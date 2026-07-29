@@ -1,0 +1,143 @@
+---
+/**
+ * The backdrop. Two layers, and which one you get depends on what your
+ * device and your settings can afford:
+ *
+ *   • CSS star-field — always rendered. Static, cheap, no JS, no WebGL.
+ *     This is the whole backdrop for reduced-motion, narrow screens and
+ *     save-data, and it is deliberately pretty rather than a placeholder
+ *     (plan §7: reduced motion is "a first-class experience, not a punishment").
+ *
+ *   • WebGL galaxy — layered on top only when the reader hasn't opted out and
+ *     the device can carry it. Three.js and GSAP are dynamically imported, so
+ *     nobody who won't see them pays for the bytes.
+ */
+---
+
+<div class="sky" aria-hidden="true">
+  <div class="sky__css"></div>
+  <canvas class="sky__gl" data-galaxy></canvas>
+</div>
+
+<style>
+  .sky {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgb(0 158 219 / 0.13), transparent 72%),
+      radial-gradient(ellipse 60% 45% at 88% 78%, rgb(201 162 39 / 0.07), transparent 70%),
+      var(--void);
+  }
+
+  /* Three layers of stars at different sizes, from repeating radial gradients.
+     No image request, no canvas, ~1KB of CSS. */
+  .sky__css {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 18%, rgb(245 241 230 / 0.75), transparent),
+      radial-gradient(1.2px 1.2px at 68% 9%, rgb(0 158 219 / 0.65), transparent),
+      radial-gradient(1.6px 1.6px at 33% 62%, rgb(245 241 230 / 0.6), transparent),
+      radial-gradient(1.1px 1.1px at 84% 41%, rgb(245 241 230 / 0.5), transparent),
+      radial-gradient(1.3px 1.3px at 51% 84%, rgb(201 162 39 / 0.55), transparent),
+      radial-gradient(1px 1px at 7% 73%, rgb(245 241 230 / 0.45), transparent),
+      radial-gradient(1.5px 1.5px at 92% 88%, rgb(245 241 230 / 0.55), transparent),
+      radial-gradient(1px 1px at 24% 35%, rgb(0 158 219 / 0.5), transparent),
+      radial-gradient(1.2px 1.2px at 61% 27%, rgb(245 241 230 / 0.5), transparent),
+      radial-gradient(1px 1px at 44% 52%, rgb(245 241 230 / 0.4), transparent);
+    background-size: 620px 620px;
+    background-repeat: repeat;
+    opacity: 0.9;
+  }
+
+  .sky__gl {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s var(--ease);
+  }
+
+  /* A ceiling on the whole layer. Even with the shader's brightness budget,
+     this guarantees the backdrop can never win a contrast fight with the
+     text sitting on top of it. */
+  .sky__gl[data-ready] {
+    opacity: 0.78;
+  }
+
+  /* Fades up once the first frame has actually rendered, so there is never a
+     flash of empty canvas over the CSS stars. */
+  /* When the galaxy is live the CSS layer steps back rather than doubling up. */
+  :global(html.galaxy-live) .sky__css {
+    opacity: 0.32;
+  }
+</style>
+
+<script>
+  import type { Galaxy } from '../scripts/galaxy';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-galaxy]');
+
+  function wantsMotion() {
+    return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function canAffordWebGL() {
+    // Narrow screens get the CSS sky: the plan asks for a simplified — but
+    // still gorgeous — mobile mode, and this keeps the LCP budget intact.
+    if (window.innerWidth < 768) return false;
+
+    const conn = (navigator as any).connection;
+    if (conn?.saveData) return false;
+    if (typeof conn?.effectiveType === 'string' && /2g/.test(conn.effectiveType)) return false;
+    if ((navigator as any).deviceMemory && (navigator as any).deviceMemory < 4) return false;
+
+    try {
+      const probe = document.createElement('canvas');
+      return !!(probe.getContext('webgl2') || probe.getContext('webgl'));
+    } catch {
+      return false;
+    }
+  }
+
+  async function boot() {
+    if (!wantsMotion()) return; // no galaxy, no GSAP, no bytes
+
+    let galaxy: Galaxy | null = null;
+
+    if (canvas && canAffordWebGL()) {
+      try {
+        const { createGalaxy } = await import('../scripts/galaxy');
+        // Particle budget scales with viewport area, capped either side.
+        const area = window.innerWidth * window.innerHeight;
+        const count = Math.round(Math.min(26000, Math.max(9000, area / 62)));
+        galaxy = createGalaxy(canvas, count);
+        requestAnimationFrame(() => {
+          canvas.setAttribute('data-ready', '');
+          document.documentElement.classList.add('galaxy-live');
+        });
+      } catch (err) {
+        // A missing galaxy is a downgrade, not a failure — the CSS sky and
+        // the whole timeline are already on screen.
+        console.warn('[unaiverse] galaxy unavailable, using CSS sky', err);
+      }
+    }
+
+    try {
+      const { startMotion } = await import('../scripts/motion');
+      await startMotion(galaxy);
+    } catch (err) {
+      console.warn('[unaiverse] scroll choreography unavailable', err);
+    }
+  }
+
+  // Never compete with first paint or with the fonts.
+  if (document.readyState === 'complete') {
+    setTimeout(boot, 120);
+  } else {
+    window.addEventListener('load', () => setTimeout(boot, 120), { once: true });
+  }
+</script>

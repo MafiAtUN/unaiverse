@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import MilestoneNode from '../components/MilestoneNode.astro';
 import FilterBar from '../components/FilterBar.astro';
 import ABot from '../components/ABot.astro';
+import Starfield from '../components/Starfield.astro';
 import { sortKey } from '../lib/milestone';
 import { takeLoadReport, unboundTakes } from '../lib/takes';
 import { SITE, ZONES, ZONE_ORDER, TIERS } from '../lib/taxonomy';
@@ -144,8 +145,17 @@ for (const o of unboundTakes(slotKeys)) {
   <main id="timeline" class="wrap">
     {
       byZone.map(({ zone, items }) => (
-        <section class="zone" aria-labelledby={`zone-${zone.id}`} data-zone>
-          <div class="zone__head" id={`zone-${zone.id}`}>
+        <section
+          class:list={['zone', { 'zone--bang': zone.id === 1 }]}
+          aria-labelledby={`zone-${zone.id}`}
+          data-zone
+          data-bigbang={zone.id === 1 ? '' : undefined}
+        >
+          <div
+            class="zone__head"
+            id={`zone-${zone.id}`}
+            data-bigbang-flash={zone.id === 1 ? '' : undefined}
+          >
             <p class="zone__num mono">Zone {zone.id}</p>
             <h2 class="zone__title">{zone.title}</h2>
             <p class="zone__range mono">{zone.range}</p>
@@ -177,6 +187,7 @@ for (const o of unboundTakes(slotKeys)) {
     </div>
   </footer>
 
+  <Starfield />
   <ABot />
 </Base>
 
@@ -365,6 +376,59 @@ for (const o of unboundTakes(slotKeys)) {
   .zone__blurb {
     color: var(--ink-dim);
     font-style: italic;
+  }
+
+  /* ── Zone 1: the Big Bang ───────────────────────────────────────────
+     The one moment that gets the animation budget (plan §7). Extra room
+     above and below so the detonation has sky to happen in, and the single
+     node inside it sits centre stage. */
+  .zone--bang {
+    padding-block: clamp(var(--sp-8), 22vh, 14rem);
+    text-align: center;
+    border-bottom-color: rgb(201 162 39 / 0.28);
+  }
+
+  .zone--bang .zone__head {
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+
+  .zone--bang .zone__num {
+    color: var(--assembly-gold);
+  }
+
+  .zone--bang .zone__title {
+    font-size: var(--step-4);
+    background: linear-gradient(100deg, var(--paper) 25%, var(--assembly-gold) 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .zone--bang .zone__blurb {
+    margin-inline: auto;
+    font-size: var(--step-1);
+    font-style: normal;
+    color: var(--ink);
+  }
+
+  .zone--bang .zone__nodes {
+    text-align: left;
+    max-width: 54rem;
+    margin-inline: auto;
+  }
+
+  /* No spine through the Big Bang — the timeline breaks here, on purpose. */
+  .zone--bang .zone__nodes::before {
+    display: none;
+  }
+
+  .zone--bang .zone__nodes :global(.node) {
+    padding-left: 0;
+  }
+
+  .zone--bang .zone__nodes :global(.node__marker) {
+    display: none;
   }
 
   /* The spine. Phase 4 replaces this with the galaxy; this stays as the

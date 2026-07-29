@@ -329,6 +329,9 @@ const constellations = Object.entries(CONSTELLATIONS)
       resetEl.hidden = active === 0;
       activeEl.hidden = active === 0;
       activeEl.textContent = String(active);
+
+      // Hiding nodes moves everything below them; scroll triggers need to know.
+      document.dispatchEvent(new CustomEvent('unaiverse:filtered'));
     }
 
     toggleEl.addEventListener('click', () => {

@@ -111,6 +111,40 @@ a:hover {
   font-feature-settings: 'zero' 1;
 }
 
+/* ── Reveal-on-scroll ─────────────────────────────────────────────────
+   `motion-ready` is added by src/scripts/motion.ts and ONLY once the
+   IntersectionObserver that reveals these elements has been created. The
+   hidden state cannot exist without the thing that undoes it — otherwise a
+   failed or blocked script leaves 76 milestones invisible.
+
+   Deliberately a CSS transition rather than a JS-driven tween: the browser
+   owns the animation, so nothing can leave an element mid-fade. */
+html.motion-ready [data-node],
+html.motion-ready .zone__head {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.5s var(--ease-out);
+}
+
+html.motion-ready [data-node].is-revealed,
+html.motion-ready .zone__head.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* The reveal is a flourish, not a gate. Anyone who asked for less motion
+   gets the content immediately, with no transform and no fade. */
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ready [data-node],
+  html.motion-ready .zone__head {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* ── The paper surface ────────────────────────────────────────────────
    Applied to any long-form reading panel. Sets its own text colours so
    nested components inherit correct ink without knowing where they sit. */
