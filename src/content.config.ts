@@ -31,6 +31,20 @@ const milestones = defineCollection({
     badges: z.array(z.string()).default([]),
     personas: z.array(z.string()).default([]),
     unverified: z.boolean().default(false),
+
+    // Layer 1 of the panel (plan §5) — "Mafi's take", 2–3 sentences in the
+    // fun voice. Not written yet; the slot renders only when it appears, so
+    // these can be filled in file by file without touching code.
+    tldr: z.string().optional(),
+
+    // Supernovas get a pull quote (CONTENT_SPEC §1). Sourced like everything else.
+    quote: z
+      .object({
+        text: z.string(),
+        attribution: z.string(),
+        url: z.string().url().optional(),
+      })
+      .optional(),
   }),
 });
 

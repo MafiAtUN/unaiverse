@@ -2,13 +2,37 @@
 /**
  * A/BOT — the robot guide (plan §6).
  * Phase 5 gives it the scripted dialogue tree, glossary mode and mini-quests.
- * This is the shell: it exists, it is reachable by keyboard, and it says
- * something honest about where it is in its own development.
+ * This is the shell: it exists, it is reachable by keyboard, it closes on
+ * Escape and on outside click, and it is honest about its own state.
  */
 import { SITE } from '../lib/taxonomy';
 ---
 
-<div class="abot" id="abot">
+{/* Hidden until the script confirms it can open the panel — an inert robot
+    button that does nothing when clicked is worse than no robot at all. */}
+<div class="abot" data-abot hidden>
+  <div class="abot__panel on-paper" id="abot-panel" hidden data-abot-panel>
+    <div class="abot__panel-head">
+      <span class="abot__badge mono">{SITE.bot}</span>
+      <button type="button" class="abot__close" data-abot-close aria-label="Close A/BOT">
+        ×
+      </button>
+    </div>
+    <p class="abot__line">
+      <strong>B</strong>ureaucratic <strong>E</strong>xplainer &amp;
+      <strong>E</strong>ducational <strong>P</strong>rotocol droid. I explain AI governance
+      through <em>Star Wars</em>, Asimov and the occasional dragon.
+    </p>
+    <p class="abot__line">
+      Ask me what a “<span class="mono">Global Digital Compact</span>” is and I will tell you
+      it is basically a peace treaty that everyone actually signed.
+    </p>
+    <p class="abot__status">
+      My dialogue tree, glossary and mini-quests land in Phase 5. Right now I mostly float
+      here looking approachable — which, to be fair, is most of the job.
+    </p>
+  </div>
+
   <button
     class="abot__button"
     type="button"
@@ -17,28 +41,20 @@ import { SITE } from '../lib/taxonomy';
     data-abot-toggle
   >
     <span class="abot__face" aria-hidden="true">🤖</span>
-    <span class="visually-hidden">Open {SITE.bot}, the guide</span>
+    <span class="visually-hidden">Open {SITE.bot}, your guide</span>
   </button>
-
-  <div class="abot__panel" id="abot-panel" hidden data-abot-panel>
-    <p class="abot__name">{SITE.bot}</p>
-    <p class="abot__line">
-      Bureaucratic Explainer &amp; Educational Protocol droid. I explain AI governance
-      through <em>Star Wars</em>, Asimov and the occasional dragon.
-    </p>
-    <p class="abot__line abot__line--status">
-      My dialogue tree lands in Phase 5. Right now I mostly just float here
-      looking approachable — which, to be fair, is most of the job.
-    </p>
-  </div>
 </div>
 
 <style>
+  .abot[hidden] {
+    display: none;
+  }
+
   .abot {
     position: fixed;
     right: var(--sp-4);
     bottom: var(--sp-4);
-    z-index: 50;
+    z-index: 60;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -51,17 +67,19 @@ import { SITE } from '../lib/taxonomy';
     width: 3.25rem;
     height: 3.25rem;
     border-radius: 50%;
-    border: 1px solid rgb(255 107 74 / 0.5);
+    border: 1px solid rgb(255 107 74 / 0.55);
     background: var(--void-panel);
-    box-shadow: 0 6px 24px rgb(7 11 26 / 0.7);
+    box-shadow:
+      0 8px 28px rgb(2 4 10 / 0.8),
+      0 0 20px -6px rgb(255 107 74 / 0.5);
     cursor: pointer;
     font-size: 1.5rem;
     line-height: 1;
-    transition: transform var(--dur) var(--ease);
+    transition: transform var(--dur) var(--ease-out);
   }
 
   .abot__button:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.04);
   }
 
   .abot__face {
@@ -79,37 +97,81 @@ import { SITE } from '../lib/taxonomy';
   }
 
   .abot__panel {
-    order: -1;
-    width: min(20rem, calc(100vw - 2rem));
+    width: min(21rem, calc(100vw - 2rem));
     padding: var(--sp-4);
-    border: 1px solid rgb(255 107 74 / 0.35);
     border-radius: var(--radius);
-    background: var(--void-panel);
-    box-shadow: 0 10px 40px rgb(7 11 26 / 0.8);
+    border-top: 3px solid var(--signal-on-paper);
+    box-shadow: var(--shadow-panel);
+    animation: abot-in var(--dur) var(--ease-out);
   }
 
   .abot__panel[hidden] {
     display: none;
   }
 
-  .abot__name {
-    margin: 0 0 var(--sp-2);
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    letter-spacing: 0.12em;
-    color: var(--signal);
+  @keyframes abot-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .abot__panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--sp-3);
+  }
+
+  .abot__badge {
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--signal-on-paper);
+  }
+
+  .abot__close {
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 1px solid var(--paper-hairline);
+    border-radius: 50%;
+    background: none;
+    color: var(--paper-ink-dim);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .abot__close:hover {
+    background: var(--paper-sunk);
+    color: var(--paper-ink);
   }
 
   .abot__line {
     margin: 0 0 var(--sp-3);
     font-size: var(--step--1);
-    color: var(--ink-dim);
+    color: var(--paper-ink);
+    max-width: none;
   }
 
-  .abot__line--status {
-    margin-bottom: 0;
-    color: var(--ink-faint);
+  .abot__line strong {
+    color: var(--signal-on-paper);
+  }
+
+  .abot__status {
+    margin: 0;
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--paper-hairline);
+    font-size: var(--step--2);
     font-style: italic;
+    color: var(--paper-ink-faint);
+    max-width: none;
   }
 
   @media (max-width: 40rem) {
@@ -121,20 +183,38 @@ import { SITE } from '../lib/taxonomy';
 </style>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('[data-abot-toggle]');
-  const panel = document.querySelector<HTMLElement>('[data-abot-panel]');
+  const root = document.querySelector<HTMLElement>('[data-abot]');
+  if (root) root.hidden = false; // only now that the panel can actually open
+
+  const toggle = root?.querySelector<HTMLButtonElement>('[data-abot-toggle]');
+  const panel = root?.querySelector<HTMLElement>('[data-abot-panel]');
+  const closeBtn = root?.querySelector<HTMLButtonElement>('[data-abot-close]');
+
+  function setOpen(open: boolean, returnFocus = false) {
+    if (!toggle || !panel) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    panel.hidden = !open;
+    if (!open && returnFocus) toggle.focus();
+  }
 
   toggle?.addEventListener('click', () => {
-    const open = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!open));
-    panel!.hidden = open;
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
   });
+
+  closeBtn?.addEventListener('click', () => setOpen(false, true));
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
-      toggle.setAttribute('aria-expanded', 'false');
-      panel!.hidden = true;
-      toggle.focus();
+      setOpen(false, true);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (
+      toggle?.getAttribute('aria-expanded') === 'true' &&
+      !root?.contains(e.target as Node)
+    ) {
+      setOpen(false);
     }
   });
 </script>

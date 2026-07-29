@@ -2,10 +2,11 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import MilestoneNode from '../components/MilestoneNode.astro';
+import FilterBar from '../components/FilterBar.astro';
 import ABot from '../components/ABot.astro';
 import { sortKey } from '../lib/milestone';
 import { takeLoadReport, unboundTakes } from '../lib/takes';
-import { SITE, ZONES, ZONE_ORDER, TIERS, type ZoneId } from '../lib/taxonomy';
+import { SITE, ZONES, ZONE_ORDER, TIERS } from '../lib/taxonomy';
 
 const all = await getCollection('milestones');
 
@@ -29,13 +30,22 @@ const byZone = ZONE_ORDER.map((z) => ({
   items: sorted.filter((m) => m.data.zone === z),
 }));
 
-const tierCounts = { 1: 0, 2: 0, 3: 0 } as Record<1 | 2 | 3, number>;
-for (const m of sorted) tierCounts[m.data.tier]++;
+const tierCounts: Record<number, number> = { 1: 0, 2: 0, 3: 0 };
+const constellationCounts: Record<string, number> = {};
+for (const m of sorted) {
+  tierCounts[m.data.tier]!++;
+  constellationCounts[m.data.constellation] =
+    (constellationCounts[m.data.constellation] ?? 0) + 1;
+}
 
 const takeSlots = sorted.reduce((n, m) => n + m.data.personas.length, 0);
 const takes = takeLoadReport();
+const receiptCount = sorted.reduce(
+  (n, m) => n + (m.body?.match(/https?:\/\/[^\s)>"]+/g)?.length ?? 0),
+  0,
+);
 
-// Build-time sanity: these are the invariants Phase 1 established.
+// Build-time invariants, established in Phase 1.
 if (sorted.length !== 76) {
   console.warn(`[unaiverse] expected 76 milestones, found ${sorted.length}`);
 }
@@ -50,25 +60,22 @@ console.log(
 for (const s of takes.skipped.slice(0, 5)) {
   console.warn(`[unaiverse] take skipped (${s.reason}):`, s.sample);
 }
-
-// A take whose milestone_id or persona matches no slot loads fine and then
-// renders nowhere. Catch those here rather than shipping a silent hole.
-const slotKeys = new Set(
-  sorted.flatMap((m) => m.data.personas.map((p) => `${m.id}::${p}`)),
-);
+const slotKeys = new Set(sorted.flatMap((m) => m.data.personas.map((p) => `${m.id}::${p}`)));
 for (const o of unboundTakes(slotKeys)) {
   console.warn(
-    `[unaiverse] take binds to no slot: "${o.milestoneId}" / "${o.persona}" — check the id and persona spelling`,
+    `[unaiverse] take binds to no slot: "${o.milestoneId}" / "${o.persona}" — check spelling`,
   );
 }
 ---
 
 <Base>
   <header class="hero">
-    <div class="wrap">
+    <div class="hero__field" aria-hidden="true"></div>
+    <div class="wrap hero__inner">
       <p class="hero__kicker mono">A totally unofficial field guide</p>
       <h1 class="hero__title">{SITE.name}</h1>
       <p class="hero__tagline">{SITE.tagline}</p>
+
       <p class="hero__blurb">
         For roughly 77 years the United Nations was busy with minor side quests — peace,
         human rights, development — and mentioned artificial intelligence approximately
@@ -77,39 +84,72 @@ for (const o of unboundTakes(slotKeys)) {
       </p>
 
       <dl class="hero__stats">
-        <div><dt>Milestones</dt><dd>{sorted.length}</dd></div>
-        <div><dt>{TIERS[1].glyph} Supernova</dt><dd>{tierCounts[1]}</dd></div>
-        <div><dt>{TIERS[2].glyph} Star</dt><dd>{tierCounts[2]}</dd></div>
-        <div><dt>{TIERS[3].glyph} Stardust</dt><dd>{tierCounts[3]}</dd></div>
-        <div><dt>Takes</dt><dd>{takes.loaded}<span class="hero__of">/{takeSlots}</span></dd></div>
+        <div>
+          <dt>Milestones</dt>
+          <dd>{sorted.length}</dd>
+        </div>
+        <div>
+          <dt>{TIERS[1].glyph} Supernova</dt>
+          <dd>{tierCounts[1]}</dd>
+        </div>
+        <div>
+          <dt>{TIERS[2].glyph} Star</dt>
+          <dd>{tierCounts[2]}</dd>
+        </div>
+        <div>
+          <dt>{TIERS[3].glyph} Stardust</dt>
+          <dd>{tierCounts[3]}</dd>
+        </div>
+        <div>
+          <dt>Receipts</dt>
+          <dd>{receiptCount}</dd>
+        </div>
+        <div>
+          <dt>Takes</dt>
+          <dd>{takes.loaded}<span class="hero__of">/{takeSlots}</span></dd>
+        </div>
       </dl>
 
+      <nav class="hero__zones" aria-label="Jump to a zone">
+        {
+          byZone.map(({ zone, items }) => (
+            <a href={`#zone-${zone.id}`} class="hero__zone-link">
+              <span class="hero__zone-num mono">{zone.id}</span>
+              <span class="hero__zone-name">{zone.title}</span>
+              <span class="hero__zone-count mono">{items.length}</span>
+            </a>
+          ))
+        }
+      </nav>
+
       <p class="hero__phase">
-        <strong>Phase 2 skeleton.</strong> Every milestone renders with its receipts; the
-        galaxy, the Big Bang and A/BOT's dialogue arrive in Phases 4 and 5.
+        <strong>Phase 3 — design system.</strong> Every milestone opens onto a paper reading
+        panel with its role toggle and receipts.{' '}
         {
           takes.loaded === 0
-            ? ' The 156 takes are being written — their slots are live and will fill the moment the file lands.'
-            : ` ${takes.loaded} of ${takes.expected} takes have landed.`
-        }
+            ? 'The 156 takes are still being written; their slots are live and fill the moment the file lands.'
+            : `${takes.loaded} of ${takes.expected} takes have landed.`
+        }{' '}
+        The galaxy and the Big Bang arrive in Phase 4.
       </p>
     </div>
   </header>
 
+  <FilterBar
+    constellationCounts={constellationCounts}
+    tierCounts={tierCounts}
+    total={sorted.length}
+  />
+
   <main id="timeline" class="wrap">
     {
       byZone.map(({ zone, items }) => (
-        <section class="zone" aria-labelledby={`zone-${zone.id}`}>
-          <div class="zone__head">
+        <section class="zone" aria-labelledby={`zone-${zone.id}`} data-zone>
+          <div class="zone__head" id={`zone-${zone.id}`}>
             <p class="zone__num mono">Zone {zone.id}</p>
-            <h2 class="zone__title" id={`zone-${zone.id}`}>
-              {zone.title}
-            </h2>
+            <h2 class="zone__title">{zone.title}</h2>
             <p class="zone__range mono">{zone.range}</p>
             <p class="zone__blurb">{zone.blurb}</p>
-            <p class="zone__count mono">
-              {items.length} {items.length === 1 ? 'milestone' : 'milestones'}
-            </p>
           </div>
 
           <div class="zone__nodes">
@@ -124,15 +164,15 @@ for (const o of unboundTakes(slotKeys)) {
 
   <footer class="foot">
     <div class="wrap">
-      <p>
+      <p class="foot__lead">
         All facts are sourced to official UN documents. All jokes are the author's own and
         aimed strictly at hype and bureaucratic pacing — never at the Organization, its
         officials, or any Member State.
       </p>
       <p class="foot__fine">
-        A personal project by Mafizul Islam. Not an official United Nations product, and
-        nothing here represents the views of the UN or any of its offices. It does,
-        however, link to a lot of things that do.
+        A personal project by Mafizul Islam, built with Claude Code. Not an official United
+        Nations product, and nothing here represents the views of the UN or any of its
+        offices. It does, however, link to a lot of things that do.
       </p>
     </div>
   </footer>
@@ -141,27 +181,43 @@ for (const o of unboundTakes(slotKeys)) {
 </Base>
 
 <style>
+  /* ── Hero ───────────────────────────────────────────────────────── */
   .hero {
+    position: relative;
     padding: var(--sp-8) 0 var(--sp-7);
     border-bottom: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+
+  /* A hint of the star-field Phase 4 will build properly. Two radial
+     gradients, no canvas, no JS — it costs nothing. */
+  .hero__field {
+    position: absolute;
+    inset: 0;
     background:
-      radial-gradient(ellipse 80% 60% at 50% 0%, rgb(0 158 219 / 0.14), transparent 70%),
-      var(--void);
+      radial-gradient(ellipse 70% 55% at 50% -10%, rgb(0 158 219 / 0.18), transparent 70%),
+      radial-gradient(ellipse 45% 40% at 85% 15%, rgb(201 162 39 / 0.1), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero__inner {
+    position: relative;
   }
 
   .hero__kicker {
     margin: 0 0 var(--sp-3);
-    letter-spacing: 0.2em;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--assembly-gold);
-    font-size: var(--step--1);
+    font-size: var(--step--2);
   }
 
   .hero__title {
-    font-size: var(--step-3);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    background: linear-gradient(100deg, var(--paper) 20%, var(--un-blue) 90%);
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    background: linear-gradient(102deg, var(--paper) 18%, var(--un-blue) 88%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -171,30 +227,31 @@ for (const o of unboundTakes(slotKeys)) {
     margin-top: var(--sp-3);
     font-size: var(--step-1);
     color: var(--ink-dim);
+    max-width: var(--measure);
   }
 
   .hero__blurb {
     margin-top: var(--sp-4);
     color: var(--ink-dim);
+    max-width: var(--measure);
   }
 
   .hero__stats {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--sp-3) var(--sp-6);
+    gap: var(--sp-4) var(--sp-6);
     margin: var(--sp-6) 0 var(--sp-5);
     padding: var(--sp-4) 0;
     border-block: 1px solid var(--hairline);
   }
 
   .hero__stats div {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: var(--sp-1);
   }
 
   .hero__stats dt {
-    font-size: var(--step--1);
+    font-size: var(--step--2);
     color: var(--ink-faint);
     letter-spacing: 0.04em;
   }
@@ -208,22 +265,70 @@ for (const o of unboundTakes(slotKeys)) {
 
   .hero__of {
     color: var(--ink-faint);
-    font-size: 0.7em;
+    font-size: 0.65em;
+  }
+
+  .hero__zones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-5);
+  }
+
+  .hero__zone-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-4) var(--sp-2) var(--sp-3);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .hero__zone-link:hover {
+    border-color: var(--un-blue);
+    color: var(--paper);
+  }
+
+  .hero__zone-num {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: rgb(0 158 219 / 0.16);
+    color: var(--un-blue);
+    font-size: var(--step--2);
+  }
+
+  .hero__zone-count {
+    color: var(--ink-faint);
+    font-size: var(--step--2);
   }
 
   .hero__phase {
+    max-width: var(--measure);
     font-size: var(--step--1);
     color: var(--ink-faint);
-    max-width: var(--measure);
   }
 
   .hero__phase strong {
     color: var(--signal);
   }
 
+  /* ── Zones ──────────────────────────────────────────────────────── */
   .zone {
     padding: var(--sp-8) 0 var(--sp-6);
     border-bottom: 1px solid var(--hairline);
+  }
+
+  .zone[hidden] {
+    display: none;
   }
 
   .zone:last-of-type {
@@ -233,18 +338,22 @@ for (const o of unboundTakes(slotKeys)) {
   .zone__head {
     max-width: var(--measure);
     margin-bottom: var(--sp-6);
+    /* No scroll-margin here — FilterBar sets scroll-padding-top on <html>
+       to its own measured height, so the two would double-count. */
   }
 
   .zone__num {
     margin: 0 0 var(--sp-2);
-    font-size: var(--step--1);
-    letter-spacing: 0.2em;
+    font-size: var(--step--2);
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: var(--un-blue);
   }
 
   .zone__title {
-    font-size: var(--step-2);
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.025em;
   }
 
   .zone__range {
@@ -258,14 +367,8 @@ for (const o of unboundTakes(slotKeys)) {
     font-style: italic;
   }
 
-  .zone__count {
-    margin: 0;
-    font-size: var(--step--1);
-    color: var(--ink-faint);
-  }
-
-  /* The spine. Phase 4 replaces this with the galaxy; the vertical
-     timeline stays as the reduced-motion and mobile fallback. */
+  /* The spine. Phase 4 replaces this with the galaxy; this stays as the
+     reduced-motion and mobile fallback. */
   .zone__nodes {
     position: relative;
     display: grid;
@@ -282,18 +385,13 @@ for (const o of unboundTakes(slotKeys)) {
     background: linear-gradient(
       to bottom,
       transparent,
-      var(--hairline-strong) 8%,
-      var(--hairline-strong) 92%,
+      var(--hairline-strong) 6%,
+      var(--hairline-strong) 94%,
       transparent
     );
   }
 
-  @media (max-width: 40rem) {
-    .zone__nodes::before {
-      left: 0.5rem;
-    }
-  }
-
+  /* ── Footer ─────────────────────────────────────────────────────── */
   .foot {
     padding: var(--sp-7) 0 var(--sp-8);
     border-top: 1px solid var(--hairline);
@@ -301,7 +399,21 @@ for (const o of unboundTakes(slotKeys)) {
     font-size: var(--step--1);
   }
 
+  .foot__lead {
+    color: var(--ink-dim);
+  }
+
   .foot__fine {
     font-style: italic;
+  }
+
+  @media (max-width: 40rem) {
+    .zone__nodes::before {
+      left: 0.5rem;
+    }
+
+    .hero {
+      padding-top: var(--sp-7);
+    }
   }
 </style>

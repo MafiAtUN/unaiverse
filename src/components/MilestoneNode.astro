@@ -1,7 +1,7 @@
 ---
 import { parseMilestoneBody } from '../lib/milestone';
 import { BADGE_KIND, CONSTELLATIONS, TIERS } from '../lib/taxonomy';
-import TakeSlot from './TakeSlot.astro';
+import RoleToggle from './RoleToggle.astro';
 
 interface Props {
   id: string;
@@ -14,6 +14,8 @@ interface Props {
     badges: string[];
     personas: string[];
     unverified: boolean;
+    tldr?: string;
+    quote?: { text: string; attribution: string; url?: string };
   };
   body: string;
 }
@@ -23,14 +25,27 @@ const { factual, receipts, why } = parseMilestoneBody(body);
 const tier = TIERS[data.tier];
 const constellation = CONSTELLATIONS[data.constellation];
 
-// Supernovas open by default; the rest stay closed so the page is scannable.
+// Supernovas open by default — they carry the narrative. Stars and Stardust
+// stay closed so 76 nodes remain scannable in one scroll.
 const openByDefault = data.tier === 1;
+
+// Italic markdown is the only inline formatting the corpus uses (document
+// titles). Everything else is plain prose, verified in Phase 2.
+const factualHtml = factual.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 ---
 
-<article class="node" id={id} data-tier={data.tier} data-constellation={data.constellation}>
-  <div class="node__marker" aria-hidden="true"><span class="node__dot"></span></div>
+<article
+  class="node"
+  id={id}
+  data-tier={data.tier}
+  data-constellation={data.constellation}
+  data-node
+>
+  <div class="node__marker" aria-hidden="true">
+    <span class="node__dot"></span>
+  </div>
 
-  <details class="node__body" open={openByDefault}>
+  <details class="node__shell" open={openByDefault}>
     <summary class="node__summary">
       <div class="node__meta">
         <time class="mono node__date">{data.date_display}</time>
@@ -39,14 +54,18 @@ const openByDefault = data.tier === 1;
 
       <h3 class="node__title">{data.title}</h3>
 
+      {data.tldr && <p class="node__tldr-teaser">{data.tldr}</p>}
+
       <div class="node__tags">
-        <span class="tag tag--tier" title={`Tier ${data.tier} — ${tier.name}`}>
-          <span aria-hidden="true">{tier.glyph}</span> {tier.name}
+        <span class="tag tag--tier" data-tier-tag={data.tier}>
+          <span aria-hidden="true">{tier.glyph}</span>
+          {tier.name}
         </span>
         {
           constellation && (
             <span class="tag tag--constellation">
-              <span aria-hidden="true">{constellation.glyph}</span> {constellation.label}
+              <span aria-hidden="true">{constellation.glyph}</span>
+              {constellation.label}
             </span>
           )
         }
@@ -57,36 +76,68 @@ const openByDefault = data.tier === 1;
             </span>
           ))
         }
+        {
+          data.personas.length > 0 && (
+            <span class="tag tag--takes">
+              {data.personas.length} take{data.personas.length === 1 ? '' : 's'}
+            </span>
+          )
+        }
       </div>
+
+      <span class="node__affordance" aria-hidden="true"></span>
     </summary>
 
-    <div class="node__content">
-      {/* Phase 3 adds the TL;DR ("Mafi's take") above this. The factual
-          section is the neutral layer and stays as written. */}
-      <p class="node__factual" set:html={factual.replace(/\*(.+?)\*/g, '<em>$1</em>')} />
-
-      {why && <p class="node__why"><strong>Why it matters:</strong> {why}</p>}
-
+    {/* The reading surface. Dark sky above, document below — plan §7 asks for
+        long-form text on paper "so reading feels like documents, not terminals". */}
+    <div class="node__paper on-paper on-paper--ruled">
       {
-        data.personas.length > 0 && (
-          <section class="node__takes" aria-label={`What ${data.title} means for each reader`}>
-            <h4 class="node__section-heading">
-              What this means for you
-              <span class="node__count">{data.personas.length} takes</span>
-            </h4>
-            <div class="node__takes-grid">
-              {data.personas.map((p) => (
-                <TakeSlot milestoneId={id} persona={p} />
-              ))}
-            </div>
-          </section>
+        data.tldr && (
+          <p class="node__tldr">
+            <span class="node__tldr-mark">Mafi's take</span>
+            {data.tldr}
+          </p>
         )
       }
 
       {
+        data.quote && (
+          <figure class="node__quote">
+            <blockquote>{data.quote.text}</blockquote>
+            <figcaption>
+              {data.quote.url ? (
+                <a href={data.quote.url} rel="noopener noreferrer" target="_blank">
+                  {data.quote.attribution}
+                </a>
+              ) : (
+                data.quote.attribution
+              )}
+            </figcaption>
+          </figure>
+        )
+      }
+
+      <div class="node__factual">
+        <p set:html={factualHtml} />
+      </div>
+
+      {
+        why && (
+          <p class="node__why">
+            <strong>Why it matters:</strong> {why}
+          </p>
+        )
+      }
+
+      {data.personas.length > 0 && <RoleToggle milestoneId={id} personas={data.personas} />}
+
+      {
         receipts.length > 0 && (
           <section class="node__receipts">
-            <h4 class="node__section-heading">Receipts</h4>
+            <h4 class="node__section-heading">
+              Receipts
+              <span class="node__section-note">every claim above, at its source</span>
+            </h4>
             <ul class="node__receipt-list">
               {receipts.map((r) => (
                 <li>
@@ -107,63 +158,82 @@ const openByDefault = data.tier === 1;
   .node {
     position: relative;
     padding-left: var(--sp-6);
-    padding-block: var(--sp-3);
+    /* Grid items default to min-width:auto, so the nowrap badge row would set
+       a min-content floor wider than a phone and push the whole page sideways.
+       This lets the node shrink so flex-wrap can actually do its job. */
+    min-width: 0;
   }
 
+  /* ── The star on the spine ──────────────────────────────────────── */
   .node__marker {
     position: absolute;
     left: 0;
-    top: 1.5rem;
+    top: 1.35rem;
     display: grid;
     place-items: center;
     width: 1.25rem;
   }
 
   .node__dot {
-    width: 9px;
-    height: 9px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--tier-3);
     box-shadow: 0 0 0 4px var(--void);
-  }
-
-  [data-tier='1'] .node__dot {
-    width: 15px;
-    height: 15px;
-    background: var(--tier-1);
-    box-shadow:
-      0 0 0 4px var(--void),
-      0 0 18px 2px rgb(201 162 39 / 0.5);
+    transition: box-shadow var(--dur) var(--ease);
   }
 
   [data-tier='2'] .node__dot {
     width: 11px;
     height: 11px;
     background: var(--tier-2);
-    box-shadow:
-      0 0 0 4px var(--void),
-      0 0 12px 1px rgb(0 158 219 / 0.4);
+    box-shadow: 0 0 0 4px var(--void), var(--glow-blue);
   }
 
-  .node__body {
+  [data-tier='1'] .node__dot {
+    width: 16px;
+    height: 16px;
+    background: var(--tier-1);
+    box-shadow: 0 0 0 5px var(--void), var(--glow-gold);
+  }
+
+  [data-tier='1'] .node__marker::after {
+    content: '';
+    position: absolute;
+    inset: -0.6rem;
+    border: 1px solid rgb(201 162 39 / 0.3);
+    border-radius: 50%;
+  }
+
+  /* ── Shell ──────────────────────────────────────────────────────── */
+  .node__shell {
     border: 1px solid var(--hairline);
     border-radius: var(--radius);
     background: var(--void-raised);
-    transition: border-color var(--dur) var(--ease);
+    overflow: hidden;
+    transition:
+      border-color var(--dur) var(--ease),
+      background var(--dur) var(--ease);
   }
 
-  [data-tier='1'] .node__body {
-    border-color: rgb(201 162 39 / 0.35);
-    background: var(--void-panel);
-  }
-
-  .node__body:hover,
-  .node__body[open] {
+  .node__shell:hover {
     border-color: var(--hairline-strong);
   }
 
+  [data-tier='2'] .node__shell {
+    border-color: rgb(0 158 219 / 0.22);
+  }
+
+  [data-tier='1'] .node__shell {
+    border-color: rgb(201 162 39 / 0.38);
+    background: var(--void-panel);
+    box-shadow: 0 0 40px -20px rgb(201 162 39 / 0.5);
+  }
+
   .node__summary {
-    padding: var(--sp-4);
+    position: relative;
+    display: block;
+    padding: var(--sp-4) var(--sp-5) var(--sp-4) var(--sp-4);
     cursor: pointer;
     list-style: none;
   }
@@ -172,29 +242,18 @@ const openByDefault = data.tier === 1;
     display: none;
   }
 
-  .node__summary::after {
-    content: '＋ open';
-    display: inline-block;
-    margin-top: var(--sp-3);
-    font-size: var(--step--1);
-    color: var(--ink-faint);
-  }
-
-  .node__body[open] .node__summary::after {
-    content: '－ close';
-  }
-
+  /* ── Meta line ──────────────────────────────────────────────────── */
   .node__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--sp-2) var(--sp-4);
+    gap: var(--sp-1) var(--sp-4);
     margin-bottom: var(--sp-2);
     font-size: var(--step--1);
   }
 
   .node__date {
     color: var(--assembly-gold);
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
   }
 
   .node__symbol {
@@ -203,48 +262,89 @@ const openByDefault = data.tier === 1;
 
   .node__title {
     font-size: var(--step-1);
-    margin-bottom: var(--sp-3);
+    font-weight: 600;
+    color: var(--paper);
   }
 
   [data-tier='1'] .node__title {
     font-size: var(--step-2);
+    font-weight: 700;
   }
 
+  [data-tier='3'] .node__title {
+    font-size: var(--step-0);
+    font-weight: 500;
+    color: var(--ink-dim);
+  }
+
+  .node__tldr-teaser {
+    margin: var(--sp-2) 0 0;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    max-width: var(--measure-tight);
+  }
+
+  .node__shell[open] .node__tldr-teaser {
+    display: none;
+  }
+
+  /* ── Tags ───────────────────────────────────────────────────────── */
   .node__tags {
     display: flex;
     flex-wrap: wrap;
     gap: var(--sp-2);
+    margin-top: var(--sp-3);
+  }
+
+  /* Stardust hides its tags until opened — 40 compact rows stay scannable. */
+  [data-tier='3'] .node__tags {
+    display: none;
+  }
+
+  [data-tier='3'] .node__shell[open] .node__tags {
+    display: flex;
   }
 
   .tag {
     display: inline-flex;
     align-items: center;
     gap: 0.35em;
-    padding: 0.2em 0.7em;
+    padding: 0.18em 0.7em;
     border-radius: 999px;
     border: 1px solid var(--hairline);
-    font-size: var(--step--1);
+    font-size: var(--step--2);
     color: var(--ink-dim);
     white-space: nowrap;
   }
 
-  .tag--tier {
-    border-color: var(--hairline-strong);
-  }
-
-  .tag--badge {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-  }
-
-  .tag--badge[data-kind='fact'] {
+  .tag--tier[data-tier-tag='1'] {
     border-color: rgb(201 162 39 / 0.5);
     color: var(--assembly-gold);
   }
 
+  .tag--tier[data-tier-tag='2'] {
+    border-color: rgb(0 158 219 / 0.45);
+    color: var(--un-blue);
+  }
+
+  .tag--tier[data-tier-tag='3'] {
+    border-color: rgb(122 139 92 / 0.5);
+    color: var(--olive);
+  }
+
+  .tag--badge {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.06em;
+  }
+
+  .tag--badge[data-kind='fact'] {
+    border-color: rgb(201 162 39 / 0.45);
+    color: var(--assembly-gold);
+  }
+
   .tag--badge[data-kind='process'] {
-    border-color: rgb(0 158 219 / 0.4);
+    border-color: rgb(0 158 219 / 0.35);
     color: var(--un-blue);
   }
 
@@ -253,54 +353,178 @@ const openByDefault = data.tier === 1;
     color: var(--signal);
   }
 
-  .node__content {
-    padding: 0 var(--sp-4) var(--sp-5);
-    border-top: 1px solid var(--hairline);
-    padding-top: var(--sp-4);
-    margin-top: var(--sp-1);
-  }
-
-  .node__factual {
-    color: var(--ink);
-  }
-
-  .node__why {
-    padding: var(--sp-3) var(--sp-4);
-    border-left: 3px solid var(--olive);
-    background: rgb(122 139 92 / 0.08);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    color: var(--ink-dim);
-  }
-
-  .node__section-heading {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--sp-3);
-    margin: var(--sp-5) 0 var(--sp-3);
-    font-size: var(--step--1);
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+  .tag--takes {
+    border-style: dashed;
     color: var(--ink-faint);
   }
 
-  .node__count {
+  /* ── Open/close affordance ──────────────────────────────────────── */
+  .node__affordance {
+    position: absolute;
+    top: var(--sp-4);
+    right: var(--sp-4);
+    width: 1.4rem;
+    height: 1.4rem;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 50%;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .node__affordance::before,
+  .node__affordance::after {
+    content: '';
+    position: absolute;
+    inset: 50% 25%;
+    border-top: 1px solid var(--ink-dim);
+    transform: translateY(-0.5px);
+  }
+
+  .node__affordance::after {
+    transform: translateY(-0.5px) rotate(90deg);
+  }
+
+  .node__shell[open] .node__affordance {
+    transform: rotate(45deg);
+  }
+
+  /* ── The paper ──────────────────────────────────────────────────── */
+  /* Real page margins. The reading column is capped at --measure, so on a wide
+     screen the extra width becomes margin rather than dead space — the panel
+     reads as a document page, not a stretched band. */
+  .node__paper {
+    padding: var(--sp-6) clamp(var(--sp-5), 5.5vw, var(--sp-8));
+    border-top: 3px solid var(--assembly-gold);
+    box-shadow: inset 0 12px 24px -18px rgb(19 24 41 / 0.5);
+    animation: paper-unfurl var(--dur-slow) var(--ease-out);
+  }
+
+  @keyframes paper-unfurl {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  [data-tier='2'] .node__paper {
+    border-top-color: var(--un-blue);
+  }
+
+  [data-tier='3'] .node__paper {
+    border-top-color: var(--olive);
+    padding-block: var(--sp-5);
+  }
+
+  /* ── Mafi's take ────────────────────────────────────────────────── */
+  .node__tldr {
+    position: relative;
+    margin-bottom: var(--sp-5);
+    padding-left: var(--sp-4);
+    border-left: 3px solid var(--signal-on-paper);
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--paper-ink);
+  }
+
+  .node__tldr-mark {
+    display: block;
+    margin-bottom: var(--sp-1);
     font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--signal-on-paper);
+  }
+
+  /* ── Pull quote (Supernovas) ────────────────────────────────────── */
+  .node__quote {
+    margin: 0 0 var(--sp-5);
+    padding: var(--sp-4) var(--sp-5);
+    background: var(--paper-sunk);
+    border-radius: var(--radius-sm);
+  }
+
+  .node__quote blockquote {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: var(--paper-ink);
+  }
+
+  .node__quote blockquote::before {
+    content: '“';
+    color: var(--gold-on-paper);
+  }
+
+  .node__quote blockquote::after {
+    content: '”';
+    color: var(--gold-on-paper);
+  }
+
+  .node__quote figcaption {
+    margin-top: var(--sp-2);
+    font-size: var(--step--1);
+    color: var(--paper-ink-faint);
+  }
+
+  /* ── Factual layer ──────────────────────────────────────────────── */
+  .node__factual p {
+    max-width: var(--measure);
+    color: var(--paper-ink);
+  }
+
+  .node__factual :global(em) {
+    font-style: italic;
+    color: var(--paper-ink);
+  }
+
+  .node__why {
+    margin-top: var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    border-left: 3px solid var(--olive-on-paper);
+    background: rgb(122 139 92 / 0.1);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--paper-ink-dim);
+    max-width: var(--measure);
+  }
+
+  .node__why strong {
+    color: var(--olive-on-paper);
+  }
+
+  /* ── Section headings on paper ──────────────────────────────────── */
+  .node__section-heading {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--sp-1) var(--sp-3);
+    margin: var(--sp-5) 0 var(--sp-3);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--paper-hairline);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper-ink-faint);
+  }
+
+  .node__section-note {
     letter-spacing: 0;
     text-transform: none;
+    font-family: var(--font-body);
+    font-style: italic;
   }
 
-  .node__takes-grid {
-    display: grid;
-    gap: var(--sp-3);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
-  }
-
+  /* ── Receipts ───────────────────────────────────────────────────── */
   .node__receipt-list {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--sp-2) var(--sp-3);
+    gap: var(--sp-2);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -309,15 +533,20 @@ const openByDefault = data.tier === 1;
 
   .node__receipt-list a {
     display: inline-block;
-    padding: 0.25em 0.7em;
-    border: 1px solid var(--hairline);
+    padding: 0.3em 0.8em;
+    border: 1px solid var(--paper-hairline-strong);
     border-radius: var(--radius-sm);
+    background: var(--paper);
     text-decoration: none;
+    color: var(--blue-on-paper);
+    transition:
+      border-color var(--dur) var(--ease),
+      background var(--dur) var(--ease);
   }
 
   .node__receipt-list a:hover {
-    border-color: var(--un-blue);
-    background: rgb(0 158 219 / 0.1);
+    border-color: var(--blue-on-paper);
+    background: var(--paper-sunk);
   }
 
   @media (max-width: 40rem) {
@@ -325,9 +554,17 @@ const openByDefault = data.tier === 1;
       padding-left: var(--sp-5);
     }
 
-    .node__summary,
-    .node__content {
-      padding-inline: var(--sp-3);
+    .node__summary {
+      padding: var(--sp-3) var(--sp-6) var(--sp-3) var(--sp-3);
+    }
+
+    .node__paper {
+      padding: var(--sp-5) var(--sp-4);
+    }
+
+    .node__affordance {
+      top: var(--sp-3);
+      right: var(--sp-3);
     }
   }
 </style>

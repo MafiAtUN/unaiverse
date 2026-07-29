@@ -1,0 +1,217 @@
+---
+/**
+ * The role toggle (plan §5, layer 3).
+ *
+ * Progressive enhancement, deliberately: the server renders every take
+ * stacked and visible. If JavaScript never runs, the reader gets all of them
+ * as a readable list — no blank tabs, no dead buttons. The script then
+ * upgrades that list into a WAI-ARIA tab set.
+ *
+ * Keyboard: ←/→ move, Home/End jump to first/last, per the APG tabs pattern.
+ */
+import TakeSlot from './TakeSlot.astro';
+import { PERSONA_BY_ID } from '../lib/taxonomy';
+
+interface Props {
+  milestoneId: string;
+  personas: string[];
+}
+
+const { milestoneId, personas } = Astro.props;
+---
+
+<div class="roles" data-roles>
+  <div class="roles__bar">
+    <p class="roles__label">What this means for</p>
+    <div class="roles__tabs" role="tablist" aria-label="Choose your role">
+      {
+        personas.map((p, i) => {
+          const meta = PERSONA_BY_ID.get(p);
+          return (
+            <button
+              type="button"
+              role="tab"
+              class="roles__tab"
+              id={`tab-${milestoneId}-${p}`}
+              aria-controls={`panel-${milestoneId}-${p}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              data-role-tab={p}
+            >
+              <span class="roles__tab-glyph" aria-hidden="true">
+                {meta?.glyph ?? '•'}
+              </span>
+              <span class="roles__tab-text">{meta?.label ?? p}</span>
+            </button>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <div class="roles__panels">
+    {
+      personas.map((p, i) => (
+        <div
+          role="tabpanel"
+          class="roles__panel"
+          id={`panel-${milestoneId}-${p}`}
+          aria-labelledby={`tab-${milestoneId}-${p}`}
+          tabindex="0"
+          data-role-panel={p}
+          data-first={i === 0 ? 'true' : 'false'}
+        >
+          <TakeSlot milestoneId={milestoneId} persona={p} />
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .roles {
+    margin-top: var(--sp-5);
+  }
+
+  .roles__bar {
+    border-bottom: 1px solid var(--paper-hairline);
+    margin-bottom: var(--sp-4);
+  }
+
+  .roles__label {
+    margin: 0 0 var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper-ink-faint);
+  }
+
+  /* Hidden until the script confirms it can drive them. No-JS readers see
+     the stacked panels below and never a row of inert buttons. */
+  .roles__tabs {
+    display: none;
+    gap: var(--sp-1);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-bottom: 1px;
+    scroll-snap-type: x proximity;
+  }
+
+  .roles--enhanced .roles__tabs {
+    display: flex;
+  }
+
+  .roles__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    flex: none;
+    padding: var(--sp-2) var(--sp-3);
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--paper-ink-faint);
+    cursor: pointer;
+    white-space: nowrap;
+    scroll-snap-align: start;
+    transition:
+      color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+
+  .roles__tab:hover {
+    color: var(--paper-ink);
+  }
+
+  .roles__tab[aria-selected='true'] {
+    color: var(--paper-ink);
+    font-weight: 600;
+    border-bottom-color: var(--blue-on-paper);
+  }
+
+  .roles__tab-glyph {
+    font-size: 1.05em;
+  }
+
+  /* Stacked by default; the script hides all but the selected panel. */
+  .roles__panel + .roles__panel {
+    margin-top: var(--sp-3);
+  }
+
+  .roles--enhanced .roles__panel[hidden] {
+    display: none;
+  }
+
+  .roles--enhanced .roles__panel {
+    margin-top: 0;
+    animation: role-fade var(--dur) var(--ease-out);
+  }
+
+  @keyframes role-fade {
+    from {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 34rem) {
+    .roles__tab-text {
+      display: none;
+    }
+
+    .roles--enhanced .roles__tab[aria-selected='true'] .roles__tab-text {
+      display: inline;
+    }
+
+    .roles__tab-glyph {
+      font-size: 1.25em;
+    }
+  }
+</style>
+
+<script>
+  function enhance(root: HTMLElement) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-role-tab]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-role-panel]'));
+    if (tabs.length < 2) return; // a single take needs no toggle
+
+    root.classList.add('roles--enhanced');
+
+    const select = (index: number, focus = true) => {
+      tabs.forEach((tab, i) => {
+        const active = i === index;
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+        panels[i]!.hidden = !active;
+      });
+      if (focus) tabs[index]!.focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i, false));
+      tab.addEventListener('keydown', (e) => {
+        const last = tabs.length - 1;
+        let next: number | null = null;
+        if (e.key === 'ArrowRight') next = i === last ? 0 : i + 1;
+        else if (e.key === 'ArrowLeft') next = i === 0 ? last : i - 1;
+        else if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = last;
+        if (next !== null) {
+          e.preventDefault();
+          select(next);
+        }
+      });
+    });
+
+    select(0, false);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-roles]').forEach(enhance);
+</script>

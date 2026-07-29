@@ -83,6 +83,14 @@ export function labelForUrl(url: string): string {
       'reuters.com': 'Reuters',
     };
 
+    // Several nodes cite more than one Digital Library record; a bare
+    // "UN Digital Library" twice in a row tells the reader nothing about
+    // which is which, so carry the record number.
+    const record = u.pathname.match(/\/record\/(\d+)/);
+    if (record && HOST_NAMES[host]) {
+      return `${HOST_NAMES[host]} #${record[1]}`;
+    }
+
     if (HOST_NAMES[host]) {
       const isPdf = u.pathname.toLowerCase().endsWith('.pdf');
       return isPdf ? `${HOST_NAMES[host]} (PDF)` : HOST_NAMES[host];
@@ -113,6 +121,21 @@ export function parseMilestoneBody(body: string): ParsedMilestone {
     if (seen.has(url)) continue;
     seen.add(url);
     receipts.push({ url, label: labelForUrl(url) });
+  }
+
+  // Two receipts on the same node reading identically is a dead end for the
+  // reader — number the collisions so each chip is distinguishable.
+  const labelCounts = new Map<string, number>();
+  for (const r of receipts) {
+    labelCounts.set(r.label, (labelCounts.get(r.label) ?? 0) + 1);
+  }
+  const running = new Map<string, number>();
+  for (const r of receipts) {
+    if (labelCounts.get(r.label)! > 1) {
+      const n = (running.get(r.label) ?? 0) + 1;
+      running.set(r.label, n);
+      r.label = `${r.label} (${n})`;
+    }
   }
 
   const why =

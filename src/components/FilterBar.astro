@@ -1,0 +1,366 @@
+---
+/**
+ * Constellation + tier filtering (plan §3: "color-coded, filterable").
+ *
+ * Collapsed by default so the sticky footprint stays ~3rem — an expanded
+ * chip grid pinned to the top eats a third of a laptop viewport and hides
+ * the node you just scrolled to.
+ *
+ * Progressive enhancement: the whole bar is hidden until the script runs,
+ * so a no-JS reader gets all 76 nodes rather than controls that do nothing.
+ */
+import { CONSTELLATIONS, TIERS } from '../lib/taxonomy';
+
+interface Props {
+  constellationCounts: Record<string, number>;
+  tierCounts: Record<number, number>;
+  total: number;
+}
+
+const { constellationCounts, tierCounts, total } = Astro.props;
+
+const constellations = Object.entries(CONSTELLATIONS)
+  .filter(([key]) => constellationCounts[key])
+  .map(([key, meta]) => ({ key, ...meta, count: constellationCounts[key]! }));
+---
+
+<div class="filters" data-filters hidden>
+  <div class="wrap filters__bar">
+    <button
+      type="button"
+      class="filters__toggle"
+      aria-expanded="false"
+      aria-controls="filter-panel"
+      data-filter-toggle
+    >
+      <span class="filters__toggle-icon" aria-hidden="true"></span>
+      Filter
+      <span class="filters__active mono" data-filter-active hidden></span>
+    </button>
+
+    <p class="filters__count mono" data-filter-count aria-live="polite">
+      {total} milestones
+    </p>
+
+    <button type="button" class="filters__reset" data-filter-reset hidden>Clear</button>
+  </div>
+
+  <div class="filters__panel" id="filter-panel" hidden data-filter-panel>
+    <div class="wrap filters__panel-inner">
+      <div class="filters__group">
+        <p class="filters__label" id="filter-tier-label">Significance</p>
+        <div class="filters__chips" role="group" aria-labelledby="filter-tier-label">
+          {
+            ([1, 2, 3] as const).map((t) => (
+              <button
+                type="button"
+                class="chip"
+                data-filter-tier={t}
+                aria-pressed="false"
+                data-accent={`tier-${t}`}
+              >
+                <span aria-hidden="true">{TIERS[t].glyph}</span>
+                {TIERS[t].name}
+                <span class="chip__count">{tierCounts[t] ?? 0}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="filters__group">
+        <p class="filters__label" id="filter-constellation-label">Constellation</p>
+        <div class="filters__chips" role="group" aria-labelledby="filter-constellation-label">
+          {
+            constellations.map((c) => (
+              <button
+                type="button"
+                class="chip"
+                data-filter-constellation={c.key}
+                aria-pressed="false"
+              >
+                <span aria-hidden="true">{c.glyph}</span>
+                {c.label}
+                <span class="chip__count">{c.count}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .filters {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    border-bottom: 1px solid var(--hairline);
+    background: rgb(7 11 26 / 0.94);
+    backdrop-filter: blur(12px);
+  }
+
+  .filters[hidden],
+  .filters__panel[hidden] {
+    display: none;
+  }
+
+  .filters__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    min-height: 3rem;
+  }
+
+  .filters__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: 0.35em 0.9em;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .filters__toggle:hover,
+  .filters__toggle[aria-expanded='true'] {
+    border-color: var(--un-blue);
+    color: var(--paper);
+  }
+
+  /* Three stacked rules — a filter glyph without an icon font. */
+  .filters__toggle-icon {
+    position: relative;
+    width: 0.85rem;
+    height: 0.6rem;
+  }
+
+  .filters__toggle-icon::before,
+  .filters__toggle-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid currentColor;
+  }
+
+  .filters__toggle-icon::before {
+    top: 0;
+  }
+
+  .filters__toggle-icon::after {
+    bottom: 0;
+    right: 30%;
+  }
+
+  .filters__active {
+    padding: 0 0.45em;
+    border-radius: 999px;
+    background: var(--un-blue);
+    color: var(--void);
+    font-size: var(--step--2);
+    font-weight: 500;
+  }
+
+  .filters__active[hidden] {
+    display: none;
+  }
+
+  .filters__count {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .filters__reset {
+    margin-left: auto;
+    padding: 0.3em 0.8em;
+    border: 1px solid rgb(255 107 74 / 0.4);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--2);
+    color: var(--signal);
+    cursor: pointer;
+  }
+
+  .filters__reset[hidden] {
+    display: none;
+  }
+
+  .filters__panel {
+    border-top: 1px solid var(--hairline);
+    animation: filter-open var(--dur) var(--ease-out);
+  }
+
+  @keyframes filter-open {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .filters__panel-inner {
+    display: grid;
+    gap: var(--sp-4);
+    padding-block: var(--sp-4);
+  }
+
+  .filters__group {
+    display: grid;
+    gap: var(--sp-2);
+  }
+
+  .filters__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .filters__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3em 0.8em;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .chip:hover {
+    border-color: var(--hairline-strong);
+    color: var(--paper);
+  }
+
+  .chip[aria-pressed='true'] {
+    background: rgb(0 158 219 / 0.16);
+    border-color: var(--un-blue);
+    color: var(--paper);
+  }
+
+  .chip[aria-pressed='true'][data-accent='tier-1'] {
+    background: rgb(201 162 39 / 0.18);
+    border-color: var(--assembly-gold);
+  }
+
+  .chip[aria-pressed='true'][data-accent='tier-3'] {
+    background: rgb(122 139 92 / 0.2);
+    border-color: var(--olive);
+  }
+
+  .chip__count {
+    font-family: var(--font-mono);
+    opacity: 0.6;
+  }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-filters]');
+  if (bar) {
+    bar.hidden = false; // only now that we can actually drive it
+
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-node]'));
+    const zones = Array.from(document.querySelectorAll<HTMLElement>('[data-zone]'));
+    const countEl = bar.querySelector<HTMLElement>('[data-filter-count]')!;
+    const resetEl = bar.querySelector<HTMLButtonElement>('[data-filter-reset]')!;
+    const activeEl = bar.querySelector<HTMLElement>('[data-filter-active]')!;
+    const toggleEl = bar.querySelector<HTMLButtonElement>('[data-filter-toggle]')!;
+    const panelEl = bar.querySelector<HTMLElement>('[data-filter-panel]')!;
+    const chips = Array.from(bar.querySelectorAll<HTMLButtonElement>('.chip'));
+
+    const tiers = new Set<string>();
+    const constellations = new Set<string>();
+
+    // Keep anchor jumps clear of the sticky bar, whatever height it is.
+    function syncScrollPadding() {
+      document.documentElement.style.scrollPaddingTop = `${bar!.offsetHeight + 16}px`;
+    }
+
+    function apply() {
+      let visible = 0;
+
+      for (const node of nodes) {
+        const tierOk = tiers.size === 0 || tiers.has(node.dataset.tier!);
+        const constOk =
+          constellations.size === 0 || constellations.has(node.dataset.constellation!);
+        const show = tierOk && constOk;
+        node.hidden = !show;
+        if (show) visible++;
+      }
+
+      // A zone with nothing left in it steps aside entirely.
+      for (const zone of zones) {
+        zone.hidden = zone.querySelectorAll('[data-node]:not([hidden])').length === 0;
+      }
+
+      const active = tiers.size + constellations.size;
+      countEl.textContent = active
+        ? `${visible} of ${nodes.length} milestones`
+        : `${nodes.length} milestones`;
+      resetEl.hidden = active === 0;
+      activeEl.hidden = active === 0;
+      activeEl.textContent = String(active);
+    }
+
+    toggleEl.addEventListener('click', () => {
+      const open = toggleEl.getAttribute('aria-expanded') === 'true';
+      toggleEl.setAttribute('aria-expanded', String(!open));
+      panelEl.hidden = open;
+      syncScrollPadding();
+    });
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        const tier = chip.dataset.filterTier;
+        const set = tier ? tiers : constellations;
+        const value = tier ?? chip.dataset.filterConstellation!;
+
+        if (set.has(value)) set.delete(value);
+        else set.add(value);
+
+        chip.setAttribute('aria-pressed', String(set.has(value)));
+        apply();
+      });
+    }
+
+    resetEl.addEventListener('click', () => {
+      tiers.clear();
+      constellations.clear();
+      for (const chip of chips) chip.setAttribute('aria-pressed', 'false');
+      apply();
+      resetEl.blur();
+    });
+
+    syncScrollPadding();
+    window.addEventListener('resize', syncScrollPadding);
+  }
+</script>

@@ -10,40 +10,37 @@ interface Props {
 const { milestoneId, persona } = Astro.props;
 const meta = PERSONA_BY_ID.get(persona);
 const take = getTake(milestoneId, persona);
+
+const BEATS = [
+  { label: 'So what', value: take?.soWhat },
+  { label: 'Watch for', value: take?.watchFor },
+  { label: 'Use it', value: take?.useIt },
+] as const;
 ---
 
 <article class:list={['take', { 'take--pending': !take }]} data-persona={persona}>
-  <h4 class="take__who">
+  <header class="take__head">
     <span class="take__glyph" aria-hidden="true">{meta?.glyph ?? '•'}</span>
-    <span>{meta?.label ?? persona}</span>
-  </h4>
+    <div>
+      <h5 class="take__who">{meta?.label ?? persona}</h5>
+      <p class="take__audience">{meta?.who}</p>
+    </div>
+  </header>
 
   {
     take ? (
       <dl class="take__beats">
-        {take.soWhat && (
-          <>
-            <dt>So what</dt>
-            <dd>{take.soWhat}</dd>
-          </>
-        )}
-        {take.watchFor && (
-          <>
-            <dt>Watch for</dt>
-            <dd>{take.watchFor}</dd>
-          </>
-        )}
-        {take.useIt && (
-          <>
-            <dt>Use it</dt>
-            <dd>{take.useIt}</dd>
-          </>
-        )}
+        {BEATS.filter((b) => b.value).map((b) => (
+          <div class="take__beat">
+            <dt>{b.label}</dt>
+            <dd>{b.value}</dd>
+          </div>
+        ))}
       </dl>
     ) : (
       <p class="take__pending">
         <span class="take__pulse" aria-hidden="true" />
-        Take incoming — being written for {meta?.who ?? 'this reader'}.
+        <span>Take incoming — being written for this desk.</span>
       </p>
     )
   }
@@ -51,56 +48,83 @@ const take = getTake(milestoneId, persona);
 
 <style>
   .take {
+    /* Capped so a ~60-word take reads as a card, not a stretched banner. */
+    max-width: 52rem;
     padding: var(--sp-4);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
-    background: var(--void-raised);
+    border: 1px solid var(--paper-hairline);
+    border-left: 3px solid var(--blue-on-paper);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--paper-sunk);
   }
 
-  .take__who {
+  .take__head {
     display: flex;
-    align-items: center;
-    gap: var(--sp-2);
-    margin: 0 0 var(--sp-3);
-    font-size: var(--step--1);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--paper-hairline);
   }
 
   .take__glyph {
-    font-size: 1.1em;
+    font-size: 1.3rem;
+    line-height: 1.2;
+  }
+
+  .take__who {
+    margin: 0;
+    font-size: var(--step-0);
+    font-weight: 700;
+    color: var(--paper-ink);
+  }
+
+  .take__audience {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
+    max-width: none;
   }
 
   .take__beats {
     margin: 0;
     display: grid;
-    gap: var(--sp-1) 0;
+    gap: var(--sp-3);
   }
 
-  .take__beats dt {
-    font-size: var(--step--1);
-    font-weight: 700;
-    color: var(--un-blue);
-    letter-spacing: 0.02em;
+  .take__beat {
+    display: grid;
+    gap: var(--sp-1);
   }
 
-  .take__beats dd {
-    margin: 0 0 var(--sp-3);
-    color: var(--ink);
+  .take__beat dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-on-paper);
   }
 
-  .take__beats dd:last-child {
-    margin-bottom: 0;
+  .take__beat dd {
+    margin: 0;
+    max-width: var(--measure-tight);
+    color: var(--paper-ink);
   }
 
-  /* Pending state: legible and calm. It should read as "on its way",
-     never as "broken" or "missing". */
+  /* Pending: calm and legible. It must read as "on its way", never as
+     "broken" — this is the state 156 of 156 slots are in right now. */
   .take--pending {
     border-style: dashed;
-    border-color: var(--hairline);
+    border-left-style: solid;
+    border-left-color: var(--paper-hairline-strong);
     background: transparent;
+  }
+
+  .take--pending .take__head {
+    border-bottom-color: transparent;
+    padding-bottom: 0;
+    margin-bottom: var(--sp-2);
+    opacity: 0.7;
   }
 
   .take__pending {
@@ -108,28 +132,28 @@ const take = getTake(milestoneId, persona);
     align-items: baseline;
     gap: var(--sp-2);
     margin: 0;
-    color: var(--ink-faint);
+    color: var(--paper-ink-faint);
     font-size: var(--step--1);
     font-style: italic;
   }
 
   .take__pulse {
     flex: none;
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: var(--signal);
-    opacity: 0.75;
+    background: var(--signal-on-paper);
+    opacity: 0.7;
     animation: take-pulse 2.4s var(--ease) infinite;
   }
 
   @keyframes take-pulse {
     0%,
     100% {
-      opacity: 0.25;
+      opacity: 0.2;
     }
     50% {
-      opacity: 0.9;
+      opacity: 0.85;
     }
   }
 </style>

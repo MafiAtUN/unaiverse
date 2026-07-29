@@ -1,3 +1,4 @@
+@import './fonts.css';
 @import './tokens.css';
 
 *,
@@ -8,7 +9,9 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem; /* clears the sticky zone bar on anchor jumps */
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -17,16 +20,18 @@ body {
   color: var(--ink);
   font-family: var(--font-body);
   font-size: var(--step-0);
-  line-height: 1.65;
+  line-height: var(--leading-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;
 }
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-family: var(--font-display);
-  line-height: 1.15;
+  line-height: var(--leading-tight);
   letter-spacing: -0.015em;
   margin: 0;
   text-wrap: balance;
@@ -45,30 +50,36 @@ p:last-child {
 a {
   color: var(--un-blue);
   text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
 }
 
 a:hover {
   color: var(--paper);
 }
 
-/* Visible focus everywhere — keyboard navigation between nodes is a
-   stated requirement (plan §8), so it must never be invisible. */
+/* Keyboard navigation between nodes is a stated requirement (plan §8),
+   so focus must never be invisible — on space or on paper. */
 :focus-visible {
   outline: 2px solid var(--signal);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
 
+.on-paper :focus-visible {
+  outline-color: var(--signal-on-paper);
+}
+
 .skip-link {
   position: absolute;
   left: var(--sp-4);
-  top: -4rem;
-  z-index: 100;
+  top: -5rem;
+  z-index: 200;
   padding: var(--sp-3) var(--sp-4);
   background: var(--paper);
-  color: var(--void);
+  color: var(--paper-ink);
   border-radius: var(--radius-sm);
   font-weight: 600;
+  text-decoration: none;
   transition: top var(--dur) var(--ease);
 }
 
@@ -89,12 +100,40 @@ a:hover {
 }
 
 .wrap {
-  width: min(100% - 2rem, 78rem);
+  width: min(100% - 2rem, 74rem);
   margin-inline: auto;
 }
 
 .mono {
   font-family: var(--font-mono);
-  font-size: 0.9em;
+  font-size: 0.88em;
   letter-spacing: 0.01em;
+  font-feature-settings: 'zero' 1;
+}
+
+/* ── The paper surface ────────────────────────────────────────────────
+   Applied to any long-form reading panel. Sets its own text colours so
+   nested components inherit correct ink without knowing where they sit. */
+.on-paper {
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.on-paper a {
+  color: var(--blue-on-paper);
+}
+
+.on-paper a:hover {
+  color: var(--paper-ink);
+}
+
+/* A faint ruled texture, like a document that has been photocopied once
+   too often. Cheap: a single repeating gradient, no image request. */
+.on-paper--ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent calc(var(--leading-body) * 1em - 1px),
+    rgb(19 24 41 / 0.028) calc(var(--leading-body) * 1em)
+  );
 }
