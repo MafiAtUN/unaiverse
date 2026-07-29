@@ -10,6 +10,10 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+media:
+  url: "/media/2025-ai-for-good-global-summit-2025.jpg"
+  caption: "AI for Good Global Summit 2025, Geneva. From ITU's official summit album; the frame predates the 8–11 July programme."
+  credit: "© ITU Pictures · CC BY-NC-SA 4.0 · flickr.com/photos/itupictures/54621307075"
 ---
 
 The 2025 summit continued ITU’s programme on standards, skills, innovation, robotics and partnerships. It occurred while Member States were finalizing the terms of reference for the Scientific Panel and Global Dialogue. The summit also supported the expanding AI Standards Exchange.

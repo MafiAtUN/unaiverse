@@ -1,0 +1,392 @@
+/*  UNAIVERSE skin for TimelineJS
+    -----------------------------
+    TimelineJS ships a light theme: #f2f2f2 navigation, white axis, grey
+    markers. This file repaints it onto the site's palette so /timeline reads as
+    the same universe as the galaxy view.
+
+    Two things about this file are unavoidable rather than sloppy:
+
+    1. It is a global stylesheet, not a scoped Astro <style>. TimelineJS builds
+       its entire DOM at runtime, so Astro's scoping hash never lands on any of
+       these elements.
+    2. There is a lot of `!important`. The library's own rules run several
+       selectors deep (`.tl-timemarker .tl-timemarker-content-container
+       .tl-timemarker-content ...`) and its stylesheet is loaded after this one.
+       Out-specifying it selector-for-selector would be longer and more brittle
+       than saying so plainly.
+
+    Colours come from tokens.css. Slide backgrounds do not live here — they are
+    set per zone in lib/timelinejs.ts, because they are data, not decoration. */
+
+/* ── The frame ──────────────────────────────────────────────────────── */
+
+.tl-timeline,
+.tl-storyslider,
+.tl-slider-container-mask,
+.tl-slide-scrollable-container {
+  background-color: var(--void);
+  color: var(--ink);
+}
+
+.tl-timeline .tl-slide {
+  background-color: var(--void);
+}
+
+/* ── Slide text ─────────────────────────────────────────────────────── */
+
+/*  Every slide carries a background colour, so TimelineJS adds
+    .tl-full-color-background and already inverts its own type. These rules are
+    about measure and rhythm, not legibility. */
+.tl-timeline .tl-text {
+  max-width: 40rem;
+}
+
+.tl-timeline .tl-text .tl-headline,
+.tl-timeline .tl-text h2.tl-headline {
+  color: var(--paper) !important;
+  text-wrap: balance;
+}
+
+.tl-timeline .tl-text p {
+  color: rgb(241 238 228 / 0.82);
+}
+
+.tl-timeline .tl-headline-date,
+.tl-timeline .tl-text h3.tl-headline-date {
+  color: var(--riso-pink) !important;
+}
+
+.tl-timeline .tl-text a {
+  color: var(--riso-pink);
+  text-decoration-color: rgb(255 95 168 / 0.45);
+  text-underline-offset: 2px;
+}
+
+.tl-timeline .tl-text a:hover,
+.tl-timeline .tl-text a:focus-visible {
+  color: var(--paper);
+  text-decoration-color: currentColor;
+}
+
+/* ── The bits this site adds to a slide ─────────────────────────────── */
+
+.tl-timeline .tl-un-meta {
+  font-family: var(--font-mono);
+  font-size: 12px !important;
+  letter-spacing: 0.05em;
+  color: rgb(241 238 228 / 0.6) !important;
+  margin: 0 0 0.75rem;
+}
+
+.tl-timeline .tl-un-symbol {
+  color: var(--riso-yellow);
+}
+
+.tl-timeline .tl-un-badges {
+  margin: 0 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.tl-timeline .tl-un-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  color: rgb(241 238 228 / 0.78);
+}
+
+/*  Mafi's take, when a milestone has one. Set off with a rule rather than a
+    box: the slide is already a card floating on a coloured field. */
+.tl-timeline blockquote.tl-un-tldr {
+  margin: 0 0 1.25rem;
+  padding: 0 0 0 1rem;
+  border-left: 2px solid var(--signal);
+  color: var(--paper) !important;
+}
+
+.tl-timeline blockquote.tl-un-tldr p {
+  color: var(--paper) !important;
+  font-size: 17px !important;
+}
+
+.tl-timeline .tl-un-why {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--hairline);
+  color: var(--paper) !important;
+}
+
+.tl-timeline .tl-un-why strong {
+  color: var(--riso-yellow);
+}
+
+.tl-timeline .tl-un-receipts {
+  margin-top: 1rem;
+  font-size: 13px !important;
+  line-height: 2.1 !important;
+  color: rgb(241 238 228 / 0.55) !important;
+}
+
+.tl-timeline .tl-un-receipts strong {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(241 238 228 / 0.5);
+}
+
+/*  Receipts are chips, not a wall of underlines — there are up to eight on a
+    single slide. */
+.tl-timeline .tl-un-receipts a {
+  display: inline-block;
+  margin: 0 0.25rem 0.25rem 0;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid rgb(255 95 168 / 0.35);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+}
+
+.tl-timeline .tl-un-receipts a:hover,
+.tl-timeline .tl-un-receipts a:focus-visible {
+  background: rgb(255 95 168 / 0.15);
+  border-color: var(--riso-pink);
+}
+
+.tl-timeline .tl-un-lede {
+  font-size: 20px !important;
+  color: var(--paper) !important;
+}
+
+.tl-timeline .tl-un-hint {
+  font-family: var(--font-mono);
+  font-size: 12px !important;
+  letter-spacing: 0.04em;
+  color: rgb(241 238 228 / 0.5) !important;
+}
+
+/* ── The navigator strip ────────────────────────────────────────────── */
+
+.tl-timeline .tl-timenav {
+  background-color: var(--void-deep) !important;
+  border-top: 1px solid var(--hairline);
+}
+
+.tl-timeline .tl-timenav-line {
+  background-color: var(--hairline-strong);
+}
+
+/*  Lane bands. The alternating stripe is what makes eight constellations
+    readable as eight lanes rather than one crowd. */
+.tl-timeline .tl-timegroup {
+  background-color: transparent !important;
+  border-top: 1px solid rgb(241 238 228 / 0.07);
+}
+
+.tl-timeline .tl-timegroup-alternate {
+  background-color: rgb(241 238 228 / 0.03) !important;
+}
+
+.tl-timeline .tl-timegroup-message {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(241 238 228 / 0.45) !important;
+  text-shadow: none !important;
+  /* Clears the zoom buttons, which are absolutely positioned over the left
+     edge of the navigator and would otherwise sit on top of four lane names. */
+  margin-left: 44px !important;
+}
+
+/* ── Markers ────────────────────────────────────────────────────────── */
+
+.tl-timeline .tl-timemarker .tl-timemarker-content-container {
+  background-color: var(--void-panel) !important;
+  border: 1px solid var(--hairline) !important;
+}
+
+.tl-timeline .tl-timemarker.tl-timemarker-active .tl-timemarker-content-container {
+  background-color: var(--riso-pink) !important;
+  border-color: var(--riso-pink) !important;
+  box-shadow: var(--ring-2);
+}
+
+.tl-timeline .tl-timemarker .tl-timemarker-content .tl-timemarker-text h2.tl-headline {
+  color: rgb(241 238 228 / 0.78) !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+}
+
+.tl-timeline .tl-timemarker.tl-timemarker-active .tl-timemarker-text h2.tl-headline {
+  color: var(--void-deep) !important;
+}
+
+/*  The fade-out gradient on a clipped marker title is hard-coded to the light
+    theme's #e5e5e5, which leaves a pale smear over a dark marker. */
+.tl-timeline .tl-timemarker .tl-timemarker-text h2.tl-headline.tl-headline-fadeout:after {
+  background: linear-gradient(to bottom, rgb(17 26 51 / 0) 0%, var(--void-panel) 60%) !important;
+}
+
+.tl-timeline
+  .tl-timemarker.tl-timemarker-active
+  .tl-timemarker-text
+  h2.tl-headline.tl-headline-fadeout:after {
+  background: linear-gradient(to bottom, rgb(255 95 168 / 0) 0%, var(--riso-pink) 60%) !important;
+}
+
+/*  Spans — the "2021–ongoing" tracks. These are the bars that make the
+    difference between a row of dots and an actual picture of the decade. */
+/*  Kept faint on purpose. 39 of the 76 nodes carry an end date and several run
+    the full width of the axis, so at any real opacity the bars stack into one
+    solid wash and the point markers vanish inside it. */
+.tl-timeline .tl-timemarker .tl-timemarker-timespan {
+  background-color: rgb(255 95 168 / 0.07) !important;
+}
+
+.tl-timeline .tl-timemarker .tl-timemarker-timespan .tl-timemarker-timespan-content {
+  background-color: rgb(255 95 168 / 0.22) !important;
+}
+
+.tl-timeline .tl-timemarker.tl-timemarker-active .tl-timemarker-timespan {
+  background-color: rgb(255 95 168 / 0.2) !important;
+}
+
+.tl-timeline
+  .tl-timemarker.tl-timemarker-active
+  .tl-timemarker-timespan
+  .tl-timemarker-timespan-content {
+  background-color: rgb(255 95 168 / 0.7) !important;
+}
+
+.tl-timeline .tl-timemarker .tl-timemarker-line-left,
+.tl-timeline .tl-timemarker .tl-timemarker-line-right {
+  border-color: var(--hairline-strong) !important;
+}
+
+.tl-timeline .tl-timemarker.tl-timemarker-active .tl-timemarker-line-left,
+.tl-timeline .tl-timemarker.tl-timemarker-active .tl-timemarker-line-right {
+  border-color: var(--riso-pink) !important;
+}
+
+.tl-timeline .tl-timemarker .tl-timemarker-line-left:after,
+.tl-timeline .tl-timemarker .tl-timemarker-line-right:after {
+  background-color: var(--hairline-strong) !important;
+}
+
+.tl-timeline .tl-timemarker.tl-timemarker-active .tl-timemarker-line-left:after,
+.tl-timeline .tl-timemarker.tl-timemarker-active .tl-timemarker-line-right:after {
+  background-color: var(--riso-pink) !important;
+}
+
+/* ── The axis ───────────────────────────────────────────────────────── */
+
+.tl-timeline .tl-timeaxis-background {
+  background-color: var(--void-deep) !important;
+  border-top: 1px solid var(--hairline);
+}
+
+.tl-timeline .tl-timeaxis .tl-timeaxis-content-container .tl-timeaxis-tick {
+  color: rgb(241 238 228 / 0.55) !important;
+}
+
+.tl-timeline .tl-timeaxis .tl-timeaxis-content-container .tl-timeaxis-tick:before {
+  border-color: var(--hairline) !important;
+  color: transparent !important;
+}
+
+/* ── Era bands (the four zones) ─────────────────────────────────────── */
+
+.tl-timeline .tl-timeera .tl-timeera-background {
+  opacity: 0.22 !important;
+}
+
+/*  Eras cannot carry their own colour in the data — TimelineJS hands each one a
+    `tl-timeera-colorN` class off an internal counter. That counter increments
+    BEFORE it is applied, so the first era is color1, not color0: the four zones
+    land on color1–color4 and the numbering below is deliberately shifted. */
+.tl-timeline .tl-timeera-color1 .tl-timeera-background {
+  background-color: #4a5a86 !important; /* zone 0 — ancient history */
+}
+.tl-timeline .tl-timeera-color2 .tl-timeera-background {
+  background-color: var(--signal) !important; /* zone 1 — the Big Bang */
+}
+.tl-timeline .tl-timeera-color3 .tl-timeera-background {
+  background-color: var(--riso-pink) !important; /* zone 2 — the main galaxy */
+}
+.tl-timeline .tl-timeera-color4 .tl-timeera-background {
+  background-color: var(--riso-green) !important; /* zone 3 — the horizon */
+}
+
+/*  Clipped to the band. The Big Bang era is a single day, so at most zoom
+    levels it is a few pixels wide and its label would otherwise run straight
+    across "The Main Galaxy" sitting next to it. */
+.tl-timeline .tl-timeera .tl-timeera-content-container {
+  font-size: 10px !important;
+  letter-spacing: 0.1em;
+  color: rgb(241 238 228 / 0.6) !important;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ── Chrome: zoom buttons, slide arrows, attribution ────────────────── */
+
+.tl-timeline .tl-menubar {
+  color: var(--ink) !important;
+  border: 1px solid var(--hairline);
+  border-left: 0;
+}
+
+.tl-timeline .tl-menubar-button {
+  background-color: rgb(13 20 40 / 0.94) !important;
+  color: rgb(241 238 228 / 0.6) !important;
+}
+
+.tl-timeline .tl-menubar-button:hover,
+.tl-timeline .tl-menubar-button:focus-visible {
+  color: var(--riso-pink) !important;
+}
+
+.tl-timeline .tl-slidenav-previous .tl-slidenav-content-container,
+.tl-timeline .tl-slidenav-next .tl-slidenav-content-container {
+  color: rgb(241 238 228 / 0.75) !important;
+  text-shadow: none !important;
+}
+
+.tl-timeline .tl-slidenav-previous .tl-slidenav-icon,
+.tl-timeline .tl-slidenav-next .tl-slidenav-icon,
+.tl-timeline .tl-slidenav-previous .tl-slidenav-title,
+.tl-timeline .tl-slidenav-next .tl-slidenav-title,
+.tl-timeline .tl-slidenav-previous .tl-slidenav-description,
+.tl-timeline .tl-slidenav-next .tl-slidenav-description {
+  color: rgb(241 238 228 / 0.75) !important;
+  text-shadow: none !important;
+}
+
+.tl-timeline .tl-slidenav-previous:hover .tl-slidenav-icon,
+.tl-timeline .tl-slidenav-next:hover .tl-slidenav-icon {
+  color: var(--riso-pink) !important;
+}
+
+.tl-timeline .tl-attribution {
+  background-color: rgb(4 6 15 / 0.8) !important;
+  color: rgb(241 238 228 / 0.45);
+}
+
+.tl-timeline .tl-attribution a {
+  color: rgb(241 238 228 / 0.55);
+}
+
+.tl-timeline .tl-message-container,
+.tl-timeline .tl-message-full .tl-message-content {
+  background-color: var(--void-panel) !important;
+  color: var(--ink) !important;
+}
+
+.tl-timeline .tl-loading-icon {
+  filter: invert(1) hue-rotate(180deg);
+}

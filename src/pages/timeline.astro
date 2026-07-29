@@ -1,0 +1,263 @@
+---
+/**
+ * /timeline — the same 76 milestones as a KnightLab TimelineJS presentation.
+ *
+ * This is a second VIEW, not a second copy. The slides are built from the same
+ * content collection the galaxy on `/` renders, through lib/timelinejs.ts.
+ *
+ * TimelineJS is loaded as a plain static asset from public/vendor rather than
+ * imported: it ships a UMD bundle with no package entry point, and its CSS
+ * resolves icon fonts relatively, so the `js/` + `css/` directory pair has to
+ * survive intact. See scripts/vendor-timeline.mjs.
+ */
+import Base from '../layouts/Base.astro';
+import '../styles/timeline-theme.css';
+import { getCollection } from 'astro:content';
+import { buildTimelineData } from '../lib/timelinejs';
+import { SITE } from '../lib/taxonomy';
+
+const { data, report } = buildTimelineData(await getCollection('milestones'));
+
+console.log(
+  `[unaiverse] /timeline — ${report.slides} slides · ${report.spans} spans · ` +
+    `${data.eras.length} eras`,
+);
+for (const id of report.undated) {
+  console.warn(`[unaiverse] /timeline: no date resolved for "${id}" — slide dropped`);
+}
+
+const base = import.meta.env.BASE_URL;
+const asset = (p: string) => `${base}/${p}`.replace(/\/+/g, '/');
+
+// Inlined rather than fetched from /timeline.json: one request instead of two,
+// and no window where the page is mounted but empty. The endpoint still exists
+// for anyone who wants the data on its own.
+const payload = JSON.stringify(data).replace(/</g, '\\u003c');
+---
+
+<Base
+  title={`Timeline — ${SITE.name}`}
+  description={`All ${report.slides} UN artificial-intelligence milestones on one interactive timeline, from the first autonomous-weapons talks to the mandates that have not happened yet. Every entry sourced to the original document.`}
+>
+  <link rel="stylesheet" href={asset('vendor/timelinejs/css/timeline.css')} />
+
+  <header class="tlbar">
+    <a class="tlbar__back" href={asset('')}>
+      <span aria-hidden="true">←</span> The galaxy
+    </a>
+    <p class="tlbar__title">
+      <strong>{SITE.name}</strong>
+      <span class="tlbar__sep" aria-hidden="true">/</span>
+      <span>Timeline</span>
+    </p>
+    <p class="tlbar__count mono">{report.slides} milestones · 2014–2028</p>
+  </header>
+
+  <main id="timeline">
+    <div id="timeline-embed" class="tl-embed"></div>
+    <noscript>
+      <p class="tl-fallback">
+        This view is an interactive timeline and needs JavaScript. The same {report.slides}
+        milestones, with every source, are on the <a href={asset('')}>main page</a> — which
+        works without it.
+      </p>
+    </noscript>
+  </main>
+
+  <script type="application/json" id="tl-data" is:inline set:html={payload} />
+  <script is:inline src={asset('vendor/timelinejs/js/timeline.js')}></script>
+  <script is:inline data-font={asset('timeline-fonts.css')}>
+    (function () {
+      var mount = document.getElementById('timeline-embed');
+      var raw = document.getElementById('tl-data');
+      if (!mount || !raw || typeof TL === 'undefined') return;
+
+      var data = JSON.parse(raw.textContent);
+      var lanes = new Set(data.events.map(function (e) { return e.group; })).size;
+
+      // The site treats reduced motion as a first-class mode, not a downgrade:
+      // every slide and marker is still reachable, it just stops sliding.
+      var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var timeline = new TL.Timeline(mount, data, {
+        font: document.currentScript.dataset.font,
+        // Deep links. Each slide's unique_id is its milestone id, so
+        // #2022-chatgpt-big-bang opens the Big Bang from a cold load.
+        hash_bookmark: true,
+        // An index into TimelineJS's zoom_sequence, not a factor — lower is
+        // wider, and it overrides scale_factor. The library's own default
+        // opens on roughly 2012–2016, which is four years of empty axis before
+        // the first milestone; 1 opens on 2007–2021, so the thin decade and
+        // the wall of activity after 2022 are both in view. The navigator is
+        // wider than the viewport at any zoom and is meant to be dragged.
+        initial_zoom: 1,
+        timenav_position: 'bottom',
+        // Eight constellation lanes need the room; below this they collapse
+        // into an unreadable stack.
+        timenav_height: 340,
+        default_bg_color: { r: 7, g: 11, b: 26 },
+        duration: still ? 0 : 700,
+        slide_padding_lr: 60,
+        language: 'en',
+      });
+
+      /*  Two things have to happen once the navigator has actually been drawn.
+       *
+       *  Not on the library's `loaded` event, though: with the data passed in
+       *  as an object rather than a URL there is nothing to wait for, so the
+       *  event fires from inside the constructor above — before this line runs
+       *  and before anything can subscribe to it. Polling for the DOM the work
+       *  depends on is the honest version of the same wait.
+       */
+      var ready = function () {
+        var first = mount.querySelector('.tl-timegroup');
+        if (!first || !first.parentNode) return false;
+        var host = first.parentNode;
+
+        /*  1. Land deep links on the navigator, not just the slide.
+         *
+         *  TimelineJS reads the hash and shows the right slide, but leaves the
+         *  strip parked at the start with no marker highlighted — so
+         *  #2024-pact-for-the-future opens the right text with no sense of
+         *  where in the decade it sits.
+         *
+         *  Only the navigator is nudged, and deliberately so. The public
+         *  goToId() is a no-op here (current_id already matches the hash), and
+         *  goTo() by index routes through the storyslider, which at this point
+         *  has not finished measuring its slides — it answers by scrolling
+         *  itself past the end of the deck. The slide is already correct;
+         *  moving the strip alone is both the smaller fix and the safe one.
+         */
+        var id = location.hash.replace(/^#/, '');
+        var known = id && data.events.some(function (e) { return e.unique_id === id; });
+        if (known && timeline._timenav) timeline._timenav.goToId(id);
+
+        /*  2. Deduplicate the lane labels.
+         *
+         *  TimelineJS redraws the navigator whenever the viewport changes, and
+         *  its `_createGroups()` empties the internal group array without
+         *  removing the DOM nodes it made last time. With eight constellations
+         *  that means eight orphaned labels overlapping the live ones after
+         *  the first resize — including the one the browser fires when the
+         *  fonts finish loading, so it shows up on a plain page load.
+         *
+         *  The library always appends the current set last, so keeping the
+         *  final `lanes` children and dropping the rest is safe. Removing them
+         *  mutates the container, which re-enters the observer once and then
+         *  finds nothing to do, so it settles rather than looping.
+         */
+        var prune = function () {
+          var all = host.querySelectorAll(':scope > .tl-timegroup');
+          for (var i = 0; i < all.length - lanes; i++) all[i].remove();
+        };
+
+        new MutationObserver(prune).observe(host, { childList: true });
+        prune();
+        return true;
+      };
+
+      // Bounded, so a future version of the library that never draws groups
+      // costs one second of idle frames rather than a permanent rAF loop.
+      var tries = 0;
+      (function wait() {
+        if (ready() || ++tries > 60) return;
+        requestAnimationFrame(wait);
+      })();
+    })();
+  </script>
+</Base>
+
+<style>
+  /* The timeline owns the viewport — it is a fixed-height widget, and letting
+     the page scroll behind it fights its own drag handling. */
+  :global(html),
+  :global(body) {
+    overflow: hidden;
+  }
+
+  .tlbar {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    height: 3.5rem;
+    padding: 0 var(--sp-5);
+    background: var(--void-deep);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .tlbar__back {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-decoration: none;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+
+  .tlbar__back:hover,
+  .tlbar__back:focus-visible {
+    color: var(--paper);
+    border-color: var(--hairline-strong);
+  }
+
+  .tlbar__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+
+  .tlbar__title strong {
+    font-weight: 600;
+  }
+
+  .tlbar__sep {
+    color: var(--ink-faint);
+    margin: 0 0.35rem;
+  }
+
+  .tlbar__title span:last-child {
+    color: var(--ink-dim);
+  }
+
+  .tlbar__count {
+    margin: 0 0 0 auto;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  #timeline {
+    height: calc(100dvh - 3.5rem);
+  }
+
+  .tl-embed {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tl-fallback {
+    max-width: var(--measure);
+    margin: var(--sp-7) auto;
+    padding: 0 var(--sp-5);
+    color: var(--ink-dim);
+    line-height: var(--leading-body);
+  }
+
+  /* On a phone the header is dead weight against a widget that already needs
+     every pixel it can get. */
+  @media (max-width: 640px) {
+    .tlbar__count {
+      display: none;
+    }
+
+    .tlbar {
+      padding: 0 var(--sp-4);
+    }
+  }
+</style>

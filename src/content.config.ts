@@ -37,6 +37,18 @@ const milestones = defineCollection({
     // these can be filled in file by file without touching code.
     tldr: z.string().optional(),
 
+    // Optional illustration, used by the /timeline view (TimelineJS puts media
+    // beside the text on every slide). Declared here so a picture can be added
+    // to any milestone file without a code change; nothing renders without it.
+    media: z
+      .object({
+        url: z.string(),
+        caption: z.string().optional(),
+        credit: z.string().optional(),
+        thumbnail: z.string().optional(),
+      })
+      .optional(),
+
     // Supernovas get a pull quote (CONTENT_SPEC §1). Sourced like everything else.
     quote: z
       .object({

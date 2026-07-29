@@ -10,6 +10,10 @@ tier: 2
 badges: ["FIRST-EVER", "ONGOING TRACK"]
 personas: ["development", "builders", "front-office"]
 unverified: false
+media:
+  url: "/media/2017-first-ai-for-good-global-summit.jpg"
+  caption: "Sophia, the Hanson Robotics humanoid, on stage at the first AI for Good Global Summit, ITU headquarters, Geneva, 8 June 2017."
+  credit: "© ITU/R. Farrell · CC BY 2.0 · flickr.com/photos/itupictures/34328656564"
 ---
 
 The International Telecommunication Union convened the first AI for Good Global Summit in Geneva with UN partners, government officials, researchers, civil society and technology companies. The summit was designed to identify practical uses of AI that could accelerate the Sustainable Development Goals and to connect technical experts with organizations working on global problems. It subsequently developed into the year-round AI for Good platform and a recurring global summit led by ITU in partnership with numerous UN entities.
