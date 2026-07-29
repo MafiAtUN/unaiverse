@@ -1,36 +1,144 @@
 ---
 /**
  * A/BOT — the robot guide (plan §6).
- * Phase 5 gives it the scripted dialogue tree, glossary mode and mini-quests.
- * This is the shell: it exists, it is reachable by keyboard, it closes on
- * Escape and on outside click, and it is honest about its own state.
+ *
+ * Scripted, not a live model: the whole personality is `src/data/abot.json`,
+ * which keeps the site static, fast and free. Three modes — glossary, quests,
+ * and a pointer at real AI for anyone who wants to interrogate the material
+ * properly.
+ *
+ * Hidden until its script runs. An inert robot button is worse than no robot.
  */
-import { SITE } from '../lib/taxonomy';
+import abot from '../data/abot.json';
+import { GLOSSARY } from '../lib/glossary';
+import { getCollection } from 'astro:content';
+
+const milestones = await getCollection('milestones');
+const titleById = new Map(milestones.map((m) => [m.id, m.data.title]));
+
+// A quest step pointing at a milestone that no longer exists would be a dead
+// link in the UI. Catch it at build time instead.
+const quests = abot.quests.map((q) => ({
+  ...q,
+  steps: q.steps
+    .map((s) => ({ ...s, title: titleById.get(s.milestone) }))
+    .filter((s) => {
+      if (!s.title) console.warn(`[unaiverse] A/BOT quest "${q.id}" → unknown milestone "${s.milestone}"`);
+      return !!s.title;
+    }),
+}));
 ---
 
-{/* Hidden until the script confirms it can open the panel — an inert robot
-    button that does nothing when clicked is worse than no robot at all. */}
 <div class="abot" data-abot hidden>
   <div class="abot__panel on-paper" id="abot-panel" hidden data-abot-panel>
-    <div class="abot__panel-head">
-      <span class="abot__badge mono">{SITE.bot}</span>
-      <button type="button" class="abot__close" data-abot-close aria-label="Close A/BOT">
-        ×
+    <header class="abot__head">
+      <div>
+        <p class="abot__badge mono">{abot.intro.name}</p>
+        <p class="abot__expansion">{abot.intro.expansion}</p>
+      </div>
+      <button type="button" class="abot__close" data-abot-close aria-label="Close A/BOT">×</button>
+    </header>
+
+    <div class="abot__tabs" role="tablist" aria-label="A/BOT modes">
+      <button type="button" role="tab" class="abot__tab" data-abot-mode="glossary" aria-selected="true">
+        Glossary
+      </button>
+      <button type="button" role="tab" class="abot__tab" data-abot-mode="quests" aria-selected="false">
+        Quests
+      </button>
+      <button type="button" role="tab" class="abot__tab" data-abot-mode="real" aria-selected="false">
+        Real AI
       </button>
     </div>
-    <p class="abot__line">
-      <strong>B</strong>ureaucratic <strong>E</strong>xplainer &amp;
-      <strong>E</strong>ducational <strong>P</strong>rotocol droid. I explain AI governance
-      through <em>Star Wars</em>, Asimov and the occasional dragon.
-    </p>
-    <p class="abot__line">
-      Ask me what a “<span class="mono">Global Digital Compact</span>” is and I will tell you
-      it is basically a peace treaty that everyone actually signed.
-    </p>
-    <p class="abot__status">
-      My dialogue tree, glossary and mini-quests land in Phase 5. Right now I mostly float
-      here looking approachable — which, to be fair, is most of the job.
-    </p>
+
+    <div class="abot__body" data-abot-body>
+      {/* ── Glossary ─────────────────────────────────────────────── */}
+      <section class="abot__mode" data-abot-panel-for="glossary">
+        <p class="abot__hint" data-abot-glossary-hint>
+          Tap any <span class="abot__hint-term">underlined term</span> in the timeline and I will explain
+          it here. Or browse all {GLOSSARY.length}:
+        </p>
+
+        <div class="abot__entry" data-abot-entry hidden>
+          <h4 class="abot__entry-term" data-abot-entry-term></h4>
+          <p class="abot__entry-short" data-abot-entry-short></p>
+          <p class="abot__entry-analogy">
+            <span class="abot__analogy-mark">Think of it as</span>
+            <span data-abot-entry-analogy></span>
+          </p>
+        </div>
+
+        <ul class="abot__terms" data-abot-terms>
+          {
+            GLOSSARY.map((g) => (
+              <li>
+                <button type="button" class="abot__term-chip" data-abot-open-term={g.slug}>
+                  {g.term}
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      {/* ── Quests ───────────────────────────────────────────────── */}
+      <section class="abot__mode" data-abot-panel-for="quests" hidden>
+        <p class="abot__hint">
+          Short guided routes through the timeline. Pick your situation — each stop opens the node
+          and tells you why it is on the list.
+        </p>
+        {
+          quests.map((q) => (
+            <details class="quest">
+              <summary class="quest__summary">
+                <span class="quest__glyph" aria-hidden="true">
+                  {q.glyph}
+                </span>
+                <span>
+                  <span class="quest__title">{q.title}</span>
+                  <span class="quest__blurb">{q.blurb}</span>
+                </span>
+                <span class="quest__count mono">{q.steps.length}</span>
+              </summary>
+              <ol class="quest__steps">
+                {q.steps.map((s) => (
+                  <li>
+                    <button type="button" class="quest__step" data-abot-goto={s.milestone}>
+                      <span class="quest__step-title">{s.title}</span>
+                      <span class="quest__step-why">{s.why}</span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          ))
+        }
+      </section>
+
+      {/* ── Real AI ──────────────────────────────────────────────── */}
+      <section class="abot__mode" data-abot-panel-for="real" hidden>
+        <h4 class="abot__real-heading">{abot.realAI.heading}</h4>
+        <p class="abot__hint">{abot.realAI.intro}</p>
+        <ul class="abot__prompts">
+          {
+            abot.realAI.prompts.map((prompt) => (
+              <li>
+                <button type="button" class="abot__prompt" data-abot-copy={prompt}>
+                  <span>{prompt}</span>
+                  <span class="abot__copy-hint mono">copy</span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="abot__caveat">{abot.realAI.caveat}</p>
+      </section>
+    </div>
+
+    <footer class="abot__foot">
+      <p class="abot__fact" data-abot-fact></p>
+      <button type="button" class="abot__fact-next" data-abot-fact-next>Another</button>
+    </footer>
   </div>
 
   <button
@@ -41,15 +149,15 @@ import { SITE } from '../lib/taxonomy';
     data-abot-toggle
   >
     <span class="abot__face" aria-hidden="true">🤖</span>
-    <span class="visually-hidden">Open {SITE.bot}, your guide</span>
+    <span class="visually-hidden">Open {abot.intro.name}, your guide</span>
   </button>
 </div>
 
-<style>
-  .abot[hidden] {
-    display: none;
-  }
+<script is:inline define:vars={{ GLOSSARY_DATA: GLOSSARY, FACTS: abot.facts }}>
+  window.__ABOT__ = { glossary: GLOSSARY_DATA, facts: FACTS };
+</script>
 
+<style>
   .abot {
     position: fixed;
     right: var(--sp-4);
@@ -59,6 +167,10 @@ import { SITE } from '../lib/taxonomy';
     flex-direction: column;
     align-items: flex-end;
     gap: var(--sp-3);
+  }
+
+  .abot[hidden] {
+    display: none;
   }
 
   .abot__button {
@@ -97,12 +209,15 @@ import { SITE } from '../lib/taxonomy';
   }
 
   .abot__panel {
-    width: min(21rem, calc(100vw - 2rem));
-    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    width: min(26rem, calc(100vw - 2rem));
+    max-height: min(38rem, calc(100vh - 7rem));
     border-radius: var(--radius);
     border-top: 3px solid var(--signal-on-paper);
     box-shadow: var(--shadow-panel);
     animation: abot-in var(--dur) var(--ease-out);
+    overflow: hidden;
   }
 
   .abot__panel[hidden] {
@@ -112,7 +227,7 @@ import { SITE } from '../lib/taxonomy';
   @keyframes abot-in {
     from {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
@@ -120,21 +235,31 @@ import { SITE } from '../lib/taxonomy';
     }
   }
 
-  .abot__panel-head {
+  .abot__head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: var(--sp-3);
+    gap: var(--sp-3);
+    padding: var(--sp-4) var(--sp-4) var(--sp-3);
   }
 
   .abot__badge {
-    font-size: var(--step--2);
+    margin: 0;
+    font-size: var(--step--1);
     font-weight: 500;
     letter-spacing: 0.16em;
     color: var(--signal-on-paper);
   }
 
+  .abot__expansion {
+    margin: 0;
+    max-width: none;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
+  }
+
   .abot__close {
+    flex: none;
     display: grid;
     place-items: center;
     width: 1.6rem;
@@ -153,68 +278,456 @@ import { SITE } from '../lib/taxonomy';
     color: var(--paper-ink);
   }
 
-  .abot__line {
-    margin: 0 0 var(--sp-3);
-    font-size: var(--step--1);
-    color: var(--paper-ink);
-    max-width: none;
+  .abot__tabs {
+    display: flex;
+    gap: var(--sp-1);
+    padding: 0 var(--sp-4);
+    border-bottom: 1px solid var(--paper-hairline);
   }
 
-  .abot__line strong {
+  .abot__tab {
+    padding: var(--sp-2) var(--sp-3);
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--paper-ink-faint);
+    cursor: pointer;
+  }
+
+  .abot__tab:hover {
+    color: var(--paper-ink);
+  }
+
+  .abot__tab[aria-selected='true'] {
+    color: var(--paper-ink);
+    font-weight: 600;
+    border-bottom-color: var(--signal-on-paper);
+  }
+
+  .abot__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sp-4);
+  }
+
+  .abot__mode[hidden] {
+    display: none;
+  }
+
+  .abot__hint {
+    margin: 0 0 var(--sp-3);
+    max-width: none;
+    font-size: var(--step--1);
+    color: var(--paper-ink-dim);
+  }
+
+  .abot__hint-term {
+    text-decoration: underline dotted;
+    text-decoration-color: var(--blue-on-paper);
+    text-underline-offset: 3px;
+  }
+
+  /* ── Glossary entry ───────────────────────────────────────────── */
+  .abot__entry {
+    margin-bottom: var(--sp-4);
+    padding: var(--sp-3) var(--sp-4);
+    border-left: 3px solid var(--signal-on-paper);
+    background: var(--paper-sunk);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .abot__entry[hidden] {
+    display: none;
+  }
+
+  .abot__entry-term {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--step-0);
+    color: var(--paper-ink);
+  }
+
+  .abot__entry-short {
+    margin: 0 0 var(--sp-3);
+    max-width: none;
+    font-size: var(--step--1);
+    color: var(--paper-ink);
+  }
+
+  .abot__entry-analogy {
+    margin: 0;
+    max-width: none;
+    font-size: var(--step--1);
+    font-style: italic;
+    color: var(--paper-ink-dim);
+  }
+
+  .abot__analogy-mark {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--signal-on-paper);
   }
 
-  .abot__status {
+  .abot__terms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
     margin: 0;
-    padding-top: var(--sp-3);
-    border-top: 1px solid var(--paper-hairline);
+    padding: 0;
+    list-style: none;
+  }
+
+  .abot__term-chip {
+    padding: 0.25em 0.7em;
+    border: 1px solid var(--paper-hairline);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--2);
+    color: var(--paper-ink-dim);
+    cursor: pointer;
+  }
+
+  .abot__term-chip:hover,
+  .abot__term-chip[aria-current='true'] {
+    border-color: var(--blue-on-paper);
+    background: var(--paper-sunk);
+    color: var(--paper-ink);
+  }
+
+  /* ── Quests ───────────────────────────────────────────────────── */
+  .quest {
+    border: 1px solid var(--paper-hairline);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--sp-2);
+  }
+
+  .quest__summary {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    padding: var(--sp-3);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .quest__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .quest__glyph {
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+
+  .quest__title {
+    display: block;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--paper-ink);
+  }
+
+  .quest__blurb {
+    display: block;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
+  }
+
+  .quest__count {
+    margin-left: auto;
+    flex: none;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
+  }
+
+  .quest__steps {
+    margin: 0;
+    padding: 0 var(--sp-3) var(--sp-3) var(--sp-6);
+    display: grid;
+    gap: var(--sp-2);
+  }
+
+  .quest__steps li::marker {
+    color: var(--signal-on-paper);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .quest__step {
+    display: block;
+    width: 100%;
+    padding: var(--sp-2);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .quest__step:hover {
+    background: var(--paper-sunk);
+  }
+
+  .quest__step-title {
+    display: block;
+    font-size: var(--step--1);
+    color: var(--blue-on-paper);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .quest__step-why {
+    display: block;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
+  }
+
+  /* ── Real AI ──────────────────────────────────────────────────── */
+  .abot__real-heading {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--step-0);
+    color: var(--paper-ink);
+  }
+
+  .abot__prompts {
+    margin: 0 0 var(--sp-3);
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--sp-2);
+  }
+
+  .abot__prompt {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    width: 100%;
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--paper-hairline);
+    border-radius: var(--radius-sm);
+    background: var(--paper-sunk);
+    font: inherit;
+    font-size: var(--step--2);
+    color: var(--paper-ink);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .abot__prompt:hover {
+    border-color: var(--blue-on-paper);
+  }
+
+  .abot__copy-hint {
+    margin-left: auto;
+    flex: none;
+    color: var(--blue-on-paper);
+    font-size: var(--step--2);
+  }
+
+  .abot__caveat {
+    margin: 0;
+    max-width: none;
     font-size: var(--step--2);
     font-style: italic;
     color: var(--paper-ink-faint);
+  }
+
+  /* ── Footer fact ──────────────────────────────────────────────── */
+  .abot__foot {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    border-top: 1px solid var(--paper-hairline);
+    background: var(--paper-sunk);
+  }
+
+  .abot__fact {
+    margin: 0;
     max-width: none;
+    font-size: var(--step--2);
+    font-style: italic;
+    color: var(--paper-ink-dim);
+  }
+
+  .abot__fact-next {
+    margin-left: auto;
+    flex: none;
+    padding: 0.2em 0.6em;
+    border: 1px solid var(--paper-hairline);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
+    cursor: pointer;
+  }
+
+  .abot__fact-next:hover {
+    border-color: var(--signal-on-paper);
+    color: var(--signal-on-paper);
   }
 
   @media (max-width: 40rem) {
     .abot {
       right: var(--sp-3);
       bottom: var(--sp-3);
+      left: var(--sp-3);
+      align-items: flex-end;
+    }
+
+    .abot__panel {
+      width: 100%;
+      max-height: min(32rem, calc(100vh - 6rem));
     }
   }
 </style>
 
 <script>
-  const root = document.querySelector<HTMLElement>('[data-abot]');
-  if (root) root.hidden = false; // only now that the panel can actually open
-
-  const toggle = root?.querySelector<HTMLButtonElement>('[data-abot-toggle]');
-  const panel = root?.querySelector<HTMLElement>('[data-abot-panel]');
-  const closeBtn = root?.querySelector<HTMLButtonElement>('[data-abot-close]');
-
-  function setOpen(open: boolean, returnFocus = false) {
-    if (!toggle || !panel) return;
-    toggle.setAttribute('aria-expanded', String(open));
-    panel.hidden = !open;
-    if (!open && returnFocus) toggle.focus();
+  interface Entry {
+    term: string;
+    short: string;
+    analogy: string;
+    slug: string;
   }
 
-  toggle?.addEventListener('click', () => {
-    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-  });
+  const root = document.querySelector<HTMLElement>('[data-abot]');
+  if (root) {
+    root.hidden = false; // only now that the panel can actually open
+    // Lets the glossary terms out in the prose show their underline. Until
+    // this runs they are indistinguishable from ordinary text, so nobody
+    // clicks a definition that cannot open.
+    document.documentElement.classList.add('abot-ready');
 
-  closeBtn?.addEventListener('click', () => setOpen(false, true));
+    const data = (window as any).__ABOT__ as { glossary: Entry[]; facts: string[] };
+    const bySlug = new Map(data.glossary.map((g) => [g.slug, g]));
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
-      setOpen(false, true);
+    const toggle = root.querySelector<HTMLButtonElement>('[data-abot-toggle]')!;
+    const panel = root.querySelector<HTMLElement>('[data-abot-panel]')!;
+    const closeBtn = root.querySelector<HTMLButtonElement>('[data-abot-close]')!;
+    const body = root.querySelector<HTMLElement>('[data-abot-body]')!;
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-abot-mode]'));
+    const modes = Array.from(root.querySelectorAll<HTMLElement>('[data-abot-panel-for]'));
+
+    const entryBox = root.querySelector<HTMLElement>('[data-abot-entry]')!;
+    const entryTerm = root.querySelector<HTMLElement>('[data-abot-entry-term]')!;
+    const entryShort = root.querySelector<HTMLElement>('[data-abot-entry-short]')!;
+    const entryAnalogy = root.querySelector<HTMLElement>('[data-abot-entry-analogy]')!;
+    const factEl = root.querySelector<HTMLElement>('[data-abot-fact]')!;
+
+    let lastFocus: HTMLElement | null = null;
+
+    function setOpen(open: boolean, returnFocus = false) {
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      if (open) {
+        nextFact();
+      } else if (returnFocus) {
+        (lastFocus ?? toggle).focus();
+        lastFocus = null;
+      }
     }
-  });
 
-  document.addEventListener('click', (e) => {
-    if (
-      toggle?.getAttribute('aria-expanded') === 'true' &&
-      !root?.contains(e.target as Node)
-    ) {
-      setOpen(false);
+    function setMode(mode: string) {
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.abotMode === mode)));
+      modes.forEach((m) => (m.hidden = m.dataset.abotPanelFor !== mode));
+      body.scrollTop = 0;
     }
-  });
+
+    function showTerm(slug: string) {
+      const entry = bySlug.get(slug);
+      if (!entry) return;
+      setMode('glossary');
+      entryTerm.textContent = entry.term;
+      entryShort.textContent = entry.short;
+      entryAnalogy.textContent = entry.analogy;
+      entryBox.hidden = false;
+      root
+        .querySelectorAll<HTMLElement>('[data-abot-open-term]')
+        .forEach((c) =>
+          c.setAttribute('aria-current', String(c.dataset.abotOpenTerm === slug)),
+        );
+      body.scrollTop = 0;
+    }
+
+    let factIndex = Math.floor(Math.random() * data.facts.length);
+    function nextFact() {
+      factEl.textContent = data.facts[factIndex % data.facts.length]!;
+      factIndex++;
+    }
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    closeBtn.addEventListener('click', () => setOpen(false, true));
+    tabs.forEach((t) => t.addEventListener('click', () => setMode(t.dataset.abotMode!)));
+    root
+      .querySelector('[data-abot-fact-next]')!
+      .addEventListener('click', () => nextFact());
+
+    root.querySelectorAll<HTMLButtonElement>('[data-abot-open-term]').forEach((chip) =>
+      chip.addEventListener('click', () => showTerm(chip.dataset.abotOpenTerm!)),
+    );
+
+    // Glossary terms live out in the timeline prose, added at build time.
+    document.addEventListener('click', (e) => {
+      const term = (e.target as HTMLElement).closest<HTMLElement>('.term[data-term]');
+      if (!term) return;
+      lastFocus = term;
+      document
+        .querySelectorAll('.term[aria-current]')
+        .forEach((t) => t.removeAttribute('aria-current'));
+      term.setAttribute('aria-current', 'true');
+      setOpen(true);
+      showTerm(term.dataset.term!);
+    });
+
+    // Quest steps: open the node, scroll to it, and leave it focused.
+    root.querySelectorAll<HTMLButtonElement>('[data-abot-goto]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const node = document.getElementById(btn.dataset.abotGoto!);
+        if (!node) return;
+        node.hidden = false;
+        node.querySelector('details')?.setAttribute('open', '');
+        node.classList.add('is-revealed');
+        setOpen(false);
+        node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        node.querySelector<HTMLElement>('summary')?.focus({ preventScroll: true });
+      }),
+    );
+
+    // Copy a suggested prompt for a real model.
+    root.querySelectorAll<HTMLButtonElement>('[data-abot-copy]').forEach((btn) =>
+      btn.addEventListener('click', async () => {
+        const hint = btn.querySelector('.abot__copy-hint')!;
+        try {
+          await navigator.clipboard.writeText(btn.dataset.abotCopy!);
+          hint.textContent = 'copied';
+        } catch {
+          hint.textContent = 'select & copy';
+        }
+        setTimeout(() => (hint.textContent = 'copy'), 1800);
+      }),
+    );
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false, true);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (
+        toggle.getAttribute('aria-expanded') === 'true' &&
+        !root.contains(e.target as Node) &&
+        !(e.target as HTMLElement).closest('.term[data-term]')
+      ) {
+        setOpen(false);
+      }
+    });
+  }
 </script>

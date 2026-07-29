@@ -1,5 +1,6 @@
 ---
 import { parseMilestoneBody } from '../lib/milestone';
+import { markupFactual } from '../lib/glossary';
 import { BADGE_KIND, CONSTELLATIONS, TIERS } from '../lib/taxonomy';
 import RoleToggle from './RoleToggle.astro';
 
@@ -29,9 +30,9 @@ const constellation = CONSTELLATIONS[data.constellation];
 // stay closed so 76 nodes remain scannable in one scroll.
 const openByDefault = data.tier === 1;
 
-// Italic markdown is the only inline formatting the corpus uses (document
-// titles). Everything else is plain prose, verified in Phase 2.
-const factualHtml = factual.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+// Glossary terms become A/BOT buttons; *asterisks* become <em>. Done at build
+// time over plain text, so no tag can be split (see lib/glossary.ts).
+const { html: factualHtml } = markupFactual(factual);
 ---
 
 <article
@@ -480,6 +481,34 @@ const factualHtml = factual.replace(/\*([^*]+)\*/g, '<em>$1</em>');
   .node__factual :global(em) {
     font-style: italic;
     color: var(--paper-ink);
+  }
+
+  /* Glossary terms render as plain prose by default — a button stripped of
+     every button affordance. The underline that says "ask A/BOT about this"
+     only appears once A/BOT's script has confirmed it can answer. */
+  .node__factual :global(.term) {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    cursor: text;
+    transition: background var(--dur) var(--ease);
+  }
+
+  :global(html.abot-ready) .node__factual :global(.term) {
+    cursor: help;
+    text-decoration: underline dotted;
+    text-decoration-color: var(--blue-on-paper);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1.5px;
+  }
+
+  .node__factual :global(.term:hover),
+  .node__factual :global(.term[aria-current='true']) {
+    background: rgb(10 100 136 / 0.12);
+    border-radius: 3px;
   }
 
   .node__why {
