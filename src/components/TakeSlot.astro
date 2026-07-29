@@ -1,0 +1,135 @@
+---
+import { getTake } from '../lib/takes';
+import { PERSONA_BY_ID } from '../lib/taxonomy';
+
+interface Props {
+  milestoneId: string;
+  persona: string;
+}
+
+const { milestoneId, persona } = Astro.props;
+const meta = PERSONA_BY_ID.get(persona);
+const take = getTake(milestoneId, persona);
+---
+
+<article class:list={['take', { 'take--pending': !take }]} data-persona={persona}>
+  <h4 class="take__who">
+    <span class="take__glyph" aria-hidden="true">{meta?.glyph ?? '•'}</span>
+    <span>{meta?.label ?? persona}</span>
+  </h4>
+
+  {
+    take ? (
+      <dl class="take__beats">
+        {take.soWhat && (
+          <>
+            <dt>So what</dt>
+            <dd>{take.soWhat}</dd>
+          </>
+        )}
+        {take.watchFor && (
+          <>
+            <dt>Watch for</dt>
+            <dd>{take.watchFor}</dd>
+          </>
+        )}
+        {take.useIt && (
+          <>
+            <dt>Use it</dt>
+            <dd>{take.useIt}</dd>
+          </>
+        )}
+      </dl>
+    ) : (
+      <p class="take__pending">
+        <span class="take__pulse" aria-hidden="true" />
+        Take incoming — being written for {meta?.who ?? 'this reader'}.
+      </p>
+    )
+  }
+</article>
+
+<style>
+  .take {
+    padding: var(--sp-4);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+  }
+
+  .take__who {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    margin: 0 0 var(--sp-3);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .take__glyph {
+    font-size: 1.1em;
+  }
+
+  .take__beats {
+    margin: 0;
+    display: grid;
+    gap: var(--sp-1) 0;
+  }
+
+  .take__beats dt {
+    font-size: var(--step--1);
+    font-weight: 700;
+    color: var(--un-blue);
+    letter-spacing: 0.02em;
+  }
+
+  .take__beats dd {
+    margin: 0 0 var(--sp-3);
+    color: var(--ink);
+  }
+
+  .take__beats dd:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Pending state: legible and calm. It should read as "on its way",
+     never as "broken" or "missing". */
+  .take--pending {
+    border-style: dashed;
+    border-color: var(--hairline);
+    background: transparent;
+  }
+
+  .take__pending {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-2);
+    margin: 0;
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+    font-style: italic;
+  }
+
+  .take__pulse {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--signal);
+    opacity: 0.75;
+    animation: take-pulse 2.4s var(--ease) infinite;
+  }
+
+  @keyframes take-pulse {
+    0%,
+    100% {
+      opacity: 0.25;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+</style>

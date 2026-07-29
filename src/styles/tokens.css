@@ -1,0 +1,72 @@
+/* Design tokens — plan §7. Phase 3 builds the full system on top of these;
+   the values themselves are fixed and should not drift. */
+
+:root {
+  /* Palette */
+  --void: #070b1a;
+  --un-blue: #009edb;
+  --assembly-gold: #c9a227;
+  --olive: #7a8b5c;
+  --paper: #f5f1e6;
+  --signal: #ff6b4a;
+
+  /* Derived surfaces — mixes of the six, never new hues */
+  --void-raised: #0d1428;
+  --void-panel: #111a33;
+  --hairline: rgb(245 241 230 / 0.14);
+  --hairline-strong: rgb(245 241 230 / 0.28);
+  --ink: var(--paper);
+  --ink-dim: rgb(245 241 230 / 0.72);
+  --ink-faint: rgb(245 241 230 / 0.5);
+
+  /* Tier accents */
+  --tier-1: var(--assembly-gold);
+  --tier-2: var(--un-blue);
+  --tier-3: var(--olive);
+
+  /* Type — Phase 3 swaps in Space Grotesk / Inter / IBM Plex Mono.
+     Token names are already correct so nothing downstream changes. */
+  --font-display: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --step--1: clamp(0.78rem, 0.76rem + 0.1vw, 0.84rem);
+  --step-0: clamp(0.95rem, 0.92rem + 0.16vw, 1.05rem);
+  --step-1: clamp(1.15rem, 1.08rem + 0.35vw, 1.4rem);
+  --step-2: clamp(1.45rem, 1.3rem + 0.75vw, 2rem);
+  --step-3: clamp(1.9rem, 1.5rem + 2vw, 3.2rem);
+
+  /* Space */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 5rem;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --measure: 68ch;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur: 240ms;
+}
+
+/* Reduced motion is a first-class mode, not a punishment (plan §7).
+   Everything below simply becomes instant; nothing is hidden or degraded. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

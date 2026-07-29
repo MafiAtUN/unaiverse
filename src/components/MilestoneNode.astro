@@ -1,0 +1,333 @@
+---
+import { parseMilestoneBody } from '../lib/milestone';
+import { BADGE_KIND, CONSTELLATIONS, TIERS } from '../lib/taxonomy';
+import TakeSlot from './TakeSlot.astro';
+
+interface Props {
+  id: string;
+  data: {
+    title: string;
+    date_display: string;
+    symbol: string | null;
+    tier: 1 | 2 | 3;
+    constellation: string;
+    badges: string[];
+    personas: string[];
+    unverified: boolean;
+  };
+  body: string;
+}
+
+const { id, data, body } = Astro.props;
+const { factual, receipts, why } = parseMilestoneBody(body);
+const tier = TIERS[data.tier];
+const constellation = CONSTELLATIONS[data.constellation];
+
+// Supernovas open by default; the rest stay closed so the page is scannable.
+const openByDefault = data.tier === 1;
+---
+
+<article class="node" id={id} data-tier={data.tier} data-constellation={data.constellation}>
+  <div class="node__marker" aria-hidden="true"><span class="node__dot"></span></div>
+
+  <details class="node__body" open={openByDefault}>
+    <summary class="node__summary">
+      <div class="node__meta">
+        <time class="mono node__date">{data.date_display}</time>
+        {data.symbol && <span class="mono node__symbol">{data.symbol}</span>}
+      </div>
+
+      <h3 class="node__title">{data.title}</h3>
+
+      <div class="node__tags">
+        <span class="tag tag--tier" title={`Tier ${data.tier} — ${tier.name}`}>
+          <span aria-hidden="true">{tier.glyph}</span> {tier.name}
+        </span>
+        {
+          constellation && (
+            <span class="tag tag--constellation">
+              <span aria-hidden="true">{constellation.glyph}</span> {constellation.label}
+            </span>
+          )
+        }
+        {
+          data.badges.map((b) => (
+            <span class="tag tag--badge" data-kind={BADGE_KIND[b] ?? 'process'}>
+              {b}
+            </span>
+          ))
+        }
+      </div>
+    </summary>
+
+    <div class="node__content">
+      {/* Phase 3 adds the TL;DR ("Mafi's take") above this. The factual
+          section is the neutral layer and stays as written. */}
+      <p class="node__factual" set:html={factual.replace(/\*(.+?)\*/g, '<em>$1</em>')} />
+
+      {why && <p class="node__why"><strong>Why it matters:</strong> {why}</p>}
+
+      {
+        data.personas.length > 0 && (
+          <section class="node__takes" aria-label={`What ${data.title} means for each reader`}>
+            <h4 class="node__section-heading">
+              What this means for you
+              <span class="node__count">{data.personas.length} takes</span>
+            </h4>
+            <div class="node__takes-grid">
+              {data.personas.map((p) => (
+                <TakeSlot milestoneId={id} persona={p} />
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        receipts.length > 0 && (
+          <section class="node__receipts">
+            <h4 class="node__section-heading">Receipts</h4>
+            <ul class="node__receipt-list">
+              {receipts.map((r) => (
+                <li>
+                  <a href={r.url} rel="noopener noreferrer" target="_blank">
+                    {r.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </div>
+  </details>
+</article>
+
+<style>
+  .node {
+    position: relative;
+    padding-left: var(--sp-6);
+    padding-block: var(--sp-3);
+  }
+
+  .node__marker {
+    position: absolute;
+    left: 0;
+    top: 1.5rem;
+    display: grid;
+    place-items: center;
+    width: 1.25rem;
+  }
+
+  .node__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--tier-3);
+    box-shadow: 0 0 0 4px var(--void);
+  }
+
+  [data-tier='1'] .node__dot {
+    width: 15px;
+    height: 15px;
+    background: var(--tier-1);
+    box-shadow:
+      0 0 0 4px var(--void),
+      0 0 18px 2px rgb(201 162 39 / 0.5);
+  }
+
+  [data-tier='2'] .node__dot {
+    width: 11px;
+    height: 11px;
+    background: var(--tier-2);
+    box-shadow:
+      0 0 0 4px var(--void),
+      0 0 12px 1px rgb(0 158 219 / 0.4);
+  }
+
+  .node__body {
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  [data-tier='1'] .node__body {
+    border-color: rgb(201 162 39 / 0.35);
+    background: var(--void-panel);
+  }
+
+  .node__body:hover,
+  .node__body[open] {
+    border-color: var(--hairline-strong);
+  }
+
+  .node__summary {
+    padding: var(--sp-4);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .node__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .node__summary::after {
+    content: '＋ open';
+    display: inline-block;
+    margin-top: var(--sp-3);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .node__body[open] .node__summary::after {
+    content: '－ close';
+  }
+
+  .node__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-4);
+    margin-bottom: var(--sp-2);
+    font-size: var(--step--1);
+  }
+
+  .node__date {
+    color: var(--assembly-gold);
+    letter-spacing: 0.04em;
+  }
+
+  .node__symbol {
+    color: var(--ink-faint);
+  }
+
+  .node__title {
+    font-size: var(--step-1);
+    margin-bottom: var(--sp-3);
+  }
+
+  [data-tier='1'] .node__title {
+    font-size: var(--step-2);
+  }
+
+  .node__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.2em 0.7em;
+    border-radius: 999px;
+    border: 1px solid var(--hairline);
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+
+  .tag--tier {
+    border-color: var(--hairline-strong);
+  }
+
+  .tag--badge {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+  }
+
+  .tag--badge[data-kind='fact'] {
+    border-color: rgb(201 162 39 / 0.5);
+    color: var(--assembly-gold);
+  }
+
+  .tag--badge[data-kind='process'] {
+    border-color: rgb(0 158 219 / 0.4);
+    color: var(--un-blue);
+  }
+
+  .tag--badge[data-kind='caution'] {
+    border-color: rgb(255 107 74 / 0.5);
+    color: var(--signal);
+  }
+
+  .node__content {
+    padding: 0 var(--sp-4) var(--sp-5);
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--sp-4);
+    margin-top: var(--sp-1);
+  }
+
+  .node__factual {
+    color: var(--ink);
+  }
+
+  .node__why {
+    padding: var(--sp-3) var(--sp-4);
+    border-left: 3px solid var(--olive);
+    background: rgb(122 139 92 / 0.08);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    color: var(--ink-dim);
+  }
+
+  .node__section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    margin: var(--sp-5) 0 var(--sp-3);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .node__count {
+    font-family: var(--font-mono);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .node__takes-grid {
+    display: grid;
+    gap: var(--sp-3);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+  }
+
+  .node__receipt-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step--1);
+  }
+
+  .node__receipt-list a {
+    display: inline-block;
+    padding: 0.25em 0.7em;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+  }
+
+  .node__receipt-list a:hover {
+    border-color: var(--un-blue);
+    background: rgb(0 158 219 / 0.1);
+  }
+
+  @media (max-width: 40rem) {
+    .node {
+      padding-left: var(--sp-5);
+    }
+
+    .node__summary,
+    .node__content {
+      padding-inline: var(--sp-3);
+    }
+  }
+</style>
