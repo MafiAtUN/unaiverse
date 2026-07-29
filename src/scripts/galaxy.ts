@@ -40,7 +40,7 @@ const VERT = /* glsl */ `
 
   void main() {
     // Four beats: fly out, gather to the emblem, HOLD, then disperse.
-    // The hold between 0.58 and 0.78 is the whole point — without it the
+    // The hold between 0.58 and 0.78 is the whole point: without it the
     // olive branches are a smear nobody can read.
     float burst = smoothstep(0.00, 0.30, uBang);
     float form  = smoothstep(0.24, 0.58, uBang);
@@ -73,11 +73,11 @@ const VERT = /* glsl */ `
     gl_Position = projectionMatrix * mv;
 
     // Brightness budget. Additive blending over thousands of overlapping
-    // points saturates fast, so these numbers stay low on purpose — the text
+    // points saturates fast, so these numbers stay low on purpose: the text
     // on top of this has to stay readable at every point in the sequence.
     // Riso inks are far more luminous than the navy palette these numbers
     // were first tuned for. The settled galaxy in particular has to sit well
-    // under the cards it appears behind — the emblem is the only beat that
+    // under the cards it appears behind: the emblem is the only beat that
     // earns real brightness.
     float flash = exp(-pow((uBang - 0.26) * 11.0, 2.0));
     vAlpha = mix(0.15, 0.24, toGal) + flash * 0.22 + emblemHold * 0.32;

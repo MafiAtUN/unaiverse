@@ -229,7 +229,7 @@ function StickyRail({
 
       <style>{`
         /*  Keyed on the year, so React remounts the node and the animation
-            re-runs only when the year genuinely changes — not on every section. */
+            re-runs only when the year genuinely changes, not on every section. */
         .story-year { animation: year-in 420ms cubic-bezier(0.16,1,0.3,1) both; }
         @keyframes year-in {
           from { opacity: 0; transform: translateY(0.35em); }

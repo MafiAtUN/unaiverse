@@ -263,8 +263,8 @@ export function buildTimelineData(all: Milestone[]): { data: TLData; report: Bui
         headline: SITE.name,
         text:
           `<p class="tl-un-lede">${escapeHtml(SITE.tagline)}</p>` +
-          `<p>For roughly 77 years the United Nations was busy with minor side quests — ` +
-          `peace, human rights, development — and mentioned artificial intelligence ` +
+          `<p>For roughly 77 years the United Nations was busy with minor side quests ` +
+          `(peace, human rights, development) and mentioned artificial intelligence ` +
           `approximately never. Then a chatbot launched in November 2022. Here are ` +
           `${events.length} milestones of what happened next, every one sourced to the ` +
           `original document.</p>` +

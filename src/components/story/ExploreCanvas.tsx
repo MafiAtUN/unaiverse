@@ -355,7 +355,7 @@ export function ExploreCanvas({
       <style>{`
         /* Soft snapping: the axis stays free to scrub, but releasing near a
            stem settles onto it. "proximity" rather than "mandatory" is the
-           whole point — mandatory would make dragging past a dense year feel
+           whole point: mandatory would make dragging past a dense year feel
            like it was fighting back. */
         .explore-scroller { scroll-snap-type: x proximity; scrollbar-width: thin; }
         .explore-scroller [data-stem-hit] { scroll-snap-align: center; }
