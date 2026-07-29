@@ -1,52 +1,56 @@
-/* Design tokens — plan §7. The six palette values are fixed and must not drift;
-   everything else is derived from them. */
+/* Design tokens.
+   Palette per DESIGN.md option B (Riso), which supersedes plan §7. The five
+   ink values are fixed; everything else derives from them. */
 
 :root {
-  /* ── Palette (plan §7, verbatim) ────────────────────────────────── */
-  --void: #070b1a; /* deep space navy — background */
-  --un-blue: #009edb; /* official UN blue — node glow, primary accent */
-  --assembly-gold: #c9a227; /* the GA hall's gold emblem wall */
-  --olive: #7a8b5c; /* the olive branches — success, hope */
-  --paper: #f5f1e6; /* aged resolution paper — reading surfaces */
-  --signal: #ff6b4a; /* A/BOT's colour. Sparingly. */
+  /* ── Palette ─────────────────────────────────────────────────────
+     Risograph: two or three saturated spot inks on cheap stock. Chosen over
+     the plan §7 palette because navy + electric blue + coral + cream is the
+     house style of every AI product page since 2023 — see DESIGN.md.
+
+     The official UN blue is deliberately gone. This site is explicitly
+     unofficial; borrowing less of the Organization's visual identity is more
+     correct, not less. */
+  --ink-black: #101011; /* neutral, not navy — no blue cast anywhere */
+  --newsprint: #f1eee4; /* cool stock, not warm parchment */
+  --riso-pink: #ff5fa8; /* fluorescent pink — the loud one */
+  --riso-green: #2fbf74; /* bottle green — structure, "why it matters" */
+  --riso-yellow: #f5d020; /* the brightest thing on the page */
 
   /* ── Space surfaces: everything outside a reading panel ─────────── */
-  --void-raised: #0d1428;
-  --void-panel: #111a33;
-  --void-deep: #04060f;
-  --hairline: rgb(245 241 230 / 0.14);
-  --hairline-strong: rgb(245 241 230 / 0.28);
-  --ink: var(--paper);
-  --ink-dim: rgb(245 241 230 / 0.72);
-  --ink-faint: rgb(245 241 230 / 0.5);
+  --void: var(--ink-black);
+  --void-raised: #1a1a1c;
+  --void-panel: #232326;
+  --void-deep: #0a0a0b;
+  --hairline: rgb(241 238 228 / 0.16);
+  --hairline-strong: rgb(241 238 228 / 0.32);
+  --ink: var(--newsprint);
+  --ink-dim: rgb(241 238 228 / 0.74);
+  --ink-faint: rgb(241 238 228 / 0.56);
 
   /* ── Paper surfaces: the reading panels ─────────────────────────────
-     §7 is specific — long-form text sits on paper "so reading feels like
-     documents, not terminals". Ink is a deep navy-black pulled from --void,
-     never pure black: paper printed in the same universe as the sky. */
-  --paper-ink: #131829;
-  --paper-ink-dim: rgb(19 24 41 / 0.76);
-  /* 0.62 rather than a prettier 0.56: this token carries 12px labels, and
-     anything lighter drops under 4.5:1 on --paper-sunk. Fixed at the token
-     so no future use of it can reintroduce the problem. */
-  --paper-ink-faint: rgb(19 24 41 / 0.62);
-  --paper-hairline: rgb(19 24 41 / 0.14);
-  --paper-hairline-strong: rgb(19 24 41 / 0.26);
-  --paper-sunk: #ebe5d6; /* a shade deeper — insets, quiet blocks */
-  --paper-edge: #ded6c2;
+     §7's best idea survives the repaint: long-form text sits on stock, so
+     reading feels like documents rather than terminals. */
+  --paper: var(--newsprint);
+  --paper-ink: #141416;
+  --paper-ink-dim: rgb(20 20 22 / 0.76);
+  --paper-ink-faint: rgb(20 20 22 / 0.62);
+  --paper-hairline: rgb(20 20 22 / 0.16);
+  --paper-hairline-strong: rgb(20 20 22 / 0.3);
+  --paper-sunk: #e5e1d4;
+  --paper-edge: #d8d3c3;
 
-  /* On-paper accents, darkened to clear WCAG AA on BOTH paper surfaces —
-     --paper and the deeper --paper-sunk that take cards sit on. The blue is
-     the tightest case because it carries small uppercase beat labels. */
-  --blue-on-paper: #0a6488;
-  --gold-on-paper: #7d6414;
-  --olive-on-paper: #4c5a33;
-  --signal-on-paper: #b83c1d;
+  /* On-stock variants. A fluorescent ink that reads on screen is unreadable
+     on paper at 12px, so each accent has a darkened print-weight twin. */
+  --pink-on-paper: #b01a63;
+  --green-on-paper: #146b3f;
+  --yellow-on-paper: #6b5a05;
 
   /* ── Tier accents ───────────────────────────────────────────────── */
-  --tier-1: var(--assembly-gold);
-  --tier-2: var(--un-blue);
-  --tier-3: var(--olive);
+  --tier-1: var(--riso-yellow); /* Supernova */
+  --tier-2: var(--riso-pink); /* Star      */
+  --tier-3: var(--riso-green); /* Stardust  */
+  --signal: var(--riso-pink); /* A/BOT     */
 
   /* ── Type ───────────────────────────────────────────────────────── */
   --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
@@ -88,10 +92,12 @@
   --dur: 240ms;
   --dur-slow: 480ms;
 
-  /* Glows. Phase 4's Big Bang gets the animation budget; these stay cheap. */
-  --glow-gold: 0 0 24px 2px rgb(201 162 39 / 0.45);
-  --glow-blue: 0 0 16px 1px rgb(0 158 219 / 0.4);
-  --shadow-panel: 0 18px 50px -12px rgb(2 4 10 / 0.85);
+  /* Rings, not glows. A soft neon halo is the second-most recognisable
+     "AI product" tell after gradient headline text; a hard ring reads as
+     printed. The Big Bang still gets real light — that is earned. */
+  --ring-1: 0 0 0 1px rgb(245 208 32 / 0.55);
+  --ring-2: 0 0 0 1px rgb(255 95 168 / 0.5);
+  --shadow-panel: 0 18px 50px -12px rgb(6 6 7 / 0.85);
 }
 
 /* Reduced motion is a first-class experience, not a punishment (plan §7).

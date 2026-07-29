@@ -1,7 +1,11 @@
 # DESIGN — getting out of the default AI look
 
-**Status:** proposal. Nothing here is implemented yet — pick an option and it becomes a token swap.
-**Supersedes:** `UN_AI_TIMELINE_PLAN.md` §7 palette (see [What this costs](#what-this-costs) before deciding).
+**Status: DECIDED AND SHIPPED — Option B (Riso).** Mafi chose the vibrant direction and
+dropped the UN blue outright rather than demoting it: the site is explicitly unofficial,
+so borrowing the Organization's colour was never load-bearing. The §5 non-colour fixes
+went in the same pass.
+
+**Supersedes:** `UN_AI_TIMELINE_PLAN.md` §7 palette in full.
 
 ![Three palettes compared against the current one](docs/palettes.png)
 
@@ -49,7 +53,7 @@ Whatever we pick has to keep clearing the bars already met, because they were ex
 
 Contrast figures are computed with the WCAG 2.x formula against the exact surface each token is used on. Full audit: `scripts/palette-audit.py`.
 
-### Option A — Foxed Paper ★ recommended
+### Option A — Foxed Paper *(was recommended; not taken)*
 
 *Bottle-green black · foxed bone · brass · moss · plum*
 
@@ -89,7 +93,7 @@ A naturalist's field guide left in a drawer for forty years. The ground is black
 
 ---
 
-### Option B — Riso
+### Option B — Riso ✅ ADOPTED
 
 *Ink black · newsprint · fluorescent pink · riso green · riso yellow*
 
@@ -200,12 +204,26 @@ Roughly an hour, including re-verification. No content changes, no component rew
 
 ---
 
-## 7. Recommendation
+## 7. What shipped
 
-**Option A, with UN blue demoted to a citation colour.**
+**Option B (Riso), UN blue dropped, §5 fixes applied.**
 
-It is distinctive without being costume, it makes the Big Bang's olive branches finally make sense, it keeps a real institutional signal where that signal is doing honest work, and it survives being screenshotted into a Teams channel next to a resolution symbol.
+Notes from the implementation, for whoever touches this next:
 
-If you want a harder break and are comfortable with the tonal risk, take B — it is the more memorable of the two, and the contrast margins are the healthiest of any option here.
+- **The galaxy needed retuning, not just recolouring.** Riso inks are far more
+  luminous than the navy palette the shader's brightness budget was written for. A
+  straight colour swap left a pink nebula sitting on top of the reading cards. The
+  settled-galaxy alpha came down from 0.46 to 0.24 and the canvas ceiling from 0.78
+  to 0.6.
+- **The olive branches are green now**, which is what made the whole decision worth
+  it. `uWarm` — the emblem and detonation colour — is riso green, so the wreath that
+  forms at the Big Bang reads as olive rather than as generic light.
+- **One new contrast failure surfaced**: `.chip__count` was using `opacity: 0.6`
+  compounded on already-dimmed text, which landed at 4.0:1 on the darker ground. Now
+  an explicit `--ink-faint`. Opacity-on-dimmed-colour is a trap worth remembering.
+- **Verified after the swap**: 108 palette pairings clear AA, axe-core reports zero
+  violations across all eight states, Lighthouse unchanged at 97 mobile / 100 desktop
+  with LCP 2.1s and 0.5s.
 
-Tell me which, and whether you want the §5 non-colour fixes in the same pass.
+Option A remains fully specified above if the pink ever proves too loud in practice —
+it is a token swap plus three shader constants.

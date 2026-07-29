@@ -75,21 +75,25 @@ const VERT = /* glsl */ `
     // Brightness budget. Additive blending over thousands of overlapping
     // points saturates fast, so these numbers stay low on purpose — the text
     // on top of this has to stay readable at every point in the sequence.
+    // Riso inks are far more luminous than the navy palette these numbers
+    // were first tuned for. The settled galaxy in particular has to sit well
+    // under the cards it appears behind — the emblem is the only beat that
+    // earns real brightness.
     float flash = exp(-pow((uBang - 0.26) * 11.0, 2.0));
-    vAlpha = mix(0.22, 0.46, toGal) + flash * 0.26 + emblemHold * 0.34;
+    vAlpha = mix(0.15, 0.24, toGal) + flash * 0.22 + emblemHold * 0.32;
     vAlpha *= smoothstep(140.0, 8.0, -mv.z);
     vHeat = clamp(emblemHold * 0.8 + flash * 0.9, 0.0, 1.0);
 
-    gl_PointSize = aScale * uPixelRatio * (1.0 + flash * 0.7) * (215.0 / -mv.z);
+    gl_PointSize = aScale * uPixelRatio * (1.0 + flash * 0.7) * (190.0 / -mv.z);
   }
 `;
 
 const FRAG = /* glsl */ `
   precision mediump float;
 
-  uniform vec3 uCool;   // UN blue
-  uniform vec3 uWarm;   // assembly gold
-  uniform vec3 uPaper;
+  uniform vec3 uCool;   // settled galaxy
+  uniform vec3 uWarm;   // detonation + olive branches
+  uniform vec3 uPaper;  // the flash
 
   varying float vAlpha;
   varying float vHeat;
@@ -237,9 +241,11 @@ export function createGalaxy(canvas: HTMLCanvasElement, count: number): Galaxy {
     uTime: { value: 0 },
     uDrift: { value: 0 },
     uPixelRatio: { value: pixelRatio },
-    uCool: { value: new THREE.Color('#009edb') },
-    uWarm: { value: new THREE.Color('#c9a227') },
-    uPaper: { value: new THREE.Color('#f5f1e6') },
+    // Green on the emblem is not decoration: the particles form the UN's
+    // olive branches, and a green wreath is the entire point of that beat.
+    uCool: { value: new THREE.Color('#ff5fa8') }, // riso pink galaxy
+    uWarm: { value: new THREE.Color('#2fbf74') }, // riso green olive branches
+    uPaper: { value: new THREE.Color('#f5d020') }, // riso yellow at the flash
   };
 
   const material = new THREE.ShaderMaterial({
