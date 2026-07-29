@@ -174,7 +174,10 @@ export function buildTimelineDataset(all: Milestone[]): TimelineDataset {
       tierName: TIERS[m.data.tier].name,
       badges: m.data.badges,
       personas: m.data.personas,
-      symbol: m.data.symbol,
+      // Seven files carry "No single document symbol" as a placeholder meaning
+      // there isn't one. Rendering that as a symbol produces a chip that says
+      // an event has a symbol whose value is the words "no symbol".
+      symbol: /^no single document symbol$/i.test(m.data.symbol ?? '') ? null : m.data.symbol,
 
       tldr: m.data.tldr ?? null,
       body,
