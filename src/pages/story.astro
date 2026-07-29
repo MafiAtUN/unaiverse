@@ -1,0 +1,117 @@
+---
+/**
+ * /story — the hand-built timeline.
+ *
+ * The page itself is a shell: it loads the corpus, hands it to the React island
+ * as plain JSON, and gets out of the way. No component below this line knows
+ * about `astro:content`, which is what keeps the timeline portable.
+ *
+ * Deliberately not on Base.astro. That layout pulls in global.css, whose
+ * element-level rules were written for the galaxy and would fight Tailwind's
+ * preflight. This page loads the tokens and the fonts and nothing else.
+ */
+import { getCollection } from 'astro:content';
+import Story from '../components/story/Story';
+import { buildTimelineDataset } from '../lib/timeline-data';
+import { SITE } from '../lib/taxonomy';
+import '../styles/story.css';
+
+const data = buildTimelineDataset(await getCollection('milestones'));
+
+console.log(
+  `[unaiverse] /story — ${data.events.length} events · ` +
+    `${data.events.filter((e) => e.end).length} spans · ${data.zones.length} zones`,
+);
+
+const base = import.meta.env.BASE_URL;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const title = `Story — ${SITE.name}`;
+const description = `All ${data.events.length} UN artificial-intelligence milestones as an interactive timeline: scrub the decade, filter by constellation, open any milestone for its sources.`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Mafizul Islam" />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#101011" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(`${base}/og.png`.replace(/\/+/g, '/'), Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href={`${base}/favicon.svg`.replace(/\/+/g, '/')} type="image/svg+xml" />
+  </head>
+
+  <body>
+    {/*  client:only rather than client:load, and deliberately.
+
+        Every piece of this island's state is read from the URL — which event is
+        open, the search terms, the active filters. Server-rendering it means
+        rendering the state of a URL with no query string, so a deep link like
+        `?event=2024-pact…` hydrates against markup that has no drawer in it and
+        React tears the tree down (error #418).
+
+        Nothing is lost by skipping SSR here: the canvas measures its own
+        viewport before it can draw anything, so the server had no real output
+        to give. Crawlers and readers without JavaScript get the list below,
+        which is the whole corpus in plain HTML. */}
+    <Story client:only="react" data={data} base={base} />
+
+    <noscript>
+      <div class="ns">
+        <h1>UNAIVERSE — the timeline</h1>
+        <p>
+          The interactive timeline needs JavaScript. Every milestone is listed below, and the{' '}
+          <a href={base}>main page</a> carries all {data.events.length} of them with their sources
+          and reader takes — it works without JavaScript.
+        </p>
+        <ol>
+          {
+            data.events.map((e) => (
+              <li>
+                <span class="ns-date">{e.dateDisplay}</span>
+                <a href={`${base}#${e.id}`.replace(/\/+#/, '/#')}>{e.title}</a>
+                {e.why && <span class="ns-why">{e.why}</span>}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </noscript>
+
+    <style is:global>
+      .ns {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 3rem 1.5rem;
+        color: #f1eee4;
+        font-family: 'Inter Variable', system-ui, sans-serif;
+      }
+      .ns h1 { font-size: 1.75rem; margin: 0 0 1rem; }
+      .ns p { line-height: 1.7; color: rgb(241 238 228 / 0.74); }
+      .ns ol { margin: 2.5rem 0 0; padding: 0; list-style: none; }
+      .ns li {
+        display: grid;
+        gap: 0.25rem;
+        padding: 1rem 0;
+        border-top: 1px solid rgb(241 238 228 / 0.16);
+      }
+      .ns-date {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.6875rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgb(241 238 228 / 0.56);
+      }
+      .ns a { color: #ff5fa8; font-size: 1.05rem; }
+      .ns-why { color: rgb(241 238 228 / 0.56); font-size: 0.875rem; line-height: 1.6; }
+    </style>
+  </body>
+</html>

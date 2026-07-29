@@ -1,0 +1,97 @@
+/*  Tailwind for /story.
+    ---------------------
+    Scoped to this one page. The galaxy and /timeline keep hand-written CSS and
+    never load any of this.
+
+    The theme below deliberately declares almost no values of its own — it
+    points Tailwind's utility names at the custom properties already defined in
+    tokens.css. `bg-void` resolves to `--ink-black`, `text-pink` to
+    `--riso-pink`. That means the Riso repaint (or the next one) propagates here
+    for free, and there is exactly one palette in the project rather than two
+    that drift. */
+
+@import 'tailwindcss';
+@import './fonts.css';
+@import './tokens.css';
+
+/*  The Vite plugin infers sources from the project root, which misses nothing
+    here, but naming them keeps the scan cheap and the intent explicit. */
+@source '../components/story';
+@source '../pages/story.astro';
+
+@theme {
+  /* ── Surfaces ─────────────────────────────────────────────────── */
+  --color-void: var(--ink-black);
+  --color-void-raised: var(--void-raised);
+  --color-void-panel: var(--void-panel);
+  --color-void-deep: var(--void-deep);
+
+  /* ── Stock (the drawer, and anything meant to read as a document) ── */
+  --color-paper: var(--newsprint);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-paper-edge: var(--paper-edge);
+  --color-paper-ink: var(--paper-ink);
+  --color-paper-ink-dim: var(--paper-ink-dim);
+  --color-paper-ink-faint: var(--paper-ink-faint);
+  --color-paper-hairline: var(--paper-hairline);
+
+  /* ── Ink ──────────────────────────────────────────────────────── */
+  --color-ink: var(--newsprint);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+
+  /* ── Spot inks. Tier maps onto these: 1 yellow, 2 pink, 3 green. ── */
+  --color-pink: var(--riso-pink);
+  --color-green: var(--riso-green);
+  --color-yellow: var(--riso-yellow);
+  --color-pink-print: var(--pink-on-paper);
+  --color-green-print: var(--green-on-paper);
+  --color-yellow-print: var(--yellow-on-paper);
+
+  /*  ── Type ──────────────────────────────────────────────────────
+      Named head/text/code rather than display/body/mono: tokens.css already
+      owns `--font-display` and friends, and a Tailwind theme key of the same
+      name would resolve to itself. */
+  --font-head: var(--font-display);
+  --font-text: var(--font-body);
+  --font-code: var(--font-mono);
+
+  /*  Editorial scale. Deliberately few steps and a large top end — the brief
+      asks for big type, and a short scale is what keeps a page looking set
+      rather than assembled. */
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.14em;
+  --text-lede: clamp(1.125rem, 0.95rem + 0.7vw, 1.5rem);
+  --text-lede--line-height: 1.5;
+  --text-display: clamp(2.25rem, 1.3rem + 4vw, 4.5rem);
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.025em;
+}
+
+/*  Native-feeling scroll. Lenis drives the wheel, but the browser still owns
+    anchor jumps and focus scrolling, and those should not fight it. */
+html {
+  scroll-behavior: auto;
+}
+
+/*  Lenis adds these on the root; without them the wheel handler and the
+    browser both scroll and the page moves twice. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/*  Focus that is visible on ink and on stock, without a per-component rule. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--riso-pink);
+    outline-offset: 2px;
+  }
+}
