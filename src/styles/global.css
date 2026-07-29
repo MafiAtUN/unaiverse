@@ -161,6 +161,79 @@ html.motion-ready .zone__head.is-revealed {
   color: var(--paper-ink);
 }
 
+/* ── Print ────────────────────────────────────────────────────────────
+   People print briefing material. A site built to look like documents
+   should survive being turned back into one: ink on white, every panel
+   open, every source URL spelled out next to its link. */
+@media print {
+  .sky,
+  .abot,
+  .filters,
+  .skip-link,
+  .node__affordance,
+  .hero__zones {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 10.5pt;
+  }
+
+  .hero__title {
+    -webkit-text-fill-color: #000;
+    color: #000 !important;
+    background: none !important;
+  }
+
+  .hero,
+  .zone,
+  .node__shell,
+  .node__paper,
+  .take {
+    background: none !important;
+    border-color: #bbb !important;
+    box-shadow: none !important;
+    color: #000 !important;
+  }
+
+  /* Everything open, nothing faded out by the reveal animation. */
+  .node__paper,
+  [data-node],
+  .zone__head {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .roles__tabs {
+    display: none !important;
+  }
+
+  .roles__panel {
+    display: block !important;
+    margin-bottom: 0.4cm;
+  }
+
+  /* A link is useless on paper unless you can read where it goes. */
+  .node__receipt-list a::after {
+    content: ' (' attr(href) ')';
+    font-size: 8pt;
+    word-break: break-all;
+  }
+
+  .node,
+  .zone__head {
+    break-inside: avoid;
+  }
+
+  .zone {
+    break-before: page;
+  }
+}
+
 /* A faint ruled texture, like a document that has been photocopied once
    too often. Cheap: a single repeating gradient, no image request. */
 .on-paper--ruled {

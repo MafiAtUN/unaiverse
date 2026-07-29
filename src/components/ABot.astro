@@ -29,7 +29,7 @@ const quests = abot.quests.map((q) => ({
 }));
 ---
 
-<div class="abot" data-abot hidden>
+<aside class="abot" aria-label="A/BOT, your guide" data-abot hidden>
   <div class="abot__panel on-paper" id="abot-panel" hidden data-abot-panel>
     <header class="abot__head">
       <div>
@@ -151,7 +151,7 @@ const quests = abot.quests.map((q) => ({
     <span class="abot__face" aria-hidden="true">🤖</span>
     <span class="visually-hidden">Open {abot.intro.name}, your guide</span>
   </button>
-</div>
+</aside>
 
 <script is:inline define:vars={{ GLOSSARY_DATA: GLOSSARY, FACTS: abot.facts }}>
   window.__ABOT__ = { glossary: GLOSSARY_DATA, facts: FACTS };
@@ -255,7 +255,8 @@ const quests = abot.quests.map((q) => ({
     margin: 0;
     max-width: none;
     font-size: var(--step--2);
-    color: var(--paper-ink-faint);
+    /* --paper-ink-faint is under 4.5:1 at this size; dim clears it at 7.6:1 */
+    color: var(--paper-ink-dim);
   }
 
   .abot__close {
@@ -292,7 +293,7 @@ const quests = abot.quests.map((q) => ({
     background: none;
     font: inherit;
     font-size: var(--step--1);
-    color: var(--paper-ink-faint);
+    color: var(--paper-ink-dim);
     cursor: pointer;
   }
 
@@ -565,7 +566,8 @@ const quests = abot.quests.map((q) => ({
     background: none;
     font: inherit;
     font-size: var(--step--2);
-    color: var(--paper-ink-faint);
+    /* on --paper-sunk, faint falls under 4.5:1 at this size */
+    color: var(--paper-ink-dim);
     cursor: pointer;
   }
 
@@ -574,17 +576,19 @@ const quests = abot.quests.map((q) => ({
     color: var(--signal-on-paper);
   }
 
+  /* Anchored to the right edge only — never stretched with left+right.
+     A fixed element's containing block is the layout viewport, which on a
+     phone can be wider than the visible page; stretching it pushed the
+     button clean off the screen and made A/BOT untappable below 768px. */
   @media (max-width: 40rem) {
     .abot {
       right: var(--sp-3);
       bottom: var(--sp-3);
-      left: var(--sp-3);
-      align-items: flex-end;
     }
 
     .abot__panel {
-      width: 100%;
-      max-height: min(32rem, calc(100vh - 6rem));
+      width: min(23rem, calc(100dvw - 1.5rem));
+      max-height: min(32rem, calc(100dvh - 6rem));
     }
   }
 </style>

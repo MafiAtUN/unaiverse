@@ -22,7 +22,9 @@ const { milestoneId, personas } = Astro.props;
 
 <div class="roles" data-roles>
   <div class="roles__bar">
-    <p class="roles__label">What this means for</p>
+    {/* A real heading, not a styled paragraph: without it the document jumps
+        from the node's h3 straight to each take's h5. */}
+    <h4 class="roles__label">What this means for</h4>
     <div class="roles__tabs" role="tablist" aria-label="Choose your role">
       {
         personas.map((p, i) => {
@@ -71,15 +73,18 @@ const { milestoneId, personas } = Astro.props;
 <style>
   .roles {
     margin-top: var(--sp-5);
+    min-width: 0;
   }
 
   .roles__bar {
     border-bottom: 1px solid var(--paper-hairline);
     margin-bottom: var(--sp-4);
+    min-width: 0;
   }
 
   .roles__label {
     margin: 0 0 var(--sp-2);
+    font-weight: 400;
     font-family: var(--font-mono);
     font-size: var(--step--2);
     letter-spacing: 0.14em;
@@ -96,6 +101,8 @@ const { milestoneId, personas } = Astro.props;
     scrollbar-width: thin;
     padding-bottom: 1px;
     scroll-snap-type: x proximity;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .roles--enhanced .roles__tabs {
@@ -161,13 +168,29 @@ const { milestoneId, personas } = Astro.props;
     }
   }
 
+  /* Narrow screens show only the persona glyph on unselected tabs — but the
+     glyph is aria-hidden, so `display: none` on the label left every tab with
+     no accessible name at all. Clipped instead of removed: invisible to the
+     eye, still announced. */
   @media (max-width: 34rem) {
+    /* Clipped in flow, NOT position:absolute. An absolutely-positioned label
+       with no positioned ancestor escapes the tab strip's overflow container
+       and widens the layout viewport — which on a phone pushed A/BOT's button
+       clean off the right edge of the screen. */
     .roles__tab-text {
-      display: none;
+      display: inline-block;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .roles--enhanced .roles__tab[aria-selected='true'] .roles__tab-text {
-      display: inline;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
     }
 
     .roles__tab-glyph {
