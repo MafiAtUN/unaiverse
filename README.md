@@ -46,6 +46,11 @@ npm run dev      # local, with the content collection watching content/milestone
 npm run build    # static output to dist/
 ```
 
+> **Adding a dependency?** Run `npm run relock` afterwards, not just `npm install <pkg>`.
+> An incremental install on macOS prunes optional dependencies that only resolve on
+> other platforms, and CI's `npm ci` then fails on Linux with `Missing: @emnapi/core`.
+> `relock` regenerates the lockfile from scratch so all ten platforms are recorded.
+
 The build reports what it rendered, which is the quickest way to spot a content problem:
 
 ```text
