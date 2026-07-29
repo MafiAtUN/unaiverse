@@ -2,7 +2,9 @@
 
 **One data nerd's lovingly sarcastic map of the UN's AI universe.**
 
-> Live site: `https://mafiatun.github.io/unaiverse` *(once Phase 2 ships)*
+> **Live:** https://mafiatun.github.io/unaiverse
+>
+> *Currently the Phase 2 skeleton — all 76 milestones with their receipts, rendered as a plain vertical timeline. The galaxy, the Big Bang and A/BOT's dialogue are still in the hangar.*
 
 ## What is this?
 
@@ -27,13 +29,28 @@ All facts are sourced to official UN documents. All jokes are the author's own a
 | `research.md` | The sourced research base (~75 milestones, 2017 – Jul 2026) |
 | `content/milestones/` | One file per milestone, frontmatter carries tier/badges/personas |
 | `content/quotes.md` | Key official quotations, sourced |
-| `content/gaps.md` | Known gaps and open questions from the research pass |
+| `content/gaps.md` | Known gaps and open questions — what Phase 1 closed, and what's still open |
 | `takes_manifest.json` | Every milestone × persona pair awaiting a generated take |
+| `VERIFICATION_LOG.md` | What the Phase 1 accuracy pass checked, found and fixed |
+| `src/` | The site: content collection, timeline, take slots, A/BOT |
+| `src/data/README.md` | How to drop the generated takes in when they're ready |
 
 ## Stack
 
 Astro · Three.js · GSAP · deployed via GitHub Actions to GitHub Pages.
 Reduced-motion and mobile modes are first-class citizens, not afterthoughts.
+
+```bash
+npm install
+npm run dev      # local, with the content collection watching content/milestones
+npm run build    # static output to dist/
+```
+
+The build reports what it rendered, which is the quickest way to spot a content problem:
+
+```text
+[unaiverse] 76 milestones · 156 take slots · 0/156 takes loaded
+```
 
 ---
 
