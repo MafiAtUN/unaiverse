@@ -30,7 +30,17 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm ci
+        # `npm ci` is the strict path and stays the default. But npm prunes
+        # platform-specific optional deps (@emnapi/*) out of a lockfile written
+        # on macOS, so a Linux `npm ci` fails on a lockfile that is otherwise
+        # perfectly correct. That has blocked this deploy three times. Fall back
+        # rather than lose a deploy to a known npm quirk — and shout about it,
+        # so a genuine drift still gets noticed and fixed with `npm run relock`.
+        run: |
+          npm ci || {
+            echo "::warning::npm ci failed — lockfile likely missing platform-specific optional deps. Falling back to npm install. Run 'npm run relock' locally and commit the result."
+            npm install --no-audit --no-fund
+          }
 
       - name: Build
         run: npm run build
