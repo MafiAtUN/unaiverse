@@ -10,6 +10,11 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["itu"]
+recurs:
+  cadence: "Annual, in Geneva, convened by ITU with UN system partners."
+  next: "The 2027 edition had not been announced when this was compiled."
 media:
   url: "/media/2026-ai-for-good-global-summit-2026.jpg"
   caption: "AI for Good Global Summit 2026, Palexpo, Geneva, 10 July 2026."

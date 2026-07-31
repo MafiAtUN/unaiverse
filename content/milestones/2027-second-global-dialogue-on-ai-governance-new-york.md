@@ -10,6 +10,8 @@ tier: 2
 badges: ["UPCOMING"]
 personas: ["opga", "missions", "front-office"]
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 The second Global Dialogue is confirmed for May 2027 in New York. It is expected to receive the Panel’s next annual assessment and continue discussion of safe and trustworthy AI, capacity-building, interoperability and inclusion. Exact dates, programme, venue and co-chairs had not been publicly confirmed as of 28 July 2026.

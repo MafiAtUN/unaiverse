@@ -10,6 +10,8 @@ tier: 2
 badges: ["FIRST-EVER"]
 personas: ["peace-security", "human-rights", "front-office"]
 unverified: false
+venue: ["new-york", "geneva"]
+organ: ["secretariat"]
 ---
 
 The Secretary-General and the President of the International Committee of the Red Cross jointly called on States to negotiate a legally binding instrument establishing prohibitions and restrictions on autonomous weapons systems and to conclude negotiations by 2026. They called for prohibiting unpredictable systems and systems designed or used to apply force against persons, while regulating other systems through limits and meaningful human control.

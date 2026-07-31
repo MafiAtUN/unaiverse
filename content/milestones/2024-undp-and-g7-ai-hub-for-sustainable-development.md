@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["rome", "new-york"]
+organ: ["agency"]
 ---
 
 UNDP worked with the Italian G7 presidency on an AI Hub for Sustainable Development, initially focused on African ecosystems. The initiative maps needs and opportunities and aims to support partnerships, local innovation, skills, responsible governance and access to resources. It reflects the capacity-building priorities later emphasized in General Assembly resolutions.

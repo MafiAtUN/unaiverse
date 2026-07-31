@@ -10,6 +10,8 @@ tier: 3
 badges: ["INTERNAL"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat"]
 ---
 
 Relevant structures include the Scientific Advisory Board, ODET, the UN 2.0 network, the former High-level Advisory Body on AI and the Independent International Scientific Panel. Their roles are different: internal strategic advice, Secretariat coordination, organizational transformation, time-limited policy recommendations and independent scientific assessment. They should not be presented as a single hierarchy.

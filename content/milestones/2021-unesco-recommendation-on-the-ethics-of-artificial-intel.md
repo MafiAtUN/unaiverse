@@ -10,6 +10,8 @@ tier: 1
 badges: ["FIRST-EVER", "CONSENSUS"]
 personas: ["peace-security", "development", "human-rights", "data-digital", "front-office", "opga", "builders", "missions"]
 unverified: false
+venue: ["paris"]
+organ: ["unesco"]
 ---
 
 UNESCO’s General Conference adopted the Recommendation on the Ethics of Artificial Intelligence at its forty-first session. UNESCO describes it as the first global normative instrument on AI ethics and states that it was adopted by its 193 Member States. The Recommendation covers human rights, dignity, fairness, transparency, accountability, privacy, data governance, education, labour, culture, health, the environment and international cooperation. It also calls for implementation tools, national reporting and institutional capacity.

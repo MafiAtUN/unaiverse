@@ -10,6 +10,11 @@ tier: 2
 badges: ["ONGOING TRACK"]
 personas: ["peace-security", "human-rights", "missions"]
 unverified: false
+venue: ["geneva"]
+organ: ["ccw"]
+recurs:
+  cadence: "The Group of Governmental Experts meets in sessions through the year in Geneva, under the Convention on Certain Conventional Weapons."
+  next: "Session dates are set by the CCW meeting calendar rather than by any AI process."
 ---
 
 States Parties to the Convention on Certain Conventional Weapons began informal expert discussions on lethal autonomous weapons systems in 2014. A formal Group of Governmental Experts was established in 2016 and began meeting in 2017. The GGE works by consensus and has agreed guiding principles, including that international humanitarian law applies fully and that human responsibility for decisions on weapon use must be retained.

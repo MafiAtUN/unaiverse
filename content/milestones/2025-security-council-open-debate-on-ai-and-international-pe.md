@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["security-council"]
 ---
 
 The Republic of Korea convened an open debate on AI and international peace and security during its Security Council presidency. It was the Council’s 10005th meeting, and it continued over two resumptions. The meeting examined conflict prevention, military uses, human oversight, disinformation, cyber threats, international law and inequality in access to AI capabilities.

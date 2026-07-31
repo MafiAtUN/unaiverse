@@ -10,6 +10,8 @@ tier: 2
 badges: ["ONGOING TRACK"]
 personas: ["peace-security", "builders", "development"]
 unverified: false
+venue: ["geneva", "new-york"]
+organ: ["agency"]
 ---
 
 OCHA’s Centre for Humanitarian Data supports responsible data management, predictive analytics and model-related risk management in humanitarian settings. OCHA also supports anticipatory action based on forecasts and predefined triggers. The data-responsibility framework is public; a single consolidated public OCHA policy governing all generative-AI use was not found in the public record as of 28 July 2026.

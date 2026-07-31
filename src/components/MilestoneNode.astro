@@ -1,7 +1,14 @@
 ---
 import { parseMilestoneBody } from '../lib/milestone';
 import { markupFactual } from '../lib/glossary';
-import { BADGE_KIND, CONSTELLATIONS, TIERS } from '../lib/taxonomy';
+import { buildBrief } from '../lib/brief';
+import {
+  BADGE_KIND,
+  CONSTELLATIONS,
+  ORGAN_BY_ID,
+  TIERS,
+  VENUE_BY_ID,
+} from '../lib/taxonomy';
 import RoleToggle from './RoleToggle.astro';
 
 interface Props {
@@ -15,6 +22,8 @@ interface Props {
     badges: string[];
     personas: string[];
     unverified: boolean;
+    venue: string[];
+    organ: string[];
     tldr?: string;
     quote?: { text: string; attribution: string; url?: string };
   };
@@ -25,6 +34,42 @@ const { id, data, body } = Astro.props;
 const { factual, receipts, why } = parseMilestoneBody(body);
 const tier = TIERS[data.tier];
 const constellation = CONSTELLATIONS[data.constellation];
+
+const venues = data.venue.map((v) => VENUE_BY_ID.get(v)).filter((v) => v !== undefined);
+const organs = data.organ.map((o) => ORGAN_BY_ID.get(o)).filter((o) => o !== undefined);
+
+// The static half of the briefing note. The client script bolts on whichever
+// take is selected and copies the result — see the script at the foot of this
+// file. Built here so the formatting lives in one place, in TypeScript.
+const nodeUrl = new URL(
+  `${import.meta.env.BASE_URL}/#${id}`.replace(/\/+/g, '/'),
+  Astro.site,
+).href;
+const brief = buildBrief({
+  id,
+  title: data.title,
+  dateDisplay: data.date_display,
+  symbol: data.symbol,
+  badges: data.badges,
+  venue: data.venue,
+  organ: data.organ,
+  body,
+  url: nodeUrl,
+});
+
+// The symbol without its separators, so a search for "79/325" or "79325"
+// finds A/RES/79/325. Delegates type symbols from memory, rarely in full.
+const searchBlob = [
+  data.title,
+  data.date_display,
+  data.symbol ?? '',
+  (data.symbol ?? '').replace(/[^A-Za-z0-9]/g, ''),
+  ...venues.map((v) => v.label),
+  ...organs.map((o) => o.label),
+  ...data.badges,
+]
+  .join(' ')
+  .toLowerCase();
 
 // Supernovas open by default — they carry the narrative. Stars and Stardust
 // stay closed so 76 nodes remain scannable in one scroll.
@@ -40,6 +85,9 @@ const { html: factualHtml } = markupFactual(factual);
   id={id}
   data-tier={data.tier}
   data-constellation={data.constellation}
+  data-venue={data.venue.join(' ')}
+  data-organ={data.organ.join(' ')}
+  data-search={searchBlob}
   data-node
 >
   <div class="node__marker" aria-hidden="true">
@@ -74,6 +122,21 @@ const { html: factualHtml } = markupFactual(factual);
           data.badges.map((b) => (
             <span class="tag tag--badge" data-kind={BADGE_KIND[b] ?? 'process'}>
               {b}
+            </span>
+          ))
+        }
+        {
+          venues.map((v) => (
+            <span class="tag tag--venue" title={`Duty station: ${v.label}`}>
+              {v.label}
+            </span>
+          ))
+        }
+        {
+          organs.map((o) => (
+            <span class="tag tag--organ">
+              <span aria-hidden="true">{o.glyph}</span>
+              {o.label}
             </span>
           ))
         }
@@ -151,6 +214,19 @@ const { html: factualHtml } = markupFactual(factual);
           </section>
         )
       }
+
+      {/* The note is assembled at build time and parked here as data. The
+          button is added by script, so a reader with no JS never sees a
+          control that cannot work. */}
+      <script type="application/json" data-brief set:html={JSON.stringify(brief)} />
+      <div class="node__tools" data-brief-tools hidden>
+        <button type="button" class="node__tool" data-copy-brief>
+          Copy briefing note
+        </button>
+        <p class="node__tool-note">
+          Plain text: the facts, the selected take, and every source URL.
+        </p>
+      </div>
     </div>
   </details>
 </article>
@@ -356,6 +432,73 @@ const { html: factualHtml } = markupFactual(factual);
   .tag--takes {
     border-style: dashed;
     color: var(--ink-faint);
+  }
+
+  /* Duty station reads as a stamp, not a chip — it is a fact about where the
+     file sits, and a delegate scanning for "Geneva" should find it fast. */
+  .tag--venue {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-color: rgb(47 191 116 / 0.45);
+    color: var(--riso-green);
+  }
+
+  .tag--organ {
+    border-style: dotted;
+    border-color: var(--hairline-strong);
+  }
+
+  /* ── Briefing note ──────────────────────────────────────────────── */
+  .node__tools {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-3);
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--paper-hairline);
+  }
+
+  .node__tools[hidden] {
+    display: none;
+  }
+
+  .node__tool {
+    padding: 0.4em 1em;
+    border: 1px solid var(--pink-on-paper);
+    border-radius: var(--radius-sm);
+    background: var(--paper);
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--pink-on-paper);
+    cursor: pointer;
+    transition:
+      background var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .node__tool:hover {
+    background: var(--pink-on-paper);
+    color: var(--paper);
+  }
+
+  .node__tool[data-state='copied'] {
+    border-color: var(--riso-green-on-paper);
+    background: var(--riso-green-on-paper);
+    color: var(--paper);
+  }
+
+  .node__tool[data-state='failed'] {
+    border-color: var(--riso-green-on-paper);
+    color: var(--paper-ink);
+  }
+
+  .node__tool-note {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
   }
 
   /* ── Open/close affordance ──────────────────────────────────────── */
@@ -577,6 +720,19 @@ const { html: factualHtml } = markupFactual(factual);
     background: var(--paper-sunk);
   }
 
+  @media (pointer: coarse) {
+    .node__tool {
+      min-height: 44px;
+    }
+  }
+
+  /* The tools are a screen affordance. On paper the note IS the page. */
+  @media print {
+    .node__tools {
+      display: none !important;
+    }
+  }
+
   @media (max-width: 40rem) {
     .node {
       padding-left: var(--sp-5);
@@ -596,3 +752,86 @@ const { html: factualHtml } = markupFactual(factual);
     }
   }
 </style>
+
+<script>
+  /**
+   * "Copy briefing note" — the request every one of these nodes eventually
+   * generates, answered in one click.
+   *
+   * The static half of the note was built at build time (lib/brief.ts). The
+   * only thing decided here is which take to include: whichever the reader has
+   * open, read straight from the DOM so the copy always matches the screen.
+   */
+  type BriefParts = { head: string; body: string; tail: string };
+
+  /** The take on screen — the selected tab, or the first if tabs never ran. */
+  function selectedTake(node: HTMLElement): string {
+    const panels = Array.from(node.querySelectorAll<HTMLElement>('[data-role-panel]'));
+    const shown = panels.find((p) => !p.hidden) ?? panels[0];
+    if (!shown) return '';
+
+    const who = shown.querySelector('.take__who')?.textContent?.trim();
+    const beats = Array.from(shown.querySelectorAll<HTMLElement>('.take__beat'))
+      .map((beat) => {
+        const label = beat.querySelector('dt')?.textContent?.trim();
+        const value = beat.querySelector('dd')?.textContent?.trim();
+        return label && value ? `${label}: ${value}` : null;
+      })
+      .filter((line): line is string => line !== null);
+
+    if (!beats.length) return '';
+    return [`FOR ${(who ?? 'this desk').toUpperCase()}`, ...beats].join('\n');
+  }
+
+  async function copy(text: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // Clipboard API needs a secure context and a permission that some
+      // managed desktops withhold. Fall back to a selection the reader can
+      // copy by hand rather than failing silently.
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(area);
+      area.select();
+      const ok = document.execCommand?.('copy') ?? false;
+      area.remove();
+      return ok;
+    }
+  }
+
+  for (const tools of document.querySelectorAll<HTMLElement>('[data-brief-tools]')) {
+    const node = tools.closest<HTMLElement>('[data-node]');
+    const payload = node?.querySelector<HTMLScriptElement>('script[data-brief]');
+    const button = tools.querySelector<HTMLButtonElement>('[data-copy-brief]');
+    if (!node || !payload?.textContent || !button) continue;
+
+    let parts: BriefParts;
+    try {
+      parts = JSON.parse(payload.textContent);
+    } catch {
+      continue; // a malformed payload should cost the reader nothing
+    }
+
+    tools.hidden = false;
+
+    button.addEventListener('click', async () => {
+      const take = selectedTake(node);
+      const note = [parts.head, '', parts.body, ...(take ? ['', take] : []), '', parts.tail].join(
+        '\n',
+      );
+
+      const ok = await copy(note);
+      const label = button.textContent;
+      button.dataset.state = ok ? 'copied' : 'failed';
+      button.textContent = ok ? 'Copied' : 'Press Ctrl/Cmd+C';
+      window.setTimeout(() => {
+        delete button.dataset.state;
+        button.textContent = label;
+      }, 2200);
+    });
+  }
+</script>

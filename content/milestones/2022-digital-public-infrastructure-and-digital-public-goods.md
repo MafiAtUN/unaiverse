@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["system-wide"]
+organ: ["secretariat", "agency"]
 ---
 
 UNDP and ODET support safe, inclusive and interoperable digital public infrastructure for identity, payments and data exchange. The Global Digital Compact encourages digital public goods and open-source technologies. ODET has also examined conditions under which AI systems may qualify as digital public goods.

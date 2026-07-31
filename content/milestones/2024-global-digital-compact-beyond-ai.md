@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 The Compact addresses universal connectivity, digital inclusion, digital literacy, human rights online, Internet governance, digital trust and safety, data governance, digital public goods and digital public infrastructure. It reaffirms multi-stakeholder cooperation and links digital transformation to the Sustainable Development Goals. Its scope is explicitly non-military.

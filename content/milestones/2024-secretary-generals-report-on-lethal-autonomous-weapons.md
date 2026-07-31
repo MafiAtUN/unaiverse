@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat", "ga-first-committee"]
 ---
 
 The report compiled submissions from Member States, observer States, international and regional organizations, the ICRC, civil society, academia and industry pursuant to A/RES/78/241. It presents differing views on legal sufficiency, human control, prohibitions, restrictions and the appropriate negotiating forum. The report does not itself establish a negotiated UN position.

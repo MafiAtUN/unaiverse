@@ -10,6 +10,8 @@ tier: 2
 badges: ["FIRST-EVER", "ONGOING TRACK"]
 personas: ["development", "builders", "front-office"]
 unverified: false
+venue: ["geneva"]
+organ: ["itu"]
 media:
   url: "/media/2017-first-ai-for-good-global-summit.jpg"
   caption: "Sophia, the Hanson Robotics humanoid, on stage at the first AI for Good Global Summit, ITU headquarters, Geneva, 8 June 2017."

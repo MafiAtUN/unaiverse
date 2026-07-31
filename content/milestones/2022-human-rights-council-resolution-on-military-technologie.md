@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["human-rights-council"]
 ---
 
 The Human Rights Council requested an expert study on the human-rights implications of new and emerging technologies in the military domain. The work includes AI and autonomous systems and considers the relationship between technological development, international human-rights law and international humanitarian law.

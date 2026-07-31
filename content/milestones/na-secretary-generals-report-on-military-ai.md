@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat", "ga-first-committee"]
 ---
 
 Mandated by resolution 79/239, the Secretary-General submitted a consolidated summary of the views received from Member States and observer States on artificial intelligence in the military domain, with specific focus on areas other than lethal autonomous weapons systems. The report catalogues opportunities, challenges and existing or emerging normative proposals, and annexes the submissions themselves. It was issued to the eightieth session and reissued for technical reasons on 4 February 2026.

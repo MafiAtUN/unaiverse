@@ -10,6 +10,8 @@ tier: 2
 badges: ["CONSENSUS"]
 personas: ["development", "missions", "opga", "builders"]
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 The General Assembly adopted without a vote the China-led resolution *Enhancing international cooperation on capacity-building of artificial intelligence*. The draft was issued as A/78/L.86 and adopted at the ninety-seventh plenary meeting. It calls for cooperation on infrastructure, financing, knowledge-sharing, technical assistance, data, skills and institutional capacity, with particular attention to developing countries.

@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["agency"]
 ---
 
 UNICEF published successive editions of policy guidance on AI and children. The guidance calls for children’s safety, privacy, non-discrimination, transparency, accountability, inclusion, best interests and meaningful participation to be embedded in AI policy and product design. The 2025 edition expands coverage of generative AI, AI companions, environmental impacts, abuse material, supply-chain risks and armed conflict.

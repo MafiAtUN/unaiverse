@@ -10,6 +10,8 @@ tier: 1
 badges: ["FIRST-EVER", "CONSENSUS"]
 personas: ["peace-security", "development", "human-rights", "data-digital", "front-office", "opga", "builders", "missions"]
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 The General Assembly adopted by consensus and without a vote the United States-led resolution *Seizing the opportunities of safe, secure and trustworthy artificial intelligence systems for sustainable development*. The draft was issued as A/78/L.49 and adopted at the Assembly’s sixty-third plenary meeting. The resolution emphasizes international law, human rights, privacy, safety, inclusion and the need to close digital and development divides.

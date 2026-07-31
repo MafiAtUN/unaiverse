@@ -10,6 +10,8 @@ tier: 2
 badges: ["INTERNAL"]
 personas: ["data-digital", "front-office", "builders"]
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat"]
 ---
 
 The Office of the Secretary-General’s Envoy on Technology transitioned into the United Nations Office for Digital and Emerging Technologies. ODET supports implementation and follow-up of the Global Digital Compact and coordinates work on AI governance, connectivity, digital inclusion, data governance, digital public infrastructure and emerging technologies. The Office also provides substantive and secretariat support to the UN’s new AI governance mechanisms.

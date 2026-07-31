@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["elsewhere"]
+organ: ["secretariat"]
 ---
 
 ODET launched the AI Governance for Humanity Lab in Valencia, Spain. The Lab is intended to support applied policy research, experimentation, capacity-building and inclusive multi-stakeholder dialogue. It advances recommendations from the Advisory Body’s final report and complements the Scientific Panel and Global Dialogue.

@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["agency"]
 ---
 
 UNHCR published an organizational approach to AI covering refugee protection, assistance, policy, emergency response and internal efficiency. It emphasizes human oversight, safety, accountability, humanitarian principles, participation, data protection and procedural fairness. It also addresses information integrity and the risks of bias or exclusion affecting refugees, asylum-seekers and stateless people.

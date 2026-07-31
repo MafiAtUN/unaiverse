@@ -10,6 +10,8 @@ tier: 3
 badges: ["INTERNAL"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat"]
 ---
 
 OICT supports enterprise platforms, cloud services, cybersecurity, analytics and digital innovation across the Secretariat. An OIOS evaluation of digital transformation reported a large, decentralized portfolio of digital initiatives across Secretariat entities, including some involving advanced analytics and AI. A complete public register of AI systems, models, vendors, risk classifications and impact assessments was not located.

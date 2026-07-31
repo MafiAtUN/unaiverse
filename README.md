@@ -12,6 +12,18 @@ For roughly 77 years, the United Nations was busy with minor side quests (peace,
 
 UNAIVERSE is an interactive, fly-through galaxy of everything the UN has done about AI since: every resolution, report, summit, panel, and robot press conference, each one a glowing node with links to the original documents (*receipts included*), a plain-language TL;DR, and tailored takes for eight kinds of UN reader, from Security Council watchers to the person who has to write the briefing note by 6pm.
 
+It is also meant to be *usable on a Tuesday*, which is why it ships:
+
+| Page | For |
+|---|---|
+| `/` | The timeline. Search by document symbol, filter by duty station and body, copy any milestone as a plain-text briefing note. |
+| `/agenda` | What is still to come, with a calendar file to subscribe to, and a ledger of who owes what by when. |
+| `/inherit` | Ten minutes on what exists, for the delegate or colleague who just had the file handed to them with no handover. |
+| `/calendar.ics` | Every scheduled item, importable into Outlook or Google Calendar. Per-event files live at `/calendar/<id>.ics`. |
+| `/rss.xml` | For the office that pipes a feed into a Teams channel. |
+
+Filter state lives in the URL, so a filtered view is a link you can send to a colleague or a capital: [`?venue=geneva`](https://mafiatun.github.io/unaiverse/?venue=geneva) is the Geneva file.
+
 Your guide through the galaxy is **A/BOT** 🤖, a droid with junior-staffer energy and a weakness for acronyms, who explains AI governance through *Star Wars*, Asimov, and the occasional dragon.
 
 All facts are sourced to official UN documents. All jokes are the author's own and aimed strictly at hype and bureaucratic pacing, never at the Organization, its officials, or any Member State.
@@ -34,6 +46,10 @@ All facts are sourced to official UN documents. All jokes are the author's own a
 | `VERIFICATION_LOG.md` | What the Phase 1 accuracy pass checked, found and fixed |
 | `src/` | The site: content collection, timeline, take slots, A/BOT |
 | `src/data/README.md` | How to drop the generated takes in when they're ready |
+| `src/lib/agenda.ts` | The forward view: upcoming events, the mandate ledger, iCalendar output |
+| `src/lib/brief.ts` | Builds the plain-text briefing note behind every "Copy briefing note" button |
+| `src/lib/onboarding.ts` | The authored reading order behind `/inherit`, plus the always-safe citable lines |
+| `scripts/annotate-milestones.mjs` | The hand-written duty-station and body mapping for all 76 milestones |
 
 ## Stack
 
@@ -55,6 +71,35 @@ The build reports what it rendered, which is the quickest way to spot a content 
 
 ```text
 [unaiverse] 76 milestones · 156 take slots · 0/156 takes loaded
+```
+
+### Adding a milestone
+
+Frontmatter carries two fields the filters and the Geneva/New York split depend on:
+
+```yaml
+venue: ["geneva"]        # duty station — see VENUES in src/lib/taxonomy.ts
+organ: ["human-rights-council"]  # owning body — see ORGANS
+```
+
+They are assigned by hand in `scripts/annotate-milestones.mjs`, one line per milestone, because
+where a file sits is an editorial judgement and not something derivable from the prose. Add a
+row there and run `npm run annotate`; `npm run annotate:check` verifies without writing. A
+milestone with neither field still builds, and the build warns that it will never show up in a
+duty-station filter.
+
+If a milestone creates an obligation (a report requested, a body to be appointed, a review to be
+held), add a `mandates:` block and it appears in the ledger at `/agenda` with no code change:
+
+```yaml
+mandates:
+  - what: "Seek views and report to the General Assembly"
+    who: "Secretary-General"
+    due: "Eightieth session"
+    due_sort: 20250930   # plain YYYYMMDD; the prose above is often a session, not a date
+    status: "done"       # done | pending | upcoming — a fact, never a judgement
+    source: "A/RES/79/239"
+    note: "Delivered as A/80/78, 5 June 2025."
 ```
 
 ---

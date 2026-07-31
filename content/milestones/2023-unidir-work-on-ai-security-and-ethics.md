@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["agency"]
 ---
 
 The United Nations Institute for Disarmament Research conducts research and convenes discussions on AI, military applications, strategic stability, human control, testing, assurance, ethics and responsible innovation. Its Security and Technology Programme examines AI together with cyber capabilities, autonomy and other emerging technologies. UNIDIR’s research supports diplomats but does not itself create binding rules.

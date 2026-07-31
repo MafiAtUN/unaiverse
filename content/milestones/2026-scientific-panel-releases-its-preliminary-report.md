@@ -10,6 +10,8 @@ tier: 2
 badges: ["ADVISORY"]
 personas: ["data-digital", "front-office", "development"]
 unverified: false
+venue: ["new-york"]
+organ: ["advisory-body"]
 ---
 
 The Scientific Panel released the *Preliminary Report of the Independent International Scientific Panel on AI: Evidence-based assessment of opportunities, risks and impacts of AI*. The report states that AI capabilities are advancing faster than safeguards and governance capacity and highlights unequal access to compute, data, skills and benefits. The Secretary-General launched the report with co-chairs Yoshua Bengio and Maria Ressa. The official publication is titled a **Preliminary Report**, although some event material referred more generally to the Panel’s first report or annual report.

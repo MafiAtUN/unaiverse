@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY", "ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["who", "itu"]
 ---
 
 WHO, ITU and WIPO established the Global Initiative on AI for Health as a platform for standards, evaluation, governance and implementation. It builds on the earlier ITU-WHO Focus Group on AI for Health. The initiative aims to support countries and stakeholders in evaluating and deploying health AI safely and equitably.

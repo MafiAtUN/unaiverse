@@ -10,6 +10,8 @@ tier: 1
 badges: ["FIRST-EVER"]
 personas: ["peace-security", "development", "human-rights", "data-digital", "front-office", "opga", "builders", "missions"]
 unverified: false
+venue: ["geneva"]
+organ: ["ga-plenary"]
 ---
 
 The inaugural Global Dialogue met at the Palexpo International Convention Centre in Geneva, co-chaired by El Salvador and Estonia. Governments, technology companies, civil society, academia and the technical community discussed the seven themes set out in resolution 79/325: safe, secure and trustworthy AI; capacity-building; social, economic, ethical, cultural, linguistic and technical implications; interoperability of governance approaches; human rights; transparency, accountability and human oversight; and open-source software, open data and open models. Six months of consultations preceded it, drawing more than 1,500 written submissions from every UN regional group. The Scientific Panel presented its Preliminary Report. The Dialogue was a separate UN event from the AI for Good Global Summit, although both were held at Palexpo and their dates overlapped.

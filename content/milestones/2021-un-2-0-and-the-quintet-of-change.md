@@ -10,6 +10,8 @@ tier: 2
 badges: ["INTERNAL", "ONGOING TRACK"]
 personas: ["data-digital", "development", "front-office"]
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat"]
 ---
 
 UN 2.0 groups data, digital, innovation, behavioural science and strategic foresight as the “Quintet of Change.” The initiative is intended to modernize UN capabilities and make programmes more adaptive, evidence-based and future-oriented. AI is treated as part of the digital and data transformation rather than as an isolated reform stream.

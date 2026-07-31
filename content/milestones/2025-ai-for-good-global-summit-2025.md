@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["itu"]
 media:
   url: "/media/2025-ai-for-good-global-summit-2025.jpg"
   caption: "AI for Good Global Summit 2025, Geneva. From ITU's official summit album; the frame predates the 8–11 July programme."

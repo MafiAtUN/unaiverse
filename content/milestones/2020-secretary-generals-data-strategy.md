@@ -10,6 +10,8 @@ tier: 2
 badges: ["INTERNAL"]
 personas: ["data-digital", "builders", "front-office"]
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat"]
 ---
 
 The Secretary-General’s Data Strategy aims to strengthen data governance, capabilities, analytics and responsible data use across the UN. It promotes better decision-making, stronger programme delivery and more effective organizational management. AI adoption in the Secretariat depends on the data governance, quality and skills foundations established by this strategy.

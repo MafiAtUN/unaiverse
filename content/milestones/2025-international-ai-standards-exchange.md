@@ -10,6 +10,8 @@ tier: 2
 badges: ["ONGOING TRACK"]
 personas: ["builders", "data-digital", "front-office"]
 unverified: false
+venue: ["geneva"]
+organ: ["itu"]
 ---
 
 ITU’s AI Standards Exchange provides access to standards and related technical publications from ITU, ISO, IEC and other standards-development organizations. It also includes standards news and capacity-building material. The initiative responds to Global Digital Compact commitments on interoperable standards and international cooperation.

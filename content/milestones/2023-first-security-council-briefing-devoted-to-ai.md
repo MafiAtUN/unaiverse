@@ -10,6 +10,8 @@ tier: 1
 badges: ["FIRST-EVER"]
 personas: ["peace-security", "development", "human-rights", "data-digital", "front-office", "opga", "builders", "missions"]
 unverified: false
+venue: ["new-york"]
+organ: ["security-council"]
 ---
 
 The United Kingdom convened the first formal Security Council meeting devoted specifically to artificial intelligence under the agenda item “Maintenance of international peace and security.” Secretary-General António Guterres warned that AI could support development, humanitarian action and peace efforts but could also amplify disinformation, cyberattacks and weapons risks. He supported consideration of a global AI governance institution able to provide scientific assessment and policy coordination. Briefers included Jack Clark of Anthropic and Yi Zeng of the Chinese Academy of Sciences.

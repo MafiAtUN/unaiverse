@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 The Secretary-General addressed a high-level multi-stakeholder informal meeting launching preparations for the Global Dialogue on AI Governance. He described the Dialogue as a venue for building safe, secure and trustworthy AI grounded in international law and human rights, promoting interoperability and expanding participation in AI governance. The meeting initiated political and stakeholder preparations for the first substantive session.

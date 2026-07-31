@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["ohchr"]
 ---
 
 High Commissioner for Human Rights Volker Türk stated that human rights must guide the entire lifecycle of generative AI systems. He emphasized transparency, accountability, non-discrimination, participation, privacy and remedy. He also linked government obligations and corporate responsibilities to the UN Guiding Principles on Business and Human Rights.

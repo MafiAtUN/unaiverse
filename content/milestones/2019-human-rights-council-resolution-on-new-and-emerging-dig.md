@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["human-rights-council"]
 ---
 
 The Human Rights Council adopted, without a vote, a resolution on new and emerging digital technologies and human rights at its forty-first session. It recognized that technologies can facilitate human rights while also creating or amplifying violations and abuses. The resolution requested work by OHCHR and the Council’s Advisory Committee and became part of a continuing Council track on digital technologies.

@@ -10,6 +10,8 @@ tier: 2
 badges: ["ONGOING TRACK", "UNIVERSAL COMMITMENT"]
 personas: ["opga", "missions", "front-office", "development"]
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 ODET supports follow-up and implementation through mapping commitments, convening stakeholders, tracking initiatives and supporting intergovernmental processes. The AI commitments were implemented first through negotiations that led to A/RES/79/325, followed by creation of the Scientific Panel and Global Dialogue. The Compact mandates a high-level review during the General Assembly’s eighty-second session.

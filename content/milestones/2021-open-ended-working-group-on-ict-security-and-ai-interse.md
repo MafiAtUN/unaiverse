@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["ga-first-committee"]
 ---
 
 The Open-ended Working Group on security of and in the use of information and communications technologies addresses international law, responsible State behaviour, confidence-building, capacity-building and cyber threats. AI intersects with this agenda through AI-enabled cyber operations, automated vulnerability discovery, synthetic influence campaigns and defensive applications. The OEWG is not an AI-governance forum, but its norms are relevant to AI-enabled cyber risk.

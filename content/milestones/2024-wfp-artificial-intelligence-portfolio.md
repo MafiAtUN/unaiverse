@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY", "INTERNAL"]
 personas: []
 unverified: false
+venue: ["rome"]
+organ: ["agency"]
 ---
 
 The World Food Programme supports AI applications for satellite-image analysis, food-security monitoring, assistance integrity, logistics and mission planning. Public projects include SKAI, anomaly detection for assistance delivery, an enterprise deduplication service and an AI-supported mission planner. WFP presents AI as a way to increase speed, targeting and operational efficiency while requiring responsible use.

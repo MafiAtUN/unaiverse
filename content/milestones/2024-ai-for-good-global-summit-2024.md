@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["itu"]
 media:
   url: "/media/2024-ai-for-good-global-summit-2024.jpg"
   caption: "AI for Good Global Summit 2024, Geneva. From ITU's official summit album; the frame itself was shot on 22 May 2024, ahead of the 30–31 May programme."

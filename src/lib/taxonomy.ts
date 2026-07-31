@@ -82,6 +82,70 @@ export type PersonaId = (typeof PERSONAS)[number]['id'];
 
 export const PERSONA_BY_ID = new Map(PERSONAS.map((p) => [p.id as string, p]));
 
+/**
+ * Where a thing happens, in duty-station terms.
+ *
+ * This is the axis a delegation actually organises by: a mission in New York
+ * and a mission in Geneva are usually different people, and the first question
+ * about any process is whose desk it lands on. `system-wide` is for tracks with
+ * no single seat; `elsewhere` covers the one-off host cities (The Hague,
+ * Madrid, Valencia) that do not earn a permanent entry.
+ */
+export const VENUES = [
+  { id: 'new-york', label: 'New York', short: 'NY' },
+  { id: 'geneva', label: 'Geneva', short: 'GVA' },
+  { id: 'paris', label: 'Paris', short: 'PAR' },
+  { id: 'rome', label: 'Rome', short: 'ROM' },
+  { id: 'vienna', label: 'Vienna', short: 'VIE' },
+  { id: 'nairobi', label: 'Nairobi', short: 'NBO' },
+  { id: 'elsewhere', label: 'Elsewhere', short: 'OTH' },
+  { id: 'system-wide', label: 'System-wide', short: 'SYS' },
+] as const;
+
+export type VenueId = (typeof VENUES)[number]['id'];
+export const VENUE_BY_ID = new Map(VENUES.map((v) => [v.id as string, v]));
+
+/**
+ * Which body owns the thing. Deliberately mixes intergovernmental organs with
+ * the entities that run their own tracks, because that is how the file is
+ * actually divided up in practice — a delegate covering First Committee and a
+ * delegate covering the Human Rights Council are answering different phones,
+ * and neither of them covers WHO.
+ */
+export const ORGANS = [
+  { id: 'ga-plenary', label: 'GA plenary', glyph: '🏛️' },
+  { id: 'ga-first-committee', label: 'GA First Committee', glyph: '🎯' },
+  { id: 'ga-second-committee', label: 'GA Second Committee', glyph: '📈' },
+  { id: 'ga-third-committee', label: 'GA Third Committee', glyph: '⚖️' },
+  { id: 'security-council', label: 'Security Council', glyph: '🕊️' },
+  { id: 'human-rights-council', label: 'Human Rights Council', glyph: '🧭' },
+  { id: 'ohchr', label: 'OHCHR', glyph: '📕' },
+  { id: 'ccw', label: 'CCW', glyph: '🛡️' },
+  { id: 'unesco', label: 'UNESCO', glyph: '🏺' },
+  { id: 'itu', label: 'ITU', glyph: '📡' },
+  { id: 'who', label: 'WHO', glyph: '🩺' },
+  { id: 'ilo', label: 'ILO', glyph: '🔧' },
+  { id: 'advisory-body', label: 'Panel & advisory bodies', glyph: '🔬' },
+  { id: 'ceb', label: 'CEB', glyph: '🧩' },
+  { id: 'secretariat', label: 'Secretariat', glyph: '🏢' },
+  { id: 'agency', label: 'Funds, programmes & agencies', glyph: '🛰️' },
+] as const;
+
+export type OrganId = (typeof ORGANS)[number]['id'];
+export const ORGAN_BY_ID = new Map(ORGANS.map((o) => [o.id as string, o]));
+
+/**
+ * Mandate status. Purely factual: whether the thing that was mandated has
+ * happened yet. Nothing here judges anyone for the answer.
+ */
+export const MANDATE_STATUS = {
+  done: { label: 'Delivered', glyph: '✓' },
+  pending: { label: 'In progress', glyph: '◐' },
+  upcoming: { label: 'Not yet due', glyph: '○' },
+} as const;
+
+export type MandateStatus = keyof typeof MANDATE_STATUS;
+
 /** Badge styling hooks. `UNVERIFIED` stays defined — Phase 1 cleared it, but the vocabulary survives. */
 export const BADGE_KIND: Record<string, 'fact' | 'process' | 'caution'> = {
   'FIRST-EVER': 'fact',

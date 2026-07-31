@@ -10,6 +10,8 @@ tier: 3
 badges: ["INTERNAL", "AGENCY"]
 personas: []
 unverified: false
+venue: ["system-wide"]
+organ: ["agency"]
 ---
 
 UN entities have piloted chatbots, virtual assistants, automated translation, satellite-image analysis, anomaly detection and decision-support tools. Public examples are available through UNHCR, WFP, WHO and UNDP. Documentation is uneven, and many pilots are described through innovation pages rather than formal impact evaluations.

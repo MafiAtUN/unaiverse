@@ -32,6 +32,47 @@ const milestones = defineCollection({
     personas: z.array(z.string()).default([]),
     unverified: z.boolean().default(false),
 
+    // Duty station and owning body (lib/taxonomy VENUES / ORGANS). Arrays,
+    // because a track like WSIS+20 genuinely runs in two cities under two
+    // bodies and forcing a single value would be a lie about the file.
+    // Default [] so an unannotated milestone still builds — it simply never
+    // matches a venue or body filter.
+    venue: z.array(z.string()).default([]),
+    organ: z.array(z.string()).default([]),
+
+    // Series that will certainly meet again but whose next date the UN has not
+    // announced. They belong on /agenda — "the summit is annual and in Geneva"
+    // is a coverage decision even without a date — but they must never become
+    // calendar entries, because the date would be invented.
+    recurs: z
+      .object({
+        cadence: z.string(),
+        next: z.string(),
+      })
+      .optional(),
+
+    // What this milestone obliges someone to do, and by when. Only the ~20
+    // nodes that actually create an obligation carry these; the ledger at
+    // /agenda is assembled from every `mandates` block in the corpus, so a
+    // new entry appears there the moment it is added to a milestone file.
+    //
+    // `due_sort` is a plain YYYYMMDD integer because the due date is often
+    // prose ("eighty-second session") that no date parser should be asked to
+    // guess at. Written by hand, next to the prose it sorts.
+    mandates: z
+      .array(
+        z.object({
+          what: z.string(),
+          who: z.string(),
+          due: z.string(),
+          due_sort: z.number().int(),
+          status: z.enum(['done', 'pending', 'upcoming']),
+          source: z.string().optional(),
+          note: z.string().optional(),
+        }),
+      )
+      .default([]),
+
     // Layer 1 of the panel (plan §5) — "Mafi's take", 2–3 sentences in the
     // fun voice. Not written yet; the slot renders only when it appears, so
     // these can be filled in file by file without touching code.

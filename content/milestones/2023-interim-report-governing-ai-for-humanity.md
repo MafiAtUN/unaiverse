@@ -10,6 +10,8 @@ tier: 2
 badges: ["ADVISORY"]
 personas: ["opga", "data-digital", "human-rights"]
 unverified: false
+venue: ["new-york"]
+organ: ["advisory-body"]
 ---
 
 The High-level Advisory Body released its interim report, *Governing AI for Humanity*. The report proposed guiding principles and identified functions that international AI governance should perform, including scientific assessment, risk monitoring, policy interoperability, capacity-building and accountability. It was followed by public consultations and further expert work before the final report.

@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["agency"]
 ---
 
 UNDP’s Artificial Intelligence Landscape Assessment helps governments assess the national environment for responsible AI. It examines data, infrastructure, institutions, skills, innovation, inclusion and governance. UNDP also offers joint country support with UNESCO, combining UNDP’s landscape assessment with UNESCO’s ethics-focused Readiness Assessment Methodology.

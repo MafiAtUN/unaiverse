@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["ga-plenary"]
 ---
 
 Ambassador Egriselda López of El Salvador and Ambassador Rein Tammsaar of Estonia co-chaired the 2026 Dialogue. They guided the six months of consultations, issued the note on themes and structure, and steered the formal sessions. By design each Dialogue closes with a co-chairs’ summary rather than a negotiated outcome, so that every delegation participates on equal footing. The summary of the Geneva session had not yet been posted at a stable official URL as of 28 July 2026.

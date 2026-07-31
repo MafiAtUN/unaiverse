@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK", "AGENCY"]
 personas: []
 unverified: false
+venue: ["paris"]
+organ: ["unesco"]
 ---
 
 UNESCO developed the Readiness Assessment Methodology to help governments evaluate their institutional, legal, social, economic, scientific and technical readiness to implement the 2021 Recommendation. It also developed an Ethical Impact Assessment tool for evaluating AI systems and policies. Country profiles and completed assessments are published through the Global AI Ethics and Governance Observatory.

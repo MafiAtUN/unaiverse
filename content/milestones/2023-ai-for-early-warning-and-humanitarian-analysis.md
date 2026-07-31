@@ -10,6 +10,8 @@ tier: 2
 badges: ["ONGOING TRACK"]
 personas: ["peace-security", "builders", "data-digital"]
 unverified: false
+venue: ["system-wide"]
+organ: ["agency"]
 ---
 
 UN entities use predictive analytics, satellite imagery and machine-learning techniques for food-security monitoring, disaster mapping, displacement analysis and anticipatory action. Public examples include WFP’s SKAI satellite-image project, UNHCR’s Project Jetson experiment and work by OCHA’s Centre for Humanitarian Data. Governance is entity-by-entity: no single UN-wide policy covering all predictive or generative AI use in humanitarian operations was found in the public record as of 28 July 2026.

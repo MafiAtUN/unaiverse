@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["system-wide"]
+organ: ["advisory-body"]
 ---
 
 The 40-member Independent International Scientific Panel on AI held its first plenary meeting virtually, three weeks after the General Assembly appointed its members. Members elected Yoshua Bengio and Maria Ressa as co-chairs. The Secretary-General asked members to produce independent, multidisciplinary and evidence-based assessments of AI opportunities, risks and impacts. Under its terms of reference, the Panel may issue an annual report, thematic briefs and up to two annual updates to the General Assembly.

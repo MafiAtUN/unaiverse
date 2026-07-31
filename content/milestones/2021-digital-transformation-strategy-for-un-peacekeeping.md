@@ -10,6 +10,8 @@ tier: 3
 badges: ["INTERNAL"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat"]
 ---
 
 The Department of Peace Operations developed a strategy for digital transformation of UN peacekeeping. It emphasizes stronger situational awareness, protection of civilians, information integrity, data-driven planning, early warning and mission support. AI, analytics, remote sensing and automation may support these goals, subject to operational, legal, ethical and security safeguards.

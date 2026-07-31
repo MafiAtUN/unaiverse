@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["elsewhere"]
+organ: ["agency"]
 ---
 
 The United Nations Interregional Crime and Justice Research Institute established its Centre for Artificial Intelligence and Robotics in The Hague. The Centre examines AI and robotics from the perspective of crime prevention, criminal justice, security, human rights and the rule of law. Its work has included malicious uses of AI, responsible innovation, law-enforcement applications and international cooperation.

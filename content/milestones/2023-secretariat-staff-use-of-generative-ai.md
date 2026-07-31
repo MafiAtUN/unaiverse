@@ -10,6 +10,8 @@ tier: 2
 badges: ["INTERNAL"]
 personas: ["builders", "data-digital", "front-office"]
 unverified: false
+venue: ["system-wide"]
+organ: ["secretariat"]
 ---
 
 Guidance on staff use of generative AI was first issued to Secretariat personnel in June 2023 and revised on 5 March 2025 as *Updated UN Guidance on the Use of AI Tools at Work*. It designates an authorized enterprise chat solution for day-to-day work, directs staff away from unapproved tools for official tasks, and addresses confidentiality, personal data, verification, intellectual property, bias and human accountability. Alongside it, the CEB endorsed a system-wide framework for a model policy on the responsible use of AI and published a report on operational AI use across the system. This guidance sits below the level of a Secretary-General’s bulletin or administrative instruction; no such formal issuance dedicated to generative AI was located in the public policy repositories reviewed.

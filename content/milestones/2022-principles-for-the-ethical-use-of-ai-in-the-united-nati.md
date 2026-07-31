@@ -10,6 +10,16 @@ tier: 2
 badges: ["INTERNAL", "CONSENSUS"]
 personas: ["builders", "data-digital", "human-rights"]
 unverified: false
+venue: ["system-wide"]
+organ: ["ceb"]
+mandates:
+  - what: "Apply the ten principles across the AI lifecycle in entities that use or develop AI"
+    who: "UN system entities"
+    due: "Ongoing, no end date set"
+    due_sort: 99999999
+    status: "pending"
+    source: "CEB/2022/2/Add.1"
+    note: "The de facto compliance baseline for anything built inside the system. No central reporting mechanism was established."
 ---
 
 The UN System Chief Executives Board endorsed ten principles for ethical AI use across the UN system. They address proportionality and do no harm, safety and security, fairness, sustainability, privacy, human autonomy and oversight, transparency, explainability, responsibility, accountability, inclusion and participation. The principles apply across the AI lifecycle and to UN entities using or developing AI.

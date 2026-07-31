@@ -10,6 +10,8 @@ tier: 3
 badges: ["INTERNAL"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat"]
 ---
 
 Unite Aware integrates operational information to support situational awareness and decision-making in peacekeeping environments. It is designed to combine information from different mission systems and improve a common operational picture. Public documentation does not provide a complete inventory of any machine-learning models that may be used within specific deployments.

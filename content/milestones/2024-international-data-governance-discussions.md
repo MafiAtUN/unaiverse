@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 The Global Digital Compact calls for interoperable and rights-respecting approaches to data governance. It connects data to privacy, development, cross-border flows, public-interest uses and AI systems. As of 28 July 2026 the Compact had not produced a single binding global data-governance framework; the work remains a set of parallel processes rather than one instrument.

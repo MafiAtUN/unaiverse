@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["ohchr"]
 ---
 
 OHCHR’s B-Tech Project applies the UN Guiding Principles on Business and Human Rights to digital technologies and technology companies. Its work addresses business models, human-rights due diligence, remedy, responsible investment and corporate accountability. B-Tech has produced material specifically addressing generative AI harms and responsible company practice.

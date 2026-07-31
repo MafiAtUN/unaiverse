@@ -1,31 +1,56 @@
 ---
 /**
- * Constellation + tier filtering (plan §3: "color-coded, filterable").
+ * Filtering and search (plan §3: "color-coded, filterable").
  *
- * Collapsed by default so the sticky footprint stays ~3rem — an expanded
- * chip grid pinned to the top eats a third of a laptop viewport and hides
- * the node you just scrolled to.
+ * Four axes, in the order a reader narrows: what it is (tier), what it is
+ * about (constellation), where it happens (venue), and who owns it (organ).
+ * The last two exist because a delegation's first question about any process
+ * is whose desk it lands on — see lib/taxonomy VENUES / ORGANS.
  *
- * Progressive enhancement: the whole bar is hidden until the script runs,
- * so a no-JS reader gets all 76 nodes rather than controls that do nothing.
+ * The search box takes document symbols as well as words: "A/RES/79/325",
+ * "79/325" and "79325" all find the same node, because people type symbols
+ * from memory and rarely in full.
+ *
+ * Every choice is written to the URL, so a filtered view is a link you can
+ * send to a colleague or a capital. That is the whole distribution mechanism
+ * inside this system: someone forwards someone else a URL.
+ *
+ * Collapsed by default so the sticky footprint stays ~3rem — an expanded chip
+ * grid pinned to the top eats a third of a laptop viewport and hides the node
+ * you just scrolled to.
+ *
+ * Progressive enhancement: the whole bar is hidden until the script runs, so a
+ * no-JS reader gets all 76 nodes rather than controls that do nothing.
  */
-import { CONSTELLATIONS, TIERS } from '../lib/taxonomy';
+import { CONSTELLATIONS, ORGANS, TIERS, VENUES } from '../lib/taxonomy';
 
 interface Props {
   constellationCounts: Record<string, number>;
   tierCounts: Record<number, number>;
+  venueCounts: Record<string, number>;
+  organCounts: Record<string, number>;
   total: number;
 }
 
-const { constellationCounts, tierCounts, total } = Astro.props;
+const { constellationCounts, tierCounts, venueCounts, organCounts, total } = Astro.props;
 
 const constellations = Object.entries(CONSTELLATIONS)
   .filter(([key]) => constellationCounts[key])
   .map(([key, meta]) => ({ key, ...meta, count: constellationCounts[key]! }));
+
+const venues = VENUES.filter((v) => venueCounts[v.id]).map((v) => ({
+  ...v,
+  count: venueCounts[v.id]!,
+}));
+
+const organs = ORGANS.filter((o) => organCounts[o.id]).map((o) => ({
+  ...o,
+  count: organCounts[o.id]!,
+}));
 ---
 
 {/* A labelled landmark, so the chips inside it aren't orphan content. */}
-<section class="filters" aria-label="Filter the timeline" data-filters hidden>
+<section class="filters" aria-label="Search and filter the timeline" data-filters hidden>
   <div class="wrap filters__bar">
     <button
       type="button"
@@ -38,6 +63,21 @@ const constellations = Object.entries(CONSTELLATIONS)
       Filter
       <span class="filters__active mono" data-filter-active hidden></span>
     </button>
+
+    <div class="filters__search">
+      <label class="filters__search-label" for="filter-search">
+        Search titles and document symbols
+      </label>
+      <input
+        type="search"
+        id="filter-search"
+        class="filters__search-input mono"
+        placeholder="A/RES/79/325, Geneva, LAWS…"
+        autocomplete="off"
+        spellcheck="false"
+        data-filter-search
+      />
+    </div>
 
     <p class="filters__count mono" data-filter-count aria-live="polite">
       {total} milestones
@@ -70,6 +110,41 @@ const constellations = Object.entries(CONSTELLATIONS)
       </div>
 
       <div class="filters__group">
+        <p class="filters__label" id="filter-venue-label">
+          Duty station
+          <span class="filters__hint">whose desk it lands on</span>
+        </p>
+        <div class="filters__chips" role="group" aria-labelledby="filter-venue-label">
+          {
+            venues.map((v) => (
+              <button type="button" class="chip" data-filter-venue={v.id} aria-pressed="false">
+                {v.label}
+                <span class="chip__count">{v.count}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="filters__group">
+        <p class="filters__label" id="filter-organ-label">
+          Body
+          <span class="filters__hint">which committee or entity owns it</span>
+        </p>
+        <div class="filters__chips" role="group" aria-labelledby="filter-organ-label">
+          {
+            organs.map((o) => (
+              <button type="button" class="chip" data-filter-organ={o.id} aria-pressed="false">
+                <span aria-hidden="true">{o.glyph}</span>
+                {o.label}
+                <span class="chip__count">{o.count}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="filters__group">
         <p class="filters__label" id="filter-constellation-label">Constellation</p>
         <div class="filters__chips" role="group" aria-labelledby="filter-constellation-label">
           {
@@ -88,6 +163,10 @@ const constellations = Object.entries(CONSTELLATIONS)
           }
         </div>
       </div>
+
+      <p class="filters__share" data-filter-share hidden>
+        This view is in the address bar. Copy the URL to send it to a colleague.
+      </p>
     </div>
   </div>
 </section>
@@ -128,6 +207,7 @@ const constellations = Object.entries(CONSTELLATIONS)
     font-size: var(--step--1);
     color: var(--ink-dim);
     cursor: pointer;
+    flex: none;
     transition:
       border-color var(--dur) var(--ease),
       color var(--dur) var(--ease);
@@ -177,14 +257,57 @@ const constellations = Object.entries(CONSTELLATIONS)
     display: none;
   }
 
+  /* ── Search ───────────────────────────────────────────────────────
+     Sits in the always-visible bar rather than inside the panel: looking
+     something up by symbol is the single most common reason to arrive. */
+  .filters__search {
+    flex: 1 1 12rem;
+    min-width: 0;
+  }
+
+  .filters__search-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .filters__search-input {
+    width: 100%;
+    max-width: 24rem;
+    padding: 0.35em 0.9em;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: none;
+    font-size: var(--step--1);
+    color: var(--paper);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .filters__search-input::placeholder {
+    color: var(--ink-faint);
+  }
+
+  .filters__search-input:focus-visible {
+    outline: none;
+    border-color: var(--riso-pink);
+  }
+
+  /* The UA's own clear affordance, kept — one less control to reinvent. */
+  .filters__search-input::-webkit-search-cancel-button {
+    filter: invert(1) opacity(0.5);
+  }
+
   .filters__count {
     margin: 0;
     font-size: var(--step--2);
     color: var(--ink-faint);
+    flex: none;
   }
 
   .filters__reset {
-    margin-left: auto;
     padding: 0.3em 0.8em;
     border: 1px solid rgb(255 95 168 / 0.4);
     border-radius: 999px;
@@ -193,6 +316,7 @@ const constellations = Object.entries(CONSTELLATIONS)
     font-size: var(--step--2);
     color: var(--signal);
     cursor: pointer;
+    flex: none;
   }
 
   .filters__reset[hidden] {
@@ -201,6 +325,8 @@ const constellations = Object.entries(CONSTELLATIONS)
 
   .filters__panel {
     border-top: 1px solid var(--hairline);
+    max-height: 60vh;
+    overflow-y: auto;
     animation: filter-open var(--dur) var(--ease-out);
   }
 
@@ -227,12 +353,35 @@ const constellations = Object.entries(CONSTELLATIONS)
   }
 
   .filters__label {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--sp-1) var(--sp-3);
     margin: 0;
     font-family: var(--font-mono);
     font-size: var(--step--2);
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-faint);
+  }
+
+  .filters__hint {
+    font-family: var(--font-body);
+    letter-spacing: 0;
+    text-transform: none;
+    font-style: italic;
+  }
+
+  .filters__share {
+    margin: 0;
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--hairline);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .filters__share[hidden] {
+    display: none;
   }
 
   .filters__chips {
@@ -286,6 +435,22 @@ const constellations = Object.entries(CONSTELLATIONS)
        dimmed text, which landed at 4.0:1 against the ink ground. */
     color: var(--ink-faint);
   }
+
+  @media (max-width: 46rem) {
+    .filters__bar {
+      flex-wrap: wrap;
+      padding-block: var(--sp-2);
+    }
+
+    .filters__search {
+      order: 3;
+      flex-basis: 100%;
+    }
+
+    .filters__search-input {
+      max-width: none;
+    }
+  }
 </style>
 
 <script>
@@ -300,24 +465,105 @@ const constellations = Object.entries(CONSTELLATIONS)
     const activeEl = bar.querySelector<HTMLElement>('[data-filter-active]')!;
     const toggleEl = bar.querySelector<HTMLButtonElement>('[data-filter-toggle]')!;
     const panelEl = bar.querySelector<HTMLElement>('[data-filter-panel]')!;
+    const shareEl = bar.querySelector<HTMLElement>('[data-filter-share]')!;
+    const searchEl = bar.querySelector<HTMLInputElement>('[data-filter-search]')!;
     const chips = Array.from(bar.querySelectorAll<HTMLButtonElement>('.chip'));
 
-    const tiers = new Set<string>();
-    const constellations = new Set<string>();
+    /**
+     * One axis per entry: the URL parameter it round-trips through, the data
+     * attribute it tests, and whether a node carries one value or several.
+     * Adding an axis is adding a row here and a chip group above.
+     */
+    const AXES = [
+      { param: 'tier', attr: 'filterTier', data: 'tier', multi: false },
+      { param: 'c', attr: 'filterConstellation', data: 'constellation', multi: false },
+      { param: 'venue', attr: 'filterVenue', data: 'venue', multi: true },
+      { param: 'organ', attr: 'filterOrgan', data: 'organ', multi: true },
+    ] as const;
 
-    // Keep anchor jumps clear of the sticky bar, whatever height it is.
+    const selected = new Map<string, Set<string>>(AXES.map((a) => [a.param, new Set<string>()]));
+    let query = '';
+
+    /** Symbols get typed from memory: "79/325", "A/RES/79/325", "79325". */
+    function normalise(s: string): string {
+      return s.toLowerCase().replace(/\s+/g, ' ').trim();
+    }
+
+    function matchesQuery(node: HTMLElement): boolean {
+      if (!query) return true;
+      const blob = node.dataset.search ?? '';
+      const bare = blob.replace(/[^a-z0-9]/g, '');
+      // Every whitespace-separated term must appear, so "geneva 2026" narrows
+      // rather than widening the way an OR search would.
+      return normalise(query)
+        .split(' ')
+        .every((term) => blob.includes(term) || bare.includes(term.replace(/[^a-z0-9]/g, '')));
+    }
+
+    function matchesAxis(node: HTMLElement, axis: (typeof AXES)[number]): boolean {
+      const chosen = selected.get(axis.param)!;
+      if (chosen.size === 0) return true;
+      const raw = node.dataset[axis.data] ?? '';
+      if (!axis.multi) return chosen.has(raw);
+      // A node can sit in two cities or under two bodies; matching any one of
+      // the chosen values is what "show me the Geneva file" has to mean.
+      return raw.split(' ').filter(Boolean).some((v) => chosen.has(v));
+    }
+
+    /** Keep anchor jumps clear of the sticky bar, whatever height it is. */
     function syncScrollPadding() {
       document.documentElement.style.scrollPaddingTop = `${bar!.offsetHeight + 16}px`;
+    }
+
+    /**
+     * State in the address bar, so a filtered view can be mailed to a capital.
+     * `replaceState`, not `push`: forty chip clicks should not become forty
+     * entries the reader has to press Back through.
+     */
+    function syncUrl() {
+      const url = new URL(window.location.href);
+      for (const axis of AXES) {
+        const chosen = [...selected.get(axis.param)!];
+        if (chosen.length) url.searchParams.set(axis.param, chosen.join(','));
+        else url.searchParams.delete(axis.param);
+      }
+      if (query) url.searchParams.set('q', query);
+      else url.searchParams.delete('q');
+      window.history.replaceState(null, '', url.toString().replace(/\?$/, ''));
+    }
+
+    function readUrl() {
+      const params = new URLSearchParams(window.location.search);
+      for (const axis of AXES) {
+        const raw = params.get(axis.param);
+        if (!raw) continue;
+        const set = selected.get(axis.param)!;
+        for (const value of raw.split(',').filter(Boolean)) set.add(value);
+      }
+      query = params.get('q') ?? '';
+      searchEl.value = query;
+
+      for (const chip of chips) {
+        const axis = AXES.find((a) => chip.dataset[a.attr] !== undefined);
+        if (!axis) continue;
+        const value = chip.dataset[axis.attr]!;
+        chip.setAttribute('aria-pressed', String(selected.get(axis.param)!.has(value)));
+      }
+
+      // Arriving on a filtered link with the panel shut hides the reason the
+      // page looks short. Open it so the active chips are visible.
+      const anyChip = AXES.some((a) => selected.get(a.param)!.size > 0);
+      if (anyChip) {
+        toggleEl.setAttribute('aria-expanded', 'true');
+        panelEl.hidden = false;
+      }
     }
 
     function apply() {
       let visible = 0;
 
       for (const node of nodes) {
-        const tierOk = tiers.size === 0 || tiers.has(node.dataset.tier!);
-        const constOk =
-          constellations.size === 0 || constellations.has(node.dataset.constellation!);
-        const show = tierOk && constOk;
+        const show = matchesQuery(node) && AXES.every((axis) => matchesAxis(node, axis));
         node.hidden = !show;
         if (show) visible++;
       }
@@ -327,13 +573,16 @@ const constellations = Object.entries(CONSTELLATIONS)
         zone.hidden = zone.querySelectorAll('[data-node]:not([hidden])').length === 0;
       }
 
-      const active = tiers.size + constellations.size;
+      const active = AXES.reduce((n, a) => n + selected.get(a.param)!.size, 0) + (query ? 1 : 0);
       countEl.textContent = active
         ? `${visible} of ${nodes.length} milestones`
         : `${nodes.length} milestones`;
       resetEl.hidden = active === 0;
       activeEl.hidden = active === 0;
       activeEl.textContent = String(active);
+      shareEl.hidden = active === 0;
+
+      syncUrl();
 
       // Hiding nodes moves everything below them; scroll triggers need to know.
       document.dispatchEvent(new CustomEvent('unaiverse:filtered'));
@@ -347,27 +596,60 @@ const constellations = Object.entries(CONSTELLATIONS)
     });
 
     for (const chip of chips) {
-      chip.addEventListener('click', () => {
-        const tier = chip.dataset.filterTier;
-        const set = tier ? tiers : constellations;
-        const value = tier ?? chip.dataset.filterConstellation!;
+      const axis = AXES.find((a) => chip.dataset[a.attr] !== undefined);
+      if (!axis) continue;
+      const value = chip.dataset[axis.attr]!;
 
+      chip.addEventListener('click', () => {
+        const set = selected.get(axis.param)!;
         if (set.has(value)) set.delete(value);
         else set.add(value);
-
         chip.setAttribute('aria-pressed', String(set.has(value)));
         apply();
       });
     }
 
+    // Typing filters 76 nodes in under a millisecond, so no debounce: the list
+    // narrowing on each keystroke is the feedback that the box is working.
+    searchEl.addEventListener('input', () => {
+      query = searchEl.value;
+      apply();
+    });
+
+    searchEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && searchEl.value) {
+        e.preventDefault();
+        searchEl.value = '';
+        query = '';
+        apply();
+      }
+    });
+
     resetEl.addEventListener('click', () => {
-      tiers.clear();
-      constellations.clear();
+      for (const axis of AXES) selected.get(axis.param)!.clear();
+      query = '';
+      searchEl.value = '';
       for (const chip of chips) chip.setAttribute('aria-pressed', 'false');
       apply();
       resetEl.blur();
     });
 
+    // "/" focuses search, the convention everywhere else a reader searches.
+    document.addEventListener('keydown', (e) => {
+      const target = e.target as HTMLElement | null;
+      const typing =
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target?.isContentEditable;
+      if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        searchEl.focus();
+        searchEl.select();
+      }
+    });
+
+    readUrl();
+    apply();
     syncScrollPadding();
     window.addEventListener('resize', syncScrollPadding);
   }

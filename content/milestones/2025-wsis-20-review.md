@@ -10,6 +10,11 @@ tier: 2
 badges: ["ONGOING TRACK"]
 personas: ["development", "opga", "missions"]
 unverified: false
+venue: ["new-york", "geneva"]
+organ: ["ga-plenary", "itu"]
+recurs:
+  cadence: "The WSIS Forum meets annually in Geneva, and the twenty-year review runs through General Assembly processes in New York."
+  next: "The 2026 Global Dialogue was held alongside the WSIS Forum; later pairings are not confirmed."
 ---
 
 The twenty-year review of the World Summit on the Information Society examines connectivity, inclusion, Internet governance and implementation of the WSIS action lines. AI has become increasingly integrated into WSIS discussions. The 2026 Global Dialogue was held alongside the WSIS Forum in Geneva, illustrating growing alignment between the WSIS and Global Digital Compact processes.

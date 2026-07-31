@@ -10,6 +10,8 @@ tier: 3
 badges: ["ONGOING TRACK"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary"]
 ---
 
 The UN frames AI as a technology capable of supporting health, education, agriculture, climate action, public administration and crisis response while also generating risks for equality, rights, employment and the environment. The two 2024 General Assembly resolutions embed this dual framing in intergovernmental policy. ITU’s AI for Good platform and UNDP’s capacity-building work are major implementation channels.

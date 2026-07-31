@@ -10,6 +10,8 @@ tier: 2
 badges: ["AGENCY"]
 personas: ["development", "front-office", "human-rights"]
 unverified: false
+venue: ["geneva"]
+organ: ["ilo"]
 ---
 
 The International Labour Organization assessed occupational exposure to generative AI across countries and income groups. It found that clerical work had the highest exposure and concluded that job transformation was more likely than full job elimination. The report also identified substantial gender differences in exposure because women are overrepresented in clerical work in many economies.

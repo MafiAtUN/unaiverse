@@ -10,6 +10,8 @@ tier: 3
 badges: ["ADVISORY"]
 personas: []
 unverified: false
+venue: ["new-york"]
+organ: ["advisory-body"]
 ---
 
 The Body comprised 39 experts from 33 countries and was described by the UN as geographically diverse and gender-balanced. Its co-chairs were Carme Artigas of Spain and James Manyika of Google-Alphabet. The complete official roster and member biographies are maintained on the Advisory Body website.

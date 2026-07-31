@@ -1,0 +1,653 @@
+---
+/**
+ * The onboarding page. Linkable, printable, forwardable — which matters more
+ * than any of the interaction on it, because the way this reaches the person
+ * who needs it is a colleague sending them a URL.
+ */
+import Base from '../layouts/Base.astro';
+import Starfield from '../components/Starfield.astro';
+import { getCollection } from 'astro:content';
+import { CHAPTERS, SAFE_LINES } from '../lib/onboarding';
+import { getTake } from '../lib/takes';
+import { ORGAN_BY_ID, SITE, VENUE_BY_ID } from '../lib/taxonomy';
+
+const entries = await getCollection('milestones');
+const byId = new Map(entries.map((e) => [e.id, e]));
+
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+
+// A step naming a milestone that no longer exists would render as a blank row.
+// Fail loudly at build time instead — this file is hand-authored and drifts.
+const chapters = CHAPTERS.map((chapter) => ({
+  ...chapter,
+  steps: chapter.steps.flatMap((step) => {
+    const entry = byId.get(step.id);
+    if (!entry) {
+      console.warn(`[unaiverse] /inherit references unknown milestone "${step.id}"`);
+      return [];
+    }
+    return [{ ...step, entry, take: getTake(step.id, 'missions') }];
+  }),
+}));
+
+const stepCount = chapters.reduce((n, c) => n + c.steps.length, 0);
+
+const title = `You have just been handed the AI file · ${SITE.name}`;
+const description =
+  'Ten minutes on what exists in UN AI governance, what each thing obliges, and which meetings are worth staffing. Written for delegates and colleagues arriving on the file cold.';
+---
+
+<Base title={title} description={description}>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="page-head__kicker mono">
+        <a href={href('')}>{SITE.name}</a> / Start here
+      </p>
+      <h1 class="page-head__title">You have just been handed the AI file</h1>
+      <p class="page-head__lead">
+        Someone has rotated out, or a portfolio has been reassigned, and this landed on your
+        desk with no handover. The file looks enormous from the outside. It is quite finite from
+        the inside: {stepCount} things exist, they fit in four groups, and this page walks
+        through them in the order they make sense.
+      </p>
+      <p class="page-head__lead">
+        Every entry links to the full record and its original documents. Nothing here
+        characterises any State's or group's position, because that is not what this page is
+        for.
+      </p>
+
+      <div class="page-head__actions">
+        <a class="button" href={href('agenda')}>Then: what is coming, and who owes what</a>
+        <button type="button" class="button button--ghost" data-print>Print this page</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="timeline" class="wrap page">
+    <nav class="contents" aria-label="Contents">
+      <p class="contents__label mono">In order</p>
+      <ol class="contents__list">
+        {
+          chapters.map((c) => (
+            <li>
+              <a href={`#${c.key}`}>{c.title}</a>
+              <span class="contents__count mono">{c.steps.length}</span>
+            </li>
+          ))
+        }
+        <li>
+          <a href="#lines">Lines that are always safe</a>
+          <span class="contents__count mono">{SAFE_LINES.length}</span>
+        </li>
+      </ol>
+    </nav>
+
+    {
+      chapters.map((chapter, ci) => (
+        <section class="chapter" id={chapter.key} aria-labelledby={`${chapter.key}-title`}>
+          <p class="chapter__num mono">Part {ci + 1}</p>
+          <h2 class="chapter__title" id={`${chapter.key}-title`}>
+            {chapter.title}
+          </h2>
+          <p class="chapter__intro">{chapter.intro}</p>
+
+          <ol class="steps">
+            {chapter.steps.map((step) => (
+              <li class="step">
+                <div class="step__head">
+                  <h3 class="step__title">
+                    <a href={`${href('')}#${step.id}`}>{step.entry.data.title}</a>
+                  </h3>
+                  <p class="step__meta mono">
+                    {step.entry.data.date_display}
+                    {step.entry.data.symbol && <span> · {step.entry.data.symbol}</span>}
+                  </p>
+                </div>
+
+                <p class="step__what">{step.what}</p>
+                <p class="step__so">
+                  <span class="step__so-mark">Why you care</span>
+                  {step.soThat}
+                </p>
+
+                {step.take && (
+                  <div class="step__take">
+                    <p class="step__take-mark mono">If you are at a permanent mission</p>
+                    <dl>
+                      <div>
+                        <dt>Watch for</dt>
+                        <dd>{step.take.watchFor}</dd>
+                      </div>
+                      <div>
+                        <dt>Use it</dt>
+                        <dd>{step.take.useIt}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                )}
+
+                <div class="step__tags">
+                  {step.entry.data.venue.map((v) => (
+                    <span class="pill pill--venue mono">{VENUE_BY_ID.get(v)?.label ?? v}</span>
+                  ))}
+                  {step.entry.data.organ.map((o) => (
+                    <span class="pill">{ORGAN_BY_ID.get(o)?.label ?? o}</span>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+
+    <section class="chapter" id="lines" aria-labelledby="lines-title">
+      <p class="chapter__num mono">Part {chapters.length + 1}</p>
+      <h2 class="chapter__title" id="lines-title">Lines that are always safe</h2>
+      <p class="chapter__intro">
+        Each of these is a plain statement of procedural fact carrying its own symbol. They are
+        safe in a statement, a briefing note or a cable because they describe what happened
+        rather than what anyone thinks about it. Copy one and the symbol comes with it.
+      </p>
+
+      <ul class="lines">
+        {
+          SAFE_LINES.map((l) => (
+            <li class="line">
+              <blockquote class="line__text">{l.line}</blockquote>
+              <p class="line__symbol mono">{l.symbol}</p>
+              <button
+                type="button"
+                class="line__copy"
+                data-copy-line={`${l.line} (${l.symbol})`}
+                hidden
+              >
+                Copy
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="chapter" aria-labelledby="next-title">
+      <h2 class="chapter__title" id="next-title">What to do on Monday</h2>
+      <ol class="next">
+        <li>
+          <a href={href('agenda#calendar')}>Add the calendar</a>. One file, every scheduled item.
+          If you can only staff one AI process, the Global Dialogue is it.
+        </li>
+        <li>
+          <a href={href('agenda#ledger')}>Read the ledger</a> to see what is still owed and by
+          whom, so nothing arrives as a surprise.
+        </li>
+        <li>
+          Filter the timeline to your duty station:
+          <a href={`${href('')}?venue=new-york`}>New York</a> or
+          <a href={`${href('')}?venue=geneva`}>Geneva</a>. Send the other link to whoever covers
+          the other city.
+        </li>
+        <li>
+          Open any milestone and press <strong>Copy briefing note</strong>. That is the paragraph
+          your capital is going to ask for.
+        </li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <p class="foot__lead">
+        All facts are sourced to official UN documents, linked from every milestone. This page
+        describes processes and opportunities, never positions.
+      </p>
+      <p class="foot__fine">
+        A personal project by Mafizul Islam. Not an official United Nations product, and nothing
+        here represents the views of the UN or any of its offices.
+      </p>
+      <p><a href={href('')}>Back to the timeline</a></p>
+    </div>
+  </footer>
+
+  <Starfield />
+</Base>
+
+<style>
+  .page-head {
+    padding: var(--sp-8) 0 var(--sp-6);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .page-head__kicker {
+    margin: 0 0 var(--sp-3);
+    font-size: var(--step--2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .page-head__kicker a {
+    color: var(--riso-yellow);
+    text-decoration: none;
+  }
+
+  .page-head__title {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+    max-width: 20ch;
+  }
+
+  .page-head__lead {
+    margin-top: var(--sp-4);
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .page-head__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    margin-top: var(--sp-5);
+  }
+
+  .button {
+    padding: 0.55em 1.2em;
+    border: 1px solid var(--riso-yellow);
+    border-radius: var(--radius-sm);
+    background: var(--riso-yellow);
+    font: inherit;
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--void);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .button--ghost {
+    background: none;
+    border-color: var(--hairline-strong);
+    color: var(--ink-dim);
+    font-weight: 400;
+  }
+
+  .button--ghost[hidden] {
+    display: none;
+  }
+
+  .button--ghost:hover {
+    border-color: var(--riso-pink);
+    color: var(--paper);
+  }
+
+  /* ── Contents ───────────────────────────────────────────────────── */
+  .page {
+    padding-bottom: var(--sp-8);
+  }
+
+  .contents {
+    margin-top: var(--sp-6);
+    padding: var(--sp-4) var(--sp-5);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    max-width: 34rem;
+  }
+
+  .contents__label {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .contents__list {
+    margin: 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: var(--sp-1);
+    font-size: var(--step--1);
+  }
+
+  .contents__list a {
+    color: var(--ink-dim);
+  }
+
+  .contents__list a:hover {
+    color: var(--paper);
+  }
+
+  .contents__count {
+    margin-left: var(--sp-2);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  /* ── Chapters ───────────────────────────────────────────────────── */
+  .chapter {
+    padding-top: var(--sp-8);
+    scroll-margin-top: var(--sp-4);
+  }
+
+  .chapter__num {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--step--2);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--riso-pink);
+  }
+
+  .chapter__title {
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+  }
+
+  .chapter__intro {
+    margin-top: var(--sp-3);
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--sp-3);
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .step {
+    position: relative;
+    padding: var(--sp-5);
+    padding-left: var(--sp-7);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+    counter-increment: step;
+  }
+
+  .step::before {
+    content: counter(step);
+    position: absolute;
+    left: var(--sp-4);
+    top: var(--sp-5);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--riso-pink);
+  }
+
+  .step__title {
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+
+  .step__title a {
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .step__title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .step__meta {
+    margin: var(--sp-1) 0 0;
+    font-size: var(--step--2);
+    color: var(--riso-yellow);
+  }
+
+  .step__what {
+    margin-top: var(--sp-3);
+    max-width: var(--measure);
+    color: var(--ink);
+  }
+
+  .step__so {
+    margin-top: var(--sp-3);
+    padding-left: var(--sp-4);
+    border-left: 3px solid var(--riso-green);
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .step__so-mark {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--riso-green);
+  }
+
+  .step__take {
+    margin-top: var(--sp-4);
+    padding: var(--sp-4);
+    border-radius: var(--radius-sm);
+    background: var(--void-panel);
+  }
+
+  .step__take-mark {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--step--2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .step__take dl {
+    display: grid;
+    gap: var(--sp-2);
+    margin: 0;
+  }
+
+  .step__take dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--riso-pink);
+  }
+
+  .step__take dd {
+    margin: 0;
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+
+  .step__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-4);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.18em 0.7em;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+    white-space: nowrap;
+  }
+
+  .pill--venue {
+    border-color: rgb(47 191 116 / 0.45);
+    color: var(--riso-green);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── Safe lines ─────────────────────────────────────────────────── */
+  .lines {
+    display: grid;
+    gap: var(--sp-3);
+    margin: var(--sp-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .line {
+    display: grid;
+    gap: var(--sp-2);
+    padding: var(--sp-4) var(--sp-5);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--riso-yellow);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+  }
+
+  .line__text {
+    margin: 0;
+    max-width: var(--measure);
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    color: var(--paper);
+  }
+
+  .line__symbol {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--riso-yellow);
+  }
+
+  .line__copy {
+    justify-self: start;
+    padding: 0.25em 0.8em;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+    cursor: pointer;
+  }
+
+  .line__copy[hidden] {
+    display: none;
+  }
+
+  .line__copy:hover {
+    border-color: var(--riso-pink);
+    color: var(--paper);
+  }
+
+  /* ── Next ───────────────────────────────────────────────────────── */
+  .next {
+    display: grid;
+    gap: var(--sp-3);
+    margin: var(--sp-5) 0 0;
+    padding-left: 1.3em;
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .next a {
+    color: var(--riso-pink);
+  }
+
+  /* ── Footer ─────────────────────────────────────────────────────── */
+  .foot {
+    padding: var(--sp-7) 0 var(--sp-8);
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  .foot__lead {
+    color: var(--ink-dim);
+  }
+
+  .foot__fine {
+    font-style: italic;
+  }
+
+  /* Finger-sized controls, keyed to the pointer rather than the viewport so a
+     narrow laptop window keeps its compact ones. */
+  @media (pointer: coarse) {
+    .button,
+    .line__copy,
+    .contents__list a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .line__copy {
+      padding-inline: 1.1em;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    /* The number gutter costs a phone about three characters a line. Put the
+       counter above the title instead of beside it and give the prose the
+       full column back. */
+    .step {
+      padding: var(--sp-4);
+    }
+
+    .step::before {
+      position: static;
+      display: block;
+      margin-bottom: var(--sp-2);
+    }
+
+    .line {
+      padding: var(--sp-4);
+    }
+  }
+
+  @media print {
+    .page-head__actions,
+    .line__copy,
+    .sky {
+      display: none !important;
+    }
+
+    .step,
+    .line {
+      break-inside: avoid;
+    }
+  }
+</style>
+
+<script>
+  // Both controls are script-only, so neither is shown until it can work.
+  const printButton = document.querySelector<HTMLButtonElement>('[data-print]');
+  printButton?.addEventListener('click', () => window.print());
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy-line]')) {
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      const text = button.dataset.copyLine ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+        const label = button.textContent;
+        button.textContent = 'Copied';
+        window.setTimeout(() => {
+          button.textContent = label;
+        }, 1800);
+      } catch {
+        // Managed desktops withhold clipboard permission often enough that a
+        // dead button would be a real failure. Select the line instead so
+        // Ctrl+C still works.
+        const quote = button.closest('.line')?.querySelector('.line__text');
+        if (!quote) return;
+        const range = document.createRange();
+        range.selectNodeContents(quote);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+    });
+  }
+</script>

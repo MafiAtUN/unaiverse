@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["ilo"]
 ---
 
 ILO and NASK published a refined global index measuring occupational exposure to generative AI. The updated method classified tasks and occupations in greater detail and again found that transformation was more likely than full automation for most jobs. The study estimated that roughly one in four workers globally was in an occupation with some degree of exposure.

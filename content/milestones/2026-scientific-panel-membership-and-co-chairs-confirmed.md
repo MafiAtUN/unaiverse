@@ -10,6 +10,8 @@ tier: 2
 badges: ["ADVISORY"]
 personas: ["data-digital", "opga", "front-office"]
 unverified: false
+venue: ["new-york"]
+organ: ["ga-plenary", "advisory-body"]
 ---
 
 The General Assembly appointed the Panel’s 40 members on 12 February 2026, by a recorded vote, for a three-year term running to 11 February 2029. The members were drawn from more than 2,600 applications from over 140 countries, following independent review by ITU, ODET and UNESCO, and comprise 19 women and 21 men from all five UN regions. At the Panel’s first plenary meeting on 3 March 2026 the members elected Yoshua Bengio of Canada and Maria Ressa of the Philippines as co-chairs. Members serve in their personal capacity rather than as representatives of governments, employers or institutions.

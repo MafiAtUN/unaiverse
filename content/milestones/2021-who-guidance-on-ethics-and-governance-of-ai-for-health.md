@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["who"]
 ---
 
 The World Health Organization published *Ethics and governance of artificial intelligence for health*. The guidance sets out six principles: protecting human autonomy; promoting human well-being, safety and the public interest; ensuring transparency and explainability; fostering responsibility and accountability; ensuring inclusiveness and equity; and promoting responsive and sustainable AI. It provides recommendations for governments, developers, health providers, researchers and funders.

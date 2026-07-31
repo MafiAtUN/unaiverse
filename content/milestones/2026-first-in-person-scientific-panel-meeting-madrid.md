@@ -10,6 +10,8 @@ tier: 3
 badges: []
 personas: []
 unverified: false
+venue: ["elsewhere"]
+organ: ["advisory-body"]
 ---
 
 The Scientific Panel held its first in-person meeting in Madrid. Members worked on the evidence base for the Panel’s first assessment of AI capabilities, opportunities, risks and impacts. The meeting was an important drafting milestone ahead of the inaugural Global Dialogue.

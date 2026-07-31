@@ -10,6 +10,11 @@ tier: 2
 badges: ["ONGOING TRACK"]
 personas: ["builders", "data-digital", "development"]
 unverified: false
+venue: ["geneva"]
+organ: ["itu"]
+recurs:
+  cadence: "Continuous study-group and focus-group work in Geneva, on ITU-T cycles."
+  next: "No single date. Track the relevant study group rather than a meeting."
 ---
 
 ITU-T develops standards and pre-standardization work for AI and machine learning in telecommunications, networks, multimedia, digital health, autonomous driving and environmental efficiency. Examples include ITU-T Y.3172 on integrating machine learning into future networks, Y.3173 on evaluating intelligence levels and Y.3174 on data handling for machine learning. ITU also supports focus groups and joint initiatives with WHO and other organizations.

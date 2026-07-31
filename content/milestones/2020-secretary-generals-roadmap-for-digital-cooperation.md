@@ -10,6 +10,8 @@ tier: 2
 badges: ["ADVISORY"]
 personas: ["opga", "data-digital", "front-office"]
 unverified: false
+venue: ["new-york"]
+organ: ["secretariat", "ga-plenary"]
 ---
 
 Secretary-General António Guterres issued the Roadmap for Digital Cooperation as a follow-up to the High-level Panel on Digital Cooperation. The Roadmap addressed universal connectivity, digital inclusion, digital public goods, digital capacity-building, human rights, digital trust and security, and global cooperation on artificial intelligence. It proposed strengthening international AI cooperation and considering a multi-stakeholder advisory body to examine global AI governance.

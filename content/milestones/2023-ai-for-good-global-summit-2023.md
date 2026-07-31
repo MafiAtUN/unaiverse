@@ -10,6 +10,8 @@ tier: 2
 badges: []
 personas: ["front-office", "builders", "development"]
 unverified: false
+venue: ["geneva"]
+organ: ["itu"]
 media:
   url: "/media/2023-ai-for-good-global-summit-2023.jpg"
   caption: "AI for Good Global Summit 2023, Geneva, 6 July 2023."

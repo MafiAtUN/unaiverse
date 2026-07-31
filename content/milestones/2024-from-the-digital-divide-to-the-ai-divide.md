@@ -10,6 +10,8 @@ tier: 2
 badges: ["ONGOING TRACK"]
 personas: ["development", "opga", "front-office"]
 unverified: false
+venue: ["system-wide"]
+organ: ["itu", "agency"]
 ---
 
 UN reports describe AI inequality in terms of connectivity, compute, data, financing, skills, language coverage and institutional capacity. The Advisory Body, Global Digital Compact, UNCTAD and ODET call for international cooperation and public-interest infrastructure to prevent concentration of AI capabilities and benefits. Capacity-building for developing countries is therefore treated as a core governance issue rather than a separate development programme.

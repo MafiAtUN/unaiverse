@@ -10,6 +10,8 @@ tier: 3
 badges: ["AGENCY"]
 personas: []
 unverified: false
+venue: ["geneva"]
+organ: ["who"]
 ---
 
 WHO released guidance on the ethics and governance of large multi-modal models used in health care, public health, scientific research and drug development. It recommends regulatory oversight, transparency, independent auditing, cybersecurity, stakeholder participation and post-deployment monitoring. WHO warns that plausible but inaccurate outputs can create serious harm in health settings.
