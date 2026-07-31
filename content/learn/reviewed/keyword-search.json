@@ -209,9 +209,41 @@
     "bm25"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:30.294Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process[1]",
+        "severity": "error",
+        "problem": "The stated term matches are wrong. Counting the query terms gives A: travel 1 + claim 1 + receipts 1 = 3 distinct matches; B: travel 2 + claim 0 + receipts 0 = 1 distinct match; C: travel 0 + claim 0 + receipts 0 = 0 matches; D: travel 0 + claim 1 + receipts 0 = 1 distinct match. Document C does not contain “claim”, while document D does.",
+        "fix": "It checks the index and finds that document A contains all three terms, B contains “travel”, C contains none of the query terms, and D contains “claim”."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The proposed lower results contradict the actual matches. Document C has no query-term match, while document D matches “claim”. A basic lexical retrieval stage therefore has evidence for B and D, not C. The relative order of B and D depends on the scoring configuration.",
+        "fix": "The search tool returns A first, then B or D lower down, with snippets highlighting the matching words."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the distractors are absurd. Claims about reading only titles, image-only use and guaranteed factual correctness can be rejected without understanding BM25 or semantic search.",
+        "fix": "Replace options 1 to 3 with: “BM25 retrieves by meaning, while semantic search requires the same words.”; “BM25 builds the term index, while semantic search ranks lexical matches.”; “BM25 and semantic search are two names for the same term-based ranking method.”"
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "The four boxes named here do not match the four stages specified below. The description names “indexed documents” and “term matching”, while the steps and drawing instructions specify an index and a scoring box.",
+        "fix": "A left-to-right flow diagram with four boxes: user query, search index, match scoring, and ranked results. Arrows show that the query is broken into terms, checked against the index, scored, and returned as an ordered list with snippets."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -32,7 +32,7 @@
     "large-language-model"
   ],
   "oneSentence": "A VLM links images and text so one model can take visual input, written input, or both, and produce text or other structured outputs about them.",
-  "plainExplanation": "A vision-language model, or VLM, is a model built to work across images and language together. In practice, people also say large multimodal model, or LMM, for larger systems that handle several kinds of input. The terms overlap, but they are not always identical: a VLM specifically connects vision and language, while an LMM may also include audio, video or other data types.\n\nWhat goes in can be an image, a question in text, or both. The image is first turned into machine-readable pieces by a vision component. The text is turned into tokens, which are small pieces of text a model processes. Those visual and text representations are then placed into a shared processing system so the model can relate words to parts of the image.\n\nWhat happens next is similar to a language model, but with visual information added to the context. The system predicts text tokens one after another, or sometimes produces labels, coordinates or extracted fields. For example, it may answer a question about a chart, describe a photo, or read values from a scanned form.\n\nWhat comes out is not guaranteed truth. A VLM can miss small details, misread blurry text, or confidently describe something not present. It is also different from classic computer vision, which often performs narrower tasks like object detection, and different from a text-only large language model, which cannot directly inspect an image unless another tool first converts the image into text.",
+  "plainExplanation": "A vision-language model, or VLM, is a model built to connect images and language. In practice, people also say large multimodal model, or LMM, for larger systems that handle several kinds of input. The terms overlap, but they are not always identical: a VLM specifically connects vision and language, while an LMM may also include audio, video or other data types.\n\nWhat goes in can be an image, a question in text, or both. In one common generative design, a vision component turns the image into machine-readable features. The text is turned into tokens, which are small pieces of text a model processes. The visual and text representations are then supplied to a shared processing context so the model can relate words to image regions or patterns.\n\nMany generative VLMs then work similarly to a language model, but with visual information added to the context. They predict text tokens one after another. Depending on the design, outputs may instead include labels, coordinates or extracted fields. For example, a VLM may answer a question about a chart, describe a photo, or read values from a scanned form.\n\nWhat comes out is not guaranteed truth. A VLM can miss small details, misread blurry text, or confidently describe something not present. A VLM uses computer vision but specifically links visual processing with language. This differs from a text-only large language model, which cannot directly process an image unless another component first converts it into usable input.",
   "everydayAnalogy": {
     "title": "Matching a photographed form to the right template",
     "story": "Amina works at a service desk that receives phone photos of paper forms from offices in Nairobi, Bogotá and Amman. She looks at each photo, notices the layout, the boxes and the headings, and then matches it to one of several known templates. If the sender adds a note such as “find the invoice number”, she uses both the photo and the note to decide where to look. She then replies with the template name and the requested field value.\n\nIf the photo is blurred or cropped, she may still give an answer that sounds confident but is wrong.",
@@ -101,7 +101,7 @@
       "The model relates the prompt words to visual areas that look like headings and form fields.",
       "It generates an answer token by token: first the template label, then the extracted number."
     ],
-    "result": "Output: 'Template B. Invoice number: 84731.' A human checks the original image and confirms the template is B, but notices the last digit is actually 1 because the photo glare made 7 look similar to 1 in one region; this shows why verification matters."
+    "result": "Output: 'Template B. Invoice number: 84737.' A human checks the original image and confirms the template is B, but notices the last digit is actually 1, not 7; photo glare made the 1 look similar to 7. This shows why verification matters."
   },
   "unWorkplaceExample": {
     "scenario": "An office wants an internal search tool over approved guidance documents so staff can upload a screenshot of a form or table and ask, 'Which guidance note matches this layout?'",
@@ -217,9 +217,50 @@
   ],
   "contested": "Usage varies across research papers and products. Some authors use VLM narrowly for vision-plus-language systems, while others use broader labels such as LMM or multimodal LLM for overlapping capability sets.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:25.534Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The example's verification does not change the extracted number. The output is 84,731, whose last digit is 1. The described correct value also ends in 1. Digit comparison: output 8-4-7-3-1; verified value 8-4-7-3-1. There is no arithmetic to compute, but the claimed discrepancy is internally inconsistent.",
+        "fix": "Output: 'Template B. Invoice number: 84737.' A human checks the original image and confirms the template is B, but notices the last digit is actually 1, not 7; photo glare made the 1 look similar to 7. This shows why verification matters."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The final sentence presents a VLM as separate from computer vision because computer vision often performs narrower tasks. That is a category error. Computer vision is the broader capability or field for analysing images and video. A VLM uses that capability while specifically connecting visual and language processing. Narrow object detection is only one computer vision task.",
+        "fix": "Replace the explanation with the corrected version supplied below."
+      },
+      {
+        "field": "plainExplanation and visual",
+        "severity": "error",
+        "problem": "The page repeatedly presents separate encoders, a merged shared context and token generation as the mechanism of every VLM. The technical section correctly admits that architectures vary, but the main explanation and diagram do not. They should identify this pipeline as one common generative design rather than the definition of the whole model class.",
+        "fix": "Use the corrected plain explanation below. In the visual learning objective, description and accessibility description, call the diagram 'one common generative design'. In steps 2 to 4, begin the mechanism claims with 'In this design'."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The contrast implies that a VLM cannot ask a clarifying question. A system can generate such a question, even though this does not mean it deliberately recognises uncertainty as a person does. The limitation should focus on human responsibility and access to external context instead.",
+        "fix": "A person can compare the photo with original documents, seek missing context, and take responsibility for checking uncertain areas. A VLM does not look at an image in the human sense. It processes learned numerical representations and generates outputs from patterns in training and current input. Also, many VLMs do more than template matching: they can answer open questions, summarise images, or combine image and text inputs."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "The marked option is the only defensible answer, but the distractors are too weak. Option 0 is false because the page itself says usage overlaps but is not identical in every context. Option 1 is the intended and defensible answer. Option 2 is false because neither term is restricted to captioning or chat. Option 3 is false because combining an image with a text prompt is a standard capability described throughout the page. The categorical wording makes the answer obvious without understanding the distinction.",
+        "fix": "Use more plausible distractors, for example: 0. 'A VLM is any multimodal model, while an LMM is limited to vision and language.' 1. Keep the marked answer. 2. 'VLM and LMM differ mainly in output format: VLMs return text and LMMs return structured fields.' 3. 'LMM is the label for image-only systems, while VLM requires a text prompt.'"
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

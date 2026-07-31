@@ -30,7 +30,7 @@
     "summarisation"
   ],
   "oneSentence": "A method that sorts text, speech transcripts or sometimes images into attitudes such as positive, negative or neutral.",
-  "plainExplanation": "Sentiment analysis looks for the attitude expressed in language. The input is usually text, such as survey comments, social media posts, emails, reviews or call-centre transcripts. Some systems also analyse images or video captions, but most common uses focus on words.\n\nThe system takes the input and applies a classification step. Classification means putting something into a category. The categories might be simple, such as positive, negative and neutral, or more detailed, such as anger, praise, complaint or mixed feeling.\n\nTo do this, a model or rule set looks for patterns linked to attitude. These patterns can include words, phrases, punctuation, word order and context. For example, “cheap” can be praise in one sentence and criticism in another. Because of this, sentiment analysis is not just counting happy or unhappy words.\n\nThe output is usually a label, a score or both. For example, a comment might be marked negative with a score of 0.82. That can help people summarise large volumes of feedback, but it does not prove what a person truly felt. Results can be less reliable with sarcasm, mixed opinions, domain-specific language and low-resource languages, where less training data may exist.",
+  "plainExplanation": "Sentiment analysis looks for the attitude expressed in language. The input is usually text, such as survey comments, social media posts, emails, reviews or call-centre transcripts. Some systems also analyse images or video captions, but most common uses focus on words.\n\nThe system takes the input and applies a classification step. Classification means putting something into a category. The categories might be simple, such as positive, negative and neutral, or more detailed, such as very positive, mildly negative, neutral or mixed.\n\nTo do this, a model or rule set looks for patterns linked to attitude. These patterns can include words, phrases, punctuation, word order and context. For example, “cheap” can be praise in one sentence and criticism in another. Because of this, sentiment analysis is not just counting happy or unhappy words.\n\nThe output is usually a label, a score or both. For example, a comment might be marked negative with a score of 0.82. That can help people summarise large volumes of feedback, but it does not prove what a person truly felt. Results can be less reliable with sarcasm, mixed opinions, domain-specific language and low-resource languages, where less training data may exist.",
   "everydayAnalogy": {
     "title": "Sorting letters by mood",
     "story": "Two colleagues are reading feedback cards after an international youth event. One card says, “The venue was beautiful, but registration took far too long.” Another says, “Check-in was slow, yet the staff stayed calm and helpful.” They place each card into trays labelled mostly positive, mostly negative or mixed, based on the overall tone rather than one word. When they disagree, they reread the full sentence because the same idea can be expressed in different words.",
@@ -94,7 +94,7 @@
       "It assigns a label and score to each comment: 1 positive 0.91, 2 mixed with slight negative lean 0.56 negative, 3 negative 0.97, 4 neutral 0.88.",
       "A dashboard summarises the set: 1 positive, 1 mixed, 1 negative, 1 neutral."
     ],
-    "result": "Staff can quickly see that reliability and app stability are problems, but they should still read the comments themselves before acting because the labels simplify nuanced feedback."
+    "result": "Staff can quickly see the balance of attitudes, but they must read the comments to learn why, such as app crashes or missed work, because the labels omit those details."
   },
   "unWorkplaceExample": {
     "scenario": "A communications team in a UN field mission reviews thousands of public comments on official social media posts and website feedback forms to see whether messages about vaccination hours are being received positively, negatively or with confusion.",
@@ -211,9 +211,56 @@
     "opinion mining"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:24:40.420Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The detailed category examples blur sentiment analysis with emotion and intent detection. Anger is an emotion, while praise and complaint describe communicative functions. They are not simply finer-grained versions of positive, negative and neutral sentiment.",
+        "fix": "Replace “anger, praise, complaint or mixed feeling” with “very positive, mildly negative, neutral or mixed”."
+      },
+      {
+        "field": "visual.steps[3].visualInstruction",
+        "severity": "warning",
+        "problem": "The diagram highlights “Mixed” as a category but displays only negative and positive scores. That does not match the three displayed categories, so the reader cannot tell whether the scores are class probabilities, independent scores or evidence used to derive the mixed label.",
+        "fix": "Draw an arrow to a final box with three pill buttons: Positive, Negative, Neutral/Mixed. Highlight “Mixed” and show a score beneath, such as “confidence 0.74”."
+      },
+      {
+        "field": "workedExample.process[2]",
+        "severity": "warning",
+        "problem": "The score format is inconsistent. Comments 1, 3 and 4 have a label followed by an apparent score for that label, but comment 2 is labelled mixed and then given a negative score. The relationship between its label and score is unexplained. The count itself is correct: 1 positive + 1 mixed + 1 negative + 1 neutral = 4 comments.",
+        "fix": "It assigns a label and score to each comment: 1 positive 0.91, 2 mixed 0.56, 3 negative 0.97, 4 neutral 0.88."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result credits sentiment analysis with identifying reliability and app stability problems, although the described output contains only sentiment labels and scores. Finding the reasons or issues requires reading the comments or using another analysis task.",
+        "fix": "Staff can quickly see the balance of attitudes, but they must read the comments to learn why, such as app crashes or missed work, because the labels omit those details."
+      },
+      {
+        "field": "unWorkplaceExample.scenario and unWorkplaceExample.relevance",
+        "severity": "error",
+        "problem": "Confusion is not a positive, negative or neutral sentiment category. Claiming that this sentiment analysis use identifies confusion and posts needing clearer wording blurs sentiment with a separate classification task and overstates what the stated output can establish.",
+        "fix": "Scenario: “A communications team in a UN field mission reviews thousands of public comments on official social media posts and website feedback forms to estimate whether reactions to messages about vaccination hours are positive, negative or neutral.” Relevance: “This can help the team spot broad trends, compare reactions across languages and identify posts receiving negative reactions that may need human review.”"
+      },
+      {
+        "field": "quickCheck.options and quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The fourth option is a straw distractor. No relevant system promises a writer’s “exact real-world intentions”, and the explanation misleadingly associates this impossible output with intent detection. The other distractors also test unrelated task names rather than the distinctions specified for this page.",
+        "fix": "Use these options: [“A label such as positive, negative or neutral for a comment”, “A goal category such as asking for help or reporting a problem”, “Recurring themes found across a collection of documents”, “A shorter version that keeps the main points”]. Keep correctOptionIndex as 0 and revise the explanation accordingly."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

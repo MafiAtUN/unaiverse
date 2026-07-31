@@ -33,7 +33,7 @@
     "biological-neuron"
   ],
   "oneSentence": "A neural network is a layered set of connected numerical operations that turns input data into an output such as a label, score or prediction.",
-  "plainExplanation": "A neural network is a machine-learning method built from many small calculation units linked in layers. The terms “artificial neural network”, “neural net” and “ANN” usually mean the same broad idea. “Neural network” is the common short form, while “artificial” reminds us that this is an engineered system, not a biological brain.\n\nWhat goes in depends on the task. The input might be numbers from a spreadsheet, pixels from an image, or words turned into numbers. Each unit applies a weighted sum, meaning it multiplies inputs by adjustable importance values called weights, adds a bias term, and then passes the result through an activation function, a rule that changes the number before sending it onward.\n\nWhat happens inside is often called a forward pass. Values move from the input layer through one or more hidden layers to an output layer. During training, the network compares its output with the desired answer and adjusts its weights and biases to reduce error over many examples.\n\nWhat comes out might be a category, a probability-like score, a translated phrase, or a forecast. A neural network does not contain facts in the way a database does. It produces outputs by applying learned numerical patterns, so results can be useful but still wrong, biased or overconfident.\n\nPeople often confuse neural networks with deep learning. Deep learning usually means neural networks with many layers and large-scale training, so it is a subset, not a separate unrelated idea. Specific architectures such as convolutional neural networks, recurrent neural networks and transformers are different designs within the wider neural-network family.",
+  "plainExplanation": "A neural network is a machine-learning method built from connected numerical operations, often organised in layers. The terms “artificial neural network”, “neural net” and “ANN” usually mean the same broad idea. “Neural network” is the common short form, while “artificial” reminds us that this is an engineered system, not a biological brain.\n\nWhat goes in depends on the task. The input might be numbers from a spreadsheet, pixels from an image, or words turned into numbers. In a basic feed-forward network, a unit multiplies inputs by adjustable values called weights, adds a bias term, and passes the result through an activation function. Other neural-network designs organise and combine numerical operations differently.\n\nWhat happens when an input is processed is often called a forward pass. Values move through the network to produce an output. In many training tasks, the network compares its output with a target and adjusts its weights and biases to reduce error over many examples.\n\nWhat comes out might be a category, a probability-like score, a translated phrase, or a forecast. A neural network does not contain facts in the way a database does. It produces outputs by applying learned numerical patterns, so results can be useful but still wrong, biased or overconfident.\n\nPeople often confuse neural networks with deep learning. Deep learning usually means neural networks with many layers and large-scale training, so it is a subset, not a separate unrelated idea. Specific architectures such as convolutional neural networks, recurrent neural networks and transformers are different designs within the wider neural-network family.",
   "everydayAnalogy": {
     "title": "A relay of editors translating a short field report",
     "story": "A field officer writes a short report in Arabic about road damage after heavy rain. Before it is shared more widely, a small team handles it in stages: one person marks place names, another identifies key events, and another rewrites the main message in clear English. Each person passes a marked-up note to the next, not the original conversation in their head. At the end, the team produces a short English summary with confidence notes about uncertain phrases.",
@@ -149,7 +149,7 @@
       "A sensor that directly observes the real world without training"
     ],
     "correctOptionIndex": 1,
-    "explanation": "A neural network processes numeric inputs through layers of calculations with learned weights and biases. It is not simply a database, a hand-written rule list or a physical sensor."
+    "explanation": "The correct option describes the broad neural-network family. Deep learning uses many-layered models, a transformer is one neural-network design, and the brain comparison does not mean that neural networks reproduce living cells."
   },
   "resources": [
     {
@@ -234,9 +234,63 @@
     "ann"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:31.490Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that each unit applies a weighted sum, bias and activation is presented as true of every neural network. That describes a basic feed-forward unit, not every operation in architectures such as transformers. The training description also assumes comparison with a desired answer without qualifying this as one common form of training.",
+        "fix": "Qualify the unit-level description as a basic feed-forward network and say that other designs organise numerical operations differently. Qualify the desired-answer account as applying to many training tasks."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The statement that internal steps are “usually all applied mathematically at once” is false. Later layers depend on results from earlier layers. Calculations within a layer may run in parallel, but the entire network is not evaluated at once.",
+        "fix": "A real neural network does not contain people who understand language or meaning. Its internal steps are numerical transformations applied in a required order, although many calculations within one layer can run in parallel. Training changes numbers in the system rather than teaching separate human-like specialists."
+      },
+      {
+        "field": "visual",
+        "severity": "warning",
+        "problem": "The diagram presents one input-hidden-output feed-forward design as the mechanism of neural networks generally. It does not signal that this is a simplified architecture, so it blurs the broad term with one particular arrangement.",
+        "fix": "Change the title to “How a basic feed-forward neural network turns input into output” and identify the three-column layout as a simplified example."
+      },
+      {
+        "field": "workedExample.input",
+        "severity": "warning",
+        "problem": "The features are called word features, but “outage word” is 0.2 even though word presence would normally be represented as present or absent. The page does not explain what the fractional value means.",
+        "fix": "Rename it “outage-related signal=0.2” so the fractional value is not presented as literal word presence."
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "warning",
+        "problem": "This is not a worked calculation. The values 1.7, 0.3, 0.88 and 0.12 are asserted without weights, biases, activation rules or output equations. The only checkable arithmetic is 0.88 + 0.12 = 1.00, which does not show how those scores came from 1.7 and 0.3. The claimed conversion therefore cannot be reproduced.",
+        "fix": "Replace the steps with: “Input features enter as [1, 0, 1, 0.2].” “Water unit: max(0, 1×1 + 0×0 + 0.5×1 + 0×0.2 + 0.2) = 1.7.” “Electricity unit: max(0, 0×1 + 1×0 + 0×1 + 0.5×0.2 + 0.2) = 0.3.” “The output copies these as scores: water = 1×1.7 + 0×0.3 = 1.7; electricity = 0×1.7 + 1×0.3 = 0.3.” “Because 1.7 > 0.3, the top label is water supply issue.”"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "Calling a neural network a “chain” suggests a strictly sequential structure. That is misleading for designs containing parallel paths or other connection patterns, including the separately defined transformer category.",
+        "fix": "A neural network is best understood as a system of learned numerical transformations, not as a digital brain."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked option is the only defensible answer, but the distractors are so unrelated that a reader can answer by elimination without understanding neural networks. Option 0 is a database, option 2 is an entirely hand-written rule list, and option 3 is a physical sensor. None tests confusion with deep learning, transformers or the brain analogy.",
+        "fix": "Use these options: “Deep learning, meaning that every neural network has many layers and large-scale training”; “A layered system of weighted calculations that maps inputs to outputs”; “A transformer, meaning the design used by every neural network”; “A mathematical copy of living brain cells and biological processes”. Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

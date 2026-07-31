@@ -31,8 +31,8 @@
     "indexing",
     "retrieval-augmented-generation"
   ],
-  "oneSentence": "A method for quickly finding the items most similar to a query in a vector space, often trading a little accuracy for much faster search at scale.",
-  "plainExplanation": "Nearest-neighbour search starts with a query represented as numbers, often called a vector or embedding. It compares that query with many stored vectors and returns the closest ones according to a distance or similarity measure such as cosine similarity. The output is usually a short ranked list: the top 1, top 5, or top k most similar items.\n\nSeveral related terms are often mixed together. k-NN usually means “return the k closest items”. Nearest-neighbour search can mean the general task of finding the closest items, whether one or many. ANN usually means approximate nearest neighbour: a faster method that may miss the exact best match sometimes, but is much more practical for large collections.\n\nWhat happens in practice depends on scale. With a small collection, a system can compare the query against every stored vector. With millions of items, that is often too slow, so the system builds an index: a data structure that helps narrow the search to promising regions first. The index does not change the meaning of similarity; it changes how the system finds similar items efficiently.\n\nThis is commonly used in semantic search and retrieval-augmented generation. A user asks a question, the system turns it into a vector, nearest-neighbour search retrieves passages with similar meaning, and those passages may then be reranked or shown to a language model. This is different from keyword search, which matches words directly rather than closeness in vector space.",
+  "oneSentence": "A method for finding the items most similar to a query in a vector space; approximate methods often trade a little accuracy for much faster search at scale.",
+  "plainExplanation": "Nearest-neighbour search starts with a query represented as numbers, often called a vector or embedding. It compares that query with many stored vectors and returns the closest ones according to a distance or similarity measure such as cosine similarity. The output is usually a short ranked list: the top 1, top 5, or top k most similar items.\n\nSeveral related terms are often mixed together. k-nearest-neighbour search means returning the k closest items. The abbreviation k-NN can also refer to a supervised classification or regression method that uses nearby examples. Nearest-neighbour search is the general task of finding the closest items, whether one or many. ANN means approximate nearest-neighbour search: a faster method that may miss true nearest items but is more practical for large collections.\n\nWhat happens in practice depends on scale. With a small collection, a system can compare the query against every stored vector. With millions of items, that is often too slow, so the system builds an index: a data structure that helps narrow the search to promising regions first. The index does not change the meaning of similarity; it changes how the system finds similar items efficiently.\n\nThis is commonly used in semantic search and retrieval-augmented generation. A user asks a question, the system turns it into a vector, nearest-neighbour search retrieves passages with similar meaning, and those passages may then be reranked or shown to a language model. This is different from keyword search, which matches words directly rather than closeness in vector space.",
   "everydayAnalogy": {
     "title": "Finding the right book by shelf neighbours",
     "story": "A librarian in Nairobi receives a request: “I need a book about preparing cities for extreme heat, not just climate in general.” Instead of checking every title in a huge library one by one, she goes to the section where books on urban climate adaptation tend to sit near each other. She pulls the few books from the nearest shelves, then keeps the five that best match the request. If the library is enormous and time is short, she may use a floor map and shelf guide to get close quickly, even if she does not inspect every possible book.",
@@ -130,7 +130,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Turn the query and the stored items into numbers, find which stored items are closest, and return the best few. If the collection is huge, use a shortcut index so the search is fast enough.",
-    "technical": "Given a query vector q and a set of stored vectors, nearest-neighbour search returns the item with minimum distance to q or the top k items by a similarity metric such as cosine similarity, inner product or Euclidean distance. A brute-force method computes scores against every vector. At scale, systems build an index to reduce the search space, for example by partitioning vectors, building graph-based neighbourhood links or using quantisation to compress representations. These are often called approximate nearest-neighbour methods because they optimise latency, memory and throughput while aiming to preserve high recall of the true nearest items. In retrieval pipelines, ANN typically provides a candidate set that may then be reranked with a more expensive model."
+    "technical": "Given a query vector q and a set of stored vectors, nearest-neighbour search returns the item with minimum distance to q or the top k items under a distance or similarity measure such as Euclidean distance, cosine similarity or inner product. A brute-force method computes scores against every vector. At scale, systems build an index to reduce the search space, for example by partitioning vectors, building graph-based neighbourhood links or using quantisation to compress representations. These are often called approximate nearest-neighbour methods because they optimise latency, memory and throughput while aiming to preserve high recall of the true nearest items. In retrieval pipelines, ANN typically provides a candidate set that may then be reranked with a more expensive model."
   },
   "keyTakeaway": "Nearest-neighbour search is the engine that turns embeddings into useful retrieval, and ANN is the speed-up that makes it practical on large collections.",
   "quickCheck": {
@@ -142,7 +142,7 @@
       "k-NN refers only to keyword matching over the k most frequent words."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Nearest-neighbour search is the broad idea of finding the closest items in a vector space. k-NN commonly asks for the top k such items, while ANN focuses on efficient approximate methods that reduce computation on large datasets. They are related terms, not one undifferentiated concept."
+    "explanation": "Nearest-neighbour search is the broad task of finding the closest stored items. k-nearest-neighbour search asks for k such items, while k-NN can also name a prediction method using nearby examples. ANN uses approximate methods to reduce computation at scale."
   },
   "resources": [
     {
@@ -214,9 +214,69 @@
     "k-nn"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:29.919Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This defines nearest-neighbour search as if it were usually approximate. The general task does not inherently trade accuracy for speed. That trade-off belongs to approximate nearest-neighbour methods.",
+        "fix": "A method for finding the items most similar to a query in a vector space; approximate methods often trade a little accuracy for much faster search at scale."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The statement that “k-NN usually means return the k closest items” is unreliable. k-nearest-neighbour search returns k items, but “k-NN” commonly also names a supervised classification or regression method. The current wording blurs retrieval with that separate use.",
+        "fix": "Replace the second paragraph with: “Several related terms are often mixed together. k-nearest-neighbour search means returning the k closest items. The abbreviation k-NN can also refer to a supervised classification or regression method that uses nearby examples. Nearest-neighbour search is the general task of finding the closest items, whether one or many. ANN means approximate nearest-neighbour search: a faster method that may miss true nearest items but is more practical for large collections.”"
+      },
+      {
+        "field": "visual.description, visual.accessibilityDescription, visual.reducedMotionDescrip",
+        "severity": "error",
+        "problem": "These fields repeatedly define exact search as checking every stored vector. Brute-force exact search does that, but exact nearest-neighbour search can also use an index that safely prunes candidates while still guaranteeing the exact result. The contrast should be brute-force exact search versus approximate search, not all exact search versus approximate search.",
+        "fix": "Qualify each route as “brute-force exact: score all items” and “approximate: inspect selected candidates”. In the accessibility text, replace “exact search, which compares the query to all stored vectors” with “brute-force exact search, which compares the query with all stored vectors”."
+      },
+      {
+        "field": "workedExample",
+        "severity": "warning",
+        "problem": "This is not a worked computation. No query or candidate vector is provided, so none of the cosine scores can be checked. The only numerical check available is that 0.89 > 0.86 > 0.82 > 0.81 > 0.79, which is correctly ordered. A human must supply small vectors and show the dot products and norms if the example is meant to demonstrate cosine similarity."
+      },
+      {
+        "field": "workedExample.scenario, workedExample.process, workedExample.result",
+        "severity": "warning",
+        "problem": "The unit being searched changes without explanation. The scenario gives one embedding per document, but the task, candidates and results are passages. This obscures whether documents were split into chunks and what each stored vector represents.",
+        "fix": "Use “100,000 short passages” and “Each passage has an embedding” in the scenario, then retain “passages” throughout the process and result."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "Euclidean distance is listed as a similarity metric. It is a distance measure, for which smaller values are closer. Cosine similarity and inner product are similarity measures, for which larger values are normally ranked higher.",
+        "fix": "Given a query vector q and a set of stored vectors, nearest-neighbour search returns the item with minimum distance to q or the top k items under a distance or similarity measure such as Euclidean distance, cosine similarity or inner product. A brute-force method computes scores against every vector. At scale, systems build an index to reduce the search space, for example by partitioning vectors, building graph-based neighbourhood links or using quantisation to compress representations. These are often called approximate nearest-neighbour methods because they optimise latency, memory and throu"
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked option repeats the unreliable claim that k-NN usually means top-k retrieval. The other three options are caricatures: exact synonyms used only in classification, ANN always being better, and matching frequent keywords. A learner can choose option 2 without understanding the distinctions.",
+        "fix": "Replace the options with: [“Nearest-neighbour search and k-NN are exact methods, while ANN is a separate retrieval task.”, “Nearest-neighbour search is the general task, k-nearest-neighbour search returns k items, and ANN performs the task approximately for efficiency.”, “k-NN is the general task, nearest-neighbour search means top k, and ANN changes the similarity measure.”, “Nearest-neighbour search names the index, k-NN names its metric, and ANN names its reranker.”] Keep correctOptionIndex as 1."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "error",
+        "problem": "The explanation again treats k-NN chiefly as a request for top-k items and does not acknowledge its common supervised-learning meaning.",
+        "fix": "Nearest-neighbour search is the broad task of finding the closest stored items. k-nearest-neighbour search asks for k such items, while k-NN can also name a prediction method using nearby examples. ANN uses approximate methods to reduce computation at scale."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

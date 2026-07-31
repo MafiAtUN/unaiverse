@@ -31,7 +31,7 @@
     "edge-ai"
   ],
   "oneSentence": "The systems and services that keep an AI model available so it can receive requests, run on computing hardware, and return outputs reliably and securely.",
-  "plainExplanation": "Model hosting means providing the place and supporting systems that let a trained model accept requests and produce outputs. A request might be text, an image, audio, or structured data. The output might be a summary, a classification, a translation, or another generated result.\n\nWhat goes in is not only the user’s request. The hosting setup also includes the model file, the computing hardware such as CPUs or GPUs, the software needed to load the model, security controls, and rules for who can call it and how often. In many cases it also includes logging, monitoring, and automatic scaling, which means adding more capacity when demand rises.\n\nWhat happens is often called inference: the model is loaded into memory, a request reaches an endpoint, the system checks permissions and limits, the model runs on the available hardware, and the service returns the result. Good hosting tries to do this with acceptable speed, uptime, cost, and protection of data.\n\nWhat comes out is more than the model’s answer. Hosting also produces operational information such as response time, failures, usage records, and cost signals. That is why model hosting is not the same as training a model, and not the same as deploying one change into production. Deployment is the act of releasing a version; hosting is the environment that keeps versions running over time.",
+  "plainExplanation": "Model hosting means providing the place and supporting systems that let a trained model accept requests and produce outputs. A request might be text, an image, audio, or structured data. The output might be a summary, a classification, a translation, or another generated result.\n\nThe hosting setup does more than handle the user’s request. It also includes the model, computing hardware such as CPUs or GPUs, software needed to load the model, security controls, and rules for who can call it and how often. In many cases it also includes logging, monitoring, and automatic scaling, which means adding more capacity when demand rises.\n\nWhat happens is often called inference: the model is loaded into memory, a request reaches the service through an endpoint, the system checks permissions and limits, the model runs on the available hardware, and the service returns the result. Good hosting tries to do this with acceptable speed, uptime, cost, and protection of data.\n\nHosting also produces operational information such as response time, failures, usage records, and cost signals. That is why model hosting is not the same as training or deployment. Deployment puts an AI system into real use. Hosting is the runtime environment and ongoing operation that keeps the model available.",
   "everydayAnalogy": {
     "title": "A message-sorting desk in a busy office",
     "story": "Imagine a regional office that receives hundreds of messages each hour. A sorting desk takes each message, checks whether the sender is authorised, routes it to staff with the right language skills, and returns a label such as urgent or non-urgent. On quiet days one staff member is enough, but during a storm or public holiday more staff are called in so delays do not grow too much. The office manager also tracks waiting time, errors, and electricity use because the desk must stay reliable and affordable.\n\nThe sorter’s skill is like the trained model, but the desk, staff schedule, access checks, queue and reporting are what make the service actually usable.",
@@ -136,7 +136,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Model hosting is the setup that keeps an AI model available for use. It receives requests, runs the model on computing hardware, returns results, and manages things like access, speed and uptime.",
-    "technical": "Model hosting is the runtime infrastructure and service layer for model inference. It typically includes model artefact storage, container or server processes, hardware allocation such as CPU or GPU, network exposure through an endpoint, authentication and authorisation, rate limiting, queues, autoscaling, observability, version management, and sometimes vendor-managed orchestration. The aim is to meet operational requirements such as latency, throughput, availability, security, compliance and cost control. In self-hosted arrangements, the organisation manages more of this stack directly. In managed hosting, a provider operates more of it, but governance and risk responsibility do not disappear. The term is often confused with deployment, which is the act of shipping or updating a model, and with endpoint, which is the address used to access the service rather than the whole hosting environment."
+    "technical": "Model hosting is the runtime infrastructure and service layer for model inference. It typically includes model artefact storage, container or server processes, hardware allocation such as CPU or GPU, network exposure through an endpoint, authentication and authorisation, rate limiting, queues, autoscaling, observability, version management, and sometimes vendor-managed orchestration. The aim is to meet operational requirements such as latency, throughput, availability, security, compliance and cost control. In self-hosted arrangements, the organisation manages more of this stack directly. In managed hosting, a provider operates more of it, but governance and risk responsibility do not disappear. Deployment puts an AI system into real use, while hosting is the runtime environment that keeps it available. An endpoint is the address and rules used to access a specific service function."
   },
   "keyTakeaway": "A model is useful in practice only when the hosting around it makes it reachable, fast enough, secure enough and affordable enough for real work.",
   "quickCheck": {
@@ -220,9 +220,50 @@
     "managed model"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:24.741Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The final paragraph incorrectly narrows deployment to releasing a version or deploying one change. The supplied definition covers putting an AI system into real use, not merely version release. The paragraph beginning “What goes in” also confuses requests with components of the hosting setup.",
+        "fix": "Model hosting means providing the place and supporting systems that let a trained model accept requests and produce outputs. A request might be text, an image, audio, or structured data. The output might be a summary, a classification, a translation, or another generated result.\n\nThe hosting setup does more than handle the user’s request. It also includes the model, computing hardware such as CPUs or GPUs, software needed to load the model, security controls, and rules for who can call it and how often. In many cases it also includes logging, monitoring, and automatic scaling, which means addi"
+      },
+      {
+        "field": "commonMisconceptions[0].correction",
+        "severity": "error",
+        "problem": "The correction again defines deployment too narrowly as releasing a model or new version. This contradicts the supplied definition and blurs deployment with release or update management.",
+        "fix": "They are related but different. Deployment puts an AI system into real use. Hosting provides and operates the environment that keeps the model available, scaled, monitored and controlled."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The final sentence incorrectly says deployment is the act of shipping or updating a model. Deployment is putting an AI system into real use, while an update is only one possible deployment activity.",
+        "fix": "Model hosting is the runtime infrastructure and service layer for model inference. It typically includes model artefact storage, container or server processes, hardware allocation such as CPU or GPU, network exposure through an endpoint, authentication and authorisation, rate limiting, queues, autoscaling, observability, version management, and sometimes vendor-managed orchestration. The aim is to meet operational requirements such as latency, throughput, availability, security, compliance and cost control. In self-hosted arrangements, the organisation manages more of this stack directly. In m"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The claim that 680 milliseconds is “quickly enough” is unsupported because the example gives no latency target. The claim that the team can see the cost impact is also stronger than the listed records, which mention latency, model version and token usage but no calculated cost.",
+        "fix": "The application receives an urgent label in 680 milliseconds and routes the message to human staff for follow-up, while the operations team reviews performance and resource use."
+      },
+      {
+        "field": "visual.description and visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "Both descriptions call this a five-step flow even though monitoring is drawn below the processing stages and operates alongside them. Presenting monitoring as step five can falsely suggest that it begins only after the response is returned.",
+        "fix": "Description: A flow diagram has four boxes connected left to right, from request to response. Access checks and the hosted model sit between them. A monitoring box sits below the service stages, with dotted links showing that monitoring occurs throughout. Side labels show that traffic volume affects scaling and that logs and metrics support reliability and cost control.\n\nAccessibility description: The diagram shows a four-stage flow from left to right, with monitoring underneath. First, a request enters the service. Second, the service checks permissions, applies rate limits and may queue the "
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

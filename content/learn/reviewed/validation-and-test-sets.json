@@ -33,7 +33,7 @@
     "training"
   ],
   "oneSentence": "Separate portions of data are kept aside to tune a model during development and then to check, at the end, how well it works on unseen examples.",
-  "plainExplanation": "When people train a machine-learning model, they usually do not use all their data for the same purpose. One part is used for training: adjusting the model’s internal settings from examples. A second part, often called the validation set, is used during development to compare versions, tune choices such as model size, and watch for overfitting. A third part, the test set, is saved for the final check.\n\nWhat goes in are examples from the same general task, such as past messages and their correct categories, or house features and sale prices. What happens is that the model learns from the training set, then developers measure its performance on the validation set and may change settings or even the modelling approach. After those choices are finished, they run the final model once on the test set to estimate how it may perform on new, similar data.\n\nThe key difference is timing and use. The validation set helps guide development, so repeated checking can slowly influence decisions. The test set should stay untouched until the end, because it is meant to be an independent check. If people keep looking at test results and changing the model, the test set starts acting like a validation set and no longer gives a clean final estimate.\n\nYou may also hear held-out set. That means data deliberately kept out of training. Sometimes people use it loosely for either validation or test data, so ask which role it serves. This term is often confused with cross-validation, which is a method for rotating through several temporary validation splits, and with data leakage, which is the mistake of letting information from validation or test data influence training.",
+  "plainExplanation": "When people train a machine-learning model, they usually do not use all their data for the same purpose. One part is used for training: adjusting the model’s internal settings from examples. A second part, often called the validation set, is used during development to compare versions, tune choices such as model size, and watch for overfitting. A third part, the test set, is saved for the final check.\n\nWhat goes in are examples from the same general task, such as past messages and their correct categories, or house features and sale prices. What happens is that the model learns from the training set, then developers measure its performance on the validation set and may change settings or even the modelling approach. After those choices are finished, they run the final model once on the test set to estimate how it may perform on new, similar data.\n\nThe key difference is timing and use. The validation set helps guide development, so repeated checking can slowly influence decisions. The test set should stay untouched until the end, because it is meant to be an independent check. If people keep looking at test results and changing the model, the test set starts acting like a validation set and no longer gives a clean final estimate.\n\nYou may also hear held-out set. That means data deliberately kept out of training. Sometimes people use it loosely for either validation or test data, so ask which role it serves. This term is often confused with cross-validation, which is a method for rotating through several temporary validation splits, and with data leakage, which is the mistake of allowing information to cross data boundaries in a way that makes measured performance misleading.",
   "everydayAnalogy": {
     "title": "Planning a journey across a city",
     "story": "A team in Nairobi is designing a route-planning guide for visitors who need to cross the city by bus and on foot. They practise on many known journeys, then check a separate list of trial journeys to compare two draft guides and choose the better one. Once they settle on a guide, they open a sealed envelope with a final set of journeys they have not used before and score the guide only once. If they keep reopening that envelope and rewriting the guide each time, the final score stops being a fair check.",
@@ -219,9 +219,43 @@
     "test set"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:01.538Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The final sentence defines data leakage too narrowly and risks calling legitimate validation use leakage. Validation results are meant to influence model selection and tuning. Leakage is not simply any influence from validation or test data on development. It involves information crossing boundaries in a way that makes evaluation unrealistically favourable.",
+        "fix": "Replace the final clause with: \"and with data leakage, which is the mistake of allowing information to cross data boundaries in a way that makes measured performance misleading.\""
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "The question reverses the causal relationship. The concern is whether evaluation data influenced development choices, not whether the system influenced the data.",
+        "fix": "Replace the opening question with: \"was the system measured on data that had already influenced its development, or on genuinely held-out data?\""
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The final sentence categorically treats grouped observations crossing splits as data leakage. Such crossing is risky when the observations are related and the evaluation is meant to generalise to new groups, but it is not automatically leakage in every task.",
+        "fix": "Replace the final sentence with: \"Good practice also requires preventing data leakage, such as duplicate records crossing splits, future information being used too early, or related observations being split in a way that inflates performance.\""
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "The description says to read from training to validation to test, which suggests that data flows sequentially between the three sets. The detailed steps instead show the correct structure: one dataset branches into three sets with different roles.",
+        "fix": "A left-to-right step diagram starts with one dataset branching into three labelled data boxes. The process then covers training, validation and test. The diagram shows that training changes the model, validation helps choose settings, and test is used last for final evaluation only."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

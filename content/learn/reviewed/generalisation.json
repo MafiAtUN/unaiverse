@@ -30,7 +30,7 @@
     "memorisation"
   ],
   "oneSentence": "The ability of a model to give useful results on new cases, not just on the examples used to build or tune it.",
-  "plainExplanation": "A model is built from past examples, often called training data. Generalisation asks a simple question: after learning from those examples, does the model still work on new examples it has not seen before? The input is old data used for development, and the output is performance on fresh data.\n\nWhat happens in between is testing. Developers compare the model’s predictions with the real answers on a separate set of examples. If the score stays good on new data, the model probably generalises well. If it only looks good on familiar data, it may have copied patterns too closely instead of finding a broader rule.\n\nThis is often confused with accuracy, but they are not the same. Accuracy is one measurement on one dataset. Generalisation is the broader ability to keep performing well beyond the data used to create the system. A model can have high accuracy in development and still generalise badly in practice.\n\nIt is also often confused with memorisation. Memorisation means storing exact examples or narrow patterns. Generalisation means using learned patterns in a way that still helps on new cases. In real evaluation, people check this with held-out test data, cross-validation, and by watching whether results remain stable when the setting changes.",
+  "plainExplanation": "A model is built from past examples, often called training data. Generalisation asks whether its performance carries over to relevant examples it has not seen before.\n\nTesting does not create generalisation. It provides evidence about it. Developers compare predictions with known answers on a separate set of examples. Strong performance on relevant unseen data suggests better generalisation. A sharp drop suggests that patterns learned during development do not transfer well.\n\nAccuracy and generalisation are not the same. Accuracy is a measurement on a particular dataset. Generalisation concerns performance beyond the data used to train or tune the model. A model can have high development accuracy and still perform poorly in practice.\n\nGeneralisation also differs from memorisation and overfitting. Memorisation means repeating training examples or narrow patterns. Overfitting occurs when fitting the training examples closely leads to worse performance on new cases. Generalisation is usually estimated with held-out test data or cross-validation, followed by checks under relevant operating conditions.",
   "everydayAnalogy": {
     "title": "Finding books in a large library",
     "story": "A new library assistant learns how books are arranged by practising in one wing of a large library. In that wing, the assistant gets very fast at locating history books on familiar shelves. The next day, the assistant is sent to a different wing with new shelves, different subjects and some unusual labels. If the assistant can still find the right books quickly by using the library system rather than just memory of one area, that is the kind of behaviour people mean by generalisation.",
@@ -125,7 +125,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "In simple terms, this means a model learned something useful that still helps on new examples, not just on the examples used to build it.",
-    "technical": "Technically, generalisation is the extent to which a model’s performance on unseen data matches its performance during development. The central idea is the gap between empirical performance on the data available for training or tuning and expected performance on data drawn later from the same or a related process. It is usually estimated with held-out test sets, validation splits, or cross-validation. Poor generalisation can result from overfitting, data leakage, distribution mismatch, class imbalance, or evaluation procedures that do not reflect deployment conditions. The exact metric may be accuracy, precision, recall, F1 score, calibration or another measure, but the question is broader than any single metric: do the learned patterns transfer beyond the observed sample?"
+    "technical": "Technically, generalisation is the performance a fitted model is expected to achieve on relevant unseen data. The difference between development performance and unseen-data performance is the generalisation gap. Generalisation is estimated with held-out test sets or cross-validation, using metrics suited to the task, such as accuracy, precision, recall, F1 score or calibration. Poor unseen performance can result from overfitting, data leakage, distribution mismatch or evaluation procedures that do not reflect intended use. The central question is whether patterns fitted from the observed sample support useful performance beyond that sample."
   },
   "keyTakeaway": "A model is only as useful as its performance on new, relevant data, not on the examples it has already seen.",
   "quickCheck": {
@@ -209,9 +209,50 @@
     "generalise"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:20.507Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The sentence \"What happens in between is testing\" falsely presents testing as the process that produces generalisation. Testing only estimates how well a trained model performs on unseen data. The input-output framing is also misleading because generalisation is a property of performance, not a pipeline with old data as its input and a score as its output.",
+        "fix": "A model is built from past examples, often called training data. Generalisation asks whether its performance carries over to relevant examples it has not seen before.\n\nTesting does not create generalisation. It provides evidence about it. Developers compare predictions with known answers on a separate set of examples. Strong performance on relevant unseen data suggests better generalisation. A sharp drop suggests that patterns learned during development do not transfer well.\n\nAccuracy and generalisation are not the same. Accuracy is a measurement on a particular dataset. Generalisation concern"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The definition equates generalisation with unseen performance matching development performance. That is wrong because equally poor performance on both datasets would produce a small gap without showing useful generalisation. Matching scores describes the generalisation gap, not generalisation itself.",
+        "fix": "Technically, generalisation is the performance a fitted model is expected to achieve on relevant unseen data. The difference between development performance and unseen-data performance is the generalisation gap. Generalisation is estimated with held-out test sets or cross-validation, using metrics suited to the task, such as accuracy, precision, recall, F1 score or calibration. Poor unseen performance can result from overfitting, data leakage, distribution mismatch or evaluation procedures that do not reflect intended use. The central question is whether patterns fitted from the observed sampl"
+      },
+      {
+        "field": "visual.description and visual.steps[1]",
+        "severity": "warning",
+        "problem": "The visual contrasts \"familiar-style data\" with unseen data, but these are not opposites. Proper held-out data is often deliberately similar to development data while still being unseen. The diagram therefore blurs whether it is teaching separation from training data or robustness to a changed setting.",
+        "fix": "Revise the columns to contrast evaluation on data used during development with evaluation on separate, unseen data. Treat changed settings as an additional check, not as the definition of unseen data."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The claim that the model \"does not generalise well enough\" is unsupported because no acceptable performance threshold is given. The arithmetic itself is consistent: 95% of 10,000 is 9,500, and 74% of 2,000 is 1,480. The justified conclusion is that performance fell substantially, not that 74% is necessarily inadequate.",
+        "fix": "The model’s performance falls substantially on fresh data. Its strong development score did not carry over, so the team should investigate data coverage, evaluation and possibly a different approach."
+      },
+      {
+        "field": "quickCheck.options and quickCheck.explanation",
+        "severity": "warning",
+        "problem": "Option 1 says only that performance remains similar. Similar but poor performance would not satisfy the page’s definition of useful generalisation. Options 2 and 3 are also implausible distractors, making the answer obvious without much understanding. Option 0 is not evidence because it uses training and tuning data. Option 1 is the intended answer but needs to require strong performance. Speed and parameter count in options 2 and 3 provide no evidence of generalisation.",
+        "fix": "Replace options 1 to 3 with: \"It keeps strong performance on separate, unseen data from the intended use setting.\"; \"It scores well on a selected test set.\"; \"It was tuned until its test score improved.\" Keep correctOptionIndex as 1. Explain that strong performance on separate unseen data is the relevant evidence, while selected or repeatedly reused evaluation data can mislead."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

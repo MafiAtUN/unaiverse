@@ -28,8 +28,8 @@
     "data-poisoning",
     "prompt-injection"
   ],
-  "oneSentence": "An attacker subtly changes an input so an AI system produces a wrong, unsafe or attacker-chosen output at use time.",
-  "plainExplanation": "An adversarial attack targets an AI system by changing what goes into it, not necessarily by breaking into the computer that runs it. The input might be an image, a sound clip, a text prompt or other data the system is meant to process. The attacker crafts that input so the system makes a mistake or follows an unintended path.\n\nWhat goes in is usually a normal-looking input plus a carefully chosen change. In image systems, the change may be tiny pixel adjustments. In language systems, it may be special wording that steers the model away from the developer’s intended rules. What happens next depends on how the model responds to patterns in the input. The model may give the wrong label, ignore safety instructions or reveal information it should not expose.\n\nWhat comes out is not random damage. The goal is usually a specific failure: misclassification, unsafe content, bypass of safeguards or another attacker-chosen behaviour. That is why this is often called an evasion attack: the attacker is trying to evade the system’s normal checks at the moment the system is used.\n\nThis term is broader than a single misleading input. An adversarial example is one crafted input that triggers the failure. An adversarial attack is the overall method or act of causing that failure. It is also different from data poisoning, which changes training data earlier in the system’s lifecycle rather than attacking the model during use.",
+  "oneSentence": "An adversarial attack is a deliberate attempt to exploit an AI system so it fails or produces an attacker-chosen result.",
+  "plainExplanation": "An adversarial attack is a deliberate attempt to exploit a weakness in an AI system so it produces a failure that benefits the attacker. The term is broad. It does not by itself identify when the attack happens or which mechanism it uses.\n\nA common form is an input-time evasion attack. The attacker crafts an image, sound clip or other input so the model produces an incorrect or attacker-chosen result during use. The crafted input may look ordinary to a person, but subtle changes are not required.\n\nAn adversarial example is one crafted input used to trigger such a failure. The attack is the wider method or attempt. Data poisoning specifically changes training or update data. Prompt injection specifically uses malicious instructions in text to override an assistant’s intended rules.\n\nThe input-time examples on this page illustrate evasion attacks. Their goal may be misclassification, bypass of a safeguard or another chosen result. They do not represent every kind of adversarial attack.",
   "everydayAnalogy": {
     "title": "A delivery check fooled by a manipulated manifest",
     "story": "At a warehouse, a clerk checks whether a shipping manifest matches the boxes on a pallet before release. A dishonest sender keeps the goods the same but edits the manifest so key codes look valid at a glance and the checking procedure passes the pallet. The clerk follows the usual process and releases it, even though the paperwork was crafted to trigger the wrong result. Nothing was physically forced open; the weakness was in how the checking system reacted to the input it was given.",
@@ -133,8 +133,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "Someone gives the AI a specially crafted input so it makes a mistake or ignores a safeguard, even though the system may look normal from the outside.",
-    "technical": "In technical terms, an adversarial attack is an intentional manipulation of a model’s input at inference time to induce a targeted or untargeted error, policy bypass or other attacker-desired behaviour. The input is crafted with knowledge ranging from none to extensive knowledge of the model and system. In classical machine learning, this often means perturbations designed to move the input across a decision boundary while remaining similar under some constraint. In language-model settings, the attack may involve adversarial text that exploits instruction following, context handling or tool-invocation pathways. The term is broader than 'adversarial example', which usually refers to a specific crafted instance, and it is distinct from training-time attacks such as data poisoning."
+    "simple": "Someone deliberately exploits an AI system so it makes a mistake, bypasses a safeguard or produces another result that benefits the attacker.",
+    "technical": "In technical terms, an adversarial attack is a deliberate attempt to exploit an AI system and induce an attacker-desired failure. Input-time evasion is one form. In classical machine learning, it may use a perturbation designed to move an input across a decision boundary while remaining similar under a constraint. The attacker’s knowledge of the model and system may range from none to extensive. An adversarial example is the specific crafted instance, not the overall attack. Data poisoning names manipulation of training data. Prompt injection names malicious text instructions intended to override an assistant’s rules."
   },
   "keyTakeaway": "An adversarial attack does not need to break the machine; it can work by making the machine misread the input.",
   "quickCheck": {
@@ -146,7 +146,7 @@
       "A user forgets their password and cannot open the internal dashboard."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The key idea is manipulation of the input to cause failure at use time. The other options describe model improvement, service availability and account access problems, which are different issues."
+    "explanation": "Option 0 describes a deliberate input-time attempt to make the model fail. The other options describe an ordinary model error, testing with natural inputs and a software fault, not an adversarial attack."
   },
   "resources": [
     {
@@ -215,9 +215,84 @@
     "evasion attack"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:31:19.265Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This defines the broad term \"adversarial attack\" as only an input-time evasion attack. Adversarial attacks are not necessarily subtle, and the attacker may create a crafted input rather than change an existing one. The wording also nearly duplicates the supplied definition of \"adversarial example\" instead of distinguishing the overall attack from the crafted instance.",
+        "fix": "An adversarial attack is a deliberate attempt to exploit an AI system so it fails or produces an attacker-chosen result."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation incorrectly treats input-time manipulation as the definition of every adversarial attack and categorically separates adversarial attacks from data poisoning. \"Adversarial attack\" is a broad label, while evasion, data poisoning and prompt injection identify more specific stages or mechanisms. The language-model examples about malicious instructions, ignored safety rules and information disclosure also blur directly into the page's supplied definition of prompt injection.",
+        "fix": "An adversarial attack is a deliberate attempt to exploit a weakness in an AI system so it produces a failure that benefits the attacker. The term is broad. It does not by itself identify when the attack happens or which mechanism it uses.\n\nA common form is an input-time evasion attack. The attacker crafts an image, sound clip or other input so the model produces an incorrect or attacker-chosen result during use. The crafted input may look ordinary to a person, but subtle changes are not required.\n\nAn adversarial example is one crafted input used to trigger such a failure. The attack is the wid"
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "The limitation calls hidden instructions in text another form of the illustrated mechanism without clearly identifying prompt injection as the more specific term. It also fails to say that the analogy covers only input-time evasion, not the full category of adversarial attacks.",
+        "fix": "A human clerk can pause, ask questions and use common sense in ways many models cannot. The story illustrates input-time evasion, not every adversarial attack. Small mathematical changes can affect image or audio models even when people do not notice them. Malicious instructions in text are more specifically prompt injection, while changes to training data are data poisoning. The analogy does not show those distinct mechanisms."
+      },
+      {
+        "field": "visual",
+        "severity": "error",
+        "problem": "The title, learning objective and accessibility text present input alteration at use time as the mechanism of adversarial attacks in general. The diagram actually teaches only input-time evasion. Without that qualification, it reinforces the page's false narrow definition.",
+        "fix": "Change the title to \"How an input-time adversarial attack changes an output\". In the learning objective, replace \"the attacker\" with \"in this form of attack, the attacker\". In the accessibility description, replace \"The point is causal\" with \"This example shows input-time evasion\"."
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "The correction says crafted text that bypasses instructions or changes tool use is simply an adversarial attack in language models. That description overlaps directly with prompt injection but never distinguishes the more specific term, despite the page claiming the entries are distinct.",
+        "fix": "Some language-model attacks use adversarial text. If text contains malicious instructions meant to override an assistant’s rules or task, the more specific term is prompt injection."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The correction groups hidden instructions in retrieved text with pixel changes and unusual phrasing as though they were interchangeable examples. Hidden malicious instructions intended to override an assistant's rules are specifically prompt injection under the supplied definition.",
+        "fix": "Models can be affected by small pixel changes or unusual phrasing even when a human sees nothing suspicious. Malicious instructions hidden in retrieved text are more specifically prompt injection."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "The simple definition again reduces the broad term to a specially crafted input at use time and blurs safeguard-ignoring text attacks into prompt injection.",
+        "fix": "Someone deliberately exploits an AI system so it makes a mistake, bypasses a safeguard or produces another result that benefits the attacker."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The technical definition confidently states that an adversarial attack is input manipulation at inference time. That defines input-time evasion, not the broader category. Its language-model examples also fail to distinguish adversarial text from prompt injection.",
+        "fix": "In technical terms, an adversarial attack is a deliberate attempt to exploit an AI system and induce an attacker-desired failure. Input-time evasion is one form. In classical machine learning, it may use a perturbation designed to move an input across a decision boundary while remaining similar under a constraint. The attacker’s knowledge of the model and system may range from none to extensive. An adversarial example is the specific crafted instance, not the overall attack. Data poisoning names manipulation of training data. Prompt injection names malicious text instructions intended to overr"
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is correct, but the three distractors are trivial and unrelated. Model improvement, a server outage and a forgotten password can be rejected without understanding adversarial attacks or their distinction from ordinary model errors. Replace options 1 to 3 with plausible AI failures that lack deliberate exploitation.",
+        "fix": "Keep option 0. Replace the other options with: 1. \"A model mislabels an ordinary image because its training data lacked similar cases.\" 2. \"A tester measures errors on naturally blurry images without crafting them to fail.\" 3. \"A software bug swaps two labels after the model returns the correct result.\" Option 0 remains the only defensible answer because it alone describes deliberate crafting intended to cause failure."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation only contrasts the answer with obviously unrelated operational events. After improving the distractors, it should identify deliberate exploitation as the decisive feature and acknowledge that the answer is an input-time example of the broader term.",
+        "fix": "Option 0 describes a deliberate input-time attempt to make the model fail. The other options describe an ordinary model error, testing with natural inputs and a software fault, not an adversarial attack."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

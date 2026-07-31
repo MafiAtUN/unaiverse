@@ -29,7 +29,7 @@
     "convolutional-neural-network",
     "biological-neuron"
   ],
-  "oneSentence": "A neural network built for sequences carries a changing internal state from one step to the next so earlier inputs can influence later outputs.",
+  "oneSentence": "A recurrent neural network processes a sequence by carrying a changing hidden state from one step to the next, so earlier inputs can influence later outputs.",
   "plainExplanation": "Many AI tasks involve sequences: words in a sentence, notes in speech, sensor readings over time, or clicks in order. A recurrent neural network handles this by reading one item at a time instead of treating every item as unrelated.\n\nAt each step, it takes two things as input: the current item and a hidden state. The hidden state is a vector, meaning a list of numbers, that acts like a running summary of what came before. The network updates that summary using learned weights, which are numbers that control how strongly signals affect later calculations.\n\nBecause the same update rule is reused at every step, the model can process sequences of different lengths. It can produce one output at the end, such as a sentiment label for a whole sentence, or an output at each step, such as the next word or a tag for each token.\n\nIn practice, basic RNNs often struggle with long-range dependencies, meaning information from far back in the sequence can fade or become unstable during training. Variants such as LSTM and GRU were designed to keep useful information for longer. RNNs are important historically and still useful in some time-series and compact systems, but many language tasks now use transformers instead.",
   "everydayAnalogy": {
     "title": "A librarian tracing a request through many shelves",
@@ -125,7 +125,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "An RNN reads a sequence one piece at a time and carries forward a running summary so what came earlier can affect what comes next.",
-    "technical": "At time step t, a recurrent model computes a new hidden state from the current input xt and the previous hidden state h(t-1), typically with shared parameters across all time steps. In a simple RNN, this may look like h(t) = f(Wx xt + Wh h(t-1) + b), where f is an activation function. Outputs may be produced from each h(t) or only from the final state. Training usually uses backpropagation through time, which unfolds the repeated cell across steps and propagates gradients through that chain. This creates well-known vanishing and exploding gradient problems, which is why gated variants such as LSTMs and GRUs were introduced. Compared with convolutional neural networks, which focus on local spatial patterns, recurrent networks are built around ordered dependence across time or position. Compared with transformers, RNNs pass information step by step through a hidden state rather than directly relating all positions at once."
+    "technical": "At time step t, a recurrent model computes a new hidden state from the current input xt and the previous hidden state h(t-1), typically with shared parameters across all time steps. In a simple RNN, this may look like h(t) = f(Wx xt + Wh h(t-1) + b), where f is an activation function. Outputs may be produced from each h(t) or only from the final state. Training usually uses backpropagation through time, which unfolds the repeated cell across steps and propagates gradients through that chain. This creates well-known vanishing and exploding gradient problems, which is why gated variants such as LSTMs and GRUs were introduced. Compared with convolutional neural networks, which scan local patterns across grid-like inputs, recurrent networks are built around ordered dependence across time or position. Compared with transformers, RNNs pass information step by step through a hidden state rather than weighting relationships among many positions in parallel."
   },
   "keyTakeaway": "An RNN handles ordered data by reusing the same cell across steps and passing a hidden state forward as a compact memory of earlier inputs.",
   "quickCheck": {
@@ -137,7 +137,7 @@
       "It can only produce one output after reading the entire sequence."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The defining feature is recurrence: the model reuses the same computation across sequence steps and passes forward a hidden state. RNNs are not convolutional models, they do not keep perfect memory, and they may produce outputs at every step or only at the end depending on the task."
+    "explanation": "The defining feature is recurrence: the same learned update is applied across sequence steps while a hidden state passes forward. The other choices wrongly claim that weights change at every step, input and output lengths must match, or all positions are combined in parallel."
   },
   "resources": [
     {
@@ -209,9 +209,39 @@
     "lstm"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:54.989Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The sentence describes any neural network built for sequences as carrying an internal state. That is false and blurs the term with transformers, which do not use RNN-style recurrence.",
+        "fix": "A recurrent neural network processes a sequence by carrying a changing hidden state from one step to the next, so earlier inputs can influence later outputs."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The comparison falsely narrows convolutional neural networks to spatial patterns and overstates transformers as relating all positions at once. Convolutions can scan other grid-like inputs, and the supplied transformer definition says many parts are processed in parallel, not necessarily all positions.",
+        "fix": "At time step t, a recurrent model computes a new hidden state from the current input xt and the previous hidden state h(t-1), typically with shared parameters across all time steps. In a simple RNN, this may look like h(t) = f(Wx xt + Wh h(t-1) + b), where f is an activation function. Outputs may be produced from each h(t) or only from the final state. Training usually uses backpropagation through time, which unfolds the repeated cell across steps and propagates gradients through that chain. This creates well-known vanishing and exploding gradient problems, which is why gated variants such as "
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is correct. Option 1 is plainly unrelated because RNNs do not always use image convolution filters. Option 2 is rejected by the page's explicit statement that memory is imperfect. Option 3 is rejected by the page's explicit statement that outputs may occur at every step. The three categorical distractors make option 0 obvious without requiring understanding.",
+        "fix": "Keep option 0. Replace the other options with: 1. \"It uses different learned weights at each step in the sequence.\" 2. \"It requires the input and output sequences to have the same length.\" 3. \"It combines all sequence positions in parallel before creating any output.\" Replace the explanation with: \"The defining feature is recurrence: the same learned update is applied across sequence steps while a hidden state passes forward. The other choices wrongly claim that weights change at every step, input and output lengths must match, or all positions are combined in parallel.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

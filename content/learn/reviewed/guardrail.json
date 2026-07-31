@@ -100,7 +100,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN team uses an approved drafting assistant to prepare a first draft of a public meeting summary, with staff reviewing and editing before publication.",
     "relevance": "Guardrails can reduce risk by blocking the inclusion of offensive language, unsupported allegations, or instructions to disclose sensitive details, and by requiring human approval before text is shared externally.",
-    "caution": "Do not paste confidential, personal, protection-sensitive, witness, survivor, security-sensitive or unpublished operational information into an unapproved public AI service; human reviewers must make the final publication decision."
+    "caution": "Do not enter confidential, personal, protection-sensitive, witness, survivor, security-sensitive or unpublished operational information unless the tool's approval covers it; human reviewers must make the final publication decision."
   },
   "whyItMatters": "People may treat AI output as useful or authoritative even when it is wrong, harmful or outside policy. Guardrails matter because they create checkpoints before that output is used, shared or turned into action. For a non-specialist, this affects trust, accountability and risk: who can use the system, what it is allowed to do, what gets blocked, and when a person must step in. A system without good guardrails can leak sensitive information, generate abuse, assist fraud, or encourage over-reliance. A system with guardrails is still not automatically safe, but it is easier to govern and supervise.",
   "whereYouMayHearIt": [
@@ -214,9 +214,49 @@
   ],
   "contested": "The broad idea is widely used, but the exact scope of 'guardrail' is unsettled. Some people use it narrowly for output safety filters, while others include any technical or procedural control around an AI system, including human review and access restrictions.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:30:07.186Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The explanation distinguishes guardrails from content moderation but not from alignment or jailbreaks, despite claiming to be distinct from both. Readers are not told that alignment changes broader model behaviour, while a jailbreak is an attempt to bypass limits rather than a limit itself.",
+        "fix": "Replace the final paragraph with: \"Guardrails overlap with content moderation, but moderation focuses on reviewing user content against platform rules. Alignment changes the model’s broader behaviour to match intended goals, while guardrails apply checks and controls around its operation. A jailbreak is not a guardrail. It is a prompt designed to work around safety and behaviour limits.\""
+      },
+      {
+        "field": "visual",
+        "severity": "warning",
+        "problem": "The diagram puts the only guardrail after the AI draft, although its text says guardrails can check inputs and operate before generation. It therefore does not visibly teach the claimed mechanism. The label \"Safe outcome chosen\" also implies that the resulting outcome is known to be safe, which the rest of the page correctly denies.",
+        "fix": "Show this flow: request, input guardrail, AI draft or action, output or action guardrail, then outcomes. Add a refusal or human-review branch from the input check. Change \"Safe outcome chosen\" to \"Outcome selected\" and update the accessibility description to match."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The caution only prohibits sensitive information in an \"unapproved public AI service.\" The scenario uses an approved assistant, but approval for a tool does not by itself establish that every listed information category is approved for that tool and task. The caution is narrower than the disclosure risk described.",
+        "fix": "Do not enter confidential, personal, protection-sensitive, witness, survivor, security-sensitive or unpublished operational information unless the tool's approval covers it; human reviewers must make the final publication decision."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 2 is the only defensible answer, but the quiz is too easy to test understanding. Option 1 explicitly removes all review, option 3 concerns speed and length, and option 4 concerns prompt detail. Only option 2 contains any safety control, so it can be selected by superficial keyword matching.",
+        "fix": "Replace the options with: [\"Training changes model behaviour to better match intended preferences.\", \"A check blocks requests for personal data and sends some responses to human review before release.\", \"A user prompts an assistant to bypass its safety limits.\", \"A team measures model accuracy before approving deployment.\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation would no longer match the stronger distractors needed to make the quiz meaningful.",
+        "fix": "Option 2 is a guardrail because it blocks or escalates risky cases. Option 1 describes alignment, option 3 a jailbreak attempt, and option 4 evaluation. None of those is a control that intercepts an AI request, output or action."
+      }
+    ],
+    "applied": [
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

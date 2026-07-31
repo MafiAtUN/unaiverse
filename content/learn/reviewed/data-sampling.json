@@ -93,7 +93,7 @@
       "They calculate the sample sizes: North 240, South 180, East 120, West 60.",
       "They review the 600 selected forms and find that unclear response options appear in all regions, but especially in forms from the North and South."
     ],
-    "result": "Because the sample kept the same regional balance as the full set, the team can make a more credible statement about the wider collection than if they had only reviewed the easiest forms to reach."
+    "result": "Because they selected forms randomly within each region and kept the same regional balance as the full set, the team has a more credible basis for describing the wider collection than if it had reviewed only the easiest forms."
   },
   "unWorkplaceExample": {
     "scenario": "A human-rights team wants to assess the quality of case metadata across a very large internal archive without opening every record.",
@@ -124,9 +124,9 @@
   ],
   "simpleVsTechnical": {
     "simple": "Sampling means taking a smaller, manageable slice of a bigger set of data so you can learn something about the bigger set.",
-    "technical": "Sampling is the procedure used to select observations from a target population or source dataset for analysis, auditing or model development. The selection rule may be probability-based, such as simple random or stratified sampling, or non-probability-based, such as convenience sampling. The method affects representativeness, sampling bias, variance and how confidently findings can be generalised. In machine learning, the sampled dataset also shapes what patterns the model can learn, because under-sampled groups or events may be poorly represented in training or evaluation."
+    "technical": "Sampling is the procedure used to select observations from a target population or source dataset for analysis, auditing or model development. Selection may be probability-based, such as simple random sampling or random sampling within defined strata, or non-probability-based, such as convenience sampling. The method affects representativeness, sampling bias, variance and how confidently findings can be generalised. In machine learning, the sampled dataset shapes what patterns the model can learn, because under-sampled groups or events may be poorly represented in training or evaluation."
   },
-  "keyTakeaway": "A result is only as trustworthy as the way its data sample was chosen.",
+  "keyTakeaway": "A result's trustworthiness depends partly on how its data sample was chosen.",
   "quickCheck": {
     "question": "Which choice gives the best basis for reviewing whether service complaints are similar across four regions?",
     "options": [
@@ -136,7 +136,7 @@
       "Take any 500 complaints and assume a large number will remove all bias."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Matching the sample to the regional make-up of the full set is more likely to preserve important differences across regions. Easy-to-access cases or cases from only one region may be skewed, and large numbers do not automatically correct bad selection."
+    "explanation": "Random selection within regions and proportional allocation preserve the regional make-up while reducing selection bias. Equal weighting changes that make-up, and selecting recent or easy-to-access cases may skew the review."
   },
   "resources": [
     {
@@ -207,9 +207,52 @@
     "representative sample"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:01.871Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The text classifies stratified sampling itself as probability-based. Stratification only divides cases into groups. Selection within those groups may be probability-based or non-probability-based.",
+        "fix": "Sampling is the procedure used to select observations from a target population or source dataset for analysis, auditing or model development. Selection may be probability-based, such as simple random sampling or random sampling within defined strata, or non-probability-based, such as convenience sampling. The method affects representativeness, sampling bias, variance and how confidently findings can be generalised. In machine learning, the sampled dataset shapes what patterns the model can learn, because under-sampled groups or events may be poorly represented in training or evaluation."
+      },
+      {
+        "field": "workedExample.process and workedExample.result",
+        "severity": "error",
+        "problem": "The example defines its stratified sample only through proportional regional counts. That does not establish how forms are selected within each region. Proportional allocation alone could still use convenience selection, so the result cannot attribute greater credibility merely to preserving regional balance. The arithmetic itself is correct: North 4,800/12,000 × 600 = 240; South 3,600/12,000 × 600 = 180; East 2,400/12,000 × 600 = 120; West 1,200/12,000 × 600 = 60; and 240 + 180 + 120 + 60 = 600.",
+        "fix": "Replace the second process step with: \"They choose a stratified random sample, selecting forms at random within each region in proportion to the full set.\" Replace the result with: \"Because they selected forms randomly within each region and kept the same regional balance as the full set, the team has a more credible basis for describing the wider collection than if it had reviewed only the easiest forms.\""
+      },
+      {
+        "field": "quickCheck",
+        "severity": "error",
+        "problem": "The marked answer is not securely the only defensible answer. Option 0 uses convenience and time-order selection, so it is weak. Option 1 uses proportional allocation but does not say how cases are selected within regions, so it may still be biased. Option 2 cannot support comparison across all four regions. Option 3 says \"any 500,\" which can include a simple random sample and is therefore defensible. In addition, proportional allocation is not necessarily the best design for comparing regions because a small region may receive too few cases.",
+        "fix": "Use this replacement: Question: \"Which choice best supports reviewing complaint patterns in the full set across four regions?\" Options: [\"Randomly take 125 per region and give every region equal weight in the full set.\", \"Randomly select within each region, with numbers matched to that region's share of the full set.\", \"Match each region's share, but take only its most recent complaints because they are current.\", \"Take complaints from the easiest offices, then adjust the totals by region.\"] Correct option: 1. Explanation: \"Random selection within regions and proportional allocation preserve t"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "The statement makes sampling method the sole limit on trustworthiness. Results also depend on measurement quality, data processing, analysis and interpretation.",
+        "fix": "A result's trustworthiness depends partly on how its data sample was chosen."
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The screen-reader description calls stratified sampling \"balancing by groups.\" Stratification means sampling separately within defined groups and does not necessarily use balanced or equal group sizes, so the alternative does not convey the same method accurately.",
+        "fix": "Replace \"balancing by groups\" with \"sampling separately within groups\"."
+      }
+    ],
+    "applied": [
+      "keyTakeaway",
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

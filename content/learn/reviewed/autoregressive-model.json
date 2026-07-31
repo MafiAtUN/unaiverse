@@ -26,7 +26,7 @@
     "encoder-and-decoder",
     "diffusion-model"
   ],
-  "oneSentence": "A system that generates or estimates a sequence by using earlier tokens in that same sequence to predict the next one, one step at a time.",
+  "oneSentence": "A model that assigns each token a probability based on earlier tokens in the same sequence, and generates by predicting and adding one new token at a time.",
   "plainExplanation": "An autoregressive model handles a sequence in order. A sequence can be words in a sentence, sound samples in audio, or pixels arranged in a scan order. The model takes the tokens it has already seen or already generated and uses them to estimate what token should come next.\n\nInput goes in as an ordered context: for example, the words \"The meeting starts at\". Inside the model, each earlier token is turned into numbers called vectors, and the model computes patterns over that growing context. In modern language systems, a transformer often does this with self-attention, which lets each position weigh earlier positions differently.\n\nThe output at each step is not usually a single guaranteed answer. It is a probability distribution: a ranked list of possible next tokens with scores that can be turned into probabilities. A decoding method then picks one token, such as the highest-probability token or a sampled token, appends it to the context, and repeats the process.\n\nThis makes autoregressive generation causal: later tokens depend on earlier ones, but not on future tokens that have not been generated yet. That is why these models are strong at continuing text and dialogue. It is also why errors can accumulate: if one early token is poor, later steps build on it.\n\nThe term is often confused with \"transformer\", but they are not the same. Autoregressive describes the prediction pattern over a sequence. Transformer describes one model architecture often used to implement that pattern. It is also different from diffusion models, which generate by iterative denoising rather than next-step sequence prediction.",
   "everydayAnalogy": {
     "title": "Writing a summary card one line at a time",
@@ -209,9 +209,37 @@
     "autoregressive"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:58.976Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition makes one-step computation part of both generation and estimation. Autoregressive models factorise sequence probabilities by conditioning each token on earlier tokens, but training can estimate many next-token distributions in parallel. Only generation necessarily proceeds one new token at a time.",
+        "fix": "A model that assigns each token a probability based on earlier tokens in the same sequence, and generates by predicting and adding one new token at a time."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "“Handles a sequence in order” implies that all autoregressive computation is sequential. The explanation also distinguishes the term from transformers and diffusion models but not from encoders and decoders. A decoder is a model component or role, while autoregressive describes the conditional prediction pattern it may use.",
+        "fix": "State that the ordered, repeated process applies during generation, and add that a decoder may use autoregressive generation but the terms do not mean the same thing."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The indexing is ambiguous. It says token t is modelled from preceding tokens, then says position t can attend through position t. This is consistent only if the representation at position t predicts token t+1, but that shift is not stated.",
+        "fix": "Clarify that the representation at position t can attend through t and is then used to predict token t+1."
+      }
+    ],
+    "applied": [
+      "oneSentence"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

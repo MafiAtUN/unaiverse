@@ -31,7 +31,7 @@
     "label"
   ],
   "oneSentence": "A single row of training data used to adjust a model, often made of input values and, in some methods, a target answer.",
-  "plainExplanation": "A training example is one item a machine-learning system learns from. It might be one row in a table, one image, one short text, one sound clip, or one event in a log. A collection of these items is a dataset, but each individual item is a training example.\n\nPeople also say sample or instance. In many introductions, these words are used almost interchangeably for one item in the data. But they can carry slightly different emphasis. Sample often points to something taken from a larger population, while instance often means one concrete case represented in the model's input format.\n\nWhat goes in depends on the learning method. In supervised learning, one example usually contains input features, meaning the measurable parts the model receives, plus a label, meaning the target answer. In unsupervised learning, an example may have only the input features. During training, the model processes many examples and updates internal numbers so later it can produce predictions for new cases.\n\nWhat comes out is not a stored answer for each example, but a changed model. A single example usually changes the model only a little. After many examples, patterns in the data can shape how the model behaves. This term is often confused with feature, which is one column or property inside an example, and with dataset, which is the full collection of examples.",
+  "plainExplanation": "A training example is one item a machine-learning system learns from. It might be one row in a table, one image, one short text, one sound clip, or one event in a log. A collection of these items is a dataset, but each individual item is a training example.\n\nPeople also say sample or instance. In many introductions, these words are used almost interchangeably for one item in the data. But they can carry slightly different emphasis. Sample often points to something taken from a larger population, while instance often means one concrete case represented in the model's input format.\n\nWhat goes in depends on the learning method. In supervised learning, one example usually contains input features, meaning the measurable parts the model receives, plus a label, meaning the target answer. In unsupervised learning, an example may have only the input features. During training, the system processes many examples and may update internal numbers so later it can produce predictions for new cases.\n\nWhat comes out is a trained system. In many methods, this is a changed model rather than a stored answer for each example. A single example usually changes the model only a little. After many examples, patterns in the data can shape how the model behaves. This term is often confused with feature, which is one column or property inside an example, and with dataset, which is the full collection of examples.",
   "everydayAnalogy": {
     "title": "Marked-up policy search cards",
     "story": "A team is improving a search tool for policy documents. They make index cards, and each card has a user query on the front and a note on the back saying which document was actually relevant. One card says “school meal standards” and points to a nutrition policy; another says “border health screening” and points to an entry procedure guide. The team reviews many cards to tune the search system so future queries rank the right documents higher. Each card is one training example, while the full box of cards is the dataset.",
@@ -96,7 +96,7 @@
       "Adjust the model's internal parameters slightly so patterns linked to travel become more influential.",
       "Repeat with many other examples, such as 'Agenda for Monday meeting' labelled 'meeting'."
     ],
-    "result": "This single example does not create a rule by itself, but it nudges the model so future subject lines about flights, hotels or itineraries are more likely to be classified as travel."
+    "result": "This single example does not create a rule by itself, but it can nudge the model so future subject lines containing similar learned features, such as \"flight\", are more likely to be classified as travel."
   },
   "unWorkplaceExample": {
     "scenario": "An approved internal project analyses household assessment survey responses to group common needs and to predict which responses may need manual follow-up. One training example could be a single, de-identified survey response represented as structured fields and, if available, an outcome from a previous reviewed case.",
@@ -126,7 +126,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "A training example is one piece of data the system learns from, like one row in a spreadsheet or one labelled image.",
-    "technical": "In machine learning, a training example is one observation presented during optimisation. It is often represented as an input vector x and, in supervised learning, an associated target y. The terms sample and instance are often used for the same unit, though sample may emphasise that the observation was drawn from a broader population, and instance may emphasise one concrete case in feature space. During training, examples may be processed singly or in batches, and each contributes to an update of model parameters through a learning algorithm. The output of using training examples is an adjusted model, not a permanent one-to-one lookup table of those examples."
+    "technical": "Technically, a training example is one observation used by a learning algorithm. In optimisation-based methods, it is often represented as an input vector x and, in supervised learning, an associated target y. The terms sample and instance are often used for the same unit, though sample may emphasise that the observation was drawn from a broader population, and instance may emphasise one concrete case in feature space. Examples may be processed singly or in batches, and each can contribute to an update of model parameters. The usual result is an adjusted model, not a permanent one-to-one lookup table of the examples."
   },
   "keyTakeaway": "Think of a training example as one case the model learns from; many such cases together can shape the trained model.",
   "quickCheck": {
@@ -209,9 +209,51 @@
     "training examples"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:10:05.116Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition calls every training example a \"row\", but the page later correctly includes images, text, sound clips and events. This wording unnecessarily narrows the term and conflicts with the broader explanation.",
+        "fix": "A single item of training data used to adjust a model, often made of input values and, in some methods, a target answer."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation presents parameter updates and the absence of stored examples as universal. Some learning methods do not train by repeatedly updating internal numbers, and a trained system can retain training examples rather than only producing a changed parameterised model.",
+        "fix": "A training example is one item a machine-learning system learns from. It might be one row in a table, one image, one short text, one sound clip, or one event in a log. A collection of these items is a dataset, but each individual item is a training example.\n\nPeople also say sample or instance. In many introductions, these words are used almost interchangeably for one item in the data. But they can carry slightly different emphasis. Sample often points to something taken from a larger population, while instance often means one concrete case represented in the model's input format.\n\nWhat goes in"
+      },
+      {
+        "field": "visual.steps[2].explanation",
+        "severity": "warning",
+        "problem": "\"Each example contributes a small update\" implies that every example causes an individual update of a reliably small size. The page's technical section correctly says examples may be processed in batches, so an update may combine several examples. Update size is also not guaranteed to be small.",
+        "fix": "Examples contribute information used to adjust the model's internal numbers during training."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The example contains the word \"Flight\", but not \"hotels\" or \"itineraries\". With the stated word-presence features, this example cannot directly increase the influence of those absent words. No arithmetic is present in the worked example, so there is no numerical calculation to verify.",
+        "fix": "This single example does not create a rule by itself, but it can nudge the model so future subject lines containing similar learned features, such as \"flight\", are more likely to be classified as travel."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The technical definition says a training example is always presented during optimisation and contributes to a parameter update. That describes optimisation-based training, not every learning method, so it is too narrow for the general term.",
+        "fix": "Technically, a training example is one observation used by a learning algorithm. In optimisation-based methods, it is often represented as an input vector x and, in supervised learning, an associated target y. The terms sample and instance are often used for the same unit, though sample may emphasise that the observation was drawn from a broader population, and instance may emphasise one concrete case in feature space. Examples may be processed singly or in batches, and each can contribute to an update of model parameters. The usual result is an adjusted model, not a permanent one-to-one looku"
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

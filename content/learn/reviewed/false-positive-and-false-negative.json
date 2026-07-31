@@ -35,7 +35,7 @@
     "f1-score",
     "accuracy"
   ],
-  "oneSentence": "These labels describe the four basic outcomes of a yes-or-no prediction and show the different ways a system can be right or wrong.",
+  "oneSentence": "False positives are wrong yes predictions, while false negatives are wrong no predictions.",
   "plainExplanation": "Many AI and non-AI systems make a yes-or-no prediction: spam or not spam, relevant or not relevant, risk flag or no flag. To judge that kind of system, you compare its prediction with what was actually true.\n\nThat comparison gives four possible outcomes. A true positive means the system predicted “yes” and the real answer was yes. A true negative means it predicted “no” and the real answer was no. A false positive means it predicted “yes” but the real answer was no. A false negative means it predicted “no” but the real answer was yes.\n\nThe words matter because the two kinds of mistakes can have very different consequences. A false positive may wrongly include, accuse or interrupt. A false negative may miss something important. Which mistake matters more depends on the context. In health screening, security checks, content moderation, search, or humanitarian triage, the safer balance is not always the same.\n\nYou may also hear type I error and type II error. In many testing contexts, type I error corresponds to a false positive, and type II error corresponds to a false negative. But those labels come from statistics and can confuse people outside that setting, so it is often clearer to say false positive or false negative directly.\n\nThese terms are related to accuracy, precision and recall, but they are not the same. Accuracy is an overall score. Precision looks at how many predicted positives were actually positive. Recall looks at how many real positives were successfully found. The counts of true and false positives and negatives are the building blocks used to calculate those scores.",
   "everydayAnalogy": {
     "title": "Guessing who “they” refers to",
@@ -101,7 +101,7 @@
       "Count the 10 messages that were not spam but were marked spam as false positives.",
       "Of the 5 spam messages the filter missed, count them as false negatives; the remaining 70 non-spam messages correctly left alone are true negatives."
     ],
-    "result": "True positives = 15, false positives = 10, false negatives = 5, true negatives = 70. The filter catches many spam messages, but it also wrongly blocks some legitimate mail."
+    "result": "True positives = 15, false positives = 10, false negatives = 5, true negatives = 70. The filter catches many spam messages, but it also wrongly marks some legitimate mail as spam."
   },
   "unWorkplaceExample": {
     "scenario": "A UN office is testing an internal search tool over approved guidance documents. Staff type a query such as 'cash transfer monitoring' and the team checks whether the tool marks each returned document as relevant or not relevant.",
@@ -220,9 +220,50 @@
     "type ii error"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:08.366Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "False positives and false negatives are only the two incorrect outcomes, not labels for all four possible outcomes. The sentence defines the term too broadly.",
+        "fix": "False positives are wrong yes predictions, while false negatives are wrong no predictions."
+      },
+      {
+        "field": "visual.steps[3].explanation",
+        "severity": "error",
+        "problem": "“Precision rises when fewer predicted positives are wrong” is false if “fewer” means a smaller count. Precision depends on the share of predicted positives that are correct, not the absolute number that are wrong.",
+        "fix": "Precision is the correct share of predicted positives. Recall is the found share of actual positives. Neither score alone tells the whole story."
+      },
+      {
+        "field": "visual.steps[1].explanation and visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The threshold rule leaves items exactly equal to the threshold unclassified because it defines only items above and below the threshold.",
+        "fix": "Use one explicit convention throughout: items at or above the threshold are predicted positive, and items below it are predicted negative."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The arithmetic is correct: 20 - 15 = 5 false negatives, 80 - 10 = 70 true negatives, 15 + 10 = 25 marked spam, and 15 + 10 + 5 + 70 = 100. However, the scenario says the filter marks messages as spam, while the result claims it blocks them. Marking does not necessarily mean blocking.",
+        "fix": "True positives = 15, false positives = 10, false negatives = 5, true negatives = 70. The filter catches many spam messages, but it also wrongly marks some legitimate mail as spam."
+      },
+      {
+        "field": "unWorkplaceExample.scenario",
+        "severity": "error",
+        "problem": "The stated review checks only returned documents, so it cannot identify relevant documents that were not returned. Those missing documents are the false negatives described in the next field.",
+        "fix": "A UN office is testing an internal search tool over approved guidance documents. For a query such as 'cash transfer monitoring', the team compares which documents the tool returns with which documents reviewers judge relevant."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

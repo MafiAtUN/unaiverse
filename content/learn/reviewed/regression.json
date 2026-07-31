@@ -26,8 +26,8 @@
     "clustering",
     "inference"
   ],
-  "oneSentence": "A supervised learning method that learns to predict a number or other continuous value from example inputs and known target values.",
-  "plainExplanation": "Regression is used when you want a model to output an amount, not a category. For example, you might want to estimate travel time in minutes, crop yield in tonnes, or next month’s electricity demand. The input variables are called features, and the target value you want to predict is often called the label.\n\nDuring training, the model sees many examples where both the features and the correct target value are known. It adjusts internal parameters so its predictions get closer to those known values. In simple cases, it learns a line or curve; in more complex cases, it learns a more flexible pattern.\n\nWhat goes in is a set of training examples: for each case, the features and the known numeric outcome. What changes inside is the model’s parameters, which are updated to reduce prediction error. What comes out is a function that can take a new case and return an estimated value.\n\nRegression is often confused with classification. Classification predicts a class such as approved or not approved, damaged or not damaged. Regression predicts a quantity such as 2.4, 17 days, or 83.5 per cent. Some methods can be adapted for both, but the goal and output type are different.",
+  "oneSentence": "A supervised learning method that learns from example inputs and known target values to predict a numeric quantity for a new input.",
+  "plainExplanation": "Regression is used when you want a model to output an amount, not a category. For example, you might want to estimate travel time in minutes, crop yield in tonnes, or next month’s electricity demand. The input variables are called features, and the target value you want to predict is often called the label.\n\nDuring training, the model sees many examples where both the features and the recorded target values are available. Many regression methods adjust internal parameters so their predictions get closer to those values. Other methods fit or store the examples in different ways.\n\nWhat goes in is a set of training examples: for each case, the features and the known numeric outcome. What changes inside is the fitted model, often including parameters updated to reduce prediction error. What comes out is a function that can take a new case and return an estimated value.\n\nRegression is often confused with classification. Classification predicts a class such as approved or not approved, damaged or not damaged. Regression predicts a quantity such as 2.4, 17 days, or 83.5 per cent. Some methods can be adapted for both, but the goal and output type are different.",
   "everydayAnalogy": {
     "title": "Estimating parcel delivery time from past trips",
     "story": "A courier supervisor has a notebook of past deliveries in Nairobi, Lima and Bangkok. For each parcel, the notebook records distance, time of day, weather and the actual delivery time in minutes. By comparing many past rows, the supervisor learns a pattern: longer distance usually adds time, rush hour adds more, and heavy rain adds even more. When a new parcel arrives, the supervisor uses that learned pattern to estimate the delivery time instead of guessing from memory.",
@@ -219,9 +219,44 @@
   ],
   "contested": "The core idea is not heavily disputed, but the word is used differently across fields. In statistics, it often includes explanation of relationships between variables; in machine learning, it usually emphasises prediction of continuous values.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:04.032Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; visual.learningObjective; visual.steps[4]; visual.accessibilityDesc",
+        "severity": "error",
+        "problem": "The page defines regression as predicting a continuous value, but it later treats incident counts and case volume as regression targets. Counts are numeric quantities but are discrete, and count regression is still regression. The phrase “a number or other continuous value” is also incoherent because continuous values are represented numerically.",
+        "fix": "Use “numeric quantity” rather than “continuous value” throughout. This preserves the distinction from classification because a quantity is not a numeric code used as a category."
+      },
+      {
+        "field": "plainExplanation; visual.steps[2]; visual.accessibilityDescription; simpleVsTech",
+        "severity": "error",
+        "problem": "The page presents parameter adjustment through repeated error reduction as the universal regression training mechanism. Some regression methods do not train by iteratively updating parameters to reduce a loss. The visual therefore teaches one common fitting approach as if it defines regression.",
+        "fix": "Qualify this as a common approach. In the visual, change step 3 to: “A training procedure uses the differences between predictions and known values to fit the model. Many methods do this by updating parameters to reduce a loss.” Frame the feedback loop as an example of parameter-based fitting."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The claim that a regression model “does not reliably know why” anthropomorphises the model and implies that it might sometimes know why a relationship holds. A fitted statistical relationship does not itself establish a causal explanation.",
+        "fix": "Replace the claim about knowing with a direct statement that statistical relationships do not establish why the patterns hold."
+      },
+      {
+        "field": "workedExample.process; workedExample.result",
+        "severity": "warning",
+        "problem": "The estimate of about 830 is reproducible only after assuming an unstated model. Ordinary least squares for rent = a + b × size + c × distance gives a = −22.5, b = 14.6 and c = −5. The new estimate is −22.5 + 14.6 × 60 − 5 × 4 = 833.5, which rounds to about 830. Other regression models could produce different estimates, so “fit a regression model” is not enough to determine the number.",
+        "fix": "State that the example uses an ordinary least-squares linear model with an intercept, and show the fitted formula in the result."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

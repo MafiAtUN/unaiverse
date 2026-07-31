@@ -225,9 +225,59 @@
     "injection attack"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:30:53.354Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition makes hidden instructions sound characteristic of prompt injection. Direct prompt injection can be fully visible. Hidden instructions are more characteristic of the indirect subtype.",
+        "fix": "A text-based attack that tries to make an AI assistant follow attacker-supplied instructions instead of the rules and task it was meant to follow."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The distinction from jailbreak relies too heavily on whether the user supplies the attack directly. The stronger distinction is between mechanism and aim. Prompt injection manipulates instructions, while a jailbreak aims to work around safety or behaviour limits. An attack can be both.",
+        "fix": "Replace the final paragraph with: \"Prompt injection describes the mechanism: attacker-controlled text tries to alter the model's behaviour. Direct prompt injection is supplied in the user's prompt. Indirect prompt injection arrives through external content such as documents or webpages. Jailbreak describes the aim of working around safety and behaviour limits. A direct prompt injection may also be a jailbreak, but the terms are not interchangeable.\""
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "The simple explanation describes only instructions slipped into material the assistant reads, which blurs the main term into indirect prompt injection. It omits direct injection through a user request.",
+        "fix": "It is like adding fake instructions to a request or to material an AI assistant must read, hoping it follows them instead of the real instructions."
+      },
+      {
+        "field": "everydayAnalogy, visual, and workedExample",
+        "severity": "warning",
+        "problem": "All major teaching examples use malicious instructions embedded in external content. They therefore teach indirect prompt injection almost exclusively, despite that term having a separate entry. Readers are not given a concrete direct prompt injection example.",
+        "fix": "Replace one major example with a user directly placing conflicting instructions in a request. Keep another external-content example and label it explicitly as indirect prompt injection."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "warning",
+        "problem": "Calling separation and suspicious-pattern filtering a stronger design may overstate their security value. Structural separation can help models follow instruction priority, but it is not a security boundary, and simple pattern filters are readily bypassed. The listed controls do not explain how disclosure is actually prevented.",
+        "fix": "A stronger design clearly marks the email as untrusted data, limits access to protected context and tools, validates the output, and requires approval before sensitive actions."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "warning",
+        "problem": "The caution distinguishes approved from unapproved tools but does not say that approval must cover the specific task and data. An internally approved tool may still be unsuitable for confidential or security-sensitive material.",
+        "fix": "Use only a tool approved for the specific task and content. Do not paste confidential, personal, survivor, witness, security-sensitive, or operational information into an unapproved service. Restrict tool permissions, keep human review, and do not allow automatic sending or publication."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer: option 1 is credential theft, option 2 is ordinary inaccuracy, and option 3 is a refused harmful request rather than instruction manipulation. However, option 0 is specifically indirect prompt injection, and the explanation fails to identify that subtype despite the page claiming to distinguish it.",
+        "fix": "The document contains indirect prompt injection, a subtype of prompt injection in which manipulative instructions arrive through external content. The other options describe credential theft, ordinary inaccuracy, and a refused harmful request."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

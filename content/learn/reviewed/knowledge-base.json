@@ -134,7 +134,7 @@
       "A tool that rewrites answers to sound more natural"
     ],
     "correctOptionIndex": 1,
-    "explanation": "A knowledge base is the source collection the system searches. It is separate from model training, separate from the history of user questions, and separate from style-editing tools. In many systems, retrieval starts from this document collection."
+    "explanation": "Option 2 states the defining role: a selected source collection searched for relevant passages. Model weights come from training, a bare query history is not necessarily source material, and a rewriting tool changes wording rather than supplying sources."
   },
   "resources": [
     {
@@ -207,9 +207,43 @@
     "corpus of record"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:33.099Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence and keyTakeaway",
+        "severity": "warning",
+        "problem": "Both fields make being \"trusted\" part of the definition. A knowledge base is defined by its role as a source collection, not by the reliability of its contents. The page itself later explains that a knowledge base may contain outdated or low-quality documents. The one-sentence definition also needs the search and RAG scope because \"knowledge base\" has broader uses elsewhere.",
+        "fix": "Use \"In search and RAG, an organised source collection that a system searches to find relevant material for an answer.\" Replace \"trusted document collection\" in the takeaway with \"selected source collection\"."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The result asserts policy details without showing what the retrieved passages say. It also names only the renewal and proof-of-address sections as citations, although the answer's claim about updating details appears to depend on the address-change passage.",
+        "fix": "Output: The renewal passage says online renewal is available. The address-change and proof-of-address passages say changed details and new proof may be required before reissue. The draft repeats those points and cites all three sections."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "warning",
+        "problem": "The caution addresses confidentiality but not the analytical risk created by the scenario. Retrieved passages are not necessarily representative of all incident reports, so search results alone cannot establish broad trends.",
+        "fix": "Use authorised systems with access controls. Never put personal, survivor, witness, security-sensitive or confidential records into an unapproved public AI service. Retrieved passages do not prove broad trends, so require human review before reporting."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "error",
+        "problem": "The statement that a knowledge base is categorically separate from the history of user questions is false. Past questions could be included in a source collection if they were deliberately selected and indexed. Option 2 remains the best answer because it states the defining role, while option 3 merely names possible content without saying it is used as source material.",
+        "fix": "Option 2 states the defining role: a selected source collection searched for relevant passages. Model weights come from training, a bare query history is not necessarily source material, and a rewriting tool changes wording rather than supplying sources."
+      }
+    ],
+    "applied": [
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

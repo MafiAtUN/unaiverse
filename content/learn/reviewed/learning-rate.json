@@ -27,7 +27,7 @@
     "hyperparameter"
   ],
   "oneSentence": "A training setting that controls how far model parameters move after each error-based update.",
-  "plainExplanation": "When a model is trained, it first makes a prediction and then compares that prediction with the correct answer. The gap between them is measured by a loss function, which turns error into a number the training process can reduce.\n\nNext, the training method calculates a gradient. A gradient is a set of signals showing which direction each parameter should move to reduce the loss. The learning rate tells the optimiser how large that movement should be.\n\nIf the learning rate is too small, training can be very slow. The model may improve, but only after many updates. If it is too large, the updates can overshoot the better region and make loss bounce around or even grow.\n\nSo the input is the gradient and the current parameter values, the learning rate scales the update, and the output is a new set of parameter values. The aim is steady progress towards lower loss, not the biggest jump on any single step.",
+  "plainExplanation": "When a model is trained, it produces an output. A loss function turns how well that output meets a training target or objective into a number the training process can reduce.\n\nNext, the training method calculates a gradient. A gradient shows how the loss changes as each parameter changes. A gradient-based optimiser usually moves against it to reduce the loss. The learning rate scales that movement.\n\nIf the learning rate is too small, training can be very slow. The model may improve, but only after many updates. If it is too large, the updates can overshoot the better region and make loss bounce around or even grow.\n\nSo the input is the gradient and the current parameter values, the learning rate scales the update, and the output is a new set of parameter values. The aim is steady progress towards lower loss, not the biggest jump on any single step.",
   "everydayAnalogy": {
     "title": "Adjusting labels in a feedback-sorting office",
     "story": "A team is sorting public feedback letters into themes such as transport, health and education. After checking a batch, they notice many letters were put in the wrong pile, so they decide to adjust their sorting guide. One manager says to change the guide only a little each time, while another suggests rewriting large parts at once. Small edits make progress slow; huge edits make the guide swing from one mistake pattern to another.",
@@ -209,9 +209,61 @@
     "step size"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:26.880Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The wording says parameters move after an update, but their movement is the update. It also says only \"error-based\" rather than identifying the gradient-based mechanism.",
+        "fix": "A training setting that scales how far model parameters move in each gradient-based update."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The opening falsely presents all model training as comparing a prediction with a correct answer. Training can instead use a target or objective without a single correct answer. The gradient is also described with the wrong sign: a gradient points towards increasing loss, while gradient descent updates parameters in the opposite direction.",
+        "fix": "When a model is trained, it produces an output. A loss function turns how well that output meets a training target or objective into a number the training process can reduce.\n\nNext, the training method calculates a gradient. A gradient shows how the loss changes as each parameter changes. A gradient-based optimiser usually moves against it to reduce the loss. The learning rate scales that movement.\n\nIf the learning rate is too small, training can be very slow. The model may improve, but only after many updates. If it is too large, the updates can overshoot the better region and make loss bounc"
+      },
+      {
+        "field": "visual.learningObjective",
+        "severity": "error",
+        "problem": "It claims that the same gradient produces entire slow, stable or unstable training paths. Only the initial gradient is the same. The gradient changes as the parameter moves along the curve.",
+        "fix": "Show how different learning rates can lead to slow, stable or unstable training on the same loss curve."
+      },
+      {
+        "field": "visual.description",
+        "severity": "error",
+        "problem": "The arrows point downhill, but their proposed label is \"gradient multiplied by learning rate.\" A gradient-descent step uses the negative gradient, as the technical equation elsewhere correctly shows.",
+        "fix": "Replace the final sentence with: \"Each jump is labelled learning rate times negative gradient.\""
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "It says every run follows \"the same downhill direction.\" The local downhill direction changes with position and reverses when an oversized step crosses the bottom.",
+        "fix": "Replace the second sentence with: \"In all cases, the optimiser starts from the same point and follows the local downhill direction at each step.\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The arithmetic is correct: 0.80 − (0.01 × 0.50) = 0.795; 0.80 − (0.1 × 0.50) = 0.75; and 0.80 − (1.2 × 0.50) = 0.20. However, these one-step calculations demonstrate only different update sizes. They do not establish slow learning, useful progress or unstable behaviour because no loss function or later gradients are given.",
+        "fix": "The same gradient produces different update sizes, while the resulting training behaviour depends on the loss surface and later steps."
+      },
+      {
+        "field": "commonMisconceptions[3].correction",
+        "severity": "warning",
+        "problem": "The contrast is misleading because momentum can affect both the direction and size of an update. Describing learning rate as size and momentum as direction blurs how momentum actually carries part of a previous update forward.",
+        "fix": "Learning rate scales the current update. Momentum carries part of the previous update into the next one, which can reduce wobble."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

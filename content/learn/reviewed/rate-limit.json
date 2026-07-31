@@ -30,7 +30,7 @@
     "scalability"
   ],
   "oneSentence": "A control that caps how many requests or how much use a service accepts within a set time, to keep systems available, fair and affordable.",
-  "plainExplanation": "A rate limit sets a pace. It tells a service how many requests, messages or tokens it will accept from one user, app or organisation in a given time period, such as 60 requests per minute.\n\nWhat goes in is incoming use: for example, people clicking a website, an app calling an AI service, or a script sending many API requests. The service counts this activity against a rule. The rule might be based on time, account type, Internet address, or a specific endpoint, which means a specific service address for one function.\n\nWhat happens next depends on the count. If use stays under the limit, requests are processed normally. If use goes over the limit, extra requests may be delayed, slowed or rejected with a message such as “too many requests”. This is why rate limiting is also called throttling.\n\nWhat comes out is not better answers. It is controlled access. The goal is to protect capacity, prevent one user from crowding out others, reduce abuse, and help manage cost. This is different from throughput, which is the total amount a system can process overall. A system can have high throughput and still impose a low rate limit per user.",
+  "plainExplanation": "A rate limit sets a pace. It tells a service how many requests, messages or tokens it will accept from one user, app or organisation in a given time period, such as 60 requests per minute.\n\nWhat goes in is incoming use: for example, people clicking a website, an app calling an AI service, or a script sending many API requests. The service counts this activity against a rule. The rule might be based on time, account type, Internet address, or a specific endpoint, which means a specific service address for one function.\n\nWhat happens next depends on the count. If use stays under the limit, requests are processed normally. If use goes over the limit, extra requests may be delayed, slowed or rejected with a message such as “too many requests”. Rate limiting relates to throttling, which usually slows requests.\n\nWhat comes out is not better answers. It is controlled access. The goal is to protect capacity, prevent one user from crowding out others, reduce abuse, and help manage cost. Throughput instead measures how much text a model processes or generates over time. A system can have high throughput and still impose a low rate limit per user.",
   "everydayAnalogy": {
     "title": "Security gate at a busy conference",
     "story": "At an international conference centre, visitors enter through a security gate. The organisers allow only 30 people every 10 minutes through one entrance so the screening team does not get overwhelmed. If 50 people arrive at once, some pass through and the rest wait in a marked queue until the next time window. The rule is not about judging who is important; it is about keeping the entrance safe and orderly for everyone.",
@@ -94,7 +94,7 @@
       "Requests 121 to 135 go over the limit.",
       "The service returns 'too many requests' for the extra 15, and the app waits a few seconds before retrying them."
     ],
-    "result": "Most users get responses immediately, 15 requests are briefly delayed, and the service avoids overload."
+    "result": "The service accepts 120 requests and rejects 15. The app can retry the rejected requests later."
   },
   "unWorkplaceExample": {
     "scenario": "A team member searches a repository of public UN resolutions through an approved internal tool that uses an AI service to suggest similar prior language.",
@@ -124,7 +124,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "It is a speed cap for using a digital service: only so much can be sent in a certain time.",
-    "technical": "A rate limit is a policy that measures incoming usage over a defined interval and enforces a maximum, such as requests per second, tokens per minute, or bytes per hour. The system identifies a subject to limit, such as an API key, user account, IP address, organisation or endpoint, then keeps a running count using a method like fixed windows, sliding windows or token buckets. When usage exceeds the threshold, the service may reject the request, delay it, or ask the client to retry later. This differs from throughput, which describes the total processing capacity of the system, not the policy cap applied to a particular caller."
+    "technical": "A rate limit is a policy that measures incoming usage over time and enforces a maximum, such as requests per second, tokens per minute, or bytes per hour. The system identifies a subject to limit, such as an API key, user account, IP address, organisation or endpoint, then applies a method like fixed windows, sliding windows or token buckets. When usage exceeds the threshold, the service may reject the request, delay it, or ask the client to retry later. This differs from throughput, which measures text processed or generated over time, not a policy cap applied to a particular caller."
   },
   "keyTakeaway": "A rate limit does not improve answers; it controls how fast a service can be used so capacity is shared safely, fairly and affordably.",
   "quickCheck": {
@@ -208,9 +208,45 @@
     "throttling"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:49.977Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation incorrectly treats rate limiting and throttling as interchangeable. Throttling usually means slowing or delaying traffic, while a rate limit may instead reject excess requests. It also defines throughput as the total amount a system can process overall, contradicting the supplied definition, which measures text processed or generated per unit of time.",
+        "fix": "Replace the claims with: “Rate limiting relates to throttling, which usually slows requests.” and “Throughput instead measures how much text a model processes or generates over time.”"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The technical explanation says token buckets keep a running count over a defined interval. A token bucket instead replenishes tokens over time and permits requests while tokens are available. The final sentence also incorrectly equates throughput with total processing capacity, contradicting the supplied definition.",
+        "fix": "Describe these as different enforcement algorithms rather than all as running counts, and define throughput as text processed or generated over time."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The arithmetic is correct: 135 - 120 = 15 excess requests. However, the result does not follow from it. Requests are not necessarily equivalent to users, accepted requests are not guaranteed immediate responses, rejected requests are not guaranteed to succeed on retry, and the example does not establish that 135 requests would have overloaded the service.",
+        "fix": "The service accepts 120 requests and rejects 15. The app can retry the rejected requests later."
+      },
+      {
+        "field": "visual.learningObjective",
+        "severity": "warning",
+        "problem": "The objective promises to show requests arriving below, near and above the limit, but the specified diagram shows only a counter, a comparison and two outcome branches. It provides no separate below, near and above cases, and “near” has no explained effect.",
+        "fix": "Show how requests are counted against a service limit, and distinguish normal processing from delay or rejection."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

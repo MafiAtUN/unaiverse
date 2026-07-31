@@ -31,7 +31,7 @@
     "authentication-and-authorisation"
   ],
   "oneSentence": "Sandboxing runs a model, tool or file inside a restricted environment so harmful actions cannot easily reach the wider system.",
-  "plainExplanation": "Sandboxing is a security practice that puts risky code, files or AI-connected tools inside a separate, tightly limited environment. That environment can read only certain data, use only certain tools, and make only certain network connections. The aim is not to trust the content less emotionally; it is to reduce what it can do technically.\n\nWhat goes in can be many things: an uploaded document, a plug-in, a browser session, a model-generated script, or a language model that can call tools. Inside the sandbox, controls define what is allowed. Examples include read-only access, no internet access, limited memory, blocked file writing, and temporary storage that is deleted after use.\n\nWhat happens next is simple in principle. The system receives input, sends it into the sandbox, and the sandbox enforces boundaries while the task runs. If the content tries to open sensitive files, contact an unapproved server, or run a dangerous command, the sandbox should block that action or keep it contained.\n\nWhat comes out is a safer result, not a guarantee of safety. Sandboxing reduces the damage that prompt injection, malicious files, unsafe tool use or untrusted code can cause. It is different from a guardrail, which tries to shape behaviour or outputs, and different from access control, which decides who is allowed to do something in the first place.",
+  "plainExplanation": "Sandboxing is a security practice that puts risky code, files or AI-connected tools inside a separate, tightly limited environment. That environment can read only certain data, use only certain tools, and make only certain network connections. The aim is not to trust the content less emotionally; it is to reduce what it can do technically.\n\nWhat goes in can be many things: an uploaded document, a plug-in, a browser session, a model-generated script, or a language model that can call tools. Inside the sandbox, controls define what is allowed. Examples include read-only access, no internet access, limited memory, blocked file writing, and temporary storage that is deleted after use.\n\nWhat happens next is simple in principle. The system receives input, sends it into the sandbox, and the sandbox enforces boundaries while the task runs. If the content tries to open sensitive files, contact an unapproved server, or run a dangerous command, the sandbox should block that action or keep it contained.\n\nWhat comes out has less technical reach, not a guarantee of safety. Sandboxing reduces the damage that prompt injection, malicious files, unsafe tool use or untrusted code can cause. A guardrail checks or limits unsafe outputs or actions. Access control sets which people, systems or tools may use resources. Sandboxing uses resource limits and isolation to confine execution.",
   "everydayAnalogy": {
     "title": "Testing farm equipment in a fenced trial plot",
     "story": "A farming cooperative wants to test a new automated irrigation controller before using it across all fields. Instead of connecting it to the full water network, the team places it in one fenced trial plot with a small tank, a separate power switch and no connection to the main pumps. The controller can measure soil moisture and turn one test valve on or off, but it cannot flood the whole farm or read the cooperative's financial records. If it behaves strangely, the team learns from the test without damaging the wider operation.",
@@ -101,7 +101,7 @@
       "Any attempt to contact example.org or read other local files is blocked by sandbox network and file rules.",
       "The system returns only the extracted rainfall values, such as \"Station A: 42 mm, Station B: 37 mm\", for review."
     ],
-    "result": "The organisation gets the needed data from the file, while the attempted exfiltration path is contained and fails."
+    "result": "The attempted exfiltration is blocked, but reviewers must still check whether the returned rainfall data is accurate."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team is reviewing submissions to a public consultation and uses an AI-assisted tool to summarise themes from uploaded documents from many external contributors.",
@@ -132,7 +132,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Put the risky part in a locked work area with only the few things it needs. If something goes wrong, it cannot easily spread to the rest of the system.",
-    "technical": "Sandboxing isolates execution within a constrained runtime and enforces least-privilege access to resources such as files, processes, devices, network endpoints and credentials. Controls may include containerisation, virtual machines, restricted system calls, capability limits, read-only mounts, network segmentation, ephemeral storage, time and memory quotas, and policy enforcement around tool invocation. In AI systems, sandboxing is especially relevant when models can use tools, browse external content, execute generated code, open uploaded files or transform untrusted inputs. It helps contain prompt injection, indirect prompt injection and unsafe code paths by limiting the effect of a successful manipulation. It is not identical to authentication, authorisation or secrets management, though it works alongside them. Those controls determine identity, permissions and secret handling; sandboxing confines runtime behaviour after execution begins."
+    "technical": "Sandboxing isolates execution within a constrained runtime and enforces least-privilege access to resources such as files, processes, devices, network endpoints and credentials. Controls may include containerisation, virtual machines, restricted system calls, capability limits, read-only mounts, network segmentation, ephemeral storage, time and memory quotas, and policy enforcement around tool invocation. In AI systems, sandboxing is especially relevant when models can use tools, browse external content, execute generated code, open uploaded files or transform untrusted inputs. It helps contain prompt injection, indirect prompt injection and unsafe code paths by limiting the effect of a successful manipulation. It is not identical to authentication, authorisation or secrets management, though it works alongside them. Authentication proves identity, authorisation and access control set permissions, and secrets management protects credentials. A sandbox combines those limits with an isolated runtime to contain execution."
   },
   "keyTakeaway": "Sandboxing does not make an AI component trustworthy; it makes a mistake or attack less able to cause wider damage.",
   "quickCheck": {
@@ -144,7 +144,7 @@
       "A training technique that removes all adversarial behaviour from a model"
     ],
     "correctOptionIndex": 1,
-    "explanation": "Sandboxing is about containment during execution. It limits access to files, networks, tools and other resources so that unsafe behaviour has less reach. It is different from factual checking, user login policy and model training methods."
+    "explanation": "Sandboxing contains execution by limiting access to files, networks, tools and other resources. A guardrail limits unsafe outputs or actions, access control sets who or what may use resources, and a regulatory sandbox is a supervised testing programme."
   },
   "resources": [
     {
@@ -217,9 +217,64 @@
     "sandbox"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:31:42.102Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The final paragraph misstates access control as deciding only who may act and only \"in the first place\". The supplied definition also covers systems and AI tools, and access controls continue to govern resource use during execution. The claim that a \"safer result\" comes out is also too broad. A sandbox can limit technical reach without making the output itself safe or accurate.",
+        "fix": "Replace the final paragraph with: \"What comes out has less technical reach, not a guarantee of safety. Sandboxing reduces the damage that prompt injection, malicious files, unsafe tool use or untrusted code can cause. A guardrail checks or limits unsafe outputs or actions. Access control sets which people, systems or tools may use resources. Sandboxing uses resource limits and isolation to confine execution.\""
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The ending creates a false temporal distinction. Authentication, authorisation and access control are not merely preliminary controls that finish before execution. Permissions are enforced while resources are being used, and sandboxes commonly rely on those permissions. It also groups secret handling under controls that do not all perform that function.",
+        "fix": "Replace the final three sentences with: \"It is not identical to authentication, authorisation or secrets management, though it works alongside them. Authentication proves identity, authorisation and access control set permissions, and secrets management protects credentials. A sandbox combines those limits with an isolated runtime to contain execution.\""
+      },
+      {
+        "field": "workedExample.process and workedExample.result",
+        "severity": "error",
+        "problem": "Sandboxing does not make a model treat an embedded instruction merely as document text, and it does not ensure that only correct rainfall values are returned. The model may follow the instruction or produce manipulated output even when file and network access are blocked. The example incorrectly attributes input interpretation and output correctness to containment.",
+        "fix": "Replace process step 3 with: \"The tool may follow the malicious instruction, but the sandbox does not grant broader access.\" Replace process step 5 with: \"The system returns a limited output, which may include incorrect or manipulated content and must be reviewed.\" Replace the result with: \"The attempted exfiltration is blocked, but reviewers must still check whether the returned rainfall data is accurate.\""
+      },
+      {
+        "field": "visual.steps[4].explanation and visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual says an \"approved output\" and a \"safe tool result\" leave the sandbox. A sandbox can control the output channel and accessible resources, but it does not establish that the content is safe, accurate or substantively approved. This conflicts with the page's own warning that harmful outputs can still mislead users.",
+        "fix": "Replace the step explanation with: \"The system receives output through an allowed channel, such as extracted text or a limited tool result, often followed by logging or human review.\" In the accessibility description, replace \"only an approved result leaves the sandbox\" with \"a result leaves through an allowed channel\"."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "Calling sandboxing a \"decision tool\" is misleading. The page otherwise defines it as a security practice that constrains execution. It may support risk decisions, but it is not itself a decision tool.",
+        "fix": "Replace \"Sandboxing is a decision tool for limiting consequences\" with \"Sandboxing is a security control for limiting consequences\"."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option B is the only defensible answer, but the quiz does not test the distinction. Option A is factual checking, B is sandboxing, C is a staff login policy, and D makes the absurd absolute claim that training removes all adversarial behaviour. Three obviously unrelated or impossible distractors reveal the answer without requiring understanding.",
+        "fix": "Replace the options with: [\"A rule that blocks unsafe model outputs before people rely on them\", \"A restricted runtime that limits what untrusted inputs or model-driven tools can access and do\", \"A rule deciding which staff or systems can use a resource\", \"A supervised programme for testing AI under temporary regulatory conditions\"]. Keep correctOptionIndex as 1."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "After replacing the weak distractors, the explanation must identify the actual distinctions among guardrails, access control and regulatory sandboxes.",
+        "fix": "Replace it with: \"Sandboxing contains execution by limiting access to files, networks, tools and other resources. A guardrail limits unsafe outputs or actions, access control sets who or what may use resources, and a regulatory sandbox is a supervised testing programme.\""
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

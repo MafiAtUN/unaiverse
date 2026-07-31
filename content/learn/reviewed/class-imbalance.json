@@ -30,7 +30,7 @@
     "accuracy",
     "algorithmic-bias"
   ],
-  "oneSentence": "A dataset has this problem when one outcome appears far more often than another, making a model look successful while missing the cases users care about most.",
+  "oneSentence": "A dataset has this problem when one class appears far more often than another, which can make overall accuracy look strong while a model misses rare cases.",
   "plainExplanation": "In classification, a system sorts items into categories such as \"damaged road\" or \"not damaged road\". Class imbalance means one category is much more common than the other in the data used to train or test the system. The rarer category is often the one people most need to detect.\n\nWhat goes in is a set of labelled examples. If 9,900 satellite images show no road damage and 100 show damage, the system sees many more examples of \"no damage\" than \"damage\". During training, many models can reduce their overall error simply by favouring the common class.\n\nWhat happens next is that a headline score, especially accuracy, can look strong even if the model performs badly on the rare class. A model that predicts \"no damage\" for every image would be 99% accurate in that example, but it would find none of the damaged roads. This is why people also check measures such as precision, recall, F1 score, and the confusion matrix.\n\nWhat comes out is not just a model but a risk of misleading evaluation. The problem is about the data distribution and the metric choice, not automatically about unfair treatment between social groups. It can contribute to harmful outcomes, but it is different from algorithmic bias, which is about systematic differences in behaviour across people or groups.",
   "everydayAnalogy": {
     "title": "Security checks at a stadium gate",
@@ -100,7 +100,7 @@
       "Overall accuracy is high because most images truly show no damage.",
       "The team then calculates recall for damage as 120 out of 300, or 40%, and precision for damage as 120 out of 150, or 80%."
     ],
-    "result": "The model looks strong if you only read its 96.4% accuracy, but it misses 60% of the damaged roads, so it is not yet reliable for finding rare damage cases."
+    "result": "The model looks strong if you only read its 97.9% accuracy, but it misses 60% of the damaged roads, so it is not yet reliable for finding rare damage cases."
   },
   "unWorkplaceExample": {
     "scenario": "A UN office is preparing procurement requirements for a vendor offering software that flags rare compliance problems in large volumes of procurement records.",
@@ -214,9 +214,44 @@
     "rare class"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:21.695Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This makes misleading success sound like an inevitable effect of class imbalance. Imbalance can make aggregate accuracy misleading, but it does not necessarily make every model look successful.",
+        "fix": "A dataset has this problem when one class appears far more often than another, which can make overall accuracy look strong while a model misses rare cases."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The stated accuracy is wrong. There are 120 true damage predictions and 30 false damage predictions. Therefore, correct no-damage predictions are 9,700 - 30 = 9,670. Total correct predictions are 9,670 + 120 = 9,790. Accuracy is 9,790 / 10,000 = 97.9%, not 96.4%. The recall calculation, 120 / 300 = 40%, precision calculation, 120 / 150 = 80%, and missed share, 180 / 300 = 60%, are correct.",
+        "fix": "The model looks strong if you only read its 97.9% accuracy, but it misses 60% of the damaged roads, so it is not yet reliable for finding rare damage cases."
+      },
+      {
+        "field": "visual.steps[3].explanation",
+        "severity": "warning",
+        "problem": "The promised 2x2 confusion matrix is specified with only three counts. It omits the fourth cell, common cases incorrectly predicted as rare, even though that count is zero. This weakens the mechanism the visual is meant to teach.",
+        "fix": "Break results into a confusion matrix: 950 common cases correctly classified, 0 common cases predicted rare, 50 rare cases missed, and 0 rare cases found. This reveals what accuracy hid."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is false because overall accuracy does not prove performance on both classes. Option 2 is the only defensible answer. Option 3 is false because a 99-to-1 split is highly imbalanced. Option 4 is false because class imbalance does not establish unfairness to protected groups. However, the absolutes in options 1, 3, and 4 make them implausible without requiring much understanding of evaluation metrics.",
+        "fix": "Replace the distractors with plausible mistakes, such as checking precision alone, changing the training balance while leaving evaluation unchanged, or treating 99% accuracy as sufficient for deployment."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

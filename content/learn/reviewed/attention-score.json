@@ -26,8 +26,8 @@
     "weight",
     "explainability"
   ],
-  "oneSentence": "A number that shows how strongly one token should use information from another token during an attention step.",
-  "plainExplanation": "In a transformer, each token such as a word or subword is compared with other tokens in the sequence. The model computes a score for each pair. That score reflects how relevant one token appears to another for the current attention calculation.\n\nWhat goes in are vector representations of tokens. A vector is a list of numbers. For each token, the model creates a query vector, a key vector and a value vector. The query asks, in effect, what information this token is looking for. The key describes what each token offers. The attention score comes from comparing a query with keys.\n\nWhat happens next is important. The raw scores are adjusted so they can be compared across all tokens, often by turning them into weights that add up to 1. Those normalised values are what many people casually call attention weights. They are then used to mix the value vectors from other tokens.\n\nWhat comes out is not the score itself but a new representation for each token. That new representation contains a weighted mixture of information from other tokens. So the attention score is an intermediate signal: it helps decide which token information contributes more or less at that step.",
+  "oneSentence": "A number comparing one token’s query with a candidate token’s key during an attention step.",
+  "plainExplanation": "In a transformer, each token such as a word or subword is compared with tokens at allowed positions, which may include its own position. The model computes a score for each pair. That score reflects their compatibility for the current attention calculation.\n\nWhat goes in are vector representations of tokens. A vector is a list of numbers. For each token, the model creates a query vector, a key vector and a value vector. The query represents what information may be useful at that position. The key represents features available at a candidate position. The attention score comes from comparing a query with keys.\n\nWhat happens next is important. The raw scores are often converted by softmax into weights that add up to 1 across allowed positions. Those normalised values are called attention weights. They are then used to mix the corresponding value vectors.\n\nWhat comes out is not the score itself but a new representation for each token. That representation contains a weighted mixture of value vectors from allowed positions. So the attention score is an intermediate compatibility signal that helps determine the mixture.",
   "everydayAnalogy": {
     "title": "Finding the right book in a large library",
     "story": "A student in Nairobi is writing a report about river flooding and asks a librarian for the most useful books. The librarian scans many book titles and subject labels, then gives each one a quick relevance mark based on the student’s question. Books with higher marks are brought to the desk first, and the student uses those books more heavily when writing the report. The marks do not mean the other books are false or useless; they only show which ones seem more relevant to this request.",
@@ -91,14 +91,14 @@
       "The model multiplies each candidate value vector by its weight.",
       "It adds the weighted value vectors to produce a new representation for 'it' that draws most strongly from 'animal' and also from 'tired'."
     ],
-    "result": "The output vector for 'it' is shaped more by tokens that appear more relevant in this context. The score did not by itself pick a single word; it helped create a blended representation."
+    "result": "Using softmax, the weights are about 0.59 for 'animal', 0.12 for 'cross' and 0.29 for 'tired'. Their value vectors are blended rather than one word being selected."
   },
   "unWorkplaceExample": {
     "scenario": "A UN analyst reviews de-identified programme monitoring notes and uses an approved internal model to group statements about supply delays, training needs and access barriers. In one transformer layer, high attention scores may connect a phrase like 'delayed delivery' with nearby mentions of 'transport' or 'road closure'.",
     "relevance": "This helps technical staff understand why the model links parts of a sentence or document and why some wording influences the output more than other wording.",
-    "caution": "Do not enter personal data, protection-sensitive details, security information or confidential operational material into an unapproved public AI service. Attention scores can support analysis, but they do not replace human review or data-governance rules."
+    "caution": "Use only approved systems and appropriately handled data. Attention scores expose numerical associations in one calculation, not why the model produced an output. They do not replace human review or data-governance rules."
   },
-  "whyItMatters": "If you read model cards, technical reports or debugging notes, you will often see attention scores mentioned as if they explain what a model is doing. They matter because they influence which parts of the input contribute more to each output representation. That affects translation, summarisation, retrieval and many other tasks. But they also matter because people over-interpret them. A high score means stronger influence in that step, not proof of meaning, causation or explanation by itself. Knowing this helps you ask better questions about reliability, traceability and limits.",
+  "whyItMatters": "If you read model cards, technical reports or debugging notes, you will often see attention scores mentioned as if they explain what a model is doing. They matter because, after normalisation, they help determine which value vectors contribute more to each output representation. That affects translation, summarisation, retrieval and many other tasks. But people also over-interpret them. Within one query and head, a higher allowed score usually leads to a larger attention weight. It is not proof of meaning, causation or explanation by itself. Knowing this helps you ask better questions about reliability, traceability and limits.",
   "whereYouMayHearIt": [
     "transformer architecture discussions",
     "model interpretability debates",
@@ -203,9 +203,71 @@
     "attention weight"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:13.035Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "Both definitions blur a raw attention score into the weight that controls how much information is mixed. A raw score is a query-key compatibility value. Its normalised attention weight, considered with the value vector, determines the contribution. This also weakens the claimed distinction from Weight.",
+        "fix": "Define the score as a comparison between a query and a candidate key, before normalisation into an attention weight."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation repeatedly says tokens are compared with \"other tokens\" and mixed from \"other tokens\". Self-attention can include the focus token's own position when that position is allowed. It also says normalisation makes scores comparable, although the raw scores are already compared across positions. Normalisation converts them into weights.",
+        "fix": "Replace \"other tokens\" with \"tokens at allowed positions, which may include the same position\", and say that normalisation converts scores into weights rather than making them comparable."
+      },
+      {
+        "field": "visual.steps[2]; visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The displayed normalisation does not compute under the usual softmax described elsewhere on the page. The arithmetic is exp(2.1) = 8.1662, exp(0.4) = 1.4918 and exp(-0.7) = 0.4966. Their sum is 10.1546, giving 8.1662/10.1546 = 0.8042, 1.4918/10.1546 = 0.1469 and 0.4966/10.1546 = 0.0489, not 0.75, 0.14 and 0.11.",
+        "fix": "Label the stage \"softmax\" and replace the weights with 0.80, 0.15 and 0.05 in both the visual instruction and accessibility description."
+      },
+      {
+        "field": "workedExample.input",
+        "severity": "error",
+        "problem": "The input calls \"animal\", \"cross\" and \"tired\" earlier tokens, but \"tired\" occurs after \"it\" in the stated sequence. Whether that later position is available also depends on the attention mask, which the example does not specify.",
+        "fix": "Change \"Candidate earlier tokens\" to \"Candidate tokens\"."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "error",
+        "problem": "The stated two-decimal weights do not compute by softmax. The arithmetic is exp(1.8) = 6.0496, exp(0.2) = 1.2214 and exp(1.1) = 3.0042. Their sum is 10.2752, giving 6.0496/10.2752 = 0.5888, 1.2214/10.2752 = 0.1189 and 3.0042/10.2752 = 0.2924. These round to 0.59, 0.12 and 0.29, not 0.58, 0.12 and 0.30. If another normalisation was intended, it is not identified.",
+        "fix": "Use: \"Using softmax, those raw scores become attention weights of about 0.59, 0.12 and 0.29.\""
+      },
+      {
+        "field": "whyItMatters; commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "The page says a high score means stronger influence. A higher allowed raw score normally produces a larger attention weight within the same query and head, but the score alone does not measure actual influence. Contribution also depends on the value vector and later computation. This wording overstates what attention scores explain.",
+        "fix": "State that a higher allowed score usually leads to a larger attention weight within one query and head, while neither the score nor the weight alone proves causal influence or explains the output."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "error",
+        "problem": "The claim that attention scores help staff understand why wording influences the output overstates their explainability. Scores expose an internal association in one attention calculation, not a causal explanation of the model's output. This contradicts the page's own caution against treating attention as a complete explanation.",
+        "fix": "This helps technical staff inspect which parts of a sentence or document the attention mechanism associates. It does not by itself show why wording influenced the model’s output."
+      },
+      {
+        "field": "quickCheck.options[1]",
+        "severity": "warning",
+        "problem": "This is the only defensible option among the four, but \"another token\" implies a different token and excludes attention to the focus token's own position. Option 0 is false because scores are input-dependent, option 2 confuses an intermediate score with an output probability, and option 3 falsely treats the score as a fact check.",
+        "fix": "A number computed from one token’s query and a candidate token’s key that helps determine weighting in the current input"
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "whyItMatters",
+      "workedExampleResult",
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

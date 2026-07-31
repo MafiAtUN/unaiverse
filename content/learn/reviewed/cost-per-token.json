@@ -102,7 +102,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN team is preparing a public report and wants to summarise submissions received through a consultation portal using an approved AI service.",
     "relevance": "Cost per token helps the team estimate the budget for testing prompts, processing batches of submissions and producing summary drafts at scale.",
-    "caution": "Do not place personal data, confidential submissions or protection-sensitive material into an unapproved public AI service. Use approved tools, minimise data and keep human review over summaries."
+    "caution": "Only process personal data, confidential submissions or protection-sensitive material with an AI service specifically approved for that data and task. Minimise data and keep human review over summaries."
   },
   "whyItMatters": "A non-specialist does not need to calculate every token by hand, but they do need to understand why AI bills rise. Cost per token affects budgeting, procurement, tool choice and workflow design. It helps you ask practical questions: How much text are we sending? How long do we need the answer to be? Which model is affordable for this task? It also helps you avoid false savings. A low price per token can still become expensive if staff send long documents, repeat prompts many times or automate large volumes. Knowing this term supports better planning and fewer surprises.",
   "whereYouMayHearIt": [
@@ -210,9 +210,31 @@
     "usage cost"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:27:00.990Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The scenario says only that the AI service is approved, while the caution implies that personal, confidential or protection-sensitive material may be entered into any approved tool. Approval must cover the specific data and task. Generic tool approval does not resolve the stated risk.",
+        "fix": "Only process personal data, confidential submissions or protection-sensitive material with an AI service specifically approved for that data and task. Minimise data and keep human review over summaries."
+      },
+      {
+        "field": "quickCheck.options and quickCheck.explanation",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. A darker theme does not affect token use, time of day does not directly affect token counts, and saving an existing reply as a PDF happens after generation. However, these distractors are so unrelated to token pricing that the answer is obvious without understanding the term.",
+        "fix": "Replace the options with: [\"Sending a longer document and asking for a detailed reply\", \"Splitting unchanged token totals across two same-rate requests\", \"Using lower rates for unchanged token counts\", \"Receiving a shorter reply for the same input\"]. Replace the explanation with: \"Longer input and output directly add billed tokens. Splitting unchanged token totals across same-rate requests leaves token cost unchanged. Lower rates reduce cost for the same counts, and a shorter reply reduces output tokens.\""
+      }
+    ],
+    "applied": [
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

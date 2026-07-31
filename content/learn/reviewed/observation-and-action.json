@@ -100,7 +100,7 @@
       "Action: instead of forcing a guess, it asks for a clearer crop of the top third of the page.",
       "Observation and result: the new crop raises the score for C-4 to 0.82, so the system returns 'C-4' and logs that a second observation resolved the ambiguity."
     ],
-    "result": "Output: 'Best match: C-4, confidence 0.82. Initial image was insufficient; classification improved after a clearer header image was provided.'"
+    "result": "Output: 'Best match: C-4, calibrated confidence 0.82. The initial scores failed the configured acceptance check; the clearer header passed it.'"
   },
   "unWorkplaceExample": {
     "scenario": "A UN team uses an approved internal automation tool to route incoming records to the right administrative workflow. The system observes metadata and validation results, then takes actions such as suggesting a queue, requesting a missing non-sensitive field, or sending a case to human review.",
@@ -217,9 +217,49 @@
   ],
   "contested": "The basic distinction between observation, action, and their loop is widely used, but exact boundaries vary across subfields such as reinforcement learning, autonomous agents, workflow automation, and computer-use systems.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:58.215Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "This gives an incomplete definition of a feedback loop as merely outputs influencing later behaviour. The supplied definition requires the system to check an action's effects, compare them with a goal, and use that signal to adjust the next step. The current distinction also wrongly implies that explicit tool mediation separates the concepts, although the page itself allows non-tool observations and actions.",
+        "fix": "They overlap, but describe different things. The act-observe loop is the stepwise exchange of observations and actions. A feedback loop additionally checks an action's effects against a goal and uses that comparison to adjust the next step. An act-observe cycle need not include that comparison or adjustment."
+      },
+      {
+        "field": "visual.steps[1].explanation",
+        "severity": "error",
+        "problem": "The phrase \"decide what matters now\" presents the system as making a human-like judgement without qualification. The mechanism is selection based on supplied state, instructions and constraints.",
+        "fix": "The system combines the latest observation with instructions and short-term working state to identify relevant state and the next allowed step."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The explanation distinguishes the term from tool use but not from workflow or orchestration. Its references to a \"wider control pattern\" and selecting steps could therefore blur the act-observe loop into the separate orchestration concept.",
+        "fix": "Explicitly state that a workflow defines ordered task steps, orchestration coordinates steps and handoffs, and an act-observe loop describes only the recurring exchange of incoming state and outgoing action."
+      },
+      {
+        "field": "workedExample.process[1] and workedExample.process[4]",
+        "severity": "error",
+        "problem": "The example declares the first result \"too close to trust\" without giving an acceptance rule, then says ambiguity is resolved after reporting only C-4's new score. A single score of 0.82 does not establish that C-4 is accepted or remains the closest match. The available arithmetic is internally consistent: C-4 initially leads T-17 by 0.44 - 0.41 = 0.03 and H-9 by 0.44 - 0.39 = 0.05; its later increase is 0.82 - 0.44 = 0.38. The problem is the missing decision rule, not the arithmetic.",
+        "fix": "Change the first decision to: \"Action: it runs a template-matching tool and gets provisional scores: T-17 0.41, C-4 0.44, H-9 0.39. The top gap is 0.03, which fails the configured acceptance check.\" Change the last step to: \"Observation and result: after the new crop, the matcher gives C-4 calibrated confidence 0.82, which passes the configured acceptance check, so the system returns 'C-4' and logs that a second observation resolved the ambiguity.\""
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the other options are caricatures containing several obvious falsehoods, such as equating observations with hidden reasoning, the loop with training, or the concept with robots. A learner can answer without understanding the distinctions.",
+        "fix": "Keep option 0. Replace the distractors with: 1. \"Observation is incoming state, action changes that state, and the act-observe loop is the workflow's fixed sequence.\" 2. \"Observation is a feedback signal, action is an adjustment towards a goal, and the act-observe loop is the feedback loop.\" 3. \"Observation and action are messages between tools, while orchestration is the loop that repeats them until completion.\""
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

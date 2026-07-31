@@ -30,7 +30,7 @@
     "attention-score"
   ],
   "oneSentence": "A method that lets a model give different importance to different parts of the input while producing an output.",
-  "plainExplanation": "Imagine a model reading a sentence one token at a time. A token is a small unit such as a word or part of a word. Instead of treating every earlier token as equally useful, the model can compare the current token with the others and give more weight to the ones that seem more relevant.\n\nWhat goes in are token representations, often called embeddings or vectors. A vector is a list of numbers that stores features in a form a model can calculate with. The attention mechanism uses these vectors to produce weights, sometimes called attention scores, that say how strongly one token should draw information from other tokens.\n\nWhat happens next is not just selection but mixing. The model does not usually pick one earlier word and ignore the rest. It combines information from several tokens, but gives larger influence to some and smaller influence to others. That helps it connect words across a sentence, such as linking a pronoun to the noun it refers to.\n\nWhat comes out is a new set of token representations enriched with context from elsewhere in the sequence. This is why attention became so important in transformers. It helps the model handle long-range relationships efficiently. Attention is a general mechanism, while self-attention is the specific case where the model attends to parts of the same sequence.",
+  "plainExplanation": "Imagine a model processing a sentence made of tokens. A token is a small unit such as a word or part of a word. For each position, attention lets the model compare its representation with a set of other representations and give more weight to information that is more relevant.\n\nWhat goes in are token representations, often called embeddings or vectors. A vector is a list of numbers that stores features in a form a model can calculate with. The mechanism computes attention scores, converts them into weights and uses those weights to control how strongly information from each token contributes.\n\nWhat happens next is not just selection but mixing. The model does not usually pick one token and ignore the rest. It combines information from several tokens, giving larger influence to some and smaller influence to others. This can help connect information across distant positions, such as a pronoun and a possible referent.\n\nWhat comes out is a new set of token representations enriched with context. Attention is a general mechanism whose information may come from the same sequence or another source. Self-attention is the specific case where positions attend to information from the same sequence.",
   "everydayAnalogy": {
     "title": "Choosing the right notes during a meeting",
     "story": "A project officer is writing a summary of a long meeting. For each sentence in the summary, she looks back at her notes and marks some lines as very useful, some as a little useful, and others as not useful for that sentence. She then writes the sentence using a blend of the most relevant notes rather than copying one line exactly. When she moves to the next sentence, she repeats the process with a different pattern of importance.",
@@ -95,7 +95,7 @@
       "It then combines information from all token vectors using those weights, so Amina and helped contribute the most.",
       "The new representation for 'she' now carries stronger context linking it to Amina and the action helped."
     ],
-    "result": "The output is not a final answer by itself. It is a context-aware representation of 'she' that later parts of the model can use to predict the next token or analyse the sentence more accurately."
+    "result": "The output is not a final answer by itself. It is a context-aware representation of 'she' that later parts of the model can use to analyse the sentence more accurately."
   },
   "unWorkplaceExample": {
     "scenario": "A country office uses an approved internal tool to help sort a shared inbox that receives messages about procurement, event invitations, travel requests and public information. When the system analyses a message, attention can help it focus more on terms such as dates, contract numbers or words that signal the topic.",
@@ -219,9 +219,62 @@
   ],
   "contested": "Whether attention weights count as an explanation of model behaviour is debated, so it is safer to treat them as one signal rather than a full account.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:41.488Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The opening says the model reads one token at a time and considers every earlier token, but the page's own example lets \"she\" attend to the later token \"helped\". Many transformer attention operations process positions in parallel and may use tokens on either side. The paragraph also calls weights \"attention scores\", blurring a term that this course claims to teach separately. Finally, saying attention handles long-range relationships \"efficiently\" is too broad because the page gives no basis for that efficiency claim.",
+        "fix": "Replace the explanation with the corrected version below. It distinguishes scores from weights, removes the false sequential description and avoids the unsupported efficiency claim."
+      },
+      {
+        "field": "everydayAnalogy.mapping[1].aiElement",
+        "severity": "error",
+        "problem": "\"Assigning attention weights or scores\" treats attention weights and attention scores as interchangeable, undermining the separate entry for attention score.",
+        "fix": "deriving attention weights from scores"
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "warning",
+        "problem": "The weights establish that Amina and helped make the largest contributions. They do not by themselves establish a semantic link or resolve that Amina is the referent of \"she\".",
+        "fix": "The new representation for 'she' contains larger contributions from Amina and helped."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The example allows \"she\" to attend to the later token \"helped\", then says that representation could be used to predict the next token. In a causal next-token model, the representation used to predict \"helped\" cannot attend to \"helped\" first. The listed weights do sum correctly: 0.15 + 0.10 + 0.35 + 0.05 + 0.05 + 0.30 = 1.00.",
+        "fix": "The output is not a final answer by itself. It is a context-aware representation of 'she' that later parts of the model can use to analyse the sentence more accurately."
+      },
+      {
+        "field": "visual.steps[2].visualInstruction",
+        "severity": "error",
+        "problem": "A stacked bar whose source-token widths are scaled only by attention weight falsely represents the output as scalar portions belonging to each token. Attention combines weighted value vectors component by component. A token's contribution cannot generally be shown as a positive segment whose width is just its weight.",
+        "fix": "Show each source vector scaled by its weight, then show the scaled vectors combining component by component into the mixed result."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only correct answer, but the other three options are so unrelated to attention that a reader can answer by elimination without understanding the mechanism. Option 1 describes training data storage, option 2 a human-written rule and option 3 an explanation of reasoning. None is a plausible confusion about what attention produces.",
+        "fix": "Replace options 1 to 3 with: \"A list of scores with no combined information\", \"One token copied without weighting others\", and \"The same fixed weighting at every position\"."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation rejects the current implausible distractors but does not test the distinction between intermediate scores and the weighted combination produced by attention.",
+        "fix": "Attention uses scores to derive weights, then combines token information with those weights. It does not stop at scores, copy one token unchanged or use the same weights at every position."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

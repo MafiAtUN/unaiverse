@@ -90,7 +90,7 @@
       "Unfreeze some higher layers and continue training with a small learning rate so the model can adapt its visual features.",
       "Evaluate on a held-out test set of 200 images to check whether transfer improved performance on the crop task."
     ],
-    "result": "The adapted model reaches 88% test accuracy, while a similar model trained from scratch on the same 1,200 images reaches 71%. The reused visual patterns, such as edges, textures and shapes, gave the second model a stronger starting point."
+    "result": "After 200 images are held out, both models train on the other 1,000. The adapted model gets 176 of 200 test images correct (88%); the model trained from scratch gets 142 correct (71%). In this hypothetical comparison, transfer gives the adapted model a stronger starting point."
   },
   "unWorkplaceExample": {
     "scenario": "A UN analytical team wants to identify broad protection-related themes in incident summaries from several field offices by adapting a language model that was previously trained on general text.",
@@ -206,9 +206,37 @@
     "transfer learning"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:24.619Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample",
+        "severity": "error",
+        "problem": "The data split does not compute as written. There are 1,200 labelled images, and 200 are held out for testing, so 1,200 - 200 = 1,000 images remain for training, not 1,200. The result also says reused patterns gave \"the second model\" a stronger start, but the second model named is the one trained from scratch. The accuracy figures themselves are possible: 88% of 200 = 176, and 71% of 200 = 142.",
+        "fix": "Clarify that both models train on 1,000 images and are tested on the same 200 held-out images. Refer to the adapted model, not the second model, as having the stronger starting point."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "The analogy assumes without explanation that likely station frequencies in Nairobi provide a useful starting point in Lima. This misses the central requirement that source and target must share useful structure. The current limitation discusses human reasoning and parameter count but does not identify this mapping failure.",
+        "fix": "The story does not establish that likely frequencies in Nairobi are useful in Lima, so the map may provide no useful starting point. Model transfer instead depends on shared structure between source and target data. A model also stores many numeric parameters, and adaptation may change millions of them across many training steps."
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "Saying a randomly initialised model must \"learn everything\" from the target data is an overstatement. The architecture still supplies built-in structure. The visual step itself uses the more accurate distinction between general and task-specific patterns.",
+        "fix": "Replace \"so it must learn everything from that data\" with \"so it must learn both general and task-specific patterns from that data\"."
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

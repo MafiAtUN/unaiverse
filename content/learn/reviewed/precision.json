@@ -207,9 +207,29 @@
     "positive predictive value"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:13:14.909Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The formula omits the zero-denominator case. If the system predicts no positives, TP + FP is zero and precision is undefined.",
+        "fix": "Precision, or positive predictive value, is TP divided by TP plus FP. It is undefined when no cases are predicted positive. Otherwise, it is the true-positive share of predicted positives and depends on the threshold and data distribution."
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The interactive visual lets users adjust class balance, but the screen-reader version mentions only threshold changes. It therefore does not convey the same mechanism or explain that class balance can affect precision.",
+        "fix": "Screen-reader version: You are given cases with real labels and system predictions. Controls change the threshold and class balance. The explainer reports true positives and false positives, then reads precision as true positives divided by true positives plus false positives. A stricter threshold can reduce the number of flagged cases. Precision rises if false positives fall proportionally more than true positives. Changing the class balance can also change precision because the mix of true and false cases changes."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

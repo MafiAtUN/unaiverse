@@ -28,7 +28,7 @@
     "bounding-box"
   ],
   "oneSentence": "A computer vision task that finds instances of chosen object types in an image or video and marks where each one appears.",
-  "plainExplanation": "Object detection takes an image or video frame as input. The system looks for specific categories such as people, vehicles, buildings or cartons. The output is usually a list of findings: the object label, a location, and a confidence score, which is a number showing how strongly the model matched patterns seen during training.\n\nThe location is often shown with a bounding box, a rectangle drawn around the detected object. This is what makes object detection different from image classification. Image classification answers a whole-image question such as \"What is in this picture?\" Object detection answers \"What objects are here, and where are they?\"\n\nIn practice, a model analyses many small visual patterns at once, then proposes possible object locations and labels. It compares these proposals, removes duplicates, and keeps the strongest ones. In video, the same process is repeated frame by frame, sometimes with tracking added afterwards to follow the same object over time.\n\nObject detection is also different from image segmentation. Segmentation aims to mark the exact pixels that belong to an object, while object detection usually gives a rectangle around it. That rectangle is often good enough for counting, monitoring, search, safety alerts or checking whether something important is present in a scene.",
+  "plainExplanation": "Object detection takes an image or video frame as input. The system looks for specific categories such as people, vehicles, buildings or cartons. The output is usually a list of findings: the object label, a location, and a confidence score, which is a number indicating the strength the model assigns to that finding.\n\nThe location is often shown with a bounding box, a rectangle drawn around the detected object. This is what makes object detection different from image classification. Image classification answers a whole-image question such as \"What is in this picture?\" Object detection answers \"What objects are here, and where are they?\"\n\nA common approach analyses many visual patterns, proposes possible object locations and labels, then removes weaker duplicate proposals. In video, detection can be repeated frame by frame, sometimes with tracking added afterwards to follow the same object over time.\n\nObject detection is also different from image segmentation. Segmentation assigns labels at pixel level to outline objects or meaningful regions, while object detection usually gives a rectangle around each detected object. That rectangle is often good enough for counting, monitoring, search, safety alerts or checking whether something important is present in a scene.",
   "everydayAnalogy": {
     "title": "Marking duplicate paper files on a registry table",
     "story": "Imagine two staff members reviewing a table covered with paper registry files. Their task is not to read every file in detail, but to spot each pile that appears to be a duplicate case and place a coloured frame card around it. At the end, they produce a sheet listing each marked pile, its table position, and how sure they are that it is a duplicate. If two frame cards overlap the same pile, they keep the stronger one and remove the extra mark.",
@@ -99,7 +99,7 @@
     "relevance": "Object detection can speed up stock visibility checks and help staff decide where manual verification is needed, especially when images are too numerous to review one by one.",
     "caution": "Do not upload identifiable people, vehicle plates, security-sensitive sites or other non-public operational imagery to an unapproved public AI service; use approved systems, minimise personal data, and keep human review in the loop before acting on results."
   },
-  "whyItMatters": "For non-specialists, object detection matters because it changes what a system can tell you. A model that only classifies an image might say \"there are vehicles here\". A detector can say how many, where they are, and sometimes whether they cross a line, enter an area or are missing from a scene. That makes it useful for counting, safety checks, inventory support, traffic analysis, document layout analysis and quality inspection. It also changes the risks: accuracy can vary by lighting, camera angle, object size, clutter and the training data used, so procurement, oversight and human review decisions should match the stakes.",
+  "whyItMatters": "For non-specialists, object detection matters because it changes what a system can tell you. A model that only classifies an image might say \"there are vehicles here\". A detector can say how many and where they are. Its outputs can also support systems that use tracking or other rules to estimate whether objects cross a line, enter an area or are missing from a scene. That makes it useful for counting, safety checks, inventory support, traffic analysis, document layout analysis and quality inspection. It also changes the risks: accuracy can vary by lighting, camera angle, object size, clutter and the training data used, so procurement, oversight and human review decisions should match the stakes.",
   "whereYouMayHearIt": [
     "camera analytics",
     "warehouse and inventory systems",
@@ -123,7 +123,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Object detection finds chosen kinds of things in a picture and draws a box around each one it finds.",
-    "technical": "Object detection is a supervised computer vision task that predicts one or more object instances in an image, typically as class labels plus localised coordinates such as bounding boxes and confidence scores. Modern detectors learn visual features from annotated training images, generate candidate regions or dense predictions, classify those candidates, refine box coordinates, and then apply post-processing to remove near-duplicate overlaps. Evaluation usually considers both localisation and classification, often through overlap-based criteria rather than label accuracy alone. The term is commonly confused with image classification, which predicts labels for the whole image, and with image segmentation, which assigns object regions at pixel level instead of only rectangular extents."
+    "technical": "Object detection is a computer vision task that predicts zero or more object instances in an image, typically as class labels plus localised coordinates such as bounding boxes and confidence scores. In a common supervised setup, detectors learn visual features from annotated training images. One common pipeline generates candidate regions or dense predictions, classifies them, refines box coordinates, and applies post-processing to remove near-duplicate overlaps. Evaluation usually considers both localisation and classification, often through overlap-based criteria rather than label accuracy alone. The term differs from image classification, which predicts labels for the whole image, and from image segmentation, which assigns labels at pixel level instead of only rectangular extents."
   },
   "keyTakeaway": "Object detection does more than say what is in an image; it also marks where each detected object appears.",
   "quickCheck": {
@@ -204,9 +204,57 @@
     "object detection"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:23:51.255Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The confidence score is incorrectly described as showing how strongly the model matched patterns seen during training. It is a model output score, not a direct measurement of similarity to training patterns.",
+        "fix": "Replace the definition with: \"a number indicating the strength the model assigns to that finding.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation presents proposal generation, proposal comparison and duplicate removal as the way object detection works in general. That is one common pipeline, not a defining mechanism of every detector.",
+        "fix": "Replace the third paragraph with: \"A common approach analyses many visual patterns, proposes possible object locations and labels, then removes weaker duplicate proposals. In video, detection can be repeated frame by frame, sometimes with tracking added afterwards to follow the same object over time.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The segmentation comparison says segmentation marks the exact pixels belonging to an object. This is too narrow because segmentation can label meaningful regions such as roads or water, not only individual objects. \"Exact\" can also imply guaranteed accuracy.",
+        "fix": "Replace the comparison with: \"Segmentation assigns labels at pixel level to outline objects or meaningful regions, while object detection usually gives a rectangle around each detected object.\""
+      },
+      {
+        "field": "visual",
+        "severity": "error",
+        "problem": "The title, learning objective and four-stage flow present candidate generation and overlap filtering as the general object detection mechanism. This repeats the architecture-specific claim rather than identifying it as one common pipeline.",
+        "fix": "Change the title to \"How one object detection pipeline turns an image into labelled boxes\". In the learning objective and description, replace claims about object detection generally with \"one common object detection pipeline\". In steps 2 and 3, begin the explanations with \"In this pipeline\"."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The text defines object detection as supervised and says modern detectors generate candidates and apply duplicate-removal post-processing. Supervision and that pipeline are common, but neither is part of the task definition nor universal.",
+        "fix": "Define the task independently of its training method, then describe the supervised candidate-and-filter pipeline as one common setup."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "The text says a detector can determine whether objects cross a line or enter an area. Detection provides locations in individual images or frames. Crossing and entry events require additional temporal tracking or other downstream logic, as the page itself notes earlier.",
+        "fix": "Replace that claim with: \"Detector outputs can support counting and, when combined with tracking or other rules, estimates of whether objects cross a line, enter an area or are missing from a scene.\""
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "whyItMatters",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

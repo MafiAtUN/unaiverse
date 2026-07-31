@@ -219,9 +219,41 @@
   ],
   "contested": "The broad idea is widely used, but details are not fully settled. Researchers disagree about how far observed scaling trends generalise across model architectures, tasks, data quality conditions and future systems.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:53.139Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process and workedExample.result",
+        "severity": "warning",
+        "problem": "The arithmetic is correct: 18% - 12% = 6 percentage points, while 12% - 10.5% = 1.5 percentage points. However, the example treats three runs with unequal, simultaneous changes in data, parameters and compute as enough to establish a curve and forecast another run. Three points on an arbitrary scaling path provide weak evidence and do not isolate the effect of any resource.",
+        "fix": "State that the results suggest slowing gains, but that more runs across a defined scaling path are needed before forecasting returns."
+      },
+      {
+        "field": "visual.steps",
+        "severity": "warning",
+        "problem": "The visual combines arbitrary changes in data, parameter count and compute into one scale axis. This hides whether the comparison varies one resource under controlled conditions or follows a defined joint scaling recipe. The resulting curve therefore does not clearly teach how a scaling relationship is estimated.",
+        "fix": "Show separate controlled experiment series for each resource, or state that all runs follow one defined scaling recipe."
+      },
+      {
+        "field": "everydayAnalogy.mapping and everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "A larger notebook of worked examples maps more naturally to additional stored data than to additional model parameters. The current limitation discusses human intention but does not disclose this central mismatch.",
+        "fix": "Explicitly state that notebook size is only a loose analogy for capacity and is not equivalent to learned parameter count."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 is false because scaling laws do not guarantee accuracy or safety. Option 2 describes scalability. Option 3 is false because a trend cannot replace evaluation. However, the words \"guarantee\" and \"replace evaluation\" make two distractors absurd, so the answer can be selected without understanding scaling laws.",
+        "fix": "Replace the implausible distractors with credible confusions, such as forecasting deployment workload, attributing improvement to individual examples, or applying a fitted trend unchanged to every task."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

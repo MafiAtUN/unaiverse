@@ -96,7 +96,7 @@
       "The model processes the text and identifies likely important items from the notes.",
       "It generates a short completion shaped by the requested format and limits."
     ],
-    "result": "- Training moved from 12 May to 19 May.\n- The handout will be translated into Arabic.\n- The handout will also be translated into French.\n- The Nairobi office will test the registration form. Budget approval is still pending."
+    "result": "- Training moved from 12 May to 19 May.\n- The handout will be translated into Arabic.\n- The handout will also be translated into French.\n- The Nairobi office will test the registration form."
   },
   "unWorkplaceExample": {
     "scenario": "A communications officer wants a first draft summary of aggregated programme monitoring data for an internal briefing note.",
@@ -211,9 +211,37 @@
     "prompting"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:15:49.955Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The explanation distinguishes a prompt from training but does not explain its relationship to a system prompt. Because a system prompt is a high-priority type of prompt, leaving this unstated blurs two entries the page claims to distinguish.",
+        "fix": "Clarify that the user's message is a prompt and that a system prompt is a higher-priority instruction set before later messages."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result violates the instruction to include only decisions. \"Budget approval is still pending\" is a status, not an agreed decision. The output does contain the requested 4 bullets, but its fourth bullet adds this disallowed material.",
+        "fix": "Remove the sentence about pending budget approval while retaining four bullets."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "The marked answer is the only correct option, but the distractors are too implausible. Option 1 describes a permanent update, option 3 says the model creates a built-in safety rule during training, and option 4 promises guaranteed accuracy. A reader can reject them without understanding what a prompt is.",
+        "fix": "Replace the options with: [\"The process of adjusting a model using examples\", \"The input that gives the model instructions and context for this response\", \"Adapting a model with extra examples for a narrower task\", \"The practice of refining instructions to improve replies\"]. Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -32,7 +32,7 @@
     "missing-data",
     "noisy-data"
   ],
-  "oneSentence": "These terms describe what happens when real-world inputs, labels or relationships change after a system is built, so its outputs become less reliable over time.",
+  "oneSentence": "These terms describe mismatches between development and live data, including changed inputs, labels or relationships, which can reduce a system's reliability.",
   "plainExplanation": "AI systems are built and checked on past data, then used on new data. Problems start when the new data no longer looks like the old data in an important way. That broad situation is often called distribution shift: the pattern of data in use differs from the pattern seen during development.\n\nWithin that broad idea, data drift usually means the inputs have changed. For example, a model trained on clear daytime photos may later receive more night images or lower-quality scans. Concept drift usually means the relationship between input and correct output has changed. For example, words that once signalled urgent feedback may later be used casually, so the same phrase no longer means the same thing.\n\nModel drift is used less consistently. Some people use it loosely for any drop in model performance over time. Others use it for the model becoming less suitable because of data drift, concept drift, software changes or feedback loops. Because usage varies, it is safer to ask what exactly has changed: the inputs, the target labels, the environment, or the measured performance.\n\nWhat goes in is live data from the real setting. What happens is a mismatch between the old pattern and the current one. What comes out can be lower accuracy, more bias, unstable results, false confidence or rising costs from extra checking and retraining. This is different from overfitting, which starts during development when a model matches training data too closely; drift happens later when the world or data pipeline changes.",
   "everydayAnalogy": {
     "title": "Practising for the wrong examination",
@@ -98,7 +98,7 @@
       "Weekly spot checks show accuracy has fallen to 76%, with health messages often misrouted to 'other'.",
       "The team updates preprocessing for transcripts, collects recent approved examples, and retrains and rechecks the system before redeployment."
     ],
-    "result": "Performance improves because the team addressed both changed input style and changed wording patterns, rather than assuming the original model stayed reliable."
+    "result": "The team addresses the changed mix of input styles, then checks whether the updated system is reliable before redeployment."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team uses an approved internal search tool to find previous resolution language and classify paragraphs by topic, based on historical documents.",
@@ -133,7 +133,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "A system learned from yesterday's patterns. If today's data looks different, or the old clues no longer mean the same thing, the system's outputs can get worse.",
-    "technical": "Distribution shift is the umbrella term for a mismatch between the probability patterns in development data and those in deployment data. A common subtype is covariate or input drift, where the distribution of features changes while the task is nominally the same. Another is concept drift, where the relationship between features and the target label changes over time, so the same input pattern maps to a different correct output. Label prevalence can also shift, and operational changes such as new sensors, preprocessing, user interfaces or feedback loops can alter measured performance. The phrase model drift is used inconsistently: in practice it often refers to observable performance degradation from one or more of these mechanisms. Detecting drift may involve comparing feature distributions, monitoring calibration and error rates, and sampling recent cases for human review, but a detected statistical shift does not by itself prove harmful impact."
+    "technical": "Distribution shift is the umbrella term for a mismatch between the probability patterns in development data and those in deployment data. Covariate shift means the feature distribution changes while the feature-to-target relationship stays the same; input drift is a looser term for changed features. Another is concept drift, where the relationship between features and the target label changes over time, so the same input pattern maps to a different correct output. Label prevalence can also shift, and operational changes such as new sensors, preprocessing, user interfaces or feedback loops can alter measured performance. The phrase model drift is used inconsistently: in practice it often refers to observable performance degradation from one or more of these mechanisms. Detecting drift may involve comparing feature distributions, monitoring calibration and error rates, and sampling recent cases for human review, but a detected statistical shift does not by itself prove harmful impact."
   },
   "keyTakeaway": "A model can age even when the code stays the same, because the data or its meaning has changed.",
   "quickCheck": {
@@ -145,7 +145,7 @@
       "A team stores fewer records than before, so the model has less data each week."
     ],
     "correctOptionIndex": 2,
-    "explanation": "Concept drift is about a change in the relationship between input and correct output. In the third option, the same wording no longer signals the same label. Blurrier scans are mainly an input change, not a changed meaning relationship."
+    "explanation": "The third option changes the input-to-label relationship. Blurrier scans change input quality. More rainy-day records with unchanged weather-risk relationships change the input mix. Fewer stored records change data volume, not meaning."
   },
   "resources": [
     {
@@ -217,9 +217,58 @@
   ],
   "contested": "The labels are not used uniformly across organisations and textbooks, especially 'model drift'. Some authors also separate additional subtypes of shift more finely than this overview does.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:10.567Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The sentence says shifts make outputs less reliable and occur after a system is built. A shift may be present as soon as deployment begins, and it does not necessarily harm performance.",
+        "fix": "These terms describe mismatches between development and live data, including changed inputs, labels or relationships, which can reduce a system's reliability."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The examples use transcript errors and lower-quality scans without distinguishing drift from noisy data. Noise is a property of data; it becomes evidence of drift when its prevalence or pattern changes between development and use.",
+        "fix": "Replace the final sentence with: \"Overfitting starts when a model matches training data too closely. Drift is later change; missing or noisy data are drift only if their pattern changes.\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The process gives no post-update measurement, so the claim that performance improves and the causal explanation for that improvement are unsupported. Retraining and preprocessing do not guarantee improvement.",
+        "fix": "The team addresses the changed mix of input styles, then checks whether the updated system is reliable before redeployment."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The text treats covariate drift and input drift as equivalent, then defines them only by saying the task is nominally the same. Covariate shift specifically requires the feature distribution to change while the feature-to-target relationship remains unchanged. Input drift is a looser term.",
+        "fix": "Replace the second sentence with: \"Covariate shift means the feature distribution changes while the feature-to-target relationship stays the same; input drift is a looser term for changed features.\""
+      },
+      {
+        "field": "quickCheck.options[1]",
+        "severity": "error",
+        "problem": "The marked answer is not uniquely defensible. Option 1 is input drift because scan quality changes. Option 2 could be concept drift because moving regions may change how weather features relate to flood risk, not merely the weather distribution. Option 3 is the intended concept-drift example. Option 4 changes data volume and is not necessarily either kind of drift. Replace option 2 so it explicitly preserves the input-to-target relationship.",
+        "fix": "Replace option 2 with: \"A flood-risk model gets more rainy-day records, but weather-risk relationships do not change.\""
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation discusses only options 1 and 3. It does not resolve the ambiguity in option 2 or explain why option 4 is not concept drift.",
+        "fix": "The third option changes the input-to-label relationship. Blurrier scans change input quality. More rainy-day records with unchanged weather-risk relationships change the input mix. Fewer stored records change data volume, not meaning."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -135,7 +135,7 @@
       "An image folder has not been uploaded yet."
     ],
     "correctOptionIndex": 1,
-    "explanation": "The recordings are present, but unwanted background sound interferes with the useful signal, so this is noise. The other options describe absent data rather than distorted or unclear data."
+    "explanation": "The recordings are present, but street traffic interferes with the useful signal. Option 0 is missing data, option 2 is distribution shift, and option 3 is data cleaning."
   },
   "resources": [
     {
@@ -206,9 +206,43 @@
     "noise"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:25:36.178Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "commonMisconceptions[0].correction",
+        "severity": "warning",
+        "problem": "The correction collapses systematic bias into noise. A sensor that always reads too high is a systematic measurement error or bias, not merely unwanted random variation. The distinction matters because filtering random noise will not correct a persistent offset.",
+        "fix": "Noise can be random, while related data errors can be systematic, such as one team labelling cases differently from another or a sensor that always reads too high. Systematic errors can be especially harmful because they may look like a real pattern."
+      },
+      {
+        "field": "workedExample",
+        "severity": "warning",
+        "problem": "The example supplies 1,000, 120 and 60 but never uses them to produce a concrete result. It also claims fewer misclassifications without giving a comparable evaluation. The available arithmetic is 1,000 - 60 = 940 records after duplicate removal. Correcting 120 labels does not change the record count.",
+        "fix": "After correcting labels and removing 60 duplicate records, 1,000 - 60 = 940 emails remain. Comparing both models on the same evaluation data can then show whether the data changes reduced misclassifications."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is correct, but the distractors make it obvious without testing understanding. Options 0, 2 and 3 all explicitly describe absence using “no”, “missing” or “not uploaded”. Replace them with examples of missing data, distribution shift and data cleaning so each option must be classified.",
+        "fix": "Use these options: [\"A survey has blank age cells for 300 respondents.\", \"A speech dataset includes recordings with loud street traffic over the speaker’s voice.\", \"District patterns change after a registration model is built.\", \"Staff fix image labels before training.\"] Keep correctOptionIndex as 1."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation only groups all distractors as absent data. That will become false once the weak distractors are replaced with examples of the other related concepts.",
+        "fix": "The recordings are present, but street traffic interferes with the useful signal. Option 0 is missing data, option 2 is distribution shift, and option 3 is data cleaning."
+      }
+    ],
+    "applied": [
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

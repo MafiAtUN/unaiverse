@@ -31,8 +31,8 @@
     "keyword-search",
     "nearest-neighbour-search"
   ],
-  "oneSentence": "A system orders possible results by how well they fit a query, then may reorder the top few with a more precise but slower method.",
-  "plainExplanation": "In search and retrieval systems, many items may look relevant to a query. Ranking means putting those items in an order, from most useful to least useful. Reranking means taking an already short list of candidates and reordering it with a second method that usually examines each candidate more carefully.\n\nWhat goes in? A query, such as a question or sentence, plus a collection of possible passages, documents or records. A first stage finds candidates. That stage may use keywords, vectors, or both. A vector is a list of numbers that represents meaning in a form a computer can compare.\n\nWhat happens next? The first ranking step is often fast and broad. It tries not to miss good candidates. Then a reranker scores only the top few, for example the top 20 or top 100, using more context from the full query and the full passage. This often improves the order, especially when several passages are all partly relevant.\n\nWhat comes out is an ordered list. In retrieval-augmented generation, the highest-ranked passages may be passed to a language model so the answer can be grounded in a source. Ranking and reranking do not guarantee truth. They only change which evidence is shown first. They are also not the same as retrieval itself: retrieval gets candidates; ranking decides their order; reranking refines that order.",
+  "oneSentence": "A system orders possible results by estimated fit to a query, then may score and reorder a shortlist with a second method.",
+  "plainExplanation": "In search and retrieval systems, many items may look relevant to a query. Ranking means putting those items in an order based on estimated relevance or usefulness. Reranking means taking an existing candidate list and reordering it with a second method that usually examines each candidate in more detail.\n\nWhat goes in? A query, such as a question or sentence, plus passages, documents or records to search. A first stage selects candidates and often gives them initial scores or an order. That stage may use keywords, vectors, or both. A vector is a list of numbers encoding learned features that can help compare meaning.\n\nWhat happens next? The initial retrieval and ranking stage is often fast and broad. It tries not to miss good candidates. Then a reranker scores only a shortlist, for example the top 20 or top 100, using more context from the full query and the full passage. This can improve the order, especially when several passages are partly relevant.\n\nWhat comes out is an ordered list. In retrieval-augmented generation, the highest-ranked passages may be passed to a language model so its answer can use source material. Ranking and reranking do not guarantee truth. They only change which evidence is shown first. Ranking is often part of retrieval: retrieval selects candidates, usually with an initial order, while reranking applies a later scoring method to refine a shortlist.",
   "everydayAnalogy": {
     "title": "Choosing the best translated field note",
     "story": "A team receives 60 short translated field notes after heavy rain in several districts. First, an assistant quickly sorts them by obvious signs of relevance to a request about damaged water points, using words like “well”, “pump”, and “broken”, plus rough similarity in wording. That quick sort gives a top 10. Then a senior reviewer reads only those 10 more carefully and moves notes higher if they actually describe water access problems rather than general storm damage. The final pack sent to the coordinator starts with the notes most likely to answer the request.",
@@ -136,10 +136,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "First, the system makes a shortlist of passages that might help. Then it puts them in order. If needed, it checks the top few more carefully and changes the order so the best evidence is more likely to appear first.",
-    "technical": "In a modern retrieval pipeline, a first stage retrieves candidate documents or chunks using lexical methods, vector similarity, or a hybrid approach. The initial ranker scores many candidates cheaply, often with approximate signals such as term matches, embedding similarity or learned lightweight features. A reranker then rescoring only the top N candidates can use richer interactions between the full query and full passage, for example cross-encoding or other pairwise query-document scoring. This second stage is slower per candidate but feasible because N is small. The aim is better relevance at the top of the list, not broad candidate discovery. In RAG, the reranked top K passages are then passed to the generation stage to improve grounding and citation quality."
+    "simple": "First, the system selects and usually orders passages that might help. If needed, it scores a shortlist again with another method and changes the order so the best evidence is more likely to appear first.",
+    "technical": "In a modern retrieval pipeline, a first stage selects and usually ranks candidate documents or chunks using lexical methods, vector similarity, or a hybrid approach. It scores many candidates cheaply, often with signals such as term matches, embedding similarity or learned lightweight features. A reranker then rescores only the top N candidates and can use richer interactions between the full query and full passage, for example cross-encoding or other query-document scoring. This second stage is often slower per candidate but feasible because N is small. The aim is better relevance at the top of the list, not broad candidate discovery. In RAG, the reranked top K passages are then passed to the generation stage to support grounding and source selection."
   },
-  "keyTakeaway": "Retrieval finds candidates, ranking orders them, and reranking gives the top few a more careful second look.",
+  "keyTakeaway": "Retrieval selects candidates, often with an initial ranking, and reranking applies a second scoring method to reorder a shortlist.",
   "quickCheck": {
     "question": "What is the main purpose of reranking in a retrieval pipeline?",
     "options": [
@@ -222,9 +222,83 @@
     "reranker"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:20.515Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This makes being more precise and slower sound intrinsic to reranking. Reranking only requires applying another scoring or ordering stage. The second method is often richer and slower, but it need not be either.",
+        "fix": "A system orders possible results by estimated fit to a query, then may score and reorder a shortlist with a second method."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The categorical distinction that “retrieval gets candidates” while “ranking decides their order” is false and contradicts the supplied entries. Keyword search explicitly ranks matches, while semantic and nearest-neighbour search commonly use scores to select and order their returned candidates. Ranking is often an operation within retrieval, not a separate process after it. The sentence saying a vector “represents meaning” is also too absolute.",
+        "fix": "In search and retrieval systems, many items may look relevant to a query. Ranking means putting those items in an order based on estimated relevance or usefulness. Reranking means taking an existing candidate list and reordering it with a second method that usually examines each candidate in more detail.\n\nWhat goes in? A query, such as a question or sentence, plus passages, documents or records to search. A first stage selects candidates and often gives them initial scores or an order. That stage may use keywords, vectors, or both. A vector is a list of numbers encoding learned features that c"
+      },
+      {
+        "field": "visual.steps[3].explanation",
+        "severity": "error",
+        "problem": "Calling every reranker a “slower, more precise model” is inaccurate. A reranker can be any second scoring method, and it is not guaranteed to be more precise. The sentence also has a subject-verb error: “model rescoring”.",
+        "fix": "A second scoring method rescores the top candidates and may change their order using fuller context."
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The key message repeats the false separation between retrieval and ranking. It also says the reranker “looks” and “reads” as though it were a person.",
+        "fix": "Replace the final sentence with: “The key message is that retrieval selects candidates, often with an initial ranking, and reranking applies another scoring method to reorder a shortlist.”"
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "“A reranker reads” presents a model as performing a human mental activity. The wording also has a grammatical error in “then rescoring gives”. The displayed score orders themselves are consistent: 0.81 > 0.79 > 0.77 > 0.74 > 0.73, and 0.92 > 0.84 > 0.41 > 0.39 > 0.35. No further arithmetic is provided to verify.",
+        "fix": "A reranker uses the full query and the full text of the top five passages, then produces new scores: C 0.92, B 0.84, A 0.41, E 0.39, D 0.35."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "“Any search system needs some way to order results” is too broad. A search system can return an unordered set or filtered records. Ranking is common in keyword, semantic and hybrid search, but not logically required by every search system.",
+        "fix": "Many search systems order results, including keyword search, semantic search, and hybrid search. What changes is the scoring signal used to rank them."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "This again teaches that retrieval creates an unordered shortlist and ranking happens only afterward. In the systems named on this page, candidate selection commonly depends on scores and an initial ranking.",
+        "fix": "First, the system selects and usually orders passages that might help. If needed, it scores a shortlist again with another method and changes the order so the best evidence is more likely to appear first."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The first two sentences imply that candidate retrieval and initial ranking are always separate stages. “Pairwise query-document scoring” is also potentially misleading technical terminology: a cross-encoder commonly scores each query-document pair, while pairwise ranking can mean comparing two candidate documents. The phrase “then rescoring” is ungrammatical.",
+        "fix": "In a modern retrieval pipeline, a first stage selects and usually ranks candidate documents or chunks using lexical methods, vector similarity, or a hybrid approach. It scores many candidates cheaply, often with signals such as term matches, embedding similarity or learned lightweight features. A reranker then rescores only the top N candidates and can use richer interactions between the full query and full passage, for example cross-encoding or other query-document scoring. This second stage is often slower per candidate but feasible because N is small. The aim is better relevance at the top "
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "The claim that a good reranker “improves speed, traceability and user trust” is not established. Reranking adds processing time, traceability depends on exposing sources and scores, and trust is a user response rather than a direct technical outcome.",
+        "fix": "For non-specialists, ranking and reranking affect what evidence appears first. That can change the quality of a summary, a chatbot answer, or a document search result. A weak initial order may leave the best passage too low to be used. A good reranker can bring a more relevant source to the top, helping users find and inspect evidence sooner, although it adds processing time. It also shapes attention: if the scoring method favours the wrong signals, important evidence may be missed or buried. So when you assess an AI search tool, ask not only “did it retrieve the document?” but also “how did i"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "The takeaway repeats the misleading claim that retrieval and ranking are cleanly separate operations. Retrieval commonly selects candidates through an initial scoring and ranking process.",
+        "fix": "Retrieval selects candidates, often with an initial ranking, and reranking applies a second scoring method to reorder a shortlist."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -29,8 +29,8 @@
     "reinforcement-learning-from-human-feedback",
     "unsupervised-learning"
   ],
-  "oneSentence": "A training method where a system improves behaviour through trial, feedback and accumulated reward across a sequence of actions.",
-  "plainExplanation": "Reinforcement learning trains a system by letting it try actions in a situation and then giving it feedback as a reward, a score that signals how useful the outcome was. The system is often called an agent, and the situation it acts in is called the environment. The goal is not just one good move, but a strategy that does well over time.\n\nWhat goes in is usually a description of the current state, meaning the information available about the situation right now, plus a reward signal after actions are taken. Unlike supervised learning, there usually is not a correct answer attached to each example in advance. Instead, the system must discover which actions lead to better long-term results.\n\nWhat happens inside is repeated trial and adjustment. The system takes an action, the environment changes, and a reward arrives. Over many rounds, it updates a policy, which is a rule for choosing actions in each state, so that higher-reward actions become more likely in similar situations.\n\nWhat comes out is a policy or control strategy, not just a label or a score for one item. That is why reinforcement learning is commonly used for problems with sequences, timing and trade-offs, such as routing, game playing or managing resources. It is different from unsupervised learning too, which looks for patterns without reward signals tied to actions.",
+  "oneSentence": "A training method that aims to improve behaviour through trial, feedback and cumulative reward across a sequence of actions.",
+  "plainExplanation": "Reinforcement learning trains a system by letting it try actions in a situation and then giving it feedback as a reward, a score that signals how useful the outcome was. The system is often called an agent, and the situation it acts in is called the environment. The goal is not just one good move, but a strategy that does well over time.\n\nWhat goes in is usually a description of the current state, meaning the information available about the situation right now, plus a reward signal after actions are taken. Unlike supervised learning, there usually is not a correct answer attached to each example in advance. Instead, the system must discover which actions lead to better long-term results.\n\nWhat happens inside is repeated trial and adjustment. The system takes an action, the environment changes, and a reward arrives. Over many rounds, it updates a policy or value estimates used to choose actions. The aim is to favour actions expected to lead to more cumulative reward in similar situations.\n\nWhat comes out is a policy or control strategy, not just a label or a score for one item. That is why reinforcement learning is commonly used for problems with sequences, timing and trade-offs, such as routing, game playing or managing resources. It is different from unsupervised learning too, which looks for patterns without reward signals tied to actions.",
   "everydayAnalogy": {
     "title": "Learning how to sort urgent messages",
     "story": "A new staff member helps sort incoming messages into an urgent tray or a later tray. At first, they guess and sometimes place a message in the wrong tray. Later in the day, they learn which choices helped the team respond quickly and which choices caused delays, and they adjust how they sort the next messages. After many days, they become better at recognising patterns that usually lead to faster handling overall, even when one message is hard to judge by itself.",
@@ -105,7 +105,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN team explores an internal prototype that learns how to order non-sensitive public consultation submissions for human reviewers, aiming to surface likely high-priority themes earlier while balancing reviewer workload.",
     "relevance": "This illustrates a sequential decision problem: the system's ordering choices affect what reviewers see next, how quickly themes are identified and how efficiently limited time is used, so feedback can be based on overall review outcomes rather than one fixed correct answer per submission.",
-    "caution": "Do not place confidential, personal or protection-sensitive submissions into an unapproved public AI service. Human oversight is needed to check that the learned ordering does not systematically disadvantage certain viewpoints, languages or regions."
+    "caution": "Use only confirmed non-sensitive submissions in an approved internal system. Human oversight is needed to check that the learned ordering does not systematically disadvantage certain viewpoints, languages or regions, and that data handling follows applicable rules."
   },
   "whyItMatters": "For non-specialists, reinforcement learning matters because it is used in situations where choices affect later options, costs or risks. That makes it relevant to resource allocation, scheduling, recommendations, control systems and some forms of AI-assisted optimisation. If you are assessing a system, you need to ask different questions than you would for ordinary prediction tools: What reward is it optimising? Who defined that reward? Does short-term success hide long-term harm? What happens while it explores and makes mistakes? Could it learn behaviour that scores well but conflicts with safety, fairness or policy goals? Understanding this helps with procurement, oversight and realistic expectations.",
   "whereYouMayHearIt": [
@@ -135,7 +135,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "The system learns by trying things, seeing what leads to better results over time, and adjusting what it does next.",
-    "technical": "In reinforcement learning, an agent interacts with an environment over time steps. At each step it observes a state, selects an action according to a policy, receives a reward and transitions to a new state. Training updates the policy, or a value function estimating expected future reward, so the agent improves expected cumulative reward rather than matching pre-labelled answers. This differs from supervised learning because there is usually no fixed target output for each input, and feedback may be sparse or delayed. It also differs from standard prediction tasks because the agent's actions change the future data it will encounter. Many formulations use the language of Markov decision processes, but not all practical systems fit that framework perfectly."
+    "technical": "In reinforcement learning, an agent interacts with an environment over time steps. At each step it observes a state, selects an action according to a policy, receives a reward and transitions to a new state. Training updates the policy, or a value function estimating expected future reward, with the aim of improving expected cumulative reward rather than matching pre-labelled answers. This differs from supervised learning because there is usually no fixed target output for each input, and feedback may be sparse or delayed. It also differs from standard prediction tasks because the agent's actions change the future data it will encounter. Many formulations use the language of Markov decision processes, but not all practical systems fit that framework perfectly."
   },
   "keyTakeaway": "Reinforcement learning is about learning a strategy for sequences of actions by using reward signals, especially when today's choice changes tomorrow's options.",
   "quickCheck": {
@@ -218,9 +218,52 @@
     "rl"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:10:49.837Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.input and workedExample.process[2]",
+        "severity": "error",
+        "problem": "The stated reward does not produce +1. Because the package caused congestion, the condition for +3, arriving on time without blocking others, is not met, while the -3 congestion reward applies. That gives -3. Even if the two values were treated as additive components, the arithmetic would be +3 + (-3) = 0, not +1.",
+        "fix": "Revise the reward definition to: \"Reward: +3 if the package arrives on time, -2 if late, and -2 if it causes congestion.\" Then the stated outcome computes as +3 + (-2) = +1."
+      },
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "It says the method improves behaviour as if improvement were guaranteed. Reinforcement learning can fail, converge poorly or learn behaviour that exploits a flawed reward.",
+        "fix": "A training method that aims to improve behaviour through trial, feedback and cumulative reward across a sequence of actions."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "It says reinforcement learning updates a policy, but many methods instead update a value function used to select actions. It also says higher-reward actions become more likely, which blurs immediate reward with expected cumulative reward and does not accurately describe every update method.",
+        "fix": "Replace the third paragraph with: \"What happens inside is repeated trial and adjustment. The system takes an action, the environment changes, and a reward arrives. Over many rounds, it updates a policy or value estimates used to choose actions. The aim is to favour actions expected to lead to more cumulative reward in similar situations.\""
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The phrase \"so the agent improves expected cumulative reward\" again presents improvement as a guaranteed result of training rather than its objective.",
+        "fix": "In reinforcement learning, an agent interacts with an environment over time steps. At each step it observes a state, selects an action according to a policy, receives a reward and transitions to a new state. Training updates the policy, or a value function estimating expected future reward, with the aim of improving expected cumulative reward rather than matching pre-labelled answers. This differs from supervised learning because there is usually no fixed target output for each input, and feedback may be sparse or delayed. It also differs from standard prediction tasks because the agent's acti"
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The scenario uses an internal prototype, but the caution only prohibits an unapproved public AI service. It does not require the internal prototype itself to be approved or require confirmation that submissions are genuinely non-sensitive. That caution does not match the stated UN data-handling risk.",
+        "fix": "Use only confirmed non-sensitive submissions in an approved internal system. Human oversight is needed to check that the learned ordering does not systematically disadvantage certain viewpoints, languages or regions, and that data handling follows applicable rules."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "unWorkplaceExampleCaution",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

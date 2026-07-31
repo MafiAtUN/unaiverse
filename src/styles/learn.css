@@ -1799,3 +1799,119 @@ button.chip:hover {
 .term-return[hidden] {
   display: none;
 }
+
+/* ── Touch ────────────────────────────────────────────────────────────
+   Everything above is sized for a mouse, where a 23px chip is a fine
+   target. On a phone it is a miss waiting to happen, and most of the
+   people this site is for will be reading it on a phone between meetings.
+
+   Scoped to `pointer: coarse` rather than to a width: a narrow desktop
+   window is still a mouse, and a large tablet is still a finger. Width is
+   the wrong question.
+
+   44px is the AAA figure rather than the 24px AA minimum. For a reference
+   site people tap through one-handed, comfortable beats compliant. */
+@media (pointer: coarse) {
+  a.chip,
+  button.chip {
+    min-height: 44px;
+    padding-inline: 0.85rem;
+  }
+
+  .att-word {
+    min-height: 44px;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .az-jump a {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .tsearch__clear {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .learn-bar__links a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .visual__alt summary,
+  .cmap__list summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* A range input is a 44px-tall strip of nothing to look at, but a
+     comfortable one to drag. The thumb is what the finger is aiming for. */
+  .vx__slider {
+    height: 44px;
+  }
+
+  /* Hairline borders vanish under a fingertip's worth of glare; give the
+     things you are meant to press a bit more edge. */
+  .vx__button,
+  .lbutton {
+    min-height: 44px;
+  }
+
+  /* Navigation links that happen to be text: a heading link, a breadcrumb, a
+     footer link. The padding grows the hit area and the matching negative
+     margin puts the layout back where it was, so nothing moves and the target
+     stops being 23px of line-height.
+
+     Not applied to links inside running prose. There the target genuinely is
+     the words, spacing them out would break the paragraph, and WCAG exempts
+     them for exactly that reason. */
+  .compare-col__title a,
+  .cat-card__title a,
+  .path-step__title a,
+  .az-group__letter a {
+    display: inline-block;
+    padding-block: 0.6rem;
+    margin-block: -0.6rem;
+  }
+
+  .learn-crumbs a,
+  .learn-foot__links a,
+  .aside-block a,
+  .milestone-links a {
+    display: inline-block;
+    padding-block: 0.7rem;
+    margin-block: -0.7rem;
+  }
+}
+
+/* ── The bar on a phone ───────────────────────────────────────────────
+   Three stacked rows of pinned chrome is a fifth of a phone screen. The
+   bar tucks away while you read forward and returns the moment you
+   scroll back, so nothing is lost and the reading area is not taxed.
+   `is-tucked` is only ever set on a coarse pointer (see Learn.astro). */
+.learn-bar {
+  transition: transform var(--dur) var(--ease);
+  will-change: transform;
+}
+
+.learn-bar.is-tucked {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learn-bar {
+    transition: none;
+  }
+}
+
+@media (pointer: coarse) {
+  /* The aside's search box stacks to the bottom of the page on a phone,
+     roughly nine screens below the fold, where it is not a persistent
+     search but a buried one. The bar's search is always a flick away, so
+     this one is redundant weight and a duplicate landmark. */
+  .term-aside .aside-block:has(.tsearch) {
+    display: none;
+  }
+}

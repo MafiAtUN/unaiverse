@@ -31,8 +31,8 @@
     "copilot",
     "automation"
   ],
-  "oneSentence": "A system that can pursue a goal by choosing and carrying out multiple steps, often using software tools, with results that should still be checked by people.",
-  "plainExplanation": "Many AI systems only reply to a prompt. An AI agent goes further. It takes a goal or instruction as input, works out possible next steps, uses tools such as search, calendars or databases, and then produces an action, a draft, an update or a recommendation.\n\nA simple way to picture it is: goal in, steps in the middle, result out. The middle part matters. The system may look at information, call a tool through an application programming interface, or API, which is a standard way for one piece of software to send requests to another, and then use what comes back to decide the next step.\n\nFor example, instead of only answering “What trains go across the city?”, it might search timetables, compare routes, check delays and draft a travel plan. Some agents can also send messages, create tickets or update a record. That is why they need limits, logging and human oversight.\n\nPeople often confuse an AI agent with a chatbot or any automation. A chatbot mainly holds a conversation. Traditional automation usually follows fixed rules. An agent is different because it can combine conversation, tool use and step-by-step action toward a goal, but its output can still be wrong, unsafe or poorly chosen.",
+  "oneSentence": "An AI system that can pursue a goal by selecting and carrying out multiple steps, often using software tools, with oversight matched to its risks.",
+  "plainExplanation": "Many AI systems only reply to a prompt. An AI agent goes further. It takes a goal or instruction as input, selects possible next steps, uses tools such as search, calendars or databases, and then produces an action, a draft, an update or a recommendation.\n\nA simple way to picture it is: goal in, steps in the middle, result out. The middle part matters. The system may look at information, call a tool through an application programming interface, or API, which is a standard way for one piece of software to send requests to another, and then use what comes back to select the next step.\n\nFor example, instead of only answering “What trains go across the city?”, it might search timetables, compare routes, check delays and draft a travel plan. Some agents can also send messages, create tickets or update a record. That is why they need limits, logging and human oversight.\n\nPeople often confuse an AI agent with a chatbot or fixed-rule automation. A chatbot mainly holds a conversation. Fixed-rule automation follows predefined rules. An agent can combine conversation, tool use and step-by-step action toward a goal, but its output can still be wrong, unsafe or poorly chosen.",
   "everydayAnalogy": {
     "title": "A travel helper planning a trip across a city",
     "story": "Amina needs to get from one side of Nairobi to the other for two meetings. She gives her travel helper a goal: arrive by 09:00, avoid expensive routes, and include a backup plan in case of delays. The helper checks a map app, looks up train and bus times, compares costs, and writes a short plan with the best route and a second option. If a line is closed, the helper changes the plan before handing it back.",
@@ -102,7 +102,7 @@
       "It sees a service alert on one bus line and creates a backup route using Metro plus a different bus arriving 08:22 for 14.",
       "It returns the primary route, the backup route and a note that the user should verify morning service updates before leaving."
     ],
-    "result": "Primary plan: Metro Line A to transfer station, then Bus 175, arrive 08:10, estimated cost 12. Backup: Metro Line A to central terminal, then Bus 233, arrive 08:22, estimated cost 14."
+    "result": "Illustrative only, not real travel advice. Primary: Metro Line A to transfer station, then Bus 175, arrive 08:10, cost 12. Backup: Metro Line A to central terminal, then Bus 233, arrive 08:22, cost 14."
   },
   "unWorkplaceExample": {
     "scenario": "A programme team wants help reviewing monthly monitoring figures from several country offices. An AI agent inside an approved internal system checks whether totals match the reporting template, flags missing fields, drafts a summary of trends and routes unusual entries to a human reviewer.",
@@ -219,9 +219,63 @@
   ],
   "contested": "The term is used loosely across industry. Some people call any tool-using assistant an agent, while others use the term only for systems with more independent multi-step behaviour, planning or delegated action.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:17.737Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition is too broad because it says only \"a system\". Ordinary planning or control software could meet it without using AI. It also implies that people should check every result, which conflicts with the later risk-based account of oversight.",
+        "fix": "An AI system that can pursue a goal by selecting and carrying out multiple steps, often using software tools, with oversight matched to its risks."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The text says the system uses tool results \"to decide the next step\". This presents deciding as an unqualified mental act. It also says an agent is categorically \"different\" from automation, although an agent can automate work. The relevant distinction is from fixed-step or fixed-rule automation.",
+        "fix": "Replace \"decide the next step\" with \"select the next step\". Replace the final paragraph's categorical distinction with a comparison to fixed-rule automation."
+      },
+      {
+        "field": "visual.steps[1].explanation and visual.steps[3].explanation",
+        "severity": "error",
+        "problem": "The visual says the agent may \"decide\" what to do and uses a result \"to decide\" whether it is finished. This anthropomorphises the mechanism instead of describing action selection and stopping rules.",
+        "fix": "Use: \"The agent selects a useful next action instead of only producing one reply. It may be configured to search, calculate, request more information or use a connected service.\" Use: \"The tool returns information or a status. The agent uses that result to select another step or meet a configured stopping condition.\""
+      },
+      {
+        "field": "workedExample",
+        "severity": "error",
+        "problem": "The example presents exact routes, service numbers, arrival times and a service alert for a named real city without saying they are fictional or verified. These details could be mistaken for real travel information. The numerical constraints themselves compute correctly: 12 < 25, 14 < 25 and 48 > 25; 08:10 and 08:22 are both before 08:30.",
+        "fix": "Clearly label the route names, service numbers and times as illustrative rather than real travel advice."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "warning",
+        "problem": "The caution focuses on unapproved public services. Approval of an internal system alone does not establish that every personal, protection-sensitive, confidential or security-sensitive data type is authorised for that system and use.",
+        "fix": "Use only data approved for that internal system, with required access controls. Do not enter personal, protection-sensitive, confidential or security-sensitive details unless the system and use are authorised for them. Keep human review before formal reporting, escalation or external sharing."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "The phrase \"separate low-risk assistance from higher-risk automation\" treats assistance as low risk and automation as higher risk. Risk depends on data, authority, consequences and controls, not whether the system falls into one of those categories.",
+        "fix": "Replace that phrase with \"separate lower-authority assistance from systems that can take consequential actions\"."
+      },
+      {
+        "field": "quickCheck",
+        "severity": "warning",
+        "problem": "Option 2 is the best answer, but the quiz is too easy and does not cleanly test the distinction. Option 1 is plainly a one-message reply, option 3 is a static page, and option 4 is a simple schedule. Option 2 could also describe fixed-rule automation because it does not explicitly say that an observation changes the selected next step. The distractors therefore do not require understanding the agent loop.",
+        "fix": "Use these options: [\"A chat interface that retrieves live train times and returns them\", \"A system that checks routes, uses a delay alert to revise its plan and prepares a backup\", \"A workflow that checks timetables and selects a route using fixed rules\", \"A copilot that drafts a route while a person chooses and submits each action\"]. Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

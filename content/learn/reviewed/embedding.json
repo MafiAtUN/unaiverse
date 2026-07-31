@@ -30,7 +30,7 @@
     "vector-database"
   ],
   "oneSentence": "A list of numbers that places a token or other item in a mathematical space so a model can compare patterns, relationships and context.",
-  "plainExplanation": "An embedding turns something discrete, such as a word piece, sentence or image label, into a list of numbers. That list is called a vector. The input might be the token for “rain”, a whole sentence, or another item the system needs to compare. The output is not a definition in words. It is a numeric representation the model can work with.\n\nThe main purpose is to put similar items closer together in a mathematical space and different items farther apart. For example, tokens often used in similar contexts may end up with similar embeddings. In modern language models, each token first gets an embedding, then the transformer processes those vectors further using attention.\n\nWhat happens in between depends on the system. Usually, the model learns these numbers during training by adjusting them so the overall task works better, such as predicting the next token. The embedding does not contain a perfect human meaning of a word. It captures patterns from the training data and from the model’s objective.\n\nThis term is often confused with tokenisation and with vector databases. Tokenisation breaks text into units such as words or word pieces. Embedding comes after that and converts those units into numbers. A vector database is a storage and search system for vectors. An embedding is the vector representation itself, not the database.",
+  "plainExplanation": "An embedding turns something discrete, such as a word piece, sentence or image label, into a list of numbers. That list is called a vector. The input might be the token for “rain”, a whole sentence, or another item the system needs to represent. The output is not a definition in words. It is a numeric representation the model can work with.\n\nSome embedding systems are trained so that a chosen similarity measure places certain related items closer together. This is not guaranteed for every embedding or every kind of similarity. For example, tokens used in similar contexts may have similar embeddings. In modern language models, each token first gets an input embedding, then the transformer processes those vectors using attention.\n\nWhat happens in between depends on the system. Usually, the model learns these numbers during training by adjusting them so the overall task works better, such as predicting the next token. The embedding does not contain a perfect human meaning of a word. It captures patterns from the training data and the model’s objective.\n\nThis term is often confused with tokenisation and vector databases. Tokenisation breaks text into units such as words or word pieces. Embedding comes after that and maps those units to vectors. A vector database stores and searches vectors. An embedding is the representation itself, not the database.",
   "everydayAnalogy": {
     "title": "Colour-coded pins on a farming map",
     "story": "A farming cooperative tracks rainfall across many villages. An analyst places a pin for each village on a wall map, not by exact geography, but by rainfall behaviour: villages with similar dry seasons, storm timing and soil moisture patterns are placed near each other. When a new village joins, the analyst studies its recent pattern and places its pin near villages with similar behaviour. Staff can then quickly spot which places may need similar planting advice.",
@@ -225,9 +225,43 @@
     "vector representation"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:18.054Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition suggests that an embedding itself compares context. A fixed token embedding is only an input representation. Transformer layers produce later context-sensitive representations.",
+        "fix": "A list of numbers representing a token or other item so a model can use it in mathematical operations."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that the main purpose is to put similar items closer and different items farther apart is too broad. This geometry may be encouraged in systems trained for similarity, but it is not guaranteed for ordinary transformer input embeddings, every distance measure or every kind of human similarity.",
+        "fix": "An embedding turns something discrete, such as a word piece, sentence or image label, into a list of numbers. That list is called a vector. The input might be the token for “rain”, a whole sentence, or another item the system needs to represent. The output is not a definition in words. It is a numeric representation the model can work with.\n\nSome embedding systems are trained so that a chosen similarity measure places certain related items closer together. This is not guaranteed for every embedding or every kind of similarity. For example, tokens used in similar contexts may have similar embed"
+      },
+      {
+        "field": "visual.learningObjective, visual.description, visual.steps[1], visual.accessibil",
+        "severity": "error",
+        "problem": "The visual says token positions are used for attention and treats proximity in a 2D projection as learned similarity. Attention does not operate on plotted 2D positions. It uses learned transformations of the vectors. A 2D projection can also distort distances and nearest neighbours, so the displayed proximity may not match proximity in the original space.",
+        "fix": "State that embedding vectors become inputs to transformer computations, including attention. Calculate neighbours in the original vector space using a stated similarity measure. Label the 2D chart as a projection that can distort distances and may not preserve nearest neighbours."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "Calling every embedding a model’s “starting representation” is too narrow for the page’s own broader definition. Sentence, document or image embeddings can be produced as outputs for retrieval or clustering rather than serving as a starting representation.",
+        "fix": "An embedding is a numeric representation of a token or other item that a system can compare and process."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

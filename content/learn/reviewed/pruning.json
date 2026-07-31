@@ -27,7 +27,7 @@
     "quantisation",
     "lora"
   ],
-  "oneSentence": "Pruning removes less useful model connections or parameters so the model becomes smaller and faster while trying to keep nearly the same performance.",
+  "oneSentence": "Pruning removes less useful connections or parameters to reduce model size or runtime while trying to keep nearly the same performance.",
   "plainExplanation": "Pruning is a way to simplify a trained or partly trained model. The input is usually a model with many parameters, plus a rule for judging which parameters seem less important. A parameter is a numerical setting that affects the model’s output.\n\nWhat happens next is selective removal. Engineers may set some parameters to zero, remove whole neurons or channels, or remove larger blocks that hardware can skip efficiently. After that, they often test the model again and may fine-tune it so it recovers some of the lost performance.\n\nThe output is a sparser model. Sparse means many parameter values are zero or many connections are absent. In some cases this cuts memory use, speeds up inference, or lowers energy use. In other cases, especially if the hardware or software cannot take advantage of sparsity, the practical speed gain is small even though many parameters were removed.\n\nPruning is often confused with quantisation and distillation. Quantisation keeps the same structure but stores numbers with lower precision, such as fewer bits. Distillation trains a smaller model to imitate a larger one. Pruning usually starts from one existing model and removes parts of it.",
   "everydayAnalogy": {
     "title": "Cutting a practice revision sheet down to essentials",
@@ -92,7 +92,7 @@
       "They run two short fine-tuning epochs on the original training set.",
       "After fine-tuning, accuracy rises to 91.9%, and the stored model size drops because many values are zero."
     ],
-    "result": "The team accepts the pruned model for a mobile deployment where memory is tight, while noting that actual speed improvement depends on whether their runtime can exploit sparse weights."
+    "result": "The team accepts the pruned model for mobile deployment after confirming sparse storage reduces memory, while noting that speed depends on whether their runtime can exploit sparse weights."
   },
   "unWorkplaceExample": {
     "scenario": "A UN analytics team maintains a language model used inside an approved internal environment to classify and route non-sensitive programme monitoring comments into broad themes such as delays, supply issues and training needs.",
@@ -212,9 +212,38 @@
     "sparsity"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:10.060Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This says pruning makes a model smaller and faster as a direct result. Zeroing weights may reduce the number of active parameters without reducing stored size or latency unless the representation and deployment stack exploit sparsity.",
+        "fix": "Pruning removes less useful connections or parameters to reduce model size or runtime while trying to keep nearly the same performance."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "Zero values do not by themselves make the stored model smaller. A dense format still stores each zero. The numerical calculations are consistent: 12 million × 40% = 4.8 million zeroed parameters, leaving 7.2 million active; 92.4% − 90.8% = 1.6 percentage points lost; 91.9% − 90.8% = 1.1 points recovered; 92.4% − 91.9% = 0.5 points remaining loss.",
+        "fix": "After fine-tuning, accuracy rises to 91.9%; storage drops only if a sparse format omits the zero values."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The team accepts the model because memory is tight, but the example never establishes that zeroing weights reduced memory. The speed caveat does not address this unsupported memory claim.",
+        "fix": "The team accepts the pruned model for mobile deployment after confirming sparse storage reduces memory, while noting that speed depends on whether their runtime can exploit sparse weights."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

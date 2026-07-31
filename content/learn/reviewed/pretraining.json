@@ -29,8 +29,8 @@
     "instruction-tuning",
     "in-context-learning"
   ],
-  "oneSentence": "The first large-scale stage where a model learns broad patterns from vast data, producing a general-purpose starting point that later steps can adapt for specific tasks.",
-  "plainExplanation": "Pretraining is the early training stage that gives a model broad general capabilities before it is adapted for a narrower use. The input is usually a very large collection of text, images, audio or other data. For language models, that often means text from many sources and domains.\n\nIn many modern systems, this stage uses self-supervised learning. That means the training signal comes from the data itself rather than from people writing labels for every example. For a language model, a common method is to hide or predict parts of text and adjust the model so its next prediction is closer to the original text.\n\nWhat happens internally is repeated adjustment of many numerical parameters, often called weights. Over many training steps, the model becomes better at capturing statistical patterns such as grammar, common facts, style, topic structure and relationships between words. This does not guarantee truth, reasoning quality or safe behaviour. It mainly creates a broad base model, often called a foundation model.\n\nWhat comes out is a checkpoint: a saved version of the model after this broad training stage. That checkpoint can then be used directly, or adapted further through methods such as fine-tuning, instruction tuning or preference-based methods. Pretraining is different from those later stages because its goal is breadth, not task-specific behaviour.",
+  "oneSentence": "A large-scale training stage where a model learns reusable patterns from data, producing a general-purpose starting point that later steps can adapt for specific tasks.",
+  "plainExplanation": "Pretraining is the early training stage that gives a model broad general capabilities before it is adapted for a narrower use. The input is usually a very large collection of text, images, audio or other data. For language models, that often means text from many sources and domains.\n\nIn many modern systems, this stage uses self-supervised learning. That means the training signal comes from the data itself rather than from people writing labels for every example. For a language model, a common method is to hide or predict parts of text and adjust the model so its predictions are closer to the original text.\n\nWhat happens internally is repeated adjustment of many numerical parameters, often called weights. Over many training steps, the model becomes better at capturing statistical patterns such as grammar, common facts, style, topic structure and relationships between words. This does not guarantee truth, reasoning quality or safe behaviour. It mainly creates a broad base model, often called a foundation model.\n\nWhat comes out is a checkpoint: a saved version of the model after this broad training stage. That checkpoint can then be used directly, or adapted further through methods such as fine-tuning, instruction tuning or preference-based methods. Pretraining differs because it creates reusable starting parameters before task-specific or instruction-following adaptation.",
   "everydayAnalogy": {
     "title": "A librarian learning the shape of a collection",
     "story": "A new librarian in Nairobi spends months shelving, scanning titles and reading short summaries from books, reports and newspapers in many subjects. She is not yet being trained for one exact request such as finding legal clauses on climate finance. Instead, she is building a broad sense of language, topics, formats and where information tends to appear. Later, a senior colleague gives extra coaching on how to answer one type of question quickly and safely for visitors. That later coaching builds on the broad preparation she already did.",
@@ -208,9 +208,62 @@
   ],
   "contested": "The basic idea is widely used, but exact boundaries vary: some people use 'pretraining' narrowly for the initial self-supervised stage, while others use it more loosely for almost any earlier training before deployment.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:51.669Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; plainExplanation",
+        "severity": "error",
+        "problem": "The page defines pretraining too narrowly as the \"first\" stage whose goal is always breadth. Continued or transferred-initialisation pretraining need not be the model's first training stage, and the technical section itself allows transferred initialisation. The final distinction is also weak: pretraining can use domain-focused data, so breadth alone does not distinguish it from later adaptation.",
+        "fix": "Replace \"first\" with a non-exclusive description. Distinguish pretraining by its role in creating reusable starting parameters before task-specific or instruction-following adaptation, not solely by dataset breadth."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The sentence about language objectives conflates masked prediction with next-token prediction. If the model predicts a hidden part of the text, it is not necessarily making a \"next prediction.\"",
+        "fix": "For a language model, a common method is to hide or predict parts of text and adjust the model so its predictions are closer to the original text."
+      },
+      {
+        "field": "workedExample.process[2]",
+        "severity": "error",
+        "problem": "\"After each prediction\" inaccurately says parameters are updated after every individual token prediction. Training normally computes loss over a batch or accumulated set of predictions before an optimisation update. There is no arithmetic in this worked example to verify. The figure of 800 billion tokens is stated but never used in a calculation.",
+        "fix": "After each batch of predictions, optimisation adjusts the parameters slightly to reduce future error across many billions of examples."
+      },
+      {
+        "field": "everydayAnalogy.mapping[2]",
+        "severity": "error",
+        "problem": "The mapping treats instruction tuning as coaching for \"one exact request\" and as adaptation for a narrower use. That contradicts the supplied definition: instruction tuning can teach general prompt-following patterns across many tasks rather than one narrow request.",
+        "fix": "Change the analogy element to \"Later coaching for requests and response patterns\" and the AI element to \"Fine-tuning or instruction tuning after pretraining\"."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "error",
+        "problem": "The date on which pretraining finished does not establish the model's knowledge cutoff. Training data may already have an earlier cutoff, and later adaptation may add newer material. The stated procurement question therefore invites a false inference.",
+        "fix": "Understanding pretraining helps staff ask the right procurement and governance questions: Was the model broadly pretrained on general text, what period did its training data cover, and what later adaptation was added for legal or search tasks? This affects coverage, language range, reliability and the model's knowledge cutoff."
+      },
+      {
+        "field": "visual.steps[2]; visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual presents missing-content or next-content prediction as the mechanism of pretraining itself. That is one common language-model objective, not a universal pretraining mechanism. The screen-reader text repeats the same overgeneralisation.",
+        "fix": "Frame this explicitly as the language-model example shown: \"In this example, the model predicts missing or next content, compares it with the target and adjusts parameters to reduce error.\""
+      },
+      {
+        "field": "quickCheck.options[2]",
+        "severity": "warning",
+        "problem": "The marked answer is the only defensible option: option 0 describes pretraining; option 1 describes retrieval or later adaptation; option 2 is a post-deployment governance activity with an impossible guarantee; and option 3 is in-context learning. However, option 2 is so absurd that it is not a useful distractor and lets learners answer by rejecting \"stop all inaccurate outputs.\"",
+        "fix": "It is a later stage that uses rated outputs to improve safe and helpful responses."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

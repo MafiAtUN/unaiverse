@@ -27,8 +27,8 @@
     "label",
     "ground-truth"
   ],
-  "oneSentence": "The result a model produces from new input, such as a class, number, ranking or next token.",
-  "plainExplanation": "A prediction is what a model produces after you give it input. The input might be a form, an image, a sentence or a table of numbers. The output could be a category, a score, a number, a ranked list or the next word in a sequence.\n\nYou can think of it as the model’s best estimate based on patterns it learned from examples. During use, the model takes the input, processes its features, and generates an output. A feature is a piece of information used by the model, such as the number of missing fields in an application.\n\nA prediction is not automatically the same as the correct answer. The correct answer, if it is later verified, may be called the ground truth. In some tasks the prediction is a label like \"complete\" or \"incomplete\". In other tasks it is a number, such as a predicted delivery time.\n\nPeople often confuse prediction with certainty. Many models can also produce a probability or confidence-like score, but that still does not guarantee the result is right. Predictions are useful because they help people sort, prioritise or estimate, but they still need checking in the right context.",
+  "oneSentence": "The result a model produces from input, such as a class, number, ranking or next token.",
+  "plainExplanation": "A prediction is what a model produces after you give it input. The input might be a form, an image, a sentence or a table of numbers. The output could be a category, a score, a number, a ranked list or the next word in a sequence.\n\nYou can think of it as the model’s best estimate based on patterns it learned from examples. When run, the model processes input features and generates an output. A feature is a piece of information used by the model, such as the number of missing fields in an application.\n\nA prediction is not automatically the same as a label or ground truth. A label is the expected answer attached to an example so a model can learn. Ground truth is the checked reference answer used for training or evaluation. In a classification task, the prediction may instead be a predicted category such as \"complete\" or \"incomplete\". In other tasks it may be a number, such as a predicted delivery time.\n\nPeople often confuse prediction with certainty. Many models can also produce a probability or confidence-like score, but that still does not guarantee the result is right. Predictions can help people sort, prioritise or estimate, but they still need checking in the right context.",
   "everydayAnalogy": {
     "title": "Sorting applications into trays",
     "story": "At an admissions desk, staff receive many applications every hour. A clerk quickly looks at each form and places it into one of three trays: likely complete, likely missing documents, or needs human review. The clerk uses visible clues such as blank fields, missing signatures and whether required attachments are listed. The tray chosen for each new form is like the model’s prediction.",
@@ -122,8 +122,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A prediction is the result an AI system gives after you enter something.",
-    "technical": "In machine learning, a prediction is the output generated during inference when a trained model maps input features to an estimated target. The target may be discrete, as in classification; continuous, as in regression; a ranked set of items; a cluster assignment; or the next token in sequence modelling. The prediction may be returned directly as a label or value, or indirectly as scores, logits or probabilities from which an output is selected. It should be distinguished from the ground-truth label, which is the verified outcome used for evaluation or training in supervised settings."
+    "simple": "A prediction is the result a model gives after it receives input.",
+    "technical": "In machine learning, a prediction is an output generated during inference when a trained model maps input features to an output for its task. It may be discrete, as in classification; continuous, as in regression; a ranked set of items; a cluster assignment; or the next token in sequence modelling. The prediction may be returned directly as a category or value, or selected from scores, logits or probabilities. In supervised settings, it is distinct from the label attached to an example and from ground truth, the checked reference used for training or evaluation."
   },
   "keyTakeaway": "A prediction is the model’s output on new input, not proof that the output is correct.",
   "quickCheck": {
@@ -206,9 +206,46 @@
     "model output"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:10:34.935Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, visual.learningObjective, visual.steps[0], visual",
+        "severity": "error",
+        "problem": "The page repeatedly defines a prediction as an output on \"new input\". That is too narrow. A model can produce predictions for inputs it encountered during training, for example when measuring training error. Novelty is not part of the definition. The quiz's marked option remains the best of the four, but its wording repeats this error.",
+        "fix": "Remove \"new\" wherever it limits the definition. Change the quiz option to \"The output a model produces from input\". The correct option index remains 1."
+      },
+      {
+        "field": "plainExplanation, simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The page blurs prediction with the separate term \"Label\" by saying a prediction may be a label and may be returned as a label. Under the supplied definition, a label is the expected answer attached to an example, while the model produces a predicted category. The phrase \"ground-truth label\" further merges label and ground truth, despite their separate definitions. Calling ground truth simply \"the correct answer\" also overstates it because ground truth is the checked, best available reference, not guaranteed absolute truth.",
+        "fix": "Use \"predicted category\" for the model output. Describe a label as the expected answer attached to an example and ground truth as the checked reference used for training or evaluation."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "This says any result from an AI system is a prediction. AI systems can return retrieved records, stored text or rule-based results that are not model predictions. The definition should refer to a model output.",
+        "fix": "A prediction is the result a model gives after it receives input."
+      },
+      {
+        "field": "visual.steps[1]",
+        "severity": "warning",
+        "problem": "The wording and artwork imply that a model selects and reads useful snippets from every input. Some models instead process all encoded input values, and features may be derived representations rather than visible parts of the input. The diagram therefore presents one possible implementation as the general mechanism.",
+        "fix": "Change the label to \"2. Input is processed\", the explanation to \"The model processes input features to produce an output\", and show the input entering the model without implying that snippets are always selected."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

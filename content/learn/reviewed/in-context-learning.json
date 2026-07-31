@@ -30,7 +30,7 @@
     "zero-one-and-few-shot"
   ],
   "oneSentence": "A model uses examples and instructions placed in the current prompt to imitate a pattern for that one interaction, without changing its stored parameters.",
-  "plainExplanation": "In-context learning means guiding a model by showing it examples inside the current prompt. You might give an instruction, then a few input-output pairs, then a new input. The model uses the pattern in that temporary text to produce a response.\n\nWhat goes in? Usually three things: a task description, one or more examples, and the new case you want solved. What happens? The model compares the new case with the examples in the prompt and continues the pattern. What comes out is an answer shaped by those examples.\n\nThis is often confused with training or fine-tuning. They are different. In training or fine-tuning, the model's internal parameters, meaning the numerical settings stored in the model, are updated and saved. In in-context learning, those stored settings stay the same. The guidance only lasts for that prompt session.\n\nIt is useful when you want to adapt behaviour quickly without rebuilding the model. But it has limits. If the prompt is too long, too ambiguous, or too different from the new case, performance can drop. The model can also copy a superficial pattern from the examples without reliably applying the deeper rule.",
+  "plainExplanation": "In-context learning means guiding a model by showing it examples inside the current prompt. You might give an instruction, then a few input-output pairs, then a new input. The model uses the pattern in that temporary text to produce a response.\n\nWhat goes in? Usually three things: a task description, one or more examples, and the new case you want solved. What happens? The model uses the examples in the prompt to continue the pattern for the new case. What comes out is an answer shaped by those examples.\n\nThis is often confused with training or fine-tuning. They are different. In training or fine-tuning, learned parameters are updated and saved. In in-context learning, those stored settings stay the same. The guidance applies only while that text remains in the model's context. It can be applied again if the text is supplied again.\n\nIt is useful when you want to adapt behaviour quickly without rebuilding the model. But it has limits. If the prompt is too long, too ambiguous, or too different from the new case, performance can drop. The model can also copy a superficial pattern from the examples without reliably applying the deeper rule.",
   "everydayAnalogy": {
     "title": "Showing a clerk a few completed tally sheets",
     "story": "At a food distribution point, a new clerk must estimate how many family parcels to prepare for the next hour. A supervisor places three completed tally sheets on the table, each showing crowd size, average family size and the final parcel estimate. Then the supervisor gives a new sheet with today's numbers and asks for the estimate in the same format. The clerk follows the pattern from the examples for this one task, but the clerk's official handbook is not rewritten.",
@@ -101,7 +101,7 @@
     "relevance": "This lets staff test a classification scheme quickly before investing in a more permanent workflow or model adaptation.",
     "caution": "Do not place personal data, protection-sensitive information, survivor accounts, witness details, security-sensitive material or other confidential records into an unapproved public AI service; use only approved tools and human review."
   },
-  "whyItMatters": "People often hear 'we trained it on our data' when what actually happened was much lighter and more temporary. That difference matters for cost, speed, privacy, governance and reliability. In-context learning can be set up in minutes and changed from one task to the next, which is useful for prototypes, formatting, extraction and classification. But because the model itself is not updated, the behaviour may be less consistent than fine-tuning, may disappear in a new session, and depends heavily on prompt quality and context length. If you know this term, you can ask better questions: Are examples only in the prompt? Will the behaviour persist? What data was sent to the service? What human checks are still needed?",
+  "whyItMatters": "People often hear 'we trained it on our data' when what actually happened was much lighter and more temporary. That difference matters for cost, speed, privacy, governance and reliability. In-context learning can be set up quickly and changed from one task to the next, which is useful for prototypes, formatting, extraction and classification. But because the model itself is not updated, the behaviour may be less consistent than fine-tuning, will not carry into a later request unless the relevant context is supplied again, and depends heavily on prompt quality and context length. If you know this term, you can ask better questions: Are examples only in the prompt? Will the behaviour persist? What data was sent to the service? What human checks are still needed?",
   "whereYouMayHearIt": [
     "prompt design discussions",
     "few-shot prompting demos",
@@ -209,9 +209,73 @@
   ],
   "contested": "The broad idea is widely used, but authors do not always draw the boundary in exactly the same way between in-context learning, few-shot prompting and related forms of prompt-based adaptation.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:19.684Z",
+    "verdict": "reject",
+    "issues": [
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The label \"high\" is not determined by the examples. The only high example combines an organisation-wide outage with a critical payroll function. The new message says email is delayed, not unavailable, and gives no duration or impact. \"Medium\" is also defensible. There is no arithmetic to check in this example."
+      },
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "\"For that one interaction\" is too narrow. Prompt content can influence several turns while it remains in the context, or whenever the same content is supplied again.",
+        "fix": "A model uses examples and instructions in its current context to produce outputs without changing its stored parameters."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "\"The guidance only lasts for that prompt session\" confuses a service session with the model's context. A service may resend conversation history across turns, omit it on the next request, or reuse a saved prompt later.",
+        "fix": "Replace the session claim with: \"The guidance applies only while that text remains in the model's context. It can be applied again if the text is supplied again.\""
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "The limitation again treats a session as the technical boundary. The real boundary is whether the relevant text remains in, or is supplied again to, the model's context.",
+        "fix": "A human clerk may reason from general experience and remember the lesson later. A model using in-context learning does not necessarily form a stable new skill. The effect applies while the examples remain in its context, or when they are supplied again. The model also processes the prompt as tokens rather than inspecting paper examples one by one."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "\"Can be set up in minutes\" is an unsupported time claim, and \"may disappear in a new session\" again uses the wrong technical boundary. The relevant issue is whether the prompt content is available in a later request.",
+        "fix": "Replace \"can be set up in minutes\" with \"can be set up quickly\", and replace \"may disappear in a new session\" with \"will not carry into a later request unless the relevant context is supplied again\"."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The passage says in-context learning is closely related to zero-shot, one-shot and few-shot prompting, but does not clearly distinguish them despite claiming a separate entry. The shot labels count task examples in the prompt. In-context learning describes context-dependent task adaptation without parameter updates during inference.",
+        "fix": "In-context learning refers to task adaptation through the prompt context rather than parameter updates during inference. The prompt may contain instructions and demonstration pairs, and the model conditions its next-token predictions on that sequence. In a transformer model, the current context influences output through attention over prompt tokens, while the underlying weights remain fixed. Zero-shot, one-shot and few-shot describe how many task examples the prompt contains. In-context learning describes the context-dependent adaptation, though authors vary on whether zero-shot prompting belo"
+      },
+      {
+        "field": "commonMisconceptions[0].correction",
+        "severity": "warning",
+        "problem": "Saying the model uses examples \"only\" as part of the current input can be read as a claim that the service cannot log, retain or later use the submitted data. That is not guaranteed and conflicts with the page's own governance caution.",
+        "fix": "For in-context adaptation, your examples are part of the current input rather than a parameter update. The effect is temporary unless the examples are supplied again. Separate service policies determine whether submitted data is logged, retained or used elsewhere."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "warning",
+        "problem": "\"Across future sessions\" repeats the session-versus-context confusion. A future turn in the same session may omit the context, while a later request may reproduce it.",
+        "fix": "Usually no. The model may use the rule while it remains in the current context, but that does not create a stored skill. A later request must supply the relevant context again unless a separate stored system provides it."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "The marked answer is the only defensible option: option 0 is in-context learning, option 1 is training or fine-tuning, option 2 is compression, and option 3 is not in-context learning. However, options 2 and 3 are so unrelated that the answer is obvious by keyword matching. Option 3 also misleadingly suggests that removing material from training data makes an already trained model forget it.",
+        "fix": "Replace option 2 with \"Training a small adapter while keeping base weights fixed\" and option 3 with \"Changing decoding settings so outputs follow a preferred style\"."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "whyItMatters"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -87,7 +87,7 @@ export const COMPARISONS: Comparison[] = [
     title: 'Chatbot vs copilot vs agent',
     question: 'The three words in every product pitch.',
     shortAnswer:
-      'A chatbot answers. A copilot suggests inside the work you are already doing, and you accept or reject each suggestion. An agent takes steps on its own — calling tools, changing things — which is where oversight stops being optional.',
+      'A chatbot answers. A copilot suggests inside the work you are already doing, and you accept or reject each suggestion. An agent takes steps on its own, calling tools and changing things, which is where oversight stops being optional.',
     termIds: ['chatbot', 'copilot', 'ai-agent'],
   },
   {

@@ -33,8 +33,8 @@
     "jailbreak",
     "authentication-and-authorisation"
   ],
-  "oneSentence": "These attacks try to recover a model’s behaviour, training data clues, or specific record presence by observing outputs rather than breaking into servers.",
-  "plainExplanation": "These are related but different attacks against AI systems. Model extraction, also called model stealing, aims to copy how a model behaves well enough to build a substitute. Model inversion aims to work backwards from outputs to infer something about the data the model learned from. Membership inference asks a narrower question: was this specific record likely in the training data? All three use model access as their starting point, but they target different outputs.\n\nWhat goes in is usually query access: an attacker can send prompts, images or other inputs to a model and observe the responses, scores or probabilities. In some settings they may also see confidence scores, embeddings, labels, or repeated outputs over time. The attacker then analyses patterns across many queries. They do not need to \"hack\" the operating system for this to be harmful; the weakness can come from what the model reveals through normal use.\n\nWhat happens depends on the attack. In extraction, the attacker gathers many input-output pairs and trains another model to imitate the original. In inversion, the attacker uses outputs to estimate features of training examples, such as what a typical face looked like for a class or which words are strongly associated with a person. In membership inference, the attacker tests whether a target record produces signals that differ from records the model probably did not train on, often because models can behave differently on familiar data.\n\nWhat comes out also differs. Extraction produces a copy or approximation of the model’s capability. Inversion produces clues, reconstructions or sensitive attributes about training data, though not always exact originals. Membership inference produces a probability or judgement about whether a particular record was used in training. These are often discussed together because they all exploit information leakage from model behaviour, but they should not be treated as one undifferentiated concept.",
+  "oneSentence": "Model extraction tries to copy model behaviour, while model inversion uses model information to reconstruct training-data features or examples.",
+  "plainExplanation": "These are related but different attacks against AI systems. Model extraction, also called model stealing, aims to copy how a model behaves well enough to build a substitute. Model inversion aims to reconstruct representative inputs or infer sensitive features of target records from model information. Membership inference asks a narrower question: was this specific record likely in the training data? The attacks can start from similar access, but they have different goals.\n\nA common starting point is query access: an attacker can send prompts, images or other inputs to a model and observe the responses, scores or probabilities. In some settings they may also see confidence scores, embeddings, labels, gradients or other internal signals. The attacker then analyses patterns across many queries or signals. They do not need to \"hack\" the operating system for this to be harmful; the weakness can come from what the model reveals through normal use.\n\nWhat happens depends on the attack. In extraction, the attacker gathers many input-output pairs and trains another model to imitate the original. In inversion, the attacker uses outputs or exposed internal signals to reconstruct representative inputs or estimate sensitive features of target records. In membership inference, the attacker tests whether a target record produces signals that differ from records the model probably did not train on, often because overfit models can produce different signals for training records.\n\nWhat comes out also differs. Extraction produces a copy or approximation of the model’s capability. Inversion produces clues, reconstructions or sensitive attributes about training data, though not always exact originals. Membership inference produces a probability or judgement about whether a particular record was used in training. These are often discussed together because they can exploit information leakage from model behaviour, but they should not be treated as one undifferentiated concept.",
   "everydayAnalogy": {
     "title": "Reverse-engineering a road-damage inspector’s method",
     "story": "A city contractor has a valuable system for spotting damaged roads from satellite images, but outsiders cannot see the internal checklist. One team submits thousands of sample images and records which ones the system marks as severe, moderate or minor, then builds its own look-alike checker from those answers. Another team studies which image features trigger strong scores and infers that the original system was trained heavily on roads with long dark cracks after rain. A third team takes one satellite image from a disputed insurance case and asks whether the pattern of responses suggests that exact image was part of the training collection.",
@@ -108,7 +108,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN team is using an approved internal tool to draft a situation report from public news and previously cleared internal summaries. A security review asks whether repeated prompts could let a user reconstruct protected training material or build a close copy of the system’s behaviour.",
     "relevance": "This matters for procurement, deployment and oversight. Even if no one breaks into servers, an exposed model interface may leak too much through outputs, especially if confidence scores, long context windows or high-volume automated access are allowed.",
-    "caution": "Do not test these risks with confidential, personal, survivor, witness, security-sensitive or operational information in an unapproved public AI service. Use approved environments, access controls, logging and human oversight."
+    "caution": "Do not run extraction, inversion or membership probes without explicit authorisation. Use only approved environments and test data, with access controls, logging and human oversight."
   },
   "whyItMatters": "A non-specialist may hear \"the model was attacked\" and imagine malware or stolen passwords. These attacks are different. They can happen through ordinary-looking use of an AI interface. That matters for procurement, contract terms, rate limits, logging, output design, privacy review and incident response. If a system can be cheaply copied, an organisation may lose intellectual property or control over safety features. If outputs leak training data clues, privacy, confidentiality and trust may be harmed even without a classic network breach. Decision-makers need to ask not only who can log in, but also what the model reveals by design under repeated questioning.",
   "whereYouMayHearIt": [
@@ -137,10 +137,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A model can give away more than intended. By asking it many questions, someone may copy how it behaves, guess what kind of data shaped it, or estimate whether one person’s record was used to train it.",
-    "technical": "These are inference attacks on model behaviour under black-box or partial white-box access. In model extraction, an attacker queries a target model to collect input-output pairs, then optimises a substitute model to approximate the target decision function, ranking behaviour or output distribution. In model inversion, the attacker uses outputs, gradients, embeddings or confidence signals to infer latent properties of the training distribution or reconstruct representative inputs or attributes associated with classes, prompts or identities. In membership inference, the attacker performs a hypothesis test on a target record, exploiting differences in loss, confidence, entropy or other signals between records inside and outside the training set. The terms overlap in practice because overfitting, rich outputs and repeated access can enable more than one attack, but they should be separated analytically: copying a function, recovering training-data information and testing record inclusion are not the same objective."
+    "simple": "A model can give away more than intended. By asking it many questions, someone may copy how it behaves, reconstruct features linked to training data, or estimate whether one person’s record was used to train it.",
+    "technical": "These are attacks on model behaviour under black-box or partial white-box access. In model extraction, an attacker queries a target model to collect input-output pairs, then optimises a substitute model to approximate the target decision function, ranking behaviour or output distribution. In model inversion, the attacker uses outputs, gradients, embeddings or confidence signals to infer sensitive features of target records or reconstruct representative inputs associated with classes, prompts or identities. In membership inference, the attacker performs a hypothesis test on a target record, exploiting differences in loss, confidence, entropy or other signals between records inside and outside the training set. The terms overlap in practice because overfitting, rich outputs and repeated access can enable more than one attack, but they should be separated analytically: copying a function, recovering training-data information and testing record inclusion are not the same objective."
   },
-  "keyTakeaway": "The main question is not only who can access the model, but what repeated access lets them infer, copy or reveal.",
+  "keyTakeaway": "The main question is not only who can access the model, but what its outputs or exposed internals let them infer, copy or reveal.",
   "quickCheck": {
     "question": "Which statement best distinguishes these related attacks?",
     "options": [
@@ -226,9 +226,84 @@
   ],
   "contested": "The family resemblance between these terms is widely recognised, but authors do not always group them the same way, and some use model stealing and extraction as exact synonyms while treating inversion and membership inference as separate subclasses or neighbouring privacy attacks.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:31:43.417Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This does not cleanly define the two named attacks. It adds membership inference as though it were part of the term and implies that both named attacks operate only by observing outputs. Model inversion may also use exposed internal signals, as the technical explanation itself acknowledges.",
+        "fix": "Model extraction tries to copy model behaviour, while model inversion uses model information to reconstruct training-data features or examples."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The inversion definition is too broad. Inferring anything about data the model learned from can include property inference and general behaviour analysis. The example about words associated with a person also need not reconstruct training-data information. The paragraph later treats query access as the common starting point even though the page also says inversion may use gradients or other partial white-box access.",
+        "fix": "Define inversion as reconstructing representative inputs or inferring sensitive features of target records from outputs or exposed internal signals. Say query access is a common starting point, not a requirement for every attack."
+      },
+      {
+        "field": "everydayAnalogy.story",
+        "severity": "error",
+        "problem": "A strong response to long dark cracks does not establish that the model was trained heavily on roads with those features. That conclusion confuses analysis of model behaviour with inference about the composition of the training set, so the analogy does not actually demonstrate inversion.",
+        "fix": "A city contractor has a valuable system for spotting damaged roads from satellite images, but outsiders cannot see its internal method. One team submits thousands of sample images and records which ones the system marks as severe, moderate or minor, then builds its own look-alike checker from those answers. Another team varies images until it reconstructs a typical severe-road pattern with long dark cracks after rain. A third team takes one satellite image from a disputed insurance case and asks whether the responses suggest that exact image was part of the training collection."
+      },
+      {
+        "field": "visual.steps[0] and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual states that all three attacks begin with query access and observed outputs. That is not universally true for inversion, which may use gradients, embeddings, parameters or other partially exposed internals. This also contradicts the technical section.",
+        "fix": "Change the shared top box to \"Access to model outputs or exposed internals\". Explain that black-box queries are common, while some attacks use partial white-box information."
+      },
+      {
+        "field": "workedExample.process and workedExample.result",
+        "severity": "warning",
+        "problem": "The example demonstrates extraction and membership inference but not inversion. Finding that confidence changes around rain-darkened cracks is analysis of decision behaviour. It is not a reconstruction or an inference about a target record's sensitive features.",
+        "fix": "Replace the final process step with: \"Using that signal, they estimate the disputed tile was likely in the training set. Separately, they optimise synthetic tiles against the confidence scores and reconstruct a representative high-damage pattern with long, rain-darkened cracks.\" Then describe all three outcomes in the result."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The caution does not match the scenario's main risk. It warns mainly against entering sensitive information into a public service, while the scenario concerns deliberate extraction, inversion or membership testing of an approved internal system. Such probing itself requires explicit authorisation, controlled test data and an approved test environment.",
+        "fix": "Do not run extraction, inversion or membership probes without explicit authorisation. Use only approved environments and test data, with access controls, logging and human oversight."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "The phrase \"guess what kind of data shaped it\" describes broad training-distribution or property inference, not model inversion specifically. It repeats the page's failure to distinguish reconstruction from general behaviour analysis.",
+        "fix": "A model can give away more than intended. By asking it many questions, someone may copy how it behaves, reconstruct features linked to training data, or estimate whether one person’s record was used to train it."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The inversion sentence includes inference of any latent property of the training distribution. That is broad enough to absorb property inference and does not reliably distinguish model inversion. The rest of the sentence gives valid inversion examples, so the overbroad phrase should be removed.",
+        "fix": "These are attacks on model behaviour under black-box or partial white-box access. In model extraction, an attacker queries a target model to collect input-output pairs, then optimises a substitute model to approximate the target decision function, ranking behaviour or output distribution. In model inversion, the attacker uses outputs, gradients, embeddings or confidence signals to infer sensitive features of target records or reconstruct representative inputs associated with classes, prompts or identities. In membership inference, the attacker performs a hypothesis test on a target record, exp"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "The takeaway again presents repeated access as the mechanism for the whole term, excluding inversion attacks that use exposed internal information.",
+        "fix": "The main question is not only who can access the model, but what its outputs or exposed internals let them infer, copy or reveal."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is the only correct answer, but the other options are not credible distractors. Option 1 claims a full server download for all attacks, option 2 equates membership inference with an unrelated prompt attack, and option 3 uses absolute claims such as \"always\" and requires public source code. The answer is obvious without understanding the distinctions.",
+        "fix": "Use these options: [\"Extraction copies model behaviour, inversion infers training-data features, and membership inference tests whether one record was in training.\", \"Extraction infers data features, inversion copies behaviour, and membership tests logins.\", \"Membership inference copies behaviour, while prompt injection tests training records.\", \"Inversion tests record inclusion, extraction reconstructs training examples, and membership copies behaviour.\"]"
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "unWorkplaceExampleCaution",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

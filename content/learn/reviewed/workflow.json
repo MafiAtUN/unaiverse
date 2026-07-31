@@ -28,7 +28,7 @@
     "agentic-ai"
   ],
   "oneSentence": "A workflow is an ordered set of steps that moves information or tasks from input to result, often combining software, people and checks.",
-  "plainExplanation": "A workflow is the path a task follows from start to finish. Something goes in, such as a request, a document or a data file. A series of steps then happens in a chosen order. A result comes out, such as a summary, a decision draft or a completed record.\n\nIn AI systems, a workflow often mixes model output with other actions. For example, a system might receive an email, extract key details, call a tool to look up a reference number, ask a person to review the draft, and then save the final version. A tool here means another piece of software the system can use, such as a calendar, database or mapping service.\n\nThe key idea is sequence and structure. Each step has a purpose, and the output of one step becomes the input to the next. Some workflows are simple and fixed. Others include conditions, such as \"if the confidence is low, send to a human reviewer\".\n\nPeople often confuse workflow with an AI agent. They are related but not the same. A workflow is the organised process. An AI agent is one kind of component that may operate inside that process. A workflow can exist without an agent, and an agent can be only one step inside a larger workflow.",
+  "plainExplanation": "A workflow is the path a task follows from start to finish. Something goes in, such as a request, a document or a data file. A series of steps then happens in a chosen order. A result comes out, such as a summary, a decision draft or a completed record.\n\nIn AI systems, a workflow often mixes model output with other actions. For example, a system might receive an email, extract key details, call a tool to look up a reference number, ask a person to review the draft, and then save the final version. A tool here means another piece of software the system can use, such as a calendar, database or mapping service.\n\nThe key idea is sequence and structure. Each step has a purpose, and a step's output can become an input to another step. Some workflows are simple and fixed. Others include conditions, such as \"if the confidence is low, send to a human reviewer\".\n\nPeople often confuse workflow with an AI agent. They are related but not the same. A workflow is the organised process. An AI agent is one kind of component that may operate inside that process. A workflow can exist without an agent, and an agent can be only one step inside a larger workflow.",
   "everydayAnalogy": {
     "title": "Reviewing a practice examination",
     "story": "A student in Nairobi finishes a practice examination and follows a set routine. First, they mark each answer against the answer sheet. Next, they circle every mistake, sort the mistakes into topics such as algebra or reading comprehension, and write the scores in a notebook. Then they choose the two weakest topics, do extra practice questions, and ask a teacher to check the hardest ones. By the end, they do not just have a score; they have a clear next action plan.",
@@ -140,7 +140,7 @@
       "A list of every AI tool an organisation has bought"
     ],
     "correctOptionIndex": 1,
-    "explanation": "A workflow is about sequence and handoff. It links steps together from input to output, and those steps may involve models, tools, rules and people. A single reply, a storage system or an inventory of tools is not the same thing."
+    "explanation": "A workflow is the ordered process. A goal-pursuing tool user may be an AI agent. The control layer may be orchestration. A system that checks and adjusts its actions may be agentic AI. Each can take part in a workflow, but is not the workflow itself."
   },
   "resources": [
     {
@@ -210,9 +210,39 @@
     "process"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:18.061Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation; simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "Both fields state that the output of each step becomes the input to the next. That falsely makes every workflow a single linear chain. Workflows can branch, merge, use additional inputs or send one output to several later stages.",
+        "fix": "In plainExplanation, replace \"Each step has a purpose, and the output of one step becomes the input to the next\" with \"Each step has a purpose, and a step's output can become an input to another step.\" In the technical explanation, replace \"The output of one stage becomes the input to the next\" with \"The output of one stage can feed one or more later stages.\""
+      },
+      {
+        "field": "workedExample.input",
+        "severity": "error",
+        "problem": "The process claims to extract the sender name, and the result addresses the sender as Amina, but the supplied input contains no sender name. The example invents information rather than showing where it came from. There is no arithmetic in this worked example to check.",
+        "fix": "Replace the opening \"Email text:\" with \"From Amina:\" so the name used later is present in the input."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is the only correct answer, but options 3 and 4 are unrelated objects rather than plausible confusions. Option 2 nearly repeats the definition word for word, so the answer is obvious without understanding the distinction between workflow, AI agent, orchestration and agentic AI.",
+        "fix": "Use these options: [\"A system that chooses tools to meet a goal\", \"An ordered chain of steps that may include tools, rules and human review\", \"A control layer for steps and handoffs\", \"A system that checks and adjusts its actions\"]. Keep correctOptionIndex as 1 and update the explanation to distinguish the alternatives."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

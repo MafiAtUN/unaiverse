@@ -104,7 +104,7 @@
       "Because the office uses a cut-off score of 70, many urgent applicants from the second group are placed lower in the queue.",
       "Reviewers notice the gap only after comparing error rates by group rather than looking only at overall accuracy."
     ],
-    "result": "The tool appears acceptable at first because its overall accuracy is 78%, but it performs unevenly across groups and risks unfair delays. The office pauses deployment, reviews data quality, changes the process, and adds human review for borderline cases."
+    "result": "The test shows a 27 percentage-point gap in urgent-case detection: 81% versus 54%. The tool therefore performs unevenly across groups and risks unfair delays. The office pauses deployment, reviews data quality, changes the process, and adds human review for borderline cases."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team receives many submissions to a public consultation and considers using an AI tool to summarise themes and rank comments by relevance.",
@@ -147,7 +147,7 @@
       "It means the system made one mistake for one person."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Algorithmic bias is broader than intentional prejudice. It can arise from data, labels, goals, thresholds or deployment, and it is usually about systematic patterns, not a single isolated error. It is also different from the mathematical 'bias' term used inside some models."
+    "explanation": "Algorithmic bias is a systematic unfair pattern linked to a computational system. It can arise from data, labels, goals, thresholds or deployment without intentional prejudice. A single error or any group difference is not enough. It differs from statistical bias, automation bias and a model's bias parameter."
   },
   "resources": [
     {
@@ -222,9 +222,50 @@
   ],
   "contested": "The general concern is widely recognised, but the exact boundary between 'bias', 'fairness' and 'discrimination', and the best way to measure them, is contested and context-dependent.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:27:40.004Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This describes possible unfairness but does not clearly define algorithmic bias or link the pattern to a computational system. Saying that a pattern is merely \"in data\" risks treating source-data problems alone as algorithmic bias.",
+        "fix": "Algorithmic bias is a systematic unfair pattern linked to a computational system that disadvantages some people or groups, especially in important decisions."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The page distinguishes statistical bias and a neural-network bias parameter, but not fairness or automation bias. It repeatedly includes user over-reliance within algorithmic bias even though automation bias is a separate human tendency that can amplify a system's unfair effects.",
+        "fix": "Replace the final paragraph with: \"Algorithmic bias is an unfair pattern in the system. Fairness means designing and checking systems to avoid unjust differences. Over-trusting outputs is automation bias, a human tendency that can amplify harm.\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The claimed 78% overall accuracy cannot be computed from the supplied figures. The urgent-case figures give (81 + 54) / (100 + 100) = 135 / 200 = 67.5% detection across those equally sized test groups, not overall accuracy. If 81% and 54% were instead weighted using the stated 700:300 application split, the calculation would be (0.81 × 700 + 0.54 × 300) / 1,000 = (567 + 162) / 1,000 = 72.9%, still not 78%. Neither calculation measures overall accuracy because results for non-urgent cases are absent.",
+        "fix": "The test shows a 27 percentage-point gap in urgent-case detection: 81% versus 54%. The tool therefore performs unevenly across groups and risks unfair delays. The office pauses deployment, reviews data quality, changes the process, and adds human review for borderline cases."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked option is not correct as written. Option 0 is false but implausibly absolute. Option 1 says \"any situation\" with uneven errors or harms, which includes random variation and differences that are not systematic or unfair. Option 2 is false because a neural-network bias parameter is distinct. Option 3 is false because one isolated mistake is not algorithmic bias. Thus none precisely states the required systematic unfair pattern, and three distractors are so absolute that the intended answer is obvious without understanding the distinctions.",
+        "fix": "Replace the options with: [\"It is consistent prediction error caused by overly simple model assumptions.\", \"It is a systematic unfair pattern in a computational system affecting people or groups.\", \"It occurs only when a protected characteristic is used directly.\", \"It is a user's tendency to trust an automated output too much.\"] Keep correctOptionIndex as 1."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation says algorithmic bias is \"usually\" systematic but does not correct the marked option's claim that any uneven group result qualifies. It also misses the opportunity to distinguish statistical bias and automation bias, which the revised distractors test.",
+        "fix": "Algorithmic bias is a systematic unfair pattern linked to a computational system. It can arise from data, labels, goals, thresholds or deployment without intentional prejudice. A single error or any group difference is not enough. It differs from statistical bias, automation bias and a model's bias parameter."
+      }
+    ],
+    "applied": [
+      "workedExampleResult",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

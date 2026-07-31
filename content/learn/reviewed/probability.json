@@ -31,7 +31,7 @@
     "sampling"
   ],
   "oneSentence": "A number attached to a model’s possible outputs that shows how much of its total estimated likelihood the model assigns to each option.",
-  "plainExplanation": "When a model produces several possible outputs, it often also produces numbers for those options. These numbers are usually turned into probabilities: values between 0 and 1, or 0% and 100%, that add up to 1 across the listed choices. The model is not reporting a fact about the world. It is reporting how strongly its internal calculations favour one option over the others.\n\nWhat goes in is an input such as text, an image, or sensor data. Inside the model, many numerical steps combine patterns learned from training data. At the end, the model gives raw scores for possible outputs. A method called softmax often converts those scores into probabilities so they can be compared more easily.\n\nWhat comes out depends on the task. In image classification, the output may be probabilities for labels such as road, tree, or building. In next-word text generation, the output may be probabilities for many possible next tokens, meaning pieces of text. The highest probability often becomes the top suggestion, but systems can also sample from the distribution instead of always picking the top one.\n\nA high probability does not automatically mean the model is correct, safe, or well calibrated. Calibration means whether probabilities match real-world frequencies over many cases. For example, among outputs given 80% probability, about 80% should be right if the system is well calibrated. Probability in model outputs is therefore best treated as a clue about the model’s ranking of options, not as proof.",
+  "plainExplanation": "When a model produces several possible outputs, it often also produces numbers for those options. For tasks with mutually exclusive options, these numbers are often turned into probabilities: values between 0 and 1, or 0% and 100%, that add up to 1 across all possible choices. A display may show only some choices, so the displayed values need not add up to 1. The model is not reporting a fact about the world. It is reporting how its calculations distribute likelihood among the options.\n\nWhat goes in is an input such as text, an image, or sensor data. Inside the model, many numerical steps combine patterns learned from training data. At the end, the model gives raw scores for possible outputs. A method called softmax often converts those scores into probabilities so they can be compared more easily.\n\nWhat comes out depends on the task. In image classification, the output may be probabilities for labels such as road, tree, or building. In next-word text generation, the output may be probabilities for many possible next tokens, meaning pieces of text. The highest probability often becomes the top suggestion, but systems can also sample from the distribution instead of always picking the top one.\n\nA high probability does not automatically mean the model is correct, safe, or well calibrated. Calibration means whether probabilities match real-world frequencies over many cases. For example, among outputs given 80% probability, about 80% should be right if the system is well calibrated. Output probability is therefore best treated as information about how the model distributes likelihood among options, not as proof.",
   "everydayAnalogy": {
     "title": "Finding a book in a large library",
     "story": "A librarian receives a note that says, \"history of river trade in East Africa, blue cover, maybe published in the 1990s\". After checking the catalogue and the shelves, the librarian says, \"I’d first look in African history, about 60%; second, transport economics, about 25%; third, local geography, about 15%.\" Those numbers do not guarantee where the book is. They only show which shelves seem more likely to the librarian based on the clues. If the note was vague or misleading, the highest number could still point to the wrong place.",
@@ -210,9 +210,43 @@
     "model confidence"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:50.560Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "visual.steps[2].visualInstruction, visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The stated probabilities do not result from applying softmax to the shown raw scores. The arithmetic is: exp(4.2) = 66.6863, exp(1.1) = 3.0042, exp(3.0) = 20.0855, and the sum is 89.7760. Therefore road = 66.6863 / 89.7760 = 74.3%, river = 3.0042 / 89.7760 = 3.3%, and building = 20.0855 / 89.7760 = 22.4%. The page instead gives 73%, 3%, and 24%. If a conversion other than softmax is intended, it must be named.",
+        "fix": "Replace the probabilities in the visual instruction and accessibility description with 'road: 74.3%', 'river: 3.3%', and 'building: 22.4%'."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that probabilities add up to 1 across the listed choices is false when an interface lists only part of the complete output space. They sum to 1 across a complete set of mutually exclusive possibilities. Displayed top choices may sum to less than 1.",
+        "fix": "State that probabilities sum to 1 across all possible mutually exclusive choices, while a displayed subset may sum to less than 1."
+      },
+      {
+        "field": "workedExample.process[0]",
+        "severity": "error",
+        "problem": "Saying the model 'considers' possible tokens presents a human mental action as a factual description of model operation.",
+        "fix": "The model processes the text so far and calculates scores for many possible next tokens."
+      },
+      {
+        "field": "plainExplanation, whyItMatters, keyTakeaway",
+        "severity": "warning",
+        "problem": "Several passages reduce probability to a ranking signal. A probability distribution does rank options, but it also states how the model divides probability mass among them. Treating 51% and 99% as merely the same top ranking loses an important part of the concept and weakens the distinction from raw scores or an ordered list.",
+        "fix": "Describe the values as the model's distribution of probability among options, while retaining the warning that they do not guarantee correctness."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

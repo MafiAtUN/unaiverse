@@ -32,7 +32,7 @@
     "model-hosting"
   ],
   "oneSentence": "CPUs, GPUs and TPUs are different kinds of computer chips that run calculations, with each designed for different patterns of work, speed, cost and energy use.",
-  "plainExplanation": "A chip is a physical part inside a computer that carries out calculations. A CPU, or central processing unit, is a general-purpose chip. It handles many kinds of instructions and controls the overall flow of work. A GPU, or graphics processing unit, has many smaller processing units that can do lots of similar calculations at the same time. A TPU, or tensor processing unit, is a more specialised accelerator designed for certain machine-learning maths.\n\nWhat goes in depends on the task: text, images, model numbers, or ordinary software instructions. The chip then performs operations on that input. For AI, many operations are repeated across large tables of numbers. GPUs and TPUs are often chosen for this because they can process many repeated calculations in parallel, meaning at the same time across many units.\n\nWhat comes out is not only an answer such as a prediction or generated text. The choice of chip also affects how fast a system responds, how much electricity it uses, how much it costs to run, and where it can be deployed. A phone, a laptop, a data centre and a field device may use different chips for practical reasons.\n\nThese terms are related but not identical. CPU, GPU and TPU name types of chips. Accelerator is a broader term for hardware that speeds up a specific kind of work, often alongside a CPU. Compute is different again: it means the amount of processing work available, not the chip itself. Cloud computing means renting such hardware over a network rather than owning it locally.",
+  "plainExplanation": "A chip is a physical part inside a computer that carries out calculations. A CPU, or central processing unit, is a general-purpose chip. It handles many kinds of instructions and controls the overall flow of work. A GPU, or graphics processing unit, has many smaller processing units that can do lots of similar calculations at the same time. A TPU, or tensor processing unit, is a more specialised accelerator designed for certain machine-learning maths.\n\nWhat goes in is encoded data and instructions that may represent text, images or model values. The chip then performs operations on that input. For AI, many operations are repeated across large tables of numbers. GPUs and TPUs are often chosen for this because they can process many repeated calculations in parallel, meaning at the same time across many units.\n\nWhat comes out is not only an answer such as a prediction or generated text. The choice of chip also affects how fast a system responds, how much electricity it uses, how much it costs to run, and where it can be deployed. A phone, a laptop, a data centre and a field device may use different chips for practical reasons.\n\nThese terms are related but not identical. CPU, GPU and TPU name types of chips. Accelerator is a broader term for hardware that speeds up a specific kind of work, often alongside a CPU. Compute is different again: it means the processing capacity used to train and run AI systems, not the chip itself. Cloud computing means using computing services over a network from remote data centres, instead of owning and running all the machines yourself.",
   "everydayAnalogy": {
     "title": "Sorting incoming forms at a service centre",
     "story": "At a service centre, one worker at the front desk handles many different tasks: greeting people, checking IDs, answering questions and deciding where each form should go. In the back room, a large team quickly compares thousands of photographed forms against known templates, each person checking one small part of many images at the same time. In a special corner, another machine is set up just for one repeated matching method and does that narrow job very fast. Together, they move forms from arrival to correct routing.",
@@ -96,7 +96,7 @@
       "On a GPU, many image calculations run in parallel, reducing model time to about 0.3 seconds.",
       "On a TPU-based cloud service configured for that model type, the same task may run in about 0.2 seconds, but only after using supported software tools."
     ],
-    "result": "All three setups can return 'Template 47, confidence 0.93', but the speed, cost, energy use and setup effort differ."
+    "result": "These are illustrative times, not benchmark results. Actual speed, cost, energy use, setup effort and outputs depend on the system."
   },
   "unWorkplaceExample": {
     "scenario": "A humanitarian coordination team is exploring an internal tool that classifies incoming satellite-image tiles and logistics photos into broad categories such as damaged road, intact building or flooded area.",
@@ -214,9 +214,56 @@
     "accelerator"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:11.224Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The sentence says each chip is designed for different cost and energy use. Cost and energy are trade-offs affected by the hardware and workload, not distinct work patterns for which each chip is necessarily designed.",
+        "fix": "CPUs, GPUs and TPUs are different kinds of computer chips that run calculations, designed for different work patterns and offering different speed, cost and energy trade-offs."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The definition of compute as \"the amount of processing work available\" is muddled. The separate entry defines compute as processing capacity used to train and run AI systems. Work is not itself something that is available.",
+        "fix": "Replace it with: \"Compute is different again: it means the processing capacity used to train and run AI systems, not the chip itself.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The statement that cloud computing means \"renting such hardware\" is too narrow and contradicts the separate definition. Cloud computing covers computing services delivered over a network from remote data centres. It does not necessarily mean renting hardware.",
+        "fix": "Replace it with: \"Cloud computing means using computing services over a network from remote data centres, instead of owning and running all the machines yourself.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "Saying that text and images go into a chip skips the necessary distinction between human-readable content and its encoded representation. Chips process encoded data and instructions, not text or images as such.",
+        "fix": "Replace the opening of that paragraph with: \"What goes in is encoded data and instructions that may represent text, images or model values.\""
+      },
+      {
+        "field": "workedExample.process and workedExample.result",
+        "severity": "error",
+        "problem": "The CPU, GPU and TPU timings are presented as benchmark results even though no hardware, model, software configuration or measurement method is specified. The figures imply speed ratios of 2.4 ÷ 0.3 = 8 for GPU versus CPU, 2.4 ÷ 0.2 = 12 for TPU versus CPU, and 0.3 ÷ 0.2 = 1.5 for TPU versus GPU, but the page cannot support those performance claims. The exact shared confidence value is similarly unsupported.",
+        "fix": "Make clear that the numbers are illustrative assumptions by replacing the result with: \"These are illustrative times, not benchmark results. Actual speed, cost, energy use, setup effort and outputs depend on the system.\""
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only defensible answer, but the other options use absurd equivalences and absolute claims. A learner can select the answer without understanding the distinctions.",
+        "fix": "Use these distractors instead: option 0, \"A CPU handles varied work, while GPU and TPU are interchangeable names for parallel AI chips.\" Option 2, \"A CPU coordinates work, a GPU is for training, and a TPU is for inference.\" Option 3, \"A CPU is local hardware, a GPU is cloud hardware, and a TPU is model-hosting hardware.\" Keep option 1 as the marked answer."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

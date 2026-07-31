@@ -96,7 +96,7 @@
       "The assistant uses the first event details to draft a reminder email but does not send it unless the user confirms.",
       "The user sees the meeting list and a draft message addressed to the first meeting participants."
     ],
-    "result": "Output shown: two meetings found, plus a draft saying, \"Reminder: our Project Check-in starts at 09:30 tomorrow. Please see the attached agenda note before the call.\""
+    "result": "Output shown: two meetings found, plus a draft saying, \"Reminder: our Project Check-in starts at 09:30 tomorrow. Please let me know if you have any questions before the call.\""
   },
   "unWorkplaceExample": {
     "scenario": "After a disaster, an approved internal workflow uses a connector to pull newly cleared satellite imagery metadata from a secure geospatial platform into an analysis dashboard, so analysts can compare locations and time stamps more quickly.",
@@ -210,9 +210,49 @@
   ],
   "contested": "The general idea is widely shared, but product teams use \"connector\", \"integration\", and \"plugin\" differently, so the boundary between them is not fully consistent across platforms.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:20.916Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The API distinction is clear, but the explanation does not distinguish a connector from Model Context Protocol, function calling, or computer use. Model Context Protocol is especially easy to confuse with this definition because both concern links to external tools and data.",
+        "fix": "Replace the final paragraph with: \"An API defines rules a service offers for software interaction. A connector is the built component that uses an API or another interface. Model Context Protocol defines a shared interface for tools and data; a connector may use it. Function calling produces a structured tool request, while a connector carries out the service interaction. Computer use instead operates visible app controls. A plugin is a looser term and may also add interface features or logic.\""
+      },
+      {
+        "field": "visual.steps[1] and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The phrases \"AI system chooses a tool path\" and \"recognises that it needs an outside service\" present human-like choice and recognition as facts rather than describing the routing mechanism.",
+        "fix": "Change the step label to \"2. Request is routed to a tool\" and its explanation to \"The system routes the request to an outside service when information or an action is required.\" In the accessibility description, use \"Step 2 is the AI system, which routes the request to an outside service.\""
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "Saying the connector \"applies allowed permissions\" is misleading. Permissions may be enforced by the external service or another access-control component. The connector normally presents configured credentials and operates within the resulting access.",
+        "fix": "Replace \"applies allowed permissions\" with \"uses configured credentials and settings\"."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "warning",
+        "problem": "The process changes the relative date \"tomorrow\" into 14 May without establishing that the request was made on 13 May. The date conversion is therefore unsupported by the scenario.",
+        "fix": "The connector sends a structured request for events tomorrow from 09:00 to 12:00."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The draft says \"Please see the attached agenda note,\" but neither the input nor the process provides an agenda note or says that any file was attached. The example therefore demonstrates an unsupported addition rather than a draft grounded in the connector result. The count itself is correct: the service returns 09:30 and 11:00, so 1 + 1 = 2 meetings.",
+        "fix": "Output shown: two meetings found, plus a draft saying, \"Reminder: our Project Check-in starts at 09:30 tomorrow. Please let me know if you have any questions before the call.\""
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

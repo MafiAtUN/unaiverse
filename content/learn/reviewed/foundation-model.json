@@ -31,7 +31,7 @@
     "generative-ai",
     "open-weight-model"
   ],
-  "oneSentence": "A broadly trained machine-learning model can be adapted for many different tasks without starting training again from nothing.",
+  "oneSentence": "A machine-learning model pretrained at large scale on broad data can be adapted for many tasks without training a new model from scratch.",
   "plainExplanation": "A foundation model is a machine-learning model trained first on a very large and varied collection of data. That first stage is often called pretraining. The aim is to build a general starting point that can later be adapted to many tasks.\n\nWhat goes in at the start is usually large-scale data, such as text, images, audio or a mix of these. During training, the system adjusts many numerical settings, often called parameters, so that it becomes better at predicting patterns in that data. What comes out is not a finished service by itself, but a reusable base that others can fine-tune, instruct, connect to tools or place inside an application.\n\nThis is different from a model built for just one narrow job, such as detecting a specific defect in one factory or forecasting one type of demand. A foundation model is intended to be general-purpose within the kinds of data it was trained on. It may support summarising, classification, drafting, search assistance or other tasks after adaptation, but that does not mean it is equally good or safe for all of them.\n\nPeople often confuse foundation models with large language models. Many large language models are foundation models, but not all foundation models work only with language. Some handle images, speech or several data types together. The exact boundary is still debated, so the term is useful but not perfectly settled.",
   "everydayAnalogy": {
     "title": "A well-organised library as a starting point",
@@ -96,7 +96,7 @@
       "They test it on 300 unseen documents and compare its summaries with human ratings for accuracy, omission and clarity.",
       "They deploy it only for first-draft summaries, with a human reviewer required before any text is shared."
     ],
-    "result": "The same base model can now produce draft summaries, suggest keywords and help retrieval across several languages, but each use still needs separate evaluation and oversight."
+    "result": "The adapted model can produce first-draft summaries across several languages, but any additional use, such as keyword suggestion or retrieval, would need separate implementation, evaluation and oversight."
   },
   "unWorkplaceExample": {
     "scenario": "A UN office wants an internal search tool over policy guidance, training materials and publicly shareable reference documents used by staff in different duty stations.",
@@ -127,7 +127,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "It is a large starter model trained on broad data so people can adapt it for many different jobs later.",
-    "technical": "A foundation model is a machine-learning model, usually with many parameters, pretrained on large-scale and diverse data to learn general-purpose representations or predictive capabilities that transfer across downstream tasks. After pretraining, it can be adapted through fine-tuning, instruction tuning, prompting, retrieval, tool use or other methods. The term usually implies broad reuse across applications, but definitions differ: some authors restrict it to models with substantial scale and wide task transfer, while others use it more loosely for any broadly pretrained base model. It is related to, but not identical with, large language models, multimodal models or frontier models."
+    "technical": "A foundation model is a machine-learning model, usually with many parameters, pretrained on large-scale and diverse data to learn general-purpose representations or predictive capabilities that transfer across downstream tasks. After pretraining, it can be adapted through fine-tuning or instruction tuning, or applied through prompting, retrieval, tool use or other methods. The term usually implies broad reuse across applications, but definitions differ: some authors restrict it to models with substantial scale and wide task transfer, while others use it more loosely for any broadly pretrained base model. It is related to, but not identical with, large language models, multimodal models or frontier models."
   },
   "keyTakeaway": "A foundation model is best understood as a reusable starting point for many AI applications, not as a finished product or a guarantee of quality.",
   "quickCheck": {
@@ -210,9 +210,51 @@
   ],
   "contested": "The term has no single universally accepted boundary. Different authors use it more narrowly or more broadly, especially when distinguishing it from large language models, multimodal models and frontier models.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:09:36.283Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition is too broad. A model that is merely broadly trained and reusable could be an ordinary pretrained model. The defining idea also includes pretraining at scale on broad data.",
+        "fix": "A machine-learning model pretrained at large scale on broad data can be adapted for many tasks without training a new model from scratch."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The limitation says a foundation model can generate new content and fluent but wrong output. That is not true of every foundation model and blurs the term into generative AI. Some foundation models are used only to produce representations or classifications.",
+        "fix": "A library catalogue is a human-made index with explicit entries. A foundation model does not store knowledge in neat labelled cards. It learns statistical patterns through numerical adjustment. Some foundation models can generate fluent but wrong output. Also, a catalogue mostly helps you find existing books, while some foundation models can produce new content."
+      },
+      {
+        "field": "simpleVsTechnical.technical and visual.steps[3].explanation",
+        "severity": "error",
+        "problem": "Both fields incorrectly present evaluation, retrieval and tool use as ways of adapting the model. Evaluation measures a system. Retrieval and tool use usually change the surrounding application rather than the model's trained parameters. Prompting changes how the model is used, not the model itself.",
+        "fix": "In the technical explanation, replace the methods sentence with: \"After pretraining, it can be adapted through fine-tuning or instruction tuning, or applied through prompting, retrieval, tool use or other methods.\" In the visual step, use: \"The starting model can be fine-tuned or prompted, and combined with tools for different uses. Each use needs separate evaluation.\""
+      },
+      {
+        "field": "visual.description, visual.steps[2], and visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The label \"Foundation model / base model\" presents the terms as synonyms. A foundation model can serve as a base, but \"base model\" is a broader and context-dependent label that does not by itself mean foundation model.",
+        "fix": "Label the central box \"Foundation model\" and add the note \"reusable base\". Make the same change in the accessibility description."
+      },
+      {
+        "field": "workedExample.input and workedExample.result",
+        "severity": "error",
+        "problem": "The process never uses the 50,000 approved documents, while the result adds keyword suggestion and retrieval even though the team adapted and tested only summarisation. No arithmetic result is stated to verify: 50,000, 2,000 and 300 are dataset counts, not operands in a claimed calculation.",
+        "fix": "Change the input to: \"A pretrained multilingual text model and 2,000 human-reviewed examples of good summaries.\" Change the result to: \"The adapted model can produce first-draft summaries across several languages, but any additional use, such as keyword suggestion or retrieval, would need separate implementation, evaluation and oversight.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

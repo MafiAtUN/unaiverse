@@ -30,8 +30,8 @@
     "false-positive-and-false-negative",
     "probability"
   ],
-  "oneSentence": "Calibration describes how closely a system’s confidence scores match the real frequency of being correct.",
-  "plainExplanation": "Many AI systems do not just give a label such as “spam” or “not spam”. They also give a confidence score, such as 0.8. Calibration asks a simple question: when the system says 0.8, is it correct about 80% of the time across many similar cases?\n\nWhat goes in is a set of predictions with confidence scores and the true outcomes. What happens is that we group predictions with similar scores, then compare the average score with what really happened. What comes out is a picture or summary of whether the scores are trustworthy as probabilities.\n\nA system can have good accuracy and still be badly calibrated. For example, it might rank risky cases above safer ones correctly, but be far too confident. That matters because people often use the score itself to choose a threshold, assign attention, or judge uncertainty.\n\nCalibration is often confused with probability itself. A score may look like a probability, but it only behaves like one if testing shows it is calibrated. Calibration is also different from precision and recall, which focus on classification results after a threshold is chosen, not on whether the confidence numbers match reality.",
+  "oneSentence": "Calibration describes how closely a system’s probability scores match the observed frequencies of the corresponding outcomes.",
+  "plainExplanation": "Many AI systems do not just give a label such as “spam” or “not spam”. They may also give a probability score, such as 0.8 for “spam”. Calibration asks a simple question: among many similar cases scored around 0.8 for spam, are about 80% actually spam?\n\nWhat goes in is a set of predictions with probability scores and the true outcomes. What happens is that we group predictions with similar scores, then compare the average score with what really happened. What comes out is a picture or summary of whether the scores match observed outcome frequencies.\n\nA system can have good accuracy and still be badly calibrated. For example, it might rank risky cases above safer ones correctly, but assign probabilities that are far too high. That matters because people often use the score itself to choose a threshold, assign attention, or judge uncertainty.\n\nCalibration is often confused with probability itself. A model output may assign estimated likelihood to each option. Calibration tests whether those numbers match observed frequencies. Calibration is also different from precision and recall, which focus on classification results after a threshold is chosen, not on whether probability scores match reality.",
   "everydayAnalogy": {
     "title": "Journey times on a city travel board",
     "story": "At a large bus station, an electronic board predicts the chance that each bus will arrive within 10 minutes. For many buses, the board says “70% chance”. Over the next month, staff check all the cases where it said 70%. If roughly 7 out of 10 of those buses really do arrive within 10 minutes, that confidence level is well calibrated.\n\nIf only 4 out of 10 arrive in time, the board was too confident. If 9 out of 10 arrive in time, it was too cautious.",
@@ -96,7 +96,7 @@
       "In the 0.5 group, 15 of 30 were routine, matching 50%.",
       "In the 0.8 group, only 30 of 50 were routine, which is 60%, not 80%."
     ],
-    "result": "The model is reasonably calibrated at 0.2 and 0.5 but overconfident at 0.8. If staff treat 0.8 as 'about 80% likely', they would be misled."
+    "result": "On this sample, the model is calibrated at 0.2 and 0.5 but overconfident at 0.8. If staff treat 0.8 as “about 80% likely”, they would be misled."
   },
   "unWorkplaceExample": {
     "scenario": "A country office tests a tool that assigns confidence scores to likely categories in a shared public enquiries inbox, such as travel request, procurement question or event registration.",
@@ -126,10 +126,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A system is well calibrated when its confidence numbers match what really happens over time. If it says '80% likely' on many cases, it should be right about 80% of those times.",
+    "simple": "A system is well calibrated when its probability scores match what happens over time. If it assigns 80% to an outcome in many cases, that outcome should occur about 80% of the time.",
     "technical": "For probabilistic predictions, calibration means agreement between predicted probabilities and empirical outcome frequencies. In binary classification, if we collect instances assigned score p, the event should occur about p of the time within that group. It is often examined with reliability diagrams, calibration curves, or summary measures such as calibration error, though the exact metric and binning method vary. Calibration differs from discrimination or ranking quality: a model can order cases well yet be systematically overconfident or underconfident. It can also be improved after training by recalibration methods, but recalibration itself must be validated on appropriate data to avoid leakage or overfitting."
   },
-  "keyTakeaway": "Do not ask only 'Was it right?'; also ask 'When it sounded 80% sure, was it right about 80% of the time?'",
+  "keyTakeaway": "Do not ask only “Was it right?” Also ask: “When it assigned 80% to an outcome, did that outcome occur about 80% of the time?”",
   "quickCheck": {
     "question": "Which statement best describes a well-calibrated classifier?",
     "options": [
@@ -139,7 +139,7 @@
       "It never makes false positives."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Calibration is about the relationship between confidence and observed frequency. A well-calibrated model may still make errors, may not have the best accuracy, and can still produce false positives. The key test is whether stated confidence levels match real outcomes over many cases."
+    "explanation": "Calibration compares probability or confidence scores with observed frequencies. Ranking cases well, using equal-sized groups, or producing high confidence does not show that the score values match outcomes."
   },
   "resources": [
     {
@@ -211,9 +211,67 @@
     "well-calibrated"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:15:02.766Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence and plainExplanation",
+        "severity": "error",
+        "problem": "The page alternates between two different meanings of a score. It sometimes defines calibration as confidence matching the frequency of the model being correct, but the worked example tests whether a score for the outcome “routine” matches the frequency of that outcome. These are not interchangeable. For a routine score of 0.2, 20% routine means the outcome probability is calibrated, while the predicted label may be correct 80% of the time.",
+        "fix": "Define calibration in terms of probability scores and their corresponding outcomes. When specifically discussing confidence in a selected label, say that the relevant outcome is whether that label is correct."
+      },
+      {
+        "field": "everydayAnalogy.mapping and everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "The board predicts whether an event will occur, but the mapping calls occurrence a “correct outcome”. A single probabilistic forecast is not evaluated as correct merely because the event occurs, or incorrect merely because it does not. Calibration concerns frequencies over repeated forecasts.",
+        "fix": "Map bus arrivals to “the observed frequency of the predicted event”. State that one forecast cannot establish calibration because calibration compares scores with frequencies across many cases."
+      },
+      {
+        "field": "visual.learningObjective",
+        "severity": "error",
+        "problem": "The claim that confidence scores “can be useful only if” they are calibrated is false. Miscalibrated scores can still be useful for ranking or discrimination, even though their numerical values should not be treated as reliable probabilities.",
+        "fix": "Show that confidence scores should match observed frequencies before their numerical values are treated as probabilities, even if many predictions are correct."
+      },
+      {
+        "field": "visual.title, visual.description, visual.steps and visual.accessibilityDescripti",
+        "severity": "error",
+        "problem": "The visual mixes positive-outcome probabilities with confidence in correctness. On a yes-or-no task, 0.3 can be a probability for “yes”, but then it must be compared with the observed share of yes outcomes, not the share correct. If the number is confidence in the selected label, binary confidence would normally be at least 0.5. The visual also calls System A highly accurate and says the systems have similar overall performance without providing band counts or enough outcomes to establish either claim.",
+        "fix": "Retitle it “Poor calibration versus good calibration”. Treat every score as the predicted probability of “yes” and compare it with the observed share of yes outcomes. Remove the claims that System A is highly accurate and that overall performance is similar unless the visual supplies counts that demonstrate those claims."
+      },
+      {
+        "field": "workedExample.process and workedExample.result",
+        "severity": "error",
+        "problem": "The arithmetic itself is correct: 20 + 30 + 50 = 100, 4/20 = 0.20, 15/30 = 0.50, and 30/50 = 0.60. However, the groups are described as being “near” 0.2, 0.5 and 0.8. Without each group’s average predicted score, the page cannot say that 20% and 50% match the predictions exactly.",
+        "fix": "Change the first process step to: “Group the 100 messages by model score: 20 scored 0.2, 30 scored 0.5, and 50 scored 0.8.” Qualify the result as applying to this sample."
+      },
+      {
+        "field": "simpleVsTechnical.simple and keyTakeaway",
+        "severity": "error",
+        "problem": "These fields repeat the same conflation between the probability of an outcome and confidence that the selected label is correct. That directly conflicts with the worked example, which evaluates the frequency of the outcome “routine”.",
+        "fix": "Describe an 80% score as matching an outcome frequency. A selected-label confidence score can instead be compared with how often that selected label is correct."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked option is the intended definition, but the alternatives do not provide a sound test. Option 1 can also describe a calibrated classifier, depending on what “high” and “low” mean. Options 2 and 3 use obvious absolutes and can be rejected without understanding calibration.",
+        "fix": "Keep option 0. Replace the other options with: “Its scores put cases in the right order, even when their values do not match outcomes.”; “Each confidence band contains the same number of cases.”; “Its average confidence is as high as possible on the test set.” Update the explanation to distinguish calibration from ranking, bin sizes and high confidence."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult",
+      "simpleVsTechnicalSimple",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

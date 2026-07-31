@@ -26,8 +26,8 @@
   "oftenConfusedWith": [
     "embedding"
   ],
-  "oneSentence": "A vector is an ordered list of numbers, and a vector space is the organised set of all such lists that can be added and scaled in consistent ways.",
-  "plainExplanation": "In modern language models, many things are turned into vectors: words, parts of words, positions, or intermediate states inside the model. A vector is just a list of numbers, such as [0.2, -1.1, 0.7]. Each number can be treated like one coordinate. The whole list acts as one compact description that a computer can compare or transform.\n\nA vector space is the larger system those vectors live in. It gives the rules for combining them. In a vector space, you can add two vectors and multiply a vector by a number, and the result still stays in the same space. In plain terms, it is the shared coordinate system that makes the vectors compatible with each other.\n\nWhat goes in? Usually text tokens or other inputs are first converted into vectors. What happens next? The model moves those vectors through many calculations, such as comparing them, mixing them, or rotating them through matrix operations. A matrix is a table of numbers used to transform one vector into another. What comes out? New vectors that capture useful patterns for the next step, such as attention or prediction.\n\nThis is often confused with an embedding. An embedding is one particular kind of vector representation learned so that related items often end up near each other. But not every vector in a transformer is an embedding, and a vector space is not the same thing as one vector. It is also not the same as a physical arrow in school geometry, though that image can help at first.",
+  "oneSentence": "A vector is an ordered list of numbers, and a vector space is a set of same-length vectors that is closed under addition and scaling.",
+  "plainExplanation": "In modern language models, many things are turned into vectors: words, parts of words, positions, or intermediate states inside the model. A vector is an ordered list of numbers, such as [0.2, -1.1, 0.7]. Each number can be treated like one coordinate. The whole list acts as one compact description that a computer can compare or transform.\n\nA vector space is the larger set those vectors belong to. It gives the rules for combining them. In a vector space, you can add two vectors and multiply a vector by a number, and the result still stays in the same space. In plain terms, vectors of the same dimension can be combined using consistent operations.\n\nWhat goes in? Usually text tokens or other inputs are first converted into vectors. What happens next? The model moves those vectors through many calculations, such as comparing, mixing, projecting or otherwise transforming them with matrix operations. A matrix is a table of numbers used to transform one vector into another. What comes out? New vectors that capture useful patterns for the next step, such as attention or prediction.\n\nThis is often confused with an embedding. An embedding is one particular kind of vector representation learned so that related items often end up near each other. But not every vector in a transformer is an embedding, and a vector space is not the same thing as one vector. It is also not the same as a physical arrow in school geometry, though that image can help at first.",
   "everydayAnalogy": {
     "title": "Pins on a multilingual noticeboard",
     "story": "Imagine a team in Nairobi, Bangkok and Bogotá sharing a large noticeboard for incident summaries. Each summary card is pinned on the board using many coordinates at once: one for location type, one for urgency, one for health issues, one for displacement, and many more. Cards about similar situations end up nearer each other, so when someone asks what the pronoun “they” refers to in a sentence, nearby cards can help show whether it likely points to families, officials or aid workers. The board is the shared layout, and each card’s position is one vector.",
@@ -97,7 +97,7 @@
       "The model forms a weighted combination of the relevant value vectors, so the updated vector for “she” is pulled more toward information linked to “Lina” and “organised”.",
       "That updated vector is then used by later layers to help the model continue the sentence or answer a question about who organised the meeting."
     ],
-    "result": "The model would likely treat “she” as referring to Lina in this sentence, because the contextual vector for “she” aligns more strongly with Lina-related information than with Amina-related information."
+    "result": "In this simplified illustration, Lina has the largest assumed attention weight for “she”. That may contribute Lina-related information to the update, but one set of attention weights alone does not establish that “she” refers to Lina."
   },
   "unWorkplaceExample": {
     "scenario": "An analyst is reviewing many approved, de-identified incident summaries to identify broad protection trends across districts and months. Text from each summary is converted into vectors so similar reports can be grouped and compared before a human reviews the patterns.",
@@ -144,7 +144,7 @@
       "A vector is only used at input, while vector spaces are only used during output."
     ],
     "correctOptionIndex": 0,
-    "explanation": "A vector is one numeric representation, such as a token’s current state. A vector space is the larger coordinate system with rules for operations like addition, scaling and comparison. Embeddings are one important kind of vector, but not the whole story."
+    "explanation": "A vector is one numeric representation, such as a token’s current state. A vector space is the larger set closed under addition and scaling. Models may compare compatible vectors using dot products. Embeddings are one kind of vector, but not the whole story."
   },
   "resources": [
     {
@@ -218,9 +218,71 @@
     "vectors"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:20.091Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "“All such lists” wrongly suggests that numeric lists of any length form one vector space. Vectors in the same numeric vector space must have a compatible fixed dimension, and the set must be closed under addition and scalar multiplication.",
+        "fix": "A vector is an ordered list of numbers, and a vector space is a set of same-length vectors that is closed under addition and scaling."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The phrase “rotating them through matrix operations” is false. An arbitrary matrix transformation may scale, shear, project or otherwise transform a vector. It is not necessarily a rotation. The explanation also calls a vector space a coordinate system, although a coordinate system is a way to describe vectors rather than the vector space itself.",
+        "fix": "Replace “rotating them through matrix operations” with “projecting or otherwise transforming them with matrix operations”, and describe the vector space as a set with compatible operations rather than as the coordinate system itself."
+      },
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping",
+        "severity": "error",
+        "problem": "The analogy blurs vectors with embeddings and misstates attention. Related items do not become nearby merely because they are vectors in a vector space. Meaningful proximity is a property of a particular learned representation and similarity measure. Attention also does not resolve “they” by checking nearby cards. It uses scores between projected query and key vectors, then combines value vectors.",
+        "fix": "Replace the proximity claim with “Cards represented by a suitable learned system may appear close under its chosen similarity measure.” Replace the final mapping with “scoring projected word vectors and combining relevant value vectors” mapped to “attention weighting contextual information from other tokens”."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "“The space changes through the network” is misleading. The vectors and their representational relationships change between layers, while many layers may still use the same dimensional vector space. Some projections also enter separate query, key or value spaces.",
+        "fix": "A real noticeboard usually has two visible dimensions, while model vectors often have hundreds or thousands. Also, vectors in a transformer are not manually pinned and do not have fixed human-readable meanings per coordinate. Their values and relationships change through the layers, even when the vector dimension stays fixed. Attention also uses learned projections, not simple visual proximity on one board."
+      },
+      {
+        "field": "visual.description, visual.steps and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual presents token vectors as nearby or distant dots and then draws influence arrows from those dots. This teaches that spatial proximity directly determines attention. Attention normally scores projected query and key vectors and uses the resulting weights to combine value vectors. The visual also attributes comparison to membership in a shared vector space, although a vector space alone provides no similarity measure.",
+        "fix": "In step 3, show vectors of the same dimension without implying that nearby dots are semantically related. In step 4, show query and key projections producing scores, followed by weighted value vectors forming the update. Make the same change in the description and accessibility text."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The weights sum correctly: 0.18 + 0.05 + 0.41 + 0.07 + 0.22 + 0.07 = 1.00. However, the conclusion does not follow from that arithmetic. A high attention weight to “Lina” in an unspecified head and layer does not by itself prove pronoun resolution or show that the updated vector “aligns” with Lina. No value vectors are supplied, so the claimed weighted vector cannot be computed.",
+        "fix": "In this simplified illustration, Lina has the largest assumed attention weight for “she”. That may contribute Lina-related information to the update, but one set of attention weights alone does not establish that “she” refers to Lina."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is the intended answer, but the three distractors are so plainly absurd that it can be selected without understanding the distinction. Option 1 equates a vector with text and a space with an answer, option 2 denies an explicitly taught distinction, and option 3 invents an input-output restriction. The quiz therefore fails the stated check even though no competing option is defensible.",
+        "fix": "Keep option 0. Replace the distractors with: “A vector is the whole numeric space; a vector space is one point within it.”, “A vector is any numeric list; a vector space is a learned input embedding.”, and “A vector stores coordinates; a vector space is the matrix that transforms it.”"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "error",
+        "problem": "The explanation lists “comparison” alongside addition and scaling as though comparison were one of the defining vector-space operations. A dot product, distance or similarity measure is additional structure, not guaranteed by the definition of a vector space.",
+        "fix": "A vector is one numeric representation, such as a token’s current state. A vector space is the larger set closed under addition and scaling. Models may compare compatible vectors using dot products. Embeddings are one kind of vector, but not the whole story."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -30,7 +30,7 @@
     "understanding"
   ],
   "oneSentence": "A multimodal model can take in or produce more than one kind of data, such as text, images or audio, within one system.",
-  "plainExplanation": "Most language models work mainly with text: words go in, words come out. A multimodal model extends that idea so one system can handle several data types, often called modalities. Common modalities include text, images, audio and sometimes video.\n\nWhat goes in depends on the system. You might give it a written question plus a photo, or a spoken request plus a chart. Inside the model, each input is turned into a machine-readable form, often into sequences of numbers called tokens or embeddings. The system then uses patterns learned during training to connect information across those forms.\n\nWhat happens next is not magic sight or hearing. The model processes the inputs statistically and generates an output that fits the prompt and its training. The output might be text, labels, a description of an image, an answer about a chart, or sometimes a generated image or audio clip.\n\nThis term is broader than vision-language model. A vision-language model specifically links images and text. A multimodal model may combine image, text, audio or other inputs and outputs. It is also different from a sensor system that merely collects many signals; to count here, the model needs a shared mechanism for working across them.",
+  "plainExplanation": "Most language models work mainly with text: words go in, words come out. A multimodal model extends that idea so one system can handle several data types, often called modalities. Common modalities include text, images, audio and sometimes video.\n\nWhat goes in depends on the system. You might give it a written question plus a photo, or a spoken request plus a chart. Inside the model, inputs are encoded in machine-readable numerical forms. Text may be split into tokens, which are mapped to vectors called embeddings. The system then uses patterns learned during training to connect information across those forms.\n\nWhat happens next is not magic sight or hearing. The model processes the inputs statistically and generates an output that fits the prompt and its training. The output might be text, labels, a description of an image, an answer about a chart, or sometimes a generated image or audio clip.\n\nThis term is broader than vision-language model. A vision-language model specifically links images and text. A multimodal model may combine image, text, audio or other inputs and outputs. It is also different from a sensor system that merely collects many signals; to count here, the model needs a shared mechanism for working across them.",
   "everydayAnalogy": {
     "title": "One control room using several instruments together",
     "story": "At a water station, an operator checks three things at once: a pressure gauge, the live sound of the pump, and a short maintenance note from the previous shift. The gauge shows a sudden drop, the pump sound has a rough rattle, and the note says a filter was replaced that morning. Looking at all three together, the operator writes, “Possible air entering the line after maintenance; inspect the new seal first.” Using only one source would give a weaker answer.",
@@ -94,7 +94,7 @@
       "The model links the question to the relevant row and column in the image.",
       "It generates a text answer based on the matched timetable entry."
     ],
-    "result": "“The last weekday bus to Nairobi is at 21:40.” This can still be wrong if the image is blurry, the table is misread or the schedule is outdated, so a user may need to verify it."
+    "result": "If the matched entry is 21:40, it may answer, “The last weekday bus to Nairobi is at 21:40.” A blurry image, misread table or outdated schedule can make this wrong, so the user may need to verify it."
   },
   "unWorkplaceExample": {
     "scenario": "A UN staff member uses an approved internal assistant to draft a short summary of a public meeting by providing the public agenda, a photo of slides shown in the room, and their own non-sensitive notes.",
@@ -123,7 +123,7 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A multimodal model is one AI system that can work with more than one kind of input or output, such as words, pictures or sound, and combine them in one response.",
+    "simple": "A multimodal model is one AI system that can work across more than one kind of input or output, such as words, pictures or sound.",
     "technical": "A multimodal model is a model architecture or system that operates across multiple modalities by mapping each modality, such as text, image, audio or video, into internal representations that can be processed jointly or aligned. In many current systems, text tokens, image patches, audio frames or other modality-specific features are encoded into embeddings, then passed through shared or connected model components that learn cross-modal relationships. The output may be restricted to one modality, often text, or may extend to several modalities depending on the design. The term is broader than vision-language model, which usually refers specifically to image-text systems."
   },
   "keyTakeaway": "Multimodal means one model can connect more than one data type, not that it reliably interprets every kind of input like a person.",
@@ -136,7 +136,7 @@
       "A model that always produces images and audio instead of text"
     ],
     "correctOptionIndex": 1,
-    "explanation": "The key idea is multiple modalities, such as text, image or audio, handled within one model or tightly integrated system. It does not have to support every modality, and simply collecting many data streams is not enough."
+    "explanation": "Option 1 identifies multiple modalities in one system. Option 0 is text-only, option 2 only stores separate streams, and option 3 is image-only."
   },
   "resources": [
     {
@@ -208,9 +208,52 @@
   ],
   "contested": "The broad idea is widely used, but the boundary can be fuzzy in practice. Some people use the term for any system that handles multiple data types, while others reserve it for models with shared or tightly integrated cross-modal representations.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:06.126Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The page conflates tokens and embeddings by calling both “sequences of numbers”. Tokens are discrete units or identifiers. Embeddings are numerical vectors derived from encoded inputs.",
+        "fix": "Replace the sentence with: “Inside the model, inputs are encoded in machine-readable numerical forms. Text may be split into tokens, which are mapped to vectors called embeddings.”"
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "“Combine them in one response” incorrectly makes simultaneous combination a requirement. A multimodal model may translate between modalities, accept them separately, or produce only one modality at a time.",
+        "fix": "A multimodal model is one AI system that can work across more than one kind of input or output, such as words, pictures or sound."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result invents 21:40 even though no timetable contents are supplied. There is no arithmetic to compute, and no provided row or column from which 21:40 can be verified.",
+        "fix": "If the matched entry is 21:40, it may answer, “The last weekday bus to Nairobi is at 21:40.” A blurry image, misread table or outdated schedule can make this wrong, so the user may need to verify it."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked answer is not uniquely defensible under the page’s own definition. Option 0 is not a definition of multimodality, but it could still describe a multimodal model because it restricts only what the model writes, not what it accepts. Option 1 is the intended definition. Option 2 explicitly excludes analysis across modalities, so it is incorrect. Option 3 says the model produces both images and audio, which are two modalities, so it necessarily describes a multimodal model under the one-sentence definition.",
+        "fix": "Replace option 0 with “A text-only model that reads and writes in several languages”. Replace option 3 with “A model that only accepts and produces images”."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "error",
+        "problem": "The explanation does not address why the existing image-and-audio option is supposedly wrong, because it cannot do so consistently with the page’s definition.",
+        "fix": "Option 1 identifies multiple modalities in one system. Option 0 is text-only, option 2 only stores separate streams, and option 3 is image-only."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult",
+      "simpleVsTechnicalSimple",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

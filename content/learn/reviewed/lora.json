@@ -128,7 +128,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "LoRA lets you customise a large model by adding and training a small attachment instead of editing the whole model.",
-    "technical": "LoRA is a parameter-efficient fine-tuning method that freezes a pre-trained weight matrix W and learns a low-rank update, often written as W + BA, where A and B are much smaller trainable matrices with rank r much less than the original dimensions. In practice, these updates are inserted into selected layers, commonly attention projections, and only A and B receive gradient updates during optimisation. This reduces the number of trainable parameters, optimiser state and often storage requirements for task-specific adaptations. At inference time, the adapter can remain separate or be merged into the base weights. The exact memory and speed benefits depend on implementation, target modules, precision, batch size and whether the adapter is merged."
+    "technical": "LoRA is a parameter-efficient fine-tuning method that freezes a pre-trained weight matrix W and learns a low-rank update, often written W + BA. A and B are trainable factor matrices with a small shared dimension r, so BA has rank at most r. These updates are inserted into selected layers, commonly attention projections, and only A and B receive gradient updates during optimisation. This reduces trainable parameters, optimiser state and often storage for task-specific adaptations. At inference, the adapter can remain separate or be merged into the base weights. Exact memory and speed benefits depend on implementation, target modules, precision, batch size and whether the adapter is merged."
   },
   "keyTakeaway": "LoRA adapts a big model by learning a small, compressed weight update instead of retraining the whole model.",
   "quickCheck": {
@@ -140,7 +140,7 @@
       "A safety method that filters model outputs after generation without changing model weights"
     ],
     "correctOptionIndex": 1,
-    "explanation": "LoRA is a parameter-efficient fine-tuning method. It keeps the base model weights fixed and learns small added matrices that modify selected layers. The other options describe prompting, pruning, or output filtering, which are different ideas."
+    "explanation": "LoRA is a parameter-efficient fine-tuning method. It keeps the base weights fixed and learns small added matrices. The first option falsely claims prompts replace pretraining; the third describes pruning, and the fourth describes output filtering."
   },
   "resources": [
     {
@@ -212,9 +212,44 @@
   ],
   "contested": "People often use \"adapter\" loosely to include LoRA, but in technical discussions \"adapter\" can also refer to other architectures, so the labels are related but not always identical.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:46.462Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The text says A and B are matrices \"with rank r\". In LoRA, r is their shared inner dimension, and the product BA has rank at most r. The factors themselves are not guaranteed to have rank exactly r.",
+        "fix": "LoRA is a parameter-efficient fine-tuning method that freezes a pre-trained weight matrix W and learns a low-rank update, often written W + BA. A and B are trainable factor matrices with a small shared dimension r, so BA has rank at most r. These updates are inserted into selected layers, commonly attention projections, and only A and B receive gradient updates during optimisation. This reduces trainable parameters, optimiser state and often storage for task-specific adaptations. At inference, the adapter can remain separate or be merged into the base weights. Exact memory and speed benefits d"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The example supplies 7 billion parameters, rank 16 and 50,000 examples but performs no calculation with them. No adapter-size arithmetic can be checked because the number and dimensions of the selected projections are omitted. Those three supplied numbers alone do not determine the adapter size.",
+        "fix": "The team gets a separate task-specific adapter rather than another full model checkpoint. Its exact size depends on the selected projections and their dimensions, which this example does not specify."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only defensible answer, but it is almost copied from the page definition while the other options describe obviously unrelated mechanisms. The first distractor is also not a valid description of prompting because prompts do not replace pretraining or directly teach facts by changing the model.",
+        "fix": "Use closer alternatives: \"An adaptation method that updates selected original weights and adds no new matrices\"; keep the marked LoRA answer; \"An adaptation method that lowers the numerical precision of the original weights\"; \"An adapter that replaces the base model after training\"."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "error",
+        "problem": "The explanation says the first option describes prompting, but that option falsely claims prompts replace pretraining and directly teach the model new facts. It does not accurately describe prompting.",
+        "fix": "LoRA is a parameter-efficient fine-tuning method. It keeps the base weights fixed and learns small added matrices. The first option falsely claims prompts replace pretraining; the third describes pruning, and the fourth describes output filtering."
+      }
+    ],
+    "applied": [
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

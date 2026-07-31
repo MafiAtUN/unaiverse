@@ -99,7 +99,7 @@
       "The model predicts output tokens that fit both the request to summarise and the instruction to use exactly 3 bullet points.",
       "Because the system prompt mentions unclear source material, the reply may note that budget figures are still provisional."
     ],
-    "result": "• Workshop topics: flood warnings, volunteer training, and radio backup planning.\n• A budget was discussed, but the figures were not final.\n• Missing detail: no final cost breakdown or implementation timeline was provided."
+    "result": "• The workshop covered flood warnings and volunteer training.\n• It also covered radio backup plans.\n• Budget figures were discussed but were not final."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team uses an approved internal assistant to draft a neutral, short summary of non-sensitive, already-cleared incident trend notes for a meeting.",
@@ -214,9 +214,37 @@
     "system instruction"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:15:49.030Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "“Sets” overstates the reliability of a system prompt. The page later correctly says that instruction following is not guaranteed. The definition also fails to say that the chat system or application normally supplies this instruction, which is an important distinction from a user prompt.",
+        "fix": "A high-priority chat-system instruction that guides the assistant’s role, rules and priorities in later responses."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The explanation presents the system prompt too narrowly as text “placed before” the user message and attributes its priority to application rules. Depending on the platform, it may be supplied through a distinct message role or input field, and its priority can also depend on the chat format and the model’s instruction-following behaviour. The guardrail comparison also omits the overlap: a rule in a system prompt can function as a guardrail, although many guardrails are external controls.",
+        "fix": "In many chat systems, messages are not all treated the same way. A system prompt is a special instruction supplied by the application, often before the user’s message or through a separate system field. It usually guides the model’s role, style, task limits and safety-related behaviour.\n\nWhat goes in? Usually the application sends a hidden or partly hidden instruction such as “answer briefly”, “do not reveal private data”, or “ask for clarification if the request is ambiguous”. Then the user’s message is added. Both become part of the model’s context, meaning the input available for generating"
+      },
+      {
+        "field": "workedExample.process[3] and workedExample.result",
+        "severity": "error",
+        "problem": "The example incorrectly treats an explicitly stated limitation as unclear source material. “Budget figures were not final” is clear, so the conditional instruction to identify what is missing need not activate. The result then labels an implementation timeline as missing even though the requested summary gives no reason to expect one. This demonstrates unsupported inference rather than correct system-prompt following.",
+        "fix": "Replace the final process step with: “The source clearly says that the budget figures were not final, so the reply should preserve that qualification without inventing missing requirements.” Replace the result with: “• The workshop covered flood warnings and volunteer training.\\n• It also covered radio backup plans.\\n• Budget figures were discussed but were not final.”"
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

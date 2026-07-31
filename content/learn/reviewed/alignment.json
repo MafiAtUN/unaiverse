@@ -30,8 +30,8 @@
     "guardrail",
     "fine-tuning"
   ],
-  "oneSentence": "Methods used after broad training to make a model follow intended instructions and preferences more reliably, while reducing unwanted behaviour.",
-  "plainExplanation": "People use this word in more than one way, so it helps to be precise. In everyday product talk, it often means adjusting a model after its broad initial training so it behaves in ways people find more useful, safer or more consistent. In research and policy discussions, it can also mean the wider problem of making advanced AI systems reliably pursue intended goals.\n\nFor a language model, the input to alignment work usually includes example prompts and preferred answers, ratings from people, rules about what the system should avoid, and tests that check its behaviour. A model is first broadly trained on large amounts of text in pretraining. Then extra methods are used to steer it. These may include instruction tuning, preference learning, or reinforcement learning from human feedback, where human judgements are used as a training signal.\n\nWhat happens during alignment is not magic and it does not guarantee perfect behaviour. Developers are changing the model, or sometimes the surrounding system, so certain kinds of responses become more likely and others less likely. That can improve helpfulness, reduce some harmful outputs and make answers follow a task more closely. But it can also introduce trade-offs, such as making the model more cautious, more verbose or less flexible.\n\nThe output of alignment work is usually a model version that better matches chosen instructions or preferences on the tests that were used. That is different from a guardrail, which is a rule or filter wrapped around a model at use time. It is also different from AI safety as a whole, which covers broader risks, governance and real-world impacts beyond this training stage.",
+  "oneSentence": "Making an AI system's behaviour better match intended goals or preferences, often through methods applied after broad training.",
+  "plainExplanation": "People use this word in more than one way, so it helps to be precise. In everyday product talk, it often means adjusting a model after its broad initial training so it behaves in ways people find more useful, safer or more consistent. In research and policy discussions, it can also mean the wider problem of making advanced AI systems reliably pursue intended goals.\n\nFor a language model, the input to alignment work usually includes example prompts and preferred answers, ratings from people, rules about what the system should avoid, and tests that check its behaviour. A model is first broadly trained on large amounts of text in pretraining. Then extra methods are used to steer it. These may include instruction tuning, preference learning, or reinforcement learning from human feedback, where human judgements are used as a training signal.\n\nWhat happens during alignment is not magic and it does not guarantee perfect behaviour. Developers use training methods to change the model so certain kinds of responses become more likely and others less likely. That can improve helpfulness, reduce some harmful outputs and make answers follow a task more closely. But it can also introduce trade-offs, such as making the model more cautious, more verbose or less flexible.\n\nThe output of alignment work is usually a model version that better matches chosen instructions or preferences on the tests that were used. This differs from fine-tuning, which is a parameter-update method that can serve alignment or another adaptation goal. It also differs from a guardrail, which is a rule, check or control that limits outputs or actions before people rely on them. AI safety is broader and covers risks, governance and real-world impacts beyond this training stage.",
   "everydayAnalogy": {
     "title": "Preparing for a practice examination with feedback",
     "story": "A student in Nairobi takes a practice examination, then sits with a teacher who marks which answers were clear, which ignored the question, and which were confident but wrong. The student does not relearn every subject from the beginning. Instead, they practise responding in the style the examination expects: answer the actual question, show steps when asked, and stop guessing when unsure. After several rounds of feedback, the student usually gives answers that fit the test better, even though they can still make mistakes.",
@@ -211,9 +211,44 @@
   ],
   "contested": "The term is genuinely contested. In product practice it often means post-training to improve behaviour, while in research and policy it can mean the broader problem of making advanced AI systems reliably pursue intended goals.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:07.676Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition incorrectly restricts alignment to methods used after broad training. The page itself later acknowledges that alignment can also mean the broader problem of making systems pursue intended goals. It also defines alignment only as a set of methods, rather than a goal or process those methods serve.",
+        "fix": "Making an AI system's behaviour better match intended goals or preferences, often through methods applied after broad training."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation blurs alignment with surrounding system controls, then defines a guardrail too narrowly as a runtime wrapper. The supplied guardrail definition also covers rules, checks and controls applied before people rely on outputs or actions. The explanation also fails to distinguish alignment from fine-tuning, even though the worked example and listed methods include fine-tuning-like parameter updates.",
+        "fix": "Describe practical alignment as changing the model through training methods. Then state that fine-tuning is a parameter-update method that may serve alignment or another adaptation goal, while a guardrail is a separate rule, check or control that limits outputs or actions before people rely on them."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The phrase saying alignment methods may combine parameter updates with external controls blurs alignment into guardrails. The field also lists supervised fine-tuning as a mechanism without explaining that fine-tuning is a method which can serve alignment but is not synonymous with it.",
+        "fix": "State that fine-tuning is one possible mechanism for alignment and can also support narrower adaptation. Identify separate external rules and checks as controls that may support the same goals but should not be presented as model training."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 falsely swaps legal approval and technical training. Option 2 invents obviously false restrictions by model modality. Option 3 makes two plainly false guarantees. The last three distractors are so implausible that the answer can be selected without understanding alignment or guardrails.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: \"Alignment sets behavioural goals; a guardrail measures whether those goals were met.\"; \"Alignment changes the training data; a guardrail changes the model's parameters.\"; \"Alignment evaluates a model before release; a guardrail monitors it after release.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

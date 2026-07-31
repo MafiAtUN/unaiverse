@@ -32,7 +32,7 @@
     "hallucination"
   ],
   "oneSentence": "Summarisation produces a shorter version of text or speech that keeps the main points and drops less important detail.",
-  "plainExplanation": "Summarisation takes a long piece of content as input and returns a shorter version. The input might be an article, meeting notes, a report, a speech transcript, or several documents on the same topic. The output is not the whole original. It is a compressed version that tries to keep the main ideas.\n\nA system does this by finding what seems most important. In simple systems, that may mean selecting key sentences from the original text. In more advanced systems, it may mean generating new sentences that restate the main points. A transcript is a written record of spoken words. A model is a statistical system trained to detect patterns in data.\n\nThis is different from translation, which changes language, and different from text generation in general, which can create new text with no source document. Summarisation starts from source material and aims to stay close to it. It is also different from topic modelling, which groups themes rather than producing a readable short version.\n\nThe main risk is loss or distortion. Important detail can be left out. A summary can overstate one point, miss uncertainty, or add wording that was not supported by the source. So a summary is useful for triage and first reading, but not a substitute for checking the original when accuracy matters.",
+  "plainExplanation": "Summarisation takes a long piece of content as input and returns a shorter version. The input might be an article, meeting notes, a report, a speech transcript, or several documents on the same topic. The output is not the whole original. It is a compressed version that tries to keep the main ideas.\n\nA system does this by finding what seems most important. In simple systems, that may mean selecting key sentences from the original text. In more advanced systems, it may mean generating new sentences that restate the main points. A transcript is a written record of spoken words. A model is a statistical system trained to detect patterns in data.\n\nAbstractive summarisation can use text generation, but the task is narrower: it starts from source material and aims to preserve its main points in less space. Translation changes language. Topic modelling groups themes rather than producing a readable short version.\n\nThe main risk is loss or distortion. Important detail can be left out. A summary can overstate one point, miss uncertainty, or add wording that was not supported by the source. So a summary is useful for triage and first reading, but not a substitute for checking the original when accuracy matters.",
   "everydayAnalogy": {
     "title": "A colleague briefs you before a meeting",
     "story": "A team in Nairobi, Bangkok and Bogotá shares ten pages of background notes before a call. One colleague reads them and says, \"Here are the three points you need before we start: the budget changed, the deadline moved, and one partner has not replied yet.\" That briefing saves time because nobody has to hear every paragraph first. But if someone needs the exact wording of an agreement, they still have to open the full notes.",
@@ -96,7 +96,7 @@
       "It drops lower-priority detail such as the exact date of the storage failure and the 40-minute transfer time.",
       "It outputs a shorter version in one or two sentences."
     ],
-    "result": "Summary: \"In May, the programme delivered 12,400 vaccine doses to 18 clinics. Rain caused short transport delays, but all deliveries were completed, no doses were lost, and June will add 3 mobile teams to reach remote communities.\""
+    "result": "Summary: \"In May, the programme delivered 12,400 vaccine doses to 18 clinics. Rain caused short transport delays, but all deliveries were completed, no doses were lost, and the June plan adds 3 mobile teams to reach remote communities.\""
   },
   "unWorkplaceExample": {
     "scenario": "A policy officer searches past General Assembly resolutions and requests short summaries of earlier language on a recurring issue before drafting a briefing note.",
@@ -212,9 +212,38 @@
     "auto-summary"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:24:27.464Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The page says summarisation is different from text generation, but its own description says advanced systems generate new sentences. Abstractive summarisation uses text generation for the narrower purpose of shortening source material. The current categorical distinction is false and blurs the relationship between the two entries.",
+        "fix": "Replace the distinction with: \"Abstractive summarisation can use text generation, but the task is narrower: it starts from source material and aims to preserve its main points in less space. Translation changes language. Topic modelling groups themes rather than producing a readable short version.\""
+      },
+      {
+        "field": "visual.description, visual.steps, visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual presents splitting text into sentences or sections and ranking those pieces as the general mechanism for summarisation. That can describe an extractive pipeline, but abstractive systems do not necessarily rank sentence-sized pieces before rewriting them. The two paths therefore cannot accurately merge after the claimed ranking stage.",
+        "fix": "Change the four boxes to: source text enters; analyse content and context; select source wording or generate new wording; produce summary. Remove sentence-card ranking as a required stage. Update the accessibility description to identify extraction and generation as two broad approaches rather than later branches of one ranking pipeline."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The source says that adding three mobile teams is the June plan. The summary changes this planned action into the definite claim that June \"will add\" the teams. That overstates certainty and is not faithful to the source.",
+        "fix": "Summary: \"In May, the programme delivered 12,400 vaccine doses to 18 clinics. Rain caused short transport delays, but all deliveries were completed, no doses were lost, and the June plan adds 3 mobile teams to reach remote communities.\""
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

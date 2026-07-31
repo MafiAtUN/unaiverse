@@ -132,10 +132,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A transformer is a model design that lets each part of an input use clues from all the other parts, instead of only the nearby ones.",
-    "technical": "A transformer maps input tokens or patches to embeddings with positional information, then applies stacked layers of self-attention and feed-forward transformations. This lets each position build a context-aware representation from the full sequence, often with multi-head attention and parallel computation."
+    "simple": "A transformer is a model design that lets each input part directly combine clues from other permitted parts, rather than carrying context step by step.",
+    "technical": "A transformer maps input tokens or patches to embeddings with positional information, then applies stacked layers of self-attention and feed-forward transformations. Each position builds a context-aware representation from permitted sequence positions, often using multi-head attention and parallel computation."
   },
-  "keyTakeaway": "The key idea of a transformer is that every part of the input can be compared with every other part to build context efficiently.",
+  "keyTakeaway": "The key idea is that many input parts can compare with other permitted parts in parallel within a layer to build context.",
   "quickCheck": {
     "question": "Which statement best describes why transformers became so important?",
     "options": [
@@ -145,7 +145,7 @@
       "They work only for English text and not for images or audio."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Transformers became important because self-attention lets each part of the input use context from the whole sequence, and the architecture supports efficient parallel training. They do not guarantee truthfulness, and they are not limited to English or even to text."
+    "explanation": "Self-attention lets positions combine context while training can run across positions in parallel. Autoregressive output is still sequential, standard attention costs more on longer inputs, and transformers need a way to represent order."
   },
   "resources": [
     {
@@ -228,9 +228,65 @@
     "transformer architecture"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:22.875Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "visual.description, visual.steps[2], visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual repeatedly says every position connects to every other position. That is false for causal transformers, including the next-token example on this page, where masking prevents positions from using future tokens. Some transformer designs also use local or sparse attention.",
+        "fix": "Replace “each part can connect to every other part” with “each part can connect to the other parts it is allowed to use.” Show blocked or omitted links to indicate that attention can be masked."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "“Instead of only the nearby ones” falsely distinguishes transformers from recurrent neural networks. An RNN can carry information from much earlier inputs through its changing state. The relevant distinction is direct attention between permitted positions versus step-by-step state propagation.",
+        "fix": "A transformer is a model design that lets each input part directly combine clues from other permitted parts, rather than carrying context step by step."
+      },
+      {
+        "field": "simpleVsTechnical.technical, keyTakeaway",
+        "severity": "error",
+        "problem": "“Full sequence” and “every other part” overstate the mechanism. Causal, local, and sparse attention restrict which positions can interact. The wording is especially inconsistent with the causal next-token worked example.",
+        "fix": "Use “permitted sequence positions” in the technical explanation. Revise the takeaway to say that many parts can compare with other permitted parts in parallel within a layer."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "warning",
+        "problem": "The example asserts a specific high-attention pattern without deriving or observing it. Attention weights are learned and need not align neatly with the author’s explanation of which words are relevant.",
+        "fix": "For illustration, “long” might give more weight to “after” and “agreement”; these links can shape the next-token prediction."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "“Why they scale well” is ambiguous and potentially misleading. Transformers support parallel computation across positions during training, but standard self-attention becomes more computationally expensive as sequence length grows.",
+        "fix": "If you choose, buy, govern, or use AI systems, this term helps you judge what current tools are good at, how they use parallel hardware, and where they may still fail without human checking."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is the only defensible answer, but the other three options are absurd absolutes. A reader can select the answer without understanding transformers. Option 0 invokes symbolic rules, option 2 claims a guarantee of truth, and option 3 says the systems work only in English.",
+        "fix": "Keep option 1. Replace the distractors with: 0. “They generate every output token at the same time.” 2. “They make attention use less computing as inputs get longer.” 3. “They preserve word order without any position information.”"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "After replacing the weak distractors, the explanation must address the real distinctions: parallel training does not mean parallel autoregressive generation, standard attention does not get cheaper on longer inputs, and order still needs representation.",
+        "fix": "Self-attention lets positions combine context while training can run across positions in parallel. Autoregressive output is still sequential, standard attention costs more on longer inputs, and transformers need a way to represent order."
+      }
+    ],
+    "applied": [
+      "keyTakeaway",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

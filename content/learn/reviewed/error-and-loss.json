@@ -31,8 +31,8 @@
     "accuracy",
     "prediction"
   ],
-  "oneSentence": "These words describe how far a model’s output is from a reference answer, either for one case or after combining many cases into a single training signal.",
-  "plainExplanation": "A model produces an output, such as a predicted number or label. You then compare that output with a reference answer, often called the ground truth. The difference between them tells you how wrong the model was on that case.\n\nError usually means the mismatch for one example. If a model predicts 70 and the reference answer is 80, the error might be -10 or 10, depending on how you measure it. Residual is a closely related word, often used for the signed difference between an observed value and a predicted value in statistics and regression.\n\nLoss is usually the combined score used for training. It often starts from individual errors, then changes them with a rule and aggregates them across examples. For example, a training system may square each error so that large misses count more, then average them. That final number is the loss.\n\nSo the relationship is: prediction and reference answer go in; a comparison happens; numbers describing wrongness come out. One example can have an error or residual. Many examples, combined by a chosen rule, produce a loss that training tries to reduce.\n\nThese terms are often confused with accuracy, but accuracy is a summary of correct versus incorrect outcomes for certain tasks, usually classification. Loss is more general and gives a smoother signal for improving model settings, even when accuracy does not change yet.",
+  "oneSentence": "Error describes a mismatch between an output and a reference. Loss is a scalar training objective for one case or an aggregate across cases.",
+  "plainExplanation": "A model produces an output, such as a predicted number or label. You then compare that output with a reference answer, often called the ground truth. This comparison describes how wrong the output was for that case.\n\nError often means a mismatch for one example. For numeric predictions, it may be signed or transformed into a non-negative value. A residual is a closely related signed difference, especially in statistics and regression. Its sign depends on whether the convention subtracts prediction from observation or observation from prediction.\n\nA loss is a scalar value produced by a chosen loss function. It can be calculated for one example. During training, per-example losses are often aggregated into a batch loss, such as a mean. For example, the function may square each residual so that large misses count more.\n\nSo the relationship is: a prediction and reference answer are compared; an error or residual may describe their mismatch; and a loss function converts the relevant values into an objective used for training. That loss may describe one example or an aggregate across many examples.\n\nAccuracy instead reports the share of correct labels for a classification task. Many training losses provide a more graded signal than accuracy, including when accuracy has not changed.",
   "everydayAnalogy": {
     "title": "Checking a water pump sensor against a manual gauge",
     "story": "A technician in Nairobi checks a water pump. The digital sensor says the pressure is 68, but a trusted manual gauge reads 72. For that reading, the gap between 68 and 72 is the error; if the technician keeps the sign, the residual is -4 because the sensor read low. After checking many pumps, the maintenance team combines all those gaps into one score that penalises big misses more strongly, so they can tune the sensor system. That combined score plays the role of loss.",
@@ -128,7 +128,7 @@
     "simple": "A model makes a guess and you compare it with the reference answer. The gap for one case is often called error, and sometimes residual if the sign matters. A training system then combines many such gaps into one number called loss, and tries to make that number smaller.",
     "technical": "Let a model output y-hat for a target y. A per-example discrepancy can be represented as a residual, often y minus y-hat or y-hat minus y depending on convention, so the sign matters. An error measure may then transform that discrepancy, for example with absolute value or squaring. A loss function maps predictions and targets to a scalar objective, often by computing per-example losses and aggregating them over a batch, such as a mean. Optimisation methods use gradients of that loss with respect to model parameters to update the parameters. In ordinary usage, people sometimes say 'the error' when they really mean the training loss, so context matters."
   },
-  "keyTakeaway": "One case gives you an error or residual; training usually turns many of those into a single loss that tells the model how to adjust.",
+  "keyTakeaway": "One case can have an error, residual, or loss; training often aggregates losses and uses their gradients to adjust model parameters.",
   "quickCheck": {
     "question": "Which statement best captures the relationship among residual, error, and loss?",
     "options": [
@@ -212,9 +212,63 @@
     "residual"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:40.766Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; plainExplanation; simpleVsTechnical.simple; keyTakeaway",
+        "severity": "error",
+        "problem": "The page incorrectly makes aggregation across many cases part of the distinction between error and loss. A loss can be calculated for one example, and those per-example losses can then be aggregated into a batch loss. This also blurs the separate entry for “loss function”: the function is the rule, while the loss is the value it produces.",
+        "fix": "Use the corrected fields below. Define loss as a scalar objective value produced for one example or an aggregate, rather than as necessarily the combined score across many cases."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that loss “gives a smoother signal” is too broad. Losses are not necessarily smooth. Many commonly used training losses provide a more graded or informative signal than accuracy, but that requires qualification.",
+        "fix": "Replace it with: “Many training losses provide a more graded signal than accuracy, including when accuracy has not changed.”"
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "A scalar loss value does not by itself say how to adjust the model. The process needs the gradient of the loss with respect to model parameters or another optimisation procedure. The arithmetic itself is correct: 68-72=-4, 75-70=5, 81-79=2; the squares are 16, 25, and 4; 16+25+4=45; 45/3=15.",
+        "fix": "Replace the step with: “During training, use gradients of this batch loss to adjust model parameters so future predictions may move closer to the references.”"
+      },
+      {
+        "field": "everydayAnalogy.story; visual.steps[2]; visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The page says a residual is often observed value minus predicted value, which would give 72-68=4, but the analogy and visual call 68-72=-4 the residual without stating that they have chosen the opposite convention. The technical section later admits that conventions vary, so the examples need to name their convention.",
+        "fix": "In the analogy, say: “Using prediction minus reference, the signed residual is -4 because the sensor read low.” In the visual, label it “residual under prediction minus reference: -4”."
+      },
+      {
+        "field": "visual.steps[2]; visual.steps[3]; visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual repeats the false implication that a transformed per-example mismatch is merely an “error measure” and becomes a loss only after aggregation. The transformed value can itself be a per-example loss. The final value should be identified as an aggregate or batch loss.",
+        "fix": "Label 4 or 16 as a “per-example loss under the chosen rule”. Then say that per-example losses are combined into an “average batch loss”."
+      },
+      {
+        "field": "visual.steps[3]; visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The displayed average loss of 9.3 cannot be checked because the miniature example cards have no values. The diagram therefore asserts an average without showing the averaging mechanism.",
+        "fix": "Reuse the worked-example values. Show per-example losses 16, 25, and 4 feeding into “average batch loss = 15”."
+      },
+      {
+        "field": "quickCheck.options; quickCheck.explanation",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the quiz is weak and repeats the aggregation overclaim. Option 1 falsely equates loss with accuracy and restricts residuals to text models. Option 2 simply reverses the definitions. Option 3 says all three terms are identical. Those distractors are so implausible that the answer requires little understanding.",
+        "fix": "Replace the options with: [“Residual is often a signed mismatch; error describes mismatch; loss is an objective value for one case or an aggregate.”, “Residual must be signed, error cannot be signed, and either one may be the training objective.”, “Loss applies only to a full dataset; one example can have error but not loss.”, “A near-zero average residual proves that the individual errors are small.”]. Keep correctOptionIndex 0 and use the corrected explanation below."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

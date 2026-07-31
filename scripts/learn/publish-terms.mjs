@@ -14,6 +14,12 @@
  *   npm run content:publish -- --all                 # everything that validates
  *   npm run content:publish -- --term token --reject --note "analogy is wrong"
  *   npm run content:publish -- --list                # what is waiting for review
+ *   npm run content:publish -- --unreview --all      # withdraw an unearned review claim
+ *
+ * Note the two different things `reviewed/` and `reviewed: true` mean. The
+ * directory means "published, the site renders this". The flag means "a person
+ * read it". A page can be the first without being the second, and when it is,
+ * it says so.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -39,6 +45,35 @@ if (flags.list) {
   const waiting = pending.filter((id) => !reviewed.has(id));
   console.log(`${COLOURS.bold(`${waiting.length} term(s) awaiting review`)} (${reviewed.size} already published)`);
   for (const id of waiting) console.log(`  ${id}  ${COLOURS.dim(categoryOf.get(id) ?? '?')}`);
+  process.exit(0);
+}
+
+// ── Withdrawing a review claim ─────────────────────────────────────────────
+if (flags.unreview) {
+  const ids = flags.term
+    ? String(flags.term).split(',').map((s) => s.trim())
+    : fs.readdirSync(PATHS.reviewed).filter((f) => f.endsWith('.json')).map((f) => f.replace(/\.json$/, ''));
+  let cleared = 0;
+  for (const id of ids) {
+    const file = path.join(PATHS.reviewed, `${id}.json`);
+    if (!fs.existsSync(file)) continue;
+    const body = readJson(file);
+    if (!body.reviewed) continue;
+    body.reviewed = false;
+    delete body.lastReviewed;
+    delete body.reviewerNotes;
+    writeJson(file, body);
+    manifest.terms[id] = { ...(manifest.terms[id] ?? {}), status: 'published-unreviewed' };
+    delete manifest.terms[id].reviewedAt;
+    delete manifest.terms[id].reviewer;
+    cleared++;
+  }
+  manifest.updatedAt = new Date().toISOString();
+  writeJson(PATHS.manifest, manifest);
+  console.log(
+    `${COLOURS.yellow(`${cleared} term(s) no longer claim to have been read by a person.`)}\n` +
+      COLOURS.dim('They stay published. Their pages now say so instead of implying a review that did not happen.'),
+  );
   process.exit(0);
 }
 

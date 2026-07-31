@@ -125,7 +125,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Inference is using an already trained AI system on new data to get a result.",
-    "technical": "Inference is the forward pass, and related processing, that applies a model's learned parameters to unseen input to compute outputs such as class probabilities, numeric estimates, token probabilities or generated sequences."
+    "technical": "Inference is the forward pass, and related processing, that applies a model's learned parameters to input to compute outputs such as class probabilities, numeric estimates, token probabilities or generated sequences."
   },
   "keyTakeaway": "Training builds the model; inference uses it.",
   "quickCheck": {
@@ -206,9 +206,43 @@
     "serving"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:09:54.137Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "visual.steps[0].explanation",
+        "severity": "error",
+        "problem": "Inference does not require input that was absent from the training data. A trained model can be run on a previously seen example and that run is still inference.",
+        "fix": "Start with input presented for this run, such as a new sentence or image."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "Calling the input \"unseen\" incorrectly makes novelty a requirement of inference. Inference describes applying the model, regardless of whether the same input appeared during training.",
+        "fix": "Inference is the forward pass, and related processing, that applies a model's learned parameters to input to compute outputs such as class probabilities, numeric estimates, token probabilities or generated sequences."
+      },
+      {
+        "field": "visual.steps[3].visualInstruction",
+        "severity": "error",
+        "problem": "The box is meant to show outputs, but \"translate\" is an instruction rather than an output. This muddles input and output.",
+        "fix": "Draw a right-side rectangle labelled 'output' with 'complaint: 0.82', 'translation', or 'next words'; connect from step 3."
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The accessibility text calls 0.82 a \"confidence score\", while the diagram only establishes that it is a model score. An arbitrary classification score need not represent calibrated confidence, so the alternative description adds a potentially misleading interpretation.",
+        "fix": "The diagram shows inference as a four-step flow. First, new input arrives, for example the sentence 'Bus service is unreliable in the evenings'. Second, the system prepares that input into a machine-usable form such as tokens or numbers. Third, the prepared input goes through a trained model. A lock icon and caption make clear that the model's learned settings are not being changed at this stage. Fourth, the system returns an output, such as the label 'complaint' with a model score, a number, a translation or generated text. The main message is that inference uses an existing model on new data"
+      }
+    ],
+    "applied": [
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

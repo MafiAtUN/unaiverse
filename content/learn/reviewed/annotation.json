@@ -33,7 +33,7 @@
     "metadata",
     "structured-data"
   ],
-  "oneSentence": "People add tags, notes or boundaries to data so a model can be trained, tested or checked against a clearer target.",
+  "oneSentence": "People or software tools add task-relevant tags, notes or boundaries to data for model training, testing, analysis or monitoring.",
   "plainExplanation": "Annotation and data labelling are closely related, but they are not always exactly the same. Data labelling usually means attaching a target tag such as “damaged road” or “not damaged road”. Annotation is broader: it can also mean drawing boxes around objects, marking sentence parts, highlighting spans of text, or adding notes about what appears in an image, audio clip or document. Annotators are the people, or sometimes software tools, that do this work.\n\nWhat goes in can be many kinds of data: images, text, speech, video or tables. A team first decides what labels or annotations are needed and writes rules so different people apply them in a similar way. Then annotators review each item and add the required mark-up. Quality checks may compare different annotators’ work, measure agreement, and correct unclear cases.\n\nWhat comes out is a labelled or annotated dataset. That dataset can be used to train a model, test whether it performs well, or monitor whether it is still working acceptably. The output may look structured, such as a spreadsheet column of labels, or more detailed, such as polygons around flooded areas on a map or highlighted names in a document.\n\nThis is often confused with data cleaning and with ground truth. Data cleaning fixes formatting errors, duplicates or broken records; annotation adds meaningful tags or marks. Ground truth usually means the best available reference answer for evaluation or training, while labels are the actual tags people assigned. In practice, some labels become part of what a project treats as ground truth, but they are not automatically perfect.",
   "everydayAnalogy": {
     "title": "Marking damage on printed satellite photos",
@@ -150,7 +150,7 @@
       "They only apply to images, not text, audio or video."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Annotation and data labelling both add information to raw data so it can be used for training, testing or review. Simple labelling might assign one class to each item, while annotation can also include boxes, highlights, timestamps and other mark-up. They are not the same as data cleaning, and human-created labels still need quality checks."
+    "explanation": "Both terms concern adding task-relevant information to data for training, testing or review. A label may assign one class to each item. Depending on the project, annotation may also include boxes, highlights, timestamps and other mark-up. This is different from data cleaning, metadata and ground truth, and human-created labels still need quality checks."
   },
   "resources": [
     {
@@ -224,9 +224,51 @@
     "annotators"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:25:37.327Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition says people add the annotations, but the page later acknowledges that software tools can also do this work. It also reduces all uses to providing a target, although annotations can support analysis and monitoring without serving directly as model targets.",
+        "fix": "People or software tools add task-relevant tags, notes or boundaries to data for model training, testing, analysis or monitoring."
+      },
+      {
+        "field": "plainExplanation; simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The page presents a broad annotation versus simple labelling hierarchy as if it were a stable distinction. The terms are often used interchangeably, while some teams use “annotation” for richer mark-up. The explanation needs to identify this as variable usage rather than a universal definition.",
+        "fix": "State that the terms often overlap and that some teams, rather than all projects, use “data labelling” for simpler class labels and “annotation” for richer mark-up."
+      },
+      {
+        "field": "visual.title; visual.steps[4].explanation; visual.accessibilityDescription; whyI",
+        "severity": "warning",
+        "problem": "Phrases such as “training-ready data”, “more structured dataset”, “turned messy inputs” and “turns raw data into usable examples” blur annotation with data cleaning and structured data. Annotation adds task-relevant information. It does not necessarily clean messy inputs, organise data into consistent rows and columns, or make a dataset ready for training by itself.",
+        "fix": "Use “How annotation adds task-relevant information to data” as the visual title. Change step 5 to “The result is a labelled dataset that can support training, testing or monitoring.” Remove “more structured” from the accessibility description, and describe annotation as adding information rather than fixing messy or unusable data."
+      },
+      {
+        "field": "everydayAnalogy",
+        "severity": "warning",
+        "problem": "This is not an everyday analogy. It is a professional satellite-image annotation project, and it repeats the worked example almost exactly. It therefore provides no separate familiar frame for understanding the mechanism.",
+        "fix": "Replace it with a familiar personal example, such as adding category tags and object markings to a photo collection, and update the mapping to match."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is the only defensible answer, but the quiz does not test understanding. Option 0 describes only deletion and incorrectly equates annotation with cleaning. Option 2 makes an indefensible guarantee. Option 3 contradicts examples already listed on the page. The repeated absolutes “only” and “guarantee” make all three distractors obviously false without knowing the term.",
+        "fix": "Replace the options with: [\"They fix duplicates and broken records in a dataset.\", \"They add task-relevant tags or markings to data, which may include richer mark-up than a single class label.\", \"They are checked reference answers used to compare with model outputs.\", \"They describe when, where and by whom data was created.\"] Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

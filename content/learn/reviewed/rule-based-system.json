@@ -29,8 +29,8 @@
     "machine-learning",
     "generative-ai"
   ],
-  "oneSentence": "A rule-based system follows explicit if-then rules written by people to turn given inputs into specified outputs.",
-  "plainExplanation": "A rule-based system uses rules that people write in advance. A rule usually looks like this: if a condition is true, then do a particular action. The input can be text, numbers, symbols or answers to questions. The output can be a label, a recommendation, an alert or another action.\n\nWhat goes in first is structured information the system can check against its rules. For example, a support form might include words such as \"password\", \"billing\" or \"urgent\". The system compares those inputs with its rule list. If a rule matches, the linked action runs.\n\nWhat happens inside is not training in the machine learning sense. The system does not usually learn new patterns from examples by itself. Instead, a person or team defines the logic, tests it and updates it when the world changes. That is why people also call this symbolic AI or, in some contexts, an expert system.\n\nWhat comes out depends on the rules that matched. The system might sort a message, flag a possible problem or suggest a next step. This can be very reliable when the task is clear and stable. It works less well when language is messy, situations are ambiguous or the rules would become too numerous to manage.",
+  "oneSentence": "A rule-based system applies explicit if-then rules to given inputs to produce specified outputs.",
+  "plainExplanation": "A rule-based system uses explicit rules, usually written in advance by people. A rule often looks like this: if a condition is true, then do a particular action. The input can be text, numbers, symbols or answers to questions. The output can be a label, a recommendation, an alert or another action.\n\nThe input must be represented in a form the system can check against its rules. For example, a support form might include words such as \"password\", \"billing\" or \"urgent\". The system compares those inputs with its rule list. If a rule matches, the linked action runs.\n\nWhat happens inside is not training in the machine learning sense. The system does not usually learn new patterns from examples by itself. Instead, people usually define the logic, test it and update it when the world changes. Rule-based systems are one form of symbolic AI. Some expert systems use this approach.\n\nWhat comes out depends on the rules that matched. The system might sort a message, flag a possible problem or suggest a next step. This can be very reliable when the task is clear and stable. It works less well when language is messy, situations are ambiguous or the rules would become too numerous to manage.",
   "everydayAnalogy": {
     "title": "Sorting meeting notes with coloured tabs",
     "story": "A team writes meeting notes on paper cards. Before sorting them, they agree on clear rules: if a card contains a date, put it in the \"deadline\" tray; if it contains a currency amount, put it in the \"budget\" tray; if it starts with \"Action:\", put it in the \"tasks\" tray. A clerk follows the rule sheet card by card and places each card into the matching tray. If a card does not match any rule, the clerk puts it in a \"review by a person\" tray.",
@@ -138,7 +138,7 @@
       "A system predicts house prices by fitting patterns in historical sales data."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The first option describes explicit human-written rules, which is the core mechanism of a rule-based system. The other options depend on models fitted from data or on generative methods, not on hand-written if-then logic alone."
+    "explanation": "The first option explicitly uses human-written checks. The other options describe models that learn or fit patterns from examples or historical data."
   },
   "resources": [
     {
@@ -210,9 +210,57 @@
   ],
   "contested": "Whether rule-based systems should always be called AI is genuinely disputed. Some people treat them as a classic branch of AI, especially in the history of expert systems and symbolic AI. Others use 'AI' more narrowly and reserve it mainly for machine learning or newer generative systems.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:09:24.895Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence and plainExplanation",
+        "severity": "error",
+        "problem": "The page makes human authorship part of the definition. Rule-based systems apply explicit rules, but those rules are not necessarily written directly by people. The plain explanation also calls all input \"structured information\" immediately after listing free text as an input. Free text is not normally structured data, although it must be represented in a form the system can process.",
+        "fix": "Define the system by its use of explicit rules. Say the rules are usually written by people, and say the input must be represented in a form the system can check."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that people also call a rule-based system \"symbolic AI\" or \"an expert system\" collapses related but non-equivalent terms. Rule-based systems are one approach within symbolic AI. An expert system may use a rule-based design, but not every rule-based system is an expert system.",
+        "fix": "Replace that claim with: \"Rule-based systems are one form of symbolic AI. Some expert systems use this approach.\""
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "The description promises four boxes called input, rule check, match decision and output. The instructions actually specify an input box, a rule-list box, one decision box and two outcome boxes. \"Rule check\" and \"match decision\" are not separate boxes in the instructions.",
+        "fix": "A flow diagram shows an input and a stored rule list feeding into a match decision. Arrows lead from that decision to either an output or human review."
+      },
+      {
+        "field": "visual.steps[2]",
+        "severity": "warning",
+        "problem": "The claim that rules are compared \"one by one or by a set order\" is unnecessarily restrictive. Rule engines can identify applicable rules through other matching and execution strategies. A set order is also not an alternative to checking one by one.",
+        "fix": "The system evaluates rule conditions according to its matching and execution design."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The page distinguishes rule-based systems from machine learning but does not clearly distinguish them from automation, despite claiming a separate entry for automation. Automation describes how much human action remains after setup, while rule-based logic is one possible mechanism used in an automated process. The final sentence also repeats the unsupported implication that explicit logic must be written directly by humans.",
+        "fix": "Explain that rule-based systems can automate tasks, but automation may instead use fixed sequences, machine learning or a combination. Contrast explicit rules with parameters fitted from data without making human authorship universal."
+      },
+      {
+        "field": "quickCheck.options[2]",
+        "severity": "error",
+        "problem": "The marked answer is not uniquely defensible. Option 0 clearly describes a rule-based system. Option 1 clearly describes machine learning from labelled examples. Option 3 clearly describes fitting patterns from historical data. However, option 2 describes only an output, not a mechanism. A hand-written system could parse a prompt and compose an image using explicit rules, so this option could also fit a rule-based system. Calling an output \"new\" does not establish generative AI or machine learning.",
+        "fix": "Replace option 2 with: \"A model learns from examples to generate images from prompts.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

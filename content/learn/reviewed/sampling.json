@@ -29,8 +29,8 @@
     "temperature",
     "deterministic-output"
   ],
-  "oneSentence": "The procedure that selects one token from the model’s predicted probabilities and appends it to the output, then repeats until the text is complete.",
-  "plainExplanation": "A language model does not write a whole reply in one step. At each step, it produces a list of possible next tokens and a probability for each one. A token is a small unit of text, such as a word, part of a word, punctuation, or a space pattern.\n\nSampling is the rule used to choose from that list. The simplest rule is greedy decoding: pick the single highest-probability token every time. Other rules add controlled randomness, for example by limiting the candidate set and then drawing one token from it.\n\nWhat goes in is the current context: the prompt plus all tokens already generated. What happens is that the model scores many possible next tokens, the decoding rule filters or reshapes those scores, and one token is chosen. What comes out is one new token, which is added to the context before the next step.\n\nThis matters because different decoding choices can make outputs more stable, more varied, more concise, or more risky. Sampling does not change the model’s weights. It changes how the model’s probability distribution is turned into actual text.",
+  "oneSentence": "A stochastic procedure that draws one next token from the model’s probability distribution, appends it to the output, and repeats until a stop condition.",
+  "plainExplanation": "A language model does not write a whole reply in one step. At each step, it produces scores for possible next tokens. These scores are used to form a probability distribution. A token is a small unit of text, such as a word, part of a word, punctuation, or a space pattern.\n\nDecoding is the broader procedure for choosing the next token. Greedy decoding picks the highest-probability token. Sampling instead draws a token using the probabilities, often after controls such as temperature, top-p, or top-k have reshaped or restricted them.\n\nThe input is the current context: the prompt plus all tokens already generated. The model scores possible next tokens, any configured controls are applied, and the selection procedure chooses one token. That token is added to the context before the next step.\n\nThese choices can make outputs more stable, more varied, more concise, or more risky. They do not change the model’s weights. They change how its scores are turned into text.",
   "everydayAnalogy": {
     "title": "Picking the next form template",
     "story": "An office worker receives a photograph of a paper form and must match it to one template in a cabinet. A screen shows likely matches in order: travel claim, vendor registration, incident report, and equipment request. If the worker always picks the top suggestion, the process is fast and repeatable. If the worker instead chooses from the top few plausible matches, the result can vary, which may help in borderline cases but can also introduce a wrong choice.",
@@ -124,8 +124,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "The model suggests many possible next pieces of text, and sampling is the rule for picking one of them.",
-    "technical": "At each generation step, the model outputs logits or probabilities over the vocabulary for the next token, conditioned on the current context. Decoding applies a selection procedure to that distribution. In greedy decoding, the argmax token is chosen deterministically. In stochastic methods, the distribution may first be transformed, for example by temperature scaling, and then truncated, for example by top-p, before drawing a token. The selected token is appended to the sequence, which updates the context for the next forward pass. This repeats until an end token, stop sequence, or length limit is reached. Sampling therefore belongs to inference-time generation, not training, and it affects variability, coherence trade-offs, and reproducibility."
+    "simple": "The model suggests possible next pieces of text, and sampling randomly picks one using their probabilities.",
+    "technical": "At each generation step, the model outputs logits over the vocabulary, conditioned on the current context. Decoding may transform these logits or their probability distribution. Greedy decoding chooses the argmax token deterministically. Sampling instead draws a token from the distribution, which may first be adjusted by temperature or restricted by top-p. The selected token is appended to the sequence, updating the context for the next forward pass. This repeats until an end token, stop sequence, or length limit is reached. Sampling is an inference-time decoding method that affects variability and reproducibility."
   },
   "keyTakeaway": "A language model predicts probabilities, but decoding decides which token actually appears next.",
   "quickCheck": {
@@ -210,9 +210,70 @@
     "greedy decoding"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:51.680Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This defines sampling as any token-selection procedure. That is decoding. Sampling specifically involves a stochastic draw, unlike greedy decoding.",
+        "fix": "A stochastic procedure that draws one next token from the model’s probability distribution, appends it to the output, and repeats until a stop condition."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation incorrectly calls greedy decoding a form of sampling. This blurs stochastic sampling with the broader category of decoding and weakens the claimed distinction from deterministic output.",
+        "fix": "A language model does not write a whole reply in one step. At each step, it produces scores for possible next tokens. These scores are used to form a probability distribution. A token is a small unit of text, such as a word, part of a word, punctuation, or a space pattern.\n\nDecoding is the broader procedure for choosing the next token. Greedy decoding picks the highest-probability token. Sampling instead draws a token using the probabilities, often after controls such as temperature, top-p, or top-k have reshaped or restricted them.\n\nThe input is the current context: the prompt plus all tokens"
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The correction says sampling and decoding are both the broader process, then includes deterministic greedy decoding within sampling. That repeats the page’s central category error.",
+        "fix": "Temperature is one control that reshapes the probability distribution before selection. Sampling is a random draw from that distribution, while decoding is the broader process of selecting a token. You can sample with different temperatures or use deterministic greedy decoding instead."
+      },
+      {
+        "field": "simpleVsTechnical",
+        "severity": "error",
+        "problem": "Both versions again use sampling as a synonym for decoding. The technical version describes greedy and stochastic methods under decoding, but then labels the whole process sampling.",
+        "fix": "Simple: The model suggests possible next pieces of text, and sampling randomly picks one using their probabilities.\n\nTechnical: At each generation step, the model outputs logits over the vocabulary, conditioned on the current context. Decoding may transform these logits or their probability distribution. Greedy decoding chooses the argmax token deterministically. Sampling instead draws a token from the distribution, which may first be adjusted by temperature or restricted by top-p. The selected token is appended to the sequence, updating the context for the next forward pass. This repeats unti"
+      },
+      {
+        "field": "visual.steps[2]",
+        "severity": "error",
+        "problem": "The visual presents greedy, temperature, and top-p as mutually exclusive selection rules, with one active toggle. Temperature reshapes scores and top-p restricts candidates. Either can be combined with stochastic sampling, while greedy is a selection method.",
+        "fix": "Replace the explanation with: \"Temperature can reshape and top-p can restrict the distribution. Greedy picks the top token; sampling draws from those left.\" Replace the instruction with: \"Show controls labelled 'temperature' and 'top-p' feeding a selector labelled 'greedy or random draw'; highlight the active settings and selection method.\""
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The accessibility text repeats the visual’s false equivalence by listing temperature adjustment and top-p filtering as alternatives to greedy selection rather than controls that can precede selection.",
+        "fix": "Replace its third sentence with: \"Third, controls such as temperature or top-p may reshape or restrict the list, after which greedy selection or a random draw chooses one token.\""
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "The takeaway accurately describes decoding but never explains the page’s actual term, stochastic sampling.",
+        "fix": "A language model predicts probabilities, and sampling draws one token from that distribution."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is correct. Option 1 is false because prompts do not trigger retraining. Option 2 is false because greedy decoding does not search training data. Option 3 is false because only one token is appended. However, all three distractors are implausible enough that the answer is obvious without understanding greedy decoding.",
+        "fix": "Keep option 0. Replace the distractors with: \"It draws one next token from the full probability distribution.\"; \"It limits the candidates and then draws one token at random.\"; \"It chooses the most probable complete sentence.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -30,8 +30,8 @@
     "probability",
     "biological-neuron"
   ],
-  "oneSentence": "A neural network uses these mathematical rules to transform each unit’s weighted input into an output, adding the non-linear behaviour needed to learn complex patterns.",
-  "plainExplanation": "Inside a neural network, each unit first combines numbers from earlier units. Those numbers are multiplied by weights, added together, and usually shifted by a bias. That gives one intermediate value, often called the pre-activation.\n\nAn activation function then changes that intermediate value into the unit’s output. Common examples are ReLU, which keeps positive values and turns negative ones into zero, and sigmoid, which squeezes any value into a number between 0 and 1. The word activation can mean either the function itself or the output after that function is applied, so the context matters.\n\nThe phrase non-linearity refers to why this step matters. If every layer only did linear operations, then stacking many layers would collapse into something equivalent to one linear transformation. In that case, the network could only draw very simple boundaries between patterns. The activation function breaks that limitation.\n\nThese words are related but not identical. Activation function is the rule. ReLU and sigmoid are specific kinds of that rule. Activation often names the resulting output value. Non-linearity describes the property that lets networks model more complex relationships than straight-line combinations can represent.",
+  "oneSentence": "A neural network usually uses an activation function to transform a unit’s weighted input into an output, often adding the non-linear behaviour needed to learn complex patterns.",
+  "plainExplanation": "Inside a neural network, each unit first combines numbers from earlier units. Those numbers are multiplied by weights, added together, and usually shifted by a bias. That gives one intermediate value, often called the pre-activation.\n\nAn activation function then changes that intermediate value into the unit’s output. Common examples are ReLU, which keeps positive values and turns negative ones into zero, and sigmoid, which squeezes any value into a number between 0 and 1. The word activation can mean either the function itself or the output after that function is applied, so the context matters.\n\nNon-linearity explains why commonly used activation functions matter. If every layer only used weighted sums and biases, stacking many layers would collapse into one equivalent weighted sum and bias. The network would remain limited to the relationships that one such operation can represent. A non-linear activation function breaks that limitation.\n\nThese words are related but not identical. Activation function is the rule. ReLU and sigmoid are specific kinds of that rule. Activation often names the resulting output value. Non-linearity describes the property that lets networks model more complex relationships than weighted sums can represent.",
   "everydayAnalogy": {
     "title": "A road damage screening desk",
     "story": "A team reviewing satellite images has a scoring sheet for each image tile. Several clues are added together: dark cracks, broken edges, and patchy texture increase the score, while clean straight surfaces lower it. Then the team uses a rule to turn that score into a signal for the next step: one desk only passes tiles with positive scores, while another converts every score into a smooth 0-to-1 urgency scale. Those rules change how strongly each tile influences later decisions about where to inspect first.",
@@ -129,10 +129,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A neural network unit first adds up evidence into one number, then passes that number through a rule. That rule might cut off negative values, like ReLU, or squeeze the number into 0 to 1, like sigmoid. The rule matters because it lets many layers model more than a simple straight-line relationship.",
+    "simple": "A neural network unit first adds up evidence into one number, then passes that number through a rule. A non-linear rule might cut off negative values, like ReLU, or squeeze the number into 0 to 1, like sigmoid. It lets many layers model more than a single weighted sum and bias.",
     "technical": "For one unit, a pre-activation value is computed as z = w·x + b, where x is the input vector, w the weights and b the bias. The activation function φ then produces a = φ(z). If φ is linear, such as φ(z)=cz, then compositions across layers remain equivalent to a single linear or affine transformation, so depth alone adds little representational power. Choosing a non-linear φ, such as ReLU or sigmoid, allows piecewise-linear or smooth non-linear mappings and therefore more expressive decision boundaries. ReLU is computationally simple and helps preserve positive signals, though it can produce units that stay at zero for many inputs. Sigmoid maps real numbers to the open interval from 0 to 1, which can be useful in some settings but may compress large-magnitude inputs strongly. The term activation may refer either to φ itself or to the resulting value a, so precise writing should distinguish the function from its output. This concept is also distinct from softmax, which is typically applied across multiple output logits to create a normalised distribution over classes."
   },
-  "keyTakeaway": "An activation function is the mathematical switch-shape between layers that turns weighted sums into non-linear signals, and that non-linearity is what makes deep networks powerful.",
+  "keyTakeaway": "An activation function transforms a weighted sum into a new signal. Non-linear activation functions give deep networks much of their expressive power.",
   "quickCheck": {
     "question": "Why do neural networks usually place an activation function after the weighted sum in each unit?",
     "options": [
@@ -142,7 +142,7 @@
       "To make every negative input factually incorrect"
     ],
     "correctOptionIndex": 0,
-    "explanation": "The main reason is non-linearity. Without it, many layers of weighted sums would collapse into one linear transformation. Some activation functions also change scale or range, but they do not automatically produce calibrated probabilities, and they do not replace weights or bias."
+    "explanation": "The main reason is non-linearity. Without it, many layers of weighted sums and biases would collapse into one affine transformation. Activations do not guarantee calibrated probabilities, replace weights or biases, or always keep outputs between 0 and 1."
   },
   "resources": [
     {
@@ -217,9 +217,65 @@
     "non-linearity"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:53.049Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This defines every activation function as adding non-linear behaviour. The page later correctly acknowledges that an activation function can be linear. Non-linearity is common and important, but it is not part of every activation function.",
+        "fix": "A neural network usually uses an activation function to transform a unit’s weighted input into an output, often adding the non-linear behaviour needed to learn complex patterns."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The statement that \"The activation function breaks that limitation\" is too broad. Only a non-linear activation function prevents a stack of weighted sums and biases from collapsing into one equivalent affine operation. Calling that result \"one linear transformation\" also ignores the biases described earlier.",
+        "fix": "State that a non-linear activation function breaks the limitation, and describe stacked weighted sums and biases as one equivalent weighted sum and bias."
+      },
+      {
+        "field": "visual.steps and visual accessibility descriptions",
+        "severity": "error",
+        "problem": "The visual says any activation function changes a weighted sum into a non-linear component. That is false for a linear activation. It also says layers containing weighted sums and biases collapse into a linear transformation, when the result is generally affine.",
+        "fix": "Change the relevant text to \"A non-linear activation function changes the unit into a non-linear component\" and say that weighted sums and biases collapse into one affine transformation."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "The final sentence attributes added expressive power to the rule in general. A linear activation does not provide that benefit, despite the technical version explicitly recognising linear activations.",
+        "fix": "A neural network unit first adds up evidence into one number, then passes that number through a rule. A non-linear rule might cut off negative values, like ReLU, or squeeze the number into 0 to 1, like sigmoid. It lets many layers model more than a single weighted sum and bias."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "\"Switch-shape\" is not a meaningful technical description, and the sentence again implies that every activation function produces non-linear signals. Linear activation functions do not.",
+        "fix": "An activation function transforms a weighted sum into a new signal. Non-linear activation functions give deep networks much of their expressive power."
+      },
+      {
+        "field": "quickCheck.options[3]",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 is false because activation functions do not guarantee probabilities or calibration. Option 2 is false because activations do not replace weights or biases. Option 3 is also false, but \"make every negative input factually incorrect\" is nonsense rather than a plausible misconception, so the answer is obvious without understanding activation functions.",
+        "fix": "Replace option 3 with: \"To keep every unit's output between 0 and 1\""
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "error",
+        "problem": "The explanation says stacked weighted sums collapse into a linear transformation. Because the page includes biases, they generally collapse into an affine transformation. The explanation should also address the proposed plausible range distractor.",
+        "fix": "The main reason is non-linearity. Without it, many layers of weighted sums and biases would collapse into one affine transformation. Activations do not guarantee calibrated probabilities, replace weights or biases, or always keep outputs between 0 and 1."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "simpleVsTechnicalSimple",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

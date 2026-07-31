@@ -259,9 +259,47 @@ export const termExplanationSchema = z.object({
   contested: z.string().max(600).optional(),
 
   contentVersion: z.string(),
+
+  /**
+   * `reviewed` means A PERSON READ IT. Nothing automated may set this — not
+   * the schema validator, not the link checker, and not the second-model
+   * review pass below. It is set only by `content:publish`, run by a human who
+   * is asserting they read the page.
+   */
   reviewed: z.boolean(),
   reviewerNotes: z.string().max(2000).optional(),
   lastReviewed: z.string().optional(),
+
+  /**
+   * The adversarial second-model pass: a *different* model from the one that
+   * wrote the page, prompted to find what is wrong rather than to approve.
+   *
+   * Deliberately a separate field from `reviewed`, because it is a separate
+   * claim. It catches arithmetic that does not add up, analogy limitations
+   * that hedge instead of limiting, quiz answers that are not defensible, and
+   * definitions that fail to distinguish themselves from their neighbours. It
+   * does not catch a confidently wrong account of how something works, which
+   * is exactly what a human reviewer is for.
+   */
+  machineReview: z
+    .object({
+      model: z.string(),
+      deployment: z.string(),
+      promptVersion: z.string(),
+      reviewedAt: z.string(),
+      verdict: z.enum(['pass', 'revise', 'reject']),
+      issues: z.array(
+        z.object({
+          field: z.string().max(80),
+          severity: z.enum(['error', 'warning', 'nit']),
+          problem: z.string().max(600),
+          fix: z.string().max(600).optional(),
+        }),
+      ),
+      /** Fields the pass actually rewrote, after re-validating the result. */
+      applied: z.array(z.string()).default([]),
+    })
+    .optional(),
 
   /**
    * Provenance. Present on anything the pipeline produced; absent only on a

@@ -28,7 +28,7 @@
     "regulation",
     "digital-public-infrastructure"
   ],
-  "oneSentence": "The ability of different systems, organisations or rules to exchange information and use it correctly for a shared purpose.",
+  "oneSentence": "The ability of systems or organisations to exchange information and use it correctly under compatible rules.",
   "plainExplanation": "Interoperability means separate systems can work together without people having to rebuild or retype everything each time. What goes in can be data, documents, messages, technical formats or agreed procedures. What happens in the middle is that the parts match well enough to exchange and interpret that input. What comes out is coordinated work across tools, teams or institutions.\n\nThis idea applies at more than one level. Technical interoperability is about compatible file formats, interfaces and data structures. Organisational interoperability is about workflows, roles and responsibilities lining up. Legal or policy interoperability is about rules that allow exchange and use under agreed conditions. A system may succeed at one level and fail at another.\n\nIn AI governance, the term often appears when countries, agencies or platforms need to share information about AI systems, risks, audits or standards-based assessments. For example, one body may record an incident in one format and another body may need to compare it with its own records. If the categories, definitions and metadata are aligned, the information can travel and still keep its meaning.\n\nInteroperability is often confused with standardisation, but they are not the same. A standard is a documented specification or agreed method. Interoperability is the practical ability to connect and use information across boundaries. Standards can help create interoperability, but systems can follow a standard and still fail to work together if implementation, governance or context differ.",
   "everydayAnalogy": {
     "title": "One report, many offices",
@@ -93,7 +93,7 @@
       "A conversion script transforms both files into one shared structure and flags 11 records where the old categories do not match cleanly.",
       "After review, 204 records can be compared directly and grouped by country, system type and severity."
     ],
-    "result": "The agencies produce one summary table showing that 62 comparable cases involve verification errors, 41 involve identification errors, and the rest require manual review because the original categories were not fully aligned."
+    "result": "The agencies produce one summary table: 62 comparable cases involve verification errors, 41 involve identification errors, 101 involve other aligned categories, and 11 require manual review."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team wants to identify protection trends across incident reports received from different partners using different case management tools and reporting templates.",
@@ -207,9 +207,44 @@
   ],
   "contested": "The core idea is widely used, but the exact scope can vary by context: some communities stress technical compatibility, while others include organisational, legal and semantic alignment as essential parts.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:33:07.097Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition makes “rules” a subject that can exchange and use information. Rules can enable or constrain interoperability, but they do not themselves exchange information.",
+        "fix": "The ability of systems or organisations to exchange information and use it correctly under compatible rules."
+      },
+      {
+        "field": "workedExample.process[0-1]",
+        "severity": "error",
+        "problem": "The example treats “country” and “state” as equivalent fields without establishing that they describe the same geographic level. “State” may refer to a subnational area, so this mapping could silently corrupt the data. The next step then incorrectly applies a shared country list to both fields.",
+        "fix": "Replace the two steps with: “They map IDs, dates, system types and severity, but verify whether country and state describe the same geography.” and “They agree dates use YYYY-MM-DD, locations use one shared geographic classification, and severity uses the same four levels.”"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The totals do not compute. There are 120 + 95 = 215 records. If 11 require manual review, 215 - 11 = 204 are directly comparable, as the process states. The result accounts for 62 + 41 = 103 comparable cases, then says “the rest” require manual review. That would make 215 - 103 = 112 records require review, not 11. Alternatively, among the 204 comparable records, 204 - 103 = 101 remain unaccounted for.",
+        "fix": "The agencies produce one summary table: 62 comparable cases involve verification errors, 41 involve identification errors, 101 involve other aligned categories, and 11 require manual review."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The blanket statement about the other options is incomplete. The PDF option is neither manual repair nor uniformity. It shows consistent display, but does not demonstrate that information can be reused across systems with shared meaning.",
+        "fix": "Option 2 combines transfer with matching fields, shared definitions and access rules. Option 1 needs manual recoding. Option 3 shows uniformity, not exchange. Option 4 shows consistent display, not cross-system reuse."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

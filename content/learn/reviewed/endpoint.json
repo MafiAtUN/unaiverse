@@ -28,8 +28,8 @@
     "model-hosting",
     "deployment"
   ],
-  "oneSentence": "A network address plus rules for a specific service function, such as sending a prompt to a model and receiving a response.",
-  "plainExplanation": "An endpoint is the specific place a program sends a request when it wants a service to do one particular job. In practice, it usually combines a web address with an agreed format for the request and response. For example, one endpoint may create text, another may list available models, and another may check usage.\n\nWhat goes in depends on the service. A request often includes input data, settings, and credentials, which are proof that the caller is allowed to use the service. The endpoint then passes that request to the system behind it. That system may validate the request, apply limits, route it to a hosted model or another backend service, and record usage for monitoring or billing.\n\nWhat comes out is a response in a defined structure, often JSON, a common machine-readable text format. The response may contain the model output, an error message, timing information, or metadata such as token counts. A good endpoint gives predictable structure even when the answer content varies.\n\nPeople often confuse an endpoint with an API. An API is the broader interface: the whole set of rules and available operations. An endpoint is one callable location or operation within that interface. People also confuse an endpoint with the model itself, but the endpoint is only the access point; the actual model may run elsewhere on different hardware or in a different region.",
+  "oneSentence": "A network address where software sends requests to a service and receives responses according to an API's rules.",
+  "plainExplanation": "An endpoint is a specific network location to which a program sends a service request. It often supports a particular operation, but one endpoint can support several operations. In practice, the location is usually a URL, while the API contract defines the request and response formats. For example, a service may expose locations for creating text, listing available models or checking usage.\n\nWhat goes in depends on the service. A request often includes input data, settings and credentials, which the service uses to authenticate the caller. The service receiving the request may validate it, check permissions, apply limits, route it to a hosted model or another backend service, and record usage for monitoring or billing.\n\nWhat comes out is a response in a defined structure, often JSON, a common machine-readable text format. The response may contain model output, an error message, timing information or metadata such as token counts. A well-designed service gives predictable structure even when the answer content varies.\n\nPeople often confuse an endpoint with an API. An API is the broader interface, including the rules and available operations. An endpoint is a network location used to access that interface. People also confuse an endpoint with the model itself, but the endpoint is only an access point. The actual model may run elsewhere on different hardware or in a different region.",
   "everydayAnalogy": {
     "title": "A service window at a weather office",
     "story": "A farming cooperative sends one staff member to a regional weather office before planting season. The building offers several service windows: one gives next-week rainfall forecasts, another provides historic rainfall tables, and another handles billing questions. At the forecast window, the staff member submits the farm location and dates on a standard form. The clerk checks the form, sends it to the forecasting system inside the building, and returns a printed forecast in a standard layout.",
@@ -93,14 +93,14 @@
       "The service routes the request to the selected hosted model and records usage.",
       "It returns a JSON response containing the summary text, a success status, and usage metadata such as 78 input tokens and 96 output tokens."
     ],
-    "result": "The app receives a structured reply it can display directly: a short rainfall summary plus metadata for logging and cost tracking."
+    "result": "The app parses the structured reply, displays the short rainfall summary, and logs the usage metadata for monitoring and cost tracking."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team wants to summarise open-text answers from a household assessment that was collected through an approved internal platform.",
     "relevance": "The team may call an approved internal endpoint that accepts de-identified text and returns a structured summary, allowing the survey tool to automate one step while keeping logging, access control and monitoring consistent.",
     "caution": "Do not send personal, confidential, protection-sensitive or otherwise unapproved assessment data to a public AI endpoint. Use only approved services, apply data minimisation, and keep human review in the loop before sharing outputs."
   },
-  "whyItMatters": "If you use or buy AI services, the endpoint is often the practical point where cost, speed, security, reliability and governance become visible. It determines what data format you must send, what authentication is required, what errors you must handle, which limits apply, and sometimes where processing happens. For non-specialists, this matters when reviewing vendor claims, planning integrations, assessing privacy and data sovereignty risks, or debugging why a system works in testing but fails in production. Knowing what an endpoint is also helps you ask better questions: Which endpoint does this function use? What data leaves our system? What logs are kept? What happens if the endpoint is unavailable or rate-limited?",
+  "whyItMatters": "If you use or buy AI services, the requirements and behaviour of the service accessed at an endpoint are where cost, speed, security, reliability and governance often become visible. They affect what data format you must send, what authentication is required, what errors you must handle, which limits apply and sometimes where processing happens. For non-specialists, this matters when reviewing vendor claims, planning integrations, assessing privacy and data sovereignty risks, or debugging why a system works in testing but fails in production. Useful questions include: Which endpoint does this function use? What data leaves our system? What logs are kept? What happens if the service is unavailable or rate-limited?",
   "whereYouMayHearIt": [
     "software integration meetings",
     "cloud service documentation",
@@ -125,7 +125,7 @@
     "simple": "Think of an endpoint as the exact service doorway your software uses for one job. You send a request in the required format, and you get back a reply in the required format.",
     "technical": "In web services, an endpoint is a concrete network-reachable interface for a specific operation, usually identified by a URL path and HTTP method such as POST /v1/responses. It is part of a larger API contract and defines how a client invokes that operation: expected headers, authentication scheme, request schema, response schema, status codes and error behaviour. In AI systems, an endpoint often sits in front of model hosting infrastructure and performs request validation, authorisation, rate limiting, routing, observability and billing before or after calling the underlying model service. The endpoint may expose synchronous or asynchronous behaviour, stream partial outputs, or proxy requests to region-specific backends for governance or performance reasons."
   },
-  "keyTakeaway": "An endpoint is the specific callable entry point for one service function; it is not the whole API and not the model itself.",
+  "keyTakeaway": "An endpoint is a specific network entry point within an API. It is not the whole API, the deployment or the hosted model.",
   "quickCheck": {
     "question": "Which statement best describes an API endpoint in an AI service?",
     "options": [
@@ -205,9 +205,59 @@
     "api endpoint"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:44.913Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, analogy, visual, simpleVsTechnical, keyTakeaway",
+        "severity": "error",
+        "problem": "The page repeatedly defines an endpoint as serving exactly one function or operation. That is too categorical. An endpoint is a network-reachable address within an API. It may correspond to one operation, but a single endpoint can accept several operations. The weather-window analogy and visual reinforce the false one-window, one-function rule.",
+        "fix": "Define the endpoint as the network location used to access a service. Say that it often supports a particular operation, but may support several. In the visual learning objective, replace 'for one service function' with 'within an API'. In step 1, replace 'for one task' with 'under the API contract'."
+      },
+      {
+        "field": "plainExplanation, visual.steps, workedExample.process, simpleVsTechnical.technic",
+        "severity": "error",
+        "problem": "The page treats the endpoint as an active software component that validates, authenticates, routes and records usage. An endpoint is an address or interface. The service, gateway or other software exposed at that endpoint performs those actions. Also, credentials are not proof that a caller is allowed to use a service. They are used to authenticate a caller, after which permissions may still need to be checked.",
+        "fix": "Attribute checks, routing and usage recording to the service receiving requests at the endpoint. Replace 'credentials, which are proof that the caller is allowed' with 'credentials, which the service uses to authenticate the caller'. In visual step 2, use: 'The service receiving the request verifies format, permissions and limits. If something is wrong, it returns an error.'"
+      },
+      {
+        "field": "workedExample.input",
+        "severity": "error",
+        "problem": "The request supplies only a location and dates, not rainfall forecast data. The example therefore implies that a text-generation service can produce a reliable current seven-day forecast from the prompt alone. Nothing on the page establishes that the service has access to current weather data.",
+        "fix": "POST request to /v1/responses with a short system instruction, trusted forecast data for Kisumu County for the next 7 days, a request to summarise it in plain language, and a parameter limiting the reply to 120 tokens."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "A JSON response is not normally displayed directly as the rainfall summary. The application must parse the response and select the output field. The example also gives 78 input tokens and 96 output tokens, which total 174 tokens, but it states no total, so there is no arithmetic error to correct.",
+        "fix": "The app parses the structured reply, displays the short rainfall summary, and logs the usage metadata for monitoring and cost tracking."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "The endpoint itself does not determine cost, speed, security, reliability, governance or processing location. Those properties arise from the service architecture, configuration, contract and infrastructure associated with the endpoint. The current wording wrongly assigns causal control to an address.",
+        "fix": "Say that these concerns become visible through the requirements and behaviour of the service accessed at the endpoint, rather than saying the endpoint determines them."
+      },
+      {
+        "field": "quickCheck",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 describes the broader API. Option 2 describes a physical facility, not an endpoint. Option 3 makes an unrelated guarantee. However, options 2 and 3 are so implausible that the answer is obvious without understanding the distinction.",
+        "fix": "Keep options 0 and 1. Replace option 2 with 'It is the hosting infrastructure that keeps the model available and runs it.' Replace option 3 with 'It is the deployment process that puts an AI system into live use.'"
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "whyItMatters",
+      "keyTakeaway",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

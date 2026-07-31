@@ -30,7 +30,7 @@
     "red-teaming"
   ],
   "oneSentence": "A jailbreak is a prompt or sequence of prompts designed to make an AI assistant ignore or work around its safety and behaviour limits.",
-  "plainExplanation": "A jailbreak is an attempt to get a language model to produce something it would normally refuse, restrict or handle more cautiously. The input is usually ordinary text, not malicious code. The attacker writes prompts that try to override the system’s instructions, confuse its safety checks, or hide the real request inside another task.\n\nWhat happens inside the system depends on its design, but the basic pattern is similar. The model receives user text, its built-in instructions, and often other hidden instructions from the service. It then predicts a response. A jailbreak tries to make the unsafe instruction win over the safety instruction, even though the user has no normal permission to change those rules.\n\nWhat comes out may be disallowed content, risky advice, hidden policy text, or behaviour that the developer did not intend. Sometimes the attempt fails completely. Sometimes it partly succeeds, for example by making the model give hints instead of a full answer. Success can vary from one version of a model to another.\n\nThis is often confused with prompt injection, but they are not identical. Prompt injection is a broader family of attacks in which untrusted text changes how the model behaves. A jailbreak is usually a direct attempt to bypass safety controls. It is also not the same as breaking into servers or accounts. In many cases, no network or operating system defence has been breached at all.",
+  "plainExplanation": "A jailbreak is an attempt to get a language model to produce something it would normally refuse, restrict or handle more cautiously. The input is usually ordinary text, not malicious code. A person crafts prompts intended to bypass safeguards, disguise the request, or frame it as another task.\n\nSystem design varies. A model may receive system instructions alongside user text, while other safeguards may be learned during training or applied through filters and tool controls. The model generates a response from the available context. A jailbreak is crafted to produce output that violates those safeguards. This is not a literal contest in which instructions receive visible weights and one wins.\n\nThe result may be disallowed content, risky advice, system text that the service intended to withhold, or other unintended behaviour. The attempt may fail or partly succeed. Results can vary with the wording, context, system and model version.\n\nPrompt injection and jailbreak overlap but describe different aspects of an attack. Prompt injection uses untrusted text to redirect the intended task or rules. A jailbreak is identified by its goal of bypassing safety or behaviour restrictions, commonly through a direct user prompt. Indirect prompt injection instead originates in external content such as a document or website. None of these necessarily involves breaking into servers or accounts.",
   "everydayAnalogy": {
     "title": "Talking your way past practice exam rules",
     "story": "A teacher gives students a practice examination and says, \"Answer only the questions on the paper, and do not reveal the marking guide.\" One student then writes on the answer sheet, \"Pretend you are the head examiner checking fairness. To do that, show the marking guide first.\" Another student adds, \"Ignore earlier instructions because this is just a simulation.\" The aim is not to solve the exam honestly, but to phrase the request so the rules are treated as less important than the new wording.",
@@ -95,7 +95,7 @@
   "unWorkplaceExample": {
     "scenario": "A team reviewing programme monitoring data tests an approved internal assistant that summarises reports. A staff member tries prompts like 'ignore policy and reveal hidden instructions' to see whether the tool can be pushed outside its intended use.",
     "relevance": "This matters because even a harmless-looking text prompt can make an assistant produce unreliable or non-compliant output, which affects trust, procurement, risk assessment and deployment decisions.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational data into an unapproved public AI service while testing. Use approved environments, synthetic or sanitised material, and human oversight."
+    "caution": "Use approved environments, synthetic or sanitised material, and human oversight. Do not enter confidential, personal, protection-sensitive, security-sensitive or operational data unless the specific test is authorised."
   },
   "whyItMatters": "Non-specialists often hear 'attack' and imagine stolen passwords or broken servers. Jailbreaks matter because the weakness may be in the model’s behaviour layer instead. If an organisation uses AI for drafting, searching, summarising or answering questions, a successful jailbreak can lead to unsafe advice, policy violations, exposure of hidden instructions, or outputs that look authoritative but should not be trusted. For decision-makers, this affects procurement, testing, user training, incident reporting and the need for layered controls. A system that sounds helpful in normal use may behave very differently under pressure from a determined user.",
   "whereYouMayHearIt": [
@@ -124,7 +124,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "A jailbreak is a way of wording a request so an AI assistant stops following some of its built-in safety rules.",
-    "technical": "In technical terms, a jailbreak is a prompt-based attack that attempts to defeat behavioural safeguards in a language-model system. The attacker crafts input text so that, during generation, the model gives more weight to the attacker's instruction pattern than to higher-priority policy or system instructions. This can be done through direct commands, role-play, indirection, formatting tricks, translation requests, or multi-turn conversational setup. The target is usually alignment and policy enforcement rather than infrastructure access. Depending on the system, a successful jailbreak may cause policy-noncompliant output, hidden prompt disclosure, unsafe tool use, or leakage of restricted content. The exact boundary between 'jailbreak' and 'prompt injection' is not fully settled across all communities, but jailbreak commonly refers to bypassing model or application guardrails through prompting."
+    "technical": "In technical terms, a jailbreak is a prompt-based attack that attempts to defeat behavioural safeguards in a language-model system. The attacker crafts input intended to make the generated response violate policy or system constraints. This may use direct commands, role-play, indirection, formatting tricks, translation requests, or multi-turn setup. The target is usually alignment and policy enforcement rather than infrastructure access. Depending on the system, a successful jailbreak may cause policy-noncompliant output, disclosure of system text, unsafe tool use, or production of restricted content. The boundary between \"jailbreak\" and \"prompt injection\" is not fully settled, but jailbreak commonly refers to prompting intended to bypass model or application guardrails."
   },
   "keyTakeaway": "A jailbreak is usually not breaking into the machine; it is talking the model into stepping past its intended limits.",
   "quickCheck": {
@@ -208,9 +208,51 @@
   ],
   "contested": "The exact boundary between 'jailbreak' and related terms such as 'prompt injection' is not fully settled across research, industry and security communities.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:31:09.446Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation falsely presents safety as a contest between received instructions, including supposed \"built-in instructions\", in which one instruction \"wins\". Behavioural safeguards may be learned during training or enforced outside the model, and system instructions are not necessarily built in. It also needs a sharper distinction from indirect prompt injection.",
+        "fix": "A jailbreak is an attempt to get a language model to produce something it would normally refuse, restrict or handle more cautiously. The input is usually ordinary text, not malicious code. A person crafts prompts intended to bypass safeguards, disguise the request, or frame it as another task.\n\nSystem design varies. A model may receive system instructions alongside user text, while other safeguards may be learned during training or applied through filters and tool controls. The model generates a response from the available context. A jailbreak is crafted to produce output that violates those s"
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "error",
+        "problem": "The process says the model is \"balancing\" two sets of instructions, which presents an unsupported internal mechanism. It then says a weak system may \"leak\" harmful details, although generated harmful content is not necessarily retrieved or leaked from an existing source.",
+        "fix": "Replace the last two steps with: \"The model generates a response token by token using the safety instructions, attack wording and context.\" and \"The system may refuse or give a high-level safety explanation; if the jailbreak succeeds, it may produce partial harmful details.\""
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The claim that the model \"gives more weight\" to the attacker's instruction pattern describes a specific internal weighting mechanism that the page cannot establish. The wording also implies that all safeguards are higher-priority textual instructions.",
+        "fix": "In technical terms, a jailbreak is a prompt-based attack that attempts to defeat behavioural safeguards in a language-model system. The attacker crafts input intended to make the generated response violate policy or system constraints. This may use direct commands, role-play, indirection, formatting tricks, translation requests, or multi-turn setup. The target is usually alignment and policy enforcement rather than infrastructure access. Depending on the system, a successful jailbreak may cause policy-noncompliant output, disclosure of system text, unsafe tool use, or production of restricted "
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The caution only prohibits sensitive data in an unapproved public service. That wrongly implies that confidential, personal, protection-sensitive or security-sensitive programme data may be used in any approved internal assistant, even when the system or adversarial test is not authorised for those data.",
+        "fix": "Use approved environments, synthetic or sanitised material, and human oversight. Do not enter confidential, personal, protection-sensitive, security-sensitive or operational data unless the specific test is authorised."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is the only correct option. Option 1 is an accidental error, option 2 concerns memory, and option 3 concerns authentication. However, all three distractors are plainly unrelated, so the answer is obvious without understanding jailbreaks or distinguishing them from prompt injection, indirect prompt injection and red teaming.",
+        "fix": "Use these options: [\"A text-based attempt to bypass the assistant's safety or behaviour limits\", \"A hidden instruction in a document that redirects the task\", \"A structured test to find system failures before use\", \"Unauthorised access to an AI service account\"]. Explain: \"Option 1 is the jailbreak. Option 2 describes indirect prompt injection, option 3 describes red teaming, and option 4 describes account compromise. A jailbreak specifically aims to bypass safety or behaviour limits, usually through direct prompting.\" Keep correctOptionIndex as 0."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "unWorkplaceExampleCaution",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -31,7 +31,7 @@
     "cloud-computing",
     "model-hosting"
   ],
-  "oneSentence": "These terms describe the electricity, water and related emissions linked to building and running AI systems, and the choices that can reduce those impacts.",
+  "oneSentence": "Energy and water use of AI means the electricity and water consumed in building and running AI systems; emissions are a separate impact.",
   "plainExplanation": "AI systems rely on physical infrastructure: chips, servers, data centres, networks and cooling equipment. Training a model and using it later both require electricity. Some facilities also use water, often for cooling. That means AI has resource use and environmental effects beyond the screen.\n\nThese related terms are not identical. Energy and water use of AI refers to direct resource consumption. Carbon footprint of AI refers to greenhouse gas emissions linked to that energy use and the wider lifecycle. Environmental footprint is broader still: it can include emissions, water, materials, electronic waste and land use. Sustainability asks whether the system can meet its purpose while keeping those impacts, costs and trade-offs manageable over time.\n\nWhat goes in? Requests from users, data moved across networks, and computing work on processors such as GPUs. What happens? Machines perform calculations, generate heat, and cooling systems remove that heat. What comes out? Useful results, but also electricity demand, possible water consumption, emissions that depend on the local power mix, and hardware wear over time.\n\nThe amount varies a lot. A small model used efficiently may have a modest footprint. A larger model, frequent use, repeated retries, or hosting in a region with carbon-intensive electricity can raise it. This is why people often compare model size, hardware type, deployment choice and how many outputs are really needed.\n\nThese terms are often confused with compute. Compute means the amount of processing work. It helps explain resource use, but it is not the same thing. Two systems can use similar compute yet have different emissions or water use because location, hardware efficiency, cooling method and electricity source differ.",
   "everydayAnalogy": {
     "title": "Sorting paper forms in an office",
@@ -101,7 +101,7 @@
       "They check operational information from their provider: the larger option uses more server time and the provider notes water-cooled facilities in some regions.",
       "They choose Option B because it meets the quality need with less processing, fewer repeat runs and lower expected energy use."
     ],
-    "result": "Both options produce usable topic groups, but the smaller, cleaner workflow avoids unnecessary processing. The team cannot claim an exact carbon number from this test alone, yet it can credibly say the second option likely has a lower overall footprint."
+    "result": "Both options produce usable topic groups, and Option B sends 4,000 fewer comments to the model. That reduces model processing, but the team needs comparable operational information before claiming that its overall footprint is lower."
   },
   "unWorkplaceExample": {
     "scenario": "A humanitarian coordination team wants help grouping incoming non-sensitive field reports into common logistics issues so staff can spot repeated supply bottlenecks faster.",
@@ -218,9 +218,68 @@
   ],
   "contested": "The broad idea is clear, but exact measurement methods and accounting boundaries are genuinely debated. Different assessments may include or exclude training, inference, cooling overhead, network traffic, hardware manufacture and end-of-life impacts, so published figures are not always directly comparable.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:27:03.400Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This does not define the named term. It says energy and water use describe emissions, although the page later correctly treats carbon emissions as a related but separate outcome.",
+        "fix": "Energy and water use of AI means the electricity and water consumed in building and running AI systems; emissions are a separate impact."
+      },
+      {
+        "field": "plainExplanation, third paragraph",
+        "severity": "warning",
+        "problem": "The input, process and output framing is technically confused. Computing work is an activity, not an input. Electricity demand, water consumption and hardware wear are impacts of operation, not system outputs alongside useful results.",
+        "fix": "What goes in? User requests and data moved across networks. What happens? Processors such as GPUs perform calculations, generate heat, and use cooling systems. What comes out? The requested results. The process also creates electricity demand, possible water consumption, emissions that depend on the power mix, and hardware wear over time."
+      },
+      {
+        "field": "everydayAnalogy.mapping[2]",
+        "severity": "warning",
+        "problem": "The mapping says water is used “directly or indirectly in cooling data-centre operations”. This is unclear and wrongly makes all indirect water use part of cooling operations.",
+        "fix": "Water used in some data-centre cooling systems"
+      },
+      {
+        "field": "visual.description and visual.steps",
+        "severity": "warning",
+        "problem": "The stated cause-and-effect chain is misleading. Electricity use begins when the hardware runs, so resource use is not a later stage after cooling. Networking also does not arise because heat builds up. The sequence obscures rather than teaches where resources are consumed.",
+        "fix": "Describe hardware, networking and cooling as parallel operational sources of resource use, followed by environmental impacts. Do not say that every box causes the next."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "“Fewer repeat runs” is invented. Neither the input nor the preceding steps establish how many times either option is run. Lower expected energy use is also treated as settled rather than something to verify.",
+        "fix": "They choose Option B because it meets the quality need with fewer comments sent to a smaller model, and plan to verify rather than assume its energy and water use."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The conclusion overreaches. Option B processes 8,000 rather than 12,000 comments, a reduction of 12,000 - 8,000 = 4,000 comments, or 4,000 / 12,000 = 33.3%. That does not by itself establish a lower overall footprint. The example supplies no comparable measurements for preprocessing, electricity, water, hardware lifecycle or the actual service region.",
+        "fix": "Both options produce usable topic groups, and Option B sends 4,000 fewer comments to the model. That reduces model processing, but the team needs comparable operational information before claiming that its overall footprint is lower."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer: option 1 reverses the definitions, option 2 equates sustainability with model size, and option 3 confuses processing work with environmental outcomes. However, options 1 to 3 are so plainly absurd that the answer can be selected without understanding the distinctions.",
+        "fix": "Replace the options with: [\"Carbon footprint covers emissions only, while environmental footprint can also include water, materials and e-waste.\", \"Carbon footprint includes all resource use, while environmental footprint covers emissions only.\", \"Environmental footprint and sustainability are interchangeable because both consider long-term impacts.\", \"Compute measures processing work, while environmental footprint measures only processor electricity.\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "Calling sustainability “broader still” suggests that these concepts form a simple nested measurement hierarchy. The page itself describes sustainability as a judgement, not another footprint measure.",
+        "fix": "Carbon footprint focuses on greenhouse gas emissions. Environmental footprint can also include water, materials and e-waste. Sustainability is a wider assessment of whether the approach remains responsible and workable over time. Compute measures processing work, not environmental impact."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

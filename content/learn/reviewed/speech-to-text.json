@@ -123,7 +123,7 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "It turns spoken audio into written words. The machine makes a text draft from what it hears, and a person may need to correct mistakes.",
+    "simple": "It turns spoken audio into written words. The system makes a text draft from speech in the audio, and a person may need to correct mistakes.",
     "technical": "In technical use, ASR refers to automated conversion of an audio signal into a sequence of words or tokens. A system processes acoustic features from the waveform, estimates probable speech units, and combines that with a language model or other sequence modelling method to predict the most likely text. Many products also add punctuation, time alignment and speaker diarisation, meaning an estimate of who spoke when. “Speech-to-text” is the broader user-facing term for this function. “Transcription” is broader still: it can refer to the output document or the whole workflow, whether generated automatically, manually, or through human correction of an ASR draft. This should be distinguished from speech translation, which changes language, and from text-to-speech or other audio generation, which create audio rather than extract text from it."
   },
   "keyTakeaway": "Speech-to-text gives you a fast text draft from audio, but a transcript is only trustworthy after checking the parts that matter.",
@@ -208,9 +208,43 @@
     "transcription"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:23:00.833Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "The phrase “from what it hears” presents human-like hearing as a fact. A speech-to-text system processes audio signals rather than hearing them.",
+        "fix": "It turns spoken audio into written words. The system makes a text draft from speech in the audio, and a person may need to correct mistakes."
+      },
+      {
+        "field": "workedExample",
+        "severity": "warning",
+        "problem": "The scenario describes a 12-minute interview, but the input and final result show only a short quotation. It also says the draft has time stamps every 30 seconds, yet the final transcript shows none and says only one word was corrected. Numerically, 12 minutes × 60 = 720 seconds, and 720 ÷ 30 = 24 intervals, so the claimed time alignment should be visible or explicitly removed. The example does not establish that the quotation is merely an excerpt.",
+        "fix": "Change the scenario to “A programme officer records a short English interview excerpt with one speaker on a quiet phone call.” Change the third process step to “It outputs a draft transcript.”"
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only correct answer, but the distractors do not test the distinction seriously. Option 1 is ruled out by “always” and directly reverses the stated same-language function. Option 2 is ruled out by “only” and “never.” Option 3 describes text-to-speech, the opposite output direction. A reader can answer by spotting absolutes and category reversals without understanding ASR, speech-to-text and transcription.",
+        "fix": "Replace options 1 to 3 with: “Speech-to-text is automated, while ASR includes review and final transcripts.” “Transcription is automated, while speech-to-text can include fully manual work.” “ASR means the final written record, while transcription names automated recognition.”"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "The claim that a transcript becomes trustworthy after checking “the parts that matter” is too broad. Checking selected details does not make the entire transcript trustworthy, and the wording conflicts with the earlier caution that it is not necessarily a verified record.",
+        "fix": "Speech-to-text gives you a fast text draft from audio, but important details should be checked before you rely on them."
+      }
+    ],
+    "applied": [
+      "simpleVsTechnicalSimple"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

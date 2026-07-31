@@ -33,7 +33,7 @@
     "baseline"
   ],
   "oneSentence": "Evaluation checks how well a system performs on a defined task, while metrics are the specific measures and evals are the tests used to produce them.",
-  "plainExplanation": "Evaluation is the overall process of checking whether a system works well enough for a particular purpose. An evaluation metric is the yardstick used in that process, such as accuracy or recall. People also say eval or evals to mean one test, a set of tests, or the whole evaluation setup, depending on context.\n\nWhat goes in? Usually you need model outputs, the correct answers or another reference, and a clear question such as “good at what?” Then you choose how to compare the outputs with the reference. That comparison produces scores, notes, or pass/fail results.\n\nWhat happens? You run the system on examples, compare its outputs with what you expected, and calculate one or more metrics. For example, a system might be right 90% of the time overall, but still miss many rare and important cases. That is why one score is often not enough.\n\nWhat comes out? You get evidence about quality, limits and trade-offs. A good evaluation does not only give a number. It also shows where the system fails, whether the test matches real use, and whether the result is strong enough to support a decision.\n\nEvaluation is often confused with a benchmark and with a loss function. A benchmark is a shared test set or suite used for comparison across systems. A loss function is the mathematical target used during training. Evaluation happens after or alongside development to judge performance for use, not just to optimise training.",
+  "plainExplanation": "Evaluation is the overall process of checking whether a system works well enough for a particular purpose. An evaluation metric is the yardstick used in that process, such as accuracy or recall. People also say eval or evals to mean one test, a set of tests, or the whole evaluation setup, depending on context.\n\nWhat goes in? Usually you need model outputs, the correct answers or another reference, and a clear question such as “good at what?” Then you choose how to compare the outputs with the reference. That comparison produces scores, notes, or pass/fail results.\n\nWhat happens? You run the system on examples, compare its outputs with what you expected, and calculate one or more metrics. For example, a system might be right 90% of the time overall, but still miss many rare and important cases. That is why one score is often not enough.\n\nWhat comes out? You get evidence about quality, limits and trade-offs. A good evaluation does not only give a number. It also shows where the system fails, whether the test matches real use, and whether the result is strong enough to support a decision.\n\nEvaluation is often confused with a benchmark and with a loss function. A benchmark is a standard test set-up used to compare systems on a defined task under stated conditions. A loss function turns outputs and targets into a number showing error for an example or batch. Evaluation is the wider process of judging performance for a purpose; it may use benchmarks or loss values as evidence.",
   "everydayAnalogy": {
     "title": "Checking a rainfall forecast for a farming cooperative",
     "story": "A farming cooperative in Kenya, India and Peru keeps daily records of whether it actually rained in each district. A forecasting tool gives a yes-or-no rain prediction every morning. At the end of the month, the coordinators compare each prediction with what happened and count different kinds of mistakes, such as missed rain days and false alarms. One number tells them overall correctness, but they also look at whether the tool is dependable during planting season, when missing rain matters more than a false warning.",
@@ -132,8 +132,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "Evaluation is the organised check to see whether a system does the job you need. Metrics are the individual measures, such as how often it is correct. Evals are the actual tests used to generate those measures.",
-    "technical": "Formally, evaluation is the procedure for estimating system performance on a specified task under defined conditions. Inputs typically include an evaluation dataset or protocol, model outputs, reference labels or human judgements, and a set of metrics. The procedure may produce scalar scores, error breakdowns, confidence intervals, subgroup analyses and qualitative findings. An evaluation metric maps outputs and references to a numerical summary, such as accuracy, precision or recall. An eval or set of evals usually refers to the concrete test suite, prompts, datasets, rubrics or review protocol used to obtain that evidence. This differs from a benchmark, which is often a standardised public comparison set, and from a loss function, which is used during optimisation rather than for deployment judgement. Sound evaluation also checks distribution shift, class imbalance, data leakage, robustness and whether results generalise beyond the test conditions."
+    "simple": "Evaluation is the organised check to see whether a system does the job you need. Metrics are individual measures, such as how often it is correct. Evals often means the tests used to generate evidence.",
+    "technical": "Formally, evaluation is the procedure for estimating system performance on a specified task under defined conditions. Inputs may include an evaluation dataset or protocol, model outputs, reference labels or human judgements, and a set of metrics. The procedure may produce scalar scores, error breakdowns, confidence intervals, subgroup analyses and qualitative findings. An evaluation metric provides a defined measure of some aspect of performance, such as accuracy, precision or recall. An eval or set of evals often refers to the concrete test suite, prompts, datasets, rubrics or review protocol used to obtain that evidence. This differs from a benchmark, which is a standard test set-up for comparing systems on a defined task under stated conditions. A loss function turns outputs and targets into a number showing error for an example or batch. It is often used during optimisation, but may also be reported in evaluation. Sound evaluation considers distribution shift, class imbalance, data leakage, robustness and whether results generalise beyond the test conditions."
   },
   "keyTakeaway": "Do not ask only “What score did it get?” Ask “Evaluated on what, with which metric, and does that match the real decision?”",
   "quickCheck": {
@@ -218,9 +218,63 @@
     "evals"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:14.663Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.input, workedExample.process, workedExample.result",
+        "severity": "error",
+        "problem": "The figures are inconsistent. There are 30 actual rain days, so there are 70 non-rain days. Of the 40 predicted rain days, 18 are true positives, so 40 - 18 = 22 are false positives. That leaves 70 - 22 = 48 true negatives. Total correct predictions are therefore 18 + 48 = 66, not 78. Recall is correctly calculated as 18 / 30 = 60%, and the missed share is 12 / 30 = 40%.",
+        "fix": "Change “The model predicts rain on 40 days” to “The model predicts rain on 28 days.” Then false positives are 28 - 18 = 10, true negatives are 70 - 10 = 60, and accuracy is (18 + 60) / 100 = 78%."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The benchmark definition is too narrow because a benchmark is a standard test set-up, not necessarily a shared test set or suite. The loss function distinction is also false as written. A loss function is often used during training, but it can also be calculated and reported during evaluation.",
+        "fix": "Evaluation is often confused with a benchmark and with a loss function. A benchmark is a standard test set-up used to compare systems on a defined task under stated conditions. A loss function turns outputs and targets into a number showing error for an example or batch. Evaluation is the wider process of judging performance for a purpose; it may use benchmarks or loss values as evidence."
+      },
+      {
+        "field": "commonMisconceptions[3].correction",
+        "severity": "error",
+        "problem": "This presents training use as part of what defines a loss function and calls evaluation a separate process. Loss can also be computed on evaluation data, so the processes are not separated in that way.",
+        "fix": "A loss function turns a model output and target into one number showing error for an example or batch. It is often used to optimise training, but it can also be reported during evaluation. Evaluation is the wider process of judging performance for a purpose, using relevant measures and evidence."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "It incorrectly distinguishes a loss function by saying it is used during optimisation rather than for deployment judgement. Loss values can be evaluation evidence. It also narrows benchmarks to public sets, although a benchmark need only be a standard test set-up under stated conditions. Finally, saying sound evaluation checks every listed issue overstates what one evaluation can establish.",
+        "fix": "Formally, evaluation is the procedure for estimating system performance on a specified task under defined conditions. Inputs may include an evaluation dataset or protocol, model outputs, reference labels or human judgements, and a set of metrics. The procedure may produce scalar scores, error breakdowns, confidence intervals, subgroup analyses and qualitative findings. An evaluation metric provides a defined measure of some aspect of performance, such as accuracy, precision or recall. An eval or set of evals often refers to the concrete test suite, prompts, datasets, rubrics or review protocol"
+      },
+      {
+        "field": "oneSentence, simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "Both fields present “evals” as an unambiguous name for concrete tests, although the page later correctly says the term can also mean one evaluation or the whole evaluation setup. The one-sentence definition also says evals produce metrics, despite the page explaining that evaluation may produce qualitative evidence.",
+        "fix": "Use “often means” rather than treating this usage as fixed, and say that evals generate evidence rather than only metrics."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer under the page's stated convention. Option 1 reverses the roles and wrongly reduces evaluation and evals to scores. Option 2 assigns unrelated meanings to all three terms. Option 3 makes an obviously false absolute claim. The last three options are so implausible that the answer can be selected without understanding the distinction.",
+        "fix": "Keep option 0. Replace the distractors with: “Evaluation is one test, metrics are its scores, and evals are only tests shared across systems.” “Evaluation is a benchmark, metrics are its examples, and evals are its scores.” “Evaluation is the full process, while metrics and evals both mean its scores.”"
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "The description says labels under the third and fourth boxes distinguish evals and metrics, but the steps place “Evals” in the second box and “Metrics and findings” in the fourth. The production instructions contradict each other.",
+        "fix": "A left-to-right flow with four boxes. Read from the task definition to the test examples, then to the model outputs and comparisons, and finally to the evidence produced. The second box labels the evals, while the fourth labels metrics and findings; the full flow represents evaluation."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

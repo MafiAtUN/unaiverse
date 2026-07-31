@@ -96,7 +96,7 @@
       "Few-shot prompt: add three examples, for instance one low, one medium and one high case, each with a label, then provide the new bulletin.",
       "Compare outputs. Zero-shot may vary more, one-shot may copy the desired label format, and few-shot often handles the threshold pattern more consistently."
     ],
-    "result": "For the new bulletin, a well-chosen few-shot prompt is more likely than zero-shot to return a clean answer such as \"high\" in the requested format, though it can still be wrong and should be checked."
+    "result": "The prompts may return low, medium or high. Check whether each output follows the requested format and applies an agreed risk rule. Few-shot prompting can still produce an inconsistent or wrong label."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team wants drafting help for short, public-facing summaries of meeting notes while keeping a human reviewer in control.",
@@ -217,9 +217,55 @@
   ],
   "contested": "The terminology is somewhat unsettled across fields: in large language model use, these labels often describe examples in the prompt, while in other machine learning literature, especially for few-shot learning, they may refer to learning methods that adapt from very small labelled datasets.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:14.154Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition is unqualified and therefore overstates the prompt-based meaning. The page later admits that one-shot and few-shot learning can refer to learning from limited examples outside prompting.",
+        "fix": "In current LLM use, these labels usually describe how many task examples a model gets in the prompt before it tries a new input: none, one, or a small number."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The opening again presents the prompting meaning as universal, despite the later cross-field caveat. It also gives an arbitrary-sounding range of two to ten examples even though few-shot has no fixed numerical cutoff.",
+        "fix": "Qualify the opening as current LLM use, and replace \"often two to ten\" with \"with no fixed cutoff\"."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The claim that a model only uses its training and the immediate prompt is too absolute. A deployed model can receive system instructions, retrieved material, tool results or other supplied context. The real limitation is the lack of lasting parameter change from prompt examples.",
+        "fix": "A human assistant can ask clarifying questions and may apply broad real-world judgement. A model generates from learned patterns and the context supplied to it. Also, in the analogy the person may learn a lasting rule after seeing examples, while prompt examples usually do not permanently update the model. Some research papers also use few-shot learning to mean additional training from a few examples, which this story does not show."
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "warning",
+        "problem": "The example never states a rainfall-risk rule or supplies the promised medium and high demonstrations, yet it claims few-shot prompting often handles a \"threshold pattern\" more consistently. No threshold pattern is actually available to inspect. There is no arithmetic to verify: 70% is input data, not part of a calculation.",
+        "fix": "Replace the final step with: \"Compare whether the outputs use the requested label format and apply an agreed risk rule. Any of the three setups may still be inconsistent or wrong.\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result selects \"high\" and claims it is more likely under few-shot prompting without defining the classification thresholds, showing the three examples or running a specified model. The supplied information cannot establish either the label or the comparative likelihood.",
+        "fix": "The prompts may return low, medium or high. Check whether each output follows the requested format and applies an agreed risk rule. Few-shot prompting can still produce an inconsistent or wrong label."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is correct. Option 1 is false because few-shot prompting does not always improve factual accuracy. Option 2 is false because prompt examples do not permanently update model parameters. Option 3 is false because prompting and fine-tuning are different processes. However, the three distractors use conspicuous absolutes or blatant equivalence claims, so option 0 is obvious without understanding the distinction.",
+        "fix": "Keep option 0. Replace the distractors with: \"Few-shot prompting and fine-tuning both use examples, so the distinction is mainly the number used.\"; \"Few-shot prompting updates parameters briefly, while fine-tuning keeps the update for later requests.\"; \"Few-shot prompting is used for new tasks, while fine-tuning is used only to change style.\""
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

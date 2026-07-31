@@ -77,6 +77,67 @@ const NAV = [
     <slot />
   </main>
 
+  <script>
+    /**
+     * On a phone the bar is three stacked rows: brand, nav, search. That is
+     * 164px of permanently pinned chrome, a fifth of the viewport, on pages
+     * people read for twenty minutes. So it gets out of the way when you are
+     * reading forward and comes straight back when you reach for it.
+     *
+     * Scroll up by any amount brings it back, so search is never more than a
+     * flick away. That matters more on mobile than anywhere else: the term
+     * page's other search sits in the aside, which stacks to the bottom of a
+     * ten-thousand-pixel page and is no use to anyone.
+     *
+     * Pointer-based, not width-based: a narrow desktop window still has a
+     * mouse and a scrollbar and does not need this.
+     */
+    const bar = document.querySelector<HTMLElement>('.learn-bar');
+    const coarse = window.matchMedia('(pointer: coarse)');
+
+    if (bar && coarse.matches) {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let lastY = window.scrollY;
+      let hidden = false;
+      let ticking = false;
+
+      const setHidden = (next: boolean) => {
+        if (next === hidden) return;
+        hidden = next;
+        bar.classList.toggle('is-tucked', next);
+      };
+
+      const onScroll = () => {
+        const y = Math.max(0, window.scrollY);
+        const delta = y - lastY;
+        // Ignore rubber-banding and sub-pixel jitter.
+        if (Math.abs(delta) < 6) return;
+        // Never hide near the top, and never while a search result list is open.
+        const searching = bar.querySelector('[aria-expanded="true"]');
+        if (y < bar.offsetHeight * 1.5 || searching) setHidden(false);
+        else setHidden(delta > 0);
+        lastY = y;
+      };
+
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            onScroll();
+            ticking = false;
+          });
+        },
+        { passive: true },
+      );
+
+      // Focus must always be visible: tabbing into a tucked bar untucks it.
+      bar.addEventListener('focusin', () => setHidden(false));
+      reduced.addEventListener('change', () => setHidden(false));
+    }
+  </script>
+
   <footer class="learn-foot">
     <div class="wrap">
       <p>

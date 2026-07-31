@@ -28,8 +28,8 @@
     "indexing",
     "citation"
   ],
-  "oneSentence": "Retrieval finds the most relevant passages from a collection so a person or model can use source material rather than answer from memory alone.",
-  "plainExplanation": "Retrieval is the step where a system looks through stored documents and pulls out the passages most relevant to a question. The input is usually a user query, such as a question or topic. The output is usually a short list of passages, snippets or document sections.\n\nIn many modern systems, the search does not rely only on exact word matching. It can also compare meaning. To do that, the query and documents are turned into numerical representations called embeddings. Items with similar meaning end up closer together, so the system can find passages even when they use different words.\n\nWhat comes back is not the final answer. It is evidence that may help a person, a search tool or a language model produce a better response. This is why retrieval is often used before answer writing: first find likely sources, then read or summarise them.\n\nRetrieval is often confused with retrieval-augmented generation, or RAG. They are related but not the same. Retrieval only finds the relevant material. RAG is the larger workflow that retrieves material and then passes it to a generative model to draft an answer grounded in those sources.\n\nGood retrieval depends on how documents were prepared and stored. For example, long documents may be split into smaller chunks, then indexed so they can be searched quickly, and then ranked so the strongest matches appear first.",
+  "oneSentence": "Retrieval returns passages that a search method ranks as relevant, so a person or later model step can use source material.",
+  "plainExplanation": "Retrieval is the step where a system searches stored documents and returns passages its search method judges relevant to a question. The input is usually a user query, such as a question or topic. The output is usually a short list of passages, snippets or document sections.\n\nIn many modern systems, search does not rely only on exact word matching. It can also compare meaning. To do that, the query and documents may be turned into numerical representations called embeddings. Similar meanings may be represented by nearby vectors, which can help the system find passages even when they use different words.\n\nWhat comes back is not the final answer or proof that the material is correct. It is candidate evidence that may help a person, search tool or language model produce a response. Retrieval selects material; a citation separately points from a claim to its supporting passage or document.\n\nRetrieval is often confused with retrieval-augmented generation, or RAG. They are related but not the same. Retrieval only finds relevant material. RAG is the larger workflow that retrieves material and then asks a generative model to draft an answer using those sources.\n\nGood retrieval depends on how documents were prepared and stored. Long documents may be split into chunks and indexed in a searchable structure before retrieval. Retrieval then searches that structure and ranks likely matches.",
   "everydayAnalogy": {
     "title": "Finding the right bus advice for a cross-city trip",
     "story": "A traveller in Nairobi asks a transport desk, “What is the fastest way to get from the museum district to the university area after 6 pm?” The desk worker does not read every leaflet in the office. Instead, they pull a few route sheets and service notices that seem closest in meaning, even if one says “campus quarter” rather than “university area”. The traveller reads those pages first and then decides which route to take. The key step is not giving the final advice from memory, but finding the most relevant pages quickly.",
@@ -127,10 +127,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "Retrieval is the part of a system that fetches the most relevant bits of text for a question so the next step has something useful to work from.",
+    "simple": "Retrieval is the part of a system that fetches bits of text judged most relevant to a question so the next step has material to examine.",
     "technical": "Retrieval takes a query and searches an indexed collection for relevant documents or chunks. In modern semantic retrieval, the query and stored text are often represented as embeddings, which are numerical vectors designed so semantically similar items are near each other. The system then performs nearest-neighbour search or a hybrid search that mixes embedding similarity with keyword signals. Results are scored, ranked and returned as candidate evidence. Optional reranking may refine the order. Retrieval is therefore a search-and-selection stage, not the generation stage; in a RAG pipeline, its output becomes context for a language model."
   },
-  "keyTakeaway": "Retrieval does not write the answer; it finds the source passages that the answer should be based on.",
+  "keyTakeaway": "Retrieval does not write the answer; it returns candidate source passages that a later step may use.",
   "quickCheck": {
     "question": "Which statement best describes retrieval in an AI-assisted question-answering system?",
     "options": [
@@ -211,9 +211,70 @@
     "document retrieval"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:01.144Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition presents retrieved passages as objectively the most relevant and describes a model as answering from memory. Retrieval returns items that its search method ranks as relevant, which may not be the genuinely best passages. A model's learned patterns should not be presented as human-like memory.",
+        "fix": "Retrieval returns passages that a search method ranks as relevant, so a person or later model step can use source material."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The embedding explanation says similar meanings end up closer together as if this were guaranteed. Embeddings are designed to capture aspects of similarity, but semantically similar items may not be close for every query, model or domain.",
+        "fix": "Similar meanings may be represented by nearby vectors, which can help the system find passages even when they use different words."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The RAG distinction says passing retrieved material to a model produces an answer grounded in those sources. Supplying context does not guarantee that the generated answer follows or is supported by it.",
+        "fix": "RAG is the larger workflow that retrieves material and then asks a generative model to draft an answer using those sources."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "The page does not clearly distinguish retrieval from citation. Asking whether a claim can be traced to its source risks implying that retrieval itself supplies the claim-to-source link. Retrieval finds candidate material, while a citation points from a particular claim to supporting material.",
+        "fix": "For non-specialists, retrieval matters because it affects which evidence a later step receives. Weak retrieval can make a later summary or AI answer miss key facts, quote the wrong source or rely on poor context. Strong retrieval lets people inspect and compare candidate passages. Retrieval does not itself trace a claim to a source; a citation provides that link. In practice, retrieval affects time, quality and accountability: Can you find the relevant paragraph quickly? Can you inspect its source? Can you spot a loosely related result?"
+      },
+      {
+        "field": "visual.description",
+        "severity": "error",
+        "problem": "The description specifies four boxes, but the five steps require boxes for Query, Document store, Retrieval, Top passages and the optional Answering step. The accessibility and reduced-motion descriptions also call this a five-part flow.",
+        "fix": "A left-to-right flow diagram with five boxes and arrows, with the fifth shown as optional. Read from the user question on the left, through stored documents and search, to ranked passages and the separated answering step on the right."
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "warning",
+        "problem": "The process names two passages and then gives three relevance scores, leaving the third scored candidate unidentified. The ordering itself is consistent: 0.91 > 0.86 > 0.62, so 0.91 and 0.86 are the top two.",
+        "fix": "It finds passages saying 'disinfecting contaminated wells after inundation' and 'safe cleaning of flooded boreholes', even though the wording differs, plus a third candidate."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "The takeaway says the answer should be based on the retrieved passages. Retrieval only returns candidate passages and does not establish that they are correct, sufficient or suitable as the basis of an answer.",
+        "fix": "Retrieval does not write the answer; it returns candidate source passages that a later step may use."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "The simple definition again treats retrieved text as genuinely the most relevant rather than text judged relevant by the search method.",
+        "fix": "Retrieval is the part of a system that fetches bits of text judged most relevant to a question so the next step has material to examine."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "simpleVsTechnicalSimple"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

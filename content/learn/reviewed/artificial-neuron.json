@@ -218,9 +218,35 @@
     "node"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:10.103Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked option at index 2 is correct, but the distractors make it obvious without testing understanding. Option 0 describes a whole AI system, not one neuron. Option 1 describes a biological cell and is directly contradicted by the page. Option 2 correctly describes the weighted computation. Option 3 describes data storage, which has no plausible connection to the term. Only option 2 is defensible, but the other options are too absurd for a useful quiz.",
+        "fix": "Replace the options with: [\"A whole layer that combines many neurons into one stage\", \"A learned weight on one network connection\", \"A small computation that combines input numbers with learned weights and outputs one number\", \"An input value passed into the network unchanged\"]. Keep correctOptionIndex as 2."
+      },
+      {
+        "field": "plainExplanation; visual.steps[1]; simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "The page repeatedly equates weights with how much an input \"matters\" or its \"importance\". A weight scales a numerical input and may reverse its sign. Its magnitude alone is not a reliable measure of importance because the actual contribution also depends on the input value and scale. The visual use of line thickness reinforces the misleading interpretation and cannot represent negative weights.",
+        "fix": "In plainExplanation, use: \"Each input is multiplied by a weight, which is a learned number that scales or reverses that input’s contribution.\" In visual.steps[1], use: \"Each input is multiplied by its own weight, which can scale or reverse its contribution.\" Replace the visual instruction with: \"Place a multiplier label on each arrow, such as ×w1, ×w2, ×w3. Show sample positive and negative weights instead of different line thicknesses.\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "Calling 0.71 a \"moderately strong signal\" assigns an interpretation that the example has not established. The meaning and relative strength of an internal activation depend on the model and how later components use it. Although the arithmetic is correct, 1×1.2 + 1×0.7 + 0×-0.4 - 1.0 = 0.9 and sigmoid(0.9) is about 0.71, the qualitative label is unsupported and may be mistaken for a probability interpretation.",
+        "fix": "This one neuron outputs about 0.71. That value passes onward and is not by itself the final model decision."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

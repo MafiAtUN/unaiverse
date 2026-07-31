@@ -96,7 +96,7 @@
       "The model generates a completion that applies the rules to each message.",
       "The officer checks the result before using it."
     ],
-    "result": "1. Urgent: media deadline within 24 hours. 2. Not urgent: translation request for next week. 3. Urgent: safety issue at venue entrance."
+    "result": "|No.|Label|Reason|\n|---|---|---|\n|1|Urgent|Deadline today|\n|2|Not urgent|Needed next week|\n|3|Urgent|Safety issue|"
   },
   "unWorkplaceExample": {
     "scenario": "A programme team wants help drafting a neutral first draft of a public-facing summary from approved, non-sensitive meeting notes.",
@@ -215,9 +215,43 @@
   ],
   "contested": "The broad idea is widely used, but the term can be contentious because some people use it for everyday clear prompting, while others reserve it for more systematic, testable methods.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:02.360Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The prompt requires a table with message number, label and reason, but the result is numbered prose. The process also claims that a fixed table format was requested, so the worked output fails its own instruction. There is no arithmetic in this example to verify.",
+        "fix": "|No.|Label|Reason|\n|---|---|---|\n|1|Urgent|Deadline today|\n|2|Not urgent|Needed next week|\n|3|Urgent|Safety issue|"
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The explanation distinguishes prompt engineering from fine-tuning and retrieval-augmented generation, but not from user prompts or system prompts. It therefore does not fully support the page's claimed distinctions.",
+        "fix": "Replace the final paragraph with: “Prompt engineering is not a user prompt or system prompt. Those are kinds of input: a user prompt comes from a person, while a system prompt sets higher-priority rules before later messages. Prompt engineering is the practice of designing and refining such input. It also differs from fine-tuning, which changes the model through additional training, and retrieval-augmented generation, which finds outside sources at run time.”"
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The statement that prompt engineering changes instructions “for one task or session” is too narrow. Prompts, including system prompts and templates, can be designed once and reused for many tasks or sessions.",
+        "fix": "They work at different levels. Prompt engineering changes the instructions or context supplied to the model, and these may be reused. Fine-tuning changes the model through additional training, which usually needs more data, testing and governance."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The claim that prompt elements influence which patterns in the model’s training and current context are “activated” is vague and misleading. It suggests that identifiable stored patterns are selected, rather than that the token context affects computations and next-token probabilities.",
+        "fix": "Prompt engineering is the design and iterative refinement of input sent to a language model so that next-token prediction is steered toward a more useful completion. In practice, the prompt may include task instructions, context, constraints, examples, role framing and output formatting requirements. These elements change the token context the model uses to calculate probabilities during generation. This is different from changing model weights through fine-tuning, and from retrieval-augmented generation, which finds relevant external information at run time. Prompt engineering can improve rel"
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

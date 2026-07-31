@@ -31,8 +31,8 @@
     "chain-rule",
     "local-and-global-minimum"
   ],
-  "oneSentence": "A method for reducing a model’s error by repeatedly adjusting its internal settings in the direction that most lowers the loss.",
-  "plainExplanation": "Gradient descent is a common way to improve a machine-learning model during training. The model starts with many settings, often called parameters, that control its outputs. We give the model examples, compare its outputs with the target answers, and calculate a loss: a number that summarises how wrong it was.\n\nNext, the training process estimates which way each parameter should move to reduce that loss. That estimated direction is called the gradient. If a parameter change would increase loss, the update goes the other way. If a change would reduce loss, the update moves that way.\n\nThen the model takes a small step. The size of that step is controlled by the learning rate. This repeat cycle of measure, estimate, and nudge gradually tends to make the model less wrong on the training data.\n\nStochastic gradient descent, or SGD, uses a small subset of examples at a time instead of the whole dataset. That makes training faster and noisier. Gradient descent is closely related to backpropagation, but they are not the same: backpropagation computes gradients, while gradient descent uses those gradients to update parameters.",
+  "oneSentence": "A method for reducing a model’s loss by repeatedly adjusting its internal settings in the direction opposite the loss gradient.",
+  "plainExplanation": "Gradient descent is a common way to improve a machine-learning model during training. The model starts with many settings, often called parameters, that control its outputs. We give the model examples, compare its outputs with the target answers, and calculate a loss: a number that summarises how wrong it was.\n\nNext, the training process calculates how the loss changes as each parameter changes. Together, these rates form the gradient, which points towards a local increase in loss. Gradient descent updates the parameters in the opposite direction, which is intended to reduce the loss.\n\nThen the model takes a small step. The size of that step is controlled by the learning rate. This repeated cycle of measure, calculate, and nudge tends to make the model less wrong on the training data, although not every individual step must lower loss.\n\nStochastic gradient descent, or SGD, uses one example or a small subset of examples per update instead of the whole dataset. That usually makes each update cheaper and noisier. Gradient descent is closely related to backpropagation, but they are not the same: backpropagation computes gradients, while gradient descent uses those gradients to update parameters.",
   "everydayAnalogy": {
     "title": "Sorting public feedback with adjustable rules",
     "story": "A city team is sorting consultation comments into topics such as transport, housing, and water. They use a spreadsheet with adjustable scoring rules, for example how strongly the word \"bus\" points to transport. After checking a small batch, they see the system put too many housing comments into transport. They slightly reduce some transport scores and increase some housing scores, then test another batch. Repeating that cycle gradually improves the sorting rules.",
@@ -138,7 +138,7 @@
     "simple": "It is a repeated process for making a model less wrong: measure error, see which way to adjust the settings, and take a small step.",
     "technical": "Given parameters and a differentiable loss function, the method computes the gradient of loss with respect to the parameters and updates them by moving in the negative gradient direction, often using mini-batches in SGD and a learning-rate hyperparameter to scale each step."
   },
-  "keyTakeaway": "Gradient descent improves a model through many small error-reducing steps, not one big leap.",
+  "keyTakeaway": "Gradient descent improves a model through many small steps intended to reduce error, not one big leap.",
   "quickCheck": {
     "question": "What does stochastic gradient descent change compared with basic full-batch gradient descent?",
     "options": [
@@ -148,7 +148,7 @@
       "It replaces gradients with random guesses only."
     ],
     "correctOptionIndex": 0,
-    "explanation": "SGD updates parameters using one example or a small batch at a time. That makes each step faster and noisier. It still uses loss and gradients; it does not guarantee the best possible minimum, and it is not purely random."
+    "explanation": "SGD uses one example or a small batch for each update rather than the whole dataset. It does not require a larger learning rate, wait for a full epoch before updating, or select only the hardest examples."
   },
   "resources": [
     {
@@ -230,9 +230,58 @@
     "sgd"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:42.967Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition says gradient descent moves in the direction that \"most lowers\" loss. The negative gradient is a locally descending direction, but a finite update may not lower loss, especially with a large learning rate or a stochastic gradient.",
+        "fix": "A method for reducing a model’s loss by repeatedly adjusting its internal settings in the direction opposite the loss gradient."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The second paragraph incorrectly calls the direction parameters should move \"the gradient.\" The gradient points towards local increase in loss. Gradient descent moves in the opposite direction. The claim that SGD makes training faster is also too broad because it is usually cheaper per update, not necessarily faster overall.",
+        "fix": "Gradient descent is a common way to improve a machine-learning model during training. The model starts with many settings, often called parameters, that control its outputs. We give the model examples, compare its outputs with the target answers, and calculate a loss: a number that summarises how wrong it was.\n\nNext, the training process calculates how the loss changes as each parameter changes. Together, these rates form the gradient, which points towards a local increase in loss. Gradient descent updates the parameters in the opposite direction, which is intended to reduce the loss.\n\nThen th"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "Saying gradient descent \"computes the gradient\" blurs it with backpropagation, despite the page correctly distinguishing them elsewhere. Gradient descent uses a gradient; backpropagation is one method for computing it.",
+        "fix": "Given parameters and a differentiable loss function, the method uses the gradient of loss with respect to the parameters and updates them in the negative gradient direction, often using mini-batches in SGD and a learning-rate hyperparameter to scale each step."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "Not every gradient descent step reduces error. Stochastic estimates and an unsuitable learning rate can increase the measured loss on an individual step.",
+        "fix": "Gradient descent improves a model through many small steps intended to reduce error, not one big leap."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is correct: SGD uses one example or a subset rather than the full dataset for each update. Options 1, 2, and 3 are false, but they are categorical and absurd: removing loss, guaranteeing a global minimum, and replacing gradients with random guesses are not credible alternatives. The answer is obvious without understanding SGD.",
+        "fix": "Keep option 0. Replace the other options with: \"It uses a larger learning rate.\", \"It updates once per full epoch.\", and \"It selects only the hardest examples.\""
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation addresses the existing implausible distractors and must be updated with the improved options.",
+        "fix": "SGD uses one example or a small batch for each update rather than the whole dataset. It does not require a larger learning rate, wait for a full epoch before updating, or select only the hardest examples."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

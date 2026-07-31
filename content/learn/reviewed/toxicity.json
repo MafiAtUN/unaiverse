@@ -26,8 +26,8 @@
     "content-moderation",
     "guardrail"
   ],
-  "oneSentence": "Toxicity means output that insults, degrades, threatens, dehumanises or otherwise creates a risk of harm to people or groups.",
-  "plainExplanation": "In AI, toxicity refers to harmful language or other content that can attack, shame, threaten, exclude or encourage harm. It often appears in text, but similar concerns can apply to images, audio or generated captions. The main question is not whether a system sounds rude once, but whether its output can harm people, groups or public discussion.\n\nWhat goes in can include a user prompt, earlier messages, system instructions and training data. Training data means the examples used to shape the model's behaviour. If those examples contain abusive patterns, stereotypes or violent language, the model may reproduce them. A user's prompt can also push the system toward harmful output.\n\nWhat happens inside is pattern generation and filtering. The model predicts likely next words or other outputs from patterns in data. Safety tools may try to block or rewrite harmful material, but they do not catch everything. Toxicity is therefore a risk to manage, not a switch that can be turned off perfectly.\n\nWhat comes out may be obviously abusive language, or something less direct such as coded insults, harassment, hate speech, sexual harassment, encouragement of self-harm, or degrading descriptions of a nationality, religion, gender or other group. Toxicity is related to bias and safety, but it is not the same as content moderation. Content moderation is the broader process of setting rules and handling content; toxicity is one kind of harmful content that those rules may address.",
+  "oneSentence": "Toxicity means abusive, hostile or degrading output, including insults, threats or dehumanising content aimed at people or groups.",
+  "plainExplanation": "In AI, toxicity refers to abusive, hostile or degrading language or other content. It can attack, shame, threaten, harass or dehumanise people or groups. It often appears in text, but similar concerns can apply to images, audio or generated captions. The main question is not whether a system uses a rude word once, but whether the output is abusive or degrading in context.\n\nAt generation time, inputs can include a user prompt, earlier messages and system instructions. Training data is not a live input at this stage. It shaped the patterns learned earlier. If those examples contained abusive patterns, stereotypes or violent language, the model may reproduce them. A user's prompt can also push the system toward toxic output.\n\nWhat happens inside is pattern generation and filtering. The model predicts likely next words or other outputs from learned patterns. Safety tools may try to block or rewrite harmful material, but they do not catch everything. Toxicity is therefore a risk to manage, not a switch that can be turned off perfectly.\n\nWhat comes out may be obviously abusive, or less direct, such as coded insults, harassment, hate speech, sexual harassment or degrading descriptions of a nationality, religion, gender or other group. Toxicity is related to bias and safety, but it is not the same as content moderation. Content moderation is the broader process of setting rules and handling content; toxicity is one kind of harmful content those rules may address.",
   "everydayAnalogy": {
     "title": "A public notice board with an overworked helper",
     "story": "Imagine a busy library with a public notice board where visitors can pin messages for community events. A helper quickly checks cards before putting them up, but the pile is large and some messages use disguised insults or coded slurs that look harmless at first glance. Most harmful cards are removed, yet a few still reach the board and upset readers. If someone keeps submitting abusive cards, the helper may also become too strict and block some harmless messages by mistake.",
@@ -133,7 +133,7 @@
       "It is the same thing as content moderation."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Toxicity is about risk of harm in the content itself, not just rude words and not simply user preference. It is also narrower than content moderation, which covers many kinds of rule-setting and enforcement."
+    "explanation": "Toxicity concerns abusive or degrading content, including indirect attacks without slurs. A filter can block benign text, and inaccurate output is not necessarily toxic. Content moderation is the broader process of applying rules to content."
   },
   "resources": [
     {
@@ -203,9 +203,51 @@
     "toxic output"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:30:18.697Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, simpleVsTechnical",
+        "severity": "error",
+        "problem": "The definition uses a catch-all risk-of-harm test. That makes any potentially harmful output, such as inaccurate advice, count as toxicity even when it is not abusive, hostile or degrading. The plain explanation similarly treats encouragement of self-harm as toxicity without distinguishing that separate safety risk. This blurs toxicity into harmful content generally.",
+        "fix": "Define toxicity as abusive, hostile or degrading content, with insults, threats, harassment and dehumanising content as examples. Do not use all possible harm as the defining test."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The statement that training data is among 'what goes in' presents past training data as a runtime input alongside the prompt and earlier messages. Training data shaped the patterns learned before generation; it does not normally enter the live request in this way.",
+        "fix": "Say that runtime inputs include the prompt, earlier messages and system instructions, while training data shaped the patterns learned earlier."
+      },
+      {
+        "field": "visual.steps[0], visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The first visual box labels 'training patterns' as an input that enters with the prompt and chat history. This repeats the false impression that training data or learned patterns enter as runtime input.",
+        "fix": "Put 'prompt', 'chat history' and 'system instructions' in the Inputs box. In the Generation box, say that output is predicted using patterns learned from training data. Make the same distinction in the accessibility description."
+      },
+      {
+        "field": "everydayAnalogy.story, everydayAnalogy.mapping",
+        "severity": "warning",
+        "problem": "The notice-board story mainly depicts moderation of user-submitted content, not AI generation. Its first mapping also equates one set of cards with both user prompts and generated outputs. This blurs toxicity with content moderation and leaves the generation mechanism unmapped.",
+        "fix": "Replace the story with: 'Imagine a busy library where visitors ask a writing helper to prepare cards for a public notice board. The helper drafts cards from familiar wording, while another staff member checks them before posting. Some requests use disguised insults or coded slurs. The draft may preserve them, and the checker may miss them. A strict checking rule may also block harmless messages by mistake.' Map visitor requests to prompts, draft cards to generated outputs, and the checker to safety filters or moderation tools."
+      },
+      {
+        "field": "quickCheck.options, quickCheck.explanation",
+        "severity": "error",
+        "problem": "Option 1 is false because toxicity is not limited to profanity. Option 2 is the only defensible answer. Option 3 is false because user dislike does not establish toxicity. Option 4 is false because content moderation is a broader process. However, the three distractors are absolute restatements of misconceptions already given on the page, so the answer is obvious without understanding the distinction.",
+        "fix": "Use these options: ['It is output blocked by a safety filter.', 'It is harmful output that may insult, threaten, dehumanise or target people or groups, even without obvious slurs.', 'It is inaccurate output that could cause harm.', 'It is the process of applying content rules.'] Keep correctOptionIndex as 1 and revise the explanation accordingly."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

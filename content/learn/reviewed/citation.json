@@ -29,8 +29,8 @@
     "hallucination",
     "semantic-search"
   ],
-  "oneSentence": "A citation in an AI answer points you to the source passage or document used to support a specific claim.",
-  "plainExplanation": "When an AI system gives an answer with citations, it shows where parts of that answer came from. The source might be a web page, a report, a policy document or a passage from a knowledge base. The useful part is not the label alone, but the link between the claim and the supporting text.\n\nA common process starts with a question. The system searches a set of documents and retrieves passages that seem relevant. “Retrieve” here means find and bring back likely source text. The model then drafts an answer and attaches references to the passages it used.\n\nWhat goes in is your question and a collection of documents. What happens is search, selection and answer drafting. What comes out is an answer plus citations, often as footnotes, numbered references or quoted snippets.\n\nA citation is not the same as proof. It can point to a weak source, the wrong passage or a passage that only partly supports the answer. It is also not the same as grounding. Grounding is the broader idea of tying an answer to external material; a citation is the visible pointer that helps a person check that connection.\n\nFor a reader, the main value is verification. You can open the cited source, see the original wording, check the date and judge whether the answer represented it fairly.",
+  "oneSentence": "A citation in an AI answer points you to a source passage or document intended to support a specific claim.",
+  "plainExplanation": "When an AI system gives an answer with citations, it presents sources as support for parts of that answer. The source might be a web page, a report, a policy document or a passage from a knowledge base. The useful part is not the label alone, but the link between the claim and the supporting text.\n\nA common process starts with a question. The system searches a set of documents and retrieves passages that seem relevant. “Retrieve” here means find and bring back likely source text. The model then drafts an answer from the passages, and the system attaches references intended to support particular claims.\n\nWhat goes in is your question and a collection of documents. What happens is search, selection and answer drafting. What comes out is an answer plus citations, often as footnotes, numbered references or quoted snippets.\n\nA citation is not the same as proof. It can point to a weak source, the wrong passage or a passage that only partly supports the answer. It is also not the same as grounding. Grounding ties an answer to retrieved source passages; a citation is the visible pointer that helps a person check that connection.\n\nFor a reader, the main value is verification. You can open the cited source, see the original wording, check the date and judge whether the answer represented it fairly.",
   "everydayAnalogy": {
     "title": "Matching a photographed form to the right template",
     "story": "A clinic worker in Nairobi receives a phone photo of a paper form. The image is unclear, so she compares it with a folder of known form templates and finds the one with the same layout and field labels. When she tells her colleague which form it is, she also clips the matching template page to her note so the colleague can check it directly. The clipped page does not guarantee that every handwritten entry was read correctly, but it gives everyone a concrete place to verify the match.",
@@ -129,7 +129,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "A citation is the “show me where that came from” part of an AI answer.",
-    "technical": "In retrieval-augmented systems, citations are usually produced after a retrieval step selects relevant documents or chunks from an indexed collection. The model then generates a response conditioned on that retrieved context, and the interface attaches references to the source items, passages or spans. Depending on the system design, the citation may be linked before generation, during generation or by a later alignment step. Citation quality depends on retrieval quality, chunking, ranking, source metadata and how accurately the system maps answer claims back to evidence. This is why a citation is best treated as traceability support, not as a guarantee of factual correctness."
+    "technical": "In retrieval-augmented systems, citations are usually produced after a retrieval step selects relevant documents or chunks from an indexed collection. The model then generates a response conditioned on that retrieved context, and the system links claims to source items, passages or spans. Depending on the system design, source references may be selected before generation, emitted during generation or aligned with claims later. Citation quality depends on retrieval quality, chunking, ranking, source metadata and how accurately the system maps answer claims back to evidence. This is why a citation is best treated as traceability support, not as a guarantee of factual correctness."
   },
   "keyTakeaway": "A good citation lets you trace an AI claim back to source text, but you still need to check whether the source truly supports the claim.",
   "quickCheck": {
@@ -213,9 +213,45 @@
     "footnote"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:32.300Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition treats a citation as evidence that the cited source was actually used. A citation only presents a source as support. It may have been attached later, mismatched or invented.",
+        "fix": "A citation in an AI answer points you to a source passage or document intended to support a specific claim."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The phrases “shows where parts of that answer came from” and “passages it used” confuse a visible citation with verified provenance. The explanation also calls grounding the broader idea of connection to any external material, which contradicts the supplied definition tying grounding to specific retrieved passages.",
+        "fix": "Replace the field with the corrected plain explanation below."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "This defines grounding as connection to any external evidence or data. That contradicts the separate entry, which defines grounding as tying an answer to specific retrieved source passages.",
+        "fix": "They are related, but not identical. Grounding ties an answer to retrieved source passages so it is based on provided material. A citation is the visible reference shown to the user. A system can be grounded without showing clear citations, and a citation can appear even when the source does not support the claim."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "It says the interface attaches references, then says citations may be linked during generation. The interface is not universally responsible for citation attachment. Some models emit citation markers, while other system components align claims and sources later.",
+        "fix": "Replace the field with the corrected technical explanation below."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

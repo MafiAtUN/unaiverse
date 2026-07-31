@@ -97,7 +97,7 @@
       "For one year, it inserts a plausible city and an official-sounding ministry name even though no evidence was provided.",
       "The answer reads smoothly, so the user may not notice that the details were guessed rather than verified."
     ],
-    "result": "The output lists 'Amman: Ministry of Transport', 'Tbilisi: Ministry of Economy and Sustainable Development', and 'Kigali: Ministry of Infrastructure'. The format looks credible, but one or more entries may be invented and must be checked against trusted event records."
+    "result": "The output lists \"2021: Amman: Ministry of Transport\", \"2022: Tbilisi: Ministry of Economy and Sustainable Development\", and \"2023: Kigali: Ministry of Infrastructure\". In this hypothetical, the 2022 entry is invented. The polished format hides that, so every entry needs checking against trusted event records."
   },
   "unWorkplaceExample": {
     "scenario": "A staff member searches past UN resolutions for prior agreed language on a topic and asks a chat assistant to identify exact earlier formulations and resolution numbers.",
@@ -215,9 +215,73 @@
   ],
   "contested": "The label 'hallucination' is widely used, but some researchers and practitioners dislike it because it can sound human-like or too broad; alternatives such as 'confabulation' or 'fabricated output' are also used.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:11.136Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition unnecessarily limits hallucinations to answers. They can also occur in summaries, completions and other generated content.",
+        "fix": "Generated content that sounds plausible but includes false, unsupported or invented details."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The claimed distinction from ordinary mistakes is not valid. Specificity and fluency do not separate hallucinations from other errors. A hallucination is a kind of output error, while error and loss are broader measures.",
+        "fix": "Replace the fourth paragraph with: \"A hallucination is one kind of output error: generated content that is false or unsupported. Error and loss are broader terms for distance from a reference answer or a training signal. Grounding is different: it ties an answer to source material. This can reduce hallucinations but cannot remove them completely.\""
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The claim that a language model does not recall events unless files are provided is false or at least seriously misleading. Models can reproduce event details encoded through training without receiving the original files. The real limitation is that this is not conscious human recollection or evidence checking.",
+        "fix": "A human clerk may consciously guess, remember office rules, and inspect files. A language model generates from learned patterns; it does not consciously remember events or check evidence. If files are provided in its context or through tools, it can still misstate what they contain."
+      },
+      {
+        "field": "visual.description, visual.steps[2], visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual treats absence from the supplied source as enough to distinguish an \"invented detail\" from an \"unsupported leap\". Source comparison can establish only that a claim is unsupported by that source. It cannot establish that the claim is invented or false without an external reference.",
+        "fix": "Use two support labels: \"supported by the source\" and \"not supported by the source\". Do not label a claim \"invented\" unless the simulation also compares it with a verified reference."
+      },
+      {
+        "field": "visual.description, visual.steps[3], visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The \"verification rule\" is only an instruction, but the page says it makes the answer cite only source content. An instruction can reduce risk, but it does not perform verification or guarantee that quotations and citations are faithful.",
+        "fix": "Rename it \"Add source-only instruction\" and say the answer attempts to use only the source or report insufficient information. State that the resulting claims and quotations still need checking."
+      },
+      {
+        "field": "workedExample.process[0], commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "The phrases \"notices a pattern\" and \"tries to continue\" present human-like perception and intention as facts about the model.",
+        "fix": "Use \"The question contains a familiar pattern\" in the process, and replace \"the model tries to continue a familiar pattern\" with \"a familiar pattern continues\" in the correction."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The result omits the requested mapping to 2021, 2022 and 2023. It also says only that one or more entries \"may\" be invented, so the worked example never clearly establishes which output is the hallucination. No arithmetic is present to check.",
+        "fix": "The output lists \"2021: Amman: Ministry of Transport\", \"2022: Tbilisi: Ministry of Economy and Sustainable Development\", and \"2023: Kigali: Ministry of Infrastructure\". In this hypothetical, the 2022 entry is invented. The polished format hides that, so every entry needs checking against trusted event records."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The wording says the token-generation process \"optimises\" likely continuation. Optimisation occurs during training; generation uses the resulting probability patterns and may sample rather than select the most likely continuation.",
+        "fix": "In language models, output is generated token by token from probability patterns learned during training, conditioned on the prompt and context. Because the training objective rewards text prediction rather than truth by default, the model may produce unsupported assertions, fabricated citations or incorrect specifics, especially under weak grounding."
+      },
+      {
+        "field": "quickCheck.options[3]",
+        "severity": "error",
+        "problem": "The fourth distractor is merely a service-performance problem and is so unrelated that it helps reveal the answer without testing understanding. Options 1 and 3 are defensible non-examples, while option 2 is the only correct answer, but option 4 is not a credible distractor.",
+        "fix": "Replace the fourth option with: \"It gives a specific report title and quotation that both appear in the provided source.\""
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

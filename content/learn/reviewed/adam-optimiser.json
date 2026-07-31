@@ -30,7 +30,7 @@
     "learning-rate"
   ],
   "oneSentence": "A training method that adjusts each model setting using both recent gradient direction and the recent size of past gradients.",
-  "plainExplanation": "When a model is trained, it produces an error value called a loss. From that loss, training calculates gradients: numbers that show which way each setting, or parameter, should move to reduce the loss. An optimiser is the rule for turning those gradients into actual parameter updates.\n\nAdam combines two ideas. First, it keeps a running average of past gradients, which acts a bit like momentum and helps updates keep moving in a useful direction instead of zig-zagging. Second, it keeps a running average of squared gradients, which tracks how large and noisy recent gradients have been for each parameter.\n\nUsing those two running averages, Adam gives each parameter its own effective step size. If a parameter has had large gradients, Adam tends to scale its update down. If a parameter has had smaller gradients, Adam may allow a relatively larger update. This often helps training move faster and more steadily, especially when different parameters behave very differently.\n\nWhat goes in are the current gradients, a base learning rate, and Adam's saved moving averages from earlier training steps. What happens is that Adam updates those averages, corrects for their early-step bias, and computes a new update for each parameter. What comes out is a new set of parameter values, hopefully giving lower loss on the next pass through the data.",
+  "plainExplanation": "When a model is trained, it produces an error value called a loss. From that loss, training calculates gradients: numbers that show which way each setting, or parameter, should move to reduce the loss. An optimiser is the rule for turning those gradients into actual parameter updates.\n\nAdam combines two ideas. First, it keeps a running average of past gradients, which acts a bit like momentum and helps updates keep moving in a useful direction instead of zig-zagging. Second, it keeps a running average of squared gradients, which tracks how large recent gradients have been for each parameter.\n\nUsing those two running averages, Adam gives each parameter its own effective step size. If a parameter has had large gradients, Adam tends to scale its update down. If a parameter has had smaller gradients, Adam may allow a relatively larger update. This often helps training move faster and more steadily, especially when different parameters behave very differently.\n\nWhat goes in are the current gradients, a base learning rate, and Adam's saved moving averages from earlier training steps. What happens is that Adam updates those averages, corrects for their early-step bias, and computes a new update for each parameter. What comes out is a new set of parameter values, hopefully giving lower loss on the next pass through the data.",
   "everydayAnalogy": {
     "title": "Editing meeting notes with memory of past corrections",
     "story": "A team in Nairobi, Bangkok and Lima is refining a shared summary of a long meeting. After each review round, they mark phrases that seem too vague or too strong. The editor does not react only to the latest comments: she remembers the overall direction of recent feedback and also notices which sections keep attracting very large corrections. For sections with repeated large swings, she makes smaller edits; for sections with lighter, steadier feedback, she is willing to change more.",
@@ -95,7 +95,7 @@
       "Compute the update size: 0.001 × 0.17 / sqrt(0.0406) is about 0.00084.",
       "Subtract the update from the parameter: 0.50 becomes about 0.49916."
     ],
-    "result": "The parameter changes only a little, and the step is smaller than plain gradient descent would give because Adam scales the move using recent gradient history."
+    "result": "The parameter changes only a little. Here Adam's 0.00084 step is slightly larger than plain gradient descent's 0.00080 step at the same learning rate."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team is training an internal model to sort incoming, non-sensitive humanitarian coordination messages by topic so analysts can find logistics, shelter and health updates faster.",
@@ -209,9 +209,50 @@
     "adam optimizer"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:13:17.166Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The second moment does not track how noisy gradients are. It tracks an uncentred average of squared gradients. Large squared values can come from consistent large gradients, not just noise.",
+        "fix": "Replace \"which tracks how large and noisy recent gradients have been for each parameter\" with \"which tracks how large recent gradients have been for each parameter\"."
+      },
+      {
+        "field": "visual.learningObjective and visual.steps[3].visualInstruction",
+        "severity": "error",
+        "problem": "The objective falsely contrasts Adam's per-parameter updates with \"one identical step for all parameters.\" Plain gradient descent also gives parameters different updates when their gradients differ. The proposed comparison therefore does not isolate Adam's adaptive scaling, and merely showing unequal steps repeats this problem.",
+        "fix": "Change the objective to: \"Show why Adam uses two moving averages and how that leads to per-parameter scaling rather than one shared scaling factor.\" In step 4, replace the final sentence with: \"Show equal current gradients with different histories getting different steps.\""
+      },
+      {
+        "field": "workedExample.process[2]",
+        "severity": "error",
+        "problem": "The example says to apply bias correction at an early step, then assumes the corrected values are close to the uncorrected values. That is precisely when they are not close. The step number t is not supplied, so the stated bias corrections cannot be calculated.",
+        "fix": "Replace this step with: \"For this simplified calculation, assume training is late enough that bias correction is negligible.\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The stated comparison with plain gradient descent is backwards. The page's arithmetic gives 0.999×0.04 + 0.001×0.64 = 0.03996 + 0.00064 = 0.04060. Then sqrt(0.0406) ≈ 0.20149, so 0.001×0.17/0.20149 ≈ 0.0008437 and 0.50 - 0.0008437 ≈ 0.4991563. Plain gradient descent with the same learning rate gives 0.001×0.80 = 0.00080. Therefore 0.0008437 is slightly larger, not smaller, than 0.00080.",
+        "fix": "The parameter changes only a little. Here Adam's 0.00084 step is slightly larger than plain gradient descent's 0.00080 step at the same learning rate."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is the only correct answer. Option 1 is false because Adam still needs a loss, option 2 is false because Adam gives no global-minimum guarantee, and option 3 is false because Adam does not impose equal updates. However, all three distractors are implausible caricatures, so the answer is obvious without understanding Adam.",
+        "fix": "Keep option 0. Replace the other options with: \"It uses one shared learning rate but does not keep information from earlier gradients.\"; \"It keeps a moving average of past gradients but does not track squared gradients.\"; \"It adapts one learning rate for the whole model rather than scaling parameters separately.\""
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

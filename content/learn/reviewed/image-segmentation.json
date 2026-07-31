@@ -28,8 +28,8 @@
     "image-classification",
     "bounding-box"
   ],
-  "oneSentence": "Image segmentation assigns a label to each pixel in an image so a system can outline and separate meaningful regions such as roads, buildings or water.",
-  "plainExplanation": "Image segmentation is a computer vision task that takes an image as input and produces a labelled map as output. In that map, each pixel, meaning each tiny picture element, is assigned to a class such as road, sky, person or tree.\n\nThe main idea is finer detail. Image classification gives one label for the whole image. Object detection usually draws boxes around objects. Segmentation goes further by marking the exact area that belongs to each class, pixel by pixel.\n\nTo do this, a model is trained on many images paired with human-made masks. A mask is a second image where colours or numbers show the correct class for each pixel. During training, the model adjusts its internal parameters so its predicted mask gets closer to the reference mask.\n\nWhen used on a new image, the model analyses local patterns such as edges, textures and shapes, while also using wider context from the rest of the image. The result might be a coloured overlay, a black-and-white mask for one class, or a data file saying which class each pixel belongs to.\n\nThis term is often confused with object detection. Detection asks, \"Where is the object, roughly?\" Segmentation asks, \"Which exact pixels belong to it?\" It is also different from image captioning, which produces text about an image rather than a pixel-level map.",
+  "oneSentence": "Image segmentation divides an image into pixel-level regions; semantic segmentation labels them as roads, buildings or water.",
+  "plainExplanation": "Image segmentation is a computer vision task that divides an image into regions at pixel level. Some forms produce a labelled map. In semantic segmentation, each pixel is assigned to a class such as road, sky, person or tree.\n\nThe main idea is finer spatial detail. Image classification gives one or more labels for the whole image. Object detection finds chosen object instances and marks where they appear, often with boxes. Segmentation instead marks pixel-level regions. Semantic segmentation labels regions by class, while instance segmentation can separate individual objects.\n\nMany learned segmentation models are trained on images paired with human-made masks. A mask is a second image where colours or numbers show the reference region or class for each pixel. During training, the model adjusts its parameters to reduce the difference between its predicted and reference masks.\n\nFor a new image, such a model uses local patterns such as edges, textures and shapes, along with wider image context. The result might be a coloured overlay, a black-and-white mask for one region, or a data file recording region or class labels.\n\nThis term is often confused with object detection. Detection marks where chosen object instances appear. Segmentation marks their pixel-level extent or divides the image into regions. It also differs from image captioning, which produces text rather than a pixel-level map.",
   "everydayAnalogy": {
     "title": "Marking a city map by land use",
     "story": "A planning team is preparing a large paper map of a city before a journey planning exercise. Instead of putting one big box around the centre, they colour every tiny block by what it is: road, park, river, housing or industrial area. After that, they can trace exactly where a walking route crosses roads, enters green space or reaches the riverbank. The map becomes useful not just for naming what exists, but for showing precisely where each type of place begins and ends.",
@@ -98,7 +98,7 @@
       "Analysts overlay the mask on the original image and inspect several edges to check whether parked vehicles or shadows were wrongly labelled as road.",
       "After minor quality review, they use the road pixels to estimate the paved share of the junction area."
     ],
-    "result": "The system estimates that about 42 percent of the image area is road, with exact boundaries that are more useful than a single box around the junction."
+    "result": "Road share is 420,000 ÷ 1,000,000 × 100 = 42 percent. The mask gives pixel-level boundaries, not guaranteed exact ones."
   },
   "unWorkplaceExample": {
     "scenario": "A humanitarian coordination team uses approved imagery tools to segment satellite images into roads, flooded areas, buildings and open ground after heavy rain, so they can compare access routes and identify broad areas that may be cut off.",
@@ -212,9 +212,45 @@
   ],
   "contested": "The broad idea is settled, but people sometimes use \"image segmentation\" loosely to cover several subtypes, including semantic, instance and panoptic segmentation, so the exact scope depends on context.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:24:00.494Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, visual, commonMisconceptions, simpleVsTechnical",
+        "severity": "error",
+        "problem": "The page repeatedly defines image segmentation as semantic segmentation. Image segmentation is the broader task of dividing an image into pixel-level regions. Assigning every pixel a semantic class is one form. The page later mentions semantic and instance segmentation, but calls instance separation a different task rather than clearly presenting these as forms of image segmentation. It also falsely implies that all segmentation models are trained on many human-made class masks.",
+        "fix": "Define image segmentation as dividing an image into pixel-level regions. Identify class-per-pixel examples as semantic segmentation, describe instance segmentation as another form, and qualify the mask-training account as applying to many learned models."
+      },
+      {
+        "field": "plainExplanation, simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The page says image classification gives or predicts one label for the whole image. This contradicts the supplied definition, which allows one or more predefined image-level labels.",
+        "fix": "Replace \"one label\" with \"one or more image-level labels\" in comparisons with image classification."
+      },
+      {
+        "field": "visual.description, visual.steps[4], visual.accessibilityDescription, workedExam",
+        "severity": "error",
+        "problem": "The page repeatedly calls predicted boundaries \"exact\" or says labels follow boundaries closely as an unconditional result. Pixel-level output has finer granularity than a box, but its boundaries can still be wrong. This conflicts with the page's own caution that crisp masks may be inaccurate.",
+        "fix": "Use \"pixel-level\" instead of \"exact\" and state that boundaries follow the depicted regions only when the prediction is accurate."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The example treats pixels labelled road as the paved share of the junction. A road class is not equivalent to all paved surface. Pavements, paved open ground or other paved areas could belong to other listed classes. The numerical calculation itself is correct: 1,000 × 1,000 = 1,000,000 pixels; 420,000 + 310,000 + 240,000 + 0 + 30,000 = 1,000,000; 420,000 ÷ 1,000,000 × 100 = 42 percent.",
+        "fix": "After minor quality review, they use the road pixels to estimate the road share of the image."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

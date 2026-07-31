@@ -27,7 +27,7 @@
     "artificial-intelligence"
   ],
   "oneSentence": "A method that trains many-layered computer models to find useful patterns in large amounts of data.",
-  "plainExplanation": "Deep learning is a way to build a model, meaning a mathematical system that turns inputs into outputs. The input might be an image, sound, text or numbers. The output might be a label, a score, a translation or newly generated content.\n\nWhat makes it “deep” is that the model has many layers. Each layer changes the input a little and passes it on. Early layers may pick up simple patterns, such as edges in an image or short word patterns in text, while later layers combine those into more complex patterns.\n\nDuring training, the system sees many examples from a dataset, which is an organised collection of data. It compares its output with the expected answer, measures the error, and adjusts many internal values so future outputs are closer. Those internal values are often called weights.\n\nWhat comes out depends on the task. A deep learning model might classify medical images, recognise speech, translate between languages or generate text and images. It is a type of machine learning, not a separate idea from it, and it is often built using neural networks, though the two terms are not exactly the same thing.",
+  "plainExplanation": "Deep learning is a type of machine learning that uses neural networks with many layers. These mathematical systems turn inputs into outputs. The input might be an image, sound, text or numbers. The output might be a label, score, translation or newly generated content.\n\nWhat makes it “deep” is that the neural network has many layers. Each layer transforms values from the previous layer and passes the results on. Early layers may pick up simple patterns, such as edges in an image or short word patterns in text, while later layers combine those into more complex patterns.\n\nDuring training, an algorithm adjusts many internal values, often called weights, to improve performance on a training objective. In supervised training, for example, it compares the model’s output with an expected answer, measures the error and updates the weights.\n\nA deep learning model might classify medical images, recognise speech, translate between languages or generate text and images. Deep learning is a type of machine learning. It uses neural networks, but not every neural network is deep.",
   "everydayAnalogy": {
     "title": "Sorting scanned forms at a busy office",
     "story": "In a regional office, staff receive thousands of photographed forms from phones and scanners. A new clerk first notices simple things like where the logo sits, whether there is a barcode, and how many boxes appear near the top. A more experienced clerk then combines those clues to tell whether the image is a registration form, an expense claim or an attendance sheet. After checking many labelled examples, the team gets faster and makes fewer mistakes on new form photos.",
@@ -97,7 +97,7 @@
       "On the test set, a new phone photo gets scores of 0.91 registration, 0.06 attendance and 0.03 travel claim.",
       "The system sends the image to the registration template queue, while staff still review uncertain cases such as scores close to each other."
     ],
-    "result": "The model helps route most incoming form photos automatically, but humans remain responsible for checking low-confidence or unusual cases."
+    "result": "For this image, the model selects the registration queue, but staff remain responsible for checking low-confidence or unusual cases."
   },
   "unWorkplaceExample": {
     "scenario": "A UN office wants to sort large volumes of incoming document images, such as standard administrative forms, into the right approved workflow using a deep learning system hosted inside an authorised environment.",
@@ -144,7 +144,7 @@
       "A system that guarantees correct answers if given enough data"
     ],
     "correctOptionIndex": 1,
-    "explanation": "Deep learning is a type of machine learning based on many-layered models. It does not rely on hand-written rules for every case, and more data does not guarantee correctness."
+    "explanation": "Deep learning is a type of machine learning that uses many-layered neural networks. Learning from examples alone describes machine learning more broadly, while layered hand-written rules and adding data to any system do not define deep learning."
   },
   "resources": [
     {
@@ -214,9 +214,64 @@
   ],
   "contested": "The exact boundary between deep learning, neural networks and broader machine learning usage is not always drawn the same way across textbooks, companies and researchers.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:08:25.449Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition does not identify deep learning as a type of machine learning based on neural networks. As written, it could describe any many-layered computer model and does not distinguish the term from the separate entries.",
+        "fix": "A machine learning method that trains many-layered neural networks to find useful patterns in data."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation says deep learning is only “often” built using neural networks. In standard usage, deep learning refers to machine learning based on deep neural networks. It also presents comparison with an expected answer as the general training mechanism, although that describes supervised training and does not cover all deep learning training methods.",
+        "fix": "Deep learning is a type of machine learning that uses neural networks with many layers. These mathematical systems turn inputs into outputs. The input might be an image, sound, text or numbers. The output might be a label, score, translation or newly generated content.\n\nWhat makes it “deep” is that the neural network has many layers. Each layer transforms values from the previous layer and passes the results on. Early layers may pick up simple patterns, such as edges in an image or short word patterns in text, while later layers combine those into more complex patterns.\n\nDuring training, an al"
+      },
+      {
+        "field": "visual.learningObjective, visual.steps[4], visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "These fields present comparison with a known answer or target as a necessary feature of deep learning training. That is specifically a supervised training setup, not a universal account of deep learning.",
+        "fix": "Qualify the diagram as a supervised training example. Replace “during training” with “during supervised training” and replace “known answer” with “training target” throughout these fields."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The example reports scores for only one test image. It gives no test accuracy, routing rate or confidence distribution, so it cannot support the conclusion that the model routes “most” incoming photos automatically. The supplied arithmetic itself is consistent: 4,000 + 4,000 + 4,000 = 12,000; 10,000 + 2,000 = 12,000; and 0.91 + 0.06 + 0.03 = 1.00.",
+        "fix": "For this image, the model selects the registration queue, but staff remain responsible for checking low-confidence or unusual cases."
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "warning",
+        "problem": "The statement that a deeper model can be “easier to misuse” is vague and does not explain any relationship between depth and misuse. It weakens an otherwise relevant correction.",
+        "fix": "Extra depth can help with complex tasks, but performance also depends on data quality, model design, computing resources and careful training. A deeper model can also be harder to train and require more computing."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is the only correct answer, but the distractors do not test the distinctions taught on the page. “Any software that runs quickly” is unrelated, while the absolute claims about exact rules and guaranteed correctness are rejectable without understanding deep learning.",
+        "fix": "Use these options: [\"Any machine learning method that learns from examples, whether or not it uses layered neural networks\", \"A type of machine learning that uses many layers to learn patterns from data\", \"A method for combining hand-written rules in several successive stages\", \"A method that adds more examples to any prediction system\"]. Keep correctOptionIndex as 1."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "With stronger distractors, the explanation should distinguish deep learning from broader machine learning and rule-based systems rather than discussing only guarantees and exhaustive rules.",
+        "fix": "Deep learning is a type of machine learning that uses many-layered neural networks. Learning from examples alone describes machine learning more broadly, while layered hand-written rules and adding data to any system do not define deep learning."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

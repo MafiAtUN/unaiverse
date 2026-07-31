@@ -205,9 +205,35 @@
     "temperature"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:34.824Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The example supplies five probabilities but never applies the stated temperature calculation to them. The numbers are decorative rather than a worked demonstration of how the distribution changes.",
+        "fix": "At 0.2, “Clean” becomes 0.40^5 ÷ (0.40^5 + 0.25^5 + 0.20^5 + 0.10^5 + 0.05^5) = 88.7%."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the other options describe unrelated capabilities. A reader can answer by rejecting absurd claims about new facts, context length and guaranteed truth without understanding temperature.",
+        "fix": "Use these options: [\"It makes the model use its highest-probability next tokens more often, so outputs are usually more consistent.\", \"It cuts off the probability list once a chosen cumulative threshold is reached.\", \"It guarantees the same output whenever the input and settings match.\", \"It makes only the highest-probability next token available for selection.\"]"
+      },
+      {
+        "field": "oneSentence",
+        "severity": "nit",
+        "problem": "Temperature operates on token choices, not only words. Tokens can also be parts of words or punctuation, as the page later explains.",
+        "fix": "A setting that controls how predictable or varied a language model’s next-token choices are during generation."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

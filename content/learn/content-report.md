@@ -1,6 +1,6 @@
 # AI Literacy content report
 
-Generated 2026-07-31 22:52 UTC by `npm run content:report`.
+Generated 2026-07-31 23:43 UTC by `npm run content:report`.
 
 ## Totals
 

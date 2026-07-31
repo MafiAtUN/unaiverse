@@ -104,7 +104,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN team builds an internal search tool over public guidance documents and opens a staff feedback box so colleagues can report harmful or inappropriate generated summaries.",
     "relevance": "Moderation is needed for the feedback channel and for any workflow that lets users flag outputs that may be abusive, discriminatory or unsafe, so problems can be reviewed and corrected.",
-    "caution": "Do not place confidential, personal, protection-sensitive or security-sensitive information into an unapproved public AI service, and do not let automated moderation alone make final decisions about serious staff, rights or safety issues."
+    "caution": "Do not include confidential, personal, protection-sensitive or security-sensitive information in the feedback box or generated summaries unless the tool and channel are approved for it. Do not let automated moderation alone make final decisions about serious staff, rights or safety issues."
   },
   "whyItMatters": "Content moderation affects what people can say, what they can safely see and whether online spaces become useful, abusive or dangerous. For a non-specialist, the key issue is not only whether harmful material is removed, but how the decision is made, who can challenge it, and whether some groups are treated unfairly. Weak moderation can leave people exposed to threats, exploitation or disinformation. Overbroad moderation can wrongly silence lawful speech, including reporting, satire, political expression or testimony about abuse. Understanding moderation helps you ask better questions about rules, evidence, transparency, appeals, human oversight and the limits of automation.",
   "whereYouMayHearIt": [
@@ -215,9 +215,43 @@
   ],
   "contested": "The broad idea is widely used, but the exact boundaries of what counts as moderation, especially around ranking, recommendation, demotion and labelling, can vary between organisations and legal frameworks.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:29:59.781Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "Calling guardrails “broader controls” does not clearly distinguish them from moderation and can be false. A guardrail may be a narrow control. The important distinction is that a guardrail limits AI outputs or actions before reliance, while moderation is an operational process for applying content rules.",
+        "fix": "Replace “Guardrails are broader controls on how an AI system behaves” with “Guardrails limit unsafe AI outputs or actions before reliance.”"
+      },
+      {
+        "field": "workedExample.process[2-3]",
+        "severity": "error",
+        "problem": "The text says the comment is a “direct threat”, but “You people should be attacked” advocates or endorses violence without directly stating that the speaker will carry it out. The example also imposes a 7-day account suspension even though the stated input provides only a policy banning threats, not an account-sanction policy. There is no arithmetic to check: 2,000 and 7 are standalone quantities, and the example performs no calculation.",
+        "fix": "Change step 3 to “The reviewer decides it violates the forum's rule against threats of violence.” Change step 4 to “The comment is removed, and the user receives a notice with the policy reason and an appeal option.”"
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The caution addresses an unapproved public AI service but not the actual internal feedback box in the scenario. Staff could paste personal, protection-sensitive or security-sensitive material into that channel while reporting a harmful summary. The caution must state that the tool and feedback channel need approval for such information.",
+        "fix": "Do not include confidential, personal, protection-sensitive or security-sensitive information in the feedback box or generated summaries unless the tool and channel are approved for it. Do not let automated moderation alone make final decisions about serious staff, rights or safety issues."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 uses the giveaway word “only”, while options 3 and 4 make implausible claims about blocking every unknown user and guaranteeing truth. The marked answer is the only defensible answer, but it can be selected without understanding content moderation.",
+        "fix": "Use these options: “A score estimating whether text is likely abusive”; “A process that reviews content against rules and can involve both software and human judgement”; “Controls that limit unsafe AI outputs before use”; “A process that checks claims against evidence”. Update the explanation to match."
+      }
+    ],
+    "applied": [
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

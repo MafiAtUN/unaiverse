@@ -95,12 +95,12 @@
       "Add the contributions: 4.5 + 1.4 - 4.0 = 1.9.",
       "Because the combined value is positive and fairly large, the next part of the network receives a relatively strong signal for 'transport disruption'."
     ],
-    "result": "The weighted combination produces 1.9, meaning the first two inputs push the score up while the negative weight pushes the unrelated-topic signal down."
+    "result": "The weighted combination produces 1.9. The first two contributions are positive, while the unrelated-topic contribution is negative."
   },
   "unWorkplaceExample": {
     "scenario": "A UN staff member uses an approved internal search tool to find earlier resolutions with wording similar to a new draft on disaster risk reduction. Inside the model behind the search tool, many weights help determine how strongly different words and patterns influence which passages are retrieved or ranked.",
     "relevance": "This matters because staff may hear that a model was 'fine-tuned' or that 'new weights were loaded', and they need to understand that this means the system’s internal numerical priorities changed, which can affect results and consistency.",
-    "caution": "Do not upload confidential negotiation text, unpublished draft language, or other sensitive material into an unapproved public AI service just to inspect or compare model weights or outputs."
+    "caution": "Use the tool only for material its rules allow. Do not enter confidential negotiation text, unpublished drafts, or other sensitive material unless it is approved for them."
   },
   "whyItMatters": "If you procure, govern, audit or use AI systems, weights matter because they are part of how a model turns inputs into outputs. Changes to weights can change performance, errors, bias patterns, energy use after pruning, and whether two deployments of 'the same model' actually behave the same way.",
   "whereYouMayHearIt": [
@@ -213,9 +213,56 @@
     "model weights"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:37.770Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The arithmetic is correct: 3×1.5 = 4.5, 2×0.7 = 1.4, 4×-1.0 = -4.0, and 4.5 + 1.4 - 4.0 = 1.9. However, calling 1.9 \"positive and fairly large\" and therefore a relatively strong signal is unsupported. Its scale and meaning depend on the bias, activation function and later calculations.",
+        "fix": "The combined value before any bias or activation is 1.9. Its effect depends on the next operation in the network."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result assigns semantic meaning to the sign of 1.9 without establishing how this intermediate value maps to the transport-disruption output. Only the signs of the individual numerical contributions are established.",
+        "fix": "The weighted combination produces 1.9. The first two contributions are positive, while the unrelated-topic contribution is negative."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The categorical claim that weights are fixed at inference time is not true for every neural-network system. Some systems update or generate weights during inference. The limitation also needs to state more directly that the traveller changes priorities by situation, while a given weight in a standard inference run does not.",
+        "fix": "A neural network does not literally hear advice or consciously choose priorities. In a standard inference run, a given weight usually stays fixed and is applied automatically; the model does not reconsider it for each case as the traveller does."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The scenario uses a new draft in an approved internal tool, but the caution only prohibits sensitive material in an unapproved public service. Approval alone does not establish that the tool is authorised for confidential negotiation text or unpublished drafts. The caution therefore does not address the risk created by its own scenario.",
+        "fix": "Use the tool only for material its rules allow. Do not enter confidential negotiation text, unpublished drafts, or other sensitive material unless it is approved for them."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "The reference to changes in weights changing energy use after pruning obscures the mechanism. Pruning only changes energy use when the deployed implementation exploits the resulting sparsity or structural change. Numerical weight changes alone do not generally change computation.",
+        "fix": "If you procure, govern, audit or use AI systems, weights matter because they are part of how a model turns inputs into outputs. Changes to weights can change performance, errors, bias patterns, and whether two deployments of 'the same model' actually behave the same way."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 falsely equates a weight with a feature and model weights with labels. Option 2 falsely equates weights with biases and activation functions. Option 3 falsely separates weights by training and deployment. These distractors are blatant category swaps, so the answer is available by elimination without understanding the distinction.",
+        "fix": "Keep option 0. Replace the other options with: \"A single weight scales one signal, while model weights refers only to the final layer of a trained model.\"; \"A single weight is chosen by a user, while model weights are all settings learned during training.\"; \"A single weight belongs to one input, while model weights are one combined score for the whole model.\""
+      }
+    ],
+    "applied": [
+      "workedExampleResult",
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

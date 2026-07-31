@@ -191,10 +191,40 @@ test('every resource carries its verification state', () => {
   }
 });
 
-test('published terms are marked reviewed and dated', () => {
+test('a review claim is either true and dated, or absent', () => {
+  // Two separate claims. The directory means published; the flag means a
+  // person read it. What must never happen is `reviewed: true` with nothing
+  // backing it, which is how a badge stops meaning anything.
   for (const term of terms) {
-    assert.equal(term.reviewed, true, `${term.id} is in reviewed/ but not marked reviewed`);
-    assert.match(term.lastReviewed ?? '', /^\d{4}-\d{2}-\d{2}$/, `${term.id} has no review date`);
+    if (term.reviewed) {
+      assert.match(
+        term.lastReviewed ?? '',
+        /^\d{4}-\d{2}-\d{2}$/,
+        `${term.id} claims a human review with no date`,
+      );
+    } else {
+      assert.equal(term.lastReviewed, undefined, `${term.id} is not reviewed but carries a review date`);
+    }
+  }
+});
+
+test('machine review never masquerades as human review', () => {
+  for (const term of terms) {
+    if (!term.machineReview) continue;
+    assert.notEqual(
+      term.machineReview.deployment,
+      undefined,
+      `${term.id} has a machine review with no deployment recorded`,
+    );
+    // The reviewer must not be the writer: a model marking its own homework is
+    // not a second opinion.
+    if (term.generation?.deployment) {
+      assert.notEqual(
+        term.machineReview.deployment,
+        term.generation.deployment,
+        `${term.id} was reviewed by the same deployment that wrote it`,
+      );
+    }
   }
 });
 
@@ -218,6 +248,38 @@ test('taxonomy prerequisites form no cycles', () => {
 
   for (const term of terms) visit(term.id);
   assert.deepEqual(cycles, [], 'prerequisite cycles would make a learning order impossible');
+});
+
+test('no shipped page renders an em dash', () => {
+  // The corpus check below covers generated content. This one covers the
+  // components and pages I wrote, where the em dashes were hiding: the quiz
+  // verdict, every interactive readout, three page titles. Testing the built
+  // HTML rather than the source is the point, because it is the only place
+  // that knows the difference between a comment and a string.
+  const dist = path.join(PATHS.root, 'dist');
+  if (!fs.existsSync(path.join(dist, 'index.html'))) return; // no build yet
+
+  const strip = (html) =>
+    html
+      .replace(/<script[\s\S]*?<\/script>/g, ' ')
+      .replace(/<style[\s\S]*?<\/style>/g, ' ')
+      .replace(/<[^>]+>/g, ' ');
+
+  const walk = (dir, out = []) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) walk(full, out);
+      else if (e.name.endsWith('.html')) out.push(full);
+    }
+    return out;
+  };
+
+  const offenders = [];
+  for (const file of walk(dist)) {
+    const hits = (strip(fs.readFileSync(file, 'utf8')).match(/—/g) ?? []).length;
+    if (hits) offenders.push(`${path.relative(dist, file)} (${hits})`);
+  }
+  assert.deepEqual(offenders.slice(0, 8), []);
 });
 
 test('no reader-facing copy uses an em dash', () => {

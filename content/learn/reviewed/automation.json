@@ -28,7 +28,7 @@
     "machine-learning",
     "software"
   ],
-  "oneSentence": "Using defined steps to carry out a task with little or no human action once the process has been set up.",
+  "oneSentence": "Automation uses a machine or software to carry out set steps with little or no human action after setup.",
   "plainExplanation": "Automation means setting up a process so a machine or software carries out repeated steps on its own. The input might be data, a document, a sensor reading, or a button press. The process follows instructions. The output might be a sorted file, an alert, a payment, or a message.\n\nNot all automation uses artificial intelligence. A simple automated system may follow fixed rules such as “if the amount is above this limit, send it for review”. That is different from machine learning, where a model finds patterns from examples and then makes predictions or classifications.\n\nWhat goes in matters. If the input is wrong, incomplete or delayed, the output can also be wrong. This is sometimes called “garbage in, garbage out”. Automation can make work faster and more consistent, but it can also spread mistakes quickly if no one checks the process.\n\nA useful way to think about automation is: people design the steps, the system executes them, and people remain responsible for the result. In some cases a human reviews or approves key points. That is often safer than letting a process run without oversight.",
   "everydayAnalogy": {
     "title": "Checking a delivery against a shipping manifest",
@@ -93,7 +93,7 @@
       "It counts cartons that were expected but not scanned and cartons that were scanned but not expected.",
       "It generates a summary report and flags the mismatches for staff review."
     ],
-    "result": "The report says: 118 matched, 2 missing, 3 unexpected. Staff inspect the five flagged cartons before accepting the delivery."
+    "result": "The report says: 118 matched, 2 missing, 3 unexpected. Staff inspect 3 unexpected cartons and investigate 2 missing ones."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team runs a household assessment and receives many survey forms. An automated system groups responses by region, checks whether required fields are missing, and produces a dashboard showing completion rates.",
@@ -124,7 +124,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Automation means getting a machine or software to do repeated steps automatically after people set up the process.",
-    "technical": "Automation is the execution of a defined workflow by machines or software with reduced direct human intervention. Inputs can include digital records, sensor signals, forms or messages. The system then applies programmed logic, which may be deterministic rules, scripts, thresholds, scheduling, orchestration across systems, or, in some cases, outputs from a machine-learning model. It then produces an action or result, such as updating a database, sending a notification, classifying an item, generating a report or triggering a handoff to a human. Automation is broader than AI: rule-based systems, robotic process automation, industrial control systems and workflow engines can all automate tasks without learning from data."
+    "technical": "Automation is the execution of a defined workflow by machines or software with reduced direct human intervention. Inputs can include digital records, sensor signals, forms or messages. The system then applies programmed logic, which may be deterministic rules, scripts, thresholds, scheduling, orchestration across systems, or, in some cases, outputs from a machine-learning model. It then produces an action or result, such as updating a database, sending a notification, classifying an item, generating a report or triggering a handoff to a human. Automation can use AI but does not require it: rule-based systems, robotic process automation, industrial control systems and workflow engines can all automate tasks without learning from data."
   },
   "keyTakeaway": "Automation means a task runs through set steps automatically, but that does not automatically make it intelligent, correct or safe.",
   "quickCheck": {
@@ -208,9 +208,39 @@
   ],
   "contested": "The basic idea is widely agreed, but the boundary between simple automation and AI-enabled automation is often described differently by different organisations and vendors.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:08:29.738Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition is too broad because it does not say that a machine or software performs the steps. As written, it could also describe people following a defined process with little supervision.",
+        "fix": "Automation uses a machine or software to carry out set steps with little or no human action after setup."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The counts compute correctly: 120 - 118 = 2 missing, and 2 + 3 = 5 mismatches. However, staff cannot inspect five flagged cartons because the two missing cartons were not scanned and may not be physically present. Only the three unexpected cartons can be inspected directly.",
+        "fix": "The report says: 118 matched, 2 missing, 3 unexpected. Staff inspect 3 unexpected cartons and investigate 2 missing ones."
+      },
+      {
+        "field": "simpleVsTechnical.technical; quickCheck.explanation",
+        "severity": "error",
+        "problem": "Both fields say automation is broader than AI. This implies a subset relationship that the page has not established and that is misleading. Automation and AI overlap. Automation may use AI, but it can also use fixed rules. AI can produce outputs without automating a wider workflow.",
+        "fix": "Replace the subset claim with the narrower and accurate statement that automation can use AI but does not require it."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -28,7 +28,7 @@
     "text-generation",
     "low-resource-language"
   ],
-  "oneSentence": "Machine translation converts text or speech from one language into another using computer systems that match patterns learned from many examples.",
+  "oneSentence": "Machine translation uses computer systems to convert text from one language into another using learned patterns, statistical methods or hand-built rules.",
   "plainExplanation": "Machine translation takes language in one form and produces language in another language. The input might be typed text, a document, subtitles, or speech that has first been turned into text. The output is a translated version that aims to keep the meaning, tone and structure usable for the reader.\n\nIn simple terms, the system looks at the words and phrases, the order they appear in, and the wider context around them. Modern systems usually learn these patterns from very large collections of translated examples, often called a corpus. A corpus is a set of texts gathered for analysis or training.\n\nThe system does not translate by replacing each word one by one in a perfect way. Languages organise meaning differently. Grammar, idioms, politeness, legal terms and cultural references can all change the right answer. Because of this, the same source sentence can have more than one reasonable translation.\n\nWhat comes out can be very helpful, but it still needs checking. A translation may sound fluent while changing a date, dropping a negation, or choosing the wrong sense of a word. That matters even more in health, law, public information and multilingual programme work, where a small wording error can change meaning or create risk.",
   "everydayAnalogy": {
     "title": "A skilled library volunteer sorting multilingual feedback cards",
@@ -124,7 +124,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "You give the system text in one language, and it gives back a version in another language. It can save time, but it can still miss meaning, so important translations should be checked by a person.",
-    "technical": "Machine translation maps a source-language sequence to a target-language sequence. Older approaches used hand-built rules or phrase statistics from bilingual text. Many current systems use neural models trained on parallel corpora, meaning matched translations of the same content in two or more languages. The model estimates which target words or subword units are most likely given the source text and the target words already produced. In practice, quality depends on training data, domain match, language pair, terminology, input quality and available context. Speech translation adds extra stages, such as speech recognition before translation and sometimes speech synthesis after it. Evaluation can include automatic scores and human assessment, but neither guarantees fitness for a specific real-world use."
+    "technical": "Machine translation maps a source-language sequence to a target-language sequence. Older approaches used hand-built rules or phrase statistics from bilingual text. Many current systems use neural models trained on parallel corpora, meaning matched translations of the same content in two or more languages. Autoregressive models often estimate which target word or subword unit is most likely given the source text and the target units already produced. In practice, quality depends on training data, domain match, language pair, terminology, input quality and available context. Speech translation adds extra stages, such as speech recognition before translation and sometimes speech synthesis after it. Evaluation can include automatic scores and human assessment, but neither guarantees fitness for a specific real-world use."
   },
   "keyTakeaway": "Machine translation is best seen as fast multilingual assistance, not as a guarantee that meaning has been preserved.",
   "quickCheck": {
@@ -208,9 +208,44 @@
     "mt"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:24:37.295Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition wrongly limits machine translation to systems that learn patterns from examples, excluding the hand-built rule-based approaches acknowledged later on the page. It also says machine translation converts speech, while the technical section correctly treats speech translation as a workflow with speech recognition and possibly speech synthesis around the text translation stage.",
+        "fix": "Machine translation uses computer systems to convert text from one language into another using learned patterns, statistical methods or hand-built rules."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "“The model estimates” presents autoregressive next-unit prediction as the mechanism used by every neural translation model. That is not universal. The statement must identify the type of model or qualify the claim.",
+        "fix": "Replace that sentence with: “Autoregressive models often estimate which target word or subword unit is most likely given the source text and the target units already produced.”"
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "The marked answer is the only defensible answer, but the quiz is trivial. Option 0 is the stated low-risk use. Option 1 explicitly removes review from a safety-critical warning. Option 2 combines confidential witness data with a public tool. Option 3 combines legal effect with no specialist review. The three distractors are blatant violations repeated throughout the page, so a reader can answer without understanding when machine translation is suitable.",
+        "fix": "Use these options: [“When you need a quick rough translation to understand the general topic before human review”, “When you need a public translation and a reviewer will check only its formatting”, “When you need to triage personal comments using any convenient web tool”, “When you need exact legal wording but no target-language specialist is available”]. Keep correctOptionIndex as 0."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation refers to the original, implausibly extreme distractors and should be updated with the revised options.",
+        "fix": "The first option is suitable because it is low-risk and followed by human review. The other cases lack accuracy review, safe data handling or target-language legal expertise, so machine output should not be treated as sufficient."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

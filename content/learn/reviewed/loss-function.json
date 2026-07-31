@@ -28,7 +28,7 @@
     "evaluation-metric"
   ],
   "oneSentence": "A loss function turns a model’s output and the correct target into a single number that shows how wrong the model was for that example or batch.",
-  "plainExplanation": "A model produces an output, such as a predicted class, score or number. A loss function takes that output and compares it with the target, meaning the expected answer in the training data. The result is a number: lower usually means the model matched the target better.\n\nWhat goes in depends on the task. In a spam filter, the inputs to the loss function might be a predicted probability and the true label. In a forecasting task, they might be the predicted amount and the actual amount. Different loss functions measure mismatch in different ways, so the choice affects what kinds of mistakes the model is pushed to reduce.\n\nWhat happens next is important. Training does not usually change the model directly from the loss alone. Instead, optimisation methods use the loss to work out how each model setting, often called a parameter, contributed to the error. Then the parameters are adjusted to try to reduce future loss.\n\nWhat comes out from the loss function is not the final judgement of model quality for real-world use. It is mainly a training signal. That is why loss is often confused with an evaluation metric such as accuracy or F1 score. They are related, but not the same: a model can be trained to lower one quantity and later assessed with another.",
+  "plainExplanation": "A model produces an output, such as a predicted class, score or number. A loss function takes that output and compares it with the target, meaning the expected answer in the training data. The result is a number: lower usually means the model matched the target better.\n\nWhat goes in depends on the task. In a spam filter, the inputs to the loss function might be a predicted probability and the true label. In a forecasting task, they might be the predicted amount and the actual amount. Different loss functions measure mismatch in different ways, so the choice affects what kinds of mistakes the model is pushed to reduce.\n\nWhat happens next is important. Training does not usually change the model directly from the loss alone. Instead, optimisation methods use gradients of the loss to estimate how small changes to each model setting, often called a parameter, would change the loss. Then the parameters are adjusted to try to reduce future loss.\n\nWhat comes out from the loss function is not the final judgement of model quality for real-world use. It is mainly a training signal. That is why loss is often confused with an evaluation metric such as accuracy or F1 score. They are related, but not the same: a model can be trained to lower one quantity and later assessed with another.",
   "everydayAnalogy": {
     "title": "Scoring a document recommender’s mistakes",
     "story": "A librarian in Nairobi tests a new system that suggests three knowledge-base documents for each staff question. For one question, the correct document should appear first, but the system puts it third. The librarian uses a scoring rule that gives a small penalty if the right document is near the top and a larger penalty if it is far down or missing. After many questions, the team averages these penalties to see how badly the system is performing. They then adjust the system so future rankings get lower penalties.",
@@ -98,7 +98,7 @@
       "If another true-IT request got probability 0.20, its loss would be -log(0.20), about 1.61, which is much larger.",
       "Average the losses across the batch, then use optimisation to adjust parameters so true labels receive higher probabilities next time."
     ],
-    "result": "The example with probability 0.80 gets a small penalty, while the example with probability 0.20 gets a large penalty, so training focuses more strongly on the worse mistake."
+    "result": "The example with probability 0.80 gets a small penalty, while the example with probability 0.20 gets a much larger training penalty."
   },
   "unWorkplaceExample": {
     "scenario": "An approved internal analytics team is developing a model to help identify broad protection trends across incident reports, using de-identified and access-controlled data to classify reports into trend categories for human review.",
@@ -134,7 +134,7 @@
     "simple": "It is the scoring rule used during training to tell the model how bad its prediction was.",
     "technical": "It is a scalar-valued objective applied to model outputs and targets, often differentiable, whose gradients with respect to parameters are used by optimisation algorithms to update the model and minimise expected training risk."
   },
-  "keyTakeaway": "A loss function is the training score that tells optimisation what kind of wrongness to reduce.",
+  "keyTakeaway": "A loss function is the scoring rule that tells optimisation what kind of wrongness to reduce.",
   "quickCheck": {
     "question": "Which statement best describes the role of a loss function during training?",
     "options": [
@@ -217,9 +217,81 @@
     "objective function"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:23.319Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "This calls the loss function itself a training score. The function is the scoring rule; the number it produces is the loss. This blurs the required distinction between a loss function and error or loss values.",
+        "fix": "A loss function is the scoring rule that tells optimisation what kind of wrongness to reduce."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that optimisation works out how each parameter \"contributed to the error\" misrepresents gradients as attribution. Gradients indicate how a small change to a parameter would locally change the loss. They do not determine each parameter's share of responsibility.",
+        "fix": "Replace the third paragraph with: \"What happens next is important. Training does not usually change the model directly from the loss alone. Instead, optimisation methods use gradients of the loss to estimate how small changes to each model setting, often called a parameter, would change the loss. Then the parameters are adjusted to try to reduce future loss.\""
+      },
+      {
+        "field": "visual.learningObjective",
+        "severity": "warning",
+        "problem": "Saying the function converts \"prediction error\" into a number blurs the function with the error or loss value. The function takes model outputs and targets and computes that value.",
+        "fix": "After viewing this, a reader should be able to say that the loss function converts model outputs and targets into a number that optimisation can use to update model parameters."
+      },
+      {
+        "field": "visual.steps[3].label",
+        "severity": "warning",
+        "problem": "\"Traces responsibility\" again suggests parameter attribution rather than local sensitivity measured by gradients.",
+        "fix": "4. Optimisation uses gradients"
+      },
+      {
+        "field": "visual.steps[4], visual.accessibilityDescription, visual.reducedMotionDescriptio",
+        "severity": "error",
+        "problem": "These fields imply that an update should produce a lower loss on the next batch, illustrated by 1.37 falling to 1.12. Different batches contain different examples, so their loss values are not a valid before-and-after comparison, and the next batch's loss need not be lower.",
+        "fix": "Change the step explanation to: \"The optimiser nudges parameters to try to lower the loss, then training repeats on the next batch.\" Replace the smaller value with \"repeat with next batch\". In the accessibility text, replace \"ideally producing a lower loss\" with \"with the aim of reducing loss over training\". Remove the two-value comparison from the reduced-motion text."
+      },
+      {
+        "field": "workedExample.process[4]",
+        "severity": "error",
+        "problem": "An optimisation step does not guarantee that true labels will receive higher probabilities next time. It only attempts to reduce the objective.",
+        "fix": "Average the losses across the batch, then use optimisation to adjust parameters to try to give true labels higher probabilities."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "\"Training focuses more strongly\" overstates what follows from the two loss values. The larger loss is a larger penalty, but the resulting parameter update also depends on gradients through the model. The arithmetic itself is correct: -ln(0.80) = 0.2231, about 0.22, and -ln(0.20) = 1.6094, about 1.61.",
+        "fix": "The example with probability 0.80 gets a small penalty, while the example with probability 0.20 gets a much larger training penalty."
+      },
+      {
+        "field": "commonMisconceptions[3].correction",
+        "severity": "error",
+        "problem": "The loss function does not itself produce the full \"error signal\" used for updates, and an optimiser does not normally perform backpropagation. The function produces a loss value, backpropagation computes gradients, and the optimiser applies updates using those gradients.",
+        "fix": "The loss function produces a value. Backpropagation can compute its gradients, and an optimiser uses those gradients to apply parameter updates."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "\"Tell the model\" is anthropomorphic and incorrectly suggests that the model receives and interprets the score. The loss is used by the training procedure.",
+        "fix": "It is the scoring rule used during training to measure how bad a prediction was."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "\"Expected training risk\" mixes expected risk with the empirical average normally minimised on training data. It also skips that parameter gradients are obtained through the model, since the stated function is directly applied to outputs and targets.",
+        "fix": "It is a scalar-valued objective applied to model outputs and targets, often differentiable, whose gradients through the model are used by optimisation algorithms to update parameters and reduce average training loss."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

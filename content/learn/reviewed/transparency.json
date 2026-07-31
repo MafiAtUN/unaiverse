@@ -97,7 +97,7 @@
       "A librarian reviews the top 20 recommendations each week and removes broken or misleading matches.",
       "The page includes a 'Report a problem or request review' button."
     ],
-    "result": "A user sees eight suggested documents, knows why they are appearing in general terms, understands key limitations, and has a clear route to question or correct the feature."
+    "result": "A user sees eight suggested documents, knows the disclosed basis for the recommendation feature, understands key limitations, and has a clear route to report errors or request review."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team uses an approved internal AI assistant to draft a situation report outline from already cleared, non-sensitive source material.",
@@ -212,9 +212,43 @@
   ],
   "contested": "The basic idea is widely accepted, but the exact amount and kind of disclosure required is context-dependent and sometimes debated, especially when transparency must be balanced with privacy, confidentiality, security, or intellectual property.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:27:28.989Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process[1]",
+        "severity": "error",
+        "problem": "The disclosed inputs are internally inconsistent. The input field lists title, language, publication year, tags, and public status. This step instead says the tool uses \"past page similarity,\" which is neither listed nor clearly public document metadata. That contradicts the label saying the tool uses public document metadata only.",
+        "fix": "Replace the note with: \"The tool uses title, tags, language, and publication year. It does not read private user files.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The distinction from interpretability is too vague and does not match the separate entry. Saying interpretability is how understandable internal workings are describes a general property. The supplied definition specifically concerns inspecting how internal parts contribute to outputs.",
+        "fix": "Replace the final paragraph with: \"Transparency is often confused with explainability and interpretability. Explainability gives human-usable reasons for a particular output or pattern of outputs. Interpretability inspects how a model’s internal parts contribute to outputs. Transparency is broader: it covers openness about the whole system, its use, governance, and limits.\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "Saying the user \"knows why\" the eight documents are appearing blurs transparency into explainability. The example provides system-level disclosure, not reasons for each particular recommendation.",
+        "fix": "A user sees eight suggested documents, knows the disclosed basis for the recommendation feature, understands key limitations, and has a clear route to report errors or request review."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "The marked third option is the only best answer, but the distractors are too weak. The first gives no disclosure, the second expressly lists missing essentials, the third repeats the page's full checklist, and the fourth gives only marketing claims. A reader can select the third without understanding transparency.",
+        "fix": "Use plausible partial disclosures for the first, second, and fourth options, such as: \"A service says AI ranks requests and names its owner, but gives no inputs, limits, or review route.\" \"A report says AI assisted and names a reviewer, but gives no purpose, limits, or challenge route.\" \"An organisation lists the AI's purpose and inputs, but gives no limits or review route.\""
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

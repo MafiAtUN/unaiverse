@@ -92,7 +92,7 @@
       "Cluster A contains low vibration and low temperature pumps, Cluster B contains medium readings, and Cluster C contains high readings.",
       "The team inspects Cluster C first and checks whether the pumps share a maintenance issue rather than assuming the cluster proves a fault."
     ],
-    "result": "The output is three suggested groups of pumps with similar behaviour. It helps the team focus inspection, but the cluster itself is not a diagnosis."
+    "result": "The nine readings form three suggested groups: P1-P3, P7-P9 and P4-P6. This can focus inspection, but no cluster is a diagnosis."
   },
   "unWorkplaceExample": {
     "scenario": "An analytics team preparing a situation report groups incoming public social media posts and open-source news summaries by similarity of topics to spot recurring themes such as road access, market disruption and school closures.",
@@ -205,9 +205,37 @@
     "cluster analysis"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:05.761Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample",
+        "severity": "error",
+        "problem": "The example claims to review 12 pumps but provides only P1 through P9: 9 readings, not 12, so 12 - 9 = 3 readings are missing. It then asserts a three-cluster output without naming the algorithm, scaling or assignments, so the result cannot be reproduced. There is no arithmetic computation in the example to verify beyond counting the supplied readings.",
+        "fix": "Change the scenario to nine pumps and say the nine listed readings are the complete input. Specify the method and scaling, then give the assignments. For example, use k-means with k=3 on standardised features and report P1-P3, P7-P9 and P4-P6 as the three resulting groups."
+      },
+      {
+        "field": "unWorkplaceExample.scenario",
+        "severity": "warning",
+        "problem": "Grouping posts by “similarity of topics” to find recurring themes blurs clustering into the separate topic modelling entry. It does not explain that document clustering groups documents as examples, whereas topic modelling groups co-occurring words into themes.",
+        "fix": "An analytics team preparing a situation report clusters incoming public social media posts and open-source news summaries by word-use similarity, then has staff interpret groups related to road access, market disruption and school closures."
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "Saying that points “gather” into groups suggests that clustering moves the observations. In the specified diagram, their feature coordinates remain fixed while neighbourhoods and group assignments are added.",
+        "fix": "Show scattered data points in a two-dimensional feature space, then show similarity relationships around the same fixed points, then colour-code groups and add human interpretations. Read left to right: examples, similarity grouping, human interpretation."
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

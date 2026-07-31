@@ -30,8 +30,8 @@
     "transformer",
     "self-attention"
   ],
-  "oneSentence": "An encoder turns input into useful internal representations, while a decoder uses those representations to generate output, often one token at a time.",
-  "plainExplanation": "These words name related parts, not one single thing. An encoder reads the input and builds internal representations: numerical patterns that highlight what may matter in each part of the input. A decoder produces the output, usually step by step, while looking at what it has generated so far and, in many systems, also looking back at the encoder’s representations.\n\nAn encoder-decoder model contains both parts. It is common in tasks where the output depends on the whole input but is not just a continuation of it, such as translation, summarisation, speech recognition and some information extraction. The older label seq2seq means “sequence to sequence”: one sequence goes in, another sequence comes out. Not every seq2seq system uses transformers, but many modern ones do.\n\nWhat goes in depends on the task: words, subword pieces, audio frames or other tokens. Inside the model, each token is turned into a vector, meaning a list of numbers. The encoder uses attention to compare tokens with one another and build context-rich vectors. The decoder then uses those vectors plus the already generated output tokens to predict the next token.\n\nThis is different from a decoder-only, or autoregressive, model. A decoder-only model usually treats the input as part of one long prompt and then continues it. An encoder-decoder model separates reading the source from generating the target. That structure often helps when the source and target play different roles, but the boundary is not absolute because real systems vary.",
+  "oneSentence": "In an encoder-decoder model, the encoder represents input, while the decoder uses those representations to generate output, often one token at a time.",
+  "plainExplanation": "These words name related parts, not one single thing. An encoder reads the input and builds internal representations: numerical patterns that highlight what may matter in each part of the input. A decoder produces the output, usually step by step, while looking at what it has generated so far and, in many systems, also looking back at the encoder’s representations.\n\nAn encoder-decoder model contains both parts. It is common in tasks where the output depends on the whole input but is not just a continuation of it, such as translation, summarisation, speech recognition and some information extraction. The older label seq2seq means “sequence to sequence”: one sequence goes in, another sequence comes out. Not every seq2seq system uses transformers, but many modern ones do.\n\nWhat goes in depends on the task: words, subword pieces, audio frames or other tokens. Inside the model, each token is turned into a vector, meaning a list of numbers. The encoder uses attention to compare tokens with one another and build context-rich vectors. The decoder then uses those vectors plus the already generated output tokens to predict the next token.\n\nDecoder-only models differ structurally, but both can be autoregressive. A decoder-only model usually treats the input as part of one long prompt and then continues it. An encoder-decoder model separates reading the source from generating the target. That structure often helps when the source and target play different roles, but the boundary is not absolute because real systems vary.",
   "everydayAnalogy": {
     "title": "Checking and rewriting application forms",
     "story": "At a scholarship office, one staff member reviews each incoming application and marks the important details: missing documents, language used, deadlines and special instructions. A second staff member uses those notes to draft a standard response letter, adding one sentence at a time depending on what has already been written. If the notes say the passport copy is missing, the letter asks for it; if everything is complete, the letter confirms receipt. The first person organises the incoming material, and the second turns that organised view into outgoing text.",
@@ -143,7 +143,7 @@
       "Encoder-decoder models are only for translation, while decoder-only models are for every other task."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The main distinction is structural. In an encoder-decoder model, the source is first encoded into internal representations, and the decoder generates output while referring to them. In a decoder-only model, the input is usually included in one running context that the model continues autoregressively. Both can generate token by token, and both can use attention."
+    "explanation": "The distinction is structural. An encoder-decoder model encodes the source separately, and its decoder usually cross-attends to those source states. It can still generate token by token. Its decoder also uses self-attention over earlier target tokens, and the architecture does not require separate source and target vocabularies. A decoder-only model represents the prompt and generated tokens in one running context."
   },
   "resources": [
     {
@@ -218,9 +218,46 @@
     "seq2seq"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:22.288Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition is not scoped to an encoder-decoder model. It therefore implies that every decoder uses encoder representations, which is false for decoder-only systems discussed later on the page.",
+        "fix": "In an encoder-decoder model, the encoder represents input, while the decoder uses those representations to generate output, often one token at a time."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "“A decoder-only, or autoregressive, model” incorrectly presents decoder-only and autoregressive as synonyms. Decoder-only describes an architecture, while autoregressive describes sequence generation. Encoder-decoder systems can also have autoregressive decoders, as the technical explanation correctly states.",
+        "fix": "Replace that sentence with: “Decoder-only models differ structurally, but both can be autoregressive.”"
+      },
+      {
+        "field": "visual.steps[2].explanation",
+        "severity": "warning",
+        "problem": "“Start token or first prompt token” blurs the target-side input to an encoder-decoder decoder with the prompt used by a decoder-only model. The rest of the visual consistently describes a start token.",
+        "fix": "The decoder receives a start token and the encoder’s representations."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is the only defensible answer, but the distractors are too crude. Option 1 is false because encoder-decoder models can generate token by token. Option 2 is false because both architectures can use attention. Option 3 is false because neither architecture is restricted to the stated tasks. The repeated absolute claims make option 0 obvious through test-taking rather than understanding.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: “An encoder-decoder model generates its whole target in parallel, while a decoder-only model generates one token at a time.”; “An encoder-decoder model uses self-attention only on the source, while a decoder-only model uses it only on generated output.”; “An encoder-decoder model must use different token vocabularies for source and target, while a decoder-only model must use one vocabulary.” Keep correctOptionIndex 0 and update the explanation."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

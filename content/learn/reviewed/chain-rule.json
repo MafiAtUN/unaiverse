@@ -95,7 +95,7 @@
     "relevance": "This matters when staff need a reliable internal tool and technical teams must explain how training updates are produced, not just report that the model 'learned'.",
     "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive or security-sensitive material into a public AI service for experimentation or training."
   },
-  "whyItMatters": "If you work with model development, procurement or oversight, this term helps you recognise how training actually assigns responsibility for error. A model does not improve by magic. It improves because the training procedure estimates how each parameter contributed to the final loss and then adjusts it. The chain rule is the link that makes this possible in deep models with many layers. If that link is weak, unstable or impossible to compute, training can stall, become noisy or fail. Understanding this helps you ask better questions about feasibility, stability, explainability of the training process, and why some architectures are harder to optimise than others.",
+  "whyItMatters": "If you work with model development, procurement or oversight, this term helps you recognise how training computes gradients. A model does not improve by magic. The training procedure estimates how a small parameter change would affect the loss, then uses that gradient to adjust the parameter. The chain rule makes this calculation possible in deep models with many layers. If local derivatives vanish, grow sharply or do not exist, training can stall, become unstable or fail. Understanding this helps you ask better questions about feasibility, stability, the training process, and why some architectures are harder to optimise than others.",
   "whereYouMayHearIt": [
     "calculus for machine learning",
     "neural network training",
@@ -130,7 +130,7 @@
       "It makes every layer contribute equally to the final prediction."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Training needs gradients with respect to parameters, but the loss usually depends on those parameters only through many intermediate calculations. The chain rule provides the mathematical way to connect those local effects. It does not guarantee a global minimum, remove the need for a loss, or make all layers contribute equally."
+    "explanation": "Training needs gradients with respect to parameters, but the loss usually depends on them through intermediate calculations. The chain rule connects those local derivatives to compute parameter gradients. It does not guarantee a global minimum, choose the learning rate, or use only the derivative nearest the loss."
   },
   "resources": [
     {
@@ -201,9 +201,44 @@
     "chain rule"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:41.345Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The phrase \"assign part of the final error signal to each earlier quantity and each parameter\" suggests attribution or allocation. The chain rule computes local sensitivities. It does not divide responsibility for an error among parameters. This also sits uneasily with the page's later correction about causal explanation.",
+        "fix": "Replace the third paragraph with: \"In model training, the model's calculations lead from an example to a loss. The training procedure works backwards through the computation, step by step, using the chain rule to compute how sensitive the final loss is to each earlier quantity and parameter. What comes out are gradients, which are numbers used to update parameters.\""
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "This field falsely says training estimates how each parameter \"contributed\" to the loss and that the chain-rule \"link\" can itself be weak or unstable. A gradient is a local sensitivity, not a decomposition of past contribution. The mathematical rule is not weak or unstable. Local derivatives can vanish, grow sharply or fail to exist.",
+        "fix": "Replace the field with: \"If you work with model development, procurement or oversight, this term helps you recognise how training computes gradients. A model does not improve by magic. The training procedure estimates how a small parameter change would affect the loss, then uses that gradient to adjust the parameter. The chain rule makes this calculation possible in deep models with many layers. If local derivatives vanish, grow sharply or do not exist, training can stall, become unstable or fail. Understanding this helps you ask better questions about feasibility, stability, the training proc"
+      },
+      {
+        "field": "unWorkplaceExample.scenario",
+        "severity": "error",
+        "problem": "The claim that the chain rule shows which parameters \"most influenced the mistake\" overstates what gradients establish and contradicts the page's own misconception correction. It computes local sensitivity at the current parameter values, not causal or historical responsibility for a mistake.",
+        "fix": "Replace the final sentence with: \"During training, the chain rule lets engineers compute how sensitive the final ranking loss is to small changes in parameters throughout the scoring layers.\""
+      },
+      {
+        "field": "quickCheck",
+        "severity": "error",
+        "problem": "Option 0 is not correct as written. The chain rule links derivatives to compute gradients, but it does not itself convert a loss into parameter updates. Option 1 is false because a small learning rate does not guarantee a global minimum. Option 2 is false and conflates loss functions with labelled data. Option 3 is false because layers need not contribute equally. Options 2 and 3 are also implausible enough to make the intended answer obvious without understanding the chain rule.",
+        "fix": "Use these options: [\"It computes parameter gradients by linking local derivatives across intermediate calculations.\", \"It guarantees the model will reach the global minimum if the learning rate is small enough.\", \"It chooses the learning rate by comparing derivatives across layers.\", \"It uses only the local derivative nearest the final loss.\"]. Keep correctOptionIndex as 0. Replace the explanation with: \"Training needs gradients with respect to parameters, but the loss usually depends on them through intermediate calculations. The chain rule connects those local derivatives to compute paramete"
+      }
+    ],
+    "applied": [
+      "whyItMatters",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -93,7 +93,7 @@
       "The analyst enters the meeting note as input. The software combines the text with the released weights to generate an output.",
       "The analyst checks the summary, notices one date was altered, corrects it manually and records the limitation for future use."
     ],
-    "result": "The university can run and adapt the model because the weights were released, but it still depends on human review and may not have access to the original training data or full training pipeline."
+    "result": "The university can run the model locally because the weights and loading instructions were released, but it still depends on human review and may not have access to the original training data or full training pipeline."
   },
   "unWorkplaceExample": {
     "scenario": "A UN office is testing a locally hosted text-drafting assistant to help staff prepare first drafts of routine public information material, with staff reviewing every line before use.",
@@ -208,9 +208,55 @@
   ],
   "contested": "The boundary of this term is genuinely unsettled. Many people use 'open-weight' narrowly to mean that trained weights are downloadable, while others expect some combination of code, documentation or permissive rights as well. The term is useful, but it does not by itself settle how open the overall system really is.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:09:49.005Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result says the university can adapt the model because the weights were released. The scenario establishes permission for offline use and provides loading instructions, but it neither grants adaptation rights nor describes any adaptation. Releasing weights alone does not establish that adaptation is legally permitted.",
+        "fix": "The university can run the model locally because the weights and loading instructions were released, but it still depends on human review and may not have access to the original training data or full training pipeline."
+      },
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition implies that releasing weights enables running or adaptation even when the licence is restrictive. Running also requires a compatible architecture and software, while adaptation may be prohibited by the licence.",
+        "fix": "A model whose trained numerical parameters are released for others to download, even if the training code and data are unavailable or the licence restricts use."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "This again treats sharing weights as sufficient for running the model. Compatible architecture information, software and infrastructure are also required, and legal terms may restrict execution.",
+        "fix": "An open-weight model is a model whose trained settings are available for other people to download, subject to its format and licence."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The statement that a model can explain a judgment, merely less easily than a human clerk, presents generated explanations as faithful accounts of the model's computation. A generated rationale may not reflect why the output arose. The limitation also fails to expose the main structural mismatch: a readable scoring sheet has named, separable factors, while model behaviour arises from many interacting values.",
+        "fix": "A scoring sheet uses a few named factors whose effects can be read separately. Real model weights may contain millions or billions of interacting values, and no single value has the clear meaning of 'trust matching dates'. Running them also requires the matching architecture and software. The analogy shows that trained parameters can be shared without the training data, but it hides how model behaviour emerges from many interacting computations."
+      },
+      {
+        "field": "visual.description and visual.steps",
+        "severity": "warning",
+        "problem": "The visual mixes two different dimensions. Weights, code, data and methods can be marked by whether they are released, but a licence is described as restricted or permissive rather than released or not released. This contradicts the stated three-state legend and makes the comparison conceptually inconsistent.",
+        "fix": "Label the fifth row 'Usage rights'. Use released, partial and not released for artefacts. Use permissive, restricted and unclear for usage rights, with a separate legend."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the distractors are so absolute and implausible that the answer is obvious without understanding the distinction. Option 1 says 'always' and 'fully', option 2 states the opposite of downloadable weights, and option 3 makes an unsupported proof claim.",
+        "fix": "Replace the options with: [\"A model with downloadable weights, while its training data and some usage rights remain restricted\", \"A model with public code and architecture details, but no released trained weights\", \"A model accessed through an API that lets users request provider-run fine-tuning\", \"A model with published evaluations and parameter counts, but private checkpoint files\"]. Keep correctOptionIndex as 0."
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -28,8 +28,8 @@
     "missing-data",
     "noisy-data"
   ],
-  "oneSentence": "Information that does not arrive in neat rows and columns, such as emails, documents, images, audio and messages, and usually needs extra processing before a system can use it well.",
-  "plainExplanation": "Some information comes in a tidy table: one row per person, one column for name, date or amount. Other information arrives in looser forms, like an email, a PDF letter, a photo, a voice note or a chat message. That looser kind is often called unstructured data, and people also sometimes call text-heavy examples free text.\n\nWhat goes in can be words, pictures, sound or mixed documents. Because it is not already organised into fixed fields, a computer system usually cannot directly sort, count or compare it in the same simple way it can with a spreadsheet.\n\nWhat happens next is usually some extra processing. A system might extract names and dates from a letter, turn speech into text, tag an image, or group similar messages together. This does not make the content automatically correct. It only turns messy input into something more usable.\n\nWhat comes out may be structured data, labels, summaries, search results or alerts. Unstructured data is not the same as bad data. It can be very valuable, but it often takes more work to store, search, govern and analyse safely.",
+  "oneSentence": "Information whose main content is not organised into consistent, predefined fields, such as emails, documents, images, audio and messages, and usually needs extra processing for analysis.",
+  "plainExplanation": "Some information comes in a tidy table: one row per person, one column for name, date or amount. Other information has main content that is not arranged into consistent fields, like an email, a PDF letter, a photo, a voice note or a chat message. That looser kind is often called unstructured data. Open-ended natural-language content is often called free text.\n\nWhat goes in can be words, pictures, sound or mixed documents. Because the main content is not already organised into fixed fields, a computer system usually cannot directly sort, count or compare it in the same simple way it can with spreadsheet fields.\n\nWhat happens next is usually some extra processing. A system might extract names and dates from a letter, turn speech into text, tag an image, or group similar messages together. This does not make the source content automatically correct. It only converts the input into something more usable.\n\nWhat comes out may be structured data, labels, summaries, search results or alerts. Unstructured data is not the same as missing, noisy or bad data. It can be very valuable, but it often takes more work to store, search, govern and analyse safely.",
   "everydayAnalogy": {
     "title": "Sorting an applications tray",
     "story": "A team receives 200 applications for a training programme. Some arrive through an online form with separate boxes for name, age and country. Others arrive as emailed letters, scanned certificates and short messages explaining missing documents. The tray with mixed letters and attachments is harder to sort quickly because staff must read and interpret each item before they can mark it complete, incomplete or urgent. Once staff pull out the key details and place them into a checklist, the applications become much easier to track.",
@@ -93,7 +93,7 @@
       "Each application is labelled complete, incomplete or pending documents.",
       "A tracking sheet is updated with the extracted fields and labels."
     ],
-    "result": "Application 1 becomes name: Amina, ID: yes, CV: yes, status: complete. Application 2 becomes ID: unknown, CV: no, status: incomplete. Application 3 becomes certificate: pending, status: pending documents."
+    "result": "Application 1 becomes name: Amina, ID: yes, CV: yes, status: undetermined without completeness rules. Application 2 becomes ID: no, CV: no, status: undetermined. Application 3 becomes certificate: pending, status: pending if required."
   },
   "unWorkplaceExample": {
     "scenario": "A country office triages a shared inbox that receives meeting requests, vendor questions, letters from partners and public enquiries in different formats.",
@@ -123,8 +123,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "It is information that arrives in messy forms like messages, documents, pictures or audio, rather than tidy boxes in a table.",
-    "technical": "It refers to data whose content and organisation are not predefined by a fixed schema, meaning there is no consistent set of fields like the columns in a relational table. Common examples include natural-language text, PDFs, emails, images, audio and video. To analyse or automate with it, systems often apply parsing, optical character recognition, speech-to-text, tagging, embedding, classification or entity extraction. The output may remain unstructured, or it may be transformed into structured fields or labels for downstream use. The term is often contrasted with structured data, but the boundary is not absolute: some formats are semi-structured because they have partial organisation, such as metadata, headings or markup."
+    "simple": "It is information whose main content is not arranged in tidy, predefined fields, such as messages, documents, pictures or audio.",
+    "technical": "Unstructured data is data whose main content is not represented in a consistent set of predefined fields, even when the file has a format or metadata. Common examples include natural-language passages in PDFs or emails, images, audio and video. To analyse or automate with it, systems often apply parsing, optical character recognition, speech-to-text, tagging, embeddings, classification or entity extraction. The output may remain unstructured, or it may be transformed into structured fields or labels for downstream use. The term is contrasted with structured data, but the boundary is not absolute: some data is semi-structured because it combines organised elements, such as metadata, headings or markup, with content that does not fit fixed fields."
   },
   "keyTakeaway": "Unstructured data can be rich and useful, but it usually needs an extra step before systems can sort, count or route it reliably.",
   "quickCheck": {
@@ -206,9 +206,59 @@
     "free text"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:25:11.902Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition wrongly makes rows and columns the dividing line. Structured data can use predefined fields without being tabular, while unstructured text can be stored inside a table cell. The distinction concerns how the main content is represented, not how it arrives.",
+        "fix": "Information whose main content is not organised into consistent, predefined fields, such as emails, documents, images, audio and messages, and usually needs extra processing for analysis."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that people call “text-heavy examples” free text is too broad. A document can contain substantial text without being free text. Free text is open-ended natural-language content. Calling the input “messy” also blurs unstructured data with noisy or low-quality data.",
+        "fix": "Some information comes in a tidy table: one row per person, one column for name, date or amount. Other information has main content that is not arranged into consistent fields, like an email, a PDF letter, a photo, a voice note or a chat message. That looser kind is often called unstructured data. Open-ended natural-language content is often called free text.\n\nWhat goes in can be words, pictures, sound or mixed documents. Because the main content is not already organised into fixed fields, a computer system usually cannot directly sort, count or compare it in the same simple way it can with sp"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The statuses do not follow from the supplied information. No completeness rules are given, so ID plus CV does not prove Application 1 is complete. Likewise, the absence of attachments does not support recording ID as “unknown” while recording CV as “no.” There is no arithmetic to check in this example.",
+        "fix": "Application 1 becomes name: Amina, ID: yes, CV: yes, status: undetermined without completeness rules. Application 2 becomes ID: no, CV: no, status: undetermined. Application 3 becomes certificate: pending, status: pending if required."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "Describing the forms as “messy” encourages confusion with noisy data. Unstructured data can be accurate and orderly while lacking predefined fields.",
+        "fix": "It is information whose main content is not arranged in tidy, predefined fields, such as messages, documents, pictures or audio."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The definition is too absolute in saying that the data's content and organisation are not predefined by a fixed schema. Emails, PDFs, images and audio files can have standard formats, metadata or other defined structure while their main content remains unstructured. The later reference to semi-structured data does not repair this contradiction.",
+        "fix": "Unstructured data is data whose main content is not represented in a consistent set of predefined fields, even when the file has a format or metadata. Common examples include natural-language passages in PDFs or emails, images, audio and video. To analyse or automate with it, systems often apply parsing, optical character recognition, speech-to-text, tagging, embeddings, classification or entity extraction. The output may remain unstructured, or it may be transformed into structured fields or labels for downstream use. The term is contrasted with structured data, but the boundary is not absolu"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "It implies that systems cannot sort or route unstructured data without processing. They can sort files or messages using metadata. Extra processing is usually needed to sort, count or route according to the unstructured content.",
+        "fix": "Unstructured data can be rich and useful, but systems usually need an extra step to sort, count or route it by its content reliably."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

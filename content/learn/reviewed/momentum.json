@@ -25,7 +25,7 @@
     "adam-optimiser"
   ],
   "oneSentence": "A training method that carries part of the previous update into the next one so parameter changes keep moving in useful directions and wobble less.",
-  "plainExplanation": "When a model learns, training computes a loss, which is a number showing how wrong the current output is. It then computes a gradient: a set of values that points toward changes expected to reduce that loss. Basic gradient descent follows only the current gradient at each step.\n\nMomentum adds memory. Instead of using just today’s gradient, it keeps a running update vector, often called velocity. Each new update combines part of the previous velocity with the current gradient, then uses that combined value to change the model’s parameters.\n\nWhat goes in: the current gradient, the previous velocity, a learning rate, and a momentum coefficient such as 0.9. What happens: the old velocity is shrunk a little, the new gradient is added, and the parameters are moved using the result. What comes out: a smoother sequence of parameter updates.\n\nThis helps for two common reasons. First, gradients from one mini-batch to the next can be noisy, so plain gradient descent may zigzag. Momentum averages over recent steps, which can damp that wobble. Second, if many gradients point in a similar direction over time, momentum can build speed along that direction and move faster through shallow regions.\n\nMomentum does not guarantee a better solution, and it is not the same as adaptive methods such as Adam. It is a rule for updating parameters during optimisation, and its behaviour depends on other choices such as learning rate, batch size and the shape of the loss surface.",
+  "plainExplanation": "When a model learns, training computes a loss, which is a number showing how wrong the current output is. It then computes a gradient: a set of values describing how the loss changes as parameters change. Moving against the gradient is expected to reduce the loss. Basic gradient descent uses only the current gradient at each step.\n\nMomentum adds memory. Instead of using just today’s gradient, it keeps a running update vector, often called velocity. Each new update combines part of the previous velocity with the current gradient, then uses that combined value to change the model’s parameters.\n\nWhat goes in: the current gradient, the previous velocity, a learning rate, and a momentum coefficient such as 0.9. What happens: the old velocity is shrunk a little, the new gradient is added, and the parameters are moved using the result. What comes out: a smoother sequence of parameter updates.\n\nThis helps for two common reasons. First, gradients from one mini-batch to the next can be noisy, so plain gradient descent may zigzag. Momentum averages over recent steps, which can damp that wobble. Second, if many gradients point in a similar direction over time, momentum can build speed along that direction and move faster through shallow regions.\n\nMomentum does not guarantee a better solution, and it is not the same as adaptive methods such as Adam. It is a rule for updating parameters during optimisation, and its behaviour depends on other choices such as learning rate, batch size and the shape of the loss surface.",
   "everydayAnalogy": {
     "title": "Pushing a loaded trolley down a bumpy corridor",
     "story": "Amina and Luis are moving a loaded trolley through a corridor with small bumps in the floor. If they react only to each bump, they keep jerking the trolley left and right and make slow progress. Instead, they keep some of the trolley’s existing motion while still correcting its direction when a new bump pushes it off course. The trolley then wiggles less from side to side and keeps rolling forward more steadily. If they push too hard for too long, however, the trolley can overshoot the doorway they wanted.",
@@ -137,7 +137,7 @@
       "It automatically lowers overfitting by adding noise to the training data."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Momentum keeps a decayed contribution from earlier updates. That memory can smooth noisy step-to-step changes and help the optimiser keep moving in directions that have repeatedly reduced loss. It does not guarantee a global minimum, and it is not a regularisation method."
+    "explanation": "Momentum keeps a decayed contribution from earlier updates. It does not average recent losses, rescale each parameter from gradient magnitudes, or change the batch data. It combines update history with the current gradient to smooth the path."
   },
   "resources": [
     {
@@ -207,9 +207,50 @@
     "momentum"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:13:21.230Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The page says the gradient points toward changes expected to reduce loss. A gradient points in the direction of increasing loss. Standard gradient descent moves against the gradient, as the later equation correctly shows.",
+        "fix": "Replace the gradient sentence with: \"It then computes a gradient: a set of values describing how the loss changes as parameters change. Moving against the gradient is expected to reduce the loss.\""
+      },
+      {
+        "field": "visual.steps[0] and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual repeatedly depicts or describes the current gradient itself as pointing downhill. This contradicts the update equation, which subtracts the gradient. The downhill arrow is the negative-gradient or descent direction, not the gradient.",
+        "fix": "In Step 1, replace \"The local gradient points downhill\" with \"The descent direction based on the local gradient points downhill\" and label the arrow \"descent direction\". In the accessibility description, replace \"follows only the current gradient each time\" with \"calculates each update using only the current gradient\"."
+      },
+      {
+        "field": "workedExample.input and workedExample.process",
+        "severity": "error",
+        "problem": "The arithmetic is correct, but the explanation of it is not. The first velocity is 0.9 × 0.30 - 0.1 × 0.80 = 0.19, and the next is 0.9 × 0.19 - 0.1 × (-0.10) = 0.181. On the second step, the negative gradient contributes +0.01, which reinforces the positive stored velocity. It does not demonstrate momentum resisting a noisy reversal or preventing an update from flipping. The resistance actually occurs in the first calculation, where the positive gradient opposes the positive stored velocity, but the text attributes it to the next mini-batch.",
+        "fix": "Change the previous velocity to -0.30. Replace the first four process lines with: \"Compute the new velocity: 0.9 × -0.30 - 0.1 × 0.80 = -0.27 - 0.08 = -0.35.\" \"Update the parameter: 5.00 - 0.35 = 4.65.\" \"On the next mini-batch, suppose the gradient changes sign slightly to -0.10 because the batch is noisy.\" \"Compute the next velocity: 0.9 × -0.35 - 0.1 × (-0.10) = -0.315 + 0.01 = -0.305. The update does not flip.\""
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is the only correct answer, but the other three options are implausible caricatures. Random search, guaranteed global optimisation, and adding noise to training data are so unrelated that the answer is obvious without understanding momentum.",
+        "fix": "Keep option 1. Replace the other options with: 0: \"It replaces each current gradient with the average loss from recent mini-batches.\" 2: \"It rescales every parameter from recent gradient magnitudes, as Adam does.\" 3: \"It changes the batch data to make consecutive gradients agree more often.\""
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "After replacing the weak distractors, the explanation must address the actual distinctions being tested. The current reference to global minima and regularisation would no longer explain why the new alternatives are wrong.",
+        "fix": "Momentum keeps a decayed contribution from earlier updates. It does not average recent losses, rescale each parameter from gradient magnitudes, or change the batch data. It combines update history with the current gradient to smooth the path."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

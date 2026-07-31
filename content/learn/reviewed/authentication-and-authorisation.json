@@ -30,8 +30,8 @@
     "access-control",
     "shadow-ai"
   ],
-  "oneSentence": "These terms describe proving who or what is requesting access, then checking what that requester is allowed to do.",
-  "plainExplanation": "These words are related, but they are not the same. Authentication checks identity: are you really the person, device or service you claim to be? Authorisation checks permissions: now that identity has been checked, what are you allowed to read, use or change? Login usually means the sign-in step people see on screen, but a system can authenticate and authorise in other ways too.\n\nWhat goes in depends on the system. It might be a password, a code from an app, a security key, or a digital token. A token is a piece of data a system uses to recognise a previously verified session. The system compares that information with its records or with another trusted service.\n\nWhat happens next has two parts. First, the system tries to verify identity. If that succeeds, it then looks up rules or roles, such as “staff can view this page” or “editors can approve changes”. What comes out is not just yes or no. The result may be “signed in but view only”, “signed in with editing rights”, or “access denied”.\n\nIn AI systems, this matters because many incidents are not about breaking encryption or guessing passwords. They are about getting a model, plugin or connected tool to act beyond its allowed scope. Good authentication and authorisation do not stop every AI attack, such as prompt injection, but they limit what a compromised session, tool or application can reach.",
+  "oneSentence": "Authentication verifies a claimed identity; authorisation checks what that requester is allowed to do.",
+  "plainExplanation": "These words are related, but they are not the same. Authentication checks an identity claim: do the credentials support the claimed person, device or service? Authorisation checks permissions: now that the claim has been checked, what is that requester allowed to read, use or change? Login usually means the sign-in step people see on screen, but a system can authenticate and authorise in other ways too.\n\nWhat goes in depends on the system. It might be a password, a code from an app, a security key, or a digital token. A token is a piece of data that may represent a session, identity, granted scope or other claims. The system compares that information with its records or with another trusted service.\n\nWhat happens next has two parts. First, the system tries to verify the identity claim. If that succeeds, it then looks up rules or roles, such as “staff can view this page” or “editors can approve changes”. What comes out is not just yes or no. The result may be “signed in but view only”, “signed in with editing rights”, or “access denied”.\n\nIn AI systems, this matters because many incidents are not about breaking encryption or guessing passwords. They are about getting a model, plugin or connected tool to act beyond its allowed scope. Good authentication and authorisation do not stop every AI attack, such as prompt injection, but they limit what a compromised session, tool or application can reach.",
   "everydayAnalogy": {
     "title": "Entering a large library reading room",
     "story": "At the entrance to a large library, Amina shows her library card to the desk clerk. The clerk checks that the card belongs to her and that it is still valid. After that, the clerk looks at her membership type and tells her she may enter the reading room and borrow ordinary books, but not enter the rare manuscripts room. Her friend Ravi also gets in, but his researcher pass lets him request materials from a restricted collection.",
@@ -127,7 +127,7 @@
     "simple": "First the system checks who is asking. Then it checks what that person or service is allowed to do.",
     "technical": "Authentication establishes or verifies an identity claim using credentials such as passwords, security keys, certificates or tokens. Successful authentication may create a session or issue a token representing that verified state. Authorisation then evaluates policy for that identity, session or workload: roles, attributes, group membership, resource rules or scope. The output is a decision about specific actions on specific resources, such as read, write, execute or call-tool permission. Login is a common interactive entry point for human users, but machine-to-machine systems may authenticate and authorise without a visible login screen. These concepts are related to access control, but they are not identical: authentication and authorisation are mechanisms within the broader control of who can do what, under which conditions."
   },
-  "keyTakeaway": "Signing in proves identity; it does not automatically justify every action that follows.",
+  "keyTakeaway": "Signing in checks an identity claim; it does not automatically justify every action that follows.",
   "quickCheck": {
     "question": "A staff member signs in successfully to an AI tool but cannot export a dataset. What best explains this?",
     "options": [
@@ -137,7 +137,7 @@
       "Login and authorisation are the same, so the tool is malfunctioning."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Successful sign-in means authentication worked. Exporting data is a separate permission question. A system can correctly authenticate a user and still deny a particular action because authorisation rules do not allow it."
+    "explanation": "Successful sign-in shows that the initial authentication step worked. Exporting data is a separate permission question. The audit message shows that authorisation rules denied that action."
   },
   "resources": [
     {
@@ -212,9 +212,70 @@
     "login"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:31:34.028Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "“Proving who or what” overstates authentication. Authentication verifies an identity claim using credentials, but stolen or shared credentials can still be accepted.",
+        "fix": "Authentication verifies a claimed identity; authorisation checks what that requester is allowed to do."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The token definition is too narrow. Tokens do not only recognise previously verified sessions. They may represent a session, identity, granted scope or other claims.",
+        "fix": "These words are related, but they are not the same. Authentication checks an identity claim: do the credentials support the claimed person, device or service? Authorisation checks permissions: now that the claim has been checked, what is that requester allowed to read, use or change? Login usually means the sign-in step people see on screen, but a system can authenticate and authorise in other ways too.\n\nWhat goes in depends on the system. It might be a password, a code from an app, a security key, or a digital token. A token is a piece of data that may represent a session, identity, granted s"
+      },
+      {
+        "field": "visual.learningObjective and visual.steps[1]",
+        "severity": "error",
+        "problem": "The visual says authentication and authorisation always happen in that order and labels authentication as proving who is asking. Authentication provides evidence for an identity claim, not proof of the actual requester. Authorisation may also apply to anonymous access or use an existing authenticated session rather than follow a new login.",
+        "fix": "Change the objective to: “Show the difference between authentication, login and authorisation, and show their common sequence for identity-based access.” Change the note to: “Checks the identity claim”."
+      },
+      {
+        "field": "workedExample.input and workedExample.process",
+        "severity": "error",
+        "problem": "The requested “team workspace” is never identified as outside Leila's unit, yet the process suddenly calls it cross-unit sharing. The example also says the AI assistant checks and enforces permissions, which misleadingly suggests that the model itself is the trusted security boundary.",
+        "fix": "Change the requested action to: “summarise Project Atlas notes and share the summary to a workspace outside Leila's unit.” In steps 3 and 4, say the document system checks Leila's permissions and blocks the sharing action, while the assistant only summarises files the system permits it to retrieve."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "error",
+        "problem": "Authentication cannot confirm that the officer personally is using the service. It checks credentials associated with the officer's account, which could be stolen or shared.",
+        "fix": "Authentication checks the credentials for the officer's account. Authorisation limits the tool to the repositories and actions that account is allowed to access, which reduces the impact of mistakes or malicious prompts."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "“Signing in proves identity” again treats authentication as conclusive proof rather than verification of an identity claim.",
+        "fix": "Signing in checks an identity claim; it does not automatically justify every action that follows."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "The simple version loses the technical version's important qualification that the system checks a claimed identity, not necessarily the real person or service operating the credentials.",
+        "fix": "First the system checks a claimed identity. Then it checks what that person or service is allowed to do."
+      },
+      {
+        "field": "quickCheck",
+        "severity": "error",
+        "problem": "The marked option is conceptually intended, but it says authorisation “allowed sign-in”, blurring the distinction the page is meant to teach. Option 0 is also defensible because systems may require later or step-up authentication. Options 2 and 3 are implausible straw distractors, so the answer is obvious without understanding the distinction.",
+        "fix": "Use the question: “A staff member signs in successfully to an AI tool. An audit message says ‘export permission denied’. What best explains this?” Use these options: 1. “The export required another identity check, which was not completed.” 2. “Authentication succeeded, but authorisation blocked that specific action.” 3. “The dataset was unavailable to every user, regardless of permissions.” 4. “The sign-in session expired before the export request.” Keep correctOptionIndex 1."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

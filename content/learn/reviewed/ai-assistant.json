@@ -28,7 +28,7 @@
     "ai-agent",
     "agentic-ai"
   ],
-  "oneSentence": "Software that uses AI to help with tasks by taking instructions, using connected tools, and returning a draft, answer or action for a person to review.",
+  "oneSentence": "Software that uses AI to help with tasks by taking instructions, sometimes using connected tools, and returning a draft, answer or proposed action for a person to review.",
   "plainExplanation": "An AI assistant is a software helper that takes a request in everyday language and tries to help complete a task. The request might be a question, a document to summarise, or an instruction such as “find the latest guidance and draft a short note”. The output might be text, a list, a recommendation, or an action taken through an approved tool.\n\nWhat goes in can include your prompt, relevant files, and access to connected systems such as a calendar, search index or database. What happens in the middle depends on the design. Some assistants only generate a reply. Others can also use tools, meaning they can send a structured request to another system, get results back, and continue the task.\n\nWhat comes out is not automatically correct or safe. An assistant can produce fluent but wrong text, miss context, call the wrong tool, or take a step you did not intend if the setup is poor. That is why supervision matters, especially when the task affects people, money, security, rights or official records.\n\nPeople often confuse an AI assistant with a chatbot, a copilot, or a full AI agent. A chatbot mainly focuses on conversation. A copilot usually helps inside a specific application while a person stays in control. A fuller AI agent may plan and carry out longer chains of actions with more autonomy. In practice, these labels overlap, so it is better to ask what the system can actually do, what tools it can access, and what checks are in place.",
   "everydayAnalogy": {
     "title": "A cooperative office helper during rainy season",
@@ -135,7 +135,7 @@
       "Any search engine with no AI component"
     ],
     "correctOptionIndex": 1,
-    "explanation": "The key idea is not just conversation. An AI assistant may combine language interaction with tool use, such as search or calendar access, and then return a draft, answer or proposed action. It does not automatically guarantee correctness, and it should not be assumed to operate without human checks."
+    "explanation": "An AI assistant is the user-facing software that accepts a request and returns a result or proposed action. It may include an AI model, use connectors or trigger automation, but none of those components alone is the assistant. Tool use is optional, and important outputs still need human checks."
   },
   "resources": [
     {
@@ -206,9 +206,69 @@
   ],
   "contested": "The label is used inconsistently across products. Some organisations use it for simple chat interfaces, while others reserve it for systems that can use tools or take limited actions, so it is best to ask what capabilities are actually included.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:14.219Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This makes connected-tool use mandatory, but the page later says some assistants only generate a reply. The definition contradicts the explanation.",
+        "fix": "Software that uses AI to help with tasks by taking instructions, sometimes using connected tools, and returning a draft, answer or proposed action for a person to review."
+      },
+      {
+        "field": "plainExplanation, paragraph 4",
+        "severity": "warning",
+        "problem": "The distinction from copilot is unsupported and ineffective. The supplied copilot definition does not require use inside a specific application, while this page's assistant definition otherwise closely matches it. The paragraph also needs to distinguish a user-facing assistant label from the multi-step autonomy associated with agents.",
+        "fix": "A chatbot is defined by back-and-forth conversation. A copilot emphasises helping a person under their direction and review. An AI agent emphasises choosing and carrying out multiple steps towards a goal. AI assistant is a broad product label for software presented as helping with user requests, so these capabilities can overlap. Check what the system can do, what tools it can access, and what checks are in place."
+      },
+      {
+        "field": "workedExample.input and workedExample.result",
+        "severity": "error",
+        "problem": "The requested 90-word SMS is only 41 words. Count: Rain(1) is2 likely3 to4 increase5 tomorrow6 in7 Nakuru8 and9 Kisumu10, with11 lighter12 change13 in14 Bungoma15. Farmers16 should17 watch18 local19 conditions20, protect21 stored22 seed23 and24 plan25 field26 work27 carefully28 where29 heavier30 rain31 is32 expected33. Please34 confirm35 with36 local37 extension38 staff39 if40 conditions41 change41. Therefore, 41 does not equal 90.",
+        "fix": "In the input, replace “draft a 90-word SMS update” with “draft a short SMS update”. The existing result then satisfies the instruction without requiring a longer rewrite."
+      },
+      {
+        "field": "visual.steps[1].explanation, visual.steps[1].visualInstruction, visual.accessibi",
+        "severity": "error",
+        "problem": "These fields present the assistant as literally deciding, choosing and recognising. That is unqualified anthropomorphism rather than a description of system processing and routing.",
+        "fix": "Use mechanistic wording: “The assistant processes the request and routes it to a direct response or a connected tool according to its configuration.” Label the internal lines “process instructions” and “route next step”. In the accessibility text, replace “chooses a next step” with “routes the request to a next step”. In the worked example, replace the first process step with “The assistant processes the instruction, and its configuration routes the request to the weather tool rather than directly generating text.”"
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The final clause says the assistant may fail to recognise missing facts, presenting recognition as a literal mental capacity. The real limitation is that the system may not detect or flag missing information.",
+        "fix": "A human office helper can ask clarifying questions with real-world judgement and may understand local context in a richer way. An AI assistant does not have that kind of general human awareness. It works by processing patterns in data and by following its configuration, so it may produce confident-sounding text without flagging that key facts are missing."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The description allows planning and observation-and-action cycles but does not explain how that overlaps with, yet differs from, the separate AI agent and agentic AI entries. It also states that an assistant maintains task context as though every product does so.",
+        "fix": "An AI assistant is an application built around one or more AI models, often language models, that accepts natural-language instructions and may maintain task context or invoke external tools through connectors, APIs or function-calling interfaces. A common flow is: receive a prompt and context, generate a response or tool request, ingest any tool result, and produce a final response or proposed action. Some assistants keep session state, preferences or limited memory. The label describes a user-facing helper, not a fixed level of autonomy. Products may range from text generation to agent-like "
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked answer is the only defensible option, but only because every distractor is absurd. Option 0 says “only” and “never”, option 2 says “always” and denies all oversight, and option 3 explicitly removes the AI component. A reader can answer by spotting extreme wording without understanding AI assistants.",
+        "fix": "Keep option 1 and replace the distractors with: 0. “The AI model inside a product, without the surrounding interface, permissions or connected tools”; 2. “A predefined automation that runs the same fixed steps whenever triggered, without interpreting a request”; 3. “A connector that gives another system access to a calendar or database but does not produce a user-facing result”."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "After the distractors are repaired, the explanation should distinguish an assistant from a model, a fixed automation and a connector rather than merely rejecting implausible absolutes.",
+        "fix": "An AI assistant is the user-facing software that accepts a request and returns a result or proposed action. It may include an AI model, use connectors or trigger automation, but none of those components alone is the assistant. Tool use is optional, and important outputs still need human checks."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

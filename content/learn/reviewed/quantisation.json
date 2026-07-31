@@ -214,9 +214,29 @@
     "quantised model"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:11.477Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process[3] and workedExample.result",
+        "severity": "warning",
+        "problem": "The weight arithmetic is correct, but the example does not specify GPU capacity, runtime memory, context length, batch size, benchmarks, or evaluation results. It therefore cannot conclude that total memory is 7 to 8 GB, that throughput improves, that quality falls only slightly, or that the model fits the target machine. Runtime overhead can vary substantially beyond the weight storage estimate.",
+        "fix": "Replace process step 4 with: \"Compare measured total memory, throughput, and evaluation results on the target hardware, then decide whether the changes are acceptable.\" Replace the result with: \"Weight storage falls from about 14 GB to about 7 GB plus scale data. The team measures total memory, speed, and quality before deciding whether deployment is practical.\""
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "The analogy can blur quantisation into pruning because simplifying a map commonly removes streets and information. Quantisation usually retains the parameters and architecture while mapping values to fewer levels. The limitation also wrongly groups specialised kernels with scales and calibration as mechanisms for preserving behaviour. Kernels primarily determine whether the chosen representation can be executed efficiently.",
+        "fix": "A simplified map removes streets and changes the information shown. Quantisation usually keeps the model's parameters and architecture but maps numerical values to fewer levels. Scales, zero-points, or calibration data can reduce the resulting error. Hardware kernels affect whether the compact representation runs faster. Unlike a map, a quantised model still requires machine computation."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

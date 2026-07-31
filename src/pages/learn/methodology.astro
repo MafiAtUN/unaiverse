@@ -11,17 +11,22 @@ import Learn from '../../layouts/Learn.astro';
 import { TERMS, CORPUS_STATS, learnHref, siteHref } from '../../lib/learn/terms';
 
 const models = [...new Set(TERMS.map((t) => t.generation?.model).filter(Boolean))] as string[];
+const reviewers = [...new Set(TERMS.map((t) => t.machineReview?.deployment).filter(Boolean))] as string[];
+const machineReviewed = TERMS.filter((t) => t.machineReview).length;
+const rewritten = TERMS.filter((t) => (t.machineReview?.applied.length ?? 0) > 0).length;
+const openErrors = TERMS.flatMap((t) => t.machineReview?.issues ?? []).filter(
+  (i) => i.severity === 'error',
+).length;
 const promptVersions = [...new Set(TERMS.map((t) => t.generation?.promptVersion).filter(Boolean))] as string[];
 const withCaution = TERMS.filter((t) => t.unWorkplaceExample.caution).length;
 const withContested = TERMS.filter((t) => t.contested).length;
 const resources = TERMS.flatMap((t) => t.resources);
 const verified = resources.filter((r) => r.verified).length;
 const searches = resources.filter((r) => r.isSearch).length;
-const lastReviewed = TERMS.map((t) => t.lastReviewed).filter(Boolean).sort().at(-1);
 
 const title = 'Methodology · UNAIVERSE';
 const description =
-  'How the AI Literacy Universe was written: an offline Azure OpenAI pipeline, a strict schema, an automated link checker, and a human review gate that every page has to pass before it exists.';
+  'How the AI Literacy Universe was written: an offline Azure OpenAI pipeline, a strict schema, an automated link checker, and a second model that reviews the first one\'s work.';
 ---
 
 <Learn title={title} description={description} section="methodology">
@@ -45,8 +50,17 @@ const description =
         Each term was drafted by a large language model running through a script on a developer's
         machine, against a fixed prompt and a strict schema. The draft was checked automatically for
         structure, for required fields, for valid links to other terms, and for reading level. Every
-        external URL was fetched to see whether it answers. A person then reviewed the draft and
-        published it. Nothing appears on this site that has not been through that gate.
+        external URL was fetched to see whether it answers. A second, different model then reviewed
+        the first model's work, looking for what was wrong with it.
+      </p>
+      <p>
+        <strong>Being precise about what that does and does not mean.</strong> A model checking a
+        model is a real check and a limited one. It catches arithmetic that does not compute,
+        definitions that fail to separate themselves from neighbouring terms, quiz answers that are
+        not defensible, and examples that present invented specifics as real. It does not reliably
+        catch a confident, fluent, wrong account of how something works. So: use these pages to get
+        oriented, and check anything that carries weight against the primary sources every page
+        links to.
       </p>
       <p>
         The published site is a folder of static files on GitHub Pages. It makes no call to any AI
@@ -58,7 +72,7 @@ const description =
       <h2 class="lsection__title" id="numbers">Where the corpus stands</h2>
       <ul class="az-list" style="grid-template-columns: 1fr">
         <li><a href={learnHref('explore')}><span>Terms published</span><span class="az-list__meta">{CORPUS_STATS.published} of {CORPUS_STATS.planned} planned</span></a></li>
-        <li><a href={learnHref('explore')}><span>Human-reviewed</span><span class="az-list__meta">{CORPUS_STATS.reviewed}</span></a></li>
+        <li><a href={learnHref('explore')}><span>Checked by a second model</span><span class="az-list__meta">{machineReviewed}</span></a></li>
         <li><a href={learnHref('map')}><span>Categories</span><span class="az-list__meta">{CORPUS_STATS.categories}</span></a></li>
         <li><a href={learnHref('explore')}><span>Hand-built interactive explainers</span><span class="az-list__meta">{CORPUS_STATS.withInteractive}</span></a></li>
       </ul>
@@ -67,7 +81,7 @@ const description =
         {withContested} are flagged as contested terminology. {verified} of {resources.length}{' '}
         external links have been fetched and answered; {searches} are deliberately search links
         rather than a single page.
-        {lastReviewed && ` Most recent human review: ${lastReviewed}.`}
+
       </p>
     </section>
 
@@ -80,15 +94,22 @@ const description =
         <li><span><strong>The answer is validated against the same schema the site uses.</strong> A draft missing its analogy limitation, its screen-reader description or a defensible quiz answer is rejected and regenerated with the specific failures fed back to the model. Rejected attempts are kept on disk.</span></li>
         <li><span><strong>Every URL is fetched.</strong> Links that answer are marked as checked with a date. Links that do not are labelled "not verified" on the page rather than quietly presented as vetted.</span></li>
         <li><span><strong>A quality report is generated:</strong> reading-level outliers, duplicate definitions, orphan terms, prerequisites pointing at unwritten pages, missing UN examples, broken links.</span></li>
-        <li><span><strong>A person reviews and publishes.</strong> The site reads one directory. A term is in it only if someone put it there.</span></li>
+        <li><span><strong>A second, different model reviews the first one's work.</strong>{reviewers.length ? ` Currently ${reviewers.join(', ')}, ` : ' '}prompted to find errors rather than to approve: arithmetic that does not compute, definitions that fail to distinguish themselves from neighbouring terms, quiz answers that are not defensible, anthropomorphism, and examples that present invented specifics as real. It may rewrite a bounded set of fields, never introduce a new fact or URL, and every rewrite is re-validated against the same schema before it is kept.{rewritten ? ` ${rewritten} pages were rewritten as a result.` : ''}</span></li>
+        <li><span><strong>Publishing is a separate, deliberate step.</strong> The site renders one directory, and a term is in it only because someone ran the command that put it there.</span></li>
       </ol>
+
+      <p class="data-note" style="margin-top: var(--sp-4)">
+        The second-model pass raised {openErrors} observation{openErrors === 1 ? '' : 's'} at error
+        level across the corpus, and rewrote {rewritten} pages as a result. The rest are recorded in
+        the repository rather than on the page.
+      </p>
     </section>
 
     <section class="lsection" aria-labelledby="rules">
       <h2 class="lsection__title" id="rules">The writing rules</h2>
       <ul class="steps-list">
         <li><span>Define the term immediately. Short sentences, one new idea at a time, no explaining jargon with more jargon.</span></li>
-        <li><span>Every analogy states where it stops working. This is enforced by the schema, not by good intentions — a term without it cannot be published.</span></li>
+        <li><span>Every analogy states where it stops working. This is enforced by the schema, not by good intentions. A term without it cannot be published.</span></li>
         <li><span>No anthropomorphism. A model does not understand, think, know, want or decide, and the validator flags drafts that say it does.</span></li>
         <li><span>No hype and no doom. Fluent output is never treated as evidence of accuracy.</span></li>
         <li><span>Examples come from many regions and many kinds of work. No cats, no dogs, no recipes.</span></li>
@@ -100,9 +121,9 @@ const description =
     <section class="lsection" aria-labelledby="limits">
       <h2 class="lsection__title" id="limits">What this means you should not assume</h2>
       <p>
-        These pages are a starting point, not an authority. They were drafted by a model, and a
-        review catches a great deal but not everything. Where a definition matters — in negotiated
-        text, in a procurement document, in a legal opinion — go to the primary source, which every
+        These pages are a starting point, not an authority. They were drafted by a model and checked
+        by another model, which catches a great deal but not everything. Where a definition matters, in negotiated
+        text, in a procurement document, in a legal opinion, go to the primary source, which every
         page links to.
       </p>
       <p>
@@ -123,7 +144,7 @@ const description =
         No login, no account, no password, no user database. No analytics, no cookies, no tracking
         pixels, no third-party scripts, no fonts loaded from anyone else's server. What you search
         for, what you save and what you get wrong in a quick check stay in your browser and are
-        never transmitted — including to the AI service that helped write these pages, which is not
+        never transmitted, including to the AI service that helped write these pages, which is not
         connected to the published site in any way.
       </p>
       <p>

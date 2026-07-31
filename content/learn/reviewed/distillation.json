@@ -29,7 +29,7 @@
     "pruning",
     "fine-tuning"
   ],
-  "oneSentence": "Distillation transfers a larger model’s behaviour into a smaller model by training the smaller one to imitate the larger model’s outputs.",
+  "oneSentence": "Distillation trains a student model to imitate a teacher model’s outputs or other signals; the student is often smaller.",
   "plainExplanation": "Distillation is a way to make a model smaller, faster or cheaper to run without starting from zero. A large model, often called a teacher model, produces outputs for many inputs. A smaller model, often called a student model, is then trained to match those outputs as closely as possible.\n\nWhat goes in? Usually three things: a trained teacher model, a set of input examples, and a student model architecture. The examples may be labelled data, unlabelled data, or prompts generated for the task. The teacher produces target outputs, which can be final answers, probabilities across options, or intermediate signals depending on the method.\n\nWhat happens? The student model adjusts its parameters so its outputs become similar to the teacher’s outputs. This can preserve much of the teacher’s performance while reducing size or latency, meaning how long one response takes. In practice, distillation is often used after pretraining or fine-tuning, not instead of them.\n\nWhat comes out? A distilled model: usually smaller, faster and cheaper to deploy, but often not as capable as the teacher on difficult cases. Distillation is about transferring behaviour from one model to another. It is commonly confused with quantisation and pruning, which also make models lighter, but those methods compress a model in different ways rather than teaching a new smaller model to imitate an existing one.",
   "everydayAnalogy": {
     "title": "A senior planner coaching a quick field briefing team",
@@ -141,7 +141,7 @@
     "simple": "A big model shows a smaller model how to answer many examples. The smaller model learns to produce similar outputs, so it can often do a similar job faster and more cheaply.",
     "technical": "Distillation is a training procedure in which a student model is optimised to match a teacher model’s behaviour on a set of inputs. The targets may be hard labels, soft labels such as probability distributions over classes, generated token distributions, hidden-state representations or combinations of these. The loss function typically measures the mismatch between teacher and student outputs and updates only the student parameters. In language models, distillation may occur after pretraining or task-specific fine-tuning, and can be used to compress capability into a smaller architecture for lower inference cost. It differs from parameter-efficient adaptation methods such as LoRA, which modify how a model is adapted, and from compression methods such as quantisation or pruning, which reduce storage or computation without necessarily training a separate student to imitate a teacher."
   },
-  "keyTakeaway": "Distillation does not just shrink a model; it trains a smaller one to imitate a larger one, trading some performance for speed and lower cost.",
+  "keyTakeaway": "Distillation trains a student model to imitate a teacher; a smaller student can trade some performance for speed and lower cost.",
   "quickCheck": {
     "question": "Which statement best describes distillation?",
     "options": [
@@ -222,9 +222,44 @@
     "distilled model"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:30.867Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, simpleVsTechnical.simple, keyTakeaway",
+        "severity": "error",
+        "problem": "These fields make a smaller student part of the definition. Distillation requires a student to imitate a teacher, but the student is not necessarily smaller. Smaller students are common when distillation is used for compression.",
+        "fix": "Define distillation by teacher-student imitation, then describe a smaller student as a common deployment choice."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The explanation distinguishes distillation from quantisation and pruning, but not clearly from fine-tuning. Mentioning that distillation may follow fine-tuning does not explain the difference. Fine-tuning adapts a model using additional examples, while distillation specifically uses another model’s behaviour as a training target.",
+        "fix": "Replace the final part with an explicit comparison covering fine-tuning, quantisation and pruning."
+      },
+      {
+        "field": "workedExample",
+        "severity": "warning",
+        "problem": "The status of the 5,000-message held-out set is unclear. If it comes from the stated 50,000 messages, the arithmetic is 50,000 - 5,000 = 45,000 training messages, so the student cannot train on all 50,000 while 5,000 remain held out. If it is an additional set, the page should say so.",
+        "fix": "State that the 5,000-message held-out set is separate from the 50,000 training messages."
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The accessibility description calls this a five-part flow, while the visual specification contains six numbered steps. This creates an avoidable mismatch for screen-reader users.",
+        "fix": "Change “five-part flow” to “six-part flow” and identify deployment as the sixth step."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "keyTakeaway"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

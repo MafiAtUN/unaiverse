@@ -29,8 +29,8 @@
     "transformer",
     "artificial-neuron"
   ],
-  "oneSentence": "A layered model that scans small patterns across a grid-like input, combines them into larger features, and uses them to classify or describe the whole input.",
-  "plainExplanation": "A convolutional neural network is a kind of neural network built for data arranged like a grid. The most common example is an image, which is a grid of pixel values, but the idea can also apply to other structured data. Instead of looking at every input value separately at first, it examines small nearby groups.\n\nThe key operation is a convolution. In simple terms, a small set of numbers, often called a filter or kernel, slides across the input. At each position, it multiplies nearby input values by the filter values and adds them up. This produces a new grid called a feature map. Different filters can respond to different local patterns, such as edges, corners or textures.\n\nAfter several layers, the model combines simple local patterns into larger and more abstract ones. Early layers may react to lines or colour changes. Later layers may react to shapes or arrangements of parts. Pooling or strided steps may reduce size so the network keeps the strongest useful signals while lowering computation. Then one or more later layers turn those signals into an output such as class scores.\n\nWhat goes in is usually a grid of numbers, such as pixel intensities. What happens is repeated local scanning, weighted combination, non-linear activation, and gradual feature building across layers. What comes out depends on the task: a label, a probability-like score after softmax, a detected region, or another structured prediction. CNNs are especially useful when nearby input values matter and the same kind of pattern can appear in many positions.",
+  "oneSentence": "A layered model that reuses small filters across a grid-like input, combines local patterns into larger features, and produces task outputs from them.",
+  "plainExplanation": "A convolutional neural network is a kind of neural network built for data arranged like a grid. The most common example is an image, which is a grid of pixel values, but the idea can also apply to other structured data. Instead of looking at every input value separately at first, it examines small nearby groups.\n\nThe key operation is a convolution. In simple terms, a small set of numbers, often called a filter or kernel, slides across the input. At each position, it multiplies nearby input values by the filter values and adds them up. This produces a new grid called a feature map. Different filters can respond to different local patterns, such as edges, corners or textures.\n\nAfter several layers, the model combines simple local patterns into larger and more abstract ones. Early layers may react to lines or colour changes. Later layers may react to shapes or arrangements of parts. Pooling or strided steps may reduce spatial size, retaining selected or aggregated signals while lowering computation. Then one or more later layers turn those signals into an output such as class scores.\n\nWhat goes in is usually a grid of numbers, such as pixel intensities. What happens is repeated local scanning, weighted combination, non-linear activation, and gradual feature building across layers. What comes out depends on the task: a label, a probability-like score after softmax, a detected region, or another structured prediction. CNNs are especially useful when nearby input values matter and the same kind of pattern can appear in many positions.",
   "everydayAnalogy": {
     "title": "Inspecting printed forms with a reusable window",
     "story": "A team in Nairobi receives thousands of paper survey forms. Instead of reading every page as one big block, one colleague places a small transparent window over the top-left part of each page and checks for simple marks such as a tick, a bold heading or a handwritten note. They slide the same window across the page, row by row, recording where each pattern appears. A second colleague looks at that pattern record to spot larger structures, such as a complaint section with several related marks close together. At the end, the team decides whether the form is about water access, school safety or something else.",
@@ -143,7 +143,7 @@
       "It guarantees that the highest output score is the true class probability."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The defining idea is local connectivity plus shared weights: the same filter scans different positions. That helps the model detect similar patterns wherever they appear. CNNs still use weights, can produce many classes, and their outputs are not guaranteed to be true probabilities."
+    "explanation": "The defining idea is local connectivity plus shared weights: the same filter scans different positions. A basic fully connected layer instead connects inputs broadly, while a recurrent design carries state through a sequence. CNNs do not learn a separate filter for every position."
   },
   "resources": [
     {
@@ -216,9 +216,57 @@
     "convnet"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:11.939Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition restricts CNNs to classifying or describing the whole input. CNNs can also produce spatial outputs, such as detected regions or other structured predictions, which the page itself later acknowledges.",
+        "fix": "A layered model that reuses small filters across a grid-like input, combines local patterns into larger features, and produces task outputs from them."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that pooling or strided steps keep the strongest useful signals is false as a general statement. Average pooling aggregates values rather than keeping the strongest, and strided convolution does not inherently select the strongest signals.",
+        "fix": "Pooling or strided steps may reduce spatial size, retaining selected or aggregated signals while lowering computation."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The limitation says modern CNNs process many filters and layers in parallel. Filters within a layer can be evaluated in parallel, but successive layers depend on earlier layers and are not ordinarily applied in parallel with them.",
+        "fix": "Real CNN filters are learned numerical weights, not hand-designed checks by a person. The model does not literally recognise concepts as a colleague reads a form. Modern CNNs apply many filters within a layer in parallel, but successive layers depend on earlier layers and can be hard to interpret."
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "warning",
+        "problem": "This is not reproducible as a worked convolution. It never gives the 3 by 3 filter values, so the claimed large and low feature-map values cannot be checked. The 4 by 4 size is correct because 6 - 3 + 1 = 4. The stated softmax is also correct: e^4.2/(e^4.2 + e^0.6) = 0.9734 and e^0.6/(e^4.2 + e^0.6) = 0.0266, which round to 0.97 and 0.03.",
+        "fix": "Specify the filter as [[-1,2,-1],[-1,2,-1],[-1,2,-1]]. The feature map then has four identical rows [-3,6,-3,0], which become [0,6,0,0] after suppressing negative values. State clearly that 4.2 and 0.6 are assumed final-layer logits."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is the only correct answer, but the three distractors are implausibly absurd. CNNs plainly are not limited to two classes, plainly use weights, and cannot guarantee truth. A reader can answer by rejecting nonsense rather than understanding local connectivity and weight sharing.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: \"It applies a different learned filter at every image position.\"; \"It treats each image row as a sequence with a changing state.\"; \"It connects every pixel directly to every unit in the next layer.\""
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation would no longer address the revised, more plausible distractors.",
+        "fix": "The defining idea is local connectivity plus shared weights: the same filter scans different positions. A basic fully connected layer instead connects inputs broadly, while a recurrent design carries state through a sequence. CNNs do not learn a separate filter for every position."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -92,7 +92,7 @@
       "Epoch 10 to 14: training loss changes only from 0.71 to 0.68, and validation loss fluctuates between 0.78 and 0.79. Parameter updates are now making little practical difference.",
       "The team applies an early stopping rule: if validation loss does not improve meaningfully for several epochs, stop training."
     ],
-    "result": "They say training has converged enough for this run around epoch 11 or 12. The model did not reach zero loss, but further training was no longer helping in a useful way."
+    "result": "After epoch 14, they say training has converged enough for this run. The model did not reach zero loss, but the recorded losses suggest further training was no longer helping in a useful way."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team is developing a model to group short household assessment responses into pre-defined themes so analysts can review patterns faster.",
@@ -122,7 +122,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "It means the model’s training has started to settle down. The error is no longer changing much, and extra training steps bring little improvement.",
-    "technical": "In optimisation, convergence refers to an iterative update process approaching a stable point, stable region or stopping condition. For machine learning training, this often means the sequence of parameter updates, losses or gradients is no longer changing in a way that yields meaningful improvement. In practice, exact mathematical convergence is rarely proved for large neural networks, so teams use operational criteria such as a plateau in validation loss, small gradient norms, bounded updates, or no material gain after several epochs. This should be distinguished from finding a global optimum, and also from generalisation performance: an algorithm can converge under its update rule while still overfitting or converging to a suboptimal local solution."
+    "technical": "In optimisation, convergence means an iterative update process approaches a limit, such as a stable point or objective value. In machine learning, teams often use a practical criterion: parameter updates, losses or gradients no longer change in a way that yields meaningful improvement. Exact mathematical convergence is rarely proved for large neural networks, so teams may look for a plateau in validation loss, small gradient norms, bounded updates, or no material gain after several epochs. Meeting such a criterion is evidence, not proof, of convergence. This remains distinct from finding a global optimum and from generalisation: an update process can converge while the model overfits or reaches a suboptimal local solution."
   },
   "keyTakeaway": "Convergence means training has largely settled, not that the model is perfect or even the best possible one.",
   "quickCheck": {
@@ -203,9 +203,38 @@
     "converged"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:53.627Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The definition says convergence can mean approaching a \"stopping condition\". A stopping condition can be met for reasons unrelated to convergence, such as a fixed training limit. Operational stopping criteria can provide evidence of convergence, but they do not define mathematical convergence.",
+        "fix": "In optimisation, convergence means an iterative update process approaches a limit, such as a stable point or objective value. In machine learning, teams often use a practical criterion: parameter updates, losses or gradients no longer change in a way that yields meaningful improvement. Exact mathematical convergence is rarely proved for large neural networks, so teams may look for a plateau in validation loss, small gradient norms, bounded updates, or no material gain after several epochs. Meeting such a criterion is evidence, not proof, of convergence. This remains distinct from finding a glo"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The claim that convergence occurred around epoch 11 or 12 is not supported by the data. The page gives only ranges for epochs 10 to 14, not individual epoch values or the patience and improvement thresholds. The stated early-stopping rule therefore cannot identify epoch 11 or 12.",
+        "fix": "After epoch 14, they say training has converged enough for this run. The model did not reach zero loss, but the recorded losses suggest further training was no longer helping in a useful way."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 makes an impossible guarantee about every future prediction, option 2 requires zero loss on both training and new data, and option 3 requires proof of the global minimum. All three distractors use extreme claims, so the answer is obvious without understanding convergence.",
+        "fix": "Replace the options with: [\"The training process is settling so that further updates bring little additional improvement.\", \"The model performs well on new data while loss keeps changing.\", \"Training loss is lower than validation loss.\", \"Loss is low, although parameter updates remain unstable.\"]"
+      }
+    ],
+    "applied": [
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

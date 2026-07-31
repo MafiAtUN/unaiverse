@@ -217,9 +217,47 @@
   ],
   "contested": "Some edge cases are treated differently across sources, especially whether architecture choices and certain automatically tuned settings should be counted as hyperparameters. The core idea, however, is widely agreed: they are settings that govern learning rather than ordinary learned parameters.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:13:53.073Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "“Chosen before or during learning” is ambiguous because it does not identify the crucial boundary: hyperparameters are outside the standard parameter-learning process. It can sound as though any value changed during learning is a hyperparameter.",
+        "fix": "A hyperparameter is a setting chosen outside the standard parameter-learning process that shapes training or model structure, rather than a value learned from data."
+      },
+      {
+        "field": "everydayAnalogy.story",
+        "severity": "warning",
+        "problem": "The team uses a “test batch” to choose a setup, while the mapping calls this validation data. In machine learning, validation data is used to choose settings; test data should be reserved for final evaluation. The wording blurs that distinction.",
+        "fix": "Change the final sentence to: “At the end, the team compares which setup gave the fewest mismatches on a validation batch and keeps it for the main job.”"
+      },
+      {
+        "field": "workedExample.process[0]",
+        "severity": "warning",
+        "problem": "Validation accuracy stalling at 78% does not by itself show “unstable fitting.” Instability would require evidence such as oscillating or diverging loss. The comparison with Run B supports only the more cautious conclusion that 0.1 may be too high.",
+        "fix": "Run A uses learning rate 0.1 and regularisation 0.0001. Training loss drops fast but validation accuracy stalls at 78%, so 0.1 may be too high."
+      },
+      {
+        "field": "unWorkplaceExample.scenario",
+        "severity": "error",
+        "problem": "The scenario incorrectly groups a summary length limit with training hyperparameters. A summary length limit is normally an output or inference setting, unlike the learning rate and regularisation used during training. This also contradicts the page's own definition of a hyperparameter as a training setting.",
+        "fix": "A UN team is building an internal tool to help summarise public consultation submissions that have already been cleared for approved processing. They test different hyperparameters such as batch size, learning rate and regularisation on non-sensitive sample data to compare clarity and consistency."
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "The five-box sequence presents “Train the model” and “Learn parameters” as consecutive stages. Parameter learning occurs inside training, not after it. The step explanations partly correct this, but the visual structure teaches the wrong sequence.",
+        "fix": "Show chosen hyperparameters feeding into a training box that contains parameter updates. Then show validation results and a loop back to revised settings."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

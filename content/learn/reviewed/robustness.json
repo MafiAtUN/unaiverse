@@ -30,7 +30,7 @@
     "adversarial-example"
   ],
   "oneSentence": "The ability of a model or system to keep performing acceptably when inputs, conditions or small disturbances change.",
-  "plainExplanation": "Robustness asks a simple question: if real-world conditions shift a bit, does the system still work well enough? The input is the same kind of data the system was built for, but with variation such as typos, different lighting, new accents, slightly changed wording or missing values. What happens is that the model processes these less tidy inputs. The output is a measure of whether performance stays acceptable rather than collapsing.\n\nThis is related to generalisation, but not the same. Generalisation usually means doing well on new examples from the same overall pattern as the training and test data. Robustness focuses more on stability under disturbance, stress or imperfect conditions. A model can score well on a clean benchmark but still be fragile when small changes appear.\n\nRobustness is also not the same as reliability. Reliability usually asks whether a system works consistently over time in operation. Robustness asks whether it keeps working when the input or environment is less ideal. A system may be reliable in the sense that it always produces an answer, but not robust if that answer becomes poor after a minor change.\n\nPeople test robustness by trying realistic variations: rephrased text, noisier images, different devices, unusual but valid cases, or data from a new location. They then compare the results with a baseline, meaning a reference result under normal conditions. If performance drops only a little, the system is more robust. If a small change causes many false positives or false negatives, robustness is weak.",
+  "plainExplanation": "Robustness asks a simple question: if real-world conditions shift a bit, does the system still work well enough? The inputs remain valid for the same task, but include defined variation such as typos, different lighting, new accents, slightly changed wording or missing values. The model processes these less tidy inputs. Evaluators then measure whether its performance stays acceptable rather than collapsing.\n\nThis is related to generalisation, but not the same. Generalisation asks whether a model gives useful results on new cases, not just examples used to build or tune it. Robustness tests specified disturbances affecting otherwise relevant cases. A model can score well on new clean cases but still be fragile when small changes appear.\n\nRobustness is also not the same as reliability. Reliability asks whether a system gives similar-quality results when used again on comparable cases and conditions. Robustness deliberately varies the inputs or environment to test whether quality remains acceptable. Producing an answer every time shows availability, not reliability.\n\nPeople test robustness by trying defined, realistic variations such as rephrased text, noisier images, different devices or missing values. They compare performance with a baseline, meaning a reference result under normal conditions. If performance stays acceptable and drops only a little, the system is more robust. If a small change causes many false positives or false negatives, robustness is weak.",
   "everydayAnalogy": {
     "title": "A translator working from messy notes",
     "story": "A field officer receives short notes from colleagues in Nairobi, Bogotá and Amman and must translate them into clear English for a daily briefing. On some days the notes are neat. On other days they contain spelling mistakes, local abbreviations or sentences copied from a phone message with missing punctuation. A robust translation process still produces a usable summary across these variations, while a fragile one fails as soon as the wording becomes messy.",
@@ -133,7 +133,7 @@
       "A model is more complex than the previous version and uses more training data."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Robustness is about how performance changes under realistic variation or stress. A clean benchmark score alone does not show that. Always producing an output shows availability, not quality. Model size and data volume do not guarantee stable behaviour."
+    "explanation": "The second result directly tests acceptable performance under defined realistic disturbances. The first is reliability, the third is generalisation, and calibration on clean data does not show robustness."
   },
   "resources": [
     {
@@ -205,9 +205,62 @@
     "robust"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:15:07.111Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition is so broad that it can include both generalisation to new cases and reliability across repeated conditions. It does not identify robustness as performance under specified disturbances that leave the task valid.",
+        "fix": "A model's ability to keep performing acceptably under specified, plausible disturbances that leave the task unchanged."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The reliability distinction is wrong. Reliability is defined elsewhere on the page set as similar quality on repeated comparable cases and conditions. Merely producing an answer every time is availability, not reliability. The explanation also calls the output a robustness measure, although the model produces task outputs and evaluators derive the performance measure.",
+        "fix": "Replace the explanation with the corrected text below."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "This again reduces reliability to consistent operation over time, contradicting the supplied definition based on similar quality across repeated comparable cases and conditions.",
+        "fix": "They overlap but differ. Reliability is consistent quality on repeated, comparable cases and conditions. Robustness is acceptable performance under specified disturbance or stress. A system may be reliable under normal conditions but fragile under changed ones."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "Including any shift in input distribution or environmental change within robustness blurs the term into generalisation. The entry needs to say that such a shift is a robustness test only when it is defined as a stress condition, rather than treating all performance on new cases as robustness.",
+        "fix": "Replace the technical explanation with the corrected text below."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The arithmetic is correct: 910/1,000 = 91%, 860/1,000 = 86%, so the drop is 5 percentage points; the baseline drop is 88% - 70% = 18 percentage points. However, calling the first model reasonably robust is unsupported because no acceptable accuracy or maximum drop was defined.",
+        "fix": "The first model drops 5 percentage points under this text noise, compared with 18 points for the baseline. Whether 86% is acceptable requires a defined threshold."
+      },
+      {
+        "field": "visual",
+        "severity": "warning",
+        "problem": "The diagram sends text, an image and a form through one unspecified model and combines them into one undefined 92% score. That does not provide a coherent task or metric, so the score comparison does not teach how robustness is evaluated.",
+        "fix": "Use three inputs from one task, such as text inputs, and label 92% as accuracy. Show matched clean and stressed versions so the comparison has a defined meaning."
+      },
+      {
+        "field": "quickCheck.options[1]",
+        "severity": "error",
+        "problem": "The marked option says only that performance remains similar. A model could remain at the same unacceptably low level, which would not meet this page's definition of robustness. The other distractors are also so plainly unrelated that the answer can be selected without distinguishing robustness from reliability or generalisation.",
+        "fix": "Use these options: \"A model gives similar-quality results when the same clean cases are run again.\"; \"A model keeps acceptable performance after realistic typos, blur and missing values are introduced.\"; \"A model gives useful results on new clean cases not used to build or tune it.\"; \"A model's confidence scores match its observed accuracy on clean data.\" Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

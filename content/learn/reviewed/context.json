@@ -28,7 +28,7 @@
     "prompt"
   ],
   "oneSentence": "The text, images or other inputs a model can currently use to shape its next output in a session.",
-  "plainExplanation": "In chat systems, this means the material the model can look at right now before it produces the next reply. That often includes the current user message, earlier messages in the same conversation, and hidden instructions set by the service. In some systems, it can also include attached documents or images.\n\nWhat goes in is a bundle of input pieces. The system turns these pieces into tokens, which are small text units a model processes. The model then uses those tokens to predict what tokens should come next in its reply.\n\nWhat comes out is a response shaped by that available material. If important facts or instructions are in the available material, the reply is more likely to reflect them. If they are missing, unclear or pushed out because there is too much text, the reply may ignore them or make mistakes.\n\nContext is not the same as long-term memory. It usually lasts only within the current exchange or session, unless a separate memory feature stores something for later. It is also not the same as the context window, which is the size limit on how much material can fit at once.",
+  "plainExplanation": "In chat systems, this means the material available right now as the model produces its next reply. That often includes the current user message, earlier messages in the same conversation, and hidden instructions set by the service. In some systems, it can also include attached documents or images.\n\nWhat goes in is a bundle of input pieces. The system represents these pieces in forms the model can process. Text is split into tokens, such as words or parts of words. Images use other machine-readable representations. The model uses the resulting sequence, including reply tokens already generated, to predict the next token.\n\nWhat comes out is a response shaped by that available material. If important facts or instructions are in the available material, the reply is more likely to reflect them. If they are missing, unclear or pushed out because there is too much text, the reply may ignore them or make mistakes.\n\nContext is not the same as a prompt. A prompt is an input intended to guide the output, while context is all the material currently available. Context is also not long-term memory, which stores information for later sessions, or the context window, which limits how much material can fit at once.",
   "everydayAnalogy": {
     "title": "A clerk checking application folders",
     "story": "At a scholarship office, a clerk reviews one application folder at a time. The folder may contain the form, a checklist, a passport copy and earlier notes from another staff member. The clerk can only judge completeness based on the papers currently inside that folder and on the office instructions on the desk. If one important page is missing or removed because the folder is too full, the clerk may give the wrong answer about whether the application is complete.",
@@ -104,7 +104,7 @@
     "relevance": "The quality of the draft depends on whether the key facts from earlier notes, instructions on format and the latest update are all still in the current context.",
     "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and do not assume the tool has remembered earlier facts unless they are visibly included in the current approved workspace."
   },
-  "whyItMatters": "If you use chat assistants, context helps explain why a reply can be accurate one moment and wrong the next. The system can only work with material that is currently available to it. That affects whether it follows your instructions, keeps track of names and dates, uses the right tone and stays on task. For decision-making, this means you should check what information is actually present, not assume the system remembers everything from earlier. It also helps you recognise when to repeat key facts, when to shorten a long conversation, and why sensitive information should be handled carefully in approved systems only.",
+  "whyItMatters": "If you use chat assistants, context helps explain why a reply can be accurate one moment and wrong the next. The reply is shaped by current material together with patterns learned during training. Context affects whether the system follows your instructions, keeps track of names and dates, uses the right tone and stays on task. For decision-making, check what information is actually present rather than assuming the system remembers everything from earlier. This also helps you recognise when to repeat key facts, when to shorten a long conversation, and why sensitive information should be handled carefully in approved systems only.",
   "whereYouMayHearIt": [
     "chat assistant help pages",
     "AI product demos",
@@ -127,7 +127,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "It is the information the model can see right now when it writes its next reply.",
-    "technical": "In a language model system, context is the sequence of input tokens provided for the current generation step. It can include system instructions, user and assistant messages from the conversation, tool outputs, retrieved text, and sometimes image or audio representations in multimodal systems. The model conditions next-token prediction on this sequence. The exact reply depends on which tokens are present, their order, and whether earlier material has been truncated, summarised or excluded to fit the context window. Context is temporary input state, not the same as parameters or any separate long-term memory mechanism."
+    "technical": "In a language model system, context is the material available for the current generation step. It can include system instructions, user and assistant messages, tool outputs, retrieved text, prior generated output, and sometimes image or audio representations in multimodal systems. The model conditions its next-token probabilities on representations of this material. The exact reply depends on what is present, its order, and whether earlier material has been truncated, summarised or excluded to fit the context window. Context is temporary working input, not the same as parameters or any separate long-term memory mechanism."
   },
   "keyTakeaway": "A model's next reply depends on what is currently in front of it, not on everything you ever told it.",
   "quickCheck": {
@@ -208,9 +208,57 @@
     "conversation history"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:05.686Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition says only \"inputs\" and frames context at the session level. It does not clearly include the model's prior output, including tokens already generated during the current response.",
+        "fix": "The inputs and prior output a model can currently use to shape its next output."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "It says all input pieces, including images, are turned into \"small text units\" called tokens. That is false for multimodal inputs, which may use non-text representations. It also omits generated reply tokens from the material used for subsequent next-token prediction.",
+        "fix": "Replace the second paragraph with: \"What goes in is a bundle of input pieces. The system represents these pieces in forms the model can process. Text is split into tokens, such as words or parts of words. Images use other machine-readable representations. The model uses the resulting sequence, including reply tokens already generated, to predict the next token.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The page distinguishes context from long-term memory and the context window, but not from a prompt. Its broad definition of context could therefore blur the two terms.",
+        "fix": "Replace the final paragraph with: \"Context is not the same as a prompt. A prompt is an input intended to guide the output, while context is all the material currently available. Context is also not long-term memory, which stores information for later sessions, or the context window, which limits how much material can fit at once.\""
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The claimed alternatives are not exhaustive. Without the earlier details, the model would not have to guess or ask. It could omit the details, use placeholders or produce a general reminder. The sample output itself is 28 words: Dear(1) Amina(2) and(3) Jorge(4), this(5) is(6) a(7) friendly(8) reminder(9) of(10) our(11) meeting(12) on(13) Tuesday(14) at(15) 14:00(16) Cairo(17) time(18). Please(19) let(20) me(21) know(22) if(23) anything(24) has(25) changed(26). Kind(27) regards(28). It therefore satisfies the under-60-word instruction.",
+        "fix": "If the earlier detail message were missing from context, the draft could omit the details, use placeholders or ask for them."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "\"The system can only work with material that is currently available to it\" wrongly implies that output depends only on current context. A language model also relies on its learned parameters.",
+        "fix": "If you use chat assistants, context helps explain why a reply can be accurate one moment and wrong the next. The reply is shaped by current material together with patterns learned during training. Context affects whether the system follows your instructions, keeps track of names and dates, uses the right tone and stays on task. For decision-making, check what information is actually present rather than assuming the system remembers everything from earlier. This also helps you recognise when to repeat key facts, when to shorten a long conversation, and why sensitive information should be handle"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "Defining context as a sequence of \"input tokens provided\" is too narrow for the listed multimodal representations and does not clearly include tokens already generated in the current response. Those generated tokens affect each later next-token prediction.",
+        "fix": "In a language model system, context is the material available for the current generation step. It can include system instructions, user and assistant messages, tool outputs, retrieved text, prior generated output, and sometimes image or audio representations in multimodal systems. The model conditions its next-token probabilities on representations of this material. The exact reply depends on what is present, its order, and whether earlier material has been truncated, summarised or excluded to fit the context window. Context is temporary working input, not the same as parameters or any separat"
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "whyItMatters",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

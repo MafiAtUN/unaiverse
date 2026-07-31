@@ -106,7 +106,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN office wants an internal search assistant over approved guidance documents so staff can ask questions in plain language and receive answers in a consistent citation format.",
     "relevance": "Supervised fine-tuning can adapt a base model to follow the organisation’s preferred answer structure, include document references, and handle recurring query types more consistently.",
-    "caution": "Only use content approved for the relevant internal system, and do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service for fine-tuning."
+    "caution": "Only use content specifically approved for fine-tuning in the relevant internal system. Do not use confidential, personal, protection-sensitive, security-sensitive or operational information unless that use, access and retention are authorised."
   },
   "whyItMatters": "For non-specialists, supervised fine-tuning matters because many claims about a model being 'trained on our data' actually refer to this specific process. It affects procurement, risk, evaluation and governance. If a vendor says a model was adapted for your task, you need to ask what examples were used, who labelled them, what outputs were treated as correct, and how performance changed after tuning. SFT can improve consistency and task performance, but it can also lock in bias, formatting errors or narrow assumptions from the dataset. It is also a different intervention from prompting, retrieval, preference training or adding fresh documents to a search system, so choosing the wrong method can waste money and create false confidence.",
   "whereYouMayHearIt": [
@@ -217,9 +217,49 @@
     "sft"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:50.181Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "visual.description",
+        "severity": "error",
+        "problem": "The description says there are four panels, but the specification contains five numbered panels and both accessibility descriptions also say five. The visual cannot be built consistently as written.",
+        "fix": "Show a left-to-right sequence of five panels. Start with a general pretrained model, then a labelled dataset of input–target pairs, then repeated comparison between model output and target with parameter updates, and end with an adapted checkpoint specialised for a task. Read from left to right as a process."
+      },
+      {
+        "field": "workedExample.scenario and workedExample.input",
+        "severity": "error",
+        "problem": "The sentence does not determine whether “she” refers to Amina or Sofia. Marking Sofia as the most likely answer may be a dataset annotation, but it is not the “correct pronoun referent” claimed in the next step. This makes the worked example present an arbitrary target as ground truth.",
+        "fix": "Scenario: “Adapting a multilingual text model to identify pronoun referents in short reports.” Input: “Example training pair: Input: 'Amina asked Sofia to drive herself to the clinic.' Target output: 'Referent of herself: Sofia.'”"
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The batch arithmetic does not come out as stated. 18,000 ÷ 32 = 562 full batches with 16 examples left over. Over three epochs, 54,000 ÷ 32 = 1,687.5, so the data cannot be divided entirely into mini-batches of exactly 32. If the final partial batch is retained, there are 563 updates per epoch and 1,689 updates in total. The text must state how the remainder is handled.",
+        "fix": "Run three training epochs over the dataset with batches of up to 32 examples, updating parameters after each batch."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "warning",
+        "problem": "The search-assistant example blurs supervised fine-tuning with retrieval. Fine-tuning can teach an answer and citation format, but it does not by itself give the model dependable access to current guidance documents or ensure that cited references support an answer.",
+        "fix": "Supervised fine-tuning can adapt a base model to use the preferred answer structure and handle recurring query types. A separate approved retrieval system must supply current documents and references."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "Approval to use content in an internal system is not necessarily approval to use it as fine-tuning data. The caution only clearly prohibits sensitive information in an unapproved public service, leaving unsafe use within an otherwise approved internal system defensible.",
+        "fix": "Only use content specifically approved for fine-tuning in the relevant internal system. Do not use confidential, personal, protection-sensitive, security-sensitive or operational information unless that use, access and retention are authorised."
+      }
+    ],
+    "applied": [
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

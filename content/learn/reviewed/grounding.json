@@ -99,14 +99,14 @@
       "Those two passages are inserted into the prompt with an instruction such as 'Answer only from the provided policy text and cite the relevant passage.'",
       "The model drafts a short answer based on the passages and includes both source references."
     ],
-    "result": "Answer: One overnight stay may be reimbursed if a scheduled connection requires a stop of more than 8 hours. Any additional nights need prior approval from the travel office. Source: travel policy sections 4.2 and 4.3."
+    "result": "Answer: One overnight stay may be reimbursed if a scheduled connection requires a stop of more than 8 hours. Any additional nights need prior approval from the travel office. Sources: retrieved passages 1 and 2."
   },
   "unWorkplaceExample": {
     "scenario": "A policy officer searches past General Assembly and Security Council resolutions to find earlier wording on humanitarian access before drafting a briefing note.",
     "relevance": "Grounding can help the system retrieve the most relevant prior language and generate a summary tied to the actual resolution text, reducing the risk of invented wording.",
     "caution": "Use only approved internal or public sources, and do not place confidential negotiations, unpublished drafts, personal data or security-sensitive information into an unapproved public AI service."
   },
-  "whyItMatters": "For non-specialists, grounding matters because it changes what kind of answer you are getting. Without grounding, a model may produce fluent text that sounds plausible but is not tied to a source. With grounding, you can inspect where the answer came from, check whether the source is current, and notice when the source does not support the claim. That helps with policy work, communications, research and operations where you need traceability, not just polished wording. It also helps you ask better questions: 'What source was this based on?' and 'What was not found?' are often more useful than simply asking whether the answer is correct.",
+  "whyItMatters": "For non-specialists, grounding matters because it changes what kind of answer you are getting. Without grounding, a model may produce fluent text that sounds plausible but is not tied to a source. With grounding and access to its sources, you can inspect where the answer came from, check whether the source is current, and notice when the source does not support the claim. That helps with policy work, communications, research and operations where you need traceability, not just polished wording. It also helps you ask better questions: 'What source was this based on?' and 'What was not found?' are often more useful than simply asking whether the answer is correct.",
   "whereYouMayHearIt": [
     "RAG system design",
     "enterprise search tools",
@@ -132,7 +132,7 @@
     "simple": "Grounding means giving the AI the exact source text it should use before it answers, so the reply is more connected to evidence.",
     "technical": "In a typical pipeline, a query is used to retrieve relevant document chunks from an indexed corpus, often through semantic search, keyword search or a hybrid method. The top-ranked chunks are inserted into the model prompt as context, along with instructions such as answering only from the provided material or citing it. The language model then generates a response conditioned on both the user query and the retrieved context. This is why grounding is often discussed inside retrieval-augmented generation. It is distinct from retrieval itself, which finds candidate passages, and distinct from citation display, which may or may not reflect the actual conditioning context. Grounding usually works better when chunking, indexing and ranking are well designed, but it still does not ensure factual correctness, faithful use of sources or complete coverage of the answer."
   },
-  "keyTakeaway": "Grounding does not make an AI answer automatically correct, but it makes the answer easier to check because it is tied to specific source material.",
+  "keyTakeaway": "Grounding does not make an AI answer automatically correct, but it can make the answer easier to check when its specific source material is also shown.",
   "quickCheck": {
     "question": "Which statement best describes grounding in an AI question-answering system?",
     "options": [
@@ -213,9 +213,51 @@
     "grounded answer"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:19:16.835Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; plainExplanation; simpleVsTechnical.simple; quickCheck.explanation",
+        "severity": "warning",
+        "problem": "These fields define grounding too narrowly as retrieved passages inserted before generation. That describes grounding in a typical RAG pipeline, not grounding in general. It also risks blurring grounding with RAG despite the page later distinguishing grounding from retrieval.",
+        "fix": "Define grounding as tying an answer to specific source material. Then identify retrieved passages as the common method used in the RAG setting covered by this page."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "error",
+        "problem": "The stated ranking rationale is false. Passage 2 mentions additional nights and approval, but it does not mention transit conditions. There are also no ranking scores showing that shared words caused the order.",
+        "fix": "Ranking puts the passage on overnight stays first because it directly matches the transit question, while the approval rule comes second because it covers additional nights."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result invents section numbers 4.2 and 4.3. The input identifies only passages 1 and 2. Teaching a model to generate unsupported source identifiers directly undermines the lesson on grounding.",
+        "fix": "Answer: One overnight stay may be reimbursed if a scheduled connection requires a stop of more than 8 hours. Any additional nights need prior approval from the travel office. Sources: retrieved passages 1 and 2."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "error",
+        "problem": "This says grounding helps the system retrieve relevant language. The page correctly states elsewhere that retrieval finds passages and grounding uses them. This sentence collapses those distinct steps.",
+        "fix": "Retrieval can find the most relevant prior language, and grounding can generate a summary tied to the actual resolution text, reducing the risk of invented wording."
+      },
+      {
+        "field": "whyItMatters; keyTakeaway",
+        "severity": "error",
+        "problem": "These fields claim grounding itself lets the user inspect sources and makes an answer easier to check. The page explicitly says a grounded system may not display citations. Inspection requires access to the passages or reliable source references, not merely their use during generation.",
+        "fix": "State that grounding makes checking easier when the source passages or reliable references are also available to the user."
+      }
+    ],
+    "applied": [
+      "whyItMatters",
+      "keyTakeaway",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

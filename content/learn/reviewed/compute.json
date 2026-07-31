@@ -33,7 +33,7 @@
     "cost-per-token"
   ],
   "oneSentence": "Compute is the processing capacity used to train and run AI systems, with different needs before deployment and during everyday use.",
-  "plainExplanation": "Compute means the processing resources needed to make an AI system do work. In practice, that usually means chips, memory and time, plus the electricity and money needed to use them. More compute can let a system handle larger models or more requests, but it does not guarantee better results.\n\nTwo related terms are often mixed together. Training compute is the compute used while building a model from examples. This stage can take days or months and usually happens only sometimes. Inference compute is the compute used after deployment, when the model produces an output for a real prompt, image or other input. This stage happens every time someone uses the system.\n\nWhat goes in depends on the stage. During training, the inputs include training data, model settings and many repeated calculations that adjust the model. During inference, the inputs include a user request and the stored model. What happens is a large number of mathematical operations on specialised hardware. What comes out is either an updated model during training or a prediction, classification or generated response during inference.\n\nCompute is related to, but different from, the hardware itself. A GPU or CPU is a type of processor; compute is the amount of processing work available or consumed on that hardware. It is also different from cloud computing, which is one way to rent and manage those resources, and from cost per token, which is one pricing measure for inference use.\n\nFor non-specialists, the key point is simple: compute affects cost, speed, scale and who can access advanced AI. It also has environmental implications because heavy compute use can require significant energy and cooling.",
+  "plainExplanation": "Compute means the processing capacity available to an AI system or the processing work it uses. In practice, it is often described through processor time or numbers of operations. Chips, memory and system configuration affect how much compute can be delivered. Electricity and money are related requirements and costs, not compute itself. More compute can let a system handle larger models or more requests, but it does not guarantee better results.\n\nTwo related terms are often mixed together. Training compute is the compute used while building a model from examples. This stage can take days or months and usually happens only sometimes. Inference compute is the compute used after deployment, when the model produces an output for a real prompt, image or other input. This stage happens every time someone uses the system.\n\nDuring training, the inputs include training data, model settings and an initial or existing model. Repeated calculations adjust the model parameters. During inference, the inputs include a user request and the trained model. Specialised hardware performs many mathematical operations. The result is an updated model after training or a prediction, classification or generated response during inference.\n\nCompute is related to, but different from, the hardware itself. A GPU or CPU is a type of processor; compute is the processing capacity available or work consumed on that hardware. It is also different from cloud computing, which is one way to rent and manage those resources, and from cost per token, which is one pricing measure for inference use.\n\nFor non-specialists, the key point is simple: compute affects cost, speed, scale and who can access advanced AI. It also has environmental implications because heavy compute use can require significant energy and cooling.",
   "everydayAnalogy": {
     "title": "Finding and using a book system in a large library",
     "story": "A city library wants a faster way to help visitors find books. First, a team spends weeks walking through shelves, checking labels, correcting catalogue records and building a better index for the whole library. Later, when a visitor asks for a book on drought planning in the Sahel, a librarian uses that finished index to answer in seconds. Building the index took a lot of staff time and effort once; using it for each visitor takes much less effort, but it happens again and again all day. If the library gets many visitors at once, it needs more desks or staff on duty to keep responses fast.",
@@ -225,9 +225,73 @@
   ],
   "contested": "The broad idea is stable, but measurement is not fully standardised. People may use 'compute' to mean hardware capacity, processor time, floating-point operations, service throughput, or the money spent to obtain them, so the intended metric should be stated.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:20.030Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This treats compute only as capacity, while the rest of the page also uses it to mean processing work consumed. \"Capacity used\" blurs those two meanings.",
+        "fix": "Compute is the processing capacity available, or processing work used, to train and run AI systems, with different demands during training and everyday use."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The definition incorrectly includes electricity and money as compute. They are requirements or costs associated with compute, not processing resources themselves. It also lists repeated calculations as training inputs, although they are the process performed on the inputs.",
+        "fix": "Compute means the processing capacity available to an AI system or the processing work it uses. In practice, it is often described through processor time or numbers of operations. Chips, memory and system configuration affect how much compute can be delivered. Electricity and money are related requirements and costs, not compute itself. More compute can let a system handle larger models or more requests, but it does not guarantee better results.\n\nTwo related terms are often mixed together. Training compute is the compute used while building a model from examples. This stage can take days or mo"
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "This again defines electricity as part of compute. Electricity powers the hardware and creates a cost and environmental impact, but it is not processing capacity or processing work.",
+        "fix": "A chip is hardware. Compute refers to the processing capacity available or work used on that hardware over time. Memory, system configuration and workload affect what the hardware can deliver, while electricity is a related requirement and cost."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "Calling training the \"big\" effort and inference the \"smaller\" effort overgeneralises. One inference request often uses less compute than a training run, but total inference compute can be larger at scale.",
+        "fix": "Compute is the machine processing available or used to build an AI system and run it afterwards. Training compute creates or adapts the model; inference compute is used repeatedly each time someone uses it."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The text groups operation counts and processor time with throughput and service capacity as if they measured the same thing. Operation counts and processor time can quantify work used. Throughput and service capacity describe how quickly or how much workload a system can handle.",
+        "fix": "Compute can refer to processing capacity or the computational work consumed to execute numerical operations on accelerators or general processors. In training, compute is used for repeated forward and backward passes that update model parameters using training data. In inference, compute is used for forward passes through a trained model to produce outputs for new inputs. Processing work may be measured through operation counts or processor time. Throughput and service capacity instead describe how quickly or how much workload a system can handle. Compute is related to, but distinct from, hard"
+      },
+      {
+        "field": "workedExample.input",
+        "severity": "warning",
+        "problem": "GPU-hours are not directly comparable across different GPU types or configurations. The example compares training and inference GPU-time without stating that the hardware is equivalent.",
+        "fix": "On the same GPU type, Model A takes 200 GPU-hours to fine-tune. Each request uses about 2 seconds of GPU time. The pilot expects 15,000 requests a month."
+      },
+      {
+        "field": "workedExample.process[4]",
+        "severity": "warning",
+        "problem": "The arithmetic is correct: 300,000 × 2 seconds = 600,000 seconds, and 600,000 ÷ 3,600 = 166.7 GPU-hours. However, calling 200 GPU-hours a \"training cost\" confuses compute use with monetary cost, for which no prices are provided.",
+        "fix": "If demand grows to 300,000 requests, inference compute rises to about 166.7 GPU-hours per month. The one-off training use remains 200 GPU-hours unless the model is retrained."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The result calls GPU-time a compute cost even though the example provides no prices. It also says inference becomes the bigger issue without clearly stating that this happens cumulatively over time. The first calculation is correct: 15,000 × 2 seconds = 30,000 seconds, and 30,000 ÷ 3,600 = 8.3 GPU-hours.",
+        "fix": "Training dominates the pilot's GPU-time. At larger scale, repeated inference approaches the one-off training use and can exceed it over time."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only correct answer. Option 1 is false because either stage can run in the cloud or locally. Option 2 is false because storage and cleaning do not define the two stages. Option 3 is false because either stage can use CPUs, GPUs or other processors. However, these categorical distractors are so implausible that the answer is obvious without understanding compute.",
+        "fix": "Use these options: [\"Training compute builds or updates a model from examples; inference compute runs the finished model on new inputs.\", \"Training compute runs a model on examples; inference compute updates it from new inputs.\", \"Training compute builds hardware; inference compute rents it through the cloud.\", \"Training compute uses processor time; inference compute uses operation counts.\"]"
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

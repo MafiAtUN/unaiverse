@@ -31,7 +31,7 @@
     "gradient"
   ],
   "oneSentence": "The process of adjusting a model’s internal settings to reduce loss, plus the algorithms and rules used to choose each adjustment.",
-  "plainExplanation": "In machine learning, optimisation means trying to make a model less wrong by changing its internal settings, often called parameters or weights. You first need a way to measure how wrong the model is. That measure is usually called a loss function.\n\nWhat goes in? A model, training data, a loss value, and a method for updating the parameters. That method may be called an optimiser or optimizer; the spelling differs by region, but the idea is the same. Optimisation is the overall process. An optimiser is the specific update rule, such as stochastic gradient descent or Adam.\n\nWhat happens? The system computes the loss on some training examples, estimates which parameters contributed to that loss, and then nudges those parameters in a direction expected to lower it. The estimate of direction is often called a gradient: it tells you how the loss would change if a parameter changed slightly.\n\nWhat comes out? Usually, a new set of parameter values that gives lower loss on the training data, or at least moves in that direction. Repeating this many times can lead to convergence, meaning the updates become small and the loss stops improving much. Lower training loss does not guarantee better performance on new data, so optimisation is only one part of building a useful model.",
+  "plainExplanation": "In machine learning, optimisation means trying to make a model less wrong by changing its internal settings, often called parameters or weights. You first need a way to measure how wrong the model is. That measure is usually called a loss function.\n\nWhat goes in? A model, training data, a loss value, and a method for updating the parameters. That method may be called an optimiser or optimizer; the spelling differs by region, but the idea is the same. Optimisation is the overall process. An optimiser is the specific update rule, such as stochastic gradient descent or Adam.\n\nWhat happens? The system computes the loss on some training examples, estimates how small parameter changes would affect it, and then nudges the parameters in a direction expected to lower it. These estimated sensitivities form a gradient, which describes the loss change for a small change in each parameter.\n\nWhat comes out? Usually, a new set of parameter values expected to lower loss on the training data. Repeating this many times may lead to convergence, meaning the parameters or loss approach stable values under a chosen stopping rule. Lower training loss does not guarantee better performance on new data, so optimisation is only one part of building a useful model.",
   "everydayAnalogy": {
     "title": "Sorting urgent and non-urgent messages",
     "story": "A team handles incoming messages and uses a checklist to decide which ones are urgent. At first, the checklist mislabels too many messages, so the team reviews yesterday’s mistakes. They notice, for example, that the rule about time-sensitive wording is too weak and the rule about formal tone is too strong, so they adjust both a little. They repeat this review-and-adjust cycle each day until the checklist makes fewer mistakes overall.",
@@ -136,7 +136,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Optimisation is the repeated process of checking how wrong a model is and adjusting its settings to make it less wrong.",
-    "technical": "Formally, optimisation in machine learning seeks parameter values that minimise an objective, usually a loss function over training data, sometimes plus regularisation terms. The optimisation process iterates over batches of examples, computes gradients of the objective with respect to parameters, commonly via backpropagation and the chain rule, and applies an update rule. That update rule is the optimiser: for example, stochastic gradient descent, SGD with momentum, or Adam. The learning rate controls update size; momentum and adaptive methods modify how past or per-parameter gradient information affects the step. In non-convex problems such as deep neural networks, optimisation does not guarantee reaching a global minimum, and practical concerns include convergence speed, numerical stability, sensitivity to hyperparameters, and issues such as vanishing or exploding gradients. The term 'optimization' is the same concept in another spelling."
+    "technical": "Formally, optimisation in machine learning seeks parameter values that minimise an objective, usually a loss function over training data, sometimes plus regularisation terms. A common process iterates over batches of examples, computes gradients of the objective with respect to parameters, often via backpropagation and the chain rule, and applies an update rule. That update rule is the optimiser: for example, stochastic gradient descent, SGD with momentum, or Adam. The learning rate controls update size; momentum and adaptive methods modify how past or per-parameter gradient information affects the step. In non-convex problems such as deep neural networks, optimisation does not guarantee reaching a global minimum, and practical concerns include convergence speed, numerical stability, sensitivity to hyperparameters, and issues such as vanishing or exploding gradients. The term 'optimization' is the same concept in another spelling."
   },
   "keyTakeaway": "Optimisation is the overall training process of reducing loss, while an optimiser is the specific rule that chooses each parameter update.",
   "quickCheck": {
@@ -148,7 +148,7 @@
       "Optimisation guarantees the best possible model; an optimiser just speeds up computation."
     ],
     "correctOptionIndex": 0,
-    "explanation": "Optimisation is the broad task and repeated procedure of improving model parameters to reduce an objective. An optimiser is one component of that procedure: the algorithm that turns gradient information into actual parameter updates. Backpropagation computes gradients, and the loss function defines what 'better' means, so those are related but different parts."
+    "explanation": "Optimisation is the broad task and repeated procedure of improving model parameters to reduce an objective. An optimiser is the rule that chooses parameter updates, often using gradients. The loss function defines what to reduce, gradients describe local changes, and backpropagation is one way to compute them."
   },
   "resources": [
     {
@@ -222,9 +222,63 @@
     "optimization"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:34.703Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The phrase \"estimates which parameters contributed to that loss\" misstates what gradients provide. A gradient describes sensitivity to small parameter changes, not causal contribution. Calling the estimate \"a direction\" also blurs the separate gradient definition.",
+        "fix": "Replace the third paragraph with: \"What happens? The system computes the loss on some training examples, estimates how small parameter changes would affect it, and then nudges the parameters in a direction expected to lower it. These estimated sensitivities form a gradient, which describes the loss change for a small change in each parameter.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The page defines convergence too narrowly as small updates and a loss that stops improving. Small updates can also result from a very low learning rate, and convergence can be assessed using parameters, gradients or objective values.",
+        "fix": "Replace the convergence sentence with: \"Repeating this many times may lead to convergence, meaning the parameters or loss approach stable values under a chosen stopping rule.\""
+      },
+      {
+        "field": "visual.steps[2].explanation",
+        "severity": "error",
+        "problem": "\"Using backpropagation\" presents backpropagation as mandatory for optimisation. Some optimisation methods do not use it.",
+        "fix": "Replace with: \"Often using backpropagation, the system calculates a gradient for each parameter: how small changes would affect the loss.\""
+      },
+      {
+        "field": "workedExample.input and workedExample.process",
+        "severity": "error",
+        "problem": "The example does not define a loss function or give a gradient, so neither \"the loss is not zero\" nor the update from 0.8 to 0.9 follows. A learning rate of 0.1 does not itself mean adding 0.1. The arithmetic actually supplied is only 0.8 × 1 + 0.6 × 0 = 0.8 and 0.9 × 1 + 0.6 × 0 = 0.9. The claimed update needs an assumed gradient of -1 under the usual update formula, but no such gradient is calculated.",
+        "fix": "Replace the input with: \"Score = 0.8 × deadline_words + 0.6 × greeting_words. Example: 'Please send by 16:00', with deadline_words=1, greeting_words=0 and target=1. Use squared loss.\" Replace the first four process steps with: \"The score is 0.8 × 1 + 0.6 × 0 = 0.8. Squared loss is (0.8 - 1)^2 = 0.04.\"; \"The deadline-weight gradient is 2 × (0.8 - 1) × 1 = -0.4. The greeting-weight gradient is 2 × (0.8 - 1) × 0 = 0.\"; \"With learning rate 0.1, the deadline weight becomes 0.8 - 0.1 × (-0.4) = 0.84.\"; \"The next score is 0.84, and squared loss is (0.84 - 1)^2 = 0.0256, which is lower.\""
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The description states that optimisation iterates over batches and computes gradients via backpropagation as though all machine-learning optimisation works this way. That is a common approach, not the definition of optimisation.",
+        "fix": "Qualify the mechanism as common rather than universal."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is the only correct answer. Option 1 falsely swaps optimisation with backpropagation and an optimiser with a loss function. Option 2 reverses training and inference. Option 3 falsely claims a guarantee. However, the three distractors are so plainly absurd that the answer can be selected without understanding the distinction.",
+        "fix": "Use these options: [\"Optimisation is the overall process of reducing loss; an optimiser is the specific update rule used within that process.\", \"Optimisation defines the loss to reduce; an optimiser calculates how wrong each prediction is.\", \"Optimisation computes gradients for one batch; an optimiser sends errors backwards through the model.\", \"Optimisation is the final trained parameter set; an optimiser is the process of fitting that set.\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "error",
+        "problem": "The explanation says an optimiser turns gradient information into updates without qualification. Many common optimisers do this, but the page defines an optimiser more broadly as an update rule, and not every optimisation method is gradient-based.",
+        "fix": "Replace with: \"Optimisation is the broad task and repeated procedure of improving model parameters to reduce an objective. An optimiser is the rule that chooses parameter updates, often using gradients. The loss function defines what to reduce, gradients describe local changes, and backpropagation is one way to compute them.\""
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

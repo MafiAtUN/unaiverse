@@ -211,9 +211,29 @@
     "true positive rate"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:13:16.259Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "visual.steps[0].visualInstruction",
+        "severity": "error",
+        "problem": "The items do not start as “true positives” and “true negatives”. Before the threshold is applied, they are actual positives and actual negatives. True positive and true negative describe combinations of the known label and the threshold-based prediction. This wording teaches the confusion-matrix categories incorrectly.",
+        "fix": "Render 20 to 40 small SVG marks arranged by score from low to high. Use both colour and shape so actual positives and actual negatives remain distinguishable without relying on colour alone."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "warning",
+        "problem": "The evaluation unit shifts from phrases to drafts. The scenario says the tool flags phrases, but the relevance statement describes recall as the share of drafts caught. Those are different evaluations unless a rule for classifying whole drafts is stated.",
+        "fix": "Recall helps the team judge whether the tool is catching most phrases that really differ from agreed language. High recall may matter if missing non-agreed wording could create diplomatic or operational problems."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

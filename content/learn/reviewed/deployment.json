@@ -31,7 +31,7 @@
     "cloud-computing"
   ],
   "oneSentence": "Deployment means putting an AI system into real use so people or software can send it live inputs and receive live outputs.",
-  "plainExplanation": "A model can work well in a test notebook and still not be ready for real use. Deployment is the stage where that model is connected to the systems, devices or websites that people actually use. In simple terms, something goes in, the model runs, and a result comes out in a live setting.\n\nWhat goes in depends on the system. It might be text from a form, an image from a camera, or rows from a database. During deployment, the model is placed on computing infrastructure, such as a server or device, and linked to an endpoint, which is the place another system sends requests. Rules are also added for security, speed, logging and human oversight.\n\nWhat happens next is not only prediction. The deployed system must receive inputs, check them, run the model, return outputs, and cope with failures or heavy traffic. Teams often watch for latency, meaning delay, cost, and distribution shift, which means real-world data no longer looks like the data used earlier.\n\nWhat comes out is a working service, not just a model file. People often confuse deployment with model hosting. Hosting is mainly where the model sits and runs. Deployment is broader: it includes connecting the model to real workflows, setting limits, monitoring behaviour, and updating or rolling back if problems appear.",
+  "plainExplanation": "A model can work well in a test notebook and still not be ready for real use. Deployment is the stage where that model is connected to the systems, devices or websites that people actually use. Inputs might be text from a form, an image from a camera, or rows from a database.\n\nDuring deployment, the model runs on infrastructure such as a server or device. It may be embedded in an application or connected through an endpoint, a network address plus rules for exchanging requests and responses. Rules are also added for security, speed, logging and human oversight.\n\nA deployed system must receive and check inputs, run the model, return outputs, and cope with failures or heavy traffic. Teams often watch latency, meaning delay, cost, and distribution shift, which means real-world data no longer looks like the data used earlier.\n\nThe result is a working service, not just a model file. Hosting covers the systems and services that keep the model available to receive requests, run and return outputs reliably and securely. Deployment is broader: it also includes workflow integration, controls, monitoring, updates and rollback.",
   "everydayAnalogy": {
     "title": "Putting a manifest checker onto the loading dock",
     "story": "A shipping company tests a new tool that compares a delivery against its manifest. In the office, it works on sample lists. To use it at the loading dock, the team installs it on a tablet, connects it to the barcode scanner, sets who can use it, and decides what happens if the network fails. Once it is live, drivers scan boxes and the tool returns match, mismatch or needs human review in real time.",
@@ -214,9 +214,49 @@
     "in production"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:33.854Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "“Live inputs” and “live outputs” can imply that deployment is limited to real-time services. Production deployment can also use scheduled or batch processing.",
+        "fix": "Deployment means putting an AI system into real use so it can process production inputs and provide outputs to people or software."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The second paragraph presents an endpoint as a required part of deployment, but a model can instead be embedded directly in an application or device. It also calls an endpoint merely “the place” requests are sent, omitting that it is a network address plus rules for a service function.",
+        "fix": "During deployment, the model runs on infrastructure such as a server or device. It may be embedded in an application or connected through an endpoint, a network address plus rules for exchanging requests and responses."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "“Hosting is mainly where the model sits and runs” understates the separate definition of model hosting. Hosting also covers keeping the model available to receive requests and return outputs reliably and securely.",
+        "fix": "Hosting covers the systems and services that keep the model available to receive requests, run and return outputs reliably and securely. Deployment is broader: it also includes workflow integration, controls, monitoring, updates and rollback."
+      },
+      {
+        "field": "visual.steps[2].explanation",
+        "severity": "error",
+        "problem": "This step says forms, apps, databases or other software are linked through an endpoint, again treating an endpoint as mandatory. That contradicts the technical explanation, which correctly allows a model to be embedded in an application.",
+        "fix": "Forms, apps, databases or other software are linked through an endpoint or direct integration so inputs can be processed and results returned."
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "warning",
+        "problem": "The correction reduces hosting to “where the model runs,” which blurs the supplied distinction by omitting availability, request handling, reliability and security.",
+        "fix": "Hosting covers systems and services that keep a model available to receive requests, run and return outputs reliably and securely. Deployment is wider, including workflow integration, controls, monitoring, updates and rollback."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

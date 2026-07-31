@@ -26,8 +26,8 @@
     "self-supervised-learning",
     "semi-supervised-learning"
   ],
-  "oneSentence": "A way of training a model on unlabelled data so it finds useful structure, similarity, groups or unusual cases without target answers for each example.",
-  "plainExplanation": "In this approach, the training data usually has inputs but no labels. A label is the target answer attached to an example, such as “fraud” or “not fraud”. Instead of learning to match inputs to known answers, the model looks for patterns in the data itself.\n\nWhat goes in can be many examples described by features. A feature is a measurable property such as temperature, word frequency or sensor vibration level. During training, the algorithm adjusts its internal settings to place similar examples near each other, compress data into simpler representations, or flag examples that do not fit the usual pattern.\n\nWhat comes out depends on the method. It might produce clusters, which are groups of similar examples; lower-dimensional embeddings, which are compact numeric summaries; or anomaly scores, which estimate how unusual an example looks compared with the training data. These outputs help people explore data, monitor systems or prepare later models.\n\nThis is often confused with clustering, but clustering is only one type of unsupervised learning. It is also different from supervised learning, where each training example has a known target, and from self-supervised learning, where labels are created automatically from the data for a specific prediction task.",
+  "oneSentence": "A way of training a model on unlabelled data to identify possible structure, similarities, groups or unusual cases without target answers for each example.",
+  "plainExplanation": "In this approach, the training data usually has inputs but no labels. A label is the target answer attached to an example, such as “fraud” or “not fraud”. Instead of learning to match inputs to known answers, the model looks for patterns in the data itself.\n\nWhat goes in can be many examples described by features. A feature is a measurable property such as temperature, word frequency or sensor vibration level. During training, the algorithm adjusts its internal settings to place similar examples near each other, compress data into simpler representations, or flag examples that do not fit the usual pattern.\n\nWhat comes out depends on the method. It might produce clusters, which are groups of similar examples; embeddings, which represent examples as numeric vectors; or anomaly scores, which estimate how unusual an example looks compared with the training data. These outputs help people explore data, monitor systems or prepare later models.\n\nThis is often confused with clustering, but clustering is only one type of unsupervised learning. It is also different from supervised learning, where each training example has a known target, and from self-supervised learning, where labels are created automatically from the data for a specific prediction task.",
   "everydayAnalogy": {
     "title": "Sorting mixed parcels in a storeroom",
     "story": "At a logistics depot, workers receive hundreds of parcels from Nairobi, Lima, Bangkok and Tunis with no shelf labels telling them where each one belongs. They begin by comparing size, weight, shape and handling marks, then place similar parcels on nearby shelves. After a while, clear groups appear: small urgent envelopes, heavy machine parts, fragile glass items and a few parcels that do not fit anywhere well. The workers did not have an answer sheet in advance, but they still uncovered structure in the pile.",
@@ -91,7 +91,7 @@
       "Most new readings receive low scores because they resemble past operating patterns.",
       "Reading C receives a much higher score because its vibration and temperature are far from the common pattern while flow rate is lower than usual."
     ],
-    "result": "The system flags reading C for inspection. It does not prove a fault, but it gives staff an evidence-based reason to check the pump early."
+    "result": "If reading C receives a high score, the system flags it for inspection. The score does not prove a fault, but it gives staff a reason to check the pump early."
   },
   "unWorkplaceExample": {
     "scenario": "A multilingual UN team has a large archive of previously cleared, non-confidential field update summaries in several languages and wants to organise them by topic before preparing translation support materials.",
@@ -202,9 +202,39 @@
     "unsupervised learning"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:10:43.342Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition says the model finds useful structure, which guarantees usefulness. The page later correctly acknowledges that mathematical patterns may not be useful in practice.",
+        "fix": "A way of training a model on unlabelled data to identify possible structure, similarities, groups or unusual cases without target answers for each example."
+      },
+      {
+        "field": "plainExplanation; visual.steps[3].explanation; visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The page defines embeddings as lower-dimensional, compact summaries with fewer numbers. Embeddings are numeric vector representations, but they are not necessarily lower-dimensional than the input or designed for compression.",
+        "fix": "In plainExplanation, replace the embedding phrase with: “embeddings, which represent examples as numeric vectors”. In visual.steps[3].explanation, use: “The result may be clusters, numeric embeddings, or anomaly scores rather than named predictions.” In visual.accessibilityDescription, use: “numeric embeddings that represent examples as vectors”."
+      },
+      {
+        "field": "workedExample.process[3]; workedExample.result",
+        "severity": "error",
+        "problem": "The stated high anomaly score cannot be derived from the supplied numbers. No scoring rule, feature scaling, training distribution or baseline statistics are given. The available arithmetic is C−A=(7.9−2.1, 83−61, 19.4−14.8, 92−120)=(5.8, 22, 4.6, −28) and C−B=(7.9−2.3, 83−60, 19.4−15.1, 92−118)=(5.6, 23, 4.3, −26). Those differences mix four units and are not anomaly scores. They do not establish that C must receive a much higher score.",
+        "fix": "Make the outcome conditional. Replace the final process step with: “If C’s combination is rare in the training data, it receives a higher score; staff inspect it rather than treating the score as proof of a fault.” Replace the result with: “If reading C receives a high score, the system flags it for inspection. The score does not prove a fault, but it gives staff a reason to check the pump early.”"
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

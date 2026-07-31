@@ -127,8 +127,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A gradient is like a set of arrows showing which knobs in a model should be turned up or down to make its error smaller.",
-    "technical": "For a loss function L over parameters theta, the gradient is the vector of partial derivatives, nabla L(theta). Each component gives the local rate of change of loss with respect to one parameter, and optimisation methods use this vector, often via backpropagation, to update parameters."
+    "simple": "A gradient is like a set of signed readings showing how turning each model knob slightly up would change its error.",
+    "technical": "For a loss function L over parameters theta, the gradient is the vector of partial derivatives, nabla L(theta). Each component gives the local rate of change of loss with respect to one parameter. Backpropagation often computes this vector, which optimisation methods use to update parameters."
   },
   "keyTakeaway": "A gradient does not tell you the answer; it tells you which way to nudge each setting to reduce error from where you are now.",
   "quickCheck": {
@@ -211,9 +211,50 @@
     "slope"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:34.380Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "This describes the gradient itself as arrows pointing in the direction the knobs should move to reduce error. The gradient points toward increasing loss. A basic gradient descent update usually moves in the opposite direction. This wording blurs gradient with gradient descent.",
+        "fix": "A gradient is like a set of signed readings showing how turning each model knob slightly up would change its error."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The phrase \"use this vector, often via backpropagation, to update parameters\" assigns backpropagation the wrong role. Backpropagation computes gradients. The optimiser then uses them to update parameters.",
+        "fix": "For a loss function L over parameters theta, the gradient is the vector of partial derivatives, nabla L(theta). Each component gives the local rate of change of loss with respect to one parameter. Backpropagation often computes this vector, which optimisation methods use to update parameters."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The result says the gradient produced the \"strength of the update\". The gradient magnitude contributes to the update, but the learning rate and optimiser determine how far the parameter actually moves. This blurs gradient with learning rate. The arithmetic itself is correct: prediction = 2.0 × 3 = 6; loss = (6 - 9)^2 = 9; gradient = 2 × (6 - 9) × 3 = -18; new weight = 2.0 - 0.1 × (-18) = 3.8.",
+        "fix": "The gradient supplied local slope information. With a 0.1 learning rate, the optimiser raised the weight from 2.0 to 3.8 to reduce loss."
+      },
+      {
+        "field": "visual.steps[3].visualInstruction",
+        "severity": "warning",
+        "problem": "The displayed updates use a learning rate of 0.1, but that value is not stated. Readers therefore see unexplained numbers even though this panel is meant to teach how the gradient guides an update.",
+        "fix": "Show weight updates using learning rate 0.1: w1 0.50 to 0.42, w2 1.20 to 1.23, w3 0.70 to 0.70. Add: new weight = old weight - learning rate × gradient."
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual shows concrete old and new weights, but the screen-reader description omits them and does not expose the update calculation. It therefore conveys less of the mechanism than the diagram.",
+        "fix": "This diagram shows four stages. First, input data enters a model with weights w1, w2 and w3. Second, the prediction is compared with the target to calculate loss. Third, the gradient values are dL over dw1 = +0.8, dL over dw2 = -0.3 and dL over dw3 = 0.0. They give the local loss slope for each weight. Fourth, using a learning rate of 0.1, the optimiser subtracts these values: w1 changes from 0.50 to 0.42, w2 from 1.20 to 1.23 and w3 remains 0.70."
+      }
+    ],
+    "applied": [
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

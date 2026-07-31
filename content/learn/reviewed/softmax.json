@@ -25,7 +25,7 @@
     "probability"
   ],
   "oneSentence": "A numerical function that turns a list of model scores into positive values that sum to 1, highlighting which outputs are larger relative to the others.",
-  "plainExplanation": "Softmax usually appears at the output end of a neural network when the model must choose among several classes, such as languages, document types or object labels. The input to softmax is a list of scores, often called logits. These scores are not yet probabilities, and they can be any real numbers, including negatives.\n\nSoftmax transforms those scores in two main steps. First, it applies the exponential function to each score, which makes larger scores grow much faster than smaller ones. Then it divides each exponentiated value by the sum of all of them. The result is a set of positive numbers that add up to 1.\n\nThis means softmax does not judge each class independently. Every output depends on all the scores in the list. If one class score rises, the shares available to the others fall. That is why softmax is commonly used for mutually exclusive classes, where the model is expected to pick one main answer.\n\nPeople often confuse softmax with probability itself. Softmax outputs are often treated like probabilities, but that interpretation can be misleading if the model is poorly calibrated. In practice, softmax gives a convenient relative distribution over classes, not a guarantee that the top class is correct at that exact rate.",
+  "plainExplanation": "Softmax usually appears at the output end of a neural network for a task with several competing classes, such as languages, document types or object labels. The input to softmax is a list of scores, often called logits. These scores are not yet probabilities, and they can be any real numbers, including negatives.\n\nSoftmax transforms those scores in two main steps. First, it applies the exponential function to each score, which makes larger scores grow much faster than smaller ones. Then it divides each exponentiated value by the sum of all of them. The result is a set of positive numbers that add up to 1.\n\nThis means softmax does not judge each class independently. Every output depends on all the scores in the list. If one class score rises, the shares available to the others fall. That is why softmax is commonly used for mutually exclusive classes, where the task requires one main answer.\n\nPeople often confuse softmax with probability itself. Softmax outputs are often treated like probabilities, but that interpretation can be misleading if the model is poorly calibrated. In practice, softmax gives a convenient relative distribution over classes, not a guarantee that the top class is correct at that exact rate.",
   "everydayAnalogy": {
     "title": "Sharing attention across a list of messages",
     "story": "A team lead opens five incoming messages and gives each one an urgency score based on quick signals such as sender, subject line and timing. Those raw scores are hard to compare because they do not form a neat scale. So the team’s triage tool converts them into attention shares that must add up to 100 percent, giving the most urgent-looking message the biggest share. If one message suddenly looks much more urgent, the shares for the others shrink even if their own raw scores did not change.",
@@ -198,9 +198,43 @@
     "softmax"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:51.780Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This does not define softmax precisely. Many functions can turn scores into positive values that sum to 1. Omitting exponentiation and division by the shared sum blurs softmax with other normalisation functions and with the broader activation-function entry.",
+        "fix": "A function that exponentiates a list of model scores and divides each result by their sum, producing positive values that sum to 1 across competing outputs."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The phrases “the model must choose” and “the model is expected to pick” attribute a choice to the model. They also conflict with the later, correct statement that softmax does not decide the class. The task requires one label; softmax only transforms scores.",
+        "fix": "Softmax usually appears at the output end of a neural network for a task with several competing classes, such as languages, document types or object labels. The input to softmax is a list of scores, often called logits. These scores are not yet probabilities, and they can be any real numbers, including negatives.\n\nSoftmax transforms those scores in two main steps. First, it applies the exponential function to each score, which makes larger scores grow much faster than smaller ones. Then it divides each exponentiated value by the sum of all of them. The result is a set of positive numbers that "
+      },
+      {
+        "field": "workedExample.scenario",
+        "severity": "error",
+        "problem": "“A document classifier must choose” again presents the classifier as making a choice. The task requires one label, while the classifier produces scores or outputs.",
+        "fix": "A document classification task requires one label for a short paragraph: climate, health, or trade."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "“The exponential emphasises differences in larger logits” is ambiguous and can imply that absolute logit size matters. It does not: adding the same constant to every logit leaves softmax unchanged. The relevant mechanism is that a logit difference becomes a ratio between outputs.",
+        "fix": "Given logits z_i for classes i, softmax computes exp(z_i) divided by the sum of exp(z_j) over all classes j. The exponential turns logit differences into output ratios, and the normalisation couples all outputs so they form a categorical distribution over classes. Adding the same constant to every logit does not change the result, which is why implementations often subtract the maximum logit first for numerical stability. Softmax is typically used for single-label multi-class prediction and is often paired with cross-entropy loss during training. It should be distinguished from sigmoid outputs"
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

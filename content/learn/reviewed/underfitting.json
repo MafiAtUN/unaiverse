@@ -119,7 +119,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "The system is too basic for the job, so it misses real patterns and performs badly even on examples it has already seen.",
-    "technical": "Underfitting occurs when model capacity, feature representation, optimisation time, or effective complexity after regularisation is insufficient to approximate the target function, leading to high bias and elevated error on both training and validation data."
+    "technical": "Underfitting occurs when model capacity, features, training, or effective complexity after regularisation is insufficient to capture the target pattern, raising error on training and validation data and sometimes reflecting high statistical bias."
   },
   "keyTakeaway": "If a model does badly even on its training examples, it may be too simple rather than too smart.",
   "quickCheck": {
@@ -200,9 +200,37 @@
     "underfit"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:09.090Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping[2]",
+        "severity": "error",
+        "problem": "The analogy says the rule performs badly on a test set, then maps that result to poor performance on training or development data. Poor development or test performance alone does not distinguish underfitting from overfitting. The analogy must establish failure on examples used to design the rule.",
+        "fix": "Change the final sentence to: \"Even in the small set of known documents the team used to design and check the search, the tool already performs badly.\" Change the mapping to: \"Bad results even on documents used to design the search rule\" and \"Poor fit visible already on training data.\""
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The sentence says all listed causes lead to high statistical bias. Limited model capacity often produces high bias, but inadequate optimisation or training can leave high training error without implying high statistical bias. This also blurs underfitting with the separate bias entry.",
+        "fix": "Underfitting occurs when model capacity, features, training, or effective complexity after regularisation is insufficient to capture the target pattern, raising error on training and validation data and sometimes reflecting high statistical bias."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "\"Too smart\" is anthropomorphic and does not name the relevant contrast. The intended distinction is between an underfit model and an overfit model.",
+        "fix": "If a model does badly even on its training examples, it may be too limited rather than overfitted."
+      }
+    ],
+    "applied": [
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

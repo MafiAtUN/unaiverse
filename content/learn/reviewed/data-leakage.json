@@ -29,8 +29,8 @@
     "memorisation",
     "data-exfiltration"
   ],
-  "oneSentence": "Data leakage happens when information that would not truly be available at prediction time slips into training or testing, making a model look better than it really is.",
-  "plainExplanation": "A model learns from input data and then produces an output, such as a class label or a score. Leakage happens when the data used to build or test the model contains extra clues about the correct answer that would not exist in real use. Those clues can come from the future, from the label itself, or from accidental overlap between training and test data.\n\nWhat goes in matters. If a spreadsheet includes a column created after the outcome happened, or if the same case appears in both training and test sets, the model can pick up shortcuts. What happens next is that evaluation scores, such as accuracy, look unusually strong. What comes out is a misleading impression of quality.\n\nA common form is target leakage. That means a feature, or input column, contains information that is too closely tied to the thing you are trying to predict. For example, predicting whether a document will be archived and including a field filled in only after archiving creates an unfair clue.\n\nThis is not the same as overfitting. Overfitting means a model matches quirks in the training data and then performs poorly on new data, even without hidden clues. Leakage is different: the evaluation itself is contaminated, so the score may be high for the wrong reason. A leaked model can seem excellent until it meets real-world data.",
+  "oneSentence": "Data leakage happens when future, target or held-out test information improperly influences model training or evaluation, making performance look better than it is.",
+  "plainExplanation": "A model learns from input data and then produces an output, such as a class label or a score. Leakage happens when model building uses information that would not exist in real use, or information that should have been reserved for a fair test. It also happens when evaluation cases overlap with training cases.\n\nWhat goes in matters. If a spreadsheet includes a column created after the outcome happened, or if the same case appears in both training and test sets, the model can pick up shortcuts. Evaluation scores, such as accuracy, may then look unusually strong. The result is a misleading impression of quality.\n\nA common form is target leakage. This means an input contains target-derived or later information that would not be available when the prediction is made. For example, predicting whether a document will be archived while including a field filled in only after archiving creates an unfair clue.\n\nThis is not the same as overfitting. Overfitting means a model matches quirks in the training data and then performs poorly on new data, even without leaked information. Leakage is a pipeline or evaluation flaw, so the score may be high for the wrong reason. A leaked model can seem excellent until it meets real-world data.",
   "everydayAnalogy": {
     "title": "A filing test with answer marks already showing",
     "story": "A team is testing whether a new search assistant can sort policy documents into the right folders. One staff member quietly leaves coloured stickers on several folders that match the correct destination, because those stickers were added after the documents had already been filed. During the test, the assistant appears highly accurate because it follows the stickers rather than reading the documents carefully. When new unstickered documents arrive, its performance drops sharply.",
@@ -110,7 +110,7 @@
   "unWorkplaceExample": {
     "scenario": "A country office wants to triage a shared programme inbox by predicting which messages need same-day response. The team uses approved internal tools and historical message metadata to test a model.",
     "relevance": "Leakage can appear if the dataset includes fields added after staff review, such as priority tags, escalation status, or closure times. That would make the pilot seem stronger than it would be on new incoming messages.",
-    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or operational email content into an unapproved public AI service. Use only approved environments, minimise data, and keep human oversight over triage decisions."
+    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or operational email content or metadata to an unapproved AI service. Use approved environments, minimise data, and keep human oversight over triage decisions."
   },
   "whyItMatters": "A leaked model can pass testing, win budget, and enter operations even though it does not truly work. That creates poor decisions: systems may be procured, deployed or trusted on the basis of scores that were never a fair test. For programme teams, this can mean missed cases, wasted staff time, unfair treatment, or false confidence in dashboards and automation. For technical teams, leakage blocks honest comparison between models because the evaluation no longer reflects reality. Spotting leakage early helps teams ask a simple but powerful question: would this information really be available at the moment we need the prediction?",
   "whereYouMayHearIt": [
@@ -136,7 +136,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "A system can look smart in testing if it was given clues that would not exist in real use. Then the score is misleading.",
-    "technical": "Data leakage is contamination of the modelling or evaluation pipeline by information that is unavailable, inappropriate or unrealistically correlated with the target at prediction time. Common mechanisms include target leakage, temporal leakage from future data, train-test contamination through duplicate or related records, and preprocessing fit on the full dataset before splitting. Leakage biases evaluation upward because the model exploits shortcuts rather than learnable signals that generalise. A key diagnostic question is whether each feature and transformation could be computed using only information available at the exact prediction point for each case."
+    "technical": "Data leakage occurs when prediction-time-unavailable information or held-out evaluation information improperly influences model building, or when evaluation cases are not independent of training. Common mechanisms include target leakage, future data, duplicate or related records across splits, and preprocessing fitted on the full dataset before splitting. Leakage often makes evaluation overly optimistic because features, transformations or model choices benefit from information outside a fair pipeline. Memorisation is a model repeating training examples and can worsen duplicate-record leakage, but it is not the leakage itself. Data exfiltration is unauthorised copying out of a system, not this evaluation flaw. Check whether every feature existed at the prediction point and whether evaluation cases remained isolated from training and model selection."
   },
   "keyTakeaway": "If a model gets hidden clues during training or testing, a strong score may measure the leak, not the model.",
   "quickCheck": {
@@ -219,9 +219,52 @@
     "target leakage"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:33.721Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition is too narrow. Train-test contamination and preprocessing fitted on the full dataset can leak held-out evaluation information even when the underlying feature values would be available at prediction time. This also conflicts with mechanisms listed later on the page.",
+        "fix": "Data leakage happens when future, target or held-out test information improperly influences model training or evaluation, making performance look better than it is."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The target leakage definition says the input is merely \"too closely tied\" to the target. A strongly correlated feature is not leakage if it is legitimately available at prediction time. The problem is that the feature contains target-derived or later information that should not be available then.",
+        "fix": "A model learns from input data and then produces an output, such as a class label or a score. Leakage happens when model building uses information that would not exist in real use, or information that should have been reserved for a fair test. It also happens when evaluation cases overlap with training cases.\n\nWhat goes in matters. If a spreadsheet includes a column created after the outcome happened, or if the same case appears in both training and test sets, the model can pick up shortcuts. Evaluation scores, such as accuracy, may then look unusually strong. The result is a misleading impres"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "Calling any \"inappropriate or unrealistically correlated\" information leakage is overbroad. An unstable proxy or spurious correlation can cause poor generalisation without any information crossing a training, time or evaluation boundary. The claim that leakage always \"biases evaluation upward\" is also too absolute. It commonly makes results optimistic, but the core defect is that the estimate is contaminated.",
+        "fix": "Data leakage occurs when prediction-time-unavailable information or held-out evaluation information improperly influences model building, or when evaluation cases are not independent of training. Common mechanisms include target leakage, future data, duplicate or related records across splits, and preprocessing fitted on the full dataset before splitting. Leakage often makes evaluation overly optimistic because features, transformations or model choices benefit from information outside a fair pipeline. Check whether every feature existed at the prediction point and whether evaluation cases rem"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The page distinguishes leakage from overfitting but not from memorisation or data exfiltration, despite claiming separate entries for both. Duplicate-record leakage can enable memorisation, but leakage is the pipeline flaw while memorisation is model behaviour. Data exfiltration is unauthorised copying out of a system, not evaluation contamination.",
+        "fix": "Use the revised technical explanation and add: \"Memorisation is a model repeating training examples and can worsen duplicate-record leakage, but it is not the leakage itself. Data exfiltration is unauthorised copying out of a system, not this evaluation flaw.\""
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The scenario uses message metadata, but the caution only prohibits uploading sensitive email content. Metadata can itself contain personal, protection-sensitive, operational or security-sensitive information, so the caution does not fully match the stated use.",
+        "fix": "Do not upload confidential, personal, protection-sensitive, security-sensitive or operational email content or metadata to an unapproved AI service. Use approved environments, minimise data, and keep human oversight over triage decisions."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "unWorkplaceExampleCaution",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

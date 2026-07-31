@@ -141,7 +141,7 @@
       "A guarantee that the system will follow every earlier instruction correctly"
     ],
     "correctOptionIndex": 1,
-    "explanation": "Short-term memory is the temporary working state for the current task or session. It may include recent messages, tool outputs and notes. It is not the same as permanent storage, system capacity, or a promise of perfect behaviour."
+    "explanation": "It is temporary working state for the current task. Cross-session retrieval is long-term memory, while the amount usable at once is the context window. The state may be updated or summarised, rather than sent as a complete unchanged transcript."
   },
   "resources": [
     {
@@ -214,9 +214,37 @@
     "session memory"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:09.875Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.input and workedExample.process",
+        "severity": "error",
+        "problem": "The example does not establish that the 2 damaged cartons are additional to the 118 arrived, yet the draft treats all 118 as intact. If the 2 damaged cartons are included in the 118 arrived, the arithmetic is 118 - 2 = 116 intact, 116 + 2 = 118 arrived, and 120 - 118 = 2 missing. The page instead states 118 intact + 2 damaged = 120 arrived. The follow-up question asks how to classify damaged cartons, but it does not resolve whether they were included in the reported 118.",
+        "fix": "Change the input to: \"User: 'Please verify this delivery. Manifest: 120 soap cartons, batch SX-44, for Clinic A. Driver reports 118 intact and 2 damaged cartons arrived.'\" Then change the first process step to: \"The system stores the key details for this session: 120 expected, 118 intact, 2 damaged, batch SX-44, destination Clinic A.\""
+      },
+      {
+        "field": "quickCheck.options and quickCheck.explanation",
+        "severity": "error",
+        "problem": "Option 1 is the marked and only defensible answer: option 0 describes permanent cross-session storage, option 2 is unrelated service capacity, and option 3 makes an invalid guarantee. However, the distractors make the answer obvious without testing the claimed distinctions. Two rely on conspicuous absolutes such as “always” and “guarantee”, while option 2 is unrelated to memory.",
+        "fix": "Use these options: [\"Stored information retrieved across sessions to reuse past facts\", \"The temporary working information kept during a current task so the next step can use recent instructions and results\", \"The maximum input and prior output a model can use at one time\", \"A complete transcript sent unchanged on every model call during the task\"]. Keep correctOptionIndex as 1 and use the corrected explanation below."
+      },
+      {
+        "field": "visual.steps, visual.description and visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The linear sequence conflates two different paths. Step 3 may be a question to the user, but a question is already an output. The diagram then places the user's answer in step 4 and produces another output in step 5, without showing that the answer starts a new turn. This does not accurately convey the turn and update cycle.",
+        "fix": "Make step 3 a tool or internal action only and step 4 its returned result. Keep the reply at step 5. Show a user answer looping back to step 1 as new input. Apply the same sequence to the main description and accessibility description."
+      }
+    ],
+    "applied": [
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

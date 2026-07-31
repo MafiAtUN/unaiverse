@@ -26,8 +26,8 @@
     "supervised-learning",
     "unsupervised-learning"
   ],
-  "oneSentence": "A learning approach that combines a small set of labelled examples with a larger set of unlabelled examples to improve predictions.",
-  "plainExplanation": "Many machine-learning systems need labelled examples. A label is the correct answer attached to an input, such as “sports” for a news article. In practice, labels are often expensive or slow to produce, while unlabelled data is plentiful.\n\nSemi-supervised learning uses both kinds of data together. The model first learns from the labelled examples, from patterns in the unlabelled examples, or from both in alternating steps. The aim is to use the extra structure in the unlabelled data to build a better predictor than labelled data alone would allow.\n\nWhat goes in: a small labelled dataset and a larger unlabelled dataset. What changes inside: the model adjusts its internal parameters so similar inputs tend to get similar outputs, or so confident provisional labels on unlabelled items can help further training. What comes out: a model for tasks such as classification or regression.\n\nIt is often confused with self-supervised learning. They are related but not the same. In self-supervised learning, labels are created automatically from the data itself by a designed prediction task. In semi-supervised learning, at least some human-provided or otherwise external labels are already present and guide the learning.",
+  "oneSentence": "A learning approach that combines labelled and unlabelled examples to train a predictor for the same target task.",
+  "plainExplanation": "Many machine-learning systems need labelled examples. A label is the correct answer attached to an input, such as “sports” for a news article. In practice, labels are often expensive or slow to produce, while unlabelled data is plentiful.\n\nSemi-supervised learning uses both kinds of data together. The model may learn from both datasets jointly, or use them in alternating steps. The aim is to use the extra structure in the unlabelled data to build a better predictor than labelled data alone would allow.\n\nWhat goes in: a small labelled dataset and a larger unlabelled dataset. What changes inside: the model adjusts its internal parameters so similar inputs tend to get similar outputs, or so confident provisional labels on unlabelled items can help further training. What comes out: a model for tasks such as classification or regression.\n\nIt is often confused with self-supervised learning. They are related but not the same. In self-supervised learning, labels are created automatically from the data itself by a designed prediction task. In semi-supervised learning, at least some human-provided or otherwise external labels are already present and guide the learning.",
   "everydayAnalogy": {
     "title": "Sorting paired paragraphs by meaning",
     "story": "A team in Nairobi is organising a large box of printed paragraph pairs for a writing workshop. On only 20 pairs, a trainer has written labels such as “same meaning” or “different meaning”. Hundreds of other pairs have no labels, but by reading them, the team can still notice clusters: some use formal language, some are short summaries, and some differ only by a few words. They use the 20 labelled pairs to anchor the task, then use the larger pile to see which unlabelled pairs look similar to the anchored examples. This helps them sort new pairs more accurately than if they had used only the 20 labelled sheets.",
@@ -210,9 +210,32 @@
     "semi-supervised learning"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:10:30.578Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition makes the usual small-labelled, large-unlabelled setting sound mandatory, although the defining feature is the use of both labelled and unlabelled data. It also says the approach improves predictions, but the page later correctly explains that performance can stay flat or worsen.",
+        "fix": "A learning approach that combines labelled and unlabelled examples to train a predictor for the same target task."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The sentence saying the model learns from both kinds of data \"in alternating steps\" wrongly excludes methods that optimise labelled and unlabelled objectives jointly. Alternating steps are one possibility, not a requirement.",
+        "fix": "Replace that sentence with: \"The model may learn from both datasets jointly, or use them in alternating steps.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

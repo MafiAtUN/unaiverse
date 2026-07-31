@@ -30,8 +30,8 @@
     "reliability",
     "understanding"
   ],
-  "oneSentence": "The same input and settings produce the same output every time, instead of varying across repeated runs.",
-  "plainExplanation": "A language model produces text one piece at a time. Those pieces are often called tokens, which can be words, parts of words, or punctuation. Deterministic output means that if you give the model the same prompt, the same context, the same model version, and the same generation settings, you get the same sequence of tokens back.\n\nWhat goes in matters. The input is not only the visible question. It also includes hidden instructions such as a system prompt, previous messages in the conversation, the model version, and settings that control how the next token is chosen. If any of these change, the output may change too.\n\nWhat happens inside is a token-by-token selection process. The model calculates scores for many possible next tokens. If the system always picks the highest-scoring token at each step, the run is deterministic. If it uses a method that allows some randomness, such as sampling, repeated runs can differ even when the prompt looks identical.\n\nWhat comes out is a completion that can be reproduced under the same conditions. This is useful for testing, auditing and comparing prompts. It does not mean the output is correct, reliable, unbiased or suitable for use without review. Deterministic output is about repeatability, not truth or quality.",
+  "oneSentence": "The same full input and generation conditions produce the same output every time, rather than varying across repeated runs.",
+  "plainExplanation": "A language model produces text one piece at a time. Those pieces are often called tokens, which can be words, parts of words, or punctuation. Deterministic output means that the same full generation conditions produce the same sequence of tokens under a deterministic implementation.\n\nWhat goes in matters. The input is not only the visible question. It also includes hidden instructions such as a system prompt, previous messages in the conversation, the model version, and settings that control how the next token is chosen. Implementation and serving behaviour may matter too.\n\nWhat happens inside is a token-by-token selection process. The model calculates scores for many possible next tokens. A fixed choice rule, such as consistently selecting a uniquely highest-scoring token, can produce deterministic output. A method that allows uncontrolled randomness may produce different outputs across repeated runs.\n\nA deterministic completion can be reproduced under the same full conditions. This is useful for testing, auditing and comparing prompts. It does not mean the output is correct, reliable, unbiased or suitable for use without review. Deterministic output is about repeatability, not truth or quality.",
   "everydayAnalogy": {
     "title": "Sorting messages with a fixed rule sheet",
     "story": "A team in Nairobi receives 200 incoming messages and must label each one urgent or not urgent. They use a rule sheet: if a message mentions evacuation, medical need or an immediate deadline, it goes into the urgent tray; otherwise it goes into the standard tray. If every team member follows the same rule sheet exactly, the same message should land in the same tray each time it is checked. If staff are allowed to use personal judgement for borderline cases, the result may vary from one review to the next.",
@@ -96,7 +96,7 @@
       "Run the same prompt twice again with the same model version but temperature 0.8.",
       "This time the model samples from several likely tokens, so wording differs across the two runs."
     ],
-    "result": "With temperature 0, both runs return: 'Clinic opens at 08:00; bring water and report severe cases immediately.' With temperature 0.8, one run returns 'The clinic opens at 08:00, so bring water and report severe cases at once,' while another returns 'Bring water, note the 08:00 opening time, and flag severe cases immediately.'"
+    "result": "With fixed highest-score selection, both runs return: 'Clinic opens at 08:00; bring water and report severe cases immediately.' With sampling that allows randomness between runs, one run may use that wording while another may say: 'Bring water, note the 08:00 opening time, and flag severe cases immediately.'"
   },
   "unWorkplaceExample": {
     "scenario": "A language services team is testing an approved internal model to translate short, non-sensitive field update templates into a working language for routine drafting support.",
@@ -209,9 +209,39 @@
     "reproducibility"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:50.005Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The page overstates what fixed inputs and settings guarantee and repeatedly treats highest-score selection as sufficient for determinism. Exact repetition also requires a deterministic implementation and stable serving behaviour, as the analogy limitation itself acknowledges. A fixed selection rule must not depend on uncontrolled randomness. The current fields therefore contradict the page's own limitation and blur deterministic output with one particular decoding method.",
+        "fix": "Define the term using the same full generation conditions and a deterministic implementation. Present highest-score selection only as an example of a fixed choice rule, and describe sampling as non-deterministic only when it allows uncontrolled randomness between runs."
+      },
+      {
+        "field": "workedExample.input, workedExample.process, workedExample.result",
+        "severity": "error",
+        "problem": "The example falsely equates temperature 0 with always choosing the highest-scoring token and temperature 0.8 with sampling. Temperature controls how predictable or varied token choices are, but the token-selection method is separate. The example therefore blurs this term into Temperature. There is no arithmetic to verify in this example.",
+        "fix": "Replace the temperature conditions with explicit methods: 'Method A: fixed highest-score selection. Method B: sampling that allows randomness between runs.' Say the sampled runs may differ, not that temperature itself determines the decoding method."
+      },
+      {
+        "field": "visual.description, visual.steps, visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual suggests that fixed selection necessarily repeats exactly and that randomised selection is the sole reason runs differ. This omits the stated dependence on implementation and serving behaviour. It also fails to distinguish sampling with uncontrolled randomness from sampling performed under reproducible conditions.",
+        "fix": "Label the left side 'fixed selection under stable conditions' and the right side 'sampling with uncontrolled randomness'. Change 'Fixed selection repeats exactly across runs' to 'Under stable conditions, fixed selection repeats exactly across runs.'"
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

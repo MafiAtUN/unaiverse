@@ -28,7 +28,7 @@
     "alignment"
   ],
   "oneSentence": "AI safety means designing, testing and using AI systems so they are less likely to cause harm, especially in situations where people could be affected.",
-  "plainExplanation": "AI safety focuses on preventing harm from AI systems before, during and after use. Harm can include wrong answers in high-stakes settings, unsafe instructions, discriminatory outputs, privacy breaches, or people trusting the system too much. The aim is not only to make a system useful, but also to reduce the chance that it causes damage.\n\nWhat goes in includes training data, design choices, rules for use, and the task given to the system. What happens includes testing, monitoring, and adding controls such as guardrails, which are limits or checks that block risky behaviour. What comes out is not just an answer or prediction, but also a level of risk that people need to manage.\n\nSafety is often confused with AI security and AI ethics. AI security is about protecting systems from attacks, theft or unauthorised access. AI safety is broader: it asks whether the system can cause harm even without an attack. AI ethics is broader in another way: it covers values and principles such as fairness, dignity and accountability, while safety concentrates on avoiding harmful outcomes.\n\nIn practice, safety usually means keeping humans involved, testing edge cases, limiting what the system can do, and planning what to do if it fails. For higher-risk uses, safety is not a one-time check. It is an ongoing process of identifying risks, reducing them, watching for problems, and stopping use if needed.",
+  "plainExplanation": "AI safety focuses on preventing harm from AI systems before, during and after use. Harm can include wrong answers in high-stakes settings, unsafe instructions, discriminatory outputs, privacy breaches, or people trusting the system too much. The aim is not only to make a system useful, but also to reduce the chance that it causes damage.\n\nWhat goes in includes training data, design choices, rules for use, and the task given to the system. What happens includes testing, monitoring, and adding controls such as guardrails, which are limits or checks intended to reduce risky behaviour. What comes out can create risks that people need to manage, depending on the output, use and context.\n\nSafety is often confused with AI security and AI ethics. AI security protects systems from attacks, theft or unauthorised access. AI safety asks whether a system could cause harm, including when there is no attack. AI ethics examines whether AI use is fair, safe, accountable and respectful of human rights. AI safety focuses more specifically on practical measures to identify and reduce harmful outcomes.\n\nIn practice, safety usually means keeping humans involved, testing edge cases, limiting what the system can do, and planning what to do if it fails. For higher-risk uses, safety is not a one-time check. It is an ongoing process of identifying risks, reducing them, watching for problems, and stopping use if needed.",
   "everydayAnalogy": {
     "title": "Checking a road map before sending repair teams",
     "story": "A city engineering office uses satellite images to mark damaged roads after heavy rain. Before repair crews are sent out, a supervisor checks a sample of the marked locations, compares them with recent field notes, and flags doubtful cases for manual review. The office also sets a rule that no repair order is issued from the map alone in areas where schools, hospitals or bridges are nearby. This helps the team avoid wasting fuel, missing dangerous damage, or sending crews to the wrong place.",
@@ -141,7 +141,7 @@
       "Avoid testing difficult cases, since they are too rare to matter."
     ],
     "correctOptionIndex": 1,
-    "explanation": "AI safety is a process for reducing harm. High average accuracy is not enough, security is only one part of risk, and difficult cases often matter most when the stakes are high."
+    "explanation": "AI safety requires more than average testing, human review alone or prompt guardrails. It combines risk identification, safeguards, targeted review and monitoring, especially for high-risk cases."
   },
   "resources": [
     {
@@ -214,9 +214,44 @@
   ],
   "contested": "The term is used in more than one way. In many practical governance settings, it means reducing harms from current AI systems. In some research communities, it also refers to longer-term risks from highly capable systems.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:27:42.436Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation makes three misleading claims. It defines guardrails as checks that \"block\" risky behaviour, although such controls can only restrict, detect or reduce it and may fail. It also says a level of risk \"comes out\" of the system, when risk arises from the output, use and context rather than being an output itself. Finally, calling AI safety \"broader\" than AI security implies a strict hierarchy that the supplied definitions do not support. The fields overlap but address different questions.",
+        "fix": "Use the corrected plainExplanation. It describes guardrails as reducing risk, locates risk in context, and distinguishes safety from security and ethics without claiming a false hierarchy."
+      },
+      {
+        "field": "everydayAnalogy",
+        "severity": "warning",
+        "problem": "This is barely an analogy. It describes satellite-image road assessment, then the worked example uses an AI tool for satellite-image road assessment after flooding. Reusing essentially the same scenario does not give readers a separate, familiar model for understanding the mechanism.",
+        "fix": "Keep the road-damage scenario as the worked example. Replace this field with a genuinely non-AI comparison that maps advance risk identification, safeguards, testing, supervised use and later monitoring."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked option is correct, but the distractors make it obvious without testing understanding. Option 0 combines total automation with reliance on average accuracy. Option 2 says security covers all major risks. Option 3 explicitly says not to test difficult cases. None is plausibly attractive to a learner who has only skimmed the page.",
+        "fix": "Replace options 0, 2 and 3 with: \"Test average accuracy, then use the same controls for routine and high-risk cases.\"; \"Add human review to every output, but do not monitor incidents after deployment.\"; and \"Block unsafe prompts, then assume valid outputs are safe to act on automatically.\" Keep option 1 and correctOptionIndex 1."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation addresses the original caricatured distractors and will no longer explain the distinctions after the options are repaired.",
+        "fix": "Use the corrected quickCheckExplanation."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

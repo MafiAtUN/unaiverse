@@ -219,9 +219,47 @@
   ],
   "contested": "The basic idea is widely used, but the exact threshold for what counts as “large” is not fixed, and related terms such as “understanding” in connection with these models remain debated.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:15:12.305Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "“The model reads the prompt token by token” blurs input processing with sequential output generation. It also distinguishes the LLM from chatbots and AI assistants but not from foundation models or generative AI, despite claiming those terms are distinct.",
+        "fix": "Say that the model processes prompt tokens, then generates the completion one token at a time. Explain that generative AI is a broader content-producing category and that an LLM may also be a foundation model when it is broadly adaptable."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "The story lets the listeners use words after the gap, but next-token generation cannot consult later generated words when choosing the current token. The stated limitation does not identify this important mismatch.",
+        "fix": "A radio listener recovers words actually spoken and may use words after the gap. During generation, an LLM has no later generated words to consult; it produces new text from earlier context. People also bring intentions and real-world knowledge that this mechanism does not provide."
+      },
+      {
+        "field": "visual.steps[2].visualInstruction",
+        "severity": "warning",
+        "problem": "The displayed probabilities are incomplete without saying so: 42% + 21% + 18% + 9% = 90%. A subset of candidates may total less than 100%, but the visual does not account for or label the remaining 10%, which can misteach what a probability distribution is.",
+        "fix": "Label these as “Example top candidates” and add “Other tokens” at 10%, or explicitly state that only 90% of the distribution is shown."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "warning",
+        "problem": "“After enough tokens form a complete sentence, the generation stops” implies that sentence completeness itself controls stopping. Generation may instead stop after a stop token, a configured limit or another product rule.",
+        "fix": "The generation stops at a stop signal or configured limit, ideally after forming a complete sentence."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "The marked option is correct and the other three are false, but the distractors are caricatures. “Human operator behind every answer” and automatic verification make two options dismissible without understanding the distinction between an LLM, chatbot, generative AI and AI assistant.",
+        "fix": "Use: 1. “A conversation interface that accepts messages and returns replies”; 2. “A model that estimates likely next tokens to generate or transform text”; 3. “A broad category covering systems that produce text, images, audio or video”; 4. “Software that follows instructions and may use connected tools to return an action”. Keep option 2 marked."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

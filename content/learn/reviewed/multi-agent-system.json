@@ -30,8 +30,8 @@
     "workflow",
     "ai-assistant"
   ],
-  "oneSentence": "A multi-agent system uses several specialised software agents that coordinate, divide tasks and exchange results to complete a goal.",
-  "plainExplanation": "A multi-agent system is a setup where more than one software agent works on the same overall task. An agent is a program that can take steps, such as searching, calling a tool, checking a result or passing work to another agent. Instead of one agent doing everything, the work is split across several agents with different roles.\n\nWhat goes in can be a user request, a queue of tasks, data from tools or rules about what each agent may do. Then the agents interact. One may plan the job, another may retrieve documents, another may compare answers, and another may check quality or ask for human review. They may share messages, partial results or a short record of what has already happened.\n\nWhat comes out is not just one reply. It can be a drafted report, a ranked list of documents, a set of actions taken through tools, or a recommendation for a human to approve. The benefit is that specialised parts can work in parallel or cross-check each other. The risk is that coordination errors can spread quickly if the design is weak.\n\nThis is often confused with orchestration. Orchestration usually means the control layer that routes tasks and manages order. A multi-agent system is the wider arrangement of multiple interacting agents; it may include orchestration, but it is not only that control layer.\n\nIt is also different from a single chatbot or assistant with many features. If one model answers everything in one thread, that is not automatically a multi-agent system. The key idea is multiple agents with separate roles, states or tool access working together.",
+  "oneSentence": "A multi-agent system contains multiple software agents that interact, directly or through a control layer, while carrying out a shared or related task.",
+  "plainExplanation": "A multi-agent system is a setup where more than one software agent interacts while working on a shared or related task. An agent is a software component that uses its current state, instructions and available tools to select and carry out actions with some autonomy. Instead of one agent handling all decisions and actions, several agents can take different roles.\n\nWhat goes in can be a user request, a queue of tasks, data from tools or rules about what each agent may do. Then the agents interact directly or through a control layer. One may plan the job, another may retrieve documents, another may compare answers, and another may check quality or ask for human review. They may share messages, partial results or a short record of what has already happened.\n\nWhat comes out is not just one reply. It can be a drafted report, a ranked list of documents, a set of actions taken through tools, or a recommendation for a human to approve. The benefit is that specialised parts can work in parallel or cross-check each other. The risk is that coordination errors can spread quickly if the design is weak.\n\nThis is often confused with orchestration. Orchestration is the control layer that routes tasks and manages order. A multi-agent system is the wider arrangement of multiple interacting agents. It may include orchestration, but it is not only that control layer.\n\nIt is also different from a workflow. A workflow defines steps that move work from input to result and may include people, ordinary software or agents. A fixed sequence does not become a multi-agent system merely because it contains several steps or components.\n\nA single chatbot or assistant with many features is not automatically a multi-agent system. The key idea is multiple agents that can select actions within their roles and interact to carry out shared or related work.",
   "everydayAnalogy": {
     "title": "A document search team in a library",
     "story": "Imagine a team in a large library helping someone find past statements on coastal protection. One person turns the request into search terms, a second searches the catalogue, a third reads the most relevant pages, and a fourth checks whether the passages really match the topic and date. They pass notes to each other instead of each person doing the full job alone. At the end, the requester receives a short pack of verified excerpts and a note about anything uncertain.",
@@ -101,7 +101,7 @@
       "A verification agent checks dates, document IDs and whether each excerpt actually contains language on the requested theme.",
       "The coordinator compiles 13 validated excerpts into a table and flags 2 borderline cases for human review."
     ],
-    "result": "The team receives a table with 13 excerpts, grouped under prevention, waste management and international cooperation, each with a resolution ID, year and a note that 2 additional excerpts need human checking."
+    "result": "The team receives a table with 13 excerpts, grouped under prevention, waste management and international cooperation, each with a resolution ID and year. Two of the 13 are marked as borderline and need human checking."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team wants to search past resolutions for prior agreed language on a negotiation topic. One agent drafts search terms, another searches an approved internal repository, and a third compares the results against the requested date range and subject labels before producing a shortlist for staff review.",
@@ -144,7 +144,7 @@
       "A database that stores many documents for one search engine"
     ],
     "correctOptionIndex": 1,
-    "explanation": "The defining feature is multiple agents with distinct roles or behaviours working together on one broader task. A single assistant with many features is not automatically multi-agent, and a fixed workflow or a database alone does not meet the idea."
+    "explanation": "The defining feature is interaction among multiple agents carrying out parts of broader work. One agent using several tools remains one agent. Fixed workflow steps are not agents, and separate model outputs that are never combined do not form an interacting multi-agent system."
   },
   "resources": [
     {
@@ -216,9 +216,46 @@
   ],
   "contested": "The broad idea is widely used, but boundaries vary in practice. Some people reserve the term for systems with relatively autonomous agents that communicate with each other, while others use it for any architecture with multiple specialised agent components under one coordinator.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:02.766Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition is too restrictive. Multi-agent systems require multiple interacting agents, but they do not necessarily divide one task or exchange results directly. Interaction may occur through a control layer, and agents may pursue shared or related tasks.",
+        "fix": "A multi-agent system contains multiple software agents that interact, directly or through a control layer, while carrying out a shared or related task."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The sentence defining an agent as a program that can take steps is factually inadequate because almost any program can take programmed steps. The explanation also claims distinction from orchestration but does not distinguish a multi-agent system from a workflow. A fixed workflow can contain many steps or software components without containing multiple agents that select actions with some autonomy.",
+        "fix": "Define an agent by its ability to select and carry out actions with some autonomy, then state that a fixed sequence of steps is not multi-agent merely because it has several components."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The counts do not come out as written. The search returns 18 paragraphs and the analysis removes 5, so 18 - 5 = 13. The result then reports 13 excerpts plus 2 additional excerpts needing review, which gives 13 + 2 = 15, not 13. The two borderline cases must be included within the 13 remaining excerpts or another process count must change.",
+        "fix": "The team receives a table with 13 excerpts, grouped under prevention, waste management and international cooperation, each with a resolution ID and year. Two of the 13 are marked as borderline and need human checking."
+      },
+      {
+        "field": "quickCheck",
+        "severity": "error",
+        "problem": "Option 1 is ambiguous because one assistant interface in a single chat can be backed by several agents. The explanation itself only says this is not automatically multi-agent, so the option does not rule it out. The other distractors explicitly say there are no agents or describe only a database, making the answer obvious without understanding the distinction.",
+        "fix": "Replace the options with: [\"One agent using several tools in a fixed sequence\", \"Several specialised agents that hand off or compare work on one broader task\", \"Several fixed workflow steps controlled without agents\", \"Several model copies producing separate answers that are never combined\"]. Keep correctOptionIndex as 1 and update the explanation."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -28,8 +28,8 @@
     "attention-score",
     "autoregressive-model"
   ],
-  "oneSentence": "A method that gives each token information about its place in a sequence so attention can use word order, not just word identity.",
-  "plainExplanation": "A transformer processes text as a sequence of tokens, which are small pieces such as words or word fragments. Each token first gets an embedding, meaning a numeric vector that represents features learned from data. But an embedding by itself does not tell the model whether the token came first, fifth or last.\n\nPositional encoding adds location information to each token representation. The input is a list of token embeddings and a position for each token in the sequence. The mechanism attaches or combines a position vector with each token vector, often by addition, though some systems use learned position embeddings or other variants.\n\nAfter this step, the output is still one vector per token, but each vector now carries both content and position. That lets self-attention compare tokens while also taking order into account. Without some position signal, a transformer would treat many reordered sequences too similarly, because attention alone does not inherently encode left-to-right order.\n\nYou may also hear position embedding. People sometimes use that as a broad synonym, but it can refer more specifically to learned position vectors, while positional encoding can also include fixed patterns such as sinusoidal signals. The terminology is not always used consistently across papers and tools.",
+  "oneSentence": "A method that supplies sequence-position information so attention can use word order, not just token content.",
+  "plainExplanation": "A transformer processes text as a sequence of tokens, which are small pieces such as words or word fragments. Each token first gets an embedding, meaning a numeric vector that represents features learned from data. But an embedding by itself does not tell the model whether the token came first, fifth or last.\n\nPositional encoding introduces location information into token representations or the attention calculation. Some methods add a fixed or learned position vector to each token vector. Other methods represent relative distance or modify the attention calculation directly.\n\nWith a position signal, self-attention can compare token content while also taking order or distance into account. Without such a signal, basic self-attention does not inherently encode sequence order and responds to reordered inputs with correspondingly reordered outputs.\n\nYou may also hear position embedding. People sometimes use that as a broad synonym, but it can refer more specifically to learned position vectors, while positional encoding can also include fixed patterns such as sinusoidal signals. The terminology is not always used consistently across papers and tools.",
   "everydayAnalogy": {
     "title": "Meeting notes with line numbers",
     "story": "A team is summarising meeting notes from Nairobi, Bangkok and Bogotá. They print each note sentence on a separate card, but the cards only show the sentence text. Before sorting the cards into a summary, they stamp each card with a line number so they know what came earlier and what came later. Now two cards that say similar things can still be treated differently if one was the opening problem statement and the other was the final decision.",
@@ -94,7 +94,7 @@
       "Combine by addition. In Sequence A, 'border' becomes [12,1] at position 1, while in Sequence B, 'border' becomes [0,11] at position 2. The token content is the same, but the final vector differs because the position differs.",
       "Self-attention now receives different inputs for the two sequences, so it can produce different attention patterns and different downstream outputs."
     ],
-    "result": "The model can treat the two word orders as different sequences rather than nearly identical bags of tokens."
+    "result": "The model receives position-sensitive inputs, so it can treat the two word orders as different sequences."
   },
   "unWorkplaceExample": {
     "scenario": "A UN language technology team evaluates a transformer-based system that translates field updates into a working language. Positional encoding helps the system preserve who did what, and in what order, across a sentence.",
@@ -207,9 +207,69 @@
   ],
   "contested": "Terminology varies. Some authors use 'positional encoding' broadly for any position signal, while others distinguish fixed encodings from learned position embeddings or separate absolute from relative methods.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:03.940Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence and plainExplanation",
+        "severity": "error",
+        "problem": "The definition says positional encoding gives or adds information to each token representation. That excludes methods the page later names, such as relative position biases, which can modify the attention calculation without adding a position vector to each token. The explanation also presents learned position embeddings as an alternative to addition, although learned vectors can themselves be added.",
+        "fix": "Define positional encoding as supplying position information to token representations or attention. Say that fixed or learned vectors may be added, while other methods modify attention directly."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The arithmetic is wrong. For Sequence B, border at position 2 is [2,1]+[0,10]=[2+0,1+10]=[2,11], not [0,11]. The complete sums are A: [12,1], [1,13], [-10,2]. B: [10,2], [2,11], [-9,3].",
+        "fix": "Combine by addition. In Sequence A, 'border' becomes [12,1] at position 1, while in Sequence B, 'border' becomes [2,11] at position 2. The token content is the same, but the final vector differs because the position differs."
+      },
+      {
+        "field": "workedExample.process[0]",
+        "severity": "warning",
+        "problem": "The tokenisation step lists the tokens in Sequence A's order and says this applies to both sequences. It fails to show the different order that the example is meant to demonstrate.",
+        "fix": "Tokenise A as 'border', 'closed', 'yesterday' and B as 'yesterday', 'border', 'closed'."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "Calling the sequences nearly identical bags of tokens misstates the baseline mechanism. Self-attention without a positional signal is permutation-equivariant: reordering the inputs correspondingly reorders its token-level outputs. It is not simply treating the input as a bag at every stage.",
+        "fix": "The model receives position-sensitive inputs, so it can treat the two word orders as different sequences."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked answer is uniquely correct, but the distractors do not test understanding. Option 0 is plainly about shortening input, option 2 reverses tokenisation, and option 3 promises factual correctness. All are obviously unrelated to position, so the answer can be selected without understanding positional encoding.",
+        "fix": "Replace the options with: [\"To assign each token a vector for its content\", \"To tell the model where each token appears so attention can use order\", \"To calculate how strongly one token uses another\", \"To predict the next token from earlier tokens\"]. Keep correctOptionIndex as 1."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "Token embeddings are vectors, so describing them as permutation-insensitive is imprecise. Self-attention without position information is permutation-equivariant: permuting the input tokens permutes the corresponding outputs. The current wording blurs invariance and equivariance.",
+        "fix": "Use permutation-equivariant to describe self-attention over token embeddings, then explain that a positional signal lets the computation distinguish order."
+      },
+      {
+        "field": "visual.steps[2].visualInstruction",
+        "severity": "warning",
+        "problem": "The visual is told to show a repeated-token example, but the specified four-token sentence contains no repeated token. The accessibility description also does not mention a separate repeated-token example.",
+        "fix": "Draw plus signs between the two columns and a third output column of merged bars. Label each merged bar 'input to attention'. Add a small inset showing one repeated token with different output because its position differs."
+      },
+      {
+        "field": "everydayAnalogy.mapping[2]",
+        "severity": "warning",
+        "problem": "The mapping equates sorting cards into a coherent summary with self-attention. Self-attention combines information using attention weights, but it does not literally sort inputs or produce a coherent summary by itself.",
+        "fix": "Use \"comparing cards using line numbers\" for the analogy element and \"self-attention using content and position information\" for the AI element."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

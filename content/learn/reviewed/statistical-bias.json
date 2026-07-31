@@ -28,8 +28,8 @@
     "variance",
     "bias-term"
   ],
-  "oneSentence": "A model with high statistical bias makes errors in a consistent direction because its assumptions or structure are too simple for the pattern in the data.",
-  "plainExplanation": "In machine learning, statistical bias means a model tends to miss the true pattern in a regular, repeatable way. It does not mean social prejudice here. It is about systematic error: the model keeps being wrong for similar reasons across many cases.\n\nWhat goes in is training data and a model form, such as a straight line, a small decision tree, or a heavily restricted classifier. What happens is that the model tries to fit a pattern, but its built-in assumptions are too rigid or too simple. What comes out is predictions that are consistently off, even on the training data and often also on new data.\n\nA high-bias model often underfits. Underfitting means it has not captured enough of the real structure in the data. For example, if public feedback contains nuanced language but the model only uses a few keywords, it may keep labelling many mixed comments incorrectly in the same way.\n\nPeople often discuss bias together with variance. Variance is how much a model’s results change when the training data changes. A model can have too much bias, too much variance, or a better balance between them. The phrase “bias-variance trade-off” refers to this tension: making a model more flexible can reduce bias but may increase variance.",
+  "oneSentence": "Statistical bias is a systematic gap between a model’s expected prediction across possible training samples and the true target, often caused by restrictive assumptions.",
+  "plainExplanation": "In machine learning, statistical bias is a systematic gap between a model’s expected prediction and the true target. Expected here means averaging predictions from models trained on different possible samples from the same population. It does not mean social prejudice. It is also different from the adjustable bias number added inside a neural network.\n\nRestrictive model forms, strong regularisation, or estimation choices can create this gap. A straight line used for a curved relationship is a common example. Such a model may underfit, with weak training and test performance. However, one fitted model’s repeated errors do not by themselves measure statistical bias. Noise and the particular sample also affect them.\n\nBias is often discussed with variance. Variance describes how much fitted predictions change across training samples. More flexibility can reduce bias but increase variance, so both need evaluation. Repeated resampling, suitable benchmarks, and error analysis can provide evidence, while the exact decomposition depends on the task and loss.",
   "everydayAnalogy": {
     "title": "Sorting consultation letters with an oversimplified rule",
     "story": "A team member has to sort printed consultation letters into two trays: “supports the proposal” and “raises concerns”. To save time, they use one rule only: if a letter contains the word “welcome”, it goes into support; otherwise it goes into concerns. Many letters say “we welcome the discussion but raise serious concerns about implementation”, so the rule keeps mis-sorting them in the same direction. The rule is fast and consistent, but it is too simple for the real language people use.",
@@ -89,7 +89,7 @@
       "A review of errors shows a pattern: comments with both positive and critical language are repeatedly forced into either ‘support’ or ‘concern’ because the model cannot represent nuance well.",
       "The team adds richer text features and relaxes the penalty slightly. A new model reaches 74% on training and 71% on test, suggesting lower bias without a large jump in variance."
     ],
-    "result": "The first model had high statistical bias: it made similar mistakes again and again because its structure was too limited for the task."
+    "result": "The first model’s limited features and patterned errors suggest underfitting, but one train-test split does not establish its statistical bias."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team wants to summarise public submissions to a consultation by grouping comments into broad themes before analysts review them.",
@@ -121,7 +121,7 @@
     "simple": "A high-bias model is too simplistic, so it keeps making the same kind of mistake.",
     "technical": "In supervised learning, bias usually refers to systematic error introduced by modelling assumptions, restricted hypothesis class, regularisation, or estimation choices. Informally, if the model family cannot represent the target relationship well, the expected prediction will sit away from the true function, producing underfitting. In the classic bias-variance decomposition, expected generalisation error can be analysed as contributions from bias, variance, and irreducible noise, though the exact form depends on the loss function and setting. Practically, high bias often appears as weak performance on both training and validation data, with errors that follow a recognisable pattern rather than random fluctuation."
   },
-  "keyTakeaway": "Statistical bias means the model is systematically wrong in a repeatable way, often because it is too simple for the pattern it needs to learn.",
+  "keyTakeaway": "Statistical bias is a systematic gap between a model’s expected prediction across possible training samples and the true target.",
   "quickCheck": {
     "question": "Which situation best suggests high statistical bias rather than high variance?",
     "options": [
@@ -201,9 +201,70 @@
     "bias-variance tradeoff"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:31.320Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, simpleVsTechnical.simple, keyTakeaway",
+        "severity": "error",
+        "problem": "These fields define statistical bias as repeatedly making the same kind of error across cases because a model is too simple. That is an underfitting pattern, not the general definition. Statistical bias concerns the gap between the expected prediction or estimate across possible training samples and the true target. Restrictive models are one cause, but regularisation and estimation choices can also create bias.",
+        "fix": "Define bias using expected predictions across possible training samples, then present underfitting from an overly restrictive model as a common cause rather than the definition."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The page distinguishes statistical bias from algorithmic bias and variance, but never distinguishes it from the adjustable bias number in a neural network. Readers could reasonably confuse the two uses of the same word.",
+        "fix": "Add: “It is also different from the adjustable bias number added inside a neural network.”"
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The claim that real statistical bias is measured over many examples with error metrics is misleading. Ordinary error metrics combine bias, variance and noise. They do not isolate statistical bias. The analogy itself illustrates underfitting from a fixed rule, not the expectation over possible training samples.",
+        "fix": "A person using a paper rule can notice the mistake and change behaviour deliberately. A model does not reflect in that way. The analogy shows underfitting, while formal statistical bias concerns average predictions across possible training samples."
+      },
+      {
+        "field": "visual",
+        "severity": "warning",
+        "problem": "The visual compares residuals from two fits on one dataset. Residual size on one sample does not show statistical bias because it also reflects noise and the particular sample. The visual teaches underfitting but omits the expected-over-training-samples mechanism used in the technical definition.",
+        "fix": "Show the true curve and several fits from different training samples in each panel. Compare each model class’s average fitted prediction with the true curve."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "error",
+        "problem": "Training accuracy of 61% and test accuracy of 60% does not prove that the model is not memorising. It only shows a one percentage point train-test gap on this split.",
+        "fix": "On the training set, accuracy is 61%, and on the test set, accuracy is 60%, so there is no large train-test gap on this split."
+      },
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The new scores cannot establish lower statistical bias or a small change in variance. The train-test gaps are 61% - 60% = 1 percentage point and 74% - 71% = 3 percentage points, but neither gap measures variance. Variance requires examining changes across training samples, folds or repeated fits.",
+        "fix": "The new model reaches 74% on training and 71% on test. This suggests a better fit, but one split cannot measure bias or variance."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result states conclusively that the first model had high statistical bias. Its limited features, strong penalty and patterned errors support an underfitting diagnosis, but one trained model and one split do not establish formal statistical bias.",
+        "fix": "The first model’s limited features and patterned errors suggest underfitting, but one train-test split does not establish its statistical bias."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The marked option is the only defensible answer, but the explanation again treats low, similar scores and repeated errors as a direct diagnosis of statistical bias. They suggest underfitting, which is evidence consistent with high bias, rather than measuring it.",
+        "fix": "The first suggests underfitting: scores are similar and the model repeatedly misses nuance. The second suggests high variance. Delayed inputs and merely having both error types do not diagnose bias."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -27,8 +27,8 @@
     "chatbot",
     "understanding"
   ],
-  "oneSentence": "A language model is a system trained on large amounts of text to predict likely next pieces of text and generate new text from a prompt.",
-  "plainExplanation": "A language model takes in text and produces text. The input might be a question, an instruction, part of a sentence, or a longer conversation. Inside the system, text is broken into small units called tokens, which may be whole words, parts of words, or punctuation marks.\n\nThe model has been trained by adjusting many numerical settings, often called parameters, so that it becomes good at predicting what token is likely to come next after the tokens it has already seen. It does not search a rulebook sentence by sentence. It uses patterns learned from many examples of language.\n\nWhen you give it a prompt, it reads the prompt token by token, estimates probabilities for possible next tokens, chooses one, adds it to the text, and repeats. This step-by-step process can produce a sentence, a summary, computer code, or a longer reply.\n\nThis is why a language model can sound fluent even when it is wrong. Fluent output is not proof of factual accuracy, real-world access, or reliable reasoning. A language model is best understood as a text-pattern generator, not the same thing as a chatbot interface, a search engine, or a person.",
+  "oneSentence": "A language model estimates probabilities for pieces of language in context; many can use these estimates to generate text from a prompt.",
+  "plainExplanation": "A common text-generating language model takes in text and produces text. The input might be a question, an instruction, part of a sentence, or a longer conversation. Inside the system, text is broken into small units called tokens, which may be whole words, parts of words, or punctuation marks.\n\nThe model is trained by adjusting numerical settings, often called parameters, so that it becomes good at predicting what token is likely to come next after earlier tokens. It does not search a rulebook sentence by sentence. It uses patterns learned from examples of language.\n\nWhen you give it a prompt, it processes the tokenised prompt, estimates probabilities for possible next tokens, selects or samples one, adds it to the text, and repeats. This step-by-step generation can produce a sentence, a summary, computer code, or a longer reply.\n\nThis is why this kind of language model can sound fluent even when it is wrong. Fluent output is not proof of factual accuracy, real-world access, or reliable reasoning. A language model is not the same thing as a chatbot interface, a search engine, or a person.",
   "everydayAnalogy": {
     "title": "Finishing a message from familiar writing patterns",
     "story": "A technician in Nairobi receives a short note on a shared tablet from a pump monitor: \"Station 4 flow dropped at 03:10. Check...\" The technician has read thousands of maintenance notes before and starts guessing how such notes usually continue: \"valve pressure\", \"sensor cable\", or \"power supply\". Each new word narrows the likely next words, so the sentence grows one piece at a time. The technician can often produce a very plausible continuation, even if they do not know what truly happened at Station 4 that night.",
@@ -92,12 +92,12 @@
       "It predicts likely next tokens for a plain-language answer, such as 'The', 'committee', 'decided', 'to', 'wait'.",
       "It continues token by token until it forms a full sentence and then stops."
     ],
-    "result": "Possible output: 'The committee decided to wait before starting the plan until it checked the budget.'"
+    "result": "Possible output: 'The committee delayed starting the plan until the budget was reviewed.'"
   },
   "unWorkplaceExample": {
     "scenario": "A UN team wants a quick first draft summary of open-ended responses from a household assessment, using an approved internal tool.",
     "relevance": "A language model can help cluster common themes and draft plain-language summaries from text, which may save staff time before human review.",
-    "caution": "Do not paste personal data, protection-sensitive details, or confidential field information into an unapproved public AI service. Human staff must review the draft for accuracy, bias, and safeguarding risks before using it."
+    "caution": "Use only a tool approved for this data, and remove personal, protection-sensitive, or confidential details unless their use is authorised. Human staff must review the draft for accuracy, bias, and safeguarding risks."
   },
   "whyItMatters": "You may hear about language models in chat assistants, translation tools, writing aids, coding helpers, and search products. Knowing what the term means helps you ask better questions: What text went in? What patterns might the system have learned? What checks are needed before acting on the output? This matters because a language model can save time on drafting, summarising, and reformatting text, but it can also produce confident mistakes, biased wording, or fabricated details. For managers, educators, public servants, and everyday users, the key decision is not whether the text sounds good, but whether it is suitable, verified, and safe for the task.",
   "whereYouMayHearIt": [
@@ -206,9 +206,52 @@
     "lm"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:15:10.325Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition wrongly makes training on large amounts of text and prompt-based generation necessary features of every language model. This describes a common generative language model and blurs the broader term with the separate entry for large language models.",
+        "fix": "A language model estimates probabilities for pieces of language in context; many can use these estimates to generate text from a prompt."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation presents autoregressive generation as the mechanism of every language model. It also says the model reads the prompt token by token, which misleadingly suggests that prompt tokens must be processed sequentially. The page should qualify this as a common text-generating type and distinguish prompt processing from output generation.",
+        "fix": "Qualify the mechanism as applying to a common text-generating language model. Say that it processes the tokenised prompt, then generates output one token at a time."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The output adds an unsupported agent for the budget review. The source says implementation was delayed pending budget review, not that the committee itself would check the budget. There is no numerical arithmetic in this example to check.",
+        "fix": "Possible output: 'The committee delayed starting the plan until the budget was reviewed.'"
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The scenario involves open-ended household assessment responses, which may contain personal or protection-sensitive information. The caution focuses on unapproved public services even though the scenario already specifies an approved internal tool. Approval must cover this type of data, and sensitive details still require minimisation or specific authorisation.",
+        "fix": "Use only a tool approved for this data, and remove personal, protection-sensitive, or confidential details unless their use is authorised. Human staff must review the draft for accuracy, bias, and safeguarding risks."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only correct answer. Option 0 is false because language models do not always retrieve stored sentences. Option 2 is false because internet access is not required. Option 3 is false because fluency does not guarantee factual accuracy. However, the three distractors use conspicuous absolutes such as 'always', 'only', and 'guarantees', so the answer is obvious without understanding the distinctions.",
+        "fix": "Replace the options with: ['A conversational interface that exchanges messages with a user', 'A system that predicts likely next pieces of text and builds output step by step', 'A search component that retrieves documents before producing an answer', 'A model defined by being very large and used for conversation']."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult",
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

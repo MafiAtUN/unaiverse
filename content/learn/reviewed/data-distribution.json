@@ -30,7 +30,7 @@
     "unstructured-data"
   ],
   "oneSentence": "The pattern of values, categories and frequencies in a dataset, including what appears often, rarely or not at all.",
-  "plainExplanation": "A dataset does not just contain items. It also has a pattern. Some words, numbers or categories appear a lot. Others appear rarely. That overall pattern is the data distribution.\n\nWhat goes in is a collection of examples: documents, images, records or sensor readings. What happens is that we count, group or measure their features, such as language, length, topic, class label or numeric range. What comes out is a picture of how common different kinds of cases are.\n\nThis matters because models learn from the examples they are given. If one type of case dominates the dataset, the model usually becomes better at that type and weaker on under-represented cases. A balanced dataset is not always the goal, but the distribution should fit the real task.\n\nData distribution is often confused with sampling and with distribution shift. Sampling is how you select data. Distribution is the pattern in the data you ended up with. Distribution shift is what we call it when that pattern changes between training and real-world use.",
+  "plainExplanation": "A dataset does not just contain items. It also has a pattern. Some words, numbers or categories appear a lot. Others appear rarely. That overall pattern is the data distribution.\n\nWhat goes in is a collection of examples: documents, images, records or sensor readings. What happens is that we count, group or measure their features, such as language, length, topic, class label or numeric range. What comes out is a picture of how common different kinds of cases are.\n\nThis matters because models fit patterns in the examples they are given. If one type of case dominates the dataset, it has more influence on training, but frequency alone does not determine performance. A balanced dataset is not always the goal, but the distribution should fit the real task.\n\nData distribution is often confused with sampling and with distribution shift. Sampling is how you select data. Distribution is the pattern in the data you ended up with. Distribution shift is what we call it when that pattern changes between training and real-world use.",
   "everydayAnalogy": {
     "title": "A library trolley after a week of returns",
     "story": "In a city library, staff sort one trolley of returned books before putting them back on the shelves. They notice that most returns are school textbooks and exam guides, some are novels, very few are poetry books, and none are in Braille that week. From one glance, they can describe the pattern of what came back most and least often. That pattern helps them decide whether the trolley reflects normal library use or just a special period such as exam season.",
@@ -94,7 +94,7 @@
       "The assistant retrieves relevant documents for 44 of 50 health queries, 39 of 50 education queries, 36 of 50 climate queries and 24 of 50 logistics queries.",
       "The team concludes that the training distribution likely favoured health and under-served logistics, so they collect more logistics documents and retest."
     ],
-    "result": "The distribution analysis helps explain uneven performance and guides targeted data collection instead of guessing that the model is simply 'bad' overall."
+    "result": "The analysis reveals uneven performance alongside uneven topic counts, guiding further checks and targeted data collection without proving that distribution caused the gap."
   },
   "unWorkplaceExample": {
     "scenario": "A UN analysis team reviews whether an internal model can help identify broad protection trends across incident reports from several field offices.",
@@ -209,9 +209,50 @@
     "distribution"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:25:50.910Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The phrase \"what appears ... not at all\" is unclear. A zero frequency can be identified only against a known or expected set of possible categories. Otherwise, something absent is not observable from the dataset alone.",
+        "fix": "The pattern of values or categories in a dataset, including how often each observed or expected kind appears."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that a model \"usually becomes better\" at a type of case merely because that type dominates the dataset overstates causation. Frequency can influence training, but performance also depends on difficulty, labels, features, model design and evaluation.",
+        "fix": "Replace the third paragraph with: \"This matters because models fit patterns in the examples they are given. If one type of case dominates the dataset, it has more influence on training, but frequency alone does not determine performance. A balanced dataset is not always the goal, but the distribution should fit the real task.\""
+      },
+      {
+        "field": "visual.steps[1-2]",
+        "severity": "error",
+        "problem": "The visual says Dataset B is closer to the intended use case and Dataset A over-represents health, but it never states the intended-use distribution. Neither claim can be inferred merely because Dataset B is more even.",
+        "fix": "For Dataset B, use: \"The same four topics appear, but the mix is more even across them.\" For Compare the pattern, use: \"Both datasets include the same topics, but one contains a much larger proportion of health documents.\""
+      },
+      {
+        "field": "workedExample.process[3] and workedExample.result",
+        "severity": "error",
+        "problem": "The arithmetic is correct: 6,000 + 2,000 + 1,500 + 500 = 10,000; 6,000 / 10,000 = 60%; 500 / 10,000 = 5%; and the test results are 44/50 = 88%, 39/50 = 78%, 36/50 = 72% and 24/50 = 48%. However, those figures show an association, not that the training distribution \"favoured\" health or caused the logistics gap. Topic difficulty, document quality and other factors could explain the difference.",
+        "fix": "Replace the final process step with: \"The team treats the training distribution as one possible cause of the gap, checks other factors, collects more logistics documents and retests.\" Replace the result with: \"The analysis reveals uneven performance alongside uneven topic counts, guiding further checks and targeted data collection without proving that distribution caused the gap.\""
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only defensible answer. Option 0 is false because equal category lists do not imply equal frequencies. Option 2 is false because datasets of any size have distributions. Option 3 is false because training data has a distribution that can affect model fitting. However, options 2 and 3 are so plainly false that they do little to test understanding.",
+        "fix": "Use these options: [\"They have the same distribution because the topic list is the same.\", \"They may lead to different model behaviour because the topic proportions differ.\", \"Distribution applies to numbers, not topic categories.\", \"The model will behave the same because every topic appears.\"]"
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

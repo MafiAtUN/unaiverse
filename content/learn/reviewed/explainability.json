@@ -32,7 +32,7 @@
     "meaningful-human-control"
   ],
   "oneSentence": "Explainability means being able to show, in human-usable terms, why an AI system produced a particular output or pattern of outputs.",
-  "plainExplanation": "Explainability is about giving people reasons they can inspect and question. In an AI system, the input might be text, images, numbers, or other data. The system processes that input and produces an output, such as a label, score, ranking, summary, or recommendation. Explainability adds information about what most influenced that output.\n\nThat extra information can take different forms. It might highlight words in a document that pushed a classification, show which variables mattered most in a risk score, or compare the actual case with similar past cases. In simple terms, it tries to answer: \"What parts of the input mattered, and in what way?\"\n\nThis is often confused with transparency, but they are not the same. Transparency is broader: it can include who built the system, what data was used, what limits are known, and who is accountable. Explainability is narrower: it focuses on making the system's behaviour or output more understandable to people.\n\nIt is also often confused with interpretability. The boundary is not settled everywhere, but many people use interpretability for systems whose inner workings are directly understandable, and explainability for methods that give human-usable reasons even when the full model is hard to inspect. In practice, both matter because people need to check errors, challenge outcomes, and decide when a human should override the system.",
+  "plainExplanation": "Explainability is about giving people reasons they can inspect and question. In an AI system, the input might be text, images, numbers, or other data. The system processes that input and produces an output, such as a label, score, ranking, summary, or recommendation. Explainability adds information about what most influenced that output.\n\nThat extra information can take different forms. It might highlight words in a document that pushed a classification, show which variables mattered most in a risk score, or compare the actual case with similar past cases. In simple terms, it tries to answer: \"What parts of the input mattered, and in what way?\"\n\nThis is often confused with transparency, but they are not the same. Transparency is broader: it can include who built the system, what data was used, what limits are known, and who is accountable. Explainability is narrower: it focuses on making the system's behaviour or output more understandable to people.\n\nIt is also often confused with interpretability. Interpretability focuses on inspecting how a model's internal parts contribute to its outputs. Explainability focuses on giving people a human-usable account of an output or pattern of behaviour. The terminology varies, and the practices can overlap. Both matter because people need to check errors and challenge outcomes. Neither one by itself gives a person authority to change or stop an AI-supported action.",
   "everydayAnalogy": {
     "title": "Sorting public comments with coloured tabs",
     "story": "A city office receives 500 comments from a public consultation. An assistant sorts each comment into tabs such as housing, transport, health, or \"other\". When the manager asks why one comment was placed under transport, the assistant points to the phrases \"bus route\", \"travel time\", and \"fare increase\" and says those phrases drove the choice. The manager can then judge whether the sorting makes sense or whether the comment was misunderstood. Without that explanation, the label alone is much harder to trust or correct.",
@@ -127,7 +127,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "In simple terms, explainability means giving people a usable reason for an AI result so they can check it instead of just accepting it.",
-    "technical": "Technically, explainability refers to methods and documentation that make an AI system's outputs more understandable to humans. Depending on the system, this can include feature importance measures, local explanations for a single prediction, global explanations of overall model behaviour, counterfactual examples showing what changes would alter an output, saliency or attention-style visualisations, rule extraction, surrogate models, confidence information, and model or system cards. The exact terminology varies: some communities reserve interpretability for models whose structure is directly understandable, and use explainability for post hoc methods applied to more complex models. That distinction is common but not universal. A key technical caution is that many explanation techniques are approximations of behaviour, not a guaranteed statement of a model's true internal mechanism. Their usefulness depends on the audience, the decision context, and whether the explanation is faithful, stable, comprehensible, and actionable."
+    "technical": "Technically, explainability refers to methods that make an AI system's outputs or behaviour more understandable to humans. Depending on the system, this can include feature importance measures, local explanations for a single prediction, global explanations of overall model behaviour, counterfactual examples showing what changes would alter an output, saliency visualisations, rule extraction, and surrogate models. Interpretability instead focuses on inspecting how internal model parts contribute to outputs, although terminology varies and the practices can overlap. A key technical caution is that many explanation techniques are approximations of behaviour, not guaranteed statements of a model's true internal mechanism. Their usefulness depends on the audience, the decision context, and whether the explanation is faithful, stable, comprehensible, and actionable."
   },
   "keyTakeaway": "A useful AI output should not only say what it produced, but also give people enough reason to check, challenge, and, when needed, override it.",
   "quickCheck": {
@@ -212,9 +212,56 @@
   ],
   "contested": "The exact boundary between explainability and interpretability is not fully settled. Different research and policy communities use the terms differently, especially when discussing whether explanations come from directly understandable models or from post hoc methods.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:27:57.368Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The distinction from interpretability contradicts the separate entry. This page narrows interpretability to systems whose inner workings are directly understandable, while the supplied definition covers efforts to inspect how internal parts contribute to outputs. It also fails to distinguish explainability clearly from meaningful human control.",
+        "fix": "Replace the final paragraph with: \"It is also often confused with interpretability. Interpretability focuses on inspecting how a model's internal parts contribute to its outputs. Explainability focuses on giving people a human-usable account of an output or pattern of behaviour. The terminology varies, and the practices can overlap. Both matter because people need to check errors and challenge outcomes. Neither one by itself gives a person authority to change or stop an AI-supported action.\""
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The technical explanation repeats the conflicting definition of interpretability. It also includes confidence information and model or system cards as explanation techniques. Confidence describes uncertainty, while cards are primarily documentation and transparency tools. Neither necessarily explains what influenced an output.",
+        "fix": "Remove those items and define interpretability consistently as inspecting how internal model parts contribute to outputs."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "This blurs explainability with meaningful human control. An explanation can support a challenge, but it does not itself provide the authority or mechanism needed to override an output or stop an action.",
+        "fix": "Explainability gives people usable information to check and challenge an AI output. It does not itself give them authority to change or stop it."
+      },
+      {
+        "field": "visual.steps[2].visualInstruction",
+        "severity": "warning",
+        "problem": "The arrow from the output alone to the explanation suggests that an explanation is derived only from the completed output. Most listed techniques also use the input, model behaviour, or both. The diagram therefore misrepresents the mechanism.",
+        "fix": "From the 'Input' and 'Model processing' boxes, draw arrows to a side box labelled 'Explanation' containing highlighted words, a short feature list, and a note 'factors in this result'."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only correct answer. Option 0 falsely promises correctness, option 2 demands total public disclosure, and option 3 says oversight is unnecessary. However, all three distractors use conspicuous absolutes, so the answer is obvious without understanding explainability or distinguishing it from the related terms.",
+        "fix": "Use these options: [\"It reports where the system is used, its data, and who is responsible.\", \"It provides human-usable information about what influenced an AI output so people can review it.\", \"It inspects how internal model parts contribute to outputs.\", \"It gives reviewers authority to change or stop an AI-supported action.\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation only rejects the implausible absolute distractors. It does not test or explain the distinctions from transparency, interpretability, and meaningful human control.",
+        "fix": "Option 2 is explainability: it gives people usable information about influences on an output. Option 1 describes transparency, option 3 interpretability, and option 4 meaningful human control. These related practices are distinct and may be needed together."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

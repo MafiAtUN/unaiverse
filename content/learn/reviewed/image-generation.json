@@ -32,7 +32,7 @@
     "watermarking"
   ],
   "oneSentence": "Software can create new pictures from prompts or other inputs by learning visual patterns from many examples, then producing a fresh image rather than retrieving one file.",
-  "plainExplanation": "Image generation means using software to produce a new image. The input might be a text prompt, another image, or both. When the input is text, people often say text-to-image. The output is often called an AI image. Image generator usually refers to the tool or system that makes it.\n\nThese terms are related but not identical. Image generation is the broad activity. Text-to-image is one common method inside that broad activity. AI images are the results. An image generator is the product or model used to create them. This is different from image classification, which labels an existing picture instead of making a new one.\n\nIn simple use, a person types a prompt such as “a red bicycle beside a market stall at sunrise, painted in watercolour”. The system turns that prompt into internal numerical patterns and then builds pixels that match the described features. Some systems also use a starting image, a style reference, or settings such as size and aspect ratio.\n\nMany modern systems use a diffusion model. A model is a mathematical system trained on many examples. Diffusion means it learns to turn random visual noise into a structured picture step by step. Other approaches also exist, such as generative adversarial networks and variational autoencoders. The user sees only the final image, but behind the scenes the system is matching learned patterns, not checking facts about the real world.\n\nThat is why these tools can be useful and risky at the same time. They can help with sketching ideas, storyboards and illustrations, but they can also produce misleading, biased or impossible images. A polished result does not prove that the scene really happened.",
+  "plainExplanation": "Image generation means using software to produce a new image. The input might be a text prompt, another image, or both. When the input is text, people often say text-to-image. The output is often called an AI image. Image generator usually refers to the tool or system that makes it.\n\nThese terms are related but not identical. Image generation is the broad activity. Text-to-image is one common method inside that broad activity. AI images are the results. An image generator is the product or model used to create them. This differs from image classification, which labels an existing picture instead of making a new one. Generated images can be synthetic media, but synthetic media also includes heavily altered images, audio, video and text. A deepfake imitates a real person, scene or event. Watermarking and provenance provide origin information rather than generating the image.\n\nIn simple use, a person types a prompt such as “a red bicycle beside a market stall at sunrise, painted in watercolour”. The system turns that prompt into internal numerical patterns and then builds pixels that match the described features. Some systems also use a starting image, a style reference, or settings such as size and aspect ratio.\n\nMany modern systems use a diffusion model. A model is a mathematical system trained on examples. During training, a diffusion model learns to reverse a process that adds noise. During generation, many such systems start with random noise and apply the learned denoising process step by step, guided by the input. Other approaches also exist, such as generative adversarial networks and variational autoencoders. Generation alone does not verify facts about the real world.\n\nThat is why these tools can be useful and risky at the same time. They can help with sketching ideas, storyboards and illustrations, but they can also produce misleading, biased or impossible images. A polished result does not prove that the scene really happened.",
   "everydayAnalogy": {
     "title": "A poster brief for three illustrators",
     "story": "A school in Nairobi, Lima and Sarajevo is preparing a cultural fair poster. The organiser gives three illustrators the same short brief: “children carrying lanterns at dusk, warm colours, joyful mood”. Each illustrator produces a different poster because each has learned different visual habits from past work. If the organiser adds more detail, such as “include mountains in the background and leave space for text”, the next versions usually move closer to what was asked. The posters are newly drawn, not copied as one existing poster from a drawer.",
@@ -54,7 +54,7 @@
         "aiElement": "prompt refinement and settings that guide the result"
       }
     ],
-    "limitation": "Human illustrators can explain their choices, use broad real-world judgement and may deliberately check facts. An image generator does not work like a person receiving instructions. It uses statistical pattern matching in numerical form. Also, a human artist may create from a small lifetime of experience, while a model is trained on very large datasets and can produce results in seconds."
+    "limitation": "Human illustrators can explain their choices, use broad real-world judgement and may deliberately check facts. An image generator does not work like a person receiving instructions. It uses statistical pattern matching in numerical form. Human experience is not equivalent to model training, and many image generators are trained on large datasets and can produce results in seconds."
   },
   "visual": {
     "type": "flow",
@@ -131,7 +131,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "You give the tool a description or other prompt, and it makes a new picture that matches the request as best it can from patterns it learned during training.",
-    "technical": "Image generation is the synthesis of new visual outputs from learned data distributions, often conditioned on text, images or control signals. In text-to-image systems, the prompt is encoded into numerical representations that guide the generation process. In many current systems, a diffusion model starts from random noise and iteratively denoises it toward an image that scores as more consistent with the prompt and the model's learned visual structure. Other architectures, including generative adversarial networks and variational autoencoders, can also generate images. The output is not a factual record by default; it is a probabilistic construction shaped by training data, model design, prompting and decoding choices."
+    "technical": "Image generation is the synthesis of new visual outputs from learned data distributions, often conditioned on text, images or control signals. In text-to-image systems, the prompt is encoded into numerical representations that guide the generation process. In many current systems, a diffusion model starts from random noise in pixel or latent space and iteratively applies a learned denoising process, with prompt conditioning guiding each step. Other architectures, including generative adversarial networks and variational autoencoders, can also generate images. The output is not a factual record by default; it is a probabilistic construction shaped by training data, model design, prompting and decoding choices."
   },
   "keyTakeaway": "Image generation creates new pictures from prompts or other inputs, and a convincing result can be useful without being true, accurate or appropriate.",
   "quickCheck": {
@@ -217,9 +217,57 @@
     "image generator"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:54.617Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "“Producing a fresh image” implies reliable originality. Generators can memorise or closely reproduce training examples, as the page itself later acknowledges.",
+        "fix": "Software can create pictures from prompts or other inputs by learning visual patterns from many examples, then generating an output rather than simply retrieving a stored file."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The sentence “Diffusion means it learns to turn random visual noise into a structured picture” inaccurately defines diffusion by describing generation only. Diffusion models are trained to reverse a noising process. Generation can then apply that learned denoising process, often starting from random noise. The claim that the system is “not checking facts” is also too absolute because a generator may be combined with retrieval or other checks. The relevant point is that generation alone does not verify facts.",
+        "fix": "Replace the diffusion paragraph with: “Many modern systems use a diffusion model. A model is a mathematical system trained on examples. During training, a diffusion model learns to reverse a process that adds noise. During generation, many such systems start with random noise and apply the learned denoising process step by step, guided by the input. Other approaches also exist, such as generative adversarial networks and variational autoencoders. Generation alone does not verify facts about the real world.”"
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The page distinguishes image generation from classification and text-to-image, but not from the other separate entries named in the brief. Generated images may be synthetic media, but image generation is a creation process while synthetic media is a broader output category. Deepfakes specifically imitate a real person, scene or event. Watermarking and provenance concern origin information and changes rather than generation itself.",
+        "fix": "Add a concise distinction after the classification sentence: “Generated images can be synthetic media, but synthetic media also includes heavily altered images, audio, video and text. A deepfake imitates a real person, scene or event. Watermarking and provenance provide origin information rather than generating the image.”"
+      },
+      {
+        "field": "analogyLimitation",
+        "severity": "error",
+        "problem": "The statement that “a model is trained on very large datasets” is an unsupported absolute. Some image models are trained or adapted using smaller datasets. Dataset size is also not the important limitation of the analogy.",
+        "fix": "Human illustrators can explain their choices, use broad real-world judgement and may deliberately check facts. An image generator does not work like a person receiving instructions. It uses statistical pattern matching in numerical form. Human experience is not equivalent to model training, and many image generators are trained on large datasets and can produce results in seconds."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The claim that diffusion denoises toward an image that “scores as more consistent” with the prompt describes an explicit scoring mechanism that many diffusion systems do not use. Prompt conditioning guides the learned denoising process, but the system need not score candidate images for consistency.",
+        "fix": "Replace that sentence with: “In many current systems, a diffusion model starts from random noise in pixel or latent space and iteratively applies a learned denoising process, with prompt conditioning guiding each step.”"
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 falsely equates text-to-image with photo editing and image generation with hand drawing. Option 2 invents an unsupported realistic-photo versus cartoon distinction. Option 3 directly denies the distinction explained on the page. However, all three distractors are so implausible that the answer is obvious without understanding the category relationship.",
+        "fix": "Use more plausible distractors: 1. “Image generation is one kind of text-to-image that also accepts image inputs.” 2. “Text-to-image and image generation are interchangeable whenever a written prompt is used.” 3. “Text-to-image describes prompt processing, while image generation describes only the final decoding stage.” Keep option 0 as correct."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "analogyLimitation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

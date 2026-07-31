@@ -30,7 +30,7 @@
     "explainability"
   ],
   "oneSentence": "Designing and checking AI systems so they do not produce avoidable, unjust differences in how people or groups are treated or affected.",
-  "plainExplanation": "Fairness in AI means asking whether a system treats people and groups in a justifiable way, and whether its benefits and harms are shared reasonably. The focus is not only the final answer from the system. It also includes who was represented in the data, who helped set the rules, who can challenge a result, and who carries the risk if the system is wrong.\n\nWhat goes in includes data, labels, design choices, success measures, and the social context. A label is the category attached to an example, such as \"approved\" or \"rejected\". A success measure is the number a team uses to judge performance, such as overall accuracy. What happens is that people choose what to predict, what data to use, how to test results, and what differences between groups are acceptable or unacceptable. Those choices shape the output.\n\nWhat comes out may be recommendations, rankings, flags, or generated text. A system can look accurate overall but still work worse for some groups, languages, regions, or disability needs. It can also seem fair by one measure and unfair by another. For example, equal error rates across groups and equal access across groups are not always possible at the same time.\n\nFairness is often confused with algorithmic bias and non-discrimination, but they are not identical. Algorithmic bias usually refers to systematic error or skew in a system. Non-discrimination is a legal and human-rights principle about unjustified different treatment or effects. Fairness is the broader question of what kinds of differences are acceptable, who decides that, and how to prevent or remedy harm.\n\nBecause these trade-offs are context-dependent, fairness is not something a model can prove by itself. It needs human judgement, testing with affected groups, documentation, routes for appeal, and ongoing review after deployment.",
+  "plainExplanation": "Fairness in AI means asking whether a system treats people and groups in a justifiable way, and whether its benefits and harms are shared reasonably. The focus is not only the final answer from the system. It also includes who was represented in the data, who helped set the rules, who can challenge a result, and who carries the risk if the system is wrong.\n\nWhat goes in includes data, labels, design choices, success measures, and the social context. A label is the category attached to an example, such as \"approved\" or \"rejected\". A success measure is the number a team uses to judge performance, such as overall accuracy. What happens is that people choose what to predict, what data to use, how to test results, and what differences between groups are acceptable or unacceptable. Those choices shape the output.\n\nWhat comes out may be recommendations, rankings, flags, or generated text. A system can look accurate overall but still work worse for some groups, languages, regions, or disability needs. It can also seem fair by one measure and unfair by another. Different fairness measures can conflict. For example, matching error rates may not align with matching positive prediction rates or calibration.\n\nFairness is often confused with algorithmic bias and non-discrimination, but they are not identical. Algorithmic bias refers to systematic unfair patterns in data, rules, or outputs. Non-discrimination prevents exclusion, burdens, or denied access linked to protected traits or close proxies. Fairness is the broader question of what differences are acceptable, who decides that, and how to prevent or remedy harm.\n\nBecause these trade-offs are context-dependent, fairness is not something a model can prove by itself. It needs human judgement, testing with affected groups, documentation, routes for appeal, and ongoing review after deployment.",
   "everydayAnalogy": {
     "title": "Reviewing a practice examination fairly",
     "story": "A school runs a practice examination for 200 students before a major test. The teachers notice that the average score looks fine, but students who use screen readers and students who learned in a second language do much worse on some questions. When the staff review the paper, they find unclear wording, one diagram with poor contrast, and examples drawn from only one local context. They revise the questions, test them again with different students, and add a way for learners to report confusing items.\n\nThe aim is not to make every student get the same score. The aim is to check whether the exam measures the skill it claims to measure, without avoidable barriers or unjust disadvantages for particular groups.",
@@ -215,9 +215,43 @@
   ],
   "contested": "The term is genuinely contested because different fields use different fairness definitions and metrics, and some of those definitions cannot all be satisfied at once in the same system.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:27:42.431Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This defines fairness as the activity of designing and checking systems, rather than as the normative property being assessed. Its focus on unjust differences also makes it sound nearly identical to the separate non-discrimination entry.",
+        "fix": "Fairness in AI is whether system design and use create avoidable, unjust differences in how people or groups are treated or affected."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The distinction from algorithmic bias contradicts the supplied entry. Calling algorithmic bias merely “systematic error or skew” omits the defining point that the patterns are unfair and may occur in data, rules, or outputs. The example about equal error rates and equal access is also too vague because “access” is undefined.",
+        "fix": "Replace the trade-off example with: “Different fairness measures can conflict. For example, matching error rates may not align with matching positive prediction rates or calibration.” Define algorithmic bias as systematic unfair patterns in data, rules, or outputs, and keep non-discrimination tied to protected traits or close proxies."
+      },
+      {
+        "field": "workedExample.scenario and process",
+        "severity": "error",
+        "problem": "The final selection rates cannot fill the stated 100 places. If district applicant counts are N, C, and S, then N + C + S = 300. The final number selected is 0.31N + 0.30C + 0.28S. Since every rate is at most 0.31, this total is at most 0.31 × 300 = 93, not 100. Even if the displayed percentages are rounded to the nearest whole percentage, the total is below 0.315 × 300 = 94.5. The accuracy drop does compute as 78% - 75% = 3 percentage points, and the selection-rate range falls from 39% - 18% = 21 points to 31% - 28% = 3 points.",
+        "fix": "Change the scenario to: “A library pilots an AI tool that ranks applicants for a digital-skills course with up to 100 places. There are 300 applicants from three districts: North, Central, and South.”"
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 2 is the only substantively correct answer: option 0 reduces fairness to accuracy, option 1 wrongly requires identical outcomes in every case, and option 3 wrongly assumes removing demographic data guarantees fairness. However, the three distractors use conspicuous absolutes such as “highest possible,” “always,” and “automatically.” A reader can choose option 2 by test-taking technique without understanding fairness.",
+        "fix": "Keep option 2. Replace the distractors with: 0. “It means using the same fairness metric in every context.” 1. “It means balancing outcomes without reviewing access or appeal.” 3. “It means testing data and outputs once before deployment is enough.”"
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

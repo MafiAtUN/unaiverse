@@ -101,7 +101,7 @@
     "relevance": "Throughput matters because a system that handles more tokens per second can serve more staff or produce long outputs faster, which affects procurement, staffing expectations and user experience.",
     "caution": "Do not test or benchmark with confidential, personal, protection-sensitive, security-sensitive or operational information in an unapproved public AI service; use approved environments and sanitised material."
   },
-  "whyItMatters": "Throughput affects cost, capacity and user experience. If throughput is low, long answers arrive slowly, queues grow during busy periods, and the same hardware serves fewer people. If you only look at model quality and ignore throughput, you may choose a system that performs well in a demo but struggles in daily use. For technical teams, throughput helps compare deployments, estimate infrastructure needs and set realistic expectations. For non-specialists, it helps you ask a better question: not only 'Is the answer good?' but also 'Can this service produce enough text, for enough users, fast enough to be useful?'",
+  "whyItMatters": "Throughput affects cost, capacity and user experience, but the scope of the measure matters. Aggregate service throughput shows how much work a deployment completes across users. Per-response output throughput shows how quickly one response generates tokens. Batching can raise aggregate throughput without making each response arrive faster. If you ignore throughput, a system that performs well in a demo may struggle under daily demand. Technical teams can use clearly defined measures to compare deployments and estimate infrastructure needs. Non-specialists can ask: 'Can this service handle enough work, and do individual responses arrive fast enough to be useful?'",
   "whereYouMayHearIt": [
     "model benchmarking",
     "GPU capacity planning",
@@ -126,7 +126,7 @@
     "simple": "Throughput is how fast a language model gets through text, usually measured as tokens per second.",
     "technical": "In LLM inference, throughput is the volume of token processing completed per unit time. People often report output throughput as generated tokens per second during decoding, but input throughput for prompt ingestion can be measured separately and may be much higher. Throughput is shaped by model architecture, parameter count, hardware bandwidth, parallelism, batch size, sequence length, memory limits and serving strategy. It differs from latency: latency captures delay to first token or per-token response delay, while throughput captures sustained work rate. Reported numbers also depend on what exactly is counted, such as prompt tokens only, completion tokens only, or both combined, so comparisons need the measurement method to be clear."
   },
-  "keyTakeaway": "Throughput tells you how fast text work flows through a model, while latency tells you how long you wait for it to start.",
+  "keyTakeaway": "Throughput is token work per unit time. Latency is the delay for a request or the next part of its response.",
   "quickCheck": {
     "question": "Which statement best describes throughput for a language model service?",
     "options": [
@@ -208,9 +208,56 @@
     "tokens per second"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:22.276Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process",
+        "severity": "error",
+        "problem": "The example double-counts the first output token. The printed arithmetic itself comes out: 180 / 40 = 4.5 and 0.8 + 4.5 = 5.3; 180 / 18 = 10 and 0.3 + 10 = 10.3. But the process says the first token has already appeared at 0.8 or 0.3 seconds. Only 179 tokens then remain. Model A takes 0.8 + 179 / 40 = 5.275 seconds, about 5.3. Model B takes 0.3 + 179 / 18 = 10.244 seconds, about 10.2.",
+        "fix": "For Model A, the first token appears after 0.8 seconds. The remaining 179 tokens take 179 / 40 = 4.475 seconds, so it finishes in about 5.3 seconds. For Model B, the remaining tokens take 179 / 18 = 9.944 seconds, so it finishes in about 10.2 seconds."
+      },
+      {
+        "field": "visual.steps[3].visualInstruction",
+        "severity": "error",
+        "problem": "The diagram specifies only four output rectangles, o1 to o4, but then labels the bracket as eight tokens in one second. The visible count does not support the stated rate.",
+        "fix": "Add a one-second bracket under the four output tokens and label it '4 tokens in 1 second = 4 tok/s'. Include a note: 'input and output rates may differ'."
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "The correction says latency and throughput describe different parts of performance. That is misleading for generation. Inter-token latency and output throughput can describe the same generation phase and are closely related for a single stream. Initial latency can vary separately.",
+        "fix": "They are different measurements, not always different phases. Latency measures delay for a request or its next part. Throughput measures work per unit time. For one stream, inter-token latency and output rate are closely related, while initial latency can vary separately."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "This reduces latency to the wait for output to start, contradicting the page's stated latency definition, which also covers the delay before the next part of a reply.",
+        "fix": "Throughput is token work per unit time. Latency is the delay for a request or the next part of its response."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "This conflates aggregate service throughput with per-response generation speed. Higher aggregate throughput can come from batching or serving more requests at once without making one long answer arrive faster. The scope of the measurement must be stated before drawing conclusions about queues, capacity or response speed.",
+        "fix": "Throughput affects cost, capacity and user experience, but the scope of the measure matters. Aggregate service throughput shows how much work a deployment completes across users. Per-response output throughput shows how quickly one response generates tokens. Batching can raise aggregate throughput without making each response arrive faster. If you ignore throughput, a system that performs well in a demo may struggle under daily demand. Technical teams can use clearly defined measures to compare deployments and estimate infrastructure needs. Non-specialists can ask: 'Can this service handle eno"
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "error",
+        "problem": "The claim again treats one throughput number as proving both service capacity and faster individual outputs. Those are different measurement scopes, and one does not guarantee the other.",
+        "fix": "Throughput matters because aggregate rates affect how much demand a service can handle, while per-response output rates affect how fast long outputs arrive. Both affect procurement, staffing expectations and user experience."
+      }
+    ],
+    "applied": [
+      "whyItMatters",
+      "keyTakeaway"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -126,8 +126,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "Data security means putting protections around information so the right people can use it, while others cannot steal it, change it or accidentally lose it.",
-    "technical": "Data security refers to the controls used to preserve the confidentiality, integrity and availability of information across its lifecycle. In practice, this can include identity checks, role-based access control, encryption at rest and in transit, logging, backup and recovery, device security, network protections and procedures for incident response. Confidentiality means preventing unauthorised disclosure. Integrity means preventing or detecting unauthorised alteration. Availability means keeping data accessible to authorised users when needed. In AI-related work, this applies to training data, prompts, outputs, documents and connected systems, but it should not be confused with the narrower topic of AI security, which often focuses on attacks against models or AI-enabled systems."
+    "simple": "Data security means putting protections around information so authorised people can use it, while preventing unauthorised access or changes and reducing accidental loss.",
+    "technical": "Data security refers to the controls used to preserve the confidentiality, integrity and availability of information across its lifecycle. In practice, this can include identity checks, role-based access control, encryption at rest and in transit, logging, backup and recovery, device security, network protections and procedures for incident response. Confidentiality means preventing unauthorised disclosure. Integrity means preventing or detecting improper alteration. Availability means keeping data accessible to authorised users when needed. In AI-related work, this applies to training data, prompts, outputs, documents and connected systems, but it should not be confused with the distinct topic of AI security, which often focuses on attacks against models or AI-enabled systems."
   },
   "keyTakeaway": "Good data security protects information from being seen, changed or lost by the wrong people, while still letting authorised work continue.",
   "quickCheck": {
@@ -212,9 +212,56 @@
     "infosec"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:28:17.965Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The definition of integrity is too narrow. Data integrity can be damaged by accidental or otherwise improper alteration, including changes made through authorised accounts. It is not limited to unauthorised alteration.",
+        "fix": "Replace “Integrity means preventing or detecting unauthorised alteration” with “Integrity means preventing or detecting improper alteration.”"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "Calling AI security a “narrower topic” incorrectly suggests that it is a subset of data security. AI security also covers manipulation of models, outputs and connected tools, which is not merely data protection.",
+        "fix": "Replace “the narrower topic of AI security” with “the distinct topic of AI security.”"
+      },
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping[4]",
+        "severity": "error",
+        "problem": "The analogy says staff compare an altered page with a “logged copy,” but the described log records who opened cabinets. An access log is not a copy of the document and cannot supply the correct contents for restoration.",
+        "fix": "In the story, use: “If a page has unexplained changes, staff compare it with a scanned backup and restore the correct version.” In the mapping, use: “comparing a changed page with a scanned backup”."
+      },
+      {
+        "field": "visual.title, visual.learningObjective, visual.description and visual.accessibil",
+        "severity": "error",
+        "problem": "The visual presents storage, access, sharing and recovery as the whole data lifecycle and says protection is shown at every stage. Collection or creation, retention and disposal are omitted, so this is not a complete lifecycle.",
+        "fix": "Change the title to “How data security protects information during handling”. In the learning objective, replace “at storage, access, sharing and recovery stages” with “during storage, access, sharing and recovery”. In the description, replace “across the whole lifecycle” with “across these activities”. In the accessibility description, replace “at every stage” with “across these stages”."
+      },
+      {
+        "field": "visual.steps[2].explanation and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The page says approved channels, minimum necessary sharing and logging reduce interception. Logging does not prevent interception, and sharing less data reduces the amount exposed rather than the chance of interception. A protected channel is the relevant control.",
+        "fix": "Use: “When data is sent to another person or system, controls should limit what is exposed. Risk: accidental disclosure or interception. Protection: approved secure channels, minimum necessary sharing and logging.” In the accessibility description, use: “approved secure channels reduce interception, limited disclosure reduces exposure, and logs support investigation.”"
+      },
+      {
+        "field": "simpleVsTechnical.simple and keyTakeaway",
+        "severity": "warning",
+        "problem": "Both summaries frame loss as something caused by the wrong people. The page itself gives accidental deletion and system failure as examples, so authorised users and technical failures can also cause data loss.",
+        "fix": "Use the revised simple explanation and key takeaway supplied below."
+      }
+    ],
+    "applied": [
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

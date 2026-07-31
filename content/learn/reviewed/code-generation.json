@@ -27,7 +27,7 @@
     "copilot",
     "text-generation"
   ],
-  "oneSentence": "A system produces computer code from prompts, examples or surrounding files, then people test and revise the result before trusting it.",
+  "oneSentence": "A system produces computer code from prompts, examples or surrounding files. People should test and revise the result before using it.",
   "plainExplanation": "Code generation means using a system to produce software code, such as a small function, a database query, a web page layout or a test script. The input might be a plain-language prompt, existing code, comments, screenshots or a mix of these. The output is usually code text, not a finished program.\n\nIn simple terms, the system looks for patterns from many examples seen during training and predicts code that fits the request. Some tools suggest the next few words of code as you type. Others create a whole block of code, explain it, rewrite it in another programming language or generate tests.\n\nWhat comes out can be useful, but it can also be wrong. The code may fail, use an unsafe method, invent a function that does not exist, misunderstand the task or include hidden security problems. That is why code generation is different from software that has already been tested and approved.\n\nIt is often confused with a copilot tool. A copilot is the product or interface that assists a person while they work. Code generation is the capability inside that tool: producing code suggestions or code files. It is also related to text generation, because code is usually generated as text tokens, but the goal and checks are different.\n\nFor non-specialists, the main point is this: code generation can speed up drafting, translation and routine coding work, but it does not remove the need for human review, testing, security checks and accountability.",
   "everydayAnalogy": {
     "title": "A clerk drafting spreadsheet formulas from your description",
@@ -213,9 +213,43 @@
     "code assistant"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:23:04.758Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The sentence presents testing and revision as steps that people actually perform whenever code is generated. Code generation ends with producing code; review is necessary guidance, not an inherent or guaranteed next step.",
+        "fix": "A system produces computer code from prompts, examples or surrounding files. People should test and revise the result before using it."
+      },
+      {
+        "field": "plainExplanation; simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "Both fields list code explanation as though it were part of code generation. An explanation is natural-language output, so it belongs to the related text-generation capability. Products may provide both features, but the page needs to preserve that distinction.",
+        "fix": "State that code-generation features produce or transform code, while the same products may use text generation to explain code."
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "warning",
+        "problem": "This is not reproducible as a worked example. The only visible arithmetic is 5 + 3 + 4 = 12, which is consistent with 12 responses only if each response belongs to exactly one theme. The page does not provide the responses, generated code, revised keyword list or observed output, so readers cannot verify that the script produces the stated counts. Responses could also mention more than one theme.",
+        "fix": "Add the 12 sample responses, the revised matching logic and the resulting counts. A human must supply these materials and check whether themes are exclusive or may overlap."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 is false because detail does not guarantee correctness or security. Option 2 is false because a copilot is a product or interface that may contain this capability. Option 3 is false because generation is not limited to exact copying from one website. However, the three distractors use absurd absolutes such as “guarantees”, “same thing as any” and “only works”, making the answer obvious without understanding the term.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: “It produces finished software once the generated code runs.”, “It is another name for a coding copilot.”, and “It produces code from prompts, but not from project context.”"
+      }
+    ],
+    "applied": [
+      "oneSentence"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

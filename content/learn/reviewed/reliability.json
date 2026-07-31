@@ -100,7 +100,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN team wants to use an approved internal AI tool to summarise submissions to a public consultation into recurring themes such as access, cost and language barriers.",
     "relevance": "Leadership may see a polished summary and assume the tool is dependable. Reliability testing checks whether similar sets of submissions produce similarly useful summaries over repeated runs and review rounds, so staff know whether the tool is steady enough to support human analysis.",
-    "caution": "Do not place personal data, confidential submissions or protection-sensitive information into an unapproved public AI service. Human reviewers should verify whether important themes are being missed or inconsistently grouped."
+    "caution": "Confirm the internal tool is approved for the submissions' data classification. Do not enter personal, confidential or protection-sensitive information unless that approval covers it. Human reviewers should verify missed or inconsistently grouped themes."
   },
   "whyItMatters": "Non-specialists often see one strong score or one convincing demo and assume a system will behave the same way in routine use. Reliability helps you ask a better question: will this quality hold up across repeats, teams, time periods and comparable cases? That matters for procurement, risk management and accountability. If results swing from one run to another, people may make different decisions for similar cases, waste staff time checking outputs, or overlook important issues because the system is inconsistent. Reliability does not prove a system is correct or fair, but without it, even a promising tool is hard to govern or use responsibly.",
   "whereYouMayHearIt": [
@@ -125,7 +125,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "In simple terms, reliability means the system does not behave unpredictably on similar work. If you test it again in much the same way, you should get about the same level of quality.",
-    "technical": "Technically, reliability refers to the stability or repeatability of performance estimates and outputs under repeated measurement or comparable evaluation conditions. You assess it by holding the task and scoring approach steady, then examining variation across runs, folds, samples, raters or time periods. Low spread suggests more stable performance; high spread suggests instability, often linked to variance, small samples, noisy labels, data leakage during testing, or sensitivity to prompt and data changes. Reliability is distinct from validity-related questions such as whether the metric captures the right objective, and from accuracy, which measures closeness to the target rather than consistency across measurements."
+    "technical": "Technically, reliability refers to the stability or repeatability of performance estimates and outputs under repeated measurement or comparable evaluation conditions. You assess it by holding the task, inputs and scoring approach steady, then examining variation across repeated runs or equivalent samples. Low spread suggests more stable performance; high spread suggests instability. Tests that change prompts, data or operating conditions assess robustness instead. Reliability is distinct from whether a metric captures the right objective, and from accuracy, which measures the share of tested cases labelled correctly."
   },
   "keyTakeaway": "A system you cannot count on to perform similarly twice is hard to use responsibly, even if one test result looks good.",
   "quickCheck": {
@@ -206,9 +206,56 @@
     "consistency"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:57.136Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping",
+        "severity": "error",
+        "problem": "The analogy treats similar category totals across two fresh batches as evidence of reliability. Different batches can legitimately contain different proportions of topics, while similar totals can hide inconsistent classification of individual comments. It therefore does not actually test repeatability.",
+        "fix": "Replace the story with: \"A colleague is asked to sort copies of the same 300 printed survey comments into issue piles such as water, transport and housing. They use the same guide on Monday and again on Wednesday without seeing the earlier choices. If the same comments usually enter the same piles both times, the sorting process looks reliable. If many identical comments enter transport one day and different piles the next, the process is not consistent enough to trust.\" Change the mappings to refer to the same comments being assigned consistently or differently across days."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The statement that high variation is often linked to data leakage is misleading. Leakage can inflate evaluation results consistently and does not inherently cause high spread. The references to sensitivity to prompt and data changes also blur reliability into the page's separate definition of robustness.",
+        "fix": "Technically, reliability refers to the stability or repeatability of performance estimates and outputs under repeated measurement or comparable evaluation conditions. You assess it by holding the task, inputs and scoring approach steady, then examining variation across repeated runs or equivalent samples. Low spread suggests more stable performance; high spread suggests instability. Tests that change prompts, data or operating conditions assess robustness instead. Reliability is distinct from whether a metric captures the right objective, and from accuracy, which measures the share of tested c"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "Calling the model \"fairly reliable\" has no stated threshold and overstates what three batches establish. The result also frames performance on a changed month as reliability, although that test addresses generalisation or robustness. The available arithmetic is more informative: the original mean is 84%, the range is 2 percentage points, and 68% is 16 points below the mean.",
+        "fix": "The three original scores average 84% and span 2 percentage points, so this limited test shows little observed variation. The 68% score is 16 points below that mean and raises a separate concern about performance when the data changes."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The scenario uses an approved internal tool, but the caution only prohibits putting sensitive information into an unapproved public service. It does not address whether the approved tool is authorised for the submissions' data classification, so the caution does not match the stated risk.",
+        "fix": "Confirm the internal tool is approved for the submissions' data classification. Do not enter personal, confidential or protection-sensitive information unless that approval covers it. Human reviewers should verify missed or inconsistently grouped themes."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only correct answer, but the distractors are implausible absolutes or direct denials of distinctions already stated in the page. A reader can select the answer without distinguishing reliability from accuracy, robustness or precision.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: \"It measures the share of tested cases the system labels correctly.\", \"It measures whether performance holds when inputs or operating conditions change.\", and \"It measures how often the system's positive flags are correct.\""
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "After replacing the weak distractors, the explanation should explicitly distinguish reliability from the three concepts represented by those options.",
+        "fix": "Reliability is about consistency across repeated checks under comparable conditions. Accuracy measures the share labelled correctly, robustness covers changed inputs or conditions, and precision measures how often positive flags are correct."
+      }
+    ],
+    "applied": [
+      "unWorkplaceExampleCaution",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

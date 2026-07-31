@@ -52,7 +52,7 @@ const nextTerm = siblings[position + 1];
 
 const paragraphs = term.plainExplanation.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 
-const title = `${term.term} — explained plainly · UNAIVERSE`;
+const title = `${term.term}: explained plainly · UNAIVERSE`;
 const description = term.oneSentence.slice(0, 300);
 
 /**
@@ -118,15 +118,6 @@ const LAYERS = {
             .filter((a) => a !== 'everyone')
             .slice(0, 3)
             .map((a) => <li><span class="chip">{AUDIENCE_LABEL[a]}</span></li>)
-        }
-        {
-          term.reviewed && (
-            <li>
-              <a class="chip" href={learnHref('methodology')}>
-                Reviewed{term.lastReviewed ? ` ${term.lastReviewed}` : ''}
-              </a>
-            </li>
-          )
         }
       </ul>
 
@@ -352,17 +343,14 @@ const LAYERS = {
             <h3>Reviewed external resources</h3>
             <ResourceList resources={term.resources} />
 
-            <h3>How this page was written</h3>
+            <h3>Where this came from</h3>
             <p class="data-note">
-              This explanation was drafted with a language model through an offline pipeline, then
-              checked against this site's schema and{' '}
-              {term.reviewed ? 'reviewed by a person' : 'is awaiting human review'}
-              {term.lastReviewed ? ` (last reviewed ${term.lastReviewed})` : ''}. External links are
-              fetched by an automated checker, and any link the checker could not confirm is marked
-              as unverified above rather than presented as vetted.{' '}
-              <a href={learnHref('methodology')}>Read the full methodology</a>.
+              Drafted with a language model through an offline pipeline, checked against this
+              site's schema, and every external link above fetched to see whether it answers.
+              Treat it as a starting point and check anything that matters against the primary
+              sources.{' '}
+              <a href={learnHref('methodology')}>How this site is built and what that means</a>.
             </p>
-            {term.reviewerNotes && <p class="data-note">Reviewer note: {term.reviewerNotes}</p>}
           </div>
         </section>
 

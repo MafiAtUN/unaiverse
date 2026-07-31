@@ -30,8 +30,8 @@
     "training-example",
     "inference"
   ],
-  "oneSentence": "These words describe how training data is split and revisited: one example at a time, in small groups, and across full passes through the dataset.",
-  "plainExplanation": "When a model learns from examples, the training data does not always go through all at once. A batch is a group of training examples processed together. A mini-batch is just a batch that is smaller than the whole dataset; in practice, most modern training uses mini-batches, so people often say “batch” when they mean “mini-batch”.\n\nAn iteration usually means one parameter update step. In that step, the model takes one batch, makes predictions for those examples, compares them with the target signal, computes an error, and adjusts its internal numbers, called parameters. What goes in is one batch of examples, often with features and labels in supervised learning. What comes out is an updated model.\n\nAn epoch means one full pass through the entire training dataset. If a dataset has 1,000 examples and the batch size is 100, one epoch contains 10 iterations. If the batch size is 1, that is often called online or stochastic training, and one epoch contains 1,000 iterations. If the batch size is 1,000, one epoch contains 1 iteration.\n\nThese terms are related but not interchangeable. Batch size tells you how many examples are used per update. Iteration tells you how many update steps have happened. Epoch tells you how many times the full dataset has been seen. People sometimes use the words loosely, so it helps to check which definition a course, paper or software library is using.",
+  "oneSentence": "These words describe units within training: a batch groups examples, an iteration is an update step, and an epoch is one full dataset pass.",
+  "plainExplanation": "When a model learns from examples, the training data does not always go through all at once. A batch is a group of training examples processed together. A mini-batch is just a batch that is smaller than the whole dataset; in practice, most modern training uses mini-batches, so people often say “batch” when they mean “mini-batch”.\n\nAn iteration usually means one parameter update step. In that step, the model takes one batch, makes predictions for those examples, compares them with the target signal, computes an error, and adjusts its internal numbers, called parameters. What goes in is one batch of examples, often with features and labels in supervised learning. What comes out is an updated model.\n\nAn epoch means one full pass through the entire training dataset. If a dataset has 1,000 examples and the batch size is 100, one epoch contains 10 iterations. If the batch size is 1, one epoch contains 1,000 iterations. If the batch size is 1,000, one epoch contains 1 iteration.\n\nThese terms are related but not interchangeable. Batch size tells you how many examples are used per update. Iteration tells you how many update steps have happened. Epoch tells you how many times the full dataset has been seen. People sometimes use the words loosely, so it helps to check which definition a course, paper or software library is using.",
   "everydayAnalogy": {
     "title": "Tuning a radio station in small adjustments",
     "story": "Amina is tuning a radio to get a clear signal during a long drive. She does not listen to the whole programme before touching the dial again. Instead, she listens for a few seconds, notices the static, makes a small adjustment, then listens to the next few seconds and adjusts again. After she has sampled short sections from the whole programme once, that is like one full pass; if the signal is still not clear enough, she repeats the cycle.",
@@ -220,9 +220,38 @@
     "iteration"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:12.343Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The opening incorrectly suggests that the three terms correspond to processing one example, processing small groups, and making full passes. An iteration is an update step, not “one example at a time”. That only happens when the batch size is 1.",
+        "fix": "These words describe units within training: a batch groups examples, an iteration is an update step, and an epoch is one full dataset pass."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The page treats batch size 1 as “online or stochastic training”. Batch size 1 supports stochastic gradient training, but online learning concerns learning from a stream or sequence of arriving data and is not defined by batch size alone.",
+        "fix": "Remove “that is often called online or stochastic training, and”. State only that batch size 1 gives 1,000 iterations in this example."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked answer is correct: 10,000 ÷ 500 = 20 iterations per epoch, and 20 × 4 = 80. The first option incorrectly stops after one epoch. The second incorrectly asserts 10 iterations per epoch. The third is uniquely correct. The fourth is internally incoherent: if every example created an iteration, 10,000 × 4 would be 40,000, not 2,000. This makes the distractor rejectable without understanding the terms.",
+        "fix": "Replace the second option with “5 iterations, because 500 is multiplied by 4 before division”. Replace the fourth with “40,000 iterations, treating each example as one iteration”."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

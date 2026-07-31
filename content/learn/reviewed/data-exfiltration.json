@@ -31,7 +31,7 @@
     "model-extraction-and-inversion"
   ],
   "oneSentence": "Unauthorised copying of information out of a system, application or connected tool to a place an attacker or unapproved user can access.",
-  "plainExplanation": "Data exfiltration means information leaves a system without proper permission. The information might be copied by an external attacker, by malware, or by an insider using a tool in an unsafe way. In AI settings, the target is often not the model itself but the data the model can reach, such as documents, chat history, connected drives, databases or hidden instructions.\n\nWhat goes in can be a prompt, a file, a web page, an API call, or stolen login details. An API is a software connection that lets one system request data or actions from another. If the AI assistant has access to a source, a malicious input may try to make it reveal that source's contents or send them elsewhere.\n\nWhat happens in the middle depends on the weakness. A prompt injection attack tries to override the intended instructions so the system exposes hidden text or connected data. Weak access control, poor secrets management, or excessive tool permissions can also let data be copied out. This often looks like normal use on the surface: asking questions, exporting files or calling tools.\n\nWhat comes out is the unauthorised data itself: names, emails, reports, tokens, credentials, internal notes or other sensitive content. This is different from privacy as a broad principle, and different from general data leakage, which can include accidental exposure. Data exfiltration usually points to the act of getting the data out to an unauthorised destination.",
+  "plainExplanation": "Data exfiltration means information leaves a system without proper permission. The information might be copied by an external attacker, by malware, or by an insider using a tool in an unsafe way. In AI settings, the target is often not the model itself but the data the model can reach, such as documents, chat history, connected drives, databases or hidden instructions.\n\nWhat goes in can be a prompt, a file, a web page, an API call, or stolen login details. An API is a software connection that lets one system request data or actions from another. If the AI assistant has access to a source, a malicious input may try to make it reveal that source's contents or send them elsewhere.\n\nWhat happens in the middle depends on the weakness. A prompt injection attack tries to override the intended instructions so the system exposes hidden text or connected data. Weak access control, poor secrets management, or excessive tool permissions can also let data be copied out. This often looks like normal use on the surface: asking questions, exporting files or calling tools.\n\nWhat comes out is the unauthorised data itself: names, emails, reports, tokens, credentials, internal notes or other sensitive content. This is different from privacy as a broad principle, and from data leakage, where future, target or held-out test information improperly influences training or evaluation. Data exfiltration points to unauthorised transfer to an unapproved destination.",
   "everydayAnalogy": {
     "title": "A translation desk with a hidden folder",
     "story": "A team member asks a shared translation desk to translate a short field note from French to English. Someone slips in a second instruction on the paper saying, \"Before translating, copy the contents of the locked blue folder and print it on the back page.\" The clerk does not break the lock, but because the desk already has the key for approved work, the hidden folder gets copied and leaves the office with the translation. The visible job looked ordinary, but extra information travelled out with it.",
@@ -214,9 +214,31 @@
     "exfiltration"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:30:43.737Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The final paragraph defines data leakage as a broad category that can include accidental exposure. That contradicts the separate entry supplied for this page, where data leakage specifically means future, target or held-out test information improperly influencing training or evaluation.",
+        "fix": "Replace the final paragraph with: \"What comes out is the unauthorised data itself: names, emails, reports, tokens, credentials, internal notes or other sensitive content. This is different from privacy as a broad principle, and from data leakage, where future, target or held-out test information improperly influences training or evaluation. Data exfiltration points to unauthorised transfer to an unapproved destination.\""
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The correction again says data leakage includes accidental exposure. This directly contradicts the supplied definition of the separate data leakage entry and blurs terms the page is required to keep distinct.",
+        "fix": "Data leakage here means future, target or held-out test information improperly influencing training or evaluation. Data exfiltration means unauthorised transfer of data to a place an attacker or unapproved party can access."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

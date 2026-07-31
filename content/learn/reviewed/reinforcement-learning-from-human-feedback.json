@@ -131,7 +131,7 @@
     "simple": "People look at several answers from a model, say which ones they prefer, and those preferences are used to train the model to answer in more preferred ways.",
     "technical": "RLHF typically follows earlier training stages. A base or instruction-tuned model is sampled on prompts to produce candidate completions. Human annotators then provide preference data, often pairwise rankings between completions under written guidelines. That dataset is used to train a reward model that estimates the relative desirability of outputs for a prompt. The main policy model is then optimised with a reinforcement-learning objective to increase expected reward while usually constraining it not to drift too far from the starting model. In large language model practice, this optimisation has often used methods such as PPO, though newer variants and related preference-optimisation methods also exist. The result is a new checkpoint that better matches the measured preference signal, but the reward model can be imperfect, vulnerable to shortcut learning, and sensitive to annotator bias, prompt distribution and reward hacking."
   },
-  "keyTakeaway": "RLHF does not teach a model what is true; it teaches the model what kinds of answers human reviewers tended to prefer.",
+  "keyTakeaway": "RLHF does not guarantee truth. It teaches the model to produce kinds of answers that human reviewers tended to reward.",
   "quickCheck": {
     "question": "Which description best captures what RLHF adds after a model already produces text?",
     "options": [
@@ -213,9 +213,49 @@
   ],
   "contested": "The term is widely used, but people do not always mean exactly the same pipeline by it. Some use RLHF narrowly for the reinforcement-learning stage after a reward model is trained, while others use it more broadly for the whole process of collecting human preferences, training the reward model and optimising the model.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:00.311Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This definition blurs RLHF into preference learning. Ranked examples and reward signals do not by themselves identify the reinforcement-learning stage that distinguishes the pipeline described on this page.",
+        "fix": "A method that learns a reward model from human preferences, then uses reinforcement learning to adjust the main model."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "This summary is also broad enough to describe preference learning or supervised training on selected outputs. It omits both the reward model and reinforcement learning.",
+        "fix": "People compare model answers. A reward model learns those preferences, then reinforcement learning updates the main model to produce higher-scoring answers."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "The absolute claim that RLHF does not teach a model what is true is false. Human feedback can reward truthful answers and affect factual behaviour. The defensible claim is that preference-based training does not guarantee truth.",
+        "fix": "RLHF does not guarantee truth. It teaches the model to produce kinds of answers that human reviewers tended to reward."
+      },
+      {
+        "field": "visual.steps[0].explanation",
+        "severity": "warning",
+        "problem": "Calling the source model \"partly trained\" is misleading and conflicts with the page's framing of RLHF as occurring after initial training. The source is normally a checkpoint whose earlier training stage is complete, even though it will now be adapted.",
+        "fix": "A pretrained or instruction-tuned model receives prompts and produces several possible answers for each one."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only defensible answer. Option 0 is false because RLHF does not replace all earlier training. Option 2 describes compression, not preference-based adaptation. Option 3 describes live internet access, not RLHF. However, the three distractors are so unrelated or absolute that the answer is obvious without understanding RLHF.",
+        "fix": "Replace the distractors with: \"It uses preferred answers as fixed targets for supervised fine-tuning.\"; keep option 1; \"It trains a reward model without updating the main model.\"; \"It updates the model from automated scores without human judgements.\""
+      }
+    ],
+    "applied": [
+      "keyTakeaway"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

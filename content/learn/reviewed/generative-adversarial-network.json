@@ -28,7 +28,7 @@
     "variational-autoencoder",
     "image-generation"
   ],
-  "oneSentence": "A training method with two neural networks, one making synthetic examples and one trying to spot fakes, so the generated output gradually becomes more realistic.",
+  "oneSentence": "A training method with two neural networks, one making synthetic examples and one trying to spot fakes, with the aim of making generated output more realistic.",
   "plainExplanation": "A generative adversarial network, or GAN, is a way to train an AI system to create new content such as images, short audio clips or other data that resembles a training set. It uses two neural networks, which are mathematical pattern-finding systems built from many weighted connections. One network is the generator. It starts from random numbers and produces a candidate output, such as an image.\n\nThe second network is the discriminator. It receives both real examples from the training data and fake examples from the generator, and it tries to tell which are real and which are synthetic. During training, the discriminator gets better at spotting flaws. The generator then adjusts its internal weights to make outputs that are harder to detect as fake. This repeated competition is the “adversarial” part.\n\nWhat goes in is usually a large collection of examples, such as face photos or satellite image patches, plus random input values often called noise. What happens is an alternating training loop: improve the discriminator, then improve the generator, again and again. What comes out is a trained generator that can turn random input into new samples with similar statistical patterns to the training data.\n\nGANs became important because they could produce sharp, realistic images and inspired many synthetic media applications. But they are not the only way to generate content, and they are often harder to train than newer diffusion models. They can also fail in specific ways, such as “mode collapse”, where the generator produces too little variety even if the outputs look convincing.",
   "everydayAnalogy": {
     "title": "A forged transit pass checked by inspectors",
@@ -133,8 +133,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A GAN trains one AI system to make fake examples and another to catch them. Because each side keeps improving, the fake examples can become very realistic.",
-    "technical": "A GAN is a generative modelling framework with two neural networks trained in opposition. The generator maps a latent vector, often sampled from a simple distribution such as Gaussian noise, into the data space. The discriminator, or critic in some variants, receives both real samples from the training distribution and generated samples, and learns to distinguish them. Training alternates optimisation steps so the discriminator improves its classification signal and the generator updates its parameters to make generated samples harder to distinguish from real ones. In the original formulation, this can be described as a minimax game over an objective related to divergence between the model distribution and the data distribution. In practice, many variants modify the loss function and architecture to improve stability, because GAN training can suffer from vanishing gradients, non-convergence and mode collapse. The hoped-for result is a generator that approximates the target data distribution well enough to sample realistic new outputs."
+    "simple": "A GAN trains one AI system to make fake examples and another to catch them. Their competing training signals can make the fake examples very realistic.",
+    "technical": "A GAN is a generative modelling framework with two neural networks trained in opposition. The generator maps a latent vector, often sampled from a simple distribution such as Gaussian noise, into the data space. The discriminator receives real and generated samples and learns to classify them. Some variants instead use a critic that assigns scalar scores to both. Training alternates optimisation steps for the two networks. The generator updates its parameters to make generated samples receive more real-like assessments. In the original formulation, this can be described as a minimax game over an objective related to divergence between the model distribution and the data distribution. In practice, many variants modify the loss function and architecture to improve stability, because GAN training can suffer from vanishing gradients, non-convergence and mode collapse. The hoped-for result is a generator that approximates the target data distribution well enough to sample realistic new outputs."
   },
   "keyTakeaway": "A GAN learns to generate realistic data by setting up a repeated contest between a maker of fakes and a detector of fakes.",
   "quickCheck": {
@@ -146,7 +146,7 @@
       "It guarantees the generated samples are authentic records of real events."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The defining idea is adversarial training between two networks: one generates candidates and the other evaluates whether they resemble real data. GANs do not require text prompts, do not inherently store exact copies as their core mechanism, and realistic output is not proof of authenticity."
+    "explanation": "A GAN trains a generator using feedback from a discriminator that compares real and generated samples. Compressing and reconstructing through a latent space describes a variational autoencoder. Step-by-step noise removal describes a diffusion model. Matching paired targets is supervised training, not the defining GAN mechanism."
   },
   "resources": [
     {
@@ -218,9 +218,47 @@
     "gan"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:23:11.549Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "Both fields imply steady improvement during GAN training. GAN optimisation can oscillate, collapse or fail, so neither network necessarily \"keeps improving\" and output does not necessarily become gradually more realistic.",
+        "fix": "oneSentence: \"A training method with two neural networks, one making synthetic examples and one trying to spot fakes, with the aim of making generated output more realistic.\" simpleVsTechnical.simple: \"A GAN trains one AI system to make fake examples and another to catch them. Their competing training signals can make the fake examples very realistic.\""
+      },
+      {
+        "field": "visual.steps[3].explanation",
+        "severity": "error",
+        "problem": "The conditional account of updating is false. Standard GAN training does not update the generator only when a fake is caught or the discriminator only when it is fooled. Each network is updated according to its loss on scheduled training steps.",
+        "fix": "The discriminator updates from errors on real and generated samples. The generator updates through its scores to make generated samples harder to identify."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The text treats a critic as another name for a discriminator and then says it learns to distinguish real from generated samples. A critic in variants such as critic-based GANs assigns scalar scores rather than performing real-or-fake classification. The passage also again suggests that alternating steps necessarily improve both networks.",
+        "fix": "A GAN is a generative modelling framework with two neural networks trained in opposition. The generator maps a latent vector, often sampled from a simple distribution such as Gaussian noise, into the data space. The discriminator receives real and generated samples and learns to classify them. Some variants instead use a critic that assigns scalar scores to both. Training alternates optimisation steps for the two networks. The generator updates its parameters to make generated samples receive more real-like assessments. In the original formulation, this can be described as a minimax game over "
+      },
+      {
+        "field": "quickCheck",
+        "severity": "error",
+        "problem": "Option 0 is the only defensible answer, but the three distractors are implausible absolutes. \"Always\", \"every\" and \"guarantees\" let readers answer by rejecting obviously extreme claims rather than understanding adversarial training. Replace the question and options with: Question: \"Which statement identifies a GAN's distinctive training mechanism?\" Options: [\"A generator uses feedback from a discriminator that compares real and generated samples.\", \"An encoder compresses examples and a decoder reconstructs or samples from the latent space.\", \"A model learns to remove noise step by step until a",
+        "fix": "Keep correctOptionIndex 0. Use this explanation: \"A GAN trains a generator using feedback from a discriminator that compares real and generated samples. Compressing and reconstructing through a latent space describes a variational autoencoder. Step-by-step noise removal describes a diffusion model. Matching paired targets is supervised training, not the defining GAN mechanism.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

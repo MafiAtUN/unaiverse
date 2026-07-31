@@ -28,8 +28,8 @@
     "completion",
     "context"
   ],
-  "oneSentence": "The text a person gives a chat assistant to guide what kind of response it should produce.",
-  "plainExplanation": "A user prompt is the text, and sometimes other attached input, that a person sends to an AI system. It tells the system what task to try, what information to use, or what style to follow. In a chat tool, this is usually the message you type.\n\nWhat goes in can be very short, like “Summarise this paragraph”, or more detailed, like “List three possible causes of this sensor reading and explain the limits of each guess”. The clearer the request, the easier it is for the model to continue with useful text.\n\nWhat happens next is not magic and not guaranteed understanding. The model breaks the input into smaller pieces called tokens, looks at the prompt together with earlier conversation in its context, and then predicts likely next tokens for a reply. The wording of the prompt strongly affects that prediction process.\n\nWhat comes out is a completion: generated text, and in some systems also tables, code, or actions through connected tools. A good prompt can improve relevance and structure, but it cannot make the model reliable beyond its actual limits. A weak or ambiguous prompt can lead to vague, wrong, or overconfident output.",
+  "oneSentence": "The input a person gives a chat assistant to guide what kind of response it should produce.",
+  "plainExplanation": "A user prompt is the input, sometimes including attached content, that a person sends to an AI system. It tells the system what task to try, what information to use, or what style to follow. In a chat tool, this is usually the message you type.\n\nWhat goes in can be very short, like “Summarise this paragraph”, or more detailed, like “List three possible causes of this sensor reading and explain the limits of each guess”. The clearer the request, the easier it is for the model to continue with useful text.\n\nWhat happens next is not magic and not guaranteed understanding. The model converts the input into internal representations, uses the prompt with other information in its current context, and generates a reply token by token. The wording of the prompt strongly affects that process.\n\nWhat comes out is a completion: generated text, including tables or code in some systems. Connected software may act on model outputs, but those actions are not the completion itself. A good prompt can improve relevance and structure, but it cannot make the model reliable beyond its actual limits. A weak or ambiguous prompt can lead to vague, wrong, or overconfident output.",
   "everydayAnalogy": {
     "title": "A note to a control room technician",
     "story": "At a water station, Amina sends a note to the control room: “Pump 3 shows 92°C for two minutes. Give me three possible explanations, ranked by urgency, and say what data I should check next.” The technician uses that note to decide what kind of reply to prepare. If the note only said “Pump problem?”, the reply would likely be broader and less useful. If the note gave the wrong pump number, the reply could be off track from the start.",
@@ -204,9 +204,56 @@
     "user message"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:02.154Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition restricts a user prompt to text, contradicting the page's later statement that it can include attached input. It also makes the distinction from the broader term \"Prompt\" depend mainly on use with a chat assistant rather than on the input coming from the user.",
+        "fix": "The input a person gives a chat assistant to guide what kind of response it should produce."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that the model breaks attached input into tokens is too broad for inputs such as images, which may first be processed into other internal representations. More seriously, the page calls actions through connected tools part of the completion. That contradicts the supplied definition of completion as generated text. A model may generate a tool request, but the resulting external action is not itself the completion.",
+        "fix": "Say that the model converts input into internal representations. Describe tables and code as generated text, and distinguish model output from actions subsequently performed by connected software."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "This repeats the overgeneralised claim that the entire context is tokenised, despite defining the user prompt as potentially containing attached content. It also introduces tool parameters without explaining whether they are user input or separately supplied context, which blurs the boundary of the term.",
+        "fix": "Remove tool parameters from the definition and say that the model encodes the context before predicting tokens."
+      },
+      {
+        "field": "keyTakeaway; simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "Both summaries reduce a user prompt to an instruction or something that tells the AI what the user wants. A user prompt can instead supply content or other input without containing an instruction. This narrowing conflicts with the fuller explanation.",
+        "fix": "Use \"input\" rather than defining every user prompt as an instruction."
+      },
+      {
+        "field": "visual.description; visual.steps; visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual specification is internally inconsistent. The description starts with two prompts, but step 1 shows only one, and the output stage then branches from one model box to both a vague and a specific answer. The diagram therefore does not clearly pair each prompt with its corresponding output. It also presents earlier chat as always present rather than optional context.",
+        "fix": "Show two parallel paths, each pairing one prompt with its corresponding output through the same model. Label earlier chat as optional, and preserve those pairings in the accessibility description."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "warning",
+        "problem": "The scenario says only that the internal tool is approved, not that it is approved for confidential procurement data. The caution likewise treats general system approval as sufficient, although approval may depend on the task and data classification.",
+        "fix": "Use only systems approved for this procurement data and task. Do not include confidential, personal, or security-sensitive information unless that approval covers it. Keep human oversight over the evaluation."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

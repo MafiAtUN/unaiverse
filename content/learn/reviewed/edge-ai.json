@@ -30,8 +30,8 @@
     "model-hosting",
     "deployment"
   ],
-  "oneSentence": "Running an AI model on a local device near the data source, instead of sending each task to a remote server, to produce outputs with less delay and less network dependence.",
-  "plainExplanation": "Edge AI means running an AI model on a device close to where data is produced. That device might be a phone, a camera, a sensor box, a vehicle computer or factory equipment. The model takes local input data, such as images, sound or sensor readings, processes it on the device, and returns an output such as a label, score, alert or short summary.\n\nWhat goes in depends on the use case: a photo, microphone audio, temperature readings or machine vibration data. What happens is called inference, meaning the model uses patterns learned earlier to generate a result for new input. What comes out might be “possible leak”, “speech detected”, “translate this sentence”, or “normal versus unusual reading”.\n\nThe main difference from cloud computing is where the inference runs. In cloud computing, the device sends data over a network to a remote server, and the server sends back the result. In Edge AI, much or all of that work happens locally. This can reduce delay, keep working when connectivity is weak, and limit how much raw data leaves the device.\n\nBut Edge AI does not mean no infrastructure, no risk or no internet ever. Models still need to be built, tested, updated and monitored. Edge devices also have limits: less compute, less memory, less battery and sometimes weaker security management than central systems. In many real deployments, edge and cloud are combined: the device does fast local processing, while a central system handles updates, logs or larger analysis.",
+  "oneSentence": "Running AI inference on a device at or near the data source, instead of sending each task to a remote server, which can reduce delay and network dependence.",
+  "plainExplanation": "Edge AI means running an AI model on a device close to where data is produced. That device might be a phone, a camera, a sensor box, a vehicle computer or factory equipment. The model takes local input data, such as images, sound or sensor readings, processes it on the device, and returns an output such as a label, score, alert or short summary.\n\nWhat goes in depends on the use case: a photo, microphone audio, temperature readings or machine vibration data. What happens is called inference, meaning the model uses patterns learned earlier to generate a result for new input. What comes out might be “possible leak”, “speech detected”, “translate this sentence”, or “normal versus unusual reading”.\n\nThe main difference from cloud-based inference is where the inference runs. With cloud-based inference, the device sends data over a network to a remote server, and the server sends back the result. In Edge AI, much or all of that work happens locally. This can reduce delay, keep working when connectivity is weak, and limit how much raw data leaves the device.\n\nBut Edge AI does not mean no infrastructure, no risk or no internet ever. Models still need to be built, tested, updated and monitored. Edge devices also have limits: less compute, less memory, limited power and sometimes weaker security management than central systems. In many real deployments, edge and cloud are combined: the device does fast local processing, while a central system handles updates, logs or larger analysis.",
   "everydayAnalogy": {
     "title": "A pump technician with a pocket checklist",
     "story": "At a water station, a technician carries a small device with a checklist for pump sounds and pressure patterns. When a sensor shows an unusual reading, the device compares it with known warning patterns right there and tells the technician, within a second, whether to inspect the pump. The technician does not need to phone a central office for every reading, so the check still works during a network outage. Later, the central office can still collect selected reports to improve the checklist.",
@@ -110,7 +110,7 @@
   "unWorkplaceExample": {
     "scenario": "A UN field office uses an approved local tool on staff laptops to produce first-pass summaries of public consultation submissions that have already been cleared for that workflow, so basic drafting can continue during weak connectivity.",
     "relevance": "This is relevant when teams need faster local processing, better continuity during outages, or less transfer of raw material to remote services. It also helps staff separate the question of where processing runs from the question of whether the output is reliable enough for official use.",
-    "caution": "Do not put confidential, personal, protection-sensitive or otherwise unapproved consultation material into a public AI service. Even with local tools, summaries should be checked by staff for accuracy, bias, omissions and policy sensitivity before use."
+    "caution": "Use only submissions cleared for this approved workflow, and follow rules for laptop access, storage, retention and synchronisation. Local processing does not make sensitive material safe by itself. Staff should check summaries for accuracy, bias, omissions and policy sensitivity before use."
   },
   "whyItMatters": "For non-specialists, Edge AI matters because where a model runs changes the practical risks, costs and benefits. A local system may respond faster, keep working during weak connectivity and reduce the amount of raw data sent elsewhere. That can matter in remote sites, factories, vehicles, phones and field operations. But local deployment can also make updates, security management, quality control and oversight harder if many devices are involved. In planning or procurement, the key question is not whether edge is better in general. It is whether the use case needs low delay, offline operation, limited data transfer or local control badly enough to justify the device constraints and management effort.",
   "whereYouMayHearIt": [
@@ -138,7 +138,7 @@
     "simple": "It is AI that runs on your device or near the sensor instead of sending every task to a distant server.",
     "technical": "Edge AI usually means deploying a trained model so inference runs on hardware close to the data source, such as a phone, camera, gateway, vehicle computer or industrial controller. Inputs are captured locally, processed under device constraints such as limited CPU, GPU, memory, storage and power, and converted into outputs like classifications, anomaly scores or compressed summaries. Compared with cloud inference, this can lower end-to-end latency, reduce bandwidth use and support operation during intermittent connectivity. It is often confused with cloud computing, but the distinction is about execution location for inference, not whether central services exist at all. In practice, many deployments are hybrid: local devices handle time-sensitive inference, while central systems support model hosting, rollout, telemetry, retraining and governance. Because edge devices operate in varied real-world conditions, teams also need to watch for distribution shift, version drift and uneven performance across device types."
   },
-  "keyTakeaway": "Edge AI moves model inference closer to the data source, trading some central convenience for faster local response and less dependence on constant connectivity.",
+  "keyTakeaway": "Edge AI moves model inference closer to the data source, which can reduce response time and dependence on constant connectivity but makes central management harder.",
   "quickCheck": {
     "question": "Which example best fits Edge AI?",
     "options": [
@@ -218,9 +218,64 @@
     "edge ai"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:45.834Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "It states that Edge AI produces less delay as a general result. Local inference removes network delay, but limited device hardware can make total processing slower. It also describes only a local device, while later sections correctly include nearby local processors.",
+        "fix": "Running AI inference on a device at or near the data source, instead of sending each task to a remote server, which can reduce delay and network dependence."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The sentence beginning \"In cloud computing\" falsely treats all cloud computing as remote AI inference. Cloud computing is broader than this request-response pattern. The intended comparison is with cloud-based inference. The phrase \"less battery\" is also an invalid comparison with central systems; the relevant constraint is limited power or battery capacity.",
+        "fix": "Replace \"cloud computing\" in that comparison with \"cloud-based inference\", and replace \"less battery\" with \"limited power\"."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "It says a model produces outputs only from its training and design, omitting the runtime input that directly affects each output.",
+        "fix": "A paper-like checklist suggests simple rules, but many edge AI systems use statistical models with many parameters rather than explicit if-then steps. Also, a human technician can use judgement outside the checklist, while a model produces outputs from its inputs within limits set by its training and design. The analogy also makes the local device seem fully independent, but many edge systems still rely on central services for updates, security patches or performance review."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The claimed warning time of about one second is not established. The example gives a one-second input interval but gives no inference, alert transmission or display time. The threshold comparison itself is correct: 0.87 - 0.80 = 0.07, so the score exceeds the threshold.",
+        "fix": "The operator gets a local warning despite intermittent internet, because 0.87 exceeds the 0.80 threshold by 0.07, and the raw sensor stream does not need to be continuously sent to a remote server."
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The caution focuses on sending material to a public AI service, but the scenario uses an approved local tool. It does not address the relevant local risks, including access, storage, retention and possible synchronisation from staff laptops.",
+        "fix": "Use only submissions cleared for this approved workflow, and follow rules for laptop access, storage, retention and synchronisation. Local processing does not make sensitive material safe by itself. Staff should check summaries for accuracy, bias, omissions and policy sensitivity before use."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "Saying central systems support \"model hosting\" blurs model hosting with distributing and managing a model that runs on edge devices. Under the page's supplied definition, model hosting keeps a model available to receive requests and run on hosting hardware. The surrounding list instead describes rollout and fleet support.",
+        "fix": "Replace \"model hosting\" with \"model distribution\"."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "It presents faster local response as a guaranteed trade-off. Edge inference can reduce network delay, but total response time depends on the device and workload.",
+        "fix": "Edge AI moves model inference closer to the data source, which can reduce response time and dependence on constant connectivity but makes central management harder."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "unWorkplaceExampleCaution"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

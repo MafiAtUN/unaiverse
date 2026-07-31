@@ -27,8 +27,8 @@
     "explainability",
     "transparency"
   ],
-  "oneSentence": "Interpretability is the effort to inspect how a model’s internal parts contribute to its outputs, not just describe the output afterwards.",
-  "plainExplanation": "Many AI systems take an input, transform it through many internal steps, and produce an output such as a score, label or generated text. Interpretability tries to look inside those internal steps. The goal is to find patterns such as which features, components or pathways were active and how they affected the result.\n\nThis is often confused with explainability. Explainability usually focuses on giving a human-usable reason for an output, even if that reason is only an approximation. Interpretability aims more directly at the model’s internal mechanism. In other words, it asks not only \"What explanation can we give?\" but also \"What seems to be happening inside the system?\"\n\nIn practice, a researcher might inspect neurons, attention patterns, feature activations or decision paths. A neuron is a small computational unit inside some models. An activation is how strongly that unit responds to a given input. By tracing which units activate together, researchers try to identify whether a model appears to rely on useful signals, irrelevant shortcuts or unsafe patterns.\n\nWhat goes in can be text, images or other data. What happens is analysis of the model’s internal representations and interactions. What comes out is evidence, not certainty: possible maps of circuits, features or behaviours inside the model. This can help with safety testing, bias investigation and human oversight, but it does not guarantee full transparency or full control.",
+  "oneSentence": "Interpretability is the extent to which people can understand how a model works or produces outputs, sometimes by inspecting its internal parts.",
+  "plainExplanation": "Many AI systems take an input, transform it through internal steps, and produce an output such as a score, label or generated text. Interpretability concerns how far people can understand this operation and the relationship between inputs and outputs. That understanding may come from readable features or decision paths, or from methods that inspect an otherwise opaque model.\n\nThis overlaps with explainability but is not identical. Explainability focuses on showing a human-usable reason for a particular output or pattern of outputs. Interpretability concerns how understandable the model’s operation is. Internal inspection is one form, especially mechanistic interpretability, but it is not the whole term.\n\nResearchers may inspect features, neurons, attention patterns, activations or decision paths. A neuron is a small computational unit inside some models. An activation shows how strongly that unit responds to an input. Units that activate together may reveal useful signals, irrelevant shortcuts or unsafe patterns, but association alone does not prove what caused an output. Researchers can test such findings with interventions and multiple examples.\n\nThe result is evidence, not certainty. It may include readable decision paths, estimates of feature effects, or possible maps of circuits and behaviours inside a model. This can help with safety testing, bias investigation and human oversight, but it does not guarantee full transparency or control.",
   "everydayAnalogy": {
     "title": "Checking how application sorting actually works",
     "story": "A team receives 1,000 applications and uses a software tool to sort them by completeness. At first, staff only see the final labels: complete, missing document, or unclear. Then an auditor opens the tool’s rule panels and event logs to see what happened inside. They discover that one rule gives too much weight to file naming style, so applications from different organisations are flagged as incomplete more often even when the right documents are present.",
@@ -130,7 +130,7 @@
     "simple": "It is a way of opening the black box a little to see what parts of an AI system seem to drive its answers.",
     "technical": "Interpretability studies the relationship between a model’s internal representations and its outputs. In mechanistic interpretability, the aim is to identify circuits, features, activations or pathways that appear to implement parts of the model’s behaviour. Methods may inspect neurons, attention heads, embeddings, saliency patterns or causal interventions on internal states. The core question is whether we can build evidence-based accounts of the model’s internal mechanism, rather than only observing input-output behaviour. In large models, this is difficult because representations are distributed, context-dependent and sometimes only partly recoverable. Findings are therefore often provisional and should be validated against multiple prompts, datasets and interventions."
   },
-  "keyTakeaway": "Interpretability looks inside a model for evidence about how it produced an output, which helps people judge risk but does not guarantee certainty or safety.",
+  "keyTakeaway": "Interpretability is how far people can understand a model’s operation. Internal inspection can provide evidence, but not certainty or safety.",
   "quickCheck": {
     "question": "Which statement best distinguishes interpretability from explainability?",
     "options": [
@@ -140,7 +140,7 @@
       "Interpretability is only about visualising data, while explainability is only about writing policy documents."
     ],
     "correctOptionIndex": 0,
-    "explanation": "The key distinction is inside-versus-outside. Explainability often focuses on giving a human-usable account of an output. Interpretability aims to inspect what seems to be happening inside the model. Neither term guarantees fairness or safety, and neither is limited to one model type."
+    "explanation": "Interpretability concerns how understandable a model’s operation is. Explainability concerns showing human-usable reasons for particular outputs or patterns. They overlap, and internal inspection is one kind of interpretability rather than its full definition. Neither guarantees fairness or safety."
   },
   "resources": [
     {
@@ -213,9 +213,47 @@
   ],
   "contested": "The broad idea is widely used, but the boundaries of 'interpretability', especially compared with explainability and transparency, are not fully settled. 'Mechanistic interpretability' is also used more narrowly by some researchers to mean analysis of internal circuits and representations, rather than interpretability in the broadest sense.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:28:04.250Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, simpleVsTechnical, keyTakeaway",
+        "severity": "error",
+        "problem": "The page incorrectly defines all interpretability as inspection of internal model parts. Internal inspection is mechanistic interpretability, a narrower form. Interpretability more broadly concerns how understandable a model's operation or input-output relationship is. Readable features or decision paths can make a model interpretable without neuron, activation or circuit inspection. This false narrowing recurs throughout the page.",
+        "fix": "Define interpretability broadly as the extent to which people can understand a model's operation. Present internal inspection as one form, especially mechanistic interpretability. Keep explainability focused on showing human-usable reasons for particular outputs or patterns."
+      },
+      {
+        "field": "visual.learningObjective, visual.description, visual.steps[4]",
+        "severity": "warning",
+        "problem": "The visual presents probes attached to internal components as the mechanism of interpretability itself. It therefore teaches only mechanistic interpretability while claiming to cover the broader term. It also says probes merely collect signals and then suggests the report shows which parts mattered. Observed activations alone do not establish causal importance.",
+        "fix": "Change the objective to: \"After viewing this, the reader should be able to say that some interpretability methods examine internal model behaviour, while others study understandable input-output relationships.\" Change step 4 to: \"Some methods inspect activations, test feature effects or intervene on internal states while the model processes an input.\""
+      },
+      {
+        "field": "workedExample.process[2], workedExample.result",
+        "severity": "warning",
+        "problem": "The example says unusual filenames \"raise\" the score, but only describes examining 50 similar cases. That comparison does not establish that filename style caused the difference. It also appears to evaluate the revised preprocessing on the same cases used to identify the problem, so the claimed improvement is not an independent test. The stated counts themselves are arithmetically coherent: 18/50 = 36%, 5/50 = 10%, a reduction of 13 cases or 26 percentage points.",
+        "fix": "Replace process step 3 with: \"Across 50 matched cases, changing only filename style increases the review score by about 0.20 while the required documents stay the same.\" Use a separate 50-case evaluation set for the result and call the shortcut suspected rather than proven."
+      },
+      {
+        "field": "quickCheck",
+        "severity": "error",
+        "problem": "Option 0 is the intended answer, but it repeats the false claim that interpretability necessarily inspects internal behaviour. Option 1 is false because neither concept is restricted to human-written rules or machine learning. Option 2 is false because neither concept guarantees lack of bias. Option 3 is false because neither concept is limited to data visualisation or policy writing. The last three options are so implausible that option 0 can be selected without understanding the distinction.",
+        "fix": "Replace the options with: [\"Interpretability concerns how understandable a model's operation is, while explainability concerns human-usable reasons for particular outputs.\", \"Interpretability applies to model developers, while explainability applies only to people affected by outputs.\", \"Interpretability evaluates model accuracy, while explainability evaluates whether its outputs are fair.\", \"Interpretability documents the data used by a system, while explainability documents who is responsible for it.\"] Keep option 0 marked and revise the explanation accordingly."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

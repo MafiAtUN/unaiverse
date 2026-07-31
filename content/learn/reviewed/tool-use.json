@@ -30,8 +30,8 @@
     "connector",
     "computer-use"
   ],
-  "oneSentence": "A system uses external software or devices during a task so it can look up information, calculate, send actions or control equipment instead of only generating text.",
-  "plainExplanation": "Some AI systems do more than reply with words. They can also call external tools such as a calculator, a calendar service, a database, a map, a sensor feed or a ticketing system. The tool gives the system fresh information or carries out an action.\n\nWhat goes in can be a user request, a signal from another system, or both. The system then chooses whether a tool is needed, which tool fits, and what input to send. A tool here means a connected piece of software or hardware that has a defined job, such as checking stock levels or reading a temperature sensor.\n\nWhat happens next is usually a loop. The system sends a request to the tool, gets a result back, and uses that result to continue the task. It may call one tool or several tools in sequence. For example, it might read a sensor, compare the reading with a safety threshold, and then open a maintenance ticket.\n\nWhat comes out depends on the setup. The result might be a written answer, a structured record, an alert, or a real action in another system. This is why tool use matters: once a system can act beyond text, errors can have practical effects, so permissions, logging and human oversight become important.\n\nTool use is often confused with function calling and APIs. Function calling is one common way a model formats a request for a tool. An API is the connection method many tools expose. Tool use is the broader idea: the system actually relying on external tools to gather information or do something.",
+  "oneSentence": "A system uses external software or devices during a task to look up information, calculate, carry out actions or control equipment beyond its own processing.",
+  "plainExplanation": "Some AI systems do more than reply with words. They can call tools such as a calculator, calendar, database, map, sensor feed or ticketing system. A tool can return information, perform a calculation or carry out an action.\n\nWhat goes in can be a user request, a signal from another system, or both. Based on its instructions and setup, the system selects whether a tool is needed, which tool fits, and what input to send. A tool here means connected software or hardware with a defined job, such as checking stock levels or reading a temperature sensor.\n\nWhat happens next is usually a loop. The system sends a request to the tool, gets a result back, and uses that result to continue the task. It may call one tool or several tools in sequence. For example, it might read a sensor, compare the reading with a safety threshold, and then open a maintenance ticket.\n\nWhat comes out depends on the setup. The result might be a written answer, a structured record, an alert, or a real action in another system. Once a system can act beyond its own processing, errors can have practical effects, so permissions, logging and human oversight become important.\n\nTool use is often confused with function calling, APIs, connectors and computer use. Function calling can return a structured tool request. An API is a standard interface for requests and responses, while a connector links systems. Computer use specifically operates app interfaces through screen actions. Tool use is the broader behaviour of relying on an external capability during a task.",
   "everydayAnalogy": {
     "title": "A maintenance desk handling a pump alert",
     "story": "A water utility worker sees an unusual reading from a pump sensor in a rural station. Instead of guessing, she checks the live sensor dashboard, looks up the normal range in the maintenance manual, and then opens a repair ticket if the reading is still abnormal. She uses different tools for each step because no single screen contains everything. The final action depends on what those tools return.",
@@ -101,7 +101,7 @@
       "The system calls the ticketing tool with a structured request: asset=P-17, issue='sustained high pressure', priority='high'.",
       "The ticket system returns confirmation: ticket MT-2041 created."
     ],
-    "result": "The assistant reports: 'Pump P-17 has been above the normal pressure range for 12 minutes. High-priority maintenance ticket MT-2041 has been created.'"
+    "result": "The assistant reports: 'Pump P-17 has been above the normal pressure range for 12 minutes. Maintenance ticket MT-2041 has been created.'"
   },
   "unWorkplaceExample": {
     "scenario": "In humanitarian coordination, a staff member uses an approved internal assistant to collect non-sensitive updates from approved logistics and supply systems, then draft a daily summary of road access and warehouse stock changes for review.",
@@ -138,7 +138,7 @@
     "simple": "It means the system can reach out to other software or devices during a task, instead of only writing text from what it has already seen.",
     "technical": "Tool use is the pattern where a model-driven system invokes external capabilities during inference or task execution. Those capabilities may include retrieval systems, calculators, databases, enterprise applications, device controls or other services. A common implementation is that the model emits a structured request with a tool name and arguments, an orchestrating layer validates and executes it, and the returned observation is added back into the working context for the next step. This can repeat as an observation-action loop. The important distinction is scope: tool use refers to the behaviour of relying on external operations, while APIs, connectors and function calling are enabling mechanisms. In practice, robust tool use also needs permission scoping, input validation, error handling, logging, rate limits and often sandboxing or human approval for consequential actions."
   },
-  "keyTakeaway": "Tool use means an AI system can do more than talk: it can reach outside itself for data or actions, so supervision and permissions matter much more.",
+  "keyTakeaway": "Tool use means an AI system can invoke external capabilities for data or actions, so supervision and permissions matter much more.",
   "quickCheck": {
     "question": "Which example best shows tool use?",
     "options": [
@@ -221,9 +221,70 @@
     "tool calling"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:47.455Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; simpleVsTechnical.simple; keyTakeaway",
+        "severity": "error",
+        "problem": "These fields define the contrast as tool use versus generating, writing or talking. AI systems without tool use can also classify, transform data or generate non-text outputs. The relevant distinction is reliance on an external capability during the task.",
+        "fix": "Replace these fields with the corrected versions below."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation calls an API a \"connection method,\" which blurs it with a connector. It also does not distinguish tool use from connectors or computer use, despite claiming those terms are distinct. \"The system then chooses\" also presents model-driven selection as unqualified human-like choice.",
+        "fix": "Replace the field with the corrected version below."
+      },
+      {
+        "field": "everydayAnalogy.mapping[3].aiElement",
+        "severity": "error",
+        "problem": "\"The system using tool results to decide\" anthropomorphises the system without explaining that the next action is selected according to its setup and model output.",
+        "fix": "Replace with: \"the setup using tool results to select the next action\""
+      },
+      {
+        "field": "visual.steps[2]; visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual presents a structured request as a required stage of all tool use. That is one implementation, associated with function calling, not a defining requirement. Tool use can also occur through other mechanisms, including app-interface operation. The \"sensor/API\" label also depicts an API as though it were itself a tool.",
+        "fix": "Change the step label to \"3. Send a tool request\" and its explanation to: \"If a tool is needed, the system prepares the required input. Some implementations use a structured request, while others use an app interface.\" Change \"sensor/API\" to \"sensor feed\" and \"structured input\" to \"tool input.\" In the accessibility description, change \"it sends a structured request\" to \"it sends the required input.\""
+      },
+      {
+        "field": "visual.learningObjective",
+        "severity": "warning",
+        "problem": "The objective promises a \"checked result or action,\" but the diagram only receives and uses the result. It shows no validation or checking stage.",
+        "fix": "Replace with: \"After viewing this, a reader should be able to describe how a system moves from a request to one or more tool calls and then to a returned result or action.\""
+      },
+      {
+        "field": "workedExample.process[3]; workedExample.result",
+        "severity": "error",
+        "problem": "The stated rule requires creating a maintenance ticket after more than 10 minutes outside the range. It does not authorise assigning high priority. The process invents that attribute, and the result repeats it. The duration and pressure comparisons themselves are consistent: every returned reading is at least 9.4 bar, which is 2.9 bar above the 6.5 bar upper limit, and 12 minutes is 2 minutes more than 10.",
+        "fix": "Remove \"priority='high'\" from the structured request and use the corrected result below."
+      },
+      {
+        "field": "commonMisconceptions[0].correction",
+        "severity": "error",
+        "problem": "\"Can access external functions or services\" describes availability or connectivity, not tool use. A configured connector can provide access even when no capability is invoked. This blurs tool use with connectors.",
+        "fix": "Replace the second sentence with: \"Tool use only means the system can invoke an external capability during a task.\""
+      },
+      {
+        "field": "quickCheck.options[3]",
+        "severity": "error",
+        "problem": "A text editor correcting spelling can defensibly be using a local spelling tool. Tool use does not require an external network lookup, so \"no external lookup\" does not rule it out. Option 1 is therefore not unambiguously the only defensible answer.",
+        "fix": "Replace option 4 with: \"A model corrects spelling in a paragraph without calling another capability.\""
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

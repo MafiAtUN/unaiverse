@@ -30,7 +30,7 @@
     "accuracy"
   ],
   "oneSentence": "The checked reference answer used to train or evaluate a model, so its output can be compared with the best available real-world answer.",
-  "plainExplanation": "In machine learning, ground truth means the reference answer you treat as the best available answer for a case. It might be a correct category, a measured number, a transcript reviewed by people, or a location marked on an image. People also say “gold standard”, although in practice it may be imperfect.\n\nWhat goes in is an example and its reference answer. During training, a model looks at many examples and tries to produce outputs close to those reference answers. During evaluation, the model’s output is compared with the reference answer to see how well it performed.\n\nWhat happens inside depends on the task. In a classification task, the model may compare its predicted class with the ground-truth class. In a regression task, it may compare a predicted number with a measured number. The difference between the model output and the reference answer becomes an error signal, which helps measure performance and often helps adjust the model during training.\n\nGround truth is not the same as a label, although labels are a common form of ground truth. A label is the tag attached to one example, such as “positive” or “negative”. Ground truth is the broader idea of the trusted reference used for comparison. It is also not the same as accuracy, which is a summary score calculated after comparing many predictions with ground truth.\n\nA practical caution: ground truth can be noisy, biased, delayed or disputed. For example, several experts may disagree, or the “true” answer may change over time. So ground truth is usually the best available reference, not a guarantee of perfect truth.",
+  "plainExplanation": "In machine learning, ground truth means the reference answer you treat as the best available answer for a case. It might be a correct category, a measured number, a transcript reviewed by people, or a location marked on an image. People also say “gold standard”, although in practice it may be imperfect.\n\nWhat goes in is an example and its reference answer. During training, a model processes many examples and tries to produce outputs close to those reference answers. During evaluation, the model’s output is compared with the reference answer to see how well it performed.\n\nWhat happens inside depends on the task. In a classification task, the model may compare its predicted class with the ground-truth class. In a regression task, it may compare a predicted number with a measured number. The difference between the model output and the reference answer becomes an error signal, which helps measure performance and often helps adjust the model during training.\n\nA label and ground truth can contain the same value, but the terms describe different roles. A label is the expected answer attached to an example. It serves as ground truth when it is treated as the trusted reference for comparison. Ground truth can also come from a measurement or another reference process. Accuracy is different: it is a summary score calculated after comparing many predictions with ground truth.\n\nA practical caution: ground truth can be noisy, biased, delayed or disputed. For example, several experts may disagree, or the “true” answer may change over time. So ground truth is usually the best available reference, not a guarantee of perfect truth.",
   "everydayAnalogy": {
     "title": "Checking who “she” refers to in a sentence",
     "story": "A class in Nairobi, Bogotá and Bangkok is reviewing short sentences that contain the word “she”. For each sentence, two language teachers read the surrounding text and mark who “she” refers to, such as Amina or Sofia. Their agreed answer is stored in a spreadsheet. Later, a language tool reads the same sentences and its answer is checked against that agreed reference.",
@@ -135,7 +135,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Ground truth is the answer you use as the trusted reference when checking whether a model got something right.",
-    "technical": "Ground truth is the target value or reference annotation assigned to an example and treated as the benchmark for comparison during training, validation or testing. In supervised learning, the model receives inputs and associated targets, then a loss function measures the difference between predicted outputs and ground-truth targets. Those differences can be used to update model parameters during training or to compute evaluation metrics on held-out data. The reference may come from human annotation, direct measurement, sensor readings, administrative records or expert adjudication. Depending on the task, it may be categorical, numeric, textual or spatial. The term is broader than label, because not all ground truth takes the form of a simple class label. It is also distinct from prediction, which is the model output, and from accuracy, which is a metric summarising prediction-versus-reference comparisons across many examples. In practice, ground truth may be noisy, partial, delayed or contested, so dataset documentation and annotation protocols are part of technical quality control."
+    "technical": "Ground truth is the target value or reference annotation assigned to an example and treated as the benchmark for comparison during training, validation or testing. In supervised learning, the model receives inputs and associated targets, then a loss function measures the difference between predicted outputs and ground-truth targets. Those differences can be used to update model parameters during training or to compute evaluation metrics on held-out data. The reference may come from human annotation, direct measurement, sensor readings, administrative records or expert adjudication. Depending on the task, it may be categorical, numeric, textual or spatial. A label is an expected answer attached to an example; it is ground truth when treated as the trusted reference. Ground truth is also distinct from prediction, which is the model output, and from accuracy, which summarises comparisons across many examples. In practice, ground truth may be noisy, partial, delayed or contested, so dataset documentation and annotation protocols are part of technical quality control."
   },
   "keyTakeaway": "Ground truth is the best available reference answer a model is trained or tested against, not the model’s output and not the score summarising performance.",
   "quickCheck": {
@@ -220,9 +220,50 @@
   ],
   "contested": "The core idea is widely used, but the term can be contentious because 'truth' may overstate certainty in domains where reference answers are partial, uncertain or socially contested.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:10:26.670Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This definition is almost interchangeable with the supplied definition of label. It does not explain that a label is an attached expected answer, while ground truth describes the role of a value treated as the trusted reference.",
+        "fix": "Ground truth is a label, measurement or other value treated as the best available reference for training or evaluating a model."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The fourth paragraph incorrectly narrows a label to a tag such as “positive” or “negative”, then claims ground truth is broader. The supplied label definition covers any expected answer attached to an example, not only class tags. A value can be both a label and ground truth, with the terms describing different roles.",
+        "fix": "A label and ground truth can contain the same value, but the terms describe different roles. A label is the expected answer attached to an example. It serves as ground truth when it is treated as the trusted reference for comparison. Ground truth can also come from a measurement or another reference process. Accuracy is different: it is a summary score calculated after comparing many predictions with ground truth."
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "The correction repeats the false claim that a label is usually a simple tag and treats numeric, textual or spatial annotations as something broader than labels. This contradicts the page's supplied definition of label.",
+        "fix": "A label is the expected answer attached to an example. It can also be ground truth when treated as the trusted reference. The terms stress different roles: label describes the attached target, while ground truth describes its reference status. Measurements and other references may provide ground truth without a simple class tag."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The claim that ground truth is broader than label because not all ground truth is a simple class label rests on an incorrect definition of label. Labels are not limited to simple classes under the definition this page must remain distinct from.",
+        "fix": "Ground truth is the target value or reference annotation assigned to an example and treated as the benchmark for comparison during training, validation or testing. In supervised learning, the model receives inputs and associated targets, then a loss function measures the difference between predicted outputs and ground-truth targets. Those differences can be used to update model parameters during training or to compute evaluation metrics on held-out data. The reference may come from human annotation, direct measurement, sensor readings, administrative records or expert adjudication. Depending o"
+      },
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping",
+        "severity": "warning",
+        "problem": "This is not an everyday analogy. It is another literal machine-learning example involving human annotation, a stored reference and a language tool. It restates the mechanism instead of explaining it through a familiar non-AI comparison.",
+        "fix": "Replace the language tool with a student completing the same exercise. Map the student’s answer to the model prediction and the teachers’ answer key to ground truth. Keep the limitation that model training uses mathematical updates rather than classroom checking."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

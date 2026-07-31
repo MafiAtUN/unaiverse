@@ -32,7 +32,7 @@
     "indexing"
   ],
   "oneSentence": "A search method that finds material by similar meaning, not just shared words, and returns the most relevant passages for review or further AI use.",
-  "plainExplanation": "Ordinary search often looks for exact words or close matches. Semantic search tries to find text with a similar meaning even when the wording is different. For example, a search for “flood damage to roads” may also find a passage about “washed-out transport routes after heavy rain”.\n\nWhat goes in? Usually a user question and a collection of documents. The system turns the question and document passages into numerical representations called embeddings. An embedding is a list of numbers designed so that items with similar meaning end up closer together.\n\nWhat happens next? The system compares the question’s embedding with the embeddings of many stored passages and retrieves the nearest ones. “Nearest” here does not mean physically nearby. It means most similar in that numerical space. The results may then be reordered by another ranking step.\n\nWhat comes out? A list of passages, documents or records that are likely to match the user’s intent. This is different from retrieval-augmented generation: semantic search finds the source material, while retrieval-augmented generation uses retrieved material to help a model produce an answer. Semantic search can help when people use different languages, phrasing or terminology, but it still needs testing because it can miss important exact terms or return items that only seem related.",
+  "plainExplanation": "Ordinary search often looks for exact words or close matches. Semantic search tries to find text with a similar meaning even when the wording is different. For example, a search for “flood damage to roads” may also find a passage about “washed-out transport routes after heavy rain”.\n\nWhat goes in? Usually a user question and a collection of documents. The system turns the question and document passages into numerical representations called embeddings. An embedding is a list of numbers designed so that items with similar meaning end up closer together.\n\nWhat happens next? The system compares the question’s embedding with the embeddings of many stored passages and retrieves the nearest ones. “Nearest” here does not mean physically nearby. It means most similar in that numerical space. The results may then be reordered by another ranking step.\n\nWhat comes out? A list of passages, documents or records that are likely to match the user’s intent. This is different from retrieval-augmented generation: semantic search finds the source material, while retrieval-augmented generation uses retrieved material to help a model produce an answer. Semantic search can help across different phrasing or terminology, and across languages when its embedding model supports them, but it still needs testing because it can miss important exact terms or return items that only seem related.",
   "everydayAnalogy": {
     "title": "Asking a skilled librarian for the right shelf",
     "story": "In a public library in Nairobi, a student asks for books about roads made unsafe after storms. The student does not know the official transport engineering terms. The librarian does not search only for the exact words the student said. Instead, the librarian thinks about the meaning, then walks to sections with books on flood damage, road washouts and emergency road repair, and brings back the most relevant ones.",
@@ -145,7 +145,7 @@
       "It sorts documents by date and popularity rather than meaning."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Semantic search is about meaning-based retrieval. It often uses embeddings to find passages that are semantically similar to the query. It does not require exact wording, and it does not automatically generate final answers."
+    "explanation": "Semantic search retrieves text close in meaning, often using embeddings. Word matching is keyword search. Organising searchable passages is indexing. Retrieving passages before generating an answer is retrieval-augmented generation."
   },
   "resources": [
     {
@@ -218,9 +218,39 @@
     "meaning-based search"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:30.509Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that semantic search can help when people use different languages is too broad. Cross-language retrieval only works when the embedding model supports the relevant languages. A semantic search system using a monolingual model may perform poorly or fail across languages.",
+        "fix": "Replace the final sentence with: “Semantic search can help across different phrasing or terminology, and across languages when its embedding model supports them, but it still needs testing because it can miss important exact terms or return items that only seem related.”"
+      },
+      {
+        "field": "visual.reducedMotionDescription",
+        "severity": "warning",
+        "problem": "It refers to an “alternate-query example”, but no alternate query appears anywhere in the visual specification. A designer or screen-reader user cannot determine what this means.",
+        "fix": "A static left-to-right diagram shows the same five stages with numbered boxes and arrows. The three best-matching passages are highlighted without animation, with query and passage vectors visible beside the comparison step."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is the only correct answer, but the distractors make that answer obvious without testing understanding. Option 0 falsely restricts search to exact words in the right order. Option 2 uses the absolute “always” and wrongly says search generates rather than retrieves. Option 3 explicitly excludes meaning. Replace them with credible descriptions of the three neighbouring terms the page claims to distinguish.",
+        "fix": "Use these options: [“It matches query words to indexed text and ranks the matches.”, “It retrieves text that is close in meaning to the query, even if the wording is different.”, “It retrieves passages before asking a language model to produce an answer.”, “It organises passages into a searchable structure for faster retrieval.”] Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

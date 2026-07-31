@@ -29,8 +29,8 @@
     "retrieval-augmented-generation",
     "model-version"
   ],
-  "oneSentence": "The latest point in time covered by a model’s training data, after which newer events and facts are usually absent unless added by another method.",
-  "plainExplanation": "A model learns patterns from large collections of text and other data. That learning uses material available up to a certain date or period. That point is often called the knowledge cutoff, training cutoff, or cut-off date.\n\nWhat goes in is older training data: books, websites, articles, code, and other sources collected before the cutoff. What happens is that the model’s parameters, the internal numerical settings shaped during training, are adjusted using that data. What comes out is a model that can generate useful text, but whose built-in factual background may stop at that earlier point.\n\nThis does not mean the model cannot talk about later events at all. It may still produce guesses, repeat patterns, or use information supplied in the prompt. But without a connected external source, those later claims should not be treated as reliable.\n\nPeople often confuse knowledge cutoff with context window or retrieval-augmented generation. A context window is how much text the model can handle in one exchange. Retrieval-augmented generation adds current documents at use time. Knowledge cutoff is about what was available during training, not how much text fits now or whether live documents are being fetched.",
+  "oneSentence": "The approximate point up to which a model’s training-derived background is expected to be current, while newer events and facts may be absent unless added another way.",
+  "plainExplanation": "A model is trained on large collections of text and other data. Training usually uses selected material assembled up to an approximate date or period. This is often called the knowledge cutoff, training cutoff, or cut-off date.\n\nWhat goes in is selected training data: books, websites, articles, code, and other sources mostly collected before the cutoff. During training, the model’s parameters, the internal numerical settings shaped by that process, are adjusted using the data. What comes out is a model that can generate useful text, but whose training-derived factual background may be outdated.\n\nThis does not mean the model cannot discuss later events. It may produce guesses, repeat patterns, or use information supplied in the prompt. But without a dependable external source, later claims should not be treated as reliable.\n\nA context window is the input and prior output the model can use at one time. Retrieval-augmented generation can supply relevant passages at use time, including newer material. A model version is a named release whose documentation may state a cutoff. The cutoff itself concerns approximate temporal coverage of training.",
   "everydayAnalogy": {
     "title": "A school atlas printed last year",
     "story": "A teacher in Nairobi gives students a printed world atlas published in 2024. In class, a student asks about a railway line opened in 2025. The atlas can still help with country names, borders shown at publication, and older transport routes, but it will not include the new line unless the teacher also brings a newer handout. If a student guesses the answer from older maps, the guess might sound sensible and still be wrong.",
@@ -99,7 +99,7 @@
   "unWorkplaceExample": {
     "scenario": "A communications officer in a UN country office uses an approved internal AI tool to draft responses for a shared public inbox that asks about this month’s office opening hours and a newly announced event.",
     "relevance": "Knowing the cutoff helps the officer recognise that a draft may contain outdated details if the model was trained before the latest office notice. The officer can then provide the current approved notice or use a connected internal knowledge source before sending anything.",
-    "caution": "Do not paste personal data, confidential correspondence, protection-sensitive case details, security information, or unpublished operational information into an unapproved public AI service."
+    "caution": "Use only approved public notices. Do not enter sender details, confidential messages, or sensitive information unless the tool is approved for those data."
   },
   "whyItMatters": "The cutoff affects whether an answer may be outdated. That matters when you judge risk, choose whether to trust a draft, and decide when you need current documents or human checking. It also helps you ask better questions of vendors: what date does built-in knowledge reach, and what approved method adds newer information? Without that clarity, people may assume a fluent answer is current when it is not.",
   "whereYouMayHearIt": [
@@ -127,8 +127,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "It is the date up to which the model’s built-in background was learned. Newer facts may be missing unless you add current information another way.",
-    "technical": "During pretraining, a model is optimised on a corpus collected up to a particular time boundary. That boundary is commonly described as the knowledge cutoff. Information after that date is generally not represented through the model’s training-derived parameters unless the model is later updated through additional training, fine-tuning on newer data, or supplemented at inference time by retrieval or user-provided context. The term refers to temporal coverage of training data, not token capacity, not conversation memory, and not automatic access to live external sources. Because models generate outputs from learned statistical patterns rather than a dated fact table, post-cutoff answers may still appear confident even when they are unsupported by current evidence."
+    "simple": "It is the approximate date up to which the model’s training-derived background may be current. Newer facts may be missing unless added another way.",
+    "technical": "During pretraining, a model is optimised on a corpus assembled up to an approximate time boundary. That boundary is commonly described as the knowledge cutoff. Information after that date is generally not represented in the model’s training-derived parameters. Newer information can be incorporated through additional training or fine-tuning, or supplied at inference time through retrieval or user-provided context. The term refers to temporal coverage of training data, not context capacity, conversation history, or automatic access to live external sources. Because models generate outputs from learned statistical patterns rather than a dated fact table, post-cutoff answers may still appear confident even when unsupported by current evidence."
   },
   "keyTakeaway": "A knowledge cutoff tells you how recent the model’s built-in training background may be, not whether it can read long prompts or use fresh documents you provide.",
   "quickCheck": {
@@ -213,9 +213,71 @@
     "cut-off date"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:20:55.949Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This presents the cutoff as a precise latest point covered by the training data. In practice, the stated cutoff is an approximate boundary for expected training-derived coverage. Sources can have uneven dates, older gaps, and references to later periods.",
+        "fix": "The approximate point up to which a model’s training-derived background is expected to be current, while newer events and facts may be absent unless added another way."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation repeatedly treats the cutoff as an exact boundary. It also defines the context window as text handled in \"one exchange\", which excludes relevant prior input and output, and says retrieval-augmented generation adds current documents even though retrieved passages are not necessarily current. It also claims to distinguish related terms but does not distinguish a knowledge cutoff from a model version.",
+        "fix": "A model is trained on large collections of text and other data. Training usually uses selected material assembled up to an approximate date or period. This is often called the knowledge cutoff, training cutoff, or cut-off date.\n\nWhat goes in is selected training data: books, websites, articles, code, and other sources mostly collected before the cutoff. During training, the model’s parameters, the internal numerical settings shaped by that process, are adjusted using the data. What comes out is a model that can generate useful text, but whose training-derived factual background may be outdated"
+      },
+      {
+        "field": "everydayAnalogy.story",
+        "severity": "error",
+        "problem": "The claim that an atlas published in 2024 \"will not include\" a railway opened in 2025 is too absolute. The atlas could show a planned or incomplete railway before it opens.",
+        "fix": "Replace \"but it will not include the new line\" with \"but it may not show the new line as open\"."
+      },
+      {
+        "field": "visual.steps[0] and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual teaches a hard date boundary by saying only material from before the marker enters training. That is stronger than a knowledge cutoff supports and hides uneven source coverage.",
+        "fix": "In step 1, use: \"Show an illustrative marker such as 'cutoff: June 2024'. Training coverage is approximate and may vary by source.\" In the accessibility description, replace the first sentence with: \"First, documents largely dated before an approximate cutoff are collected.\""
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "The correction again defines a context window as what the system processes in \"one exchange\". The supplied definition includes input and prior output available while producing the next response, which may span multiple turns.",
+        "fix": "That confuses cutoff with context window. The context window is the input and prior output the system can use at one time while generating a response. Knowledge cutoff concerns the approximate time coverage of training data."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "This again describes the cutoff as an exact date up to which the background was learned rather than an approximate indicator of expected temporal coverage.",
+        "fix": "It is the approximate date up to which the model’s training-derived background may be current. Newer facts may be missing unless added another way."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The sentence about post-cutoff information wrongly groups retrieval and user-provided context with ways information becomes represented in training-derived parameters. Retrieval supplies information at inference time but does not place it in the model’s parameters. The passage also presents corpus coverage as a precise boundary.",
+        "fix": "During pretraining, a model is optimised on a corpus assembled up to an approximate time boundary. That boundary is commonly described as the knowledge cutoff. Information after that date is generally not represented in the model’s training-derived parameters. Newer information can be incorporated through additional training or fine-tuning, or supplied at inference time through retrieval or user-provided context. The term refers to temporal coverage of training data, not context capacity, conversation history, or automatic access to live external sources. Because models generate outputs from l"
+      },
+      {
+        "field": "unWorkplaceExample.caution",
+        "severity": "error",
+        "problem": "The scenario uses a shared public inbox, which can contain sender details and confidential or sensitive message content. Saying only not to use an unapproved public service does not establish that the approved internal tool is authorised for those data.",
+        "fix": "Use only approved public notices. Do not enter sender details, confidential messages, or sensitive information unless the tool is approved for those data."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "unWorkplaceExampleCaution",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -31,7 +31,7 @@
     "biological-neuron"
   ],
   "oneSentence": "These layers organise how a neural network turns input numbers into intermediate calculations and then into an output such as a score, label or predicted value.",
-  "plainExplanation": "A neural network is often arranged in layers. The input layer receives the starting information, usually as numbers. For text, image or survey data, those inputs have already been converted into numbers before they reach the network.\n\nHidden layers sit between the start and the end. Each hidden layer applies many small calculations using weights, which control how strongly one value influences another, plus a bias term, which shifts the result, and an activation function, which adds a non-linear change. These layers create new internal values from the earlier ones.\n\nThe output layer is the final stage. It turns the last internal values into the form needed for the task: for example a class score, a probability-like distribution after softmax, or a single number such as a forecast. What comes out depends on the problem.\n\nThe word layer can mean any one stage in this chain, so it is broader than input layer, hidden layer or output layer. These terms are related but not identical. A layer is the general idea; input, hidden and output layers are specific roles in the structure.\n\nPeople sometimes imagine hidden layers as storing secret facts or human-like concepts. That is too strong. In practice, they are stages of numerical transformation. Some internal patterns can be useful to analyse, but they are not guaranteed to match neat human categories.",
+  "plainExplanation": "A neural network is often arranged in layers. The input layer receives the starting information, usually as numbers. For text, image or survey data, those inputs have already been converted into numbers before they reach the network.\n\nHidden layers sit between the start and the end. A typical hidden layer applies many small calculations using weights, which control how strongly one value influences another, plus a bias term, which shifts the result, and an activation function, which adds a non-linear change. These layers create new internal values from the earlier ones.\n\nThe output layer is the final stage. It turns the last internal values into the form needed for the task: for example a class score, a probability-like distribution after softmax, or a single number such as a forecast. What comes out depends on the problem.\n\nThe word layer can mean any one stage in this chain, so it is broader than input layer, hidden layer or output layer. These terms are related but not identical. A layer is the general idea; input, hidden and output layers are specific roles in the structure.\n\nPeople sometimes imagine hidden layers as storing secret facts or human-like concepts. That is too strong. In practice, they are stages of numerical transformation. Some internal patterns can be useful to analyse, but they are not guaranteed to match neat human categories.",
   "everydayAnalogy": {
     "title": "Sorting public feedback through review stages",
     "story": "Imagine a city consultation receives many short comments about transport. First, staff turn each comment into a checklist of simple signals such as mentions of cost, safety, buses and delays. Then two review teams work in sequence: the first groups related signals, and the second combines those groups into broader patterns such as service complaints or safety concerns. At the end, a final desk assigns each comment to an output like “mainly about safety”, “mainly about cost” or “mixed”.",
@@ -138,7 +138,7 @@
       "They guarantee that the model can explain its reasoning clearly."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Hidden layers sit between input and output. They combine earlier values using learned parameters and activation functions to create new internal representations. They do not simply store raw inputs or final labels, and they do not guarantee interpretability."
+    "explanation": "Hidden layers transform values between the feature input and task output. \"Hidden\" describes their intermediate position, not whether users can inspect them. The input layer represents the feature vector, while the output layer maps the last representation into the target space."
   },
   "resources": [
     {
@@ -212,9 +212,50 @@
     "layer"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:11:49.323Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process",
+        "severity": "error",
+        "problem": "The numerical example does not actually compute its claimed values. No weights, biases or activation calculations are given, so 0.8, 0.7, 0.9, 0.6, 0.62, 0.33 and 0.05 are merely asserted. The only checkable arithmetic is 0.62 + 0.33 + 0.05 = 1.00 and 0.62 > 0.33 > 0.05.",
+        "fix": "Replace the process with: [\"The input layer receives four numbers: 1.0, 1.0, 0.0 and 0.0.\", \"With zero biases and ReLU, hidden layer 1 gives h1=max(0, 0.1×1.0+0.7×1.0)=0.8 and h2=max(0, 0.7×1.0)=0.7.\", \"Hidden layer 2 gives service=max(0, 1.0×0.8+(1/7)×0.7)=0.9 and price=max(0, (6/7)×0.7)=0.6.\", \"With zero output biases, the scores are service=0.60×0.9+0.1333×0.6≈0.62, cost=0.10×0.9+0.40×0.6=0.33, and safety=0.0833×0.6≈0.05.\"]"
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "It says every hidden layer uses weights, a bias and a non-linear activation. That is not true of every neural network architecture or every hidden layer. These operations are typical, not universal.",
+        "fix": "Change \"Each hidden layer applies\" to \"A typical hidden layer applies\"."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 1 is clearly about an input layer, while options 3 and 4 make absurd storage and interpretability claims. The marked answer is the only correct one, but it can be selected by rejecting obviously silly distractors rather than understanding hidden layers.",
+        "fix": "Use these options: [\"They represent the feature vector supplied to the network.\", \"They are intermediate stages that transform earlier values into new internal values.\", \"They map the last internal values into the task's target space.\", \"They are any layers whose values are not shown to the user.\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation addresses the original weak distractors. After making the options credible, it must distinguish hidden layers from input layers, output layers and the everyday meaning of hidden.",
+        "fix": "Hidden layers transform values between the feature input and task output. \"Hidden\" describes their intermediate position, not whether users can inspect them. The input layer represents the feature vector, while the output layer maps the last representation into the target space."
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "The visual specifies connections from every unit to every unit in the next column without saying that this is one fully connected feed-forward example. Neural networks do not generally require this connection pattern.",
+        "fix": "An example fully connected feed-forward network shown as four vertical columns labelled Input layer, Hidden layer 1, Hidden layer 2 and Output layer. Circles represent units, and arrows connect each column to the next. Numeric features enter from the left, become intermediate values, then produce final scores."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "quickCheckExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

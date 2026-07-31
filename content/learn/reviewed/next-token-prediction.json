@@ -29,7 +29,7 @@
     "reasoning-model",
     "temperature"
   ],
-  "oneSentence": "A language model produces text by repeatedly estimating which small piece of text is most likely to come next in the current sequence.",
+  "oneSentence": "A language model produces text by repeatedly estimating probabilities for small pieces of text that could come next in the current sequence.",
   "plainExplanation": "A chat assistant does not write a whole answer in one step. It reads the text it has been given so far and predicts the next token, meaning a small piece of text such as a word, part of a word, punctuation mark, or number fragment.\n\nWhat goes in is the current text sequence, often called the context. That includes your prompt and any earlier words already generated in the reply. The model then calculates scores for many possible next tokens in its vocabulary, which is the set of tokens it can output.\n\nWhat happens next depends on the generation settings. The system may choose the highest-scoring token, or it may sample from several likely options to make the output less repetitive. After one token is chosen, it is added to the text, and the same process repeats again and again.\n\nWhat comes out is a completion built one token at a time. This often produces fluent language, but fluency is not proof of factual accuracy, reasoning quality, or reliable intent. Next-token prediction explains how text is produced, not whether the content is correct or wise.",
   "everydayAnalogy": {
     "title": "Practising exam sentence completions",
@@ -123,7 +123,7 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "The system looks at the text so far and keeps adding the next most suitable small piece of text, one step at a time.",
+    "simple": "The system looks at the text so far and keeps selecting a small piece of text to add next, one step at a time.",
     "technical": "In an autoregressive language model, generation is factorised over a sequence: the model estimates a probability distribution for the next token conditioned on the prior tokens in the context window. At each step it scores tokens in its vocabulary, then a decoding method selects one token, for example greedy choice or stochastic sampling. That chosen token is appended to the sequence and fed back as part of the input for the next step. Repeating this loop produces a completion. The mechanism explains local fluency and sensitivity to context, but it does not by itself guarantee factual accuracy, groundedness, or robust multi-step reasoning."
   },
   "keyTakeaway": "A chat assistant writes by extending text one token at a time, so polished wording can emerge even when the content still needs checking.",
@@ -206,9 +206,56 @@
     "autocomplete"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:25.787Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.process[3]",
+        "severity": "error",
+        "problem": "The token sequence does not produce the stated result. Concatenating the pieces gives 'The workshop begins at' + ' 9' = 'The workshop begins at 9'; + ':' = 'The workshop begins at 9:'; + '30' = 'The workshop begins at 9:30'; + ' a.m.' = 'The workshop begins at 9:30 a.m.'; + '.' = 'The workshop begins at 9:30 a.m..'. The process therefore adds two final full stops, while the result shows one.",
+        "fix": "Replace the final process step with: \"It runs again on the new context and may choose ':', then '30', then ' a.m.'.\""
+      },
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This says the model estimates which single token is most likely, implying that it always identifies and uses the top token. The page later correctly says generation may sample a lower-probability token from a distribution.",
+        "fix": "A language model produces text by repeatedly estimating probabilities for small pieces of text that could come next in the current sequence."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "“The next most suitable” again implies selection of one best token. Sampling can select among several possible tokens, so this contradicts the page's own explanation of generation settings.",
+        "fix": "The system looks at the text so far and keeps selecting a small piece of text to add next, one step at a time."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the distractors describe fact-checking, website selection, and verbatim document storage. They are so remote from next-token prediction that a reader can answer without understanding the term.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: \"How a model learns token patterns from training data\"; \"How temperature changes variation among likely next tokens\"; \"How a reasoning model uses extra computation while answering\"."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation would no longer match the stronger replacement distractors.",
+        "fix": "Next-token prediction describes generation: the model scores possible next tokens from the current context, selects one, appends it, and repeats. Training, temperature, and extra reasoning computation describe different processes."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "warning",
+        "problem": "The correction relies mainly on scale claims about training sets, vocabularies, and context. Those do not clearly distinguish the shared next-token mechanism, and “more complex selection methods” is vague and not reliably true of every comparison with phone autocomplete.",
+        "fix": "They share the same basic next-token idea. The comparison becomes incomplete when it suggests a model only offers one short continuation: a chat model repeatedly feeds each selected token back into context to generate an extended response."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "simpleVsTechnicalSimple"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

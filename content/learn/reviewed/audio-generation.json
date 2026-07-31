@@ -31,8 +31,8 @@
     "deepfake",
     "generative-adversarial-network"
   ],
-  "oneSentence": "Tools in this area turn text or voice examples into new spoken audio, from a generic computer voice to a close imitation of a particular person.",
-  "plainExplanation": "Audio and speech generation means creating sound with a model rather than recording a person speaking each line. The input might be written text, music instructions, a short voice sample, or all three. The output is an audio file or live spoken sound.\n\nThese terms are related but not identical. Text-to-speech, often called TTS, starts with written text and reads it aloud. Audio generation is broader: it can include speech, sound effects, music, or mixed audio. Voice cloning means generating speech that sounds like a specific person, usually from sample recordings of that person.\n\nA model is a pattern-finding system trained on many audio examples. It learns relationships between text, speech sounds, timing, pitch and style. When given a prompt, it predicts a waveform, meaning the up-and-down signal that a speaker or headphone can play as sound.\n\nThis is often confused with speech-to-text, which does the reverse and turns spoken audio into written words. It is also confused with deepfakes. A cloned voice can be part of a deepfake, but not all generated speech is deceptive. For example, an accessibility tool that reads text aloud is generated speech without pretending to be a real recording.",
+  "oneSentence": "Tools in this area create new speech, music or other sounds from text, audio examples or other controls, including voices that imitate a particular person.",
+  "plainExplanation": "Audio and speech generation means creating sound with a model rather than recording a person speaking each line. The input might be written text, music instructions, a short voice sample, or all three. The output is an audio file or live spoken sound.\n\nThese terms are related but not identical. Text-to-speech, often called TTS, starts with written text and reads it aloud. Audio generation is broader: it can include speech, sound effects, music, or mixed audio. Voice cloning means generating speech that sounds like a specific person, usually from sample recordings of that person.\n\nA model is a pattern-finding system trained on many audio examples. It learns relationships between text, speech sounds, timing, pitch and style. Given an input, it produces a waveform: the signal that a speaker or headphones play as sound.\n\nThis is often confused with speech-to-text, which does the reverse and turns spoken audio into written words. It is also confused with deepfakes. A cloned voice can be a deepfake when it convincingly imitates a real person, but generated speech need not imitate anyone. For example, an accessibility tool that reads text aloud is generated speech without pretending to be a real recording.",
   "everydayAnalogy": {
     "title": "An announcer studio with reusable voice settings",
     "story": "Imagine a radio station that has a script desk and a digital announcer console. A producer types a sentence, then chooses either a standard station voice or a saved voice profile that matches one presenter’s accent and pace. The console reads the new script aloud in seconds, even though that presenter never entered the studio. If the producer instead asks for crowd noise or a door closing sound, the system uses a different audio tool, because not all audio is speech.",
@@ -214,9 +214,44 @@
     "audio generation"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:56.976Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition limits the category to spoken audio, contradicting the page’s later explanation that audio generation also covers music, sound effects and mixed audio.",
+        "fix": "Tools in this area create new speech, music or other sounds from text, audio examples or other controls, including voices that imitate a particular person."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The statement that a model given a prompt \"predicts a waveform\" falsely presents one pipeline as universal. Some systems generate acoustic representations or audio tokens that another component converts into a waveform.",
+        "fix": "Replace the final sentence of the third paragraph with: \"Given an input, it produces a waveform: the signal that a speaker or headphones play as sound.\""
+      },
+      {
+        "field": "plainExplanation; visual.description; visual.steps[3]; visual.accessibilityDescr",
+        "severity": "error",
+        "problem": "The page repeatedly defines a deepfake as deceptive media or a deceptive use. That contradicts the supplied definition. A deepfake is fabricated or heavily altered media that convincingly imitates a real person, scene or event. Deceptive intent is not required, and \"use case\" is the wrong relationship.",
+        "fix": "Describe a deepfake as fabricated or heavily altered media that convincingly imitates a real person, scene or event. In the visual footer, replace \"deepfake: possible misuse, not the whole category\" with \"deepfake: convincing imitation, not all generated media\". Remove claims that deception defines the term."
+      },
+      {
+        "field": "visual.steps[1]; visual.accessibilityDescription; simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The page presents written text plus target-voice samples as the required input for voice cloning. Voice cloning can also condition source speech on a target voice, so written text is not always an input.",
+        "fix": "In the visual step, use: \"Input: text or source speech, plus voice samples. The system generates new speech that sounds similar to the sampled person.\" Update the accessibility text likewise. In the technical text, state that target-speaker features can be combined with text or source speech."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

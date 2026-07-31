@@ -100,7 +100,7 @@
     "relevance": "Access control can limit the tool to approved public documents and prevent it from opening restricted negotiation notes, personnel files or unrelated repositories. It can also stop the tool from sending messages or changing records unless a separately authorised workflow exists.",
     "caution": "Do not paste confidential negotiation text, personal data, security-sensitive material or protection-related information into an unapproved public AI service. Use only approved systems with the right permissions and human review."
   },
-  "whyItMatters": "For non-specialists, access control is one of the clearest ways to reduce harm without needing to understand every technical detail of AI. If an AI assistant can only read a narrow set of approved documents and cannot freely call tools, send messages or open sensitive stores, many mistakes and attacks become less damaging. This matters for procurement, system design and daily use: before asking whether a tool is clever, ask what it is allowed to touch. Good access control also supports accountability. When permissions are clear, organisations can separate public information from restricted material, give staff only the access they need, and review who used which resource. In AI systems, that boundary often matters more than the wording of the prompt.",
+  "whyItMatters": "For non-specialists, access control is a clear way to reduce harm without understanding every technical detail of AI. If an AI assistant can only read a narrow set of approved documents and cannot freely call tools, send messages or open sensitive stores, many mistakes and attacks become less damaging. This matters for procurement, system design and daily use: before asking whether a tool is clever, ask what it is allowed to touch. Good access control also supports accountability. With clear permissions and access logs, organisations can separate public information from restricted material, give staff only the access they need, and review which account used a resource. In AI systems, that boundary often matters more than the wording of the prompt.",
   "whereYouMayHearIt": [
     "IT onboarding and account setup",
     "enterprise AI assistant design",
@@ -126,7 +126,7 @@
     "simple": "Access control means setting clear rules so a person or AI tool can only reach the information and functions needed for its job, and nothing more.",
     "technical": "Access control is the enforcement of policy over subjects, resources and actions. A subject, such as a user account, service account or application, requests an operation like read, write, execute, search or send. The system evaluates whether that subject is authorised for that operation on that resource under the current conditions, then permits or denies it. In AI systems, the same principle applies to model-connected data stores, retrieval systems, plug-ins, APIs and tools. Least privilege is a design principle within access control: grant the minimum necessary permissions, ideally scoped by resource, action and context, so that a compromised prompt, tool call or workflow cannot exceed those bounds. This is related to, but not identical with, authentication and authorisation: authentication establishes identity, while access control is the practical mechanism that enforces who can do what."
   },
-  "keyTakeaway": "The safest AI assistant is not the one that promises to behave well, but the one that is only allowed to access what it truly needs.",
+  "keyTakeaway": "A safer AI assistant does not just promise to behave well. It is only allowed to access what it truly needs.",
   "quickCheck": {
     "question": "Which example best shows least privilege in an AI assistant?",
     "options": [
@@ -208,9 +208,50 @@
     "least privilege"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:31:21.574Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition says access control sets rules, but does not say that it enforces them. This makes it sound like policy design rather than the mechanism that limits access.",
+        "fix": "Access control limits which people, systems or AI tools can view, use or change specific data, functions and resources."
+      },
+      {
+        "field": "visual.description, visual.steps[1], visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual makes identifying the requester a step performed by access control. That blurs access control with authentication, despite the page claiming they are distinct. Access control should use an authenticated or otherwise established identity when applying permissions.",
+        "fix": "Change the step label to \"2. Use the known identity\" and its explanation to \"The system uses the account or service identity linked to the request, not just the words in it.\" Make the same distinction in the visual description and accessibility description."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The final distinction mentions both authentication and authorisation, but explains only authentication. The rest of the page describes checking whether an action is allowed, which is authorisation, without explaining how access control differs from it.",
+        "fix": "Access control is the enforcement of policy over subjects, resources and actions. A subject, such as a user account, service account or application, requests an operation like read, write, execute, search or send. The system evaluates the applicable permissions and permits or denies that operation on the resource under the current conditions. In AI systems, the same principle applies to model-connected data stores, retrieval systems, plug-ins, APIs and tools. Least privilege is a design principle within access control: grant the minimum necessary permissions, ideally scoped by resource, action"
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "The claim that clear permissions let organisations review who used which resource is false as written. Permissions show allowed access, not actual use. Reviewing use also requires access records or logs.",
+        "fix": "For non-specialists, access control is a clear way to reduce harm without understanding every technical detail of AI. If an AI assistant can only read a narrow set of approved documents and cannot freely call tools, send messages or open sensitive stores, many mistakes and attacks become less damaging. This matters for procurement, system design and daily use: before asking whether a tool is clever, ask what it is allowed to touch. Good access control also supports accountability. With clear permissions and access logs, organisations can separate public information from restricted material, gi"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "Calling the least-privileged assistant \"the safest\" is an unsupported absolute. Access scope is only one part of AI security, so an assistant can have narrow permissions and still be unsafe in other ways.",
+        "fix": "A safer AI assistant does not just promise to behave well. It is only allowed to access what it truly needs."
+      }
+    ],
+    "applied": [
+      "whyItMatters",
+      "keyTakeaway"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

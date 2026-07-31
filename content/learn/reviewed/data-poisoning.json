@@ -31,8 +31,8 @@
     "prompt-injection",
     "indirect-prompt-injection"
   ],
-  "oneSentence": "An attack that quietly inserts misleading or specially crafted examples into training data so a model learns the wrong pattern or a hidden trigger.",
-  "plainExplanation": "Data poisoning happens before or during training, the stage where a model adjusts itself from many examples. An attacker adds, changes or labels some training examples in a harmful way. The goal is to make later outputs less accurate, biased in a chosen direction, or responsive to a hidden trigger.\n\nWhat goes in is not a malicious command to the model at run time. It is corrupted training material: images, text, labels, ratings, or feedback data. What happens is that the training process treats those bad examples as if they were trustworthy, so the model absorbs a distorted pattern. What comes out is a model that may fail broadly or fail in a very specific way.\n\nThere are two common forms. One is general degradation: for example, making a road-damage detector worse overall by mixing in wrongly labelled satellite images. The other is a backdoor: for example, making the system behave normally except when a certain patch, phrase or marker appears, after which it produces an attacker-chosen result.\n\nThis is often confused with prompt injection or jailbreaks, which happen at use time by manipulating instructions or inputs sent to a deployed model. Data poisoning is different because the attack targets the data used to train or update the model. It is also related to adversarial attacks, but not identical: many adversarial attacks aim to fool a trained model at inference time, while poisoning changes the model itself through tainted training data.",
+  "oneSentence": "An attack that quietly corrupts training data by adding, changing or removing examples, causing wrong patterns or a hidden trigger in the model.",
+  "plainExplanation": "Data poisoning happens before or during training, the stage where a model adjusts itself from many examples. An attacker adds, changes or labels some training examples in a harmful way. The goal is to make later outputs less accurate, biased in a chosen direction, or responsive to a hidden trigger.\n\nWhat goes in is not a malicious command to the model at run time. It is corrupted training material: images, text, labels, ratings, or feedback data. What happens is that the training process treats those bad examples as if they were trustworthy, so the model absorbs a distorted pattern. What comes out is a model that may fail broadly or fail in a very specific way.\n\nThere are two common forms. One is general degradation: for example, making a road-damage detector worse overall by mixing in wrongly labelled satellite images. The other is a backdoor: for example, making the system behave normally except when a certain patch, phrase or marker appears, after which it produces an attacker-chosen result.\n\nThis is often confused with prompt injection or jailbreaks, which happen at use time by manipulating instructions or inputs sent to a deployed model. Data poisoning is different because the attack targets the data used to train or update the model. It is also different from an adversarial attack: an adversarial attack changes an input to fool a trained model at inference time, while poisoning changes the model through tainted training data.",
   "everydayAnalogy": {
     "title": "Corrupting a map-reading class",
     "story": "A city planning office trains new analysts to spot damaged roads from printed satellite images. Most of the training folders are correct, but someone slips in many images where intact roads are labelled as damaged, and a few images with a small yellow sticker are always labelled as urgent damage. The trainees study all the folders without realising some labels are false. Later, they start misclassifying ordinary roads more often, and they almost always flag any image with the yellow sticker as urgent, even when the road is fine.",
@@ -211,9 +211,32 @@
   ],
   "contested": "The broad idea is widely recognised, but boundaries between data poisoning, model poisoning and backdoor attacks are not always used in exactly the same way across research and industry. Some authors use the terms narrowly, while others treat backdoors as a subtype of poisoning.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:30:42.171Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition reduces data poisoning to inserting examples. Poisoning can also modify, remove or mislabel existing training data, as the page itself later states.",
+        "fix": "An attack that quietly corrupts training data by adding, changing or removing examples, causing wrong patterns or a hidden trigger in the model."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The final distinction says only that “many” adversarial attacks occur at inference time. That blurs and potentially contradicts the page’s supplied definition of adversarial attack as changing an input at use time. The distinction must be categorical within this material’s taxonomy.",
+        "fix": "This is often confused with prompt injection or jailbreaks, which happen at use time by manipulating instructions or inputs sent to a deployed model. Data poisoning is different because the attack targets the data used to train or update the model. It is also different from an adversarial attack: an adversarial attack changes an input to fool a trained model at inference time, while poisoning changes the model through tainted training data."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

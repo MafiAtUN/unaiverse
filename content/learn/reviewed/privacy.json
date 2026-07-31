@@ -29,7 +29,7 @@
     "consent"
   ],
   "oneSentence": "Privacy means controlling how information about identifiable people is collected, used, shared and kept, so they are not exposed, tracked or harmed unfairly.",
-  "plainExplanation": "Privacy is about information linked to a person and what others are allowed to do with it. That can include names, phone numbers and ID numbers, but also location, photos, voice, online behaviour or a combination of details that points to one person.\n\nIn an AI system, information goes in first. It may be collected from forms, messages, images, sensors or past records. Then the system or the people operating it store it, combine it, analyse it or share it. What comes out might be a prediction, a ranking, a summary or a decision support output. Privacy asks: was this information really needed, was the use clear, was access limited, and could the person be identified or affected?\n\nPrivacy is not the same as data security. Data security means protecting information from theft, loss or unauthorised access. Privacy is broader. A system can be secure but still invade privacy if it collects too much, uses data for a new purpose without a proper basis, or keeps it longer than needed.\n\nPrivacy is also not the same as confidentiality or consent, though they are related. Confidentiality is a duty not to reveal information inappropriately. Consent is one possible permission basis in some situations, but not the only one, and it may not be valid if people cannot freely refuse. Good privacy practice usually means collecting the minimum needed, limiting access, explaining the purpose, checking risks and keeping human oversight for sensitive uses.",
+  "plainExplanation": "Privacy is about information linked to a person and whether and how it should be handled. That can include names, phone numbers and ID numbers, but also location, photos, voice, online behaviour or a combination of details that points to one person.\n\nIn an AI system, information goes in first. It may be collected from forms, messages, images, sensors or past records. Then the system or the people operating it store it, combine it, analyse it or share it. What comes out might be a prediction, a ranking, a summary or a decision support output. Privacy asks: was this information really needed, was the use clear, was access limited, and could the person be identified or affected?\n\nPrivacy is not the same as data security. Data security means protecting information from theft, loss or unauthorised access. Privacy is broader. A system can be secure but still invade privacy if it collects too much, uses data for a new purpose without a proper basis, or keeps it longer than needed.\n\nPrivacy is also not the same as confidentiality or consent, though they are related. Confidentiality limits access so only authorised people can see, use or share information for a legitimate purpose. Consent is one possible permission basis in some situations, but not the only one, and it may not be valid if people cannot freely refuse. Good privacy practice usually means collecting the minimum needed, limiting access, explaining the purpose, checking risks and applying extra safeguards to sensitive uses.",
   "everydayAnalogy": {
     "title": "Counting meals without naming everyone",
     "story": "At a food distribution point, a team needs to estimate tomorrow's meal quantities. One worker proposes writing every visitor's full name, exact home address and family details. Another worker instead counts household sizes by area and keeps only the numbers needed for planning. Both methods can help estimate food, but the second exposes fewer people to unnecessary risk if a paper list is lost or seen by the wrong person.",
@@ -123,8 +123,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "Privacy means not taking or using more information about people than is needed, and not exposing them through careless or unfair data practices.",
-    "technical": "Privacy concerns the lawful and appropriate handling of personal data across its lifecycle: collection, storage, use, combination, sharing, retention and deletion. In AI contexts, privacy risk can arise from direct identifiers such as names, from indirect identifiers such as location and device data, and from inference, where analysis reveals something about a person that was not explicitly provided. Key mechanisms for reducing risk include data minimisation, purpose limitation, access controls, retention limits, de-identification with awareness of re-identification risk, and human review for sensitive processing. The term is often confused with security, confidentiality and consent, but they address different parts of the problem: security protects against unauthorised access, confidentiality limits disclosure, and consent is only one possible basis for processing in some contexts."
+    "simple": "Privacy means using information about people only when needed for a clear purpose, without exposing them through careless or unfair data practices.",
+    "technical": "Privacy concerns the lawful and appropriate handling of personal data across its lifecycle: collection, storage, use, combination, sharing, retention and deletion. In AI contexts, privacy risk can arise from direct identifiers such as names, from indirect identifiers such as location and device data, and from inference, where analysis reveals something about a person that was not explicitly provided. Key mechanisms for reducing risk include data minimisation, purpose limitation, access controls, retention limits, de-identification with awareness of re-identification risk, and additional controls for sensitive processing. The term is often confused with security, confidentiality and consent, but they address different parts of the problem: security protects against unauthorised access, confidentiality limits access and use to authorised people for a legitimate purpose, and consent is only one possible basis for processing in some contexts."
   },
   "keyTakeaway": "Privacy is not just locking data away; it is choosing carefully what personal data to collect, use, share and keep at all.",
   "quickCheck": {
@@ -136,7 +136,7 @@
       "Assume privacy is handled once the file is protected by a password."
     ],
     "correctOptionIndex": 1,
-    "explanation": "Privacy starts with necessity and purpose. If a forecast can be produced from less identifiable data, collecting extra personal details creates avoidable risk. Passwords help security, but privacy also covers whether the data should be collected, linked, used or shared at all."
+    "explanation": "The second option is best because it limits collection and disclosure to what the forecast needs. Deleting excessive data later does not justify collecting it. Removing names only from the output leaves unnecessary identifiable processing. Restricted access helps, but does not justify keeping all source records indefinitely."
   },
   "resources": [
     {
@@ -210,9 +210,59 @@
   ],
   "contested": "The broad importance of privacy is widely recognised, but the exact legal definitions, boundaries and enforcement rules vary across jurisdictions and sectors.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:28:15.947Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition frames privacy as control without saying who exercises that control. This can imply that privacy always depends on individual control or consent, although the rest of the page correctly says consent is only one possible basis.",
+        "fix": "Privacy concerns whether and how information about identifiable people is collected, used, shared and kept, so people are not exposed, tracked or harmed unfairly."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The sentence defining confidentiality as a duty not to reveal information inappropriately is narrower than, and contradicts, the supplied separate definition. Confidentiality also limits who may see, use or share information and requires a legitimate purpose.",
+        "fix": "Replace that sentence with: \"Confidentiality limits access so only authorised people can see, use or share information for a legitimate purpose.\""
+      },
+      {
+        "field": "plainExplanation; visual.steps[2]; visual.accessibilityDescription; simpleVsTech",
+        "severity": "warning",
+        "problem": "The page repeatedly presents human review as a privacy safeguard for sensitive processing. Human review does not by itself reduce collection, use or disclosure, and giving another person access can increase exposure. The privacy mechanism should be described as additional safeguards, not human review alone.",
+        "fix": "Use \"extra safeguards for sensitive uses\" in the explanation and diagram. In the technical field, use \"additional controls for sensitive processing.\""
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "The simple definition reduces privacy mainly to data minimisation and avoiding exposure. It omits whether information is used for a clear and appropriate purpose, despite purpose limitation being central elsewhere on the page.",
+        "fix": "Privacy means using information about people only when needed for a clear purpose, without exposing them through careless or unfair data practices."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The statement that confidentiality \"limits disclosure\" contradicts the supplied separate definition, which covers access, use and sharing by authorised people for a legitimate purpose.",
+        "fix": "Replace the final distinction with: \"security protects against unauthorised access, confidentiality limits access and use to authorised people for a legitimate purpose, and consent is only one possible basis for processing in some contexts.\""
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked answer at index 1 is the only defensible answer, but the quiz is trivial rather than diagnostic. Option 0 explicitly collects everything without need, option 2 explicitly publishes raw records, and option 3 merely repeats the misconception just taught. A learner can select option 1 without understanding privacy.",
+        "fix": "Replace the options with: [\"Collect detailed personal records, then delete them after the forecast is produced.\", \"Use only the data needed for the forecast and avoid sharing identifiable records in the output.\", \"Use identifiable records even though totals would work, then remove names from the published forecast.\", \"Keep all source records indefinitely, but restrict the file to the project team.\"]. Index 1 remains the only best answer: option 0 still collects unnecessary data, option 2 unnecessarily processes identifiable records, and option 3 imposes unlimited retention."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

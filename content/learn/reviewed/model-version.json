@@ -30,8 +30,8 @@
     "checkpoint",
     "knowledge-cutoff"
   ],
-  "oneSentence": "A named stage of a model and its documentation, showing what changed, what it can do, and what users should check before relying on it.",
-  "plainExplanation": "People often use several nearby words loosely here, so it helps to separate them. A model version is a specific named state of a model, such as version 1.2 or a dated release. A model update is the change from one version to another. A release is the act of making that version available to users. A model card is the document that describes the model, its intended uses, limits and testing.\n\nWhat goes in can vary. A team may start from an existing model, then change it through more training, adjustment or compression. Those changes might include fine-tuning, changing safety behaviour, making it smaller or faster, or fixing a bug in how it is served. What comes out is usually a new version name, the model files or access endpoint, and updated documentation.\n\nThe important point is that not every change means the same thing. A new version may reflect new training data or fine-tuning, but it may also reflect quantisation, distillation or other engineering changes that affect speed, cost or quality. A release may happen without changing the underlying model weights, for example if only the interface or access controls changed. A model card describes the version, but it is not the version itself.\n\nThis term is often confused with checkpoint and knowledge cutoff. A checkpoint is a saved snapshot during training, often for developers, and many checkpoints never become public versions. Knowledge cutoff refers to the latest period reflected in a model's training data, which is only one property of a version. When someone says, \"we updated the model,\" ask what changed, how it was tested, and which version the results refer to.",
+  "oneSentence": "A particular identified state of a model or model-backed system, with documented changes, capabilities and checks for use.",
+  "plainExplanation": "People often use several nearby words loosely here, so it helps to separate them. A model version is a specific named state of a model, such as version 1.2 or a dated release. A model update is the change from one version to another. A release is the act of making that version available to users. A model card is the document that describes the model, its intended uses, limits and testing.\n\nWhat goes in can vary. A team may start from an existing model, then change it through more training, adjustment or compression. Those changes might include fine-tuning, changing safety behaviour, making it smaller or faster, or fixing a bug in how it is served. What comes out is usually a new version name, the model files or access endpoint, and updated documentation.\n\nThe important point is that not every change means the same thing. A new version may reflect new training data or fine-tuning, but it may also reflect quantisation, distillation or other engineering changes that affect speed, cost or quality. A release may happen without changing the underlying model weights, for example if only the interface or access controls changed. A model card describes the version, but it is not the version itself.\n\nThis term is often confused with checkpoint and knowledge cutoff. A checkpoint is a saved snapshot during training or adaptation, often for developers, and many checkpoints never become public versions. Knowledge cutoff refers to the latest period reflected in a model's training data, which is only one property of a version. When someone says, \"we updated the model,\" ask what changed, how it was tested, and which version the results refer to.",
   "everydayAnalogy": {
     "title": "Successive editions of a translated field guide",
     "story": "A relief team uses a short field guide translated from Arabic into English for incoming staff. In March, they publish Edition 1 with a cover label and a note on where the translation may be too literal. In June, they issue Edition 2 after correcting terms, improving clarity and making the file smaller for low-bandwidth phones. The new PDF is the release, \"Edition 2\" is the version, the list of changes is the update note, and the page explaining scope and known limits works like a model card.",
@@ -125,7 +125,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Think of it like this: the version is the labelled edition, the update is what changed, the release is when people get it, and the model card is the explanation sheet.",
-    "technical": "A model version is a uniquely identifiable state of a model or model-backed system at a point in time. It may differ from earlier versions because of additional training such as fine-tuning, instruction tuning or preference optimisation, or because of post-training changes such as quantisation, distillation, pruning, safety layer adjustments or serving changes. A release is the publication or deployment event that exposes that version to users through an API, downloadable artefact or product integration. A model card is structured documentation associated with a version or family of versions, typically covering intended uses, out-of-scope uses, evaluation results, limitations, data and training notes where available, and safety or fairness considerations. These terms overlap in everyday speech, but they refer to different layers: technical state, change event, distribution event and documentation. They are also distinct from checkpoints, which are intermediate saved states during training, and from knowledge cutoff, which describes the recency of training data rather than the full set of changes in a version."
+    "technical": "A model version is a uniquely identifiable state of a model or model-backed system at a point in time. It may differ from earlier versions because of fine-tuning, instruction tuning, preference optimisation, quantisation, distillation, pruning, safety layer adjustments or serving changes. A release is the publication or deployment event that exposes that version to users through an API, downloadable artefact or product integration. A model card is structured documentation associated with a version or family of versions, typically covering intended uses, out-of-scope uses, evaluation results, limitations, data and training notes where available, and safety or fairness considerations. These terms overlap in everyday speech, but they refer to different layers: technical state, change event, distribution event and documentation. They are also distinct from checkpoints, which are saved states from particular points in training or adaptation, and from knowledge cutoff, which describes the recency of training data rather than the full set of changes in a version."
   },
   "keyTakeaway": "Ask four separate questions: what changed, which version is it, what was released, and where is the documentation for that exact version?",
   "quickCheck": {
@@ -210,9 +210,57 @@
     "model update"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:00.731Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition wrongly makes documentation part of the model version and calls the version a \"stage\". Documentation describes a version, as the page correctly says elsewhere, and a version is not necessarily a lifecycle stage.",
+        "fix": "A particular identified state of a model or model-backed system, with documented changes, capabilities and checks for use."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The checkpoint distinction is narrower than the supplied definition. A checkpoint can be saved during training or adaptation, not only \"during training\". Calling checkpoints snapshots only during training also conflicts with the technical section's discussion of adaptation.",
+        "fix": "Replace \"A checkpoint is a saved snapshot during training, often for developers\" with \"A checkpoint is a saved snapshot during training or adaptation, often for developers\"."
+      },
+      {
+        "field": "everydayAnalogy.story",
+        "severity": "error",
+        "problem": "The story says the new PDF itself is \"the release\", but the page defines release as the act of making a version available. This confuses the released artefact with the release event.",
+        "fix": "Replace \"The new PDF is the release\" with \"Publishing the new PDF is the release\"."
+      },
+      {
+        "field": "visual.description and visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual presents change, naming, release and documentation as a required four-step sequence. Documentation can be prepared before or alongside release, and naming need not occur only after every technical change. The screen-reader description repeats the same misleading order.",
+        "fix": "Describe them as four related parts rather than four stages. State that the arrows show a common relationship, not a required order."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The technical taxonomy is misleading. It places distillation under \"post-training changes\", although distillation generally creates a student model through training. It also again restricts checkpoints to intermediate states during training, omitting adaptation and implying that all checkpoints are intermediate.",
+        "fix": "Remove the training versus post-training taxonomy and describe the methods as possible reasons versions differ. Define checkpoints as saved states from particular points in training or adaptation."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked second option is correct and is the only defensible option, but the other options are crude absurdities. Option 1 simply reverses model card and checkpoint, option 3 declares two plainly different terms identical, and option 4 says public release makes versioning irrelevant. The answer is obvious without understanding the distinctions.",
+        "fix": "Use these options instead: [\"A model update is the named state, while a version is the change between states.\", \"A model version is the named state, a release makes it available, an update is the change, and a model card documents that version.\", \"A public checkpoint and a model version are always interchangeable.\", \"A knowledge cutoff records every technical change in a model version.\"] Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

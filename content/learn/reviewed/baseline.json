@@ -26,8 +26,8 @@
     "accuracy",
     "evaluation-metric"
   ],
-  "oneSentence": "A simple reference result used to judge whether a model adds real value beyond an easy, reasonable starting point.",
-  "plainExplanation": "A baseline is a starting score or method that gives you something to beat. It tells you, “If we do the simple thing, this is the result.” Then you compare a more complex system against that result.\n\nWhat goes in is a task, some data and a rule for scoring performance. The rule for scoring is an evaluation metric, such as accuracy or recall. You also choose a simple method for the task, for example always predicting the most common class, using a keyword search, or repeating the previous value.\n\nWhat happens is that you run this simple method on the same task that the new model will face. What comes out is a reference score, such as 80% accuracy, plus a clearer sense of how hard the task really is.\n\nThis matters because a score can look impressive without meaning much. If 80% of documents are routine, a system that always says “routine” gets 80% accuracy without finding anything unusual. A new model scoring 82% may sound better, but it may add little practical value.\n\nBaseline does not mean benchmark, although people mix them up. A benchmark is often a standard test set or suite used to compare systems. A baseline is the simple reference result inside an evaluation. Good evaluation often uses both.",
+  "oneSentence": "A reference method or result used to judge how a model performs against a relevant starting point.",
+  "plainExplanation": "A baseline is a reference method or score that gives you something to compare against. It tells you, “With this reference approach, this is the result.” Then you compare the new system against that result.\n\nWhat goes in is a task, some data and a rule for scoring performance. The rule for scoring is an evaluation metric, such as accuracy or recall. You also choose a relevant reference method, for example predicting the most common class, using keyword search, repeating the previous value or using the current process.\n\nWhat happens is that you run this reference method on the same task that the new model will face. What comes out is a reference score, such as 80% accuracy, plus a clearer sense of how hard the task may be.\n\nThis matters because a score can look impressive without meaning much. If 80% of documents are routine, a system that always says “routine” gets 80% accuracy without finding anything unusual. A new model scoring 82% may sound better, but it may add little practical value.\n\nBaseline does not mean benchmark. A benchmark is a standard test set-up used to compare systems on a defined task under stated conditions. A baseline is a reference method or result used within an evaluation. A benchmark can report several baselines.",
   "everydayAnalogy": {
     "title": "Checking whether search helps at all",
     "story": "A team in Nairobi needs to find policy documents about flood preparedness in a large shared folder. First, one colleague tries the simplest method: search for the exact phrase “flood preparedness” and open the first ten results. They record that 4 of the 10 documents are actually useful. Then another colleague uses a better search tool that expands related terms such as “early warning” and “risk reduction” and finds 7 useful documents out of 10. The first result gives the team a starting point, so they can tell whether the new tool really improves the search.",
@@ -96,7 +96,7 @@
       "Run the new classifier on the same test set and score it with the same metric.",
       "Compare the results and check whether the gain helps on the less common classes, not only overall accuracy."
     ],
-    "result": "Baseline accuracy is 180/300 = 60%. The new classifier reaches 72% accuracy. That beats the baseline by 12 percentage points, so the model adds value. But if its climate recall is still very low, the team may decide it is not yet good enough for the real task."
+    "result": "Baseline accuracy is 180/300 = 60%. The new classifier reaches 72% accuracy, which is 12 percentage points higher. This shows improvement in overall accuracy, but does not by itself prove practical value. If its climate recall is still very low, the team may decide it is not yet good enough for the real task."
   },
   "unWorkplaceExample": {
     "scenario": "An analysis team wants to identify protection trends across incident reports using a model that tags reports by theme, such as displacement, access restrictions or gender-based risks.",
@@ -125,10 +125,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A baseline is the simple result you compare against before calling a model good.",
-    "technical": "In model evaluation, a baseline is a reference performance level produced by a simple, plausible method under the same task definition, data split and evaluation metric used for the candidate model. Common baselines include majority-class prediction, random prediction with known class frequencies, linear or rule-based methods, historical averages, previous production systems and human performance under defined conditions. The purpose is to estimate how much signal the model adds beyond trivial structure in the data or beyond an existing workflow. A baseline helps interpret whether an observed score reflects genuine task competence, class imbalance, data leakage, low task difficulty or metric choice. Baseline selection is context-dependent: for time series, a last-value or seasonal baseline may be appropriate; for retrieval, keyword search may be a relevant baseline; for classification, majority-class or simple linear models are common. A strong evaluation may report multiple baselines because one baseline rarely captures all practical comparisons."
+    "simple": "A baseline is the reference result you compare against before calling a model better.",
+    "technical": "In model evaluation, a baseline is a reference method or performance level assessed under the same task definition, data split and evaluation metric as the candidate model. Common baselines include majority-class prediction, random prediction with known class frequencies, linear or rule-based methods, historical averages, previous production systems and human performance under defined conditions. The purpose is to compare the model with trivial patterns or an existing workflow. A baseline can reveal that an apparently high score offers little improvement over an obvious strategy, but it does not by itself diagnose problems such as data leakage. Baseline selection depends on context. For time series, a last-value or seasonal baseline may be appropriate. For retrieval, keyword search may be relevant. For classification, majority-class or simple linear models are common. A strong evaluation may report multiple baselines because one rarely captures every practical comparison."
   },
-  "keyTakeaway": "A model score matters only when you can compare it with a simple, relevant starting point.",
+  "keyTakeaway": "A model score is easier to interpret when compared with a relevant reference method or result.",
   "quickCheck": {
     "question": "Why is a baseline useful when evaluating a classifier?",
     "options": [
@@ -138,7 +138,7 @@
       "It makes accuracy the only metric you need."
     ],
     "correctOptionIndex": 1,
-    "explanation": "A baseline gives a reference result, so you can tell whether the model adds value beyond an easy starting method. It does not guarantee future performance, and it does not remove the need to examine error types or use other metrics when appropriate."
+    "explanation": "A baseline shows whether a model improves on a relevant reference method. It is not a required performance threshold, a standard test set-up or the accuracy metric itself."
   },
   "resources": [
     {
@@ -207,9 +207,56 @@
     "baseline"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:06.077Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, simpleVsTechnical.simple, keyTakeaway",
+        "severity": "error",
+        "problem": "The page repeatedly defines a baseline as necessarily simple or easy. That contradicts its own examples of previous production systems and human performance, which may be strong or complex references. The one-sentence definition also says comparison with a baseline establishes “real value”, but a score comparison alone does not establish practical value.",
+        "fix": "Define a baseline as a relevant reference method or performance level. Describe simple rules as common examples, not as a defining requirement. Do not claim that beating one proves practical value."
+      },
+      {
+        "field": "plainExplanation and commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The benchmark distinction is inaccurate because it reduces a benchmark to a dataset or test suite. The supplied definition is a standard test set-up with a defined task and stated conditions. A dataset alone is not necessarily a benchmark.",
+        "fix": "Replace the distinction with: “A benchmark is a standard test set-up used to compare systems on a defined task under stated conditions. A baseline is a reference method or result used within an evaluation. A benchmark can report several baselines.”"
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The technical explanation again requires a “simple” method while listing previous production systems and human performance. It also claims a baseline helps determine whether a score reflects data leakage. Comparing with a baseline does not by itself detect or diagnose leakage.",
+        "fix": "Define the baseline as a reference method or performance level, and say that it contextualises performance. Remove data leakage from the list of things a baseline can diagnose."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The arithmetic is correct: 180/300 = 0.60 = 60%, and 72% - 60% = 12 percentage points. However, “so the model adds value” does not follow from that arithmetic. It establishes higher overall accuracy, not practical value, acceptable minority-class performance or readiness for use.",
+        "fix": "Baseline accuracy is 180/300 = 60%. The new classifier reaches 72% accuracy, which is 12 percentage points higher. This shows improvement in overall accuracy, but does not by itself prove practical value. If its climate recall is still very low, the team may decide it is not yet good enough for the real task."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 0 is false because a baseline cannot guarantee generalisation. Option 1 is correct. Option 2 is false because a baseline does not replace error inspection. Option 3 is false because it does not make accuracy the only metric. Although only option 1 is defensible, the other three use obvious absolute claims such as “guarantees”, “replaces” and “only”, so the answer can be selected without understanding baselines.",
+        "fix": "Keep the question and correct index, but replace the options with: [“It defines the performance threshold the classifier must meet.”, “It shows whether the model improves on a relevant reference method.”, “It supplies the standard test set-up used to compare systems.”, “It gives the share of test cases labelled correctly.”]. These distinguish baseline from a threshold, benchmark and accuracy."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

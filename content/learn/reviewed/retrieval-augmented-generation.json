@@ -132,7 +132,7 @@
     "simple": "It is like giving the AI an open folder of relevant pages before asking it to answer, so the reply can be based on those pages instead of memory alone.",
     "technical": "A typical pipeline indexes a document collection as chunks, often with embeddings that place semantically similar text near each other in vector space. At query time, the system converts the question into the same kind of representation, retrieves candidate chunks through search, may rerank them, and inserts the top passages into the model prompt as context. The language model then generates a response conditioned on that retrieved context. In many systems, the output also includes citations or links back to the retrieved chunks. The quality of the final answer depends on several connected parts: chunking, indexing, retrieval, reranking, prompt construction, model behaviour and source quality. This is why evaluation should test not only answer style but also retrieval accuracy, citation faithfulness and failure handling when no good evidence is found."
   },
-  "keyTakeaway": "RAG makes an AI answer more useful by giving it relevant source passages first, but the answer is only as reliable as the retrieval and the underlying documents.",
+  "keyTakeaway": "RAG gives an AI system relevant source passages before it answers, but reliability depends on retrieval, the documents and how the answer is generated.",
   "quickCheck": {
     "question": "What best describes retrieval-augmented generation?",
     "options": [
@@ -214,9 +214,55 @@
     "grounded generation"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:54.346Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.input and workedExample.process",
+        "severity": "error",
+        "problem": "The example invents substantive HR and travel rules and attributes them to a purported \"2024 HR circular\" and guidance note. The page provides no basis for those rules, and calling a 2024 document \"current\" is unsafe without knowing the organisation and document status. Readers could mistake the drafted answer for real procedural guidance.",
+        "fix": "Replace the input with: \"Documents available: travel manual, consultancy guidance note, an outdated FAQ, and a current HR circular.\" Remove the years from the retrieval step. Replace the drafted answer with: \"The model drafts an answer that lists only the approval steps stated in the retrieved passages and cites the current circular or guidance note for each step.\""
+      },
+      {
+        "field": "visual.steps[2].explanation",
+        "severity": "error",
+        "problem": "Providing source material conditions or guides generation, but it does not constrain the model in a hard sense. A model can ignore the passages or add unsupported claims, as the page itself later acknowledges.",
+        "fix": "The selected passages are combined with the question and sent to the language model. This step guides the answer by giving the model specific source material."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "The claim makes reliability depend only on retrieval and source documents. Even with relevant, accurate passages, the generation step can misstate, omit or add information.",
+        "fix": "RAG gives an AI system relevant source passages before it answers, but reliability depends on retrieval, the documents and how the answer is generated."
+      },
+      {
+        "field": "visual.description, visual.steps[1].visualInstruction and visual.accessibilityDe",
+        "severity": "warning",
+        "problem": "A control labelled \"retrieval quality\" does not teach what changes retrieval quality and can imply that users can directly set it. The visual should expose passage matching or selection rather than treating quality as an unexplained dial.",
+        "fix": "Replace the quality control with visible match scores and passage selection. Let readers change the question and number of passages, then inspect which chunks rank highest and how those choices affect the answer."
+      },
+      {
+        "field": "visual.steps[3].visualInstruction and visual.reducedMotionDescription",
+        "severity": "warning",
+        "problem": "The specification says unsupported sentences are flagged without explaining whether these are teaching annotations or an automatic capability. This can falsely imply that a normal RAG interface reliably detects its own unsupported claims.",
+        "fix": "Label the flags and notes as explainer annotations that compare each sentence with the displayed source passages."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "\"AI memory\" encourages a misleading human-memory analogy. The relevant contrast is between retrieved context and patterns acquired during training.",
+        "fix": "It is like giving the AI an open folder of relevant pages before asking it to answer, so the reply can use those pages instead of its training alone."
+      }
+    ],
+    "applied": [
+      "keyTakeaway"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

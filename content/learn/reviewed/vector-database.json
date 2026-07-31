@@ -100,7 +100,7 @@
       "The top three matches have similarity scores of 0.89, 0.86 and 0.84. A reranker moves the second item to first because it mentions both school feeding and drought response more directly.",
       "The system returns the three passages with document titles and publication dates."
     ],
-    "result": "The officer gets a short ranked list of relevant passages and sources, even though the best match used the phrase \"climate shocks\" instead of the exact word \"drought\"."
+    "result": "The officer gets a short ranked list of relevant passages and sources, including one that uses the phrase \"climate shocks\" instead of the exact word \"drought\"."
   },
   "unWorkplaceExample": {
     "scenario": "An approved internal analytics tool helps protection analysts look for similar patterns across already authorised, sanitised incident-report summaries to find past cases with related indicators.",
@@ -135,7 +135,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "It is a system that helps computers find content that means something similar, even when the words are different.",
-    "technical": "A vector database stores embeddings together with source content and metadata, then uses an index to run efficient nearest-neighbour search in high-dimensional space. At query time, the input is embedded with the same or a compatible model, compared against stored vectors using a similarity measure such as cosine similarity or inner product, and the top candidates are returned. Many implementations support metadata filtering, hybrid search with keywords, and reranking. In retrieval-augmented generation, the retrieved passages are then passed to a language model so the answer can be grounded in specific sources."
+    "technical": "A vector database stores embeddings, often with identifiers, source content or metadata, then uses an index to run efficient nearest-neighbour search in vector space. At query time, the input is embedded with the same or a compatible model, compared against stored vectors using a similarity measure such as cosine similarity or inner product, and the top candidates are returned. Many implementations support metadata filtering, hybrid search with keywords, and reranking. In retrieval-augmented generation, the retrieved passages are then passed to a language model so the answer can be grounded in specific sources."
   },
   "keyTakeaway": "A vector database helps a system find the most meaningfully similar content quickly, but good results still depend on the embeddings, source quality, filters and human oversight.",
   "quickCheck": {
@@ -220,9 +220,50 @@
     "vector index"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:52.608Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The opening sentence says a vector database stores embeddings together with source content and metadata. That is not required. Some deployments store vectors with identifiers while keeping the source content elsewhere.",
+        "fix": "A vector database stores embeddings, often with identifiers, source content or metadata, then uses an index to run efficient nearest-neighbour search in vector space. At query time, the input is embedded with the same or a compatible model, compared against stored vectors using a similarity measure such as cosine similarity or inner product, and the top candidates are returned. Many implementations support metadata filtering, hybrid search with keywords, and reranking. In retrieval-augmented generation, the retrieved passages are then passed to a language model so the answer can be grounded in"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result claims that the best match used \"climate shocks\" instead of \"drought\". The process only says that one passage uses \"climate shocks\", while the reranker puts first an item that mentions drought response directly. No arithmetic is presented to verify: 0.89, 0.86 and 0.84 are stated scores, not inputs to a calculation.",
+        "fix": "The officer gets a short ranked list of relevant passages and sources, including one that uses the phrase \"climate shocks\" instead of the exact word \"drought\"."
+      },
+      {
+        "field": "visual.steps[4].label",
+        "severity": "warning",
+        "problem": "\"Return grounded results\" overstates what retrieval establishes. Returning similar passages with sources does not itself make the results or a later generated answer grounded.",
+        "fix": "5. Return retrieved results"
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the other options are implausible absolutes or unrelated functions. A reader can answer without distinguishing a vector database from an embedding model, keyword search or a knowledge base. Option 1 is false because retrieval does not guarantee accuracy. Option 2 describes document generation, not retrieval. Option 3 is false because vector search can coexist with metadata, permissions and keyword search.",
+        "fix": "Replace the options with: [\"Fast retrieval of content that is similar in meaning, using stored vectors and an index\", \"Exact matching of query words against indexed text, without vector comparison\", \"Conversion of documents into vectors by the embedding model\", \"The trusted source collection that staff maintain and approve\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "After replacing the weak distractors, the explanation should identify the distinct concepts represented by each option.",
+        "fix": "Its core role is efficient similarity retrieval over vectors. Exact word matching is keyword search, vector creation is done by an embedding model, and the approved source collection is the knowledge base."
+      }
+    ],
+    "applied": [
+      "workedExampleResult",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -32,7 +32,7 @@
     "open-weight-model"
   ],
   "oneSentence": "A released file of learned numerical settings that lets compatible software run a trained model without repeating the original training process.",
-  "plainExplanation": "When people say they are downloading a model, they often mean they are downloading its weights file or checkpoint file. This is a saved artefact: a file, or set of files, full of numbers produced during training. Those numbers shape how the model transforms input text into likely next tokens, where a token is a small unit such as part of a word.\n\nWhat goes in? During training, the model sees very large amounts of text and repeatedly adjusts many numerical values. Those values are commonly called weights. What happens? The training process changes them so the model becomes better at predicting the next token. What comes out at the end is a saved snapshot of those learned values.\n\nWhen someone releases model weights, other people can load that file into software that knows the model’s architecture, meaning the design of the network that uses the numbers. The software combines the architecture, the weights, a vocabulary, and tokenisation rules to generate outputs from prompts. The weights alone are powerful, but they are not the whole system.\n\nThis term is often confused with a single weight or with a parameter. A single weight is one number inside the model. A parameter is one adjustable value in the model design. Model weights as a released artefact means the packaged collection of learned values saved to disk and shared so others can run, fine-tune, inspect, or convert the model.",
+  "plainExplanation": "When people say they are downloading a model, they often mean they are downloading its weights files. This is a saved artefact: a file, or set of files, full of numbers learned during training. Some releases use files taken from a training checkpoint, but a full checkpoint can also contain optimiser state and other training information. The learned numbers shape how the model transforms input text into likely next tokens, where a token is a small unit such as part of a word.\n\nWhat goes in? During training, the model sees very large amounts of text and repeatedly adjusts many numerical values. What happens? The training process changes them so the model becomes better at predicting the next token. What comes out is a saved snapshot of those learned values.\n\nWhen someone releases model weights, other people can load the files into software that implements the matching architecture, meaning the design of the network that uses the numbers. The software combines the architecture, the weights, a vocabulary, and tokenisation rules to generate outputs from prompts. The weights alone are powerful, but they are not the whole system.\n\nThis term is often confused with a single weight or with a parameter. A single weight is one learned number that scales a signal. A parameter is any learned numerical setting, which can include weights and other values. Model weights as a released artefact means the packaged collection of learned parameter values saved to disk and shared so others can run, fine-tune, inspect, or convert the model.",
   "everydayAnalogy": {
     "title": "A library’s document-sorting cheat sheet",
     "story": "A regional library network tests thousands of past document requests and gradually improves a scoring sheet used by staff to rank which knowledge-base articles to show first. At the end, the network sends each branch a spreadsheet full of tuned numbers, plus instructions for which columns the local software should apply them to. The spreadsheet does not contain the whole library system, but when loaded into the right software it makes the ranking behaviour work in the same trained way. If a branch only has the spreadsheet and not the matching software and category list, it cannot use it properly.",
@@ -131,7 +131,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Think of it as the trained model packed into files full of numbers. Those files let compatible software reproduce the model’s learned behaviour without training from the beginning.",
-    "technical": "A released weights artefact is a serialised checkpoint containing the learned numerical tensors of a trained model, usually saved at the end of training or fine-tuning, or at an intermediate step. The tensors correspond to parameter values used by the model architecture during inference. On their own, these files are not enough: a runtime must know the architecture definition, tensor shapes, layer arrangement, configuration settings, vocabulary, and tokenisation scheme expected by the checkpoint. Once loaded, the runtime applies the weights during forward passes to transform token representations and produce next-token probability distributions. Different formats may store the same learned values in different ways, and some releases provide quantised versions, which trade some numerical precision for lower memory use and faster deployment. In practice, people often say 'the model' when they mean the checkpoint, but the full runnable system also includes code, config, and supporting assets."
+    "technical": "A released weights artefact contains serialised tensors holding the learned numerical values of a trained model. It is usually saved after training or fine-tuning, or extracted from an intermediate checkpoint. A full training checkpoint may also contain optimiser state and other information used to resume training. The tensors correspond to parameter values used by the model architecture during inference. On their own, weights files are not enough: a runtime must know the architecture definition, tensor shapes, layer arrangement, configuration settings, vocabulary, and tokenisation scheme expected by the files. Once loaded, the runtime applies the weights during forward passes to transform token representations and produce next-token probability distributions. Different formats may store the same learned values in different ways. Some releases provide quantised versions, which lower numerical precision and memory use and may improve speed on compatible systems. In practice, people often say “the model” when they mean the weights, but the full runnable system also includes code, configuration, and supporting assets."
   },
   "keyTakeaway": "Released model weights are a saved snapshot of trained numbers: essential for running a model, but not the same as the whole system around them.",
   "quickCheck": {
@@ -213,9 +213,50 @@
     "checkpoint file"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:16:00.987Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "The definition says the artefact is one file, although released weights are commonly split across a set of files. The page itself later acknowledges this.",
+        "fix": "A released set of learned numerical settings that lets compatible software run a trained model without repeating the original training process."
+      },
+      {
+        "field": "plainExplanation, visual, simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The page repeatedly treats a checkpoint and a weights file as interchangeable. A training checkpoint can include learned parameters, but it can also contain optimiser state and other information needed to resume training. A released weights artefact may be extracted from such a checkpoint and need not be a full checkpoint.",
+        "fix": "Qualify the relationship throughout. In the visual, replace “Released weights / checkpoint” with “Released weights files” and replace “checkpoint” with “weights files” where the saved released artefact is meant. Explain separately that some releases use files taken from a training checkpoint."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The distinction between a weight and a parameter is inaccurate. A parameter is described as an adjustable value “in the model design”, while the supplied definition says it is a learned numerical setting inside the model. A weight is a kind of parameter, not merely a concept at a different level.",
+        "fix": "A single weight is one learned number that scales a signal. A parameter is any learned numerical setting, which can include weights and other values. In the name “model weights”, weights is often used broadly for the released collection of learned parameter values."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "Saying weights and parameters “point to different levels” teaches the wrong relationship. A weight is one kind of parameter, while released “model weights” often uses the word broadly for a collection that includes other learned parameters.",
+        "fix": "People often use the words loosely. A weight is one kind of learned parameter, while models can also have other learned parameters. In a release, “model weights” usually means the saved collection of learned parameter values packaged as files for loading and use."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The statement that quantised versions trade precision for “faster deployment” presents increased speed as guaranteed. Speed depends on the runtime, operations and hardware. Quantisation can reduce memory use without making inference faster.",
+        "fix": "State that quantisation lowers numerical precision and memory use, and may improve speed when the runtime and hardware support it."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -212,9 +212,47 @@
   ],
   "contested": "The term is used inconsistently in the market. Some vendors use it for a simple in-application assistant, while others use it for systems with tool use and limited autonomous action, so the exact boundary with 'assistant' and 'agent' is unsettled.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:23.125Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This definition does not identify a copilot as AI-based and is broad enough to describe ordinary automation, a task-focused chatbot, or a supervised AI agent. It therefore fails to establish the term's assistive role clearly.",
+        "fix": "An AI-based helper that supports digital tasks, such as drafting or searching, while a person directs and reviews the work."
+      },
+      {
+        "field": "workedExample.input and workedExample.process[2]",
+        "severity": "error",
+        "problem": "The prompt requests a 120-word update, but the claimed draft has 118 words. The arithmetic is 120 - 118 = 2, so the draft is two words short. The actual draft is also absent, so the claimed count cannot be checked directly.",
+        "fix": "Remove the unsupported numerical constraint. Use: \"Using these meeting notes, draft a short update for colleagues. Mention the three agreed actions and keep the tone neutral.\" Then use: \"It drafts a short email in neutral language.\""
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The statement that the system may \"know only the current conversation\" presents anthropomorphism as fact. The relevant mechanism is what information is available in its context, not what it knows.",
+        "fix": "It can use only the data and systems it has been connected to and permitted to use. In some cases, its context contains only the current conversation. In others, it may search approved files or business systems. Access depends on the product design and organisational controls."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "The marked second option is the best answer, but the distractors are weak. Every wrong option uses giveaway absolutes such as \"only\", \"never\", \"fully autonomous\", or \"cannot\", so the answer can be selected without understanding the distinction between a copilot, chatbot, agentic system, and search tool.",
+        "fix": "Replace the options with: [\"A conversational system that returns replies but is not tied to work tasks\", \"A helper inside a digital workflow that may draft, retrieve information, or use approved tools under human review\", \"A system that pursues goals through tool use with limited human direction\", \"A tool that searches approved sources and returns documents for review\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation addresses chat and autonomy but does not explain why the search-only option is wrong. With stronger distractors, it should distinguish all four concepts.",
+        "fix": "The second option describes supervised help inside a workflow. The first is only conversational, the third is agentic, and the fourth only retrieves documents rather than assisting across a task."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

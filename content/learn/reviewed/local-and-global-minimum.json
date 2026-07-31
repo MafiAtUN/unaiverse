@@ -30,7 +30,7 @@
     "gradient-descent"
   ],
   "oneSentence": "A local minimum is the lowest loss in a nearby region, while a global minimum is the lowest loss anywhere in the whole set of possible model settings.",
-  "plainExplanation": "When a model learns, it tries many possible settings and measures how wrong each setting is using a loss function. You can imagine all those possible settings laid out on a landscape where height means loss: lower points mean less error.\n\nA local minimum is a point that is lower than the points close to it, but not necessarily lower than every point elsewhere. A global minimum is the single lowest point across the entire landscape. The plural of local minimum is local minima.\n\nOptimisation methods such as gradient descent usually look at the slope around the current point and step downhill. That means they use local information. If the landscape has many valleys, the method can settle into one valley that is good nearby but not best overall.\n\nWhat goes in are the current model settings, training data, and a rule for measuring loss. What happens is repeated updates that try to reduce loss. What comes out is a new set of settings, often near a minimum. In practice, for large neural networks, people often care less about proving they reached the global minimum and more about reaching a low-loss solution that generalises well to new data.",
+  "plainExplanation": "During training, a system updates model settings and calculates how wrong each setting is using a loss function. You can imagine the possible settings laid out on a landscape where height means loss: lower points mean less error.\n\nA local minimum is a point whose loss is no greater than the loss at points close to it, but it may not be lowest elsewhere. A global minimum has loss no greater than any point across the entire landscape. Several points can tie as global minima. The plural of local minimum is local minima.\n\nOptimisation methods such as gradient descent look at the slope around the current point and step downhill. That means they use local information. If the landscape has many valleys, a method can settle into one valley that is good nearby but not best overall.\n\nWhat goes in are the current model settings, training data, and a rule for measuring loss. What happens is repeated updates that try to reduce loss. What comes out is a new set of settings, often near a minimum. In practice, for large neural networks, people often care less about proving they reached a global minimum and more about reaching a low-loss solution that generalises well to new data.",
   "everydayAnalogy": {
     "title": "Walking around hills in fog",
     "story": "Amina and Diego are checking a water pump site before sunrise, when thick fog hides the wider landscape. They walk downhill from where they stand, using only the ground under their boots, and stop when every step nearby would go upward. They have found the bottom of the small hollow they are in. But once the fog clears, they can see a deeper basin on the other side of the site that would have been a better place if they had known the whole area.",
@@ -94,14 +94,14 @@
       "Now compare all tested points together.",
       "The smallest loss overall is 1 at x=2, so x=2 is the global minimum among these tested values, while x=-1 is only a local minimum."
     ],
-    "result": "This run has two local minima in the tested range, but only one global minimum among those tested points."
+    "result": "Among the five tested values, x=-1 and x=2 have lower loss than their adjacent tested values, while x=2 has the lowest tested loss. These samples do not establish minima for every possible x in the range."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team uses an approved internal model to help cluster and summarise public consultation submissions that have already been cleared for that workflow. During tuning, analysts compare several model settings and see that some settings give slightly lower training loss than nearby alternatives, while another setting found in a different run gives lower loss overall.",
     "relevance": "This matters because training can appear to improve and still settle in a merely local minimum. Staff should compare runs, validation results and practical output quality, not assume the first low-loss setting is the best available.",
     "caution": "Do not place confidential, personal or protection-sensitive submissions into an unapproved public AI service; use approved systems, data minimisation and human review."
   },
-  "whyItMatters": "This term matters because a lower training loss does not automatically mean the best possible model was found. If you hear that a system has 'converged', you should ask converged to what: a good enough low-loss solution, a poor local minimum, or something unstable. That affects decisions about whether to restart training, change hyperparameters, compare multiple runs, or judge the model on validation performance instead of training loss alone. For non-specialists, the key point is that optimisation can get stuck in a nearby good spot, so claims about model quality need evidence from evaluation, not just one training curve.",
+  "whyItMatters": "This term matters because a lower training loss does not automatically mean the best possible model was found. If you hear that a system has 'converged', you should ask what it converged to: a good enough low-loss solution or a poor local minimum. That affects decisions about whether to restart training, change hyperparameters, compare multiple runs, or judge the model on validation performance instead of training loss alone. For non-specialists, the key point is that optimisation can get stuck in a nearby good spot, so claims about model quality need evidence from evaluation, not just one training curve.",
   "whereYouMayHearIt": [
     "training loss discussions",
     "deep learning courses",
@@ -210,9 +210,63 @@
     "local minima"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:57.560Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The definition says a local minimum is lower than nearby points and a global minimum is the single lowest point. Both claims are too strict. A non-strict minimum may tie with nearby points, and several points may tie for the global minimum. This also conflicts with the correct less-than-or-equal definitions in the technical section.",
+        "fix": "Define each minimum using loss no greater than the relevant comparison points. Say that tied global minima can exist."
+      },
+      {
+        "field": "workedExample.process and workedExample.result",
+        "severity": "error",
+        "problem": "The example only reports five sampled values, so it cannot establish local minima over the continuous range of x. It establishes only sampled low points. The comparisons themselves compute correctly: 2 < 9 and 2 < 3 at x=-1; 1 < 3 and 1 < 5 at x=2; and min(9, 2, 3, 1, 5) = 1 at x=2. The result's claim of two local minima 'in the tested range' is therefore unsupported.",
+        "fix": "Replace 'neighbours' with 'adjacent tested values' in the first two steps. Conclude only that x=-1 and x=2 are sampled low points and that x=2 has the lowest loss among the tested values. State that the samples do not prove minima for every possible x."
+      },
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping",
+        "severity": "error",
+        "problem": "The story identifies only a deeper basin, then maps it to the global minimum. A basin being deeper than one local hollow does not make it the lowest basin over the whole domain.",
+        "fix": "Change 'a deeper basin' to 'the deepest basin anywhere on the site' in the story and mapping."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "error",
+        "problem": "The question 'converged to what' includes 'something unstable' as an answer. That contradicts the supplied definition of convergence as updates settling towards a stable solution. An unstable or continuing trajectory has not converged in that sense.",
+        "fix": "Remove 'or something unstable' and distinguish convergence to a good low-loss solution from convergence to a poor local minimum."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "Calling a local minimum 'the best place your training method found nearby' makes the definition depend on what an optimiser happened to find. A local minimum is a property of the loss function and its neighbourhood, whether or not training finds it.",
+        "fix": "Define it as a setting whose loss is no higher than nearby settings, then separately explain that a training method may reach it."
+      },
+      {
+        "field": "visual.description and visual.steps",
+        "severity": "warning",
+        "problem": "The specification asks for two loss landscapes rather than a local and global view of the same landscape. Local and global minima must be compared within the same function and domain. Separate landscapes can make the marked points incomparable.",
+        "fix": "Show the same landscape twice: a close view highlighting the local neighbourhood and a full view showing that landscape's lowest valley. Make clear that both markers refer to the same loss function."
+      },
+      {
+        "field": "commonMisconceptions[0].correction",
+        "severity": "warning",
+        "problem": "The sentence 'A minimum only tells you something about the area you reached' improperly applies a local limitation to the general word 'minimum'. A global minimum does identify the lowest objective value over the full domain.",
+        "fix": "Change the opening to: 'A local minimum only tells you something about the area you reached.'"
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "whyItMatters",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

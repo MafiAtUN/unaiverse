@@ -30,8 +30,8 @@
     "missing-data",
     "annotation"
   ],
-  "oneSentence": "Computer-generated records designed to resemble real-world data so systems can be tested, trained or shared with lower privacy and access risks.",
-  "plainExplanation": "Synthetic data is data produced by rules, simulations or models instead of being collected directly from people, devices or events. The goal is to create records that keep useful patterns from real data, such as ranges, relationships or frequencies, without simply copying the original records.\n\nWhat goes in often includes a real dataset, business rules, or a simulation of how something works. A generating method then creates new examples. What comes out can look like tables, text, images or other formats. Good synthetic data matches the important statistical patterns of the original data closely enough for the intended task.\n\nPeople use it for several reasons. It can help when real data is scarce, expensive, sensitive, imbalanced or hard to share across organisations or borders. It can also help test systems under rare conditions, such as unusual weather events or uncommon medical cases, if those cases are modelled carefully.\n\nBut synthetic data is not automatically safe or accurate. If the source data has bias, errors or gaps, the synthetic version can reproduce them. If the generation method copies too closely, privacy risks can remain. If it smooths the data too much, rare but important cases may disappear. That is why it should be checked for utility, privacy, fairness and fitness for purpose before use.",
+  "oneSentence": "Artificially generated records designed to resemble data from a real population or process for uses such as testing, training or sharing.",
+  "plainExplanation": "Synthetic data contains values produced artificially by rules, simulations or models rather than recorded directly from people, devices or events. The aim is to create records that reflect useful properties of a target population or process, such as ranges, relationships or frequencies, without simply copying source records.\n\nInputs may include a real dataset, business rules, or a simulation of how something works. A generation method then creates new examples. The output can be tables, text, images or other formats. Good synthetic data represents the properties needed for the intended task closely enough to be useful.\n\nPeople use it for several reasons. It can help when real data is scarce, expensive, sensitive, imbalanced or hard to share across organisations or borders. It can also help test systems under rare conditions, such as unusual weather events or uncommon medical cases, if those cases are modelled carefully.\n\nBut synthetic data is not automatically safe or accurate. If source data has bias, errors or gaps, the synthetic version can reproduce them. If the generation method copies too closely, privacy risks can remain. If it smooths the data too much, rare but important cases may disappear. That is why it should be checked for utility, privacy, fairness and fitness for purpose before use.",
   "everydayAnalogy": {
     "title": "Practice meeting notes for staff training",
     "story": "A training officer wants new colleagues to practise summarising meeting notes, but the real notes include names, sensitive topics and unfinished decisions. She studies several real note sets to see the usual structure, common agenda items and the way action points are written. Then she creates many new, fictional note sets that follow similar patterns but do not describe actual people or actual meetings. The trainees use those practice notes to learn the task before they handle approved real material.",
@@ -126,8 +126,8 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "Synthetic data is made-up data created by a computer to resemble real data closely enough for practice, testing or some kinds of training.",
-    "technical": "Synthetic data is artificially generated data produced from statistical models, machine learning models, rule-based methods or simulations to approximate properties of an original population or process. Depending on the method, it may aim to preserve marginal distributions, correlations, temporal patterns or structural constraints while reducing direct exposure of source records. Its quality is judged by utility metrics, such as downstream model performance, and risk metrics, such as disclosure or re-identification risk. It is related to, but distinct from, data anonymisation: anonymisation transforms existing records, while synthetic generation creates new ones. In practice, the trade-off between fidelity and privacy is central, and rare-event coverage is often difficult."
+    "simple": "Synthetic data is artificially created data that resembles real data closely enough for practice, testing or some kinds of training.",
+    "technical": "Synthetic data is artificially generated data produced from statistical or machine learning models, rules or simulations to approximate properties of a population or process. It may aim to preserve distributions, correlations, temporal patterns or structural constraints while reducing direct exposure of source records. Quality is judged by utility measures, such as downstream model performance, and risk measures, such as disclosure risk. It differs from anonymisation, which transforms existing records rather than creating new examples. Synthetic data and synthetic media can overlap. Generated images, audio, video or text are synthetic media, and they are synthetic data when used as data. Fidelity, privacy and rare-event coverage must still be evaluated."
   },
   "keyTakeaway": "Synthetic data can be very useful, but its value depends on what patterns it preserves, what risks remain, and whether it has been tested for the job you want it to do.",
   "quickCheck": {
@@ -209,9 +209,46 @@
     "artificial data"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:25:56.615Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition is too narrow and overpromises. Synthetic data need not be computer-generated, as the page's own manually written notes analogy shows. It also does not necessarily have lower privacy or access risks unless generation and evaluation support that conclusion.",
+        "fix": "Artificially generated records designed to resemble data from a real population or process for uses such as testing, training or sharing."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The explanation says the goal is to preserve patterns from real data and later judges quality against the original data. That is not generally true when synthetic data is generated from rules or simulations without an original dataset. The definition also excludes partially synthetic data by implying that all values must be generated rather than collected.",
+        "fix": "Synthetic data contains values produced artificially by rules, simulations or models rather than recorded directly from people, devices or events. The aim is to create records that reflect useful properties of a target population or process, such as ranges, relationships or frequencies, without simply copying source records.\n\nInputs may include a real dataset, business rules, or a simulation of how something works. A generation method then creates new examples. The output can be tables, text, images or other formats. Good synthetic data represents the properties needed for the intended task cl"
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "This repeats the false computer-only restriction and calls synthetic data merely \"made-up\", which understates systematic generation from rules, models and simulations.",
+        "fix": "Synthetic data is artificially created data that resembles real data closely enough for practice, testing or some kinds of training."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The page explicitly includes generated text and images but never distinguishes synthetic data from synthetic media. These categories can overlap, but they describe different aspects: use as data versus the generated or altered content itself.",
+        "fix": "Synthetic data is artificially generated data produced from statistical or machine learning models, rules or simulations to approximate properties of a population or process. It may aim to preserve distributions, correlations, temporal patterns or structural constraints while reducing direct exposure of source records. Quality is judged by utility measures, such as downstream model performance, and risk measures, such as disclosure risk. It differs from anonymisation, which transforms existing records rather than creating new examples. Synthetic data and synthetic media can overlap. Generated "
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

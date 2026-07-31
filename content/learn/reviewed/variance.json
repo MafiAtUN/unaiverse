@@ -25,8 +25,8 @@
     "statistical-bias",
     "reliability"
   ],
-  "oneSentence": "Variance describes how much a model’s results change when the training data, test split or similar conditions change slightly.",
-  "plainExplanation": "Variance tells you how sensitive a model is to small changes in the data. If you train the same kind of model on slightly different samples, a high-variance model may give noticeably different predictions or scores each time. A low-variance model stays more stable.\n\nWhat goes in is usually the same modelling method plus different training sets, validation folds or test samples. What happens is that the model fits patterns from each sample. If it fits many accidental details that are specific to one sample rather than broader patterns, its behaviour changes a lot from run to run. What comes out is instability: performance that looks good on one split but drops on another.\n\nThis is often discussed with overfitting, but they are not identical. Overfitting is a behaviour where a model fits the training data too closely and then performs worse on new data. High variance is one common reason that happens, because the model is too sensitive to the particular sample it saw.\n\nVariance is also different from statistical bias. In this context, bias usually means systematic error from strong simplifying assumptions, not unfairness between groups. A model can have low bias and high variance, or high bias and low variance. Good evaluation checks both average performance and how much that performance moves across repeated tests.",
+  "oneSentence": "Variance describes how much a fitted model’s predictions change when the same learning procedure is trained on slightly different samples.",
+  "plainExplanation": "Variance tells you how sensitive a fitted model is to changes in its training sample. If you train the same learning procedure on slightly different samples, a high-variance model may give noticeably different predictions each time. A low-variance model stays more stable.\n\nTo assess variance, repeat the same learning procedure with different training samples and compare the fitted models on the same cases or equivalent data. Fold-to-fold score changes are indirect evidence because validation folds can also differ. If the model fits accidental details specific to each training sample, its predictions may change substantially across fits.\n\nVariance is often discussed with overfitting, but they are not identical. Overfitting means fitting training examples so closely that performance drops on new cases. High variance is one common reason for this because the fitted model is sensitive to the sample used.\n\nVariance also differs from statistical bias and reliability. Statistical bias is systematic error caused by assumptions or structure that are too simple for the pattern. Reliability is broader consistency under comparable use. Variance specifically concerns changes caused by the training sample.",
   "everydayAnalogy": {
     "title": "Different clerks, slightly different piles",
     "story": "A university receives 1,000 applications and asks several clerks to sort small samples into “complete” and “incomplete”. They all use the same checklist, but each clerk gets a slightly different pile of applications. If the checklist is clear and robust, the results look similar across piles. If the checklist relies on tiny quirks, one pile may look 92% complete and another only 74%, even though the overall applicant pool is similar.",
@@ -202,9 +202,56 @@
     "variance"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:39.409Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "The page repeatedly defines variance as changes caused by training data, test samples or test splits. Model variance specifically concerns changes in the fitted predictor when the learning procedure is trained on different samples. Scores can change merely because test samples differ in difficulty or composition, even if the fitted model is unchanged. That is evaluation sampling variation, not necessarily model variance.",
+        "fix": "Use the corrected definitions below. State that fold-score instability is indirect evidence and compare predictions from repeated fits where possible."
+      },
+      {
+        "field": "everydayAnalogy",
+        "severity": "error",
+        "problem": "The analogy does not represent model variance. Several clerks apply one fixed checklist to different piles, so changes in completeness rates can come from pile composition or clerk consistency. No new checklist is learned from each sample. The mapping nevertheless calls the checklist both the model structure and learned rules, which is false in the story and also blurs variance with reliability.",
+        "fix": "Change the title to “Different samples, different checklists”. Replace the story with: “A university uses several small samples from 1,000 applications to build checklists for classifying records as complete or incomplete. Each sample produces a new checklist. If the method learns broad patterns, the checklists classify a shared set similarly. If it learns sample-specific quirks, their classifications differ widely.” Map the samples to training samples, the resulting checklists to fitted models, and differences on the shared set to model variance."
+      },
+      {
+        "field": "visual.steps and visual.accessibilityDescription",
+        "severity": "warning",
+        "problem": "The visual treats similar or widely spread validation scores as direct demonstrations of low or high model variance. Fold scores also depend on which cases are in each validation fold. The shifting fitted boundaries teach the mechanism, but the score language overstates what the scores alone establish.",
+        "fix": "Replace “Low variance gives similar validation scores across splits. High variance gives wide score swings” with “Similar scores are consistent with low variance. Wide swings can warn of high variance, but validation folds may also differ.” Change the right summary to “variable results; investigate variance”. In the accessibility description, say that shifting fitted boundaries show variance while score swings are supporting, indirect evidence."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The result moves too quickly from a large fold-score spread to high model variance. The arithmetic is correct: 0.91 + 0.74 + 0.88 + 0.76 + 0.90 = 4.19, and 4.19 / 5 = 0.838, which rounds to 0.84. However, fold differences alone do not isolate sensitivity of the fitted model from differences among validation folds.",
+        "fix": "Use the corrected result below."
+      },
+      {
+        "field": "plainExplanation and whyItMatters",
+        "severity": "warning",
+        "problem": "The page claims distinction from reliability but then uses instability and “unreliable in practice” almost as synonyms for variance. Reliability is the broader consistency of result quality under comparable use. Variance is specifically sensitivity of fitted predictions to the training sample. The relationship needs to be stated rather than blurred.",
+        "fix": "Use the corrected explanation and importance text below."
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "Option 2 is the only defensible marked answer because it alone compares repeated splits. Option 1 shows a small train-test gap on one split, while options 3 and 4 describe metric balance in one evaluation. However, the explanation implies that fold-score spread establishes dependence on the data, rather than being a warning that can also reflect differences among validation folds.",
+        "fix": "Use the corrected quiz explanation below."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

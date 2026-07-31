@@ -28,8 +28,8 @@
     "variational-autoencoder",
     "autoregressive-model"
   ],
-  "oneSentence": "A generative model creates media by learning how to remove noise step by step until a coherent image, audio clip or other output appears.",
-  "plainExplanation": "A diffusion model is a kind of generative model. A generative model produces new content such as pictures, sound or video after learning patterns from many examples. In diffusion systems, the usual starting point is random noise, which looks like static.\n\nDuring training, the system learns a reverse process. It sees examples where clean data has been gradually corrupted with noise, and it learns how to predict a slightly less noisy version at each step. In simple terms, it practises turning mess into structure.\n\nAt use time, a person gives a prompt, such as a text description, or sometimes another input such as a sketch, image or audio clip. The model starts from noise and repeatedly refines it over many small steps. Each step removes some noise and adds structure that better matches the prompt or conditioning input.\n\nWhat comes out depends on the type of model: an image, a short audio segment, video frames, or another kind of generated content. The output can look realistic or stylised, but it is still a statistical construction based on patterns in training data and guidance signals. It does not guarantee factual accuracy, authorship, consent or authenticity.",
+  "oneSentence": "A diffusion model creates media by learning how to remove noise step by step until a coherent image, audio clip or other output appears.",
+  "plainExplanation": "A diffusion model is a kind of generative model. A generative model produces new content such as pictures, sound or video after learning patterns from many examples. In diffusion systems, the usual starting point is random noise, which looks like static.\n\nDuring training, the system learns a reverse process. It sees clean data corrupted with different amounts of noise, and it learns how to reverse that corruption one step at a time. In simple terms, it practises turning mess into structure.\n\nAt use time, the model may receive a prompt, such as a text description, or another input such as a sketch, image or audio clip. It starts from noise and repeatedly refines it over many small steps. Each step updates the sample so that it better reflects learned patterns and any conditioning input.\n\nWhat comes out depends on the type of model: an image, a short audio segment, video frames, or another kind of generated content. The output can look realistic or stylised, but it is still a statistical construction based on patterns in training data and guidance signals. It does not guarantee factual accuracy, authorship, consent or authenticity.",
   "everydayAnalogy": {
     "title": "Revealing a picture from television static",
     "story": "Imagine a design class in Nairobi, Bogotá and Bangkok sharing the same exercise online. Each student starts with a screen full of television static and a note saying, \"make this look like a red bicycle beside a market stall\". On each round, they compare the noisy screen with examples they studied earlier and remove a little static while keeping what seems to fit the note. After many rounds, the static turns into a picture that roughly matches the description.\n\nIf the note changes to \"at night in the rain\", the students steer the clean-up in a different direction and a different picture emerges.",
@@ -141,7 +141,7 @@
       "It compares two competing networks until one wins and the final image appears instantly."
     ],
     "correctOptionIndex": 1,
-    "explanation": "The usual diffusion process begins with noise and refines it over many steps. Option 1 describes retrieval, not generation. Option 3 confuses image diffusion with token-by-token generation. Option 4 mixes it up with GAN-style training and also wrongly suggests one-step output."
+    "explanation": "The usual diffusion process begins with noise and refines it over many steps. The first statement describes retrieval-based editing. The third describes autoregressive generation. The fourth describes adversarial training rather than diffusion."
   },
   "resources": [
     {
@@ -213,9 +213,64 @@
     "diffusion"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:23:04.335Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This defines every generative model as using iterative noise removal. GANs, variational autoencoders and autoregressive models do not generally generate this way. The sentence must name diffusion models.",
+        "fix": "A diffusion model creates media by learning how to remove noise step by step until a coherent image, audio clip or other output appears."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The training description says the model predicts a slightly less noisy version at each step. That is not generally its prediction target. As the technical section correctly notes, diffusion models may predict noise, a clean sample or a related quantity. The use-time description also implies that every diffusion model receives a prompt or other conditioning input, excluding unconditional models.",
+        "fix": "A diffusion model is a kind of generative model. A generative model produces new content such as pictures, sound or video after learning patterns from many examples. In diffusion systems, the usual starting point is random noise, which looks like static.\n\nDuring training, the system learns a reverse process. It sees clean data corrupted with different amounts of noise, and it learns how to reverse that corruption one step at a time. In simple terms, it practises turning mess into structure.\n\nAt use time, the model may receive a prompt, such as a text description, or another input such as a ske"
+      },
+      {
+        "field": "visual.steps[0].explanation",
+        "severity": "error",
+        "problem": "The claim that image generation begins with random pixels is not true for the many latent diffusion systems described later on the page. Those systems begin with random values in a compressed latent space, not full-resolution pixels.",
+        "fix": "The process begins with random noise that contains no clear object or scene."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "error",
+        "problem": "The unspecified generator is said to start from a 1024 by 1024 field of random noise. This incorrectly implies direct pixel-space diffusion and conflicts with the page's account of latent diffusion. The only arithmetic available is 1024 × 1024 = 1,048,576 positions, but the page supplies no result that could be checked against that calculation.",
+        "fix": "It starts from random noise, often in a latent space."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "Saying refinement continues until the output matches a prompt implies successful and exact compliance. Diffusion outputs may only partly follow their conditioning input.",
+        "fix": "A diffusion model makes new media by starting with random noise and gradually refining it toward a prompt or another guide."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "The marked answer is the only accurate option, but the third and fourth distractors are caricatures. Images are not drawn one word at a time, and adversarial networks do not compete until one wins and an image instantly appears. These options can be rejected without understanding diffusion.",
+        "fix": "Replace the options with: [\"It retrieves a stored image, then edits that image to follow the prompt.\", \"It starts with random noise and repeatedly denoises it using guidance such as a text prompt.\", \"It predicts each image patch from earlier patches, one patch at a time.\", \"A generator creates images while a discriminator learns to identify synthetic ones.\"]"
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation refers to the existing caricatured distractors and must be updated with the stronger options.",
+        "fix": "The usual diffusion process begins with noise and refines it over many steps. The first statement describes retrieval-based editing. The third describes autoregressive generation. The fourth describes adversarial training rather than diffusion."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "quickCheckExplanation",
+      "quickCheckCorrectOptionIndex"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -24,7 +24,7 @@
     "bounding-box"
   ],
   "oneSentence": "The smallest addressable picture element in a digital image, usually storing colour or brightness information at one tiny location.",
-  "plainExplanation": "A digital image is made from many tiny picture elements arranged in a grid. Each one holds a small piece of information, such as brightness in a black-and-white image or colour values in a colour image.\n\nWhat goes in depends on how the image was created. A camera sensor records light from a scene and converts it into numbers. A scanner does something similar for a page. Those numbers are then stored so each grid position has its own value.\n\nWhat happens next is simple but important: software reads the grid one element at a time or in small groups. In computer vision, models do not receive a whole photo as a single object. They receive this organised array of values and look for patterns across nearby positions.\n\nWhat comes out depends on the task. A system might sharpen an image, detect text, estimate where an object is, or classify the whole scene. More picture elements can give more detail, but detail also depends on lens quality, lighting, focus and compression.\n\nPeople often confuse this term with resolution. A pixel is one tiny unit in the image grid. Resolution usually means how many of those units the whole image contains, such as 1920 by 1080. They are related, but they are not the same thing.",
+  "plainExplanation": "A raster image is made from many tiny picture elements arranged in a grid. Each one holds a small piece of information, such as brightness in a black-and-white image or colour values in a colour image.\n\nWhat goes in depends on how the image was created. A camera sensor records light from a scene and converts it into numbers. A scanner does something similar for a page. Those numbers are then stored so each grid position has its own value.\n\nWhat happens next is simple but important: software reads the grid one element at a time or in small groups. In computer vision, models do not receive a whole photo as a single object. They receive this organised array of values and look for patterns across nearby positions.\n\nWhat comes out depends on the task. A system might sharpen an image, detect text, estimate where an object is, or classify the whole scene. More picture elements can give more detail, but detail also depends on lens quality, lighting, focus and compression.\n\nPeople often confuse this term with resolution. A pixel is one tiny unit in the image grid. Resolution usually means how many of those units the whole image contains, such as 1920 by 1080. They are related, but they are not the same thing.",
   "everydayAnalogy": {
     "title": "A wall made of small coloured tiles",
     "story": "A maintenance worker in Amman is checking a display that shows a heat map of readings from a water pump. From far away, the panel looks like one smooth picture. Up close, she can see it is made from many tiny coloured squares, and each square shows one small part of the overall pattern. When one area turns unusually bright, she knows where to look more closely, but the exact cause still needs inspection.",
@@ -200,9 +200,43 @@
     "resolution"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:24:41.034Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation, simpleVsTechnical.simple, simpleVsTechnical.technical, whyItMa",
+        "severity": "error",
+        "problem": "The page repeatedly says that a digital image is necessarily a pixel grid. That is too broad. The explanation applies specifically to raster images. The technical field is especially problematic because it defines every digital image as a discrete raster.",
+        "fix": "Replace the universal references with “raster image”. In the simple explanation, also replace “tiny squares” with “tiny picture elements”, since pixels are grid elements rather than necessarily visible square tiles."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "warning",
+        "problem": "The limitation still implies that a real image pixel usually contains a value captured from light. Pixels can also contain generated or transformed values. It also misses the analogy's main structural weakness: a pixel is not a physical tile with visible borders.",
+        "fix": "This analogy can mislead because a pixel is a numeric sample at a grid position, not a physical coloured tile with visible borders. Also, a pump heat map may represent sensor readings, while camera or scanner pixels represent sampled light. The analogy helps with many small units making one picture, but not with image capture or how software processes the grid."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "warning",
+        "problem": "The range from 0 to 255 describes an 8-bit greyscale encoding, but the input only says “greyscale”. Other bit depths are possible. The arithmetic itself has no error: 600 × 200 = 120,000 pixels, although the result never states that count.",
+        "fix": "In an 8-bit greyscale image, each position stores a number, for example 0 for black up to 255 for white."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is correct. Option 1 is false because a bounding box is a rectangular marker rather than one image element. Option 2 is false because a pixel is not an output label, and its claim that the model has “understood” the image is anthropomorphic. Option 3 is false because pixels are digital image elements, not features limited to printed photographs. Thus the marked answer is the only defensible one, but options 2 and 3 are so implausible that the answer can be selected without understanding the distinction.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: “A pixel is an image's width and height, such as 1920 by 1080.”; “A pixel is a rectangular marker showing where an object appears in an image.”; “A pixel is a physical ink dot made by a printer when it prints an image.”"
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -28,8 +28,8 @@
     "reasoning-model",
     "tool-use"
   ],
-  "oneSentence": "Planning is the process of turning a goal into ordered sub-tasks, checks and tool calls so a system can act step by step.",
-  "plainExplanation": "In AI agents and automation, planning means breaking a goal into smaller actions before and during execution. The input is usually a goal, some instructions, available tools, and limits such as time, cost or approval rules. A tool is an external system the agent can call, such as a search service, calendar or database.\n\nWhat happens next is not magic. The system proposes a sequence of sub-tasks, such as gather information, compare options, ask for missing details, then perform an allowed action. It may revise that sequence after each observation, meaning new information returned from a tool or a previous step.\n\nThe output is usually a plan plus the actions taken from that plan. Sometimes the plan is written out in text. Sometimes it stays internal and only the tool calls and final result are visible. Good planning also includes checks, such as whether a required field is missing or whether a human approval is needed.\n\nPlanning is often confused with reasoning models, workflows and tool use. A reasoning model focuses on producing better intermediate analysis. Tool use means calling an external function. A workflow is a fixed path designed in advance. Planning is the part that chooses or adjusts the sequence of steps for a specific goal and situation.",
+  "oneSentence": "Planning is the process of turning a goal into ordered sub-tasks, checks and possible actions so a system can act step by step.",
+  "plainExplanation": "In AI agents and automation, planning means breaking a goal into smaller actions before and during execution. The input is usually a goal, some instructions, available tools, and limits such as time, cost or approval rules. A tool is an external system the agent can call, such as a search service, calendar or database.\n\nWhat happens next is not magic. The system proposes a sequence of sub-tasks, such as gather information, compare options, ask for missing details, then perform an allowed action. It may revise that sequence after each observation, meaning new information returned from a tool or a previous step.\n\nThe output is usually a plan or a choice of the next action. Sometimes the plan is written out in text. Sometimes it stays internal and only the selected actions and final result are visible. Good planning also includes checks, such as whether a required field is missing or whether human approval is needed.\n\nPlanning is often confused with reasoning models, workflows and tool use. A reasoning model uses extra computation during answering to improve difficult tasks. Tool use means calling external software. A workflow is an ordered set of steps that moves work from input to result. Planning specifically chooses or adjusts steps for a goal and situation, and may operate within a workflow.",
   "everydayAnalogy": {
     "title": "Finding who “they” refers to in a messy message thread",
     "story": "Amina receives a group message: “Samira told Lina that they need to move the meeting because the office is closed.” Before replying, Amina does not jump to one answer. She checks earlier messages, notes who organised the meeting, sees who mentioned the office, and lists two possible meanings of “they”. Then she asks one short clarifying question and only after that updates the calendar note.",
@@ -133,7 +133,7 @@
   ],
   "simpleVsTechnical": {
     "simple": "Planning means turning a goal into smaller steps, doing them in order, and changing course if new information appears.",
-    "technical": "In agentic systems, planning is the mechanism that converts a high-level objective into an executable sequence or policy over sub-tasks, tool calls and decision points. Inputs can include the user goal, system instructions, available APIs or connectors, prior observations, memory, and operational constraints such as budgets, permissions and approval rules. The planner may produce an explicit plan, an implicit next-action choice, or a rolling plan that is updated after each observation. In practice, planning often interacts with tool use, short-term memory, orchestration and feedback loops. It is distinct from tool use itself, because selecting and ordering actions is different from merely having access to a tool. It is also distinct from a fixed workflow, because the sequence may depend on context and intermediate results. Some systems rely on a language model to generate sub-goals or evaluate next steps; others use classical search, rule-based methods, or hybrid approaches. The quality of planning is usually judged by task completion, efficiency, robustness to failures, and whether the system respects constraints and escalation rules."
+    "technical": "In agentic systems, planning is the mechanism that converts a high-level objective into an executable sequence or policy over sub-tasks, tool calls and decision points. Inputs can include the user goal, system instructions, available APIs or connectors, prior observations, memory, and operational constraints such as budgets, permissions and approval rules. The planner may produce an explicit plan, an implicit next-action choice, or a rolling plan that is updated after each observation. In practice, planning often interacts with tool use, short-term memory, orchestration and feedback loops. It is distinct from tool use itself, because selecting and ordering actions is different from merely having access to a tool. It is also distinct from a workflow itself, because a workflow moves work through ordered steps, while planning selects or revises actions for a goal. Some systems rely on a language model to generate sub-goals or evaluate next steps; others use classical search, rule-based methods, or hybrid approaches. The quality of planning is usually judged by task completion, efficiency, robustness to failures, and whether the system respects constraints and escalation rules."
   },
   "keyTakeaway": "Planning is what lets an AI system turn one broad request into manageable, checked steps rather than one uncontrolled jump to an answer or action.",
   "quickCheck": {
@@ -216,9 +216,63 @@
   ],
   "contested": "The broad idea is widely used, but boundaries between planning, reasoning, orchestration and workflow vary across research papers and products.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:36.424Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "The definition makes tool calls part of planning in every case. Planning can select and order actions without calling any external tool. This blurs planning with the separate term tool use.",
+        "fix": "Planning is the process of turning a goal into ordered sub-tasks, checks and possible actions so a system can act step by step."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The third paragraph says planning usually outputs both a plan and the actions taken. That folds execution and tool use into planning. Planning selects or revises actions, while a separate execution process may perform them.",
+        "fix": "Replace the third paragraph with: \"The output is usually a plan or a choice of the next action. Sometimes the plan is written out in text. Sometimes it stays internal and only the selected actions and final result are visible. Good planning also includes checks, such as whether a required field is missing or whether human approval is needed.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that a workflow is a fixed path contradicts the supplied definition. A workflow is an ordered set of steps, but that does not mean every workflow is fixed. The paragraph therefore creates a false distinction.",
+        "fix": "Replace the final paragraph with: \"Planning is often confused with reasoning models, workflows and tool use. A reasoning model uses extra computation during answering to improve difficult tasks. Tool use means calling external software. A workflow is an ordered set of steps that moves work from input to result. Planning specifically chooses or adjusts steps for a goal and situation, and may operate within a workflow.\""
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The correction again treats a workflow as necessarily predesigned and rigid, contradicting the supplied definition. Flexibility alone does not distinguish planning from workflow.",
+        "fix": "A workflow is an ordered set of steps that moves work from input to result. Planning chooses, orders or revises sub-tasks for the current goal. A system may use planning within a workflow."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The sentence contrasting planning with a fixed workflow repeats the false implication that workflows are inherently fixed. The distinction should concern their functions, not rigidity.",
+        "fix": "Replace the relevant sentence with: \"It is also distinct from a workflow itself, because a workflow moves work through ordered steps, while planning selects or revises actions for a goal.\""
+      },
+      {
+        "field": "everydayAnalogy.mapping[2].aiElement",
+        "severity": "warning",
+        "problem": "Listing possible meanings is hypothesis generation or ambiguity analysis, not breaking a task into sub-steps. The mapping blurs planning with reasoning even though the page claims to distinguish them.",
+        "fix": "Identifying ambiguity before choosing the next action"
+      },
+      {
+        "field": "visual.description",
+        "severity": "warning",
+        "problem": "The description specifies five boxes, but the instructions specify goal, sub-task and action boxes, an observation diamond, a finish box and a revision loop. An illustrator following both descriptions receives inconsistent structural instructions.",
+        "fix": "A left-to-right diagram with five stages connected by arrows. It starts with a goal and constraints, moves to sub-task selection, then an action, then a checkpoint based on observations, and ends with completion or revision. Read from left to right to see how a plan is made and updated."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

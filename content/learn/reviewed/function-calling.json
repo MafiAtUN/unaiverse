@@ -29,7 +29,7 @@
     "model-context-protocol"
   ],
   "oneSentence": "A method that lets a model return a structured request for an external tool or system instead of only producing free-form text.",
-  "plainExplanation": "Function calling lets a language model produce output in a strict format that software can read reliably. Instead of only replying with words for a person, the model can return something like: call the search tool with these fields, or send these values to a calendar system.\n\nThe input usually includes the user’s request, the available tools, and a schema. A schema is a defined structure that says which fields are allowed, such as {\"date\":\"...\",\"location\":\"...\"}. The model then chooses whether to answer directly or to produce a structured tool request.\n\nAfter that, an application layer checks the request and decides whether to run it. This matters because the model does not execute the tool by itself. External code, under human-designed rules, runs the tool, collects the result, and may send that result back to the model for another step.\n\nThe output can therefore be one of two things: a normal text answer, or a machine-readable tool call with named arguments. This is often used in assistants and agent systems because it makes tool use more reliable, auditable and easier to connect to workflows. It is commonly confused with APIs, but an API is the external interface itself, while function calling is the model’s way of asking software to use that interface.",
+  "plainExplanation": "Function calling lets a language model produce a structured request that software can parse. Instead of replying only with prose, the model can name a tool and supply arguments, such as fields for a search or calendar request.\n\nThe input usually includes the user’s request, available tools and a schema. A schema defines details such as field names, types and required values. The model may answer directly or generate one or more structured tool requests. Those requests can still be wrong or incomplete.\n\nAn application layer parses and validates each request, then decides whether to run it. The model does not execute the tool by itself. External code, under human-designed rules, runs the tool, collects the result and may send it back to the model for another step.\n\nTool use is the broader act of using a tool. An API is an interface a tool may expose. A connector links systems, while Model Context Protocol provides a shared interface for tools and data. Function calling is specifically the model’s structured output requesting a call.",
   "everydayAnalogy": {
     "title": "Asking a records clerk with a standard request slip",
     "story": "A policy officer needs a report from a large document archive. Instead of shouting a vague request across the room, the officer fills in a standard slip with fixed boxes: topic, date range, language and urgency. The records clerk reads the slip, checks that the boxes are complete, then sends it to the archive system and brings back the results. If the slip is unclear, the clerk asks for a correction before doing anything.",
@@ -99,7 +99,7 @@
       "The search tool runs and returns three matching records with titles, dates and document IDs.",
       "The application sends the results back to the model, which drafts a short answer listing the three titles."
     ],
-    "result": "The user receives a readable reply with three French-language document titles and dates, based on the tool output rather than the model inventing citations."
+    "result": "The user receives three French-language titles and dates drafted from the tool output. The application or user must still check that the reply matches those records."
   },
   "unWorkplaceExample": {
     "scenario": "After a disaster, an analyst uses an approved internal assistant connected to a mapping service and an imagery catalogue. The assistant can return a structured request to query available satellite scenes for a district and date range, then summarise what imagery is available for expert review.",
@@ -210,9 +210,38 @@
     "function calling"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:21:15.656Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The claim that output is one of two things is too absolute. Implementations may support several structured calls, and the page itself later says real systems can chain calls. Calling the format “strict” and reliably readable also obscures the need to parse and validate it.",
+        "fix": "Function calling lets a language model produce a structured request that software can parse. Instead of replying only with prose, the model can name a tool and supply arguments, such as fields for a search or calendar request.\n\nThe input usually includes the user’s request, available tools and a schema. A schema defines details such as field names, types and required values. The model may answer directly or generate one or more structured tool requests. Those requests can still be wrong or incomplete.\n\nAn application layer parses and validates each request, then decides whether to run it. The "
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The explanation distinguishes function calling from an API but not clearly from tool use, a connector or Model Context Protocol, despite claiming separate entries for all four. Readers could mistake function calling for the whole tool connection and execution mechanism.",
+        "fix": "Use the revised plain explanation, which identifies function calling as structured model output and separately identifies the roles of tool use, APIs, connectors and Model Context Protocol."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result overclaims that using tool output means the model does not invent citations. During the final drafting step, the model can still alter, omit or add titles and dates. There is no arithmetic to check in this example.",
+        "fix": "The user receives three French-language titles and dates drafted from the tool output. The application or user must still check that the reply matches those records."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

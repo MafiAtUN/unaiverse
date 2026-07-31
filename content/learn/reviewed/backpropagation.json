@@ -29,8 +29,8 @@
     "gradient-descent",
     "forward-pass"
   ],
-  "oneSentence": "A training method that sends error information backwards through a model so each weight can be adjusted in the direction that should reduce future mistakes.",
-  "plainExplanation": "When a neural network produces an answer, we compare that answer with the target and measure the error using a loss function. A loss function is a rule that turns “how wrong was it?” into a number. Backpropagation takes that error signal and works out how much each weight contributed to it.\n\nIt does this by moving backwards from the output layer toward the earlier layers. At each step, it calculates a gradient, which is the slope showing how much the loss would change if one weight changed slightly. This uses the chain rule from calculus, which connects small effects across many steps.\n\nThe output of backpropagation is not the final improved model by itself. What comes out is a set of gradients for the weights and biases. An optimisation method such as gradient descent then uses those gradients to nudge the settings.\n\nSo backpropagation is different from the forward pass and different from gradient descent. The forward pass makes a prediction. Backpropagation computes how the error should be assigned backwards through the network. Gradient descent uses that information to update the parameters.",
+  "oneSentence": "A method that propagates derivatives backwards through a model to compute how changes to each weight would affect the loss.",
+  "plainExplanation": "When a neural network produces an answer, we compare that answer with the target and measure the error using a loss function. A loss function is a rule that turns “how wrong was it?” into a number. Backpropagation uses derivatives to work out how a small change to each weight would affect that loss.\n\nIt does this by moving backwards from the output layer toward the earlier layers. At each step, it calculates a gradient, which is the slope showing how much the loss would change if one weight changed slightly. This uses the chain rule from calculus, which connects small effects across many steps.\n\nThe output of backpropagation is not the final improved model by itself. What comes out is a set of gradients for the weights and biases. An optimisation method such as gradient descent then uses those gradients to nudge the settings.\n\nSo backpropagation is different from the forward pass and different from gradient descent. The forward pass makes a prediction. Backpropagation computes loss gradients from the output toward earlier layers. Gradient descent uses those gradients to update the parameters.",
   "everydayAnalogy": {
     "title": "Tracing a wrong library book location back through the filing process",
     "story": "In a large library, a student looks for a history book and finds it on the wrong shelf. The head librarian traces the mistake backwards: first the shelf label, then the trolley used for reshelving, then the sorting desk, then the return bin where the book was first handled. At each stage, the librarian asks how much that stage likely contributed to the book ending up in the wrong place. The staff then adjust their labelling and sorting habits so the next returned books are more likely to be shelved correctly.",
@@ -129,10 +129,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "After a model makes a mistake, this method works backwards through the model to estimate which settings contributed to the mistake and how they should be adjusted.",
+    "simple": "After calculating a model’s loss, this method works backwards to compute how changes to each setting would affect that loss.",
     "technical": "Backpropagation applies the chain rule to a computational graph to efficiently compute partial derivatives of the loss with respect to each parameter, propagating error signals from outputs to earlier layers so an optimiser can update weights and biases."
   },
-  "keyTakeaway": "Backpropagation does not make a prediction; it explains, in numbers, how each weight helped produce the error.",
+  "keyTakeaway": "Backpropagation does not make a prediction; it computes how changes to each weight would affect the loss.",
   "quickCheck": {
     "question": "What does backpropagation mainly produce during neural network training?",
     "options": [
@@ -226,9 +226,82 @@
     "back propagation"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:12:44.177Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This calls backpropagation a training method that adjusts weights and claims it should reduce future mistakes. Backpropagation computes derivatives of the current loss. The optimiser performs the adjustment, and lower future error is not guaranteed.",
+        "fix": "A method that propagates derivatives backwards through a model to compute how changes to each weight would affect the loss."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The phrases “how much each weight contributed” and “how the error should be assigned” misdescribe gradients as causal attribution. A gradient measures local sensitivity of the loss to a parameter, not how much that parameter contributed to an error.",
+        "fix": "When a neural network produces an answer, we compare that answer with the target and measure the error using a loss function. A loss function is a rule that turns “how wrong was it?” into a number. Backpropagation uses derivatives to work out how a small change to each weight would affect that loss.\n\nIt does this by moving backwards from the output layer toward the earlier layers. At each step, it calculates a gradient, which is the slope showing how much the loss would change if one weight changed slightly. This uses the chain rule from calculus, which connects small effects across many steps"
+      },
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping[2]",
+        "severity": "error",
+        "problem": "The analogy again equates gradients with estimates of how much each stage contributed. Backpropagation computes sensitivity to hypothetical small changes, not retrospective causal responsibility.",
+        "fix": "Replace “At each stage, the librarian asks how much that stage likely contributed to the book ending up in the wrong place” with “At each stage, the librarian asks how a small change there might affect where the book ends up.” Replace the mapped analogy element with “estimating how a change at each stage would affect the outcome”."
+      },
+      {
+        "field": "visual.learningObjective",
+        "severity": "error",
+        "problem": "“Assigns credit or blame” presents gradients as attribution. They measure how the loss would respond to small parameter changes.",
+        "fix": "After using this explainer, a reader should be able to say that backpropagation computes how changes to many weights would affect the loss by moving backwards through the network and computing gradients."
+      },
+      {
+        "field": "visual.steps[1].explanation",
+        "severity": "error",
+        "problem": "The difference between prediction and target does not generally become the backward error signal. The loss may transform or combine them in different ways. Backpropagation starts from the loss and its derivative at the output.",
+        "fix": "The loss function combines the prediction and target. Its derivative at the output is the starting signal for backpropagation."
+      },
+      {
+        "field": "workedExample.process[4] and workedExample.result",
+        "severity": "warning",
+        "problem": "The stated new output of 0.83 is not calculated from the information given. The supplied arithmetic before that is correct: (1.00 - 0.80)^2 = 0.04, 0.1 × (-0.30) = -0.03, and subtracting -0.03 increases the weight by 0.03. However, a gradient and weight change alone do not determine the new prediction, so the example stops being a worked calculation at its final step.",
+        "fix": "Replace the final step with: “If the new pass produces 0.83, its loss is (1.00 - 0.83)^2 = 0.0289, lower than 0.04.” Replace the result with: “Backpropagation produced gradients. The optimiser used one to update a weight, and a new forward pass checks whether the loss fell.”"
+      },
+      {
+        "field": "unWorkplaceExample.scenario",
+        "severity": "error",
+        "problem": "The claim that backpropagation calculates how each weight “contributed” to a misclassification is false attribution language. It calculates derivatives of the loss with respect to the weights.",
+        "fix": "A UN team is testing an internal model that helps sort incoming draft briefing notes by topic before human review. During training, backpropagation is used to calculate how changing each model weight would affect the loss after a draft on food security was misclassified as public health."
+      },
+      {
+        "field": "commonMisconceptions[3].correction",
+        "severity": "error",
+        "problem": "“Distributes responsibility” again presents derivatives as causal responsibility rather than local sensitivity.",
+        "fix": "Earlier layers also affect the output through chains of computation, so backpropagation computes loss gradients for many layers using the chain rule."
+      },
+      {
+        "field": "simpleVsTechnical.simple and keyTakeaway",
+        "severity": "error",
+        "problem": "Both fields repeat the false contribution framing. They also suggest that backpropagation determines how settings should be adjusted, which is the optimiser's role.",
+        "fix": "Use sensitivity language: backpropagation computes how changes to settings would affect the loss. It does not identify causal contribution or choose the update rule."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "“A model was trained” is too broad. Many kinds of models are trained without backpropagation. The page is specifically explaining neural-network training.",
+        "fix": "For many neural networks, backpropagation is a large part of training. Understanding it helps you ask better questions about why training takes time and compute, and how poor data or loss choices can push optimisation in the wrong direction."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "simpleVsTechnicalSimple"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

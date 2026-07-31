@@ -100,7 +100,7 @@
       "During a two-week pilot, human reviewers examine 300 alerts: 210 are true problems, 90 are false alarms, and 15 urgent cases are escalated immediately to engineers.",
       "The company uses the review results to adjust the threshold and keeps human review for urgent maintenance decisions."
     ],
-    "result": "The final system catches more real faults than the old rule-based alert, but its performance depends on the labelled data, the reviewers' guidance and continued human checks for high-risk cases."
+    "result": "During the pilot, reviewers confirm 210 of 300 alerts as true problems and identify 90 false alarms. They also escalate 15 urgent cases. The result shows how labelled data, guidance and continued human checks support the system."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team is preparing procurement requirements for software that uses AI to sort incoming public reports and flag potentially harmful content for review.",
@@ -221,9 +221,31 @@
   ],
   "contested": "The boundaries among these labels are not fully settled. 'Ghost work' is especially contested because some use it narrowly for hidden platform labour, while others use it more broadly as a critique of invisible human work behind supposedly automated systems.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:30:37.771Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result claims the system catches more real faults than the old rule-based alert, but the example provides no results for the old system and no count of faults missed by either system. The pilot arithmetic is internally consistent: 210 true problems + 90 false alarms = 300 reviewed alerts. However, those numbers cannot support the comparison.",
+        "fix": "During the pilot, reviewers confirm 210 of 300 alerts as true problems and identify 90 false alarms. They also escalate 15 urgent cases. The result shows how labelled data, guidance and continued human checks support the system."
+      },
+      {
+        "field": "quickCheck",
+        "severity": "error",
+        "problem": "Option 2 is marked correctly, but the distractors make the answer obvious without testing understanding. Option 0 equates every term with annotation, option 1 says all terms are interchangeable, and option 3 gives an implausibly narrow definition of ghost work. Only option 2 is defensible, but mainly because every other option is an extreme or absurd claim.",
+        "fix": "Replace the quiz with: Question: \"Which task is labour behind AI but not annotation or data labelling?\" Options: 0. \"A worker draws boundaries around objects in training images.\" 1. \"A worker writes escalation rules for live human review.\" 2. \"A worker assigns topic tags to text used for training.\" 3. \"A software tool automatically adds task-relevant tags to records.\" Correct option: 1. Explanation: \"Writing escalation rules is human work supporting AI, but it does not add tags, notes or boundaries to data. Options 0, 2 and 3 are forms of annotation or data labelling.\""
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

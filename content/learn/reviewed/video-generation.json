@@ -30,7 +30,7 @@
     "image-generation"
   ],
   "oneSentence": "A system that creates moving pictures from prompts, images or other guidance, producing short video clips that did not previously exist as recorded footage.",
-  "plainExplanation": "Video generation creates new video clips with software models trained on many examples of videos, images and text. The input can be a written prompt, a still image, a rough storyboard, or an existing clip to transform. The output is a sequence of frames, often with motion, style and camera movement that match the guidance.\n\nA prompt might say, \"A red bus drives through light rain at dusk, viewed from street level.\" The system then predicts many small visual details frame by frame so the clip looks coherent over time. In many systems, a model called a diffusion model starts from visual noise and gradually turns it into frames that fit the prompt.\n\nThis differs from ordinary video editing. Editing changes footage that a person already recorded. Video generation can make scenes, people, objects or movements that were never filmed. It is also different from image generation, because the system must keep things reasonably consistent across time rather than making just one still picture.\n\nThe results can be useful for storyboarding, mock-ups, training materials and visual ideas. They can also be misleading. A realistic clip does not prove that an event happened, so generated video raises authenticity questions and may need labels, provenance information and human checking before use.",
+  "plainExplanation": "Video generation creates new video clips with software models trained on many examples of videos, images and text. The input can be a written prompt, a still image, a rough storyboard, or an existing clip to transform. The output is a sequence of frames, often with motion, style and camera movement that match the guidance.\n\nA prompt might say, \"A red bus drives through light rain at dusk, viewed from street level.\" The system then predicts visual patterns across space and time so the clip looks coherent. In many systems, a model called a diffusion model starts from visual noise and gradually turns it into frames that fit the prompt.\n\nThis differs from ordinary video editing, which mainly arranges or modifies existing footage. Video generation can make scenes, people, objects or movements that were never filmed, although it can also transform an existing clip. It differs from image generation because it must keep things reasonably consistent across time rather than make one still picture.\n\nThe results can be useful for storyboarding, mock-ups, training materials and visual ideas. They can also be misleading. A realistic clip does not prove that an event happened, so generated video raises authenticity questions and may need labels, provenance information and human checking before use.",
   "everydayAnalogy": {
     "title": "A flipbook made from a written brief",
     "story": "A communications officer asks an illustrator to make a 5-second flipbook showing a cyclist crossing a market square at sunrise. The illustrator has seen many films, photos and drawings before, so they sketch one page after another to keep the bicycle, the square and the light fairly consistent. If the officer adds, \"make the camera move closer,\" the illustrator redraws the pages to create that effect. At the end, the flipbook shows motion even though no one filmed a real cyclist in that square.",
@@ -209,9 +209,55 @@
     "ai video"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:45.976Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The sentence saying the system predicts details \"frame by frame\" wrongly presents sequential frame generation as the general mechanism. Some video models process relationships across multiple frames rather than generating each frame in order.",
+        "fix": "Replace that sentence with: \"The system then predicts visual patterns across space and time so the clip looks coherent.\""
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The distinction from video editing is too categorical. Editing is not limited to changing footage recorded by a person, and the page later acknowledges that video generation can transform existing clips.",
+        "fix": "Replace the third paragraph with: \"This differs from ordinary video editing, which mainly arranges or modifies existing footage. Video generation can make scenes, people, objects or movements that were never filmed, although it can also transform an existing clip. It differs from image generation because it must keep things reasonably consistent across time rather than make one still picture.\""
+      },
+      {
+        "field": "everydayAnalogy.mapping[1]",
+        "severity": "error",
+        "problem": "The mapping says video frames are \"generated in order,\" repeating the unsupported claim that video generators necessarily create frames sequentially.",
+        "fix": "Change the analogy element to \"Many pages forming a sequence\" and the AI element to \"Many video frames forming a clip.\""
+      },
+      {
+        "field": "visual.description and visual.steps[2]",
+        "severity": "error",
+        "problem": "The diagram presents frame-to-frame consistency checks as a distinct processing stage. Many systems model temporal relationships during generation rather than running a separate consistency-check stage. The four-box pipeline therefore teaches a mechanism that is not generally true.",
+        "fix": "In the description, replace \"Box 3 shows frame-to-frame consistency checks for subject, motion and style\" with \"Box 3 shows relationships across frames that support consistent subject, motion and style.\" Change the step label to \"3. Link frames in time\" and its explanation to \"The model represents relationships across neighbouring frames so objects, lighting and motion can remain stable over time.\""
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "error",
+        "problem": "The correction narrows deepfakes to imitation of a real person's face, voice or identity. That contradicts the supplied deepfake entry, which also covers imitation of a real scene or event.",
+        "fix": "A deepfake is fabricated or heavily altered media made to imitate a real person, scene or event convincingly. Video generation is broader: it can create landscapes, objects, diagrams, animations or fictional scenes without imitating a real person, scene or event."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 2 is the only correct answer, but the distractors do not form a credible test. Option 3 asserts an obvious guarantee, and option 4 compares video generation with an unrelated transcription task. A reader can answer by eliminating absurd choices without understanding the distinctions from image generation, deepfakes or editing.",
+        "fix": "Use these options: [\"It creates a single still image from a prompt.\", \"It creates new video frames from guidance such as text or images, though the result may still be inaccurate or misleading.\", \"It alters media to imitate a real person or event.\", \"It arranges recorded clips without creating new scenes.\"] Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

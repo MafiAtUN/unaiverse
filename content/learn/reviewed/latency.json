@@ -206,9 +206,41 @@
     "response time"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:12.578Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "everydayAnalogy.story and everydayAnalogy.mapping[3]",
+        "severity": "error",
+        "problem": "The analogy says the pace of the directions matches latency, then maps that pace to the rate at which output tokens are generated. A generation rate is throughput under the page's own distinction. The rate can affect full-response latency, but it is not itself latency.",
+        "fix": "End the story with: \"Your waiting time before hearing the answer, and the total time until the directions end, are the parts that match latency.\" Replace the final mapping with: analogyElement \"The time until all directions have been spoken\" and aiElement \"Time until the full response is received\"."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The limitation does not correct the analogy's central confusion between output pace and latency. It should state that speaking pace corresponds to throughput and only affects the latency of the completed response.",
+        "fix": "A human journey clerk may reason with real-world knowledge, ask clarifying questions on their own, or choose to stay silent. A language model instead generates text token by token from patterns in training and the current input. The speaking pace corresponds to output throughput, not latency by itself. It affects the latency until the full reply arrives. Real travel time is separate from response latency."
+      },
+      {
+        "field": "visual.steps[2].explanation and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual equates the model generating its first token with the reply becoming visible. A service may buffer tokens, and delivery or display can add delay after generation. The diagram therefore omits part of visible time to first token while claiming to show where response time comes from.",
+        "fix": "Replace the step explanation with: \"The model computes the first piece of output. Buffering, delivery and display can add more delay before it appears to the user.\" In the accessibility description, replace the third-stage sentence with: \"Third, the model generates the first token; buffering and delivery can delay when it becomes visible.\""
+      },
+      {
+        "field": "quickCheck.options[2] and quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The quiz does not test the stated distinction from throughput. The three distractors are unrelated enough that the answer is obvious without understanding latency. Each current option was considered: option 0 correctly describes latency; option 1 describes correctness; option 2 describes login capacity; option 3 describes training data. Only option 0 is defensible, but the distractors are weak.",
+        "fix": "Replace option 2 with: \"How many tokens the system produces per second\". Keep correctOptionIndex as 0 and revise the explanation to distinguish this throughput measure explicitly."
+      }
+    ],
+    "applied": []
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

@@ -29,8 +29,8 @@
     "generalisation",
     "long-term-memory"
   ],
-  "oneSentence": "Memorisation happens when a model repeats patterns or examples from training data instead of learning rules that work on new cases.",
-  "plainExplanation": "A model is trained on examples. The input might be images, text or numbers. During training, the system adjusts internal settings so it can produce useful outputs, such as a label, score or summary.\n\nSometimes the model does not learn a broad pattern. Instead, it stores very specific details from the training examples and relies on those details later. When a very similar case appears, it can give the right answer for the wrong reason. That is memorisation.\n\nWhat goes in is training data, often with labels or targets. What happens is that the model fits itself too closely to those examples, especially if the model is large, the data are limited, or there is accidental leakage between training and testing. What comes out can look impressive on familiar data but fall apart on genuinely new data.\n\nMemorisation is related to overfitting, but they are not identical. Overfitting means performance drops on new data because the model has matched noise or quirks in the training set too closely. Memorisation is one way this can happen, especially when the model effectively reproduces seen examples or rare details. It is also different from long-term memory in AI systems, which usually means a system is designed to store and retrieve information during use.",
+  "oneSentence": "Memorisation happens when a model encodes information specific to individual training examples or small subsets of them.",
+  "plainExplanation": "A model is trained on examples such as images, text or numbers. During training, it adjusts numerical parameters to produce outputs such as a label, score or summary.\n\nMemorisation occurs when those parameters encode information specific to individual training examples or small subsets. This may allow exact or near-exact reproduction, or make an output depend unusually strongly on whether a particular example appeared in training.\n\nMemorisation can coexist with learning broader patterns. It can contribute to overfitting, but a drop on new data does not by itself prove memorisation. Such a drop may instead reflect distribution shift, noise or reliance on a spurious correlation.\n\nMemorisation is also different from long-term memory in AI systems. Long-term memory is a designed mechanism for storing and retrieving information across separate sessions. Training-data memorisation is information encoded while the model is trained.",
   "everydayAnalogy": {
     "title": "Studying road damage photos by heart",
     "story": "A road inspector is preparing for an assessment using printed satellite images from Nairobi, Lima and Dhaka. Instead of learning the general signs of cracks, potholes and flood damage, the inspector memorises that one image with a blue roof nearby means “damaged” and another with a curved shadow means “not damaged”. In the assessment, many questions use the same practice images, so the score looks excellent. But when shown new images from different places, seasons and camera angles, the inspector starts making mistakes because the remembered clues do not carry over.",
@@ -99,7 +99,7 @@
       "A second test set is created using 300 images from different districts, dates and viewing angles, with duplicates removed.",
       "On this cleaner test set, accuracy drops to 68%, and errors cluster where shadows and roof colours differ from the training images."
     ],
-    "result": "The high early score was partly caused by memorisation of training-specific visual details, not strong generalisation to new roads."
+    "result": "The score drop shows weak transfer to changed conditions, but does not by itself establish memorisation."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team explores a model to classify free-text answers from a household assessment into themes such as water access, shelter damage and health concerns.",
@@ -136,7 +136,7 @@
     "simple": "A model has memorised when it seems good mainly because it has seen very similar examples before, not because it learned a rule that works more widely.",
     "technical": "In technical terms, memorisation refers to a model encoding training-set-specific information strongly enough that its outputs depend on recalled examples or narrow cues rather than robust, transferable structure. This can appear as exact or near-exact reproduction, unusually high confidence on repeated patterns, sensitivity to duplicate or near-duplicate samples, or sharp performance drops under distribution shift. It is often associated with high-capacity models, limited or noisy data, and weak train-test separation. Memorisation is related to but distinct from generalisation: some retention of recurring patterns is necessary for learning, while harmful memorisation shows up when behaviour does not extend to independently sampled data from the target task. It is also linked to overfitting and can be worsened by data leakage, contamination of benchmarks, or spurious correlations. Detection often relies on holdout evaluation, deduplication, cross-validation where appropriate, out-of-distribution testing, privacy-oriented probing, and inspection of whether errors increase when superficial cues change."
   },
-  "keyTakeaway": "A model that remembers training examples can look impressive in testing yet fail when the real world changes even slightly.",
+  "keyTakeaway": "A model can encode or reproduce training examples while still failing on independently sampled cases.",
   "quickCheck": {
     "question": "Which result is the clearest warning sign of memorisation?",
     "options": [
@@ -218,9 +218,70 @@
     "regurgitation"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:15:22.195Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, simpleVsTechnical",
+        "severity": "error",
+        "problem": "The page repeatedly defines memorisation as reliance on narrow cues or failure to learn a general rule. Those are not sufficient conditions. A model can learn a spurious correlation without encoding any particular training example, and it can memorise examples while also generalising well. This blurs memorisation into overfitting, poor generalisation and shortcut learning.",
+        "fix": "Define memorisation as encoding information specific to individual training examples or small subsets. State that it can contribute to overfitting but can also coexist with generalisation. Do not treat distribution shift or reliance on a narrow cue as proof."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The distinction from long-term memory is incomplete. Saying long-term memory stores information \"during use\" omits its defining retrieval across separate sessions and therefore does not clearly distinguish it from training-data memorisation.",
+        "fix": "Memorisation is also different from long-term memory in AI systems, which stores information for retrieval across separate sessions."
+      },
+      {
+        "field": "everydayAnalogy.story, everydayAnalogy.mapping, visual.steps",
+        "severity": "error",
+        "problem": "The blue roof, curved shadow, neighbourhood pattern and lighting examples demonstrate spurious correlations or shortcut learning, not necessarily memorisation. A model could learn those dataset-wide correlations without encoding any particular photo. The analogy and diagram therefore teach the wrong mechanism.",
+        "fix": "Base the memorising side on exact or near-duplicate road segments recurring across training and evaluation. If roof colour and shadows remain, label them as possible shortcuts rather than as evidence of memorisation."
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The limitation does not acknowledge the analogy's main failure: remembering a particular photo is different from learning a spurious cue shared by many photos. Its final sentence instead repeats the conflation.",
+        "fix": "The roof and shadow behaviour could come from a spurious correlation without the model encoding any particular photo. That would show weak generalisation, not by itself memorisation. A model also has no conscious study strategy, and encoded information is distributed across numerical parameters rather than stored as labelled photos it can point to."
+      },
+      {
+        "field": "workedExample.process, workedExample.result",
+        "severity": "error",
+        "problem": "The example does not establish that near-duplicates cross the training-test boundary. It says only that the training set contains near-duplicates and that the initial test set comes from the same collection. The drop from 95% to 68% under changes in district, date and viewing angle could result from distribution shift or spurious correlations. It does not justify the causal conclusion that memorisation partly caused the early score.",
+        "fix": "Either state that near-duplicates of training images appeared in the initial test set, or weaken the result to: \"The score drop shows weak transfer to changed conditions, but does not by itself establish memorisation.\""
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "Most of this field describes the consequences and checks for poor generalisation, overfitting and data leakage. It claims these checks are for memorisation without explaining that they do not specifically establish training-example dependence.",
+        "fix": "Memorisation matters because encoded training examples can distort evaluation and may expose details from the training data. A high score on duplicated or contaminated test data can hide this dependence. Check whether evaluation data are truly separate and deduplicated, and whether outputs reproduce distinctive training content. Tests across places, languages, times and conditions remain important, but performance drops there show poor transfer rather than proving memorisation."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "The phrase \"a model that remembers\" presents an anthropomorphic mental capacity as fact. It also equates memorisation with failure under slight real-world change, which is evidence of poor generalisation rather than memorisation specifically.",
+        "fix": "A model can encode or reproduce training examples while still failing on independently sampled cases."
+      },
+      {
+        "field": "quickCheck",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer, but the quiz is weak. It identifies an evaluation setup that can conceal memorisation, not a result that specifically demonstrates it. Options 2 and 3 are obvious opposites or irrelevant, while option 1 is an unusual comparison with no plausible connection to memorisation. The answer can be selected without understanding the distinction from overfitting or poor generalisation.",
+        "fix": "Replace the quiz with: \"Which result most specifically supports memorisation rather than poor generalisation alone?\" Options: [\"The model reproduces a rare erroneous phrase from one training example when given its opening words.\", \"Accuracy drops on images from new cameras.\", \"The model relies on roof colour correlated with labels.\", \"Training accuracy exceeds accuracy on an independent test set.\"]. Keep option 0 as correct."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

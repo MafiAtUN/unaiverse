@@ -31,7 +31,7 @@
     "data-leakage"
   ],
   "oneSentence": "A model fits its training examples so closely that its performance drops on new cases.",
-  "plainExplanation": "A machine-learning model learns patterns from examples. The goal is not to repeat those examples perfectly, but to work well on new cases it has not seen before. That ability is called generalisation.\n\nOverfitting happens when the model locks onto details that do not hold up outside the training data. These details can include noise, accidental quirks, or patterns that only appear in one dataset. The model may score very highly during training but do worse in real use.\n\nWhat goes in is a set of past examples, such as satellite images labelled \"damaged road\" or \"not damaged road\". During training, the model adjusts itself to match those labels. If it adjusts too closely, it may learn irrelevant clues, such as a certain image border, season, or camera source, instead of the road damage itself.\n\nWhat comes out is a misleading picture of quality: strong results on familiar data, weaker results on new data. This is why people compare performance on separate validation or test sets, not only on the data used for training. Overfitting is different from data leakage, where information from the answer accidentally slips into training or evaluation.",
+  "plainExplanation": "A machine-learning model learns patterns from examples. The goal is not to repeat those examples perfectly, but to work well on new cases it has not seen before. That ability is called generalisation.\n\nOverfitting happens when the model locks onto details that do not hold up outside the training data. These details can include noise, accidental quirks, or patterns that only appear in one dataset. The model may score very highly during training but do worse in real use.\n\nWhat goes in is a set of past examples, such as satellite images labelled \"damaged road\" or \"not damaged road\". During training, the model adjusts itself to match those labels. If it adjusts too closely, it may learn irrelevant clues, such as a certain image border, season, or camera source, instead of the road damage itself.\n\nWhat comes out is a misleading picture of quality: strong results on familiar data, weaker results on new data. This is why people compare performance on separate validation or test sets, not only on the data used for training. Overfitting is different from data leakage, where information that would not be available at prediction time slips into training or testing.",
   "everydayAnalogy": {
     "title": "Studying last year's exact test paper",
     "story": "A student in Nairobi prepares for an exam by memorising last year's paper line by line, including the order of questions and even where the diagrams sat on the page. On practice with that same paper, the student gets almost everything right. On the real exam, the topic is similar but the questions are phrased differently, so the score drops sharply. The student learned the specific paper too closely instead of learning the broader subject.",
@@ -212,9 +212,61 @@
     "overfit"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:14:05.769Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The final sentence defines data leakage too narrowly as information \"from the answer\" and says it can slip into \"evaluation\" without explaining what is improper. Answers are normally needed to calculate evaluation results. Leakage concerns information that would not truly be available at prediction time entering training or testing.",
+        "fix": "Replace the final sentence with: \"Overfitting is different from data leakage, where information that would not be available at prediction time slips into training or testing.\""
+      },
+      {
+        "field": "commonMisconceptions[3].correction",
+        "severity": "error",
+        "problem": "The claim that leakage occurs when \"test data improperly enters evaluation\" is misleading. Test data is supposed to enter test evaluation. The problem is using unavailable information or allowing test information to influence model development.",
+        "fix": "They are related but different. Overfitting is fitting too closely to training data; data leakage occurs when information unavailable at prediction time improperly enters training or testing."
+      },
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "\"Performance drops on new cases\" can be read as requiring a temporal decline. Overfitting is about fitting training-specific patterns and performing less well on new cases, even when no sequence of measurements shows a drop.",
+        "fix": "A model fits its training examples too closely, so it performs less well on new cases."
+      },
+      {
+        "field": "visual.title",
+        "severity": "warning",
+        "problem": "The title says \"real-world score down\", but the chart actually shows a validation score. Validation performance is only a proxy for real-world performance and should not be equated with it.",
+        "fix": "Training score up, validation score down"
+      },
+      {
+        "field": "visual.steps[1-2].explanation",
+        "severity": "warning",
+        "problem": "These steps present increasing complexity or training duration as if it always produces the illustrated score curves. Complexity and additional training do not invariably make validation performance flatten or fall. The wording should identify this as the behaviour of the example.",
+        "fix": "For step 2: \"In this example, increasing complexity makes the training line rise while the validation line rises at first, then flattens.\" For step 3: \"In this example, further complexity or training makes the model match noise and accidental details. Training improves, but validation performance falls.\""
+      },
+      {
+        "field": "visual.steps[2].visualInstruction",
+        "severity": "warning",
+        "problem": "Outlining cloud shadows, borders, or sensor artefacts does not by itself show that the model relies on them. The visual specification asserts a model explanation without specifying evidence that supports it.",
+        "fix": "Highlight the divergence point with a vertical marker labelled 'validation starts falling'. In the image panel, illustrate possible irrelevant cues such as cloud shadows, image borders, or sensor artefacts."
+      },
+      {
+        "field": "visual.steps[3].explanation",
+        "severity": "warning",
+        "problem": "Stopping earlier does not make the current validation score \"recover\". It selects or preserves an earlier model whose validation score was better.",
+        "fix": "The reader can compare a less complex model or an earlier saved round with the final model. This shows that the best-looking training score is not always the best choice."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

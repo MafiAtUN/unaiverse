@@ -28,7 +28,7 @@
     "query-key-value"
   ],
   "oneSentence": "A transformer mechanism that runs several attention patterns in parallel so the model can combine different kinds of relationships between tokens.",
-  "plainExplanation": "In a transformer, each token first becomes a vector, which is a list of numbers that represents features of that token in context. Multi-head attention takes those token vectors as input and creates several parallel versions of the attention calculation. Each parallel part is called a head.\n\nInside each head, the model builds queries, keys and values. These are learned projections: new numeric views of the same input. A query asks what a token is looking for, a key describes what each token offers, and a value carries the information that may be passed along. The head compares queries with keys to produce attention scores, turns those scores into weights, and then mixes the values accordingly.\n\nBecause there are several heads, the model does not rely on one single pattern of relevance. One head may focus on a nearby word, another on a long-range reference, and another on part of a phrase or sentence structure. This does not mean each head always has a clean human meaning. It means the architecture gives the model several parallel channels for relating tokens.\n\nThe outputs from all heads are joined together and passed through another learned projection to produce one combined output vector per token. What comes out is still a sequence of vectors, but now each token representation has gathered information from multiple attention patterns at once.\n\nThis is often confused with self-attention. Self-attention is the broader operation where tokens attend to tokens in the same sequence. Multi-head attention is one way of implementing that operation: several self-attention calculations run in parallel and then get combined.",
+  "plainExplanation": "In a transformer, tokens are represented by vectors, which are lists of numbers representing token features. In later layers, these vectors may already include contextual information. Multi-head attention takes those token vectors as input and creates several parallel versions of the attention calculation. Each parallel part is called a head.\n\nInside each head, the model builds queries, keys and values. These are learned projections: new numeric views of the same input. A query asks what a token is looking for, a key describes what each token offers, and a value carries the information that may be passed along. The head compares queries with keys to produce attention scores, turns those scores into weights, and then mixes the values accordingly.\n\nBecause there are several heads, the model does not rely on one single pattern of relevance. One head may focus on a nearby word, another on a long-range reference, and another on part of a phrase or sentence structure. This does not mean each head always has a clean human meaning. It means the architecture gives the model several parallel channels for relating tokens.\n\nThe outputs from all heads are joined together and passed through another learned projection to produce one combined output vector per token. What comes out is still a sequence of vectors, but now each token representation has gathered information from multiple attention patterns at once.\n\nSelf-attention and multi-head attention describe different aspects. Self-attention means tokens attend to tokens in the same sequence. Multi-head attention means several attention calculations run in parallel and are combined. It can be used for self-attention or for attention between different inputs.",
   "everydayAnalogy": {
     "title": "Several readers resolving a pronoun in one sentence",
     "story": "A team is reviewing the sentence: “Amina spoke to Sofia after she finished the report.” One reader looks for the nearest possible person, another checks who was likely to write the report, and another looks at the wider paragraph for clues about the topic. Each reader marks a different likely interpretation and explains which words matter most. The team leader then combines those notes into one final summary of what “she” probably refers to.",
@@ -98,7 +98,7 @@
       "The model forms one output from each head, concatenates the three outputs, and applies a final projection to create the new vector for 'she'.",
       "Later layers use that updated vector, which now carries stronger evidence linking 'she' with 'nurse' in this context."
     ],
-    "result": "The combined representation of 'she' is shaped by several attention patterns at once, rather than by a single score pattern."
+    "result": "All three heads weight 'nurse' more than 'doctor'. Their outputs shape the vector for 'she', but these weights alone do not prove a coreference decision."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team prepares a briefing note from approved, non-confidential public statements and meeting summaries. When a transformer-based drafting tool processes the text, different attention heads can help track references across the note, such as which Member State, agency or report a pronoun or short phrase points to.",
@@ -209,9 +209,50 @@
     "attention heads"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:18:08.853Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The opening says each token vector represents the token \"in context\" before multi-head attention. That is not necessarily true in the first layer. More importantly, the final paragraph wrongly presents multi-head attention as merely an implementation of self-attention. The concepts describe different properties: self-attention concerns where queries, keys and values come from, while multi-head attention concerns running and combining several heads. Multi-head attention can also be used between different inputs.",
+        "fix": "Replace the opening and final paragraphs with the corrected plain explanation below."
+      },
+      {
+        "field": "workedExample.process[4]",
+        "severity": "error",
+        "problem": "The example treats higher attention weights as evidence that the pronoun refers to \"nurse\". Attention weights determine mixtures of value vectors, but they do not by themselves establish a coreference decision. The word \"stronger\" also lacks any stated baseline. The partial sums are valid: Head 1 gives 0.55 + 0.15 = 0.70, Head 2 gives 0.48 + 0.22 = 0.70, and Head 3 gives 0.35 + 0.30 = 0.65, leaving 0.30, 0.30 and 0.35 for other tokens. However, no head output or final vector can be calculated because the value vectors and output projection are not supplied.",
+        "fix": "Replace the last process step with: \"Later layers use the updated vector. These attention weights alone do not prove that 'she' refers to 'nurse'.\" Replace the result with the corrected result below."
+      },
+      {
+        "field": "commonMisconceptions[1].correction",
+        "severity": "error",
+        "problem": "The claim that extra heads inherently bring trade-offs in parameter count and memory use is misleading. In the fixed-model-dimension setup described elsewhere on the page, changing the number of heads usually divides that dimension differently and need not increase the projection parameter count.",
+        "fix": "More heads do not by themselves guarantee better performance. Changing head count also changes how the model dimension is divided among heads. Results depend on the whole design, including head size, number of layers, training data and optimisation."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "warning",
+        "problem": "The claim that multi-head attention explains why a model may handle long documents better than \"older sequence models\" is an unsupported and overly broad architecture comparison. Document length also depends on the available context and other design choices.",
+        "fix": "This helps explain how the tool can relate nearby wording and distant references within its available context. It does not ensure that any reference is resolved correctly."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only correct answer. Option 1 is false because heads are not forced into grammatical categories. Option 2 is false because the described mechanism uses queries, keys and values. Option 3 is false because it promises a guarantee. However, the three distractors use conspicuously absolute or directly contradictory claims, so the answer is obvious without understanding how multi-head attention differs from one attention calculation.",
+        "fix": "Use these options: [\"Several parallel attention projections and weighted mixes that are combined into one output\", \"Several attention calculations run one after another, each using the last result\", \"One attention calculation whose weights are copied across several heads\", \"Separate attention outputs that remain separate instead of being combined\"]. Use the corrected explanation below."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

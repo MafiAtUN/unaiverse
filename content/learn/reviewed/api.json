@@ -28,7 +28,7 @@
     "endpoint",
     "model-context-protocol"
   ],
-  "oneSentence": "A standard way for one software system to ask another system for data or an action and receive a structured response.",
+  "oneSentence": "An application programming interface defines rules that software uses to request data or actions from another system.",
   "plainExplanation": "An API lets one piece of software interact with another without using the full screen that a person would use. One system sends a request. The request follows agreed rules about what can be asked for, how to ask, and what format to use.\n\nWhat goes in is usually a request with details such as an address, a question, a file name, or a command like “translate this text” or “create a calendar entry”. What happens next depends on the service behind the API. It checks the request, may verify permission, does the task, and prepares a response.\n\nWhat comes out is usually structured data, often in a machine-friendly format. That might be a weather reading, a list of matching records, a translated sentence, or a message saying the request failed. Because the format is predictable, other software can use the result automatically.\n\nThis matters in AI because assistants and agents often do not only generate text. They may also call APIs to search a database, send a message, retrieve a document, or trigger another tool. An API is not the same as a connector or an endpoint: a connector is often a ready-made bridge built on top of APIs, while an endpoint is one specific address inside an API.",
   "everydayAnalogy": {
     "title": "Ordering from a takeaway counter",
@@ -93,7 +93,7 @@
       "The service looks up the forecast for Accra on that date.",
       "It returns structured data: high 29, low 24, chance_of_rain 70%."
     ],
-    "result": "The app displays: 'Accra on 2 August: 24–29°C, high chance of rain. Consider light clothes and rain protection.'"
+    "result": "Using this hypothetical response, the app displays: “Accra on 2 August: 24–29°C, high chance of rain. Consider light clothes and rain protection.”"
   },
   "unWorkplaceExample": {
     "scenario": "A UN team uses an approved internal tool to translate short, non-sensitive field updates into a working language through a translation service API.",
@@ -208,9 +208,68 @@
     "application programming interface"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:13.198Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "This defines an API as a request-and-response interaction rather than as the interface or rules that enable interaction. It also requires a structured response, although an API operation may return no content. The wording “standard way” also risks blurring an individual API with a shared standard such as Model Context Protocol.",
+        "fix": "An application programming interface defines rules that software uses to request data or actions from another system."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The distinction from an endpoint is incomplete because an endpoint is not merely an address. The supplied definition also includes rules for a specific function. Model Context Protocol is not distinguished at all, despite the page claiming to remain distinct from it.",
+        "fix": "Replace the final sentence with: “An API is not a connector, endpoint or MCP. A connector is a ready-made bridge, an endpoint identifies one function and its rules, and MCP is a shared protocol for tools and data sources.”"
+      },
+      {
+        "field": "visual.learningObjective and visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The visual repeatedly calls an API a “path” or “pathway”. An API is an interface that defines operations and rules, not the request travelling between systems. The four boxes show an API transaction but never identify the interface itself, so the diagram reinforces the conceptual error.",
+        "fix": "Change the objective to: “After viewing this, a reader should be able to explain that an API defines rules for structured interactions between software systems.” Mark the API interface at the service boundary, and replace “predictable pathway” in the accessibility description with “defined interface”."
+      },
+      {
+        "field": "everydayAnalogy.mapping",
+        "severity": "warning",
+        "problem": "The mapping accounts for the request, service, underlying work and response, but never maps anything to the API itself. Readers could wrongly infer that the order slip alone is the API.",
+        "fix": "Add a mapping from “The menu, order fields and counter rules” to “The API operations and rules available to the calling software”."
+      },
+      {
+        "field": "workedExample.process[3] and workedExample.result",
+        "severity": "error",
+        "problem": "The example presents an exact forecast for Accra on 2 August 2026 as if it were a verified service response. The page provides no basis for the values 29, 24 and 70%. There is no arithmetic to check in this example.",
+        "fix": "Make the data explicitly hypothetical. Change the process step to: “For this example, suppose it returns: high 29, low 24, chance_of_rain 70%.” Introduce the result as a display based on that hypothetical response."
+      },
+      {
+        "field": "whyItMatters",
+        "severity": "warning",
+        "problem": "Calling APIs “the links that let systems share data” blurs them with connectors, whose supplied definition is specifically a link between systems. The claim that APIs determine whether a tool can act is also too strong. API access is one possible mechanism, not the sole determinant.",
+        "fix": "Describe APIs as interfaces that define permitted interactions. Say that API access can enable a tool to act in other systems rather than determining whether it can act."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "The “agreed doorway” metaphor again presents the API as a connection or path, which blurs it with a connector. It does not identify the API as an interface or set of rules.",
+        "fix": "An API is an agreed interface that defines how software can request data or actions from another system."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only defensible answer, but the other three options are blatant category errors. Option 0 is plainly a user interface, option 2 makes an implausible absolute safety guarantee, and option 3 is plainly an AI model. A reader can answer without distinguishing an API from a connector, endpoint or Model Context Protocol.",
+        "fix": "Use these distractors: “A ready-made bridge that links an AI app to a service”; “A network address and rules for one specific service function”; “A shared protocol for connecting AI applications with tools and data sources”. Keep the current correct answer at index 1."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

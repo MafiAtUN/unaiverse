@@ -28,8 +28,8 @@
     "generative-adversarial-network",
     "image-generation"
   ],
-  "oneSentence": "A generative neural network that compresses examples into a smooth latent space and then reconstructs or samples from that space to create new outputs.",
-  "plainExplanation": "A variational autoencoder, or VAE, is a type of neural network used to learn a compact internal representation of data such as images, audio or text features. It has two main parts. An encoder turns an input into a small set of numbers in a latent space, which means a hidden coordinate system the model learns for organising patterns. A decoder turns numbers from that space back into an output.\n\nWhat makes it “variational” is that the encoder does not usually produce one fixed point. Instead, it produces a probability distribution, often described by a centre and spread. During training, the model samples from that distribution, then tries to reconstruct the original input. At the same time, it is pushed to keep nearby points in the latent space organised and smooth rather than scattered randomly.\n\nWhat goes in is usually a training set of many examples, such as face images, handwritten digits or short sound clips. What happens is two goals are optimised together: reconstruction loss, which measures how close the output is to the input, and a regularising term, often based on KL divergence, which encourages the latent space to follow a simple distribution. What comes out is a trained encoder and decoder that can compress data, reconstruct it, and generate new samples by picking points in the latent space and decoding them.\n\nThis is different from a basic autoencoder, which mainly learns to copy inputs through a bottleneck and may not produce a well-behaved latent space for sampling. It is also different from a diffusion model or a generative adversarial network. Those are other ways to generate media, with different training methods and output qualities. VAEs are often valued for controllable latent spaces and efficient encoding, even though their outputs can look blurrier than some newer methods.",
+  "oneSentence": "A generative model that compresses examples into a regularised probabilistic latent space, then reconstructs inputs or samples from that space to create new outputs.",
+  "plainExplanation": "A variational autoencoder, or VAE, is a type of neural network used to learn a compact internal representation of data such as images, audio or text features. It has two main parts. An encoder turns an input into a small set of numbers in a latent space, which means a hidden coordinate system the model learns for representing patterns. A decoder turns numbers from that space back into an output.\n\nWhat makes it “variational” is that the encoder does not usually produce one fixed point. Instead, it produces a probability distribution, often described by a centre and spread. During training, the model samples from that distribution, then tries to reconstruct the original input. At the same time, a regularising objective encourages each encoded distribution to stay close to a chosen prior, making samples from that prior more reliable.\n\nWhat goes in is usually a training set of many examples, such as face images, handwritten digits or short sound clips. What happens is two goals are optimised together: reconstruction loss, which measures how close the output is to the input, and a regularising term, often based on KL divergence, which encourages the encoded distributions to remain close to a simple prior. What comes out is a trained encoder and decoder that can compress data, reconstruct it, and generate new samples by picking points from the prior and decoding them.\n\nThis is different from a basic autoencoder, which mainly learns to copy inputs through a bottleneck and may not produce a latent space suitable for sampling. It is also different from a diffusion model or a generative adversarial network. Those are other ways to generate media, with different training methods and output qualities. VAEs are often valued for efficient encoding and useful latent representations, even though their outputs can look blurrier than some newer methods.",
   "everydayAnalogy": {
     "title": "Sorting public survey comments into a map of themes",
     "story": "Imagine a team reviewing thousands of public survey comments about city transport. Instead of keeping every sentence in full, they place each comment onto a simple map with axes like cost concern, safety concern and access concern. Similar comments end up near each other, and each comment is placed as a small cloud rather than a single dot because some comments fit more than one theme. Later, the team can pick a point on the map and write a typical summary comment that matches that area. They can also move gradually across the map and watch the summaries change from mostly about bus fares to mostly about lighting at stops.",
@@ -99,7 +99,7 @@
       "Training computes reconstruction loss from the difference between original and reconstructed pixels.",
       "Training also computes a regularisation term that discourages the latent distribution from drifting too far from a simple standard normal shape."
     ],
-    "result": "After many examples, digits with similar shapes cluster near each other in latent space. Sampling new points near the '7' region produces new digit-like images, while moving gradually across the space can morph a 1 towards a 7 or a 9."
+    "result": "After many examples, nearby codes may decode to digits with similar shapes, but distinct digit clusters are not guaranteed. Sampling around codes for 7s may produce new 7-like images, while paths through the space can yield gradual blends among digit forms."
   },
   "unWorkplaceExample": {
     "scenario": "A UN team receives thousands of public consultation submissions about urban services and wants to explore broad themes in non-sensitive text that has already been cleared for this use.",
@@ -129,10 +129,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "A VAE learns a tidy hidden map of many examples. It can place each example on that map, rebuild the example from the map, and also create new examples by choosing nearby points on the map.",
-    "technical": "A variational autoencoder is a latent-variable generative model trained with an encoder-decoder architecture. Given an input x, the encoder approximates a posterior distribution q(z|x) over latent variables z, often parameterised by means and variances of Gaussian factors. A sample from q(z|x) is passed to the decoder, which models p(x|z) and reconstructs the input. Training maximises an evidence lower bound, commonly written as a reconstruction term minus a KL divergence term between q(z|x) and a prior such as N(0, I). The reconstruction term encourages outputs that match the training example, while the KL term regularises the latent codes so the space is smooth and sampleable. The reparameterisation trick is typically used so gradients can pass through the sampling step during optimisation. Compared with plain autoencoders, this gives a more structured latent space for generation; compared with GANs or diffusion models, VAEs often offer easier inference and latent manipulation but may produce lower-fidelity samples."
+    "simple": "A VAE learns a regularised hidden representation of many examples. It can encode each example as a distribution, rebuild the example from a sampled code, and create new examples by sampling other codes.",
+    "technical": "A variational autoencoder is a latent-variable generative model trained with an encoder-decoder architecture. Given an input x, the encoder approximates a posterior distribution q(z|x) over latent variables z, often parameterised by means and variances of Gaussian factors. A sample from q(z|x) is passed to the decoder, which models p(x|z) and reconstructs the input. Training maximises an evidence lower bound, commonly written as a reconstruction term minus a KL divergence term between q(z|x) and a prior such as N(0, I). The reconstruction term encourages outputs that match the training example, while the KL term encourages the approximate posterior to remain close to the prior so samples from that prior can be decoded. The reparameterisation trick is typically used so gradients can pass through the sampling step during optimisation. Compared with plain autoencoders, this supports generation from a regularised probabilistic latent space; compared with GANs or diffusion models, VAEs often offer easier inference and latent manipulation but may produce lower-fidelity samples."
   },
-  "keyTakeaway": "A VAE is useful not just because it reconstructs data, but because it learns a latent space smooth enough to sample, explore and generate from.",
+  "keyTakeaway": "A VAE is useful not just because it reconstructs data, but because it regularises a probabilistic latent space so points can be sampled, explored and decoded.",
   "quickCheck": {
     "question": "What feature most clearly distinguishes a variational autoencoder from a basic autoencoder?",
     "options": [
@@ -215,9 +215,66 @@
     "autoencoder"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:23:39.011Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence, plainExplanation, keyTakeaway",
+        "severity": "error",
+        "problem": "The page repeatedly says a VAE learns a smooth, organised latent space as though this were guaranteed. The regularisation objective encourages encoded distributions to remain close to a prior. It does not guarantee semantically organised coordinates or that nearby points represent meaningfully similar examples.",
+        "fix": "Replace claims that the space is inherently smooth or organised with language stating that the probabilistic latent space is regularised towards a prior, making sampling more reliable."
+      },
+      {
+        "field": "visual.description",
+        "severity": "error",
+        "problem": "The description says there are four boxes but names five: input, encoder, latent distribution and sample, decoder, and output. It also says to read the whole input-to-output path for generation. That path depicts encoding and reconstruction during training or inference. Unconditional generation begins with a latent sample and passes it through the decoder.",
+        "fix": "A left-to-right flow diagram with five boxes: input example, encoder, latent distribution and sample, decoder, output. Two loss signals loop back during training: reconstruction loss compares input and output, and regularisation pushes the latent distribution towards a simple shape. Read the full path for reconstruction, or start at a new latent sample for generation."
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "warning",
+        "problem": "The only explicit dimension arithmetic is correct: 28 × 28 = 784. However, the example does not show how z is calculated and leaves “spread” undefined. If spread means standard deviation, the stated sample can be reproduced, but the current text does not supply the sampled noise needed to check it.",
+        "fix": "State that spread is standard deviation, then replace the sampling step with: “Using ε = [-1/3, -1/2], the model samples z = mean + spread × ε = [1.2 + 0.3(-1/3), -0.4 + 0.2(-1/2)] = [1.1, -0.5].”"
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "A standard VAE does not guarantee that digit classes form distinct clusters or that a labelled “7 region” emerges. Similar shapes may receive nearby codes, but class separation and human-interpretable regions depend on the data, objective and training result.",
+        "fix": "After many examples, nearby codes may decode to digits with similar shapes, but distinct digit clusters are not guaranteed. Sampling around codes for 7s may produce new 7-like images, while paths through the space can yield gradual blends among digit forms."
+      },
+      {
+        "field": "unWorkplaceExample.relevance",
+        "severity": "error",
+        "problem": "The example presents clustering and “typical reconstructed summaries” as direct VAE capabilities. A basic VAE does not inherently cluster submissions into themes, and reconstructing text is not the same as summarising it. This could mislead analysts about what the output represents.",
+        "fix": "A VAE could compress the submissions into a latent space so analysts can explore similar encoded patterns, inspect decoded reconstructions and examine where patterns overlap, such as transport, safety and access. This can support exploratory pattern discovery, but it does not identify themes or produce reliable summaries without human analysis."
+      },
+      {
+        "field": "simpleVsTechnical.simple, simpleVsTechnical.technical",
+        "severity": "error",
+        "problem": "The simple version calls the latent map “tidy”, while the technical version says the KL term makes it smooth. Both overstate the result of regularisation. The KL term encourages the approximate posterior to remain close to the prior, but semantic smoothness and interpretable latent directions are not guaranteed.",
+        "fix": "Describe the latent representation as probabilistic and regularised towards a prior. Do not claim that the KL term guarantees a tidy or semantically smooth space."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only defensible answer. Option 1 is contradicted elsewhere on the page, option 2 is an absolute restriction already disproved by the explanation, and option 3 describes a classifier rather than any autoencoder. The distractors are so implausible that the answer can be selected without understanding the distinction.",
+        "fix": "Use these options: “It encodes each input as a distribution and regularises that distribution towards a prior.”; “It always uses a latent layer smaller than the input.”; “It decodes a latent code to reconstruct the input.”; “It trains an encoder and decoder together.” Keep option 0 as correct."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult",
+      "simpleVsTechnicalSimple",
+      "simpleVsTechnicalTechnical"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

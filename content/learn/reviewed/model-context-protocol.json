@@ -31,7 +31,7 @@
     "function-calling"
   ],
   "oneSentence": "A standard way for an AI application to connect with external tools and data sources through a shared, predictable interface.",
-  "plainExplanation": "Model Context Protocol, or MCP, is a technical standard for linking an AI application to outside systems. Those outside systems might include files, databases, calendars, maps, or business software. A standard means different tools can follow the same rules, so developers do not need a completely different custom connection for each one.\n\nWhat goes in is a user request, plus information from one or more connected systems. What happens next is that the AI application uses MCP to ask a compatible server what tools or resources are available, what each one is for, and how to call it safely. In simple terms, MCP helps the application discover and use external capabilities in a structured way.\n\nWhat comes out is not just text. The application may return an answer, a retrieved document, a tool result, or a proposed action for a human to review. MCP does not guarantee that the answer is correct, and it does not remove the need for access control, logging, or human oversight.\n\nPeople often confuse MCP with an API. An API is a specific interface for one service. MCP is better described as a common pattern for exposing tools and context to AI applications in a consistent format. It is also often confused with a connector. A connector usually means one ready-made link to one system, while MCP is the protocol that can make many such links easier to build and reuse.",
+  "plainExplanation": "MCP is a technical standard for communication between an AI application's MCP client and MCP servers. Servers can expose tools, resources, and prompts in a standard form. They may connect to files, databases, calendars, maps, or business software. Back-end systems still need server-side integration, but clients can use common protocol rules.\n\nA user request may lead the application to list available tools or resources through MCP. It can then read a resource or invoke a tool using its declared inputs. The user request itself is not necessarily an MCP input. MCP standardises these exchanges. It does not determine whether a call is safe.\n\nThe application may use returned content or tool results to produce an answer or proposed action. MCP does not guarantee correctness and does not replace access control, logging, or human oversight.\n\nMCP is not simply an API, connector, or function calling. An API lets systems exchange data or actions. A connector is a ready-made link to a service. Function calling lets a model produce a structured tool request. MCP standardises how clients and servers discover and use exposed capabilities.",
   "everydayAnalogy": {
     "title": "A shared service desk for many storerooms",
     "story": "At a food distribution point, a coordinator needs current stock levels, truck arrival times, and a map of nearby roads. Instead of calling three different offices with three different forms, the coordinator uses one service desk with a standard request sheet. The desk tells the coordinator which storerooms and services are available, what each can provide, and the correct format for each request. The replies come back in a predictable structure, so the coordinator can combine them into one plan for the day.",
@@ -101,7 +101,7 @@
       "It requests transport data and gets: Truck T4 available at 08:00 with 12-tonne capacity; Truck T7 unavailable due to maintenance.",
       "The application combines the tool results and drafts a delivery note proposing one morning dispatch within capacity, then presents it for staff review."
     ],
-    "result": "A structured draft says that current stock can support the request and proposes loading Truck T4 at 08:00, with quantities adjusted to fit 12 tonnes and a note that a human planner should confirm road conditions and final authorisation."
+    "result": "A structured draft lists current stock and proposes Truck T4 at 08:00. It states that capacity cannot be checked without requested quantities and unit weights, and asks a human planner to confirm the load, road conditions, and authorisation."
   },
   "unWorkplaceExample": {
     "scenario": "A translation support tool helps staff turn non-sensitive field updates into a working language by accessing approved terminology files and style guidance through a standard protocol.",
@@ -215,9 +215,74 @@
   ],
   "contested": "The broad idea of MCP is clear, but terminology and scope are still evolving in practice. Different people may use the term narrowly for a specific protocol implementation or more broadly for the surrounding ecosystem of AI-tool integration patterns.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:42.559Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "warning",
+        "problem": "This is too close to the page's definition of a connector. It does not identify MCP's client-server structure or its capability discovery role.",
+        "fix": "A client-server protocol that standardises how AI applications discover and use external tools, resources, and prompts."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The input description misstates the protocol boundary. A user request and connected information are inputs to the wider application workflow, not necessarily messages sent through MCP. The claim that MCP tells the application how to call a capability \"safely\" is also false. MCP can describe inputs and capabilities, but it does not establish that a call is safe.",
+        "fix": "MCP is a technical standard for communication between an AI application's MCP client and MCP servers. Servers can expose tools, resources, and prompts in a standard form. They may connect to files, databases, calendars, maps, or business software. Back-end systems still need server-side integration, but clients can use common protocol rules.\n\nA user request may lead the application to list available tools or resources through MCP. It can then read a resource or invoke a tool using its declared inputs. The user request itself is not necessarily an MCP input. MCP standardises these exchanges. It"
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The statement \"An API is a specific interface for one service\" is too narrow and contradicts the supplied API definition. APIs are not defined by serving only one service. The claimed distinction therefore teaches the wrong boundary.",
+        "fix": "Use the full replacement for plainExplanation supplied above."
+      },
+      {
+        "field": "commonMisconceptions[0].correction",
+        "severity": "warning",
+        "problem": "This repeats the weak claim that an API is usually tied to one service or product. That does not reliably distinguish API from MCP and ignores the supplied definition of API.",
+        "fix": "They are related but not identical. An API lets one system request data or an action from another. MCP is a client-server protocol for discovering and using exposed tools, resources, and prompts in a standard way. An MCP server may itself rely on APIs to reach back-end systems."
+      },
+      {
+        "field": "workedExample.process[4] and workedExample.result",
+        "severity": "error",
+        "problem": "The capacity conclusion cannot be computed. The available figures are 1,250 bags of rice, 800 bags of beans, and 600 cartons of oil. Adding them gives 1,250 + 800 + 600 = 2,650 mixed packages, not a weight. No unit weights or requested delivery quantities are supplied, so there is no valid multiplication or addition that can be compared with the truck's 12-tonne capacity. The claims that the dispatch is within capacity and that stock supports the request are unsupported.",
+        "fix": "Replace process step 5 with: \"The application combines the results and drafts a note proposing T4, while flagging that quantities and load weight still need staff confirmation.\" Replace the result with: \"A structured draft lists current stock and proposes Truck T4 at 08:00. It states that capacity cannot be checked without requested quantities and unit weights, and asks a human planner to confirm the load, road conditions, and authorisation.\""
+      },
+      {
+        "field": "visual.description and visual.steps[4]",
+        "severity": "warning",
+        "problem": "The specification says there are five boxes and names external tools/data as the fifth, but the instructions instead add an output box and represent external systems as mini-boxes. The artist cannot produce the stated five-box diagram consistently. The arrows also show data flowing only from external systems into the server, not calls going from the server to those systems.",
+        "fix": "Change the description to: \"A left-to-right flow diagram with six boxes: user request, AI application, MCP client, MCP server, external tools/data, and output. Arrows show discovery and tool calls moving right, then results returning to the application for an answer or proposed action.\" In step 4, require arrows in both directions between the MCP server and external tools/data."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "warning",
+        "problem": "This again blurs MCP with a connector and implies that system-specific integration disappears. MCP standardises protocol interactions, but back-end systems still need compatible server-side integration.",
+        "fix": "MCP gives an AI application common protocol rules for discovering and using tools, resources, and prompts exposed by compatible servers."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 0 is the only correct answer, but the quiz does not test the requested distinctions. Option 1 promises universal accuracy and safety, option 2 calls MCP a language model, and option 3 calls it only a dashboard. Each is plainly absurd without understanding MCP, API, connector, or function calling.",
+        "fix": "Keep option 0. Replace options 1 to 3 with: \"It is a ready-made integration that links one AI application to one named service.\"; \"It is an interface through which one system requests data or actions from another.\"; \"It is a model-level method for returning a structured request for an external tool.\""
+      },
+      {
+        "field": "quickCheck.explanation",
+        "severity": "warning",
+        "problem": "The explanation only gestures at APIs and connectors and does not distinguish function calling, even though the improved quiz should test all three neighbouring terms.",
+        "fix": "Option 0 describes MCP. Option 1 describes a connector, option 2 describes an API, and option 3 describes function calling. MCP is the client-server protocol used to discover and access exposed tools, resources, and prompts in a standard form."
+      }
+    ],
+    "applied": [
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

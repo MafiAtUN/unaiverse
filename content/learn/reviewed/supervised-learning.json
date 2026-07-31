@@ -27,8 +27,8 @@
     "self-supervised-learning",
     "reinforcement-learning"
   ],
-  "oneSentence": "A method for training a model with labelled examples so it can predict the right output for new inputs.",
-  "plainExplanation": "Supervised learning is a common way to train an AI model from examples. Each example has an input and a correct output. The correct output is often called a label. For instance, an email message could be the input, and “spam” or “not spam” could be the label.\n\nWhat goes in is a set of labelled examples. The model looks at patterns in the input and compares its own trial outputs with the known labels. During training, its internal numerical settings are adjusted many times so future outputs fit the examples better.\n\nWhat changes inside is not a hand-written rule list. Instead, the model gradually tunes many parameters, meaning numbers that affect how strongly it reacts to different patterns. If training goes well, the model learns a mapping from inputs to outputs that also works on new examples it has not seen before.\n\nWhat comes out is a trained model that can make a prediction for a new input. The prediction may be a category, such as “approve” or “reject”, or a number, such as an estimated delivery time. This is different from unsupervised learning, which looks for structure without given labels, and different from reinforcement learning, which learns from rewards and penalties over time rather than from a fixed set of correct answers.",
+  "oneSentence": "A method for training a model on examples paired with target outputs, so it can predict outputs for new inputs.",
+  "plainExplanation": "Supervised learning is a common way to train an AI model from examples. Each example pairs an input with a target output, often called a label. A label is the training reference, but it may be wrong, noisy or disputed. For instance, an email could be the input, and “spam” or “not spam” could be the label.\n\nDuring training, the model produces trial outputs and compares them with the labels. A training method repeatedly adjusts internal numerical settings, called parameters, to reduce the measured error.\n\nThis does not create a hand-written rule list. Instead, the fitted parameters define a mapping from inputs to outputs. If training goes well, that mapping also works on relevant examples the model did not encounter during training.\n\nThe trained model can then predict a category, such as “approve” or “reject”, or a number, such as an estimated delivery time. Unsupervised learning finds structure without target outputs. Self-supervised learning creates targets from raw data as part of training. Reinforcement learning uses feedback and accumulated reward across a sequence of actions.",
   "everydayAnalogy": {
     "title": "Marking a practice examination",
     "story": "A student in Nairobi takes a practice mathematics examination. The teacher has an answer sheet with the correct answer for every question. After each round of marking, the student sees which types of questions were wrong and adjusts how they approach similar questions next time. After enough practice with marked papers, the student gets better at answering new questions of the same kind.",
@@ -98,7 +98,7 @@
       "The team checks performance on separate validation data to see whether the model generalises rather than only memorising the training set.",
       "A new parcel with distance 420 km, weather severity 2, and border-check delay 35 minutes is sent to the trained model."
     ],
-    "result": "The model outputs a prediction such as ‘late’ with a score of 0.78. That score is not a guarantee; it is an estimate based on patterns learned from past labelled examples."
+    "result": "The model outputs ‘late’ with a score of 0.78. The score’s meaning depends on how the model defines and validates it. It is not a guarantee."
   },
   "unWorkplaceExample": {
     "scenario": "A UN procurement team is preparing requirements for software that classifies incoming vendor enquiries into categories such as ‘eligibility’, ‘submission format’, ‘deadline question’, or ‘technical specification’.",
@@ -209,9 +209,45 @@
     "supervised learning"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:10:31.973Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence; plainExplanation; everydayAnalogy.mapping; visual.learningObjective",
+        "severity": "error",
+        "problem": "The page repeatedly equates labels with \"correct\" or \"right\" answers. A label is the target supplied for training, but it can be wrong, noisy or disputed, as the page itself later acknowledges. The definition therefore overstates what supervised learning receives and what it can predict.",
+        "fix": "Use \"target output\" or \"label\" instead of \"correct output\", \"right answer\" or \"known answer\". State once that a target is the training reference and is not necessarily objectively correct."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "warning",
+        "problem": "The explanation distinguishes supervised learning from unsupervised and reinforcement learning but omits self-supervised learning, despite claiming to be distinct from it. Readers could reasonably treat automatically generated targets as ordinary supplied labels.",
+        "fix": "Add that supervised learning uses targets supplied with the training examples, while self-supervised learning creates targets from raw data as part of training."
+      },
+      {
+        "field": "workedExample.process[1]",
+        "severity": "error",
+        "problem": "The claim that one wrong categorical prediction causes training to \"increase the influence of patterns linked to lateness\" presents an algorithm-specific and vague update as a general mechanism. Updates normally depend on the model, loss, optimiser and often the whole batch. A misclassification alone does not establish that this particular change occurs.",
+        "fix": "For one batch, the model’s predictions are compared with the labels, and the training method updates the model to reduce the measured error."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "The meaning of the score 0.78 is not defined. A model score is not necessarily a probability or a calibrated estimate, so calling it an estimate without saying what it estimates is unclear. There is no arithmetic in this example to verify.",
+        "fix": "The model outputs ‘late’ with a score of 0.78. The score’s meaning depends on how the model defines and validates it. It is not a guarantee."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

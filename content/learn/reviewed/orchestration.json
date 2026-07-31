@@ -99,7 +99,7 @@
       "It asks a follow-up question for the missing duty station, then reruns the search and receives one matching section plus the required attachment list.",
       "It passes the result through a final check that the answer cites the current policy section and contains no unsupported reimbursement calculation."
     ],
-    "result": "The assistant returns: 'For a three-day workshop in Bangkok, the applicable daily subsistence allowance rule is the current travel policy section for your duty station category. Please attach the workshop authorisation and lodging evidence required by that section. To confirm the exact category, I need your duty station.'"
+    "result": "After the user provides the duty station, the assistant returns the one matching policy section and its required attachment list. It cites the current section and does not add a reimbursement calculation."
   },
   "unWorkplaceExample": {
     "scenario": "A protection analysis team wants a system to identify broad protection trends across incident reports stored in an approved internal environment.",
@@ -213,9 +213,49 @@
   ],
   "contested": "The broad idea is stable, but in practice people use 'orchestration' to mean different scopes, from fixed workflow control to more dynamic agent coordination, so the boundary with workflow engines and agent frameworks can be unsettled.",
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:11.355Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The result contradicts the process. Step 4 says the user has supplied the duty station, the search has been rerun, and one matching section has been found. The result then says the duty station is still needed. It also names workshop authorisation and lodging evidence even though the process only establishes that an attachment list was returned. There is no arithmetic in this worked example to compute.",
+        "fix": "After the user provides the duty station, the assistant returns the one matching policy section and its required attachment list. It cites the current section and does not add a reimbursement calculation."
+      },
+      {
+        "field": "visual.description",
+        "severity": "error",
+        "problem": "The description says the diagram has five boxes, but the instructions specify eight: 1 input + 1 orchestrator + 3 model or tool boxes + 1 checks box + 2 end boxes = 8. There are five stages, not five boxes.",
+        "fix": "Replace “five boxes” with “five stages”."
+      },
+      {
+        "field": "commonMisconceptions[2].correction",
+        "severity": "warning",
+        "problem": "This does not clearly distinguish orchestration from workflow. Conditional branches and retries can also be parts of a workflow, so presenting flexibility as the main distinction is inadequate.",
+        "fix": "A workflow describes an ordered set of steps. Orchestration is the control logic that runs and coordinates those steps, including routing, state, checks, retries and handoffs. It may execute a fixed workflow or adapt the route at runtime. The distinction is between the process definition and its execution control."
+      },
+      {
+        "field": "visual.steps[2]",
+        "severity": "warning",
+        "problem": "The visual blurs function calling with tools and services. “Database/Function” presents a function as a component, while the separate definition correctly describes function calling as a method for producing a structured external request.",
+        "fix": "Use this explanation: “The orchestrator invokes available services through actions such as API requests or function calls.” Draw boxes labelled “Model”, “Search service” and “Database”. Label the model return arrow “structured tool request” and the outgoing service arrow “tool call”."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "warning",
+        "problem": "Option 1 is the only defensible answer: option 0 concerns writing style, option 2 falsely describes a training-data database, and option 3 makes an impossible guarantee. However, those distractors are so implausible that the answer is obvious without understanding orchestration or distinguishing it from workflow, function calling and multi-agent systems.",
+        "fix": "Replace the distractors with: 0. “An ordered set of steps that moves a task from input to result”; 2. “A structured request from a model to an external tool or system”; 3. “Several specialised agents coordinating and exchanging results to complete a goal”. Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "workedExampleResult"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

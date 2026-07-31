@@ -32,8 +32,8 @@
     "meaningful-human-control",
     "copilot"
   ],
-  "oneSentence": "A system setup where a person reviews, guides or approves an AI-driven step before, during or after action.",
-  "plainExplanation": "Human in the loop means a person is deliberately placed inside an automated process so the system does not run entirely on its own. The person may check an input, approve a step, correct an output, or stop the process.\n\nWhat goes in can be a request, some data, and a rule about when a human must step in. For example, a system may draft a reply, sort applications, or prepare a route plan. A person then reviews the draft or decision point before the system continues.\n\nWhat happens next depends on the design. In some systems, the human must approve every action. In others, the system acts on low-risk tasks by itself and only asks for help on unclear, risky or unusual cases. That human input can also become feedback for improving later behaviour, though improvement is not automatic.\n\nWhat comes out is not just an AI response but a supervised result: for example, an approved message, a corrected classification, or a blocked action. This is different from full automation, where no one checks the step, and different from general human oversight, which may happen at a distance rather than inside the actual workflow.",
+  "oneSentence": "A system setup where a person reviews, guides or approves an AI-driven step before the workflow continues or completes.",
+  "plainExplanation": "Human in the loop means a person is deliberately placed inside an automated process so the system does not run entirely on its own. The person may check an input, approve a step, correct an output, or stop the process.\n\nWhat goes in can be a request, some data, and a rule about when a human must step in. For example, a system may draft a reply, sort applications, or prepare a route plan. A person then reviews the draft or decision point before the system continues.\n\nWhat happens next depends on the design. In some systems, the human must approve every action. In others, the system acts on low-risk tasks by itself and only asks for help on unclear, risky or unusual cases. That human input can also become feedback for improving later behaviour, though improvement is not automatic.\n\nWhat comes out may be an approved message, a corrected classification, a blocked action, or an automatically handled low-risk case. This differs from full automation because the workflow has defined points for human intervention, and from general human oversight, which may operate outside the live workflow.",
   "everydayAnalogy": {
     "title": "Journey planning with a travel assistant",
     "story": "A traveller in Nairobi wants to cross the city during heavy rain. A route-planning app suggests three options using live traffic data, but before booking a ride it asks the traveller to confirm the safest pick-up point and whether they are comfortable with a higher toll road fee. The traveller checks the street names, rejects one option near flooding, and approves another. Only then does the app complete the booking.",
@@ -212,9 +212,50 @@
     "human-in-the-loop"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:22:01.036Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "Including review \"after action\" makes ordinary after-the-fact oversight count as human in the loop. This contradicts the page's later claim that HITL requires participation in the live workflow before it completes or proceeds.",
+        "fix": "A system setup where a person reviews, guides or approves an AI-driven step before the workflow continues or completes."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The statement that the output is always \"a supervised result\" contradicts the earlier explanation that low-risk cases may be handled automatically. The comparison with full automation also focuses on whether a particular step is checked rather than whether the workflow contains defined human intervention points.",
+        "fix": "Human in the loop means a person is deliberately placed inside an automated process so the system does not run entirely on its own. The person may check an input, approve a step, correct an output, or stop the process.\n\nWhat goes in can be a request, some data, and a rule about when a human must step in. For example, a system may draft a reply, sort applications, or prepare a route plan. A person then reviews the draft or decision point before the system continues.\n\nWhat happens next depends on the design. In some systems, the human must approve every action. In others, the system acts on low-"
+      },
+      {
+        "field": "everydayAnalogy.limitation",
+        "severity": "error",
+        "problem": "The claim that HITL may place the human \"after an action\" again admits after-the-fact review and blurs HITL into human oversight. If \"action\" means a proposed action rather than a completed action, the wording still fails to say so.",
+        "fix": "A travel app example makes the human role look simple and personal. In real AI systems, the human may be a caseworker, analyst or supervisor following formal rules, and there may be many review points, audit logs and multiple people involved. Also, some HITL systems route only selected cases to a human, rather than requiring review of every action."
+      },
+      {
+        "field": "simpleVsTechnical.technical",
+        "severity": "warning",
+        "problem": "The explanation distinguishes HITL from external supervision but not from the separate concepts of meaningful human control and copilot. Drafting followed by human review can describe both a copilot interaction and a HITL workflow, while merely having a checkpoint does not guarantee meaningful human control.",
+        "fix": "HITL is a workflow design pattern in which points for human intervention are built into the execution path of an automated system. An intervention may occur before an action, after a model proposes an output, at a decision threshold, or during exception handling. Common mechanisms include approval gates, confidence-based routing, sampling for review, escalation rules and correction interfaces. In agentic systems, a checkpoint may sit before tool use, sending a message, updating a record, or taking a real-world action through an API or connector. HITL identifies operational participation in a l"
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "warning",
+        "problem": "The phrase \"only with a real human checkpoint at the moments that matter\" is vague, suggests every consequential continuation requires review, and blurs HITL into meaningful human control. The page itself allows conditional routing and warns that a checkpoint can be symbolic.",
+        "fix": "Human in the loop means a human checkpoint is built into the live workflow for all actions or selected cases."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

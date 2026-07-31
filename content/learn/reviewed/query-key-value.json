@@ -30,8 +30,8 @@
     "embedding",
     "attention-score"
   ],
-  "oneSentence": "Three learned vectors let each token ask what it needs, advertise what it contains, and pass along the information chosen by attention.",
-  "plainExplanation": "In a transformer, each token first becomes a vector, which is a list of numbers representing features. From that token representation, the model creates three different versions: a query, a key and a value. They are related, but they do different jobs.\n\nThe query represents what the current token is looking for. The key represents what each token offers for matching. The value represents the information that can be passed onward if that token gets selected. The model compares one token’s query with other tokens’ keys to produce attention scores, which are weights showing how strongly it should focus on each token.\n\nThose weights are then used to mix the value vectors. So the output is not the key or the value from one place only. It is usually a weighted combination of many values, with larger weights on tokens whose keys matched the query more strongly. This is how a token gathers context from other tokens.\n\nThese three vectors are often confused with search systems because the words sound similar. But here they are internal learned projections inside the model, not database fields. They are also not fixed meanings attached to words forever. Their numbers depend on training, on the layer, on the attention head, and on the token’s current context.",
+  "oneSentence": "Three vectors produced by learned projections represent matching needs, matching features, and information that attention may pass onward.",
+  "plainExplanation": "In a transformer, each token first has a vector, which is a list of numbers representing features. From that token representation, the model creates three different versions: a query, a key and a value. They are related, but they do different jobs.\n\nThe query represents features used to seek relevant context. The key represents features used for matching. The value represents information that may be passed onward. The model compares one token’s query with other tokens’ keys to produce compatibility scores. A normalising step turns these scores into attention weights.\n\nThose weights are then used to mix the value vectors. So the output is not the key or the value from one place only. It is usually a weighted combination of many values, with larger weights on tokens whose keys matched the query more strongly. This is how a token representation incorporates context from other tokens.\n\nThese three vectors are often confused with search systems because the words sound similar. But here they are internal projections inside the model, not database fields. They are also not fixed meanings attached to words forever. Their numbers depend on the learned projections, the layer, the attention head and the input representation.",
   "everydayAnalogy": {
     "title": "Sorting survey comments by the issue they raise",
     "story": "A team receives hundreds of short survey comments from people in Nairobi, Lima and Sarajevo. For each comment, the team writes one short note about what issue they are trying to identify, one label card listing the issues the comment might relate to, and one fuller summary card with the useful details from that comment. To group comments, they compare the issue note from one comment with the label cards on all comments. Comments with stronger matches contribute more of their summary cards to the final grouped view.",
@@ -100,7 +100,7 @@
       "Because the weight on 'plan' is highest at 0.70, the value vector for 'plan' contributes most strongly to the new representation of 'it'.",
       "The weighted sum 0.05×V(city) + 0.10×V(approved) + 0.70×V(plan) + 0.15×V(urgent) becomes the contextual output for 'it'."
     ],
-    "result": "The updated representation of 'it' carries strong information from 'plan', helping the model treat 'it' as referring to the plan rather than the city."
+    "result": "In this head, the output for \"it\" receives its largest shown value contribution from \"plan\". Other heads and later layers may use this contextual information."
   },
   "unWorkplaceExample": {
     "scenario": "After a disaster, an approved internal system analyses non-sensitive satellite image patches and associated labels such as flooded road, damaged roof and intact bridge. For one image patch, the model’s query can be compared with keys from other patches so it can draw on relevant value information from similar visual contexts.",
@@ -133,10 +133,10 @@
     }
   ],
   "simpleVsTechnical": {
-    "simple": "Each token makes three versions of itself: one to ask for relevant context, one to say what it can be matched on, and one to provide the information that may be used.",
+    "simple": "The model derives three vectors from each token representation: one used to seek matches, one used for matching, and one containing information that may be combined.",
     "technical": "Given an input representation x for each token, an attention head applies three learned linear projections to produce q = xW_Q, k = xW_K and v = xW_V. For one token position, its query is compared with all keys, often by a dot product, to produce raw compatibility scores. After scaling and a normalising step such as softmax, these become attention weights. The head then computes a weighted sum of the value vectors using those weights, yielding a contextualised output for that position. In self-attention, q, k and v all come from the same sequence; in cross-attention, the query comes from one sequence or stream while keys and values come from another. The important distinction is functional: keys determine matching, values determine what information is aggregated."
   },
-  "keyTakeaway": "Queries choose where to look, keys determine what matches, and values provide what gets blended into the output.",
+  "keyTakeaway": "Queries and keys determine matching weights, while values provide the information blended into the output.",
   "quickCheck": {
     "question": "In an attention head, what is the main role of the value vector?",
     "options": [
@@ -221,9 +221,83 @@
     "qkv"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:17:44.855Z",
+    "verdict": "revise",
+    "issues": [
+      {
+        "field": "oneSentence",
+        "severity": "error",
+        "problem": "It calls query, key and value \"learned vectors\", although they are activations produced by learned projections. It also presents asking, needing and advertising as literal model behaviour.",
+        "fix": "Three vectors produced by learned projections represent matching needs, matching features, and information that attention may pass onward."
+      },
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "It equates attention scores with weights, but the technical explanation later distinguishes raw compatibility scores from the normalised weights used to mix values. It also says a token gets \"selected\", which misleadingly suggests a hard choice.",
+        "fix": "In a transformer, each token first has a vector, which is a list of numbers representing features. From that token representation, the model creates three different versions: a query, a key and a value. They are related, but they do different jobs.\n\nThe query represents features used to seek relevant context. The key represents features used for matching. The value represents information that may be passed onward. The model compares one token’s query with other tokens’ keys to produce compatibility scores. A normalising step turns these scores into attention weights.\n\nThose weights are then us"
+      },
+      {
+        "field": "everydayAnalogy.story",
+        "severity": "warning",
+        "problem": "The story shifts from comparing one comment’s query with all keys to producing a single \"final grouped view\". Attention normally produces a separate contextual output for each query, not one global grouping of all comments.",
+        "fix": "A team receives hundreds of short survey comments from people in Nairobi, Lima and Sarajevo. For each comment, the team writes one short note about what related information it needs, one label card listing what the comment may match, and one fuller summary card with useful details. For one comment, they compare its issue note with the label cards on all comments. Stronger matches contribute more of their summary cards to the contextual view for that comment."
+      },
+      {
+        "field": "visual.steps[3-4]",
+        "severity": "error",
+        "problem": "The visual labels examples such as 0.1, 0.6, 0.2 and 0.1 as comparison scores, then says scores simply become weights. The page’s technical account correctly says raw compatibility scores require scaling and normalisation before they are weights.",
+        "fix": "In step 3, call the comparison results raw compatibility scores. Insert scaling and normalisation before step 4, or label the displayed numbers attention weights after normalisation. Change step 4 to: \"Use the resulting weights on values. Tokens with larger weights contribute more of their value vectors.\""
+      },
+      {
+        "field": "visual.accessibilityDescription",
+        "severity": "error",
+        "problem": "The accessibility text repeats the score-weight conflation and therefore does not accurately describe the same mechanism as the technical explanation.",
+        "fix": "The diagram explains attention for one token. First, each token has three derived vectors called query, key and value. Second, the current token’s query is compared with every token’s key to produce compatibility scores. Third, scaling and normalisation turn those scores into weights on the corresponding value vectors. Fourth, the weighted value vectors are combined into one output vector for the current token. Keys are used for matching, while values provide the information mixed into the output."
+      },
+      {
+        "field": "workedExample.input and workedExample.process",
+        "severity": "error",
+        "problem": "The process says the query is compared with every token’s key, but the displayed weighted sum includes only four tokens and calls that the contextual output. The sentence also contains \"The\", \"the\", \"because\", \"it\" and \"was\". The four shown coefficients do sum correctly: 0.05 + 0.10 + 0.70 + 0.15 = 1.00. That leaves no weight for the omitted tokens, but the page never states that this is a simplified, renormalised four-token example.",
+        "fix": "State that this is a simplified calculation over four shown candidates. Replace the second process step with: \"For this simplified example, it compares the query with four candidate keys and normalises their weights to sum to 1.\" Replace the fourth with: \"For these four candidates, the weighted contribution is 0.05×V(city) + 0.10×V(approved) + 0.70×V(plan) + 0.15×V(urgent).\""
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "warning",
+        "problem": "A large contribution from the value at \"plan\" does not by itself establish that the model has resolved the pronoun as referring to the plan. Attention weights and value mixing are not a direct coreference decision.",
+        "fix": "In this head, the output for \"it\" receives its largest shown value contribution from \"plan\". Other heads and later layers may use this contextual information."
+      },
+      {
+        "field": "simpleVsTechnical.simple",
+        "severity": "error",
+        "problem": "It presents tokens as literally asking and saying things. It also says each token makes the vectors, rather than saying the model derives them from the token representation.",
+        "fix": "The model derives three vectors from each token representation: one used to seek matches, one used for matching, and one containing information that may be combined."
+      },
+      {
+        "field": "keyTakeaway",
+        "severity": "error",
+        "problem": "\"Queries choose where to look\" anthropomorphises the mechanism and wrongly assigns the choice to the query alone. Attention weights result from comparisons between queries and keys.",
+        "fix": "Queries and keys determine matching weights, while values provide the information blended into the output."
+      },
+      {
+        "field": "quickCheck.options",
+        "severity": "error",
+        "problem": "Option 2 is the only correct answer, but the other options are implausible category errors. A reader can select the answer without understanding the distinction among query, key and value.",
+        "fix": "Use these options: [\"It is compared with keys to produce compatibility scores.\", \"It is the information weighted and combined after query-key matching.\", \"It is matched against a query to help produce compatibility scores.\", \"It normalises the compatibility scores into weights.\"]. Keep correctOptionIndex as 1."
+      }
+    ],
+    "applied": [
+      "oneSentence",
+      "plainExplanation",
+      "keyTakeaway",
+      "workedExampleResult",
+      "simpleVsTechnicalSimple"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",

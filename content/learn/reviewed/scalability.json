@@ -30,7 +30,7 @@
     "compute"
   ],
   "oneSentence": "The ability of a system to handle more users, data or tasks without a serious drop in speed, quality, reliability or cost control.",
-  "plainExplanation": "Scalability describes how well an AI system copes when demand grows. Demand can mean more people using it, more documents to process, bigger data sets, or stricter time requirements. A scalable system keeps working acceptably as that load rises.\n\nWhat goes in is extra load: for example, 500 consultation responses instead of 50, or 5 staff using a tool instead of 500. What happens in the middle depends on the design. The organisation may add more computing power, split the work across several machines, queue requests, or simplify parts of the process. What comes out should still be useful results delivered on time and at a manageable cost.\n\nScalability is not the same as raw speed. A system can be fast for a small test but fail badly when many people use it at once. It is also not the same as scaling laws, which are claims about how model performance changes as model size, data or compute increase.\n\nIn AI work, scalability has practical limits. More capacity often means more spending, more energy use, more monitoring, and more attention to data governance and hosting choices. A scalable design does not mean unlimited growth; it means growth can be handled in a planned, controlled way.",
+  "plainExplanation": "Scalability describes how well an AI system copes when demand grows. Demand can mean more people using it, more documents to process, bigger data sets, or stricter time requirements. A scalable system keeps working acceptably as that load rises.\n\nWhat goes in is extra load: for example, 500 consultation responses instead of 50, or 500 staff using a tool instead of 5. What happens in the middle depends on the design. The organisation may add more computing power, split the work across several machines, queue requests, or simplify parts of the process. What comes out should still be useful results delivered on time and at a manageable cost.\n\nScalability is not the same as raw speed. A system can be fast for a small test but fail badly when many people use it at once. It is also not the same as scaling laws, which are claims about how model performance changes as model size, data or compute increase.\n\nIn AI work, scalability has practical limits. More capacity often means more spending, more energy use, more monitoring, and more attention to data governance and hosting choices. A scalable design does not mean unlimited growth; it means growth can be handled in a planned, controlled way.",
   "everydayAnalogy": {
     "title": "Sorting consultation letters in a town hall",
     "story": "A town hall receives letters from residents about a new transport plan. On a quiet day, one staff member can read and sort them into topics such as buses, safety and costs. When 20,000 letters arrive after a public meeting, the same method breaks down unless the office adds more trained staff, uses trays for each topic, and sets a clear process for checking quality. If that new setup still produces reliable topic lists on time, the office is handling growth well.",
@@ -208,9 +208,35 @@
     "scale"
   ],
   "contentVersion": "1.0.0",
-  "reviewed": true,
-  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
-  "lastReviewed": "2026-07-31",
+  "reviewed": false,
+  "machineReview": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "reviewedAt": "2026-07-31T23:26:31.294Z",
+    "verdict": "reject",
+    "issues": [
+      {
+        "field": "plainExplanation",
+        "severity": "error",
+        "problem": "The example reverses the claimed growth in demand. It says \"5 staff using a tool instead of 500,\" which describes fewer users, not extra load.",
+        "fix": "Change it to \"500 staff using a tool instead of 5.\""
+      },
+      {
+        "field": "workedExample.process",
+        "severity": "error",
+        "problem": "The claim that the original setup would create a queue is not supported by the arrival schedule. The average arrival rate is 48,000 ÷ (3 × 24 × 60) = 11.11 comments per minute. That is below the stated capacity of 20 comments per minute. Processing all comments would require 48,000 ÷ 20 = 2,400 minutes = 40 hours, but they arrive over 72 hours, so a growing queue does not necessarily form. A human must specify a peak arrival pattern or state that all comments are processed together after the consultation closes."
+      },
+      {
+        "field": "workedExample.result",
+        "severity": "error",
+        "problem": "The stated rate of 75 comments per minute cannot be calculated from the supplied figures. Three instances at 20 comments per minute give 3 × 20 = 60 comments per minute. At that rate, 48,000 ÷ 60 = 800 minutes = 13 hours 20 minutes. The claimed 75 comments per minute would give 48,000 ÷ 75 = 640 minutes = 10 hours 40 minutes, so the 11-hour claim is internally consistent only after assuming an unstated 25% batching gain. A human must supply that batching gain or replace the result with figures derived from 60 comments per minute."
+      }
+    ],
+    "applied": [
+      "plainExplanation"
+    ]
+  },
   "generation": {
     "model": "gpt-5.4-2026-03-05",
     "deployment": "gpt-5.4",
