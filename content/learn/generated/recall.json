@@ -1,0 +1,225 @@
+{
+  "id": "recall",
+  "slug": "recall",
+  "term": "Recall",
+  "aliases": [
+    "sensitivity",
+    "true positive rate"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "programme",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "accuracy",
+    "confusion-matrix"
+  ],
+  "relatedTermIds": [
+    "confusion-matrix",
+    "false-positive-and-false-negative",
+    "precision",
+    "f1-score",
+    "evaluation-metric",
+    "class-imbalance"
+  ],
+  "oftenConfusedWith": [
+    "accuracy",
+    "precision",
+    "f1-score"
+  ],
+  "oneSentence": "The share of real positive cases that a system successfully flags.",
+  "plainExplanation": "Recall measures how well a system finds the cases you care about. A “positive case” means the kind of item you want the system to catch, such as harmful content, fraud, or consultations that mention access barriers.\n\nYou start with items that already have a correct label, often called the ground truth. The system checks those items and marks some as positive. Recall looks only at the items that truly are positive, then asks: how many of those did the system catch?\n\nThe calculation is true positives divided by all real positives. True positives are cases that really were positive and were correctly flagged. If there are many false negatives, meaning real positives the system missed, recall goes down.\n\nHigh recall matters when missing a real case is costly. But recall alone does not tell you how many false alarms the system creates. That is why it is often discussed alongside precision, which asks a different question.",
+  "everydayAnalogy": {
+    "title": "Finding all the forms about blocked access",
+    "story": "A city office receives 200 public feedback forms after a transport consultation. Staff want to find every form that mentions blocked access for older persons or persons with disabilities. They use a keyword tool to pull out likely matches for review. If 40 forms truly mention blocked access and the tool finds 32 of them, its recall is based on those 32 found out of the 40 that really mattered.",
+    "mapping": [
+      {
+        "analogyElement": "all forms that truly mention blocked access",
+        "aiElement": "all real positive cases"
+      },
+      {
+        "analogyElement": "forms the tool pulls out",
+        "aiElement": "cases predicted as positive"
+      },
+      {
+        "analogyElement": "32 true matches found",
+        "aiElement": "true positives"
+      },
+      {
+        "analogyElement": "8 relevant forms left in the pile",
+        "aiElement": "false negatives"
+      }
+    ],
+    "limitation": "A keyword tool is much simpler than many AI systems. Real models may use patterns learned from data, may behave differently on new data, and may involve a threshold that changes recall, so the office example does not show the full mechanics."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "Precision–recall threshold simulator",
+    "learningObjective": "After using this explainer, the reader should be able to say that recall is the proportion of real positive cases found, and that changing the decision threshold can raise recall while also affecting precision.",
+    "description": "Show a horizontal threshold slider above a row or scatter of scored items. Each item has a true label known to the explainer: positive items in one shape or colour, negative items in another. As the slider moves, items on one side of the threshold become ‘flagged’. Counters update live for true positives, false positives and false negatives, and the displayed recall value changes accordingly. A companion precision value can also update so readers can compare the two measures without confusing them.",
+    "steps": [
+      {
+        "label": "See the scored items",
+        "explanation": "The explainer starts with items that each have a model score and a known true label. Some are truly positive and some are not.",
+        "visualInstruction": "Render 20 to 40 small SVG marks arranged by score from low to high. Use both colour and shape so true positives and true negatives remain distinguishable without relying on colour alone."
+      },
+      {
+        "label": "Set the threshold",
+        "explanation": "The threshold decides which items the system flags as positive. Lowering it usually flags more items.",
+        "visualInstruction": "Provide a draggable vertical line or range input tied to the score axis. Mark all items above the threshold as flagged with an outline or check icon."
+      },
+      {
+        "label": "Watch recall change",
+        "explanation": "Recall rises when more of the truly positive items are caught, and falls when more are missed.",
+        "visualInstruction": "Update a formula panel in plain text: recall = true positives / all real positives. Animate number changes if motion is allowed; otherwise swap values instantly."
+      },
+      {
+        "label": "Compare with precision",
+        "explanation": "A lower threshold can improve recall but may also create more false alarms. This shows why recall and precision answer different questions.",
+        "visualInstruction": "Display precision beside recall with a short note under each metric. Optionally highlight false positives and false negatives in different patterns."
+      }
+    ],
+    "interaction": "Readers drag a threshold slider left or right, or use keyboard arrow keys on the focused range control, to see how the set of flagged items changes and how recall and precision update together.",
+    "accessibilityDescription": "This interactive shows a set of items with known true labels and model scores. You control a threshold that decides which items are flagged as positive. When you lower the threshold, more items are flagged. This usually catches more of the truly positive items, so recall often increases, but it can also flag more items that are not truly positive. The explainer reports the current counts of true positives, false positives and false negatives, and states recall as the number of true positives divided by the total number of truly positive items. Its main lesson is that recall measures missed real cases, not false alarms.",
+    "reducedMotionDescription": "Readers see the same scored items, threshold control and metric values, but changes happen without animation. When the threshold moves, the highlighted items and the recall and precision numbers update instantly in a static layout.",
+    "component": "precision-recall"
+  },
+  "workedExample": {
+    "scenario": "A team tests a classifier that should flag public comments mentioning barriers to accessing health services.",
+    "input": "Test set of 100 comments, of which 20 truly mention access barriers.",
+    "process": [
+      "The classifier reviews all 100 comments and flags 25 as positive.",
+      "Out of those 25 flagged comments, 16 truly mention access barriers.",
+      "That means 4 true positive comments were missed, because there were 20 real positives in total.",
+      "Recall is 16 divided by 20, which equals 0.80, or 80%."
+    ],
+    "result": "The system found 80% of the comments it was supposed to catch, but it still missed 4 real cases."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team tests a tool that scans draft speeches to flag phrases that may differ from previously agreed language, so human reviewers can check them before circulation.",
+    "relevance": "Recall helps the team judge whether the tool is catching most of the drafts that really need review. High recall may matter if missing non-agreed wording could create diplomatic or operational problems.",
+    "caution": "Use only approved systems and approved text. Do not paste confidential draft language, negotiation details or unpublished internal material into an unapproved public AI service."
+  },
+  "whyItMatters": "If a system misses too many real cases, a good-looking overall score can hide a serious failure. Recall helps people judge whether the system is safe enough for tasks where missed cases have real consequences.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "screening tools for risk or harm",
+    "content moderation dashboards",
+    "medical test discussions",
+    "machine learning courses"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "High recall means the system is generally accurate.",
+      "correction": "Not necessarily. A system can catch most real positive cases and still make many false alarms. Recall looks at missed real cases, not overall correctness."
+    },
+    {
+      "misconception": "Recall and precision are just two words for the same score.",
+      "correction": "They answer different questions. Recall asks how many real positive cases were found, while precision asks how many flagged cases were actually positive."
+    },
+    {
+      "misconception": "If recall is 90%, the system is right 90% of the time.",
+      "correction": "No. A recall of 90% means it found 90% of the real positive cases. It says nothing by itself about negatives or about how many flagged cases were wrong."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Recall tells you how good a system is at catching the cases you do not want to miss.",
+    "technical": "Recall, also called sensitivity or true positive rate, is TP / (TP + FN): the proportion of actual positive instances that the classifier labels positive at a given threshold."
+  },
+  "keyTakeaway": "Recall answers one question: of the real cases that mattered, how many did the system catch?",
+  "quickCheck": {
+    "question": "A system reviews 50 documents. Ten truly contain a problem that should be flagged. It correctly flags 8 of those 10. What is its recall?",
+    "options": [
+      "16%",
+      "80%",
+      "20%",
+      "62.5%"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Recall is true positives divided by all real positives. Here that is 8 divided by 10, so the recall is 80%. The total number of documents does not matter for this calculation."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Precision and recall",
+      "url": "https://en.wikipedia.org/wiki/Precision_and_recall",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference-style overview of precision and recall and suits readers who want definitions, formulas and related concepts in one place.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link gives a short teaching explanation with examples and suits readers who want a quick practical introduction to accuracy, recall and precision.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This link gives a risk-management perspective on evaluating AI systems and suits programme, governance and assurance readers who need to place metrics in a wider decision context.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Recall",
+      "url": "https://www.youtube.com/results?search_query=Recall%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search-results page gives multiple video explanations of recall and suits readers who prefer to compare several visual teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Recall",
+      "url": "https://www.reddit.com/search/?q=Recall",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search-results page gives community discussions about recall and suits readers who want informal explanations, examples and common points of confusion, with care about varying quality.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "recall in ai",
+    "what is recall machine learning",
+    "true positive rate meaning",
+    "sensitivity vs recall",
+    "recall vs precision simple",
+    "how to calculate recall",
+    "recal machine learning",
+    "missed positives recall",
+    "recall",
+    "sensitivity",
+    "true positive rate"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:46.286Z",
+    "contentHash": "72dbcd5c6eb9c9c4",
+    "attempts": 1,
+    "promptTokens": 2173,
+    "completionTokens": 1976
+  }
+}

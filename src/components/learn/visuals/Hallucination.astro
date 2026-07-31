@@ -1,0 +1,140 @@
+---
+/**
+ * Hallucination: the same missing fact, three possible behaviours.
+ *
+ * The point is not that models lie — they have no intent — but that fluency is
+ * produced by the same process whether or not the underlying fact exists.
+ * Showing "say you don't know", "go and look it up" and "produce something
+ * plausible" as three outputs of one situation is what separates the concept
+ * from "bug" and from "lying".
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-hal data-term={termId}>
+  <p class="vx__label">The question asked</p>
+  <p class="visual__readout" data-hal-question>
+    “Which paragraph of the 2024 report deals with data governance?”
+  </p>
+
+  <p class="vx__label">The situation inside the system</p>
+  <p class="visual__readout">
+    The exact paragraph number is not in what the model learned, and nothing has been looked up.
+    Three things can happen next.
+  </p>
+
+  <div class="vx__row" role="group" aria-label="Choose a behaviour">
+    <button type="button" class="vx__button" data-hal-pick="0" aria-pressed="true">
+      State the uncertainty
+    </button>
+    <button type="button" class="vx__button" data-hal-pick="1" aria-pressed="false">
+      Retrieve a source
+    </button>
+    <button type="button" class="vx__button" data-hal-pick="2" aria-pressed="false">
+      Produce something plausible
+    </button>
+  </div>
+
+  <div class="hal-out" data-hal-out></div>
+
+  <p class="visual__readout" role="status" aria-live="polite" data-hal-readout></p>
+</div>
+
+<style>
+  .hal-out {
+    border: 1px solid var(--hairline-strong);
+    border-left-width: 4px;
+    border-radius: var(--radius);
+    padding: var(--sp-4);
+    background: var(--void-raised);
+  }
+
+  .hal-out[data-kind='safe'] { border-left-color: var(--riso-green); }
+  .hal-out[data-kind='grounded'] { border-left-color: var(--riso-yellow); }
+  .hal-out[data-kind='hallucinated'] { border-left-color: var(--riso-pink); }
+
+  .hal-out__verdict {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 var(--sp-2);
+  }
+
+  .hal-out[data-kind='safe'] .hal-out__verdict { color: var(--riso-green); }
+  .hal-out[data-kind='grounded'] .hal-out__verdict { color: var(--riso-yellow); }
+  .hal-out[data-kind='hallucinated'] .hal-out__verdict { color: var(--riso-pink); }
+
+  .hal-out__text {
+    margin: 0;
+    font-size: var(--step-0);
+    color: var(--ink);
+  }
+
+  .hal-out__note {
+    margin: var(--sp-3) 0 0;
+    color: var(--ink-dim);
+    font-size: var(--step--1);
+  }
+</style>
+
+<script>
+  const OPTIONS = [
+    {
+      kind: 'safe',
+      verdict: 'Honest, and useful',
+      text: '“I do not have the paragraph number for that report. If you can share the document, or point me at the collection it lives in, I can find it.”',
+      note: 'Nothing was invented. This answer is less satisfying and more useful, and it is the behaviour a system should be designed and instructed to prefer.',
+      readout:
+        'The model was asked something it does not have and said so. Notice this takes deliberate design: nothing in next-token prediction naturally produces an admission of ignorance.',
+    },
+    {
+      kind: 'grounded',
+      verdict: 'Grounded in a source',
+      text: '“Paragraph 4.2 covers data governance.” — retrieved from the 2024 report, page 18.',
+      note: 'The system searched a trusted collection first and answered from what it found, so the claim can be checked against the document rather than trusted.',
+      readout:
+        'This is retrieval-augmented generation. The model is no more knowledgeable than in the other two cases; it was simply handed the passage before it answered, and can therefore cite it.',
+    },
+    {
+      kind: 'hallucinated',
+      verdict: 'Fluent, confident, and unsupported',
+      text: '“Paragraph 6.3 sets out the data governance framework, building on the recommendations in annex II.”',
+      note: 'This reads exactly like the correct answer. It has the right shape, the right register, and a plausible cross-reference. None of that is evidence that paragraph 6.3 exists.',
+      readout:
+        'This is a hallucination. The model was not lying — it has no intent — it was completing a pattern, and a well-formed sentence is what the pattern produces whether or not the fact behind it exists. That is why fluency must never be read as a signal of accuracy.',
+    },
+  ];
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-hal]')) {
+    const out = root.querySelector<HTMLElement>('[data-hal-out]')!;
+    const readout = root.querySelector<HTMLElement>('[data-hal-readout]')!;
+    const buttons = root.querySelectorAll<HTMLButtonElement>('[data-hal-pick]');
+
+    function render(index: number) {
+      const o = OPTIONS[index]!;
+      out.dataset.kind = o.kind;
+      out.replaceChildren();
+
+      const verdict = document.createElement('p');
+      verdict.className = 'hal-out__verdict';
+      verdict.textContent = o.verdict;
+      const text = document.createElement('p');
+      text.className = 'hal-out__text';
+      text.textContent = o.text;
+      const note = document.createElement('p');
+      note.className = 'hal-out__note';
+      note.textContent = o.note;
+      out.append(verdict, text, note);
+
+      readout.textContent = o.readout;
+      buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
+    }
+
+    buttons.forEach((b, i) => b.addEventListener('click', () => render(i)));
+    render(0);
+  }
+</script>

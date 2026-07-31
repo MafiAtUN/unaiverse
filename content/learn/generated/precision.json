@@ -1,0 +1,221 @@
+{
+  "id": "precision",
+  "slug": "precision",
+  "term": "Precision",
+  "aliases": [
+    "positive predictive value"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "programme",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "accuracy",
+    "confusion-matrix"
+  ],
+  "relatedTermIds": [
+    "confusion-matrix",
+    "false-positive-and-false-negative",
+    "f1-score",
+    "evaluation-metric",
+    "calibration",
+    "class-imbalance"
+  ],
+  "oftenConfusedWith": [
+    "accuracy",
+    "recall"
+  ],
+  "oneSentence": "The share of flagged results that are actually correct positives.",
+  "plainExplanation": "Precision looks only at the items a system marked as positive. It asks: out of those flagged items, how many were truly the thing we were looking for?\n\nThe input is a set of predictions and the real outcomes. For each case, the system either flags it as positive or does not. Then we compare those flags with reality.\n\nA true positive means the system flagged something and it really was positive. A false positive means the system flagged something but it was not actually positive. Precision uses these two counts: true positives divided by all flagged positives.\n\nSo precision tells you how trustworthy a positive result is. High precision means few false alarms among the positives. It does not tell you how many real positives were missed; that is recall, a different measure.",
+  "everydayAnalogy": {
+    "title": "A librarian’s suggested documents list",
+    "story": "A librarian in Nairobi receives a request for past documents about coastal flooding. She quickly pulls 10 documents from a large knowledge base and puts them on a trolley marked “relevant”. After checking, 8 really are about coastal flooding, but 2 are about general weather planning and do not fit. Her precision is based on the 10 she selected, not on all the useful documents still left on the shelves.",
+    "mapping": [
+      {
+        "analogyElement": "Documents on the trolley marked relevant",
+        "aiElement": "Items the system predicted as positive"
+      },
+      {
+        "analogyElement": "8 documents that truly fit the request",
+        "aiElement": "True positives"
+      },
+      {
+        "analogyElement": "2 documents that do not actually fit",
+        "aiElement": "False positives"
+      },
+      {
+        "analogyElement": "Checking only the selected stack",
+        "aiElement": "Calculating precision from predicted positives only"
+      }
+    ],
+    "limitation": "A librarian may use judgement, context and follow-up questions, while a model applies learned patterns from data. Also, in a real search system the threshold for what counts as “positive” can be adjusted numerically, which the trolley story does not show well."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "Precision and false alarms",
+    "learningObjective": "After using this explainer, a reader should be able to say that precision measures how many flagged positives are actually correct, and how it changes when false positives rise or fall.",
+    "description": "An interactive panel shows a grid of cases split into true positives, false positives, true negatives and false negatives. Users adjust a threshold and class balance, then watch the predicted-positive group change and see precision update as a fraction and percentage.",
+    "steps": [
+      {
+        "label": "Start with the full set",
+        "explanation": "The screen shows all cases, with colours indicating what is truly positive or truly negative before any prediction threshold is applied.",
+        "visualInstruction": "Render a labelled grid or dot plot of cases. Use one colour family for true positives/false negatives and another for true negatives/false positives. Include a visible total count."
+      },
+      {
+        "label": "Apply the threshold",
+        "explanation": "Moving the threshold changes which cases the system flags as positive. The predicted-positive group is outlined so the reader can see which items count in the precision calculation.",
+        "visualInstruction": "Provide a threshold slider. As it moves, animate or update an outline around all predicted positives. Keep counts for TP and FP visible beside the graphic."
+      },
+      {
+        "label": "Read the precision formula",
+        "explanation": "A live formula updates: precision = true positives divided by all predicted positives, which is true positives plus false positives.",
+        "visualInstruction": "Display TP / (TP + FP) with the current numbers substituted and the percentage shown. Highlight false positives when they increase, to show why precision falls."
+      },
+      {
+        "label": "Compare two settings",
+        "explanation": "The reader can switch between a stricter and a looser threshold to see the trade-off: fewer false alarms may improve precision, even if fewer total positives are found.",
+        "visualInstruction": "Add buttons for ‘stricter’ and ‘looser’ presets or allow side-by-side snapshots. Show the two precision values together for comparison."
+      }
+    ],
+    "interaction": "Users can move a threshold slider, switch class balance presets, and compare stricter versus looser settings while the counts and precision update immediately.",
+    "accessibilityDescription": "Screen-reader version: You are given a set of cases with real labels and system predictions. Precision is calculated from only the cases predicted positive. The explainer reports the current counts of true positives and false positives, then reads the formula precision equals true positives divided by true positives plus false positives. When the threshold becomes stricter, fewer cases are flagged positive. If false positives drop faster than true positives, precision rises. If many incorrect cases are flagged, precision falls.",
+    "reducedMotionDescription": "For reduced motion, show two static states instead of animation: one looser threshold and one stricter threshold. Each state lists counts for true positives, false positives, true negatives and false negatives, with the precision formula written out and the predicted-positive group clearly outlined.",
+    "component": "precision-recall"
+  },
+  "workedExample": {
+    "scenario": "A knowledge-base search tool labels some documents as relevant to “drought early warning”.",
+    "input": "The tool flags 12 documents as relevant. After human checking, 9 are truly relevant and 3 are not.",
+    "process": [
+      "Count the documents the tool marked as relevant: 12 predicted positives.",
+      "Count how many of those are actually relevant: 9 true positives.",
+      "Count the incorrect flagged documents: 3 false positives.",
+      "Calculate precision as 9 divided by 12, which equals 0.75."
+    ],
+    "result": "Precision is 75%. In plain language, three out of every four flagged documents were actually relevant."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team searches past UN resolutions for earlier wording on disaster risk reduction. An internal retrieval tool highlights paragraphs it predicts are relevant to the query, and staff sample the highlighted results to measure precision before relying on the tool.",
+    "relevance": "This helps staff judge whether highlighted passages are usually on-topic or whether the tool creates too many false leads that waste time and may misguide drafting.",
+    "caution": "Use only approved internal systems and approved document collections. Do not paste confidential, negotiation-sensitive or access-restricted text into a public AI service for testing."
+  },
+  "whyItMatters": "A system can look useful while still producing many false alarms. Precision helps you judge whether a positive result is trustworthy enough for your task, especially when acting on a wrong alert has costs.",
+  "whereYouMayHearIt": [
+    "search and retrieval evaluation",
+    "medical test discussions",
+    "spam filter reports",
+    "machine learning dashboards"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "High precision means the system finds most of the real positives.",
+      "correction": "Not necessarily. A system can be very selective, flag only a few cases, and get most of those right. That gives high precision but may miss many true cases, which is low recall."
+    },
+    {
+      "misconception": "Precision and accuracy are basically the same.",
+      "correction": "Accuracy looks at all predictions, both positive and negative. Precision looks only at predicted positives, so it is often more informative when positive flags trigger action."
+    },
+    {
+      "misconception": "If precision is 90%, then 90% of all items are positive.",
+      "correction": "Precision is about the quality of the flagged positive set, not the share of positives in the whole dataset."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "When the system says ‘this one is a match’, precision tells you how often that positive signal is correct.",
+    "technical": "For binary classification, precision, also called positive predictive value, equals TP divided by TP plus FP. It measures the proportion of predicted positives that are true positives, and it depends on the decision threshold and the data distribution."
+  },
+  "keyTakeaway": "Precision tells you how much to trust a positive flag, not how many real positives were found overall.",
+  "quickCheck": {
+    "question": "A system flags 20 messages as urgent. Human review shows that 15 really are urgent and 5 are not. What is the precision?",
+    "options": [
+      "15%",
+      "25%",
+      "75%",
+      "80%"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Precision uses only flagged positives: true positives divided by all predicted positives. Here that is 15 divided by 20, which equals 75%. The unflagged messages do not enter this calculation."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Precision and recall",
+      "url": "https://en.wikipedia.org/wiki/Precision_and_recall",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This page gives a broad written overview of precision and recall, suitable for readers who want definitions, formulas and examples in one place.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course-style resource explains precision alongside accuracy and recall with practical teaching examples, and suits beginners who want a guided introduction.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This framework helps readers connect measurement choices to risk management and governance, and suits practitioners evaluating AI systems in real organisations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Precision",
+      "url": "https://www.youtube.com/results?search_query=Precision%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for videos about precision, useful for readers who prefer visual explanations and want to choose a teaching style that fits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Precision",
+      "url": "https://www.reddit.com/search/?q=Precision",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussions about precision, useful for readers who want to see common questions, confusions and informal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "precision ai meaning",
+    "positive predictive value simple",
+    "precision vs recall",
+    "how to calculate precision",
+    "false positives precision",
+    "classification precision example",
+    "precison machine learning",
+    "ppv vs precision",
+    "precision",
+    "positive predictive value"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:35:06.733Z",
+    "contentHash": "d0316917ac3cc32e",
+    "attempts": 2,
+    "promptTokens": 2225,
+    "completionTokens": 1897
+  }
+}

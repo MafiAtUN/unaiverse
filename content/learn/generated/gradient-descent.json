@@ -1,0 +1,244 @@
+{
+  "id": "gradient-descent",
+  "slug": "gradient-descent",
+  "term": "Gradient descent",
+  "aliases": [
+    "stochastic gradient descent",
+    "SGD"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "gradient",
+    "loss-function"
+  ],
+  "relatedTermIds": [
+    "loss-function",
+    "gradient",
+    "learning-rate",
+    "convergence",
+    "momentum",
+    "adam-optimiser"
+  ],
+  "oftenConfusedWith": [
+    "optimisation",
+    "backpropagation",
+    "chain-rule",
+    "local-and-global-minimum"
+  ],
+  "oneSentence": "A method for reducing a model’s error by repeatedly adjusting its internal settings in the direction that most lowers the loss.",
+  "plainExplanation": "Gradient descent is a common way to improve a machine-learning model during training. The model starts with many settings, often called parameters, that control its outputs. We give the model examples, compare its outputs with the target answers, and calculate a loss: a number that summarises how wrong it was.\n\nNext, the training process estimates which way each parameter should move to reduce that loss. That estimated direction is called the gradient. If a parameter change would increase loss, the update goes the other way. If a change would reduce loss, the update moves that way.\n\nThen the model takes a small step. The size of that step is controlled by the learning rate. This repeat cycle of measure, estimate, and nudge gradually tends to make the model less wrong on the training data.\n\nStochastic gradient descent, or SGD, uses a small subset of examples at a time instead of the whole dataset. That makes training faster and noisier. Gradient descent is closely related to backpropagation, but they are not the same: backpropagation computes gradients, while gradient descent uses those gradients to update parameters.",
+  "everydayAnalogy": {
+    "title": "Sorting public feedback with adjustable rules",
+    "story": "A city team is sorting consultation comments into topics such as transport, housing, and water. They use a spreadsheet with adjustable scoring rules, for example how strongly the word \"bus\" points to transport. After checking a small batch, they see the system put too many housing comments into transport. They slightly reduce some transport scores and increase some housing scores, then test another batch. Repeating that cycle gradually improves the sorting rules.",
+    "mapping": [
+      {
+        "analogyElement": "adjustable scoring rules in the spreadsheet",
+        "aiElement": "model parameters or weights"
+      },
+      {
+        "analogyElement": "checking a small batch of comments",
+        "aiElement": "using a batch in stochastic gradient descent"
+      },
+      {
+        "analogyElement": "seeing which topic scores were too high or too low",
+        "aiElement": "calculating the gradient from the loss"
+      },
+      {
+        "analogyElement": "slightly changing the scores and trying again",
+        "aiElement": "updating parameters with a learning rate"
+      }
+    ],
+    "limitation": "In the story, people can inspect the mistakes and change rules in a fairly direct, meaningful way. In a real neural network, the parameters are usually many numerical values with no simple human interpretation, and the gradient is computed mathematically rather than by staff reasoning through category labels."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "How repeated small updates lower loss",
+    "learningObjective": "After using this explainer, a reader should be able to say that gradient descent repeatedly measures loss, computes a downhill direction, and takes controlled steps to reduce error.",
+    "description": "An interactive loss landscape shows a marker for the model’s current position. Users can step through training, change the learning rate, and switch between full-batch and stochastic updates to see smoother or noisier paths toward lower loss.",
+    "steps": [
+      {
+        "label": "Start position",
+        "explanation": "The marker begins on a curved loss surface at a point with relatively high loss. A side panel shows current loss and learning rate.",
+        "visualInstruction": "Draw an x-y plot with a smooth bowl-shaped or uneven curve and a highlighted point above the minimum; display numeric loss beside it."
+      },
+      {
+        "label": "Measure slope",
+        "explanation": "The explainer shows the local slope at the current point. This slope indicates which direction would increase loss and which would decrease it.",
+        "visualInstruction": "Add a tangent arrow or small directional indicator at the point, labelled uphill and downhill."
+      },
+      {
+        "label": "Take an update step",
+        "explanation": "The marker moves a short distance downhill. Larger learning rates create bigger jumps; very large ones can overshoot the low point.",
+        "visualInstruction": "Animate or step the point along the curve by one update; show a ghosted previous point and a line segment between them."
+      },
+      {
+        "label": "Repeat over many steps",
+        "explanation": "Successive updates usually lower loss, though stochastic updates wobble because each step uses only part of the data.",
+        "visualInstruction": "Leave a trail of points. Provide a toggle that switches the path between smooth full-batch movement and jittery SGD movement."
+      },
+      {
+        "label": "Compare outcomes",
+        "explanation": "Readers can compare small, medium, and too-large learning rates and see slower progress, steady descent, or instability.",
+        "visualInstruction": "Offer preset buttons for learning rate values and redraw the path and loss-over-time mini-chart for each choice."
+      }
+    ],
+    "interaction": "Users can press Next Step or Auto Run, drag a learning-rate slider, and toggle between full-batch gradient descent and stochastic gradient descent; the simulation updates the path and the loss-over-time chart.",
+    "accessibilityDescription": "Screen-reader mode presents the simulation as a narrated sequence. It explains that the model starts at a point on a loss curve with high loss, measures the local slope, then updates parameters in the downhill direction. It reports the effect of different learning rates: small steps reduce loss slowly, moderate steps reduce loss steadily, and very large steps can jump past the low point and fail to settle. It also contrasts full-batch updates, which follow a smoother path, with stochastic updates, which are noisier but often faster per step.",
+    "reducedMotionDescription": "Readers who prefer less motion see three static side-by-side states: start, one downhill update, and several updates later. A separate static comparison shows paths for small, medium, and too-large learning rates, plus a smooth path for full-batch and a jagged path for stochastic updates.",
+    "component": "gradient-descent"
+  },
+  "workedExample": {
+    "scenario": "A simple text classifier is being trained to label consultation comments as transport-related or not.",
+    "input": "Current model weight for the word \"bus\" = 0.40. Learning rate = 0.10. On one training batch, the gradient for that weight is -0.30.",
+    "process": [
+      "The model scores a batch of comments and produces some wrong labels, giving a loss value for that batch.",
+      "Training computes the gradient for the \"bus\" weight as -0.30, meaning increasing this weight would reduce loss.",
+      "Gradient descent updates the weight by subtracting learning rate × gradient: 0.40 - (0.10 × -0.30) = 0.43.",
+      "The model runs again on the next batch with the new weight. If the update helped, the average loss tends to go down over repeated steps."
+    ],
+    "result": "After this step, the model gives slightly more importance to the word \"bus\" when predicting the transport category, because that change was estimated to reduce error on the training data."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN language technology team is training an internal model to help draft rough translations of routine, non-sensitive field updates into a working language. During training, gradient descent adjusts many parameters so the model’s output better matches approved reference translations.",
+    "relevance": "This helps staff understand that model quality does not improve by magic; it improves through repeated error measurement and controlled parameter updates.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive, or operational field information into an unapproved public AI service. Training and testing should use approved systems, authorised data, and human review."
+  },
+  "whyItMatters": "If you use or procure AI systems, gradient descent helps explain why training takes many iterations, why settings such as learning rate matter, and why better results come from careful optimisation rather than one-time tuning.",
+  "whereYouMayHearIt": [
+    "machine-learning training discussions",
+    "neural network courses",
+    "model debugging meetings",
+    "papers comparing optimisers"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Gradient descent and backpropagation are the same thing.",
+      "correction": "They work together but do different jobs. Backpropagation computes how each parameter affected the loss, while gradient descent uses that information to update the parameters."
+    },
+    {
+      "misconception": "It always finds the best possible solution.",
+      "correction": "It often finds a good solution, but not always the global minimum. The loss surface can have flat regions, local minima, or unstable areas, and results depend on initialisation and settings."
+    },
+    {
+      "misconception": "A larger learning rate always trains faster.",
+      "correction": "Bigger steps can speed progress at first, but if they are too large the updates can overshoot low-loss regions and make training unstable or fail to converge."
+    },
+    {
+      "misconception": "Stochastic gradient descent is just a worse, noisy version of full-batch training.",
+      "correction": "It is noisier, but that noise can make training practical on large datasets and can sometimes help the process move through difficult parts of the loss landscape."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a repeated process for making a model less wrong: measure error, see which way to adjust the settings, and take a small step.",
+    "technical": "Given parameters and a differentiable loss function, the method computes the gradient of loss with respect to the parameters and updates them by moving in the negative gradient direction, often using mini-batches in SGD and a learning-rate hyperparameter to scale each step."
+  },
+  "keyTakeaway": "Gradient descent improves a model through many small error-reducing steps, not one big leap.",
+  "quickCheck": {
+    "question": "What does stochastic gradient descent change compared with basic full-batch gradient descent?",
+    "options": [
+      "It uses a small subset of training examples for each update instead of the whole dataset.",
+      "It removes the need to calculate loss.",
+      "It guarantees the global minimum.",
+      "It replaces gradients with random guesses only."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "SGD updates parameters using one example or a small batch at a time. That makes each step faster and noisier. It still uses loss and gradients; it does not guarantee the best possible minimum, and it is not purely random."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Gradient descent, how neural networks learn",
+      "url": "https://www.3blue1brown.com/lessons/gradient-descent",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives a strong visual intuition for downhill movement on a loss surface and suits visual learners who want the big picture first.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Gradient descent",
+      "url": "https://en.wikipedia.org/wiki/Gradient_descent",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This article gives a broad reference-style overview of definitions, variants, and related concepts, and suits readers who want a more formal summary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video places gradient descent inside the wider training process for neural networks and suits readers who want context before details.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course page focuses on reducing loss during training with practical explanations and suits beginners and workplace learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Gradient descent",
+      "url": "https://www.youtube.com/results?search_query=Gradient%20descent%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers browse multiple video explanations and compare teaching styles; it suits people still looking for a presentation that clicks for them.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Gradient descent",
+      "url": "https://www.reddit.com/search/?q=Gradient%20descent",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page lets readers see community questions and explanations about gradient descent; it suits readers who want informal discussion and common points of confusion.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "gradient descent simple explanation",
+    "sgd meaning in machine learning",
+    "how gradient descent works",
+    "gradient descent vs backpropagation",
+    "learning rate overshooting",
+    "stochastic gradient descent example",
+    "gradient decsent typo",
+    "why loss goes down training",
+    "gradient descent",
+    "stochastic gradient descent",
+    "sgd"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:22.844Z",
+    "contentHash": "3f13e4aac195bad6",
+    "attempts": 2,
+    "promptTokens": 2220,
+    "completionTokens": 2248
+  }
+}

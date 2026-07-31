@@ -1,0 +1,224 @@
+{
+  "id": "access-control",
+  "slug": "access-control",
+  "term": "Access control",
+  "aliases": [
+    "permissions",
+    "least privilege"
+  ],
+  "categoryId": "ai-security",
+  "subcategory": "AI Security",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "data-security"
+  ],
+  "relatedTermIds": [
+    "ai-security",
+    "prompt-injection",
+    "data-exfiltration",
+    "sandboxing",
+    "secrets-management",
+    "shadow-ai"
+  ],
+  "oftenConfusedWith": [
+    "authentication-and-authorisation",
+    "data-security"
+  ],
+  "oneSentence": "Access control sets rules about which people, systems or AI tools can view, use or change specific data, functions and resources.",
+  "plainExplanation": "Access control is the practice of limiting access to something valuable. That “something” could be a file, a database, an internal AI assistant, a plug-in, or a tool that can send email or query records. The basic question is simple: who or what is allowed to do what?\n\nWhat goes in are an identity and a request. The identity might be a staff member, a service account, or an AI application acting through a connected tool. The request might be “read this document”, “use this search tool”, or “send this message”. The system checks rules, often called permissions, to see whether that action is allowed.\n\nWhat happens next is a gatekeeping step. If the identity has the right permission, access is granted. If not, access is blocked. Good access control also limits unnecessary power. This idea is often called least privilege: give only the minimum access needed for the task, not broad access “just in case”.\n\nWhat comes out is a safer system with clearer boundaries. In AI security, this matters because many attacks do not break code in the usual way. Instead, they try to persuade a model or connected tool to reveal data, use a function, or cross a boundary it should not cross. Strong access control helps ensure that even if a model produces risky output, the underlying systems still refuse actions the user or tool is not authorised to perform.",
+  "everydayAnalogy": {
+    "title": "Library desk with coloured passes",
+    "story": "At a large library, visitors receive different coloured passes. A blue pass lets someone read books in the main hall, while a green staff pass also opens the archive room and the equipment cupboard. When a volunteer asks for an old map from the archive, the librarian checks the pass before opening the door. Even if the volunteer sounds confident and knows the title of the map, they still cannot enter spaces their pass does not allow.",
+    "mapping": [
+      {
+        "analogyElement": "coloured passes",
+        "aiElement": "permissions linked to an identity"
+      },
+      {
+        "analogyElement": "librarian checking before opening a door",
+        "aiElement": "system verifying whether a requested action is allowed"
+      },
+      {
+        "analogyElement": "archive room and equipment cupboard",
+        "aiElement": "restricted data and powerful tools or functions"
+      },
+      {
+        "analogyElement": "volunteer knowing the map title but still being refused",
+        "aiElement": "a convincing request does not override access rules"
+      }
+    ],
+    "limitation": "Real digital systems are more detailed than door access in a library. Permissions can apply not only to places, but also to actions like read, edit, delete, export or call an external tool. Also, software may act automatically on behalf of a user or service, so there may be several layers of checks, not one librarian at one door."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How access control checks a request",
+    "learningObjective": "After viewing this, the reader should be able to explain that access depends on both identity and allowed action, and that least privilege limits what happens even if a request is risky.",
+    "description": "A left-to-right step diagram shows one request moving through four checks: identify requester, state requested action, compare with permissions, then allow or deny. A note under the final step shows that granted access can still be narrow, such as read-only rather than full control.",
+    "steps": [
+      {
+        "label": "1. Request arrives",
+        "explanation": "A person, application or AI-connected tool asks to do something, such as read a document or use a function.",
+        "visualInstruction": "Draw a card labelled with an identity icon and a short action, for example 'Team assistant: search policy folder'."
+      },
+      {
+        "label": "2. Identify the requester",
+        "explanation": "The system links the request to an account or service identity, not just to the words in the request.",
+        "visualInstruction": "Show the request card connecting to a badge labelled 'user account' or 'service account'."
+      },
+      {
+        "label": "3. Check permissions",
+        "explanation": "Rules are checked to see which resources and actions this identity is allowed to use.",
+        "visualInstruction": "Place a permissions panel with rows such as 'policy folder: read yes', 'personnel records: read no', 'send email: no'."
+      },
+      {
+        "label": "4. Allow only what is permitted",
+        "explanation": "If the action is allowed, it proceeds with the approved scope. If not, it stops. Least privilege means the allowed scope stays as small as practical.",
+        "visualInstruction": "Split into two outputs: a green path marked 'allowed: read policy folder only' and a red path marked 'denied: personnel records and email tool'."
+      }
+    ],
+    "interaction": "On hover or tap, each step highlights the data used at that stage and reveals a one-line example of an allowed or denied action.",
+    "accessibilityDescription": "The diagram explains access control as a four-step process. First, a request is made by a person, application or AI-connected tool. Second, the system identifies which account the request comes from. Third, it checks permissions for that account, including which resources it may access and which actions it may perform. Fourth, the system either allows the action within a limited scope, such as read-only access to one folder, or denies it. The key message is that persuasive wording does not grant access; permission rules do.",
+    "reducedMotionDescription": "A static four-column diagram shows the same process without animation: request, identity, permission check, and allow-or-deny outcome, with simple labels for read-only access and denied actions."
+  },
+  "workedExample": {
+    "scenario": "An organisation has an internal AI assistant connected to three sources: a public guidance folder, a restricted HR folder, and an email-sending tool.",
+    "input": "User request: 'Summarise the maternity leave guidance and email it to all staff.' The user is a programme officer, not an HR administrator or communications lead.",
+    "process": [
+      "The assistant receives the text request and ties it to the programme officer's account.",
+      "The system checks permissions for that account: public guidance folder = read allowed; restricted HR folder = read denied; email tool = send denied.",
+      "The assistant can retrieve the maternity leave guidance only from the public guidance folder.",
+      "The system blocks the email-sending action and any attempt to open the restricted HR folder."
+    ],
+    "result": "The user gets a summary of the public guidance, but no access to restricted HR material and no mass email is sent."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team uses an approved internal AI tool to check a draft speech against previously agreed public language on climate, health or development issues.",
+    "relevance": "Access control can limit the tool to approved public documents and prevent it from opening restricted negotiation notes, personnel files or unrelated repositories. It can also stop the tool from sending messages or changing records unless a separately authorised workflow exists.",
+    "caution": "Do not paste confidential negotiation text, personal data, security-sensitive material or protection-related information into an unapproved public AI service. Use only approved systems with the right permissions and human review."
+  },
+  "whyItMatters": "For non-specialists, access control is one of the clearest ways to reduce harm without needing to understand every technical detail of AI. If an AI assistant can only read a narrow set of approved documents and cannot freely call tools, send messages or open sensitive stores, many mistakes and attacks become less damaging. This matters for procurement, system design and daily use: before asking whether a tool is clever, ask what it is allowed to touch. Good access control also supports accountability. When permissions are clear, organisations can separate public information from restricted material, give staff only the access they need, and review who used which resource. In AI systems, that boundary often matters more than the wording of the prompt.",
+  "whereYouMayHearIt": [
+    "IT onboarding and account setup",
+    "enterprise AI assistant design",
+    "cloud storage and document sharing",
+    "security audits and risk reviews",
+    "single sign-on discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a user has logged in, the system should trust any request they make through an AI tool.",
+      "correction": "Logging in proves who or what is making the request, but it does not answer what they are allowed to do. Access control needs both identity and authorisation rules. Otherwise, any authenticated account could reach data or tools far beyond its role."
+    },
+    {
+      "misconception": "Access control is only about seeing files.",
+      "correction": "It also covers actions. A system may allow someone to read a document but not edit it, export it, delete it, call an external API, or send email through a connected tool. In AI systems, action permissions are often as important as data permissions."
+    },
+    {
+      "misconception": "If the AI model itself is secure, access control matters less.",
+      "correction": "Many AI risks come from what the model is connected to, not just from the model alone. A model that produces risky text is less dangerous if it cannot reach sensitive data or powerful tools. Access control provides that boundary."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Access control means setting clear rules so a person or AI tool can only reach the information and functions needed for its job, and nothing more.",
+    "technical": "Access control is the enforcement of policy over subjects, resources and actions. A subject, such as a user account, service account or application, requests an operation like read, write, execute, search or send. The system evaluates whether that subject is authorised for that operation on that resource under the current conditions, then permits or denies it. In AI systems, the same principle applies to model-connected data stores, retrieval systems, plug-ins, APIs and tools. Least privilege is a design principle within access control: grant the minimum necessary permissions, ideally scoped by resource, action and context, so that a compromised prompt, tool call or workflow cannot exceed those bounds. This is related to, but not identical with, authentication and authorisation: authentication establishes identity, while access control is the practical mechanism that enforces who can do what."
+  },
+  "keyTakeaway": "The safest AI assistant is not the one that promises to behave well, but the one that is only allowed to access what it truly needs.",
+  "quickCheck": {
+    "question": "Which example best shows least privilege in an AI assistant?",
+    "options": [
+      "An assistant can read all internal folders so it can answer more questions quickly.",
+      "An assistant can use any connected tool, but staff promise to ask responsibly.",
+      "An assistant can read one approved policy folder and cannot open HR files or send email.",
+      "An assistant blocks only requests that contain suspicious words."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Least privilege means giving the minimum access needed for the task. Read access to one approved folder, with no access to HR files or email tools, reduces harm even if the request is mistaken or manipulative."
+  },
+  "resources": [
+    {
+      "title": "Access control",
+      "url": "https://en.wikipedia.org/wiki/Access_control",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives a broad overview of access control concepts and history, and suits readers who want a quick general introduction.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OWASP Top 10 for LLM Applications",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "type": "official",
+      "publisher": "OWASP",
+      "description": "This OWASP resource shows how access control relates to common risks in LLM applications, and suits practitioners designing or reviewing AI systems.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Adversarial Machine Learning: A Taxonomy and Terminology",
+      "url": "https://csrc.nist.gov/pubs/ai/100/2/e2025/final",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This NIST document provides careful security terminology and a taxonomy for adversarial machine learning, and suits technical readers who want precise language.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Access control",
+      "url": "https://www.youtube.com/results?search_query=Access%20control%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations of access control in different styles, and suits people who learn well by watching and comparing sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Access control",
+      "url": "https://www.reddit.com/search/?q=Access%20control",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page lets readers see community questions and explanations about access control, and suits readers who want informal discussion but should verify claims carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "access control meaning",
+    "permissions vs access control",
+    "least privilege simple explanation",
+    "who can access what ai",
+    "authorisation vs access control",
+    "llm access control",
+    "ai tool permissions",
+    "access controll misspelling",
+    "how to limit ai assistant access",
+    "access control",
+    "permissions",
+    "least privilege"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:51:57.745Z",
+    "contentHash": "a8201bcf222d1e29",
+    "attempts": 1,
+    "promptTokens": 2267,
+    "completionTokens": 2440
+  }
+}

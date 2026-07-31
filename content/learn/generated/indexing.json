@@ -1,0 +1,227 @@
+{
+  "id": "indexing",
+  "slug": "indexing",
+  "term": "Indexing",
+  "aliases": [
+    "index"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "retrieval"
+  ],
+  "relatedTermIds": [
+    "retrieval",
+    "chunking",
+    "semantic-search",
+    "nearest-neighbour-search",
+    "retrieval-augmented-generation",
+    "ranking-and-reranking"
+  ],
+  "oftenConfusedWith": [
+    "vector-database",
+    "retrieval",
+    "keyword-search"
+  ],
+  "oneSentence": "Indexing organises documents or document chunks into a searchable structure so a system can quickly find the most relevant passages for a query.",
+  "plainExplanation": "Indexing is the preparation step that makes later search fast and useful. The input is usually a set of documents, or smaller pieces of them called chunks. Each chunk may be stored with its text, source, identifier and sometimes an embedding, which is a list of numbers that represents meaning in a machine-usable form.\n\nDuring indexing, the system turns the content into a structure built for search rather than for reading. In keyword search, that often means a table of which words appear in which documents. In semantic search, it often means storing embeddings in a way that allows fast nearest-neighbour search, which means finding vectors that are mathematically closest to the query vector.\n\nThe output is an index: a data structure optimised for retrieval. When a user asks a question, the system searches the index instead of scanning every document from the beginning each time. That saves time and makes large collections practical to search.\n\nIndexing is related to retrieval, but it is not the same thing. Retrieval is the act of fetching likely relevant items at query time. Indexing happens earlier, usually when documents are added or updated, so retrieval can work efficiently later.\n\nIn retrieval-augmented generation, indexing matters because poor indexing leads to poor evidence. If chunks are too large, too small, missing metadata or embedded badly, the model may receive weak source passages even if the answer exists somewhere in the knowledge base.",
+  "everydayAnalogy": {
+    "title": "Preparing a library help desk",
+    "story": "A regional library receives thousands of reports, guides and meeting notes in Arabic, English, French and Spanish. Before staff can recommend the right document to visitors, they break long reports into sections, label each section with source details and place cards in a searchable cabinet. Later, when someone asks about school feeding in drought-affected areas, the librarian checks the cabinet instead of rereading every shelf. The cabinet helps the librarian reach likely sections quickly, then the librarian still reads them before recommending anything.",
+    "mapping": [
+      {
+        "analogyElement": "sections of long reports",
+        "aiElement": "document chunks prepared for search"
+      },
+      {
+        "analogyElement": "cards in a searchable cabinet",
+        "aiElement": "the index data structure"
+      },
+      {
+        "analogyElement": "labels with source details",
+        "aiElement": "metadata such as title, section and document ID"
+      },
+      {
+        "analogyElement": "librarian checking the cabinet first",
+        "aiElement": "retrieval using the index instead of scanning all text"
+      }
+    ],
+    "limitation": "A library card cabinet is usually built by people using clear categories and words. Many AI systems also store numeric representations of meaning, not just labels, and use distance calculations rather than human-readable categories. Also, a librarian can apply broad real-world judgement while an index only narrows the search space; it does not by itself verify truth, interpret nuance or replace human review."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How indexing prepares documents for later search",
+    "learningObjective": "Show how raw documents are transformed into a search-ready structure that retrieval can query efficiently later.",
+    "description": "A left-to-right flow with four boxes. Read from documents entering on the left to a search-ready index on the right. Each box shows one preparation stage and the output passed to the next stage.",
+    "steps": [
+      {
+        "label": "1. Collect content",
+        "explanation": "Documents enter the pipeline with source information such as title, date or document ID.",
+        "visualInstruction": "Draw a stack of document icons on the left, each with small metadata tags beneath."
+      },
+      {
+        "label": "2. Split into chunks",
+        "explanation": "Long documents are divided into smaller passages so retrieval can return a focused section rather than an entire file.",
+        "visualInstruction": "Show one long document breaking into several smaller rectangles labelled chunk A, B and C."
+      },
+      {
+        "label": "3. Create search features",
+        "explanation": "For each chunk, the system stores searchable features such as keywords, metadata and often an embedding vector representing meaning.",
+        "visualInstruction": "For each chunk rectangle, add side badges: 'keywords', 'metadata', and a small row of dots or numbers for 'embedding'."
+      },
+      {
+        "label": "4. Build the index",
+        "explanation": "These features are organised into a structure designed for fast lookup, so later queries can find nearby or matching chunks quickly.",
+        "visualInstruction": "Merge the chunk features into a database-like box labelled 'index', with arrows from all chunks into it."
+      },
+      {
+        "label": "5. Use at query time",
+        "explanation": "A user query is transformed into the same search form and compared against the index to return likely relevant passages.",
+        "visualInstruction": "Add a query bubble entering from below, connecting to the index, with top results emerging on the right as ranked passages."
+      }
+    ],
+    "interaction": "Hovering or tapping a stage highlights what is added at that step: raw text, chunks, features, index structure, then retrieved passages.",
+    "accessibilityDescription": "The diagram is a five-stage flow. First, raw documents with source metadata enter the system. Second, long documents are split into smaller chunks. Third, each chunk gets search features such as keywords, metadata and often an embedding, which is a numeric representation of meaning. Fourth, these features are organised into an index, a structure built for fast search. Fifth, when a user sends a query, the system converts the query into comparable search features and searches the index to return likely relevant passages. The key point is that indexing happens before the user asks, so retrieval later can be fast and targeted.",
+    "reducedMotionDescription": "A static left-to-right diagram with five labelled boxes and arrows: documents, chunking, search features, index, and query-time retrieval results."
+  },
+  "workedExample": {
+    "scenario": "A knowledge base has 1,200 policy and guidance documents for field operations.",
+    "input": "One 12-page guidance note contains the sentence: 'Solar-powered cold storage may reduce vaccine spoilage in remote clinics where diesel delivery is unreliable.'",
+    "process": [
+      "The note is split into 18 chunks of about 250 words each, with overlap so important sentences are not cut off mid-topic.",
+      "Each chunk is stored with metadata: document ID GN-204, section title, language and publication date.",
+      "An embedding is created for every chunk and saved in the index along with the text and metadata.",
+      "A user asks: 'How can remote clinics keep vaccines cold when fuel deliveries fail?' The query is embedded and compared against the indexed chunk embeddings.",
+      "The system returns chunk 11 from GN-204 among the top results because its meaning is close to the query, even though the query did not use the exact phrase 'diesel delivery is unreliable'."
+    ],
+    "result": "The application can show the relevant passage with its source details, giving the model or the user grounded material to work from."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team maintains an approved internal knowledge base of public guidance, policy documents and cleared training material to help staff draft routine explanatory text with human review.",
+    "relevance": "Indexing lets the system search those materials quickly and return the most relevant passages for the drafter to inspect and cite, instead of relying only on the model's general patterns.",
+    "caution": "Only approved, non-sensitive material should be indexed in the service used for drafting. Staff should not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and human reviewers must check retrieved passages for relevance, date and context."
+  },
+  "whyItMatters": "If indexing is done well, search systems can find better evidence faster. If it is done badly, users may see irrelevant, outdated or incomplete passages even when the right answer exists in the collection. For managers and practitioners, this affects trust, speed, cost and risk. Good indexing choices influence what can be found, what gets missed, how often systems need to be updated and whether a retrieval-augmented system can show usable sources instead of unsupported text.",
+  "whereYouMayHearIt": [
+    "RAG system design",
+    "enterprise search setup",
+    "vector database discussions",
+    "knowledge base administration",
+    "document ingestion pipelines"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Indexing and retrieval are the same step.",
+      "correction": "They are connected but different. Indexing usually happens before questions are asked, turning documents into a search-ready structure. Retrieval happens at query time, using that structure to fetch likely relevant items. A system can have a well-built index and still retrieve poorly if the query handling or ranking is weak."
+    },
+    {
+      "misconception": "An index is only a list of keywords.",
+      "correction": "That describes one common kind of index, but not the whole idea. Modern systems may index keywords, metadata and embeddings together. In semantic search, the index often supports fast comparison of vectors so the system can find passages with similar meaning, not just the same words."
+    },
+    {
+      "misconception": "If content is indexed, the system has checked that it is correct.",
+      "correction": "Indexing improves findability, not truth. The system stores and organises content so it can be searched quickly. It does not automatically verify whether a document is accurate, current, authorised or appropriate for the user's context."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Indexing is the preparation work that organises documents so a search system can quickly find useful passages later.",
+    "technical": "Indexing is the process of transforming a corpus into data structures optimised for retrieval. In lexical systems, this often means building structures such as inverted indexes over terms and document fields. In embedding-based systems, it usually means generating vectors for chunks, storing them with metadata and arranging them for efficient nearest-neighbour search, sometimes approximately rather than exactly for speed at scale. The indexed unit may be a full document, a chunk or another segment chosen during ingestion. The quality of indexing depends on choices such as chunking strategy, metadata design, embedding model, update policy and whether filters or reranking will be applied later. It is distinct from the knowledge base itself, which is the content collection, and from the vector database, which is one possible storage and query layer that may hold an index."
+  },
+  "keyTakeaway": "Indexing does not answer the question by itself; it prepares content so the system can find the right passage quickly when the question arrives.",
+  "quickCheck": {
+    "question": "Which statement best describes indexing in a semantic search or RAG pipeline?",
+    "options": [
+      "It is the step that prepares document chunks and their search features so later queries can find relevant passages efficiently.",
+      "It is the final text generation step that turns retrieved passages into a polished answer.",
+      "It is a manual review process that confirms every document in the collection is factually correct.",
+      "It is the same as a vector database, because any stored embeddings automatically count as an index."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Indexing is the preparation stage. It organises chunks, metadata and often embeddings into a search-ready structure. It is not the same as generation, factual verification or a specific product category such as a vector database."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Search engine indexing",
+      "url": "https://en.wikipedia.org/wiki/Search_engine_indexing",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad, non-specialist overview of search engine indexing and suits readers who want the general idea before AI-specific details.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link explains embeddings, which suits readers who need to understand the meaning-based representations often used during indexing.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers explore how embeddings are arranged in space, which suits visual learners who want intuition for semantic indexing.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Indexing",
+      "url": "https://www.youtube.com/results?search_query=Indexing%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page for video explanations of indexing, which suits readers who prefer to compare several teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Indexing",
+      "url": "https://www.reddit.com/search/?q=Indexing",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page for community discussion of indexing, which suits readers who want informal questions, practical examples and varied viewpoints to inspect carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "what is indexing in rag",
+    "indexing vs retrieval",
+    "semantic search indexing",
+    "embedding index meaning",
+    "vector index explained",
+    "search index for chunks",
+    "nearest neighbour index",
+    "how documents are indexed for ai",
+    "indxing meaning ai",
+    "index vs vector database",
+    "indexing",
+    "index"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:33.199Z",
+    "contentHash": "056d45b846e27485",
+    "attempts": 1,
+    "promptTokens": 2241,
+    "completionTokens": 2475
+  }
+}

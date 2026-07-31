@@ -1,0 +1,82 @@
+---
+/**
+ * All learning paths, with local progress painted on after load.
+ */
+import Learn from '../../../layouts/Learn.astro';
+import { resolvedPaths } from '../../../lib/learn/paths';
+import { learnHref } from '../../../lib/learn/terms';
+import { AUDIENCE_LABEL } from '../../../lib/learn/schema';
+
+const paths = resolvedPaths();
+const title = 'Learning paths · UNAIVERSE';
+const description =
+  'Guided routes through AI terminology for diplomats, managers, programme officers, human rights practitioners, communications and data teams.';
+---
+
+<Learn title={title} description={description} section="paths">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / Learning Paths
+      </p>
+      <h1 class="learn-head__title">Learning paths</h1>
+      <p class="learn-head__lead">
+        Each path is six to ten terms in a deliberate order for one situation. Mark a term as
+        understood on its page and it fills in here. Progress is stored in this browser only, so
+        there is nothing to sign in to and nothing to lose track of.
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6)">
+    <ul class="path-grid" data-paths>
+      {
+        paths.map((p) => (
+          <li>
+            <a
+              class="path-card"
+              href={learnHref(`paths/${p.id}`)}
+              data-path-card
+              data-terms={p.steps.map((s) => s.id).join(' ')}
+            >
+              <span class="path-card__glyph" aria-hidden="true">{p.glyph}</span>
+              <h2 class="path-card__title">{p.title}</h2>
+              <p class="path-card__blurb">{p.blurb}</p>
+              <p class="path-card__meta">
+                {p.steps.length} terms · about {p.minutes} minutes · {AUDIENCE_LABEL[p.audience]}
+              </p>
+              <div class="path-progress" aria-hidden="true">
+                <span class="path-progress__bar" data-path-bar />
+              </div>
+              <p class="path-card__meta" data-path-progress />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Learn>
+
+<script>
+  import { doneTerms, onChange } from '../../../scripts/learn-store';
+
+  function paint() {
+    const done = new Set(doneTerms());
+    for (const card of document.querySelectorAll<HTMLElement>('[data-path-card]')) {
+      const ids = (card.dataset.terms ?? '').split(' ').filter(Boolean);
+      const complete = ids.filter((id) => done.has(id)).length;
+      const bar = card.querySelector<HTMLElement>('[data-path-bar]');
+      const label = card.querySelector<HTMLElement>('[data-path-progress]');
+      const pct = ids.length ? (complete / ids.length) * 100 : 0;
+      if (bar) bar.style.width = `${pct}%`;
+      if (label) {
+        label.textContent = complete
+          ? `${complete} of ${ids.length} marked as understood`
+          : 'Not started';
+      }
+    }
+  }
+
+  paint();
+  onChange(paint);
+</script>

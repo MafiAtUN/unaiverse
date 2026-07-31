@@ -1,0 +1,227 @@
+{
+  "id": "diffusion-model",
+  "slug": "diffusion-model",
+  "term": "Diffusion model",
+  "aliases": [
+    "diffusion"
+  ],
+  "categoryId": "generative-media",
+  "subcategory": "Generative Media",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "everyone"
+  ],
+  "prerequisiteTermIds": [
+    "image-generation"
+  ],
+  "relatedTermIds": [
+    "image-generation",
+    "audio-generation",
+    "video-generation",
+    "synthetic-media",
+    "watermarking",
+    "misinformation"
+  ],
+  "oftenConfusedWith": [
+    "generative-adversarial-network",
+    "variational-autoencoder",
+    "autoregressive-model"
+  ],
+  "oneSentence": "A generative model creates media by learning how to remove noise step by step until a coherent image, audio clip or other output appears.",
+  "plainExplanation": "A diffusion model is a kind of generative model. A generative model produces new content such as pictures, sound or video after learning patterns from many examples. In diffusion systems, the usual starting point is random noise, which looks like static.\n\nDuring training, the system learns a reverse process. It sees examples where clean data has been gradually corrupted with noise, and it learns how to predict a slightly less noisy version at each step. In simple terms, it practises turning mess into structure.\n\nAt use time, a person gives a prompt, such as a text description, or sometimes another input such as a sketch, image or audio clip. The model starts from noise and repeatedly refines it over many small steps. Each step removes some noise and adds structure that better matches the prompt or conditioning input.\n\nWhat comes out depends on the type of model: an image, a short audio segment, video frames, or another kind of generated content. The output can look realistic or stylised, but it is still a statistical construction based on patterns in training data and guidance signals. It does not guarantee factual accuracy, authorship, consent or authenticity.",
+  "everydayAnalogy": {
+    "title": "Revealing a picture from television static",
+    "story": "Imagine a design class in Nairobi, Bogotá and Bangkok sharing the same exercise online. Each student starts with a screen full of television static and a note saying, \"make this look like a red bicycle beside a market stall\". On each round, they compare the noisy screen with examples they studied earlier and remove a little static while keeping what seems to fit the note. After many rounds, the static turns into a picture that roughly matches the description.\n\nIf the note changes to \"at night in the rain\", the students steer the clean-up in a different direction and a different picture emerges.",
+    "mapping": [
+      {
+        "analogyElement": "screen full of static",
+        "aiElement": "random noise used as the starting point"
+      },
+      {
+        "analogyElement": "note describing the scene",
+        "aiElement": "text prompt or other conditioning input"
+      },
+      {
+        "analogyElement": "removing a little static each round",
+        "aiElement": "iterative denoising over many steps"
+      },
+      {
+        "analogyElement": "examples studied earlier",
+        "aiElement": "patterns learned from training data"
+      }
+    ],
+    "limitation": "Real diffusion models do not literally see a hidden finished picture inside the noise waiting to be uncovered. They generate a new output by applying learned numerical transformations step by step. Also, students in the story consciously interpret instructions, while the model only matches patterns in data and guidance signals."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How a diffusion model generates an image",
+    "learningObjective": "After viewing this, a reader should be able to say that generation starts with noise and becomes an image through repeated denoising steps guided by a prompt.",
+    "description": "Show a left-to-right sequence of panels. Panel 1 is pure noise. Panel 2 adds the prompt. Panels 3 and 4 show intermediate noisy-but-emerging versions. Panel 5 shows the final image. Read from left to right as repeated refinement, not as one sudden jump.",
+    "steps": [
+      {
+        "label": "Start with noise",
+        "explanation": "The process begins with random pixels that contain no clear object or scene.",
+        "visualInstruction": "Draw a square filled with grey static dots. Label it 'random noise'."
+      },
+      {
+        "label": "Add guidance",
+        "explanation": "A prompt or other input guides what kind of result should emerge.",
+        "visualInstruction": "Place a text box above the next panel reading 'Prompt: red bicycle beside a market stall'. Add an arrow from the prompt to the image sequence."
+      },
+      {
+        "label": "First denoising steps",
+        "explanation": "The model predicts how to make the noise slightly less random while staying consistent with the guidance.",
+        "visualInstruction": "Show a second square with heavy noise but faint red and wheel-like shapes. Connect with an arrow labelled 'step 1...n'."
+      },
+      {
+        "label": "Repeated refinement",
+        "explanation": "Many small updates gradually strengthen shapes, colours and layout.",
+        "visualInstruction": "Show a third square with a recognisable bicycle and stall, still blurry. Use another arrow labelled 'more denoising'."
+      },
+      {
+        "label": "Output",
+        "explanation": "After enough steps, the result is a coherent generated image.",
+        "visualInstruction": "Show a final clear illustration of a red bicycle beside a market stall. Label it 'generated image'."
+      }
+    ],
+    "interaction": "Hovering or tapping each panel reveals a short caption about what changed at that stage; a slider can scrub through early, middle and late denoising states.",
+    "accessibilityDescription": "The diagram explains diffusion image generation as a sequence of five stages. First, there is only random visual noise. Second, a text prompt is introduced to guide the process. Third, the model performs early denoising, where faint shapes begin to appear within the noise. Fourth, repeated denoising steps make the scene clearer and more organised. Fifth, the process ends with a coherent generated image. The key idea is that the output is built gradually through many guided clean-up steps, not produced all at once.",
+    "reducedMotionDescription": "A static five-panel strip replaces animation. Each panel shows one stage: random noise, prompt added, early noisy structure, clearer intermediate image, and final output image."
+  },
+  "workedExample": {
+    "scenario": "A person uses an image generator to create an illustration for a community cycling poster.",
+    "input": "Prompt: 'Flat poster-style image of a red bicycle parked beside a fruit stall at dusk, warm lights, no people, square format'",
+    "process": [
+      "The system encodes the text prompt into guidance signals for the image model.",
+      "It starts from a 1024 by 1024 field of random noise.",
+      "Over roughly 30 denoising steps, broad shapes appear first: stall, bicycle frame, ground and lights.",
+      "Later steps refine edges, colours and small details so the scene better matches 'poster-style', 'dusk' and 'no people'."
+    ],
+    "result": "The output is a new square illustration that matches the prompt reasonably well, though details such as wheel spokes or fruit shapes may still be imperfect or invented."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team preparing procurement requirements for a design tool is assessing whether a vendor's image-generation feature uses diffusion and what controls it offers.",
+    "relevance": "Knowing the term helps staff ask practical questions: what inputs guide generation, how many editing controls exist, what provenance or watermarking features are available, what data was used for training, and what risks of misleading synthetic media need mitigation.",
+    "caution": "Staff should not test public services with confidential drafts, personal data, protection-sensitive material, security-related imagery or unpublished procurement information unless the service is approved for that use."
+  },
+  "whyItMatters": "Non-specialists may meet diffusion models in image, audio and video tools, procurement documents, media literacy discussions and authenticity checks. The term matters because it signals a specific way content can be generated: from noise through many refinement steps. That affects speed, controllability, cost and common failure modes. It also matters for risk assessment. Outputs can look convincing even when they contain errors, fabricated details or misleading context. If you recognise the term, you can ask better questions about training data, bias, consent, provenance, watermarking, human review and whether a tool is suitable for a real task.",
+  "whereYouMayHearIt": [
+    "image generator product pages",
+    "AI procurement discussions",
+    "synthetic media policy briefings",
+    "technical explainers about text-to-image",
+    "debates about deepfakes and provenance"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A diffusion model finds a hidden real picture inside random noise.",
+      "correction": "It does not uncover a pre-existing photograph. It starts from noise and applies learned transformations that gradually create a new output consistent with the prompt or other guidance. The process is constructive, not a search for something already there."
+    },
+    {
+      "misconception": "If the result looks realistic, it must reflect something true or somewhere real.",
+      "correction": "Realistic appearance only means the output matches visual or audio patterns the model learned. It may combine details that never existed together, invent objects, or imply events that did not happen. Authenticity still needs separate checks such as provenance, source review and human verification."
+    },
+    {
+      "misconception": "Diffusion is just another name for a generative adversarial network.",
+      "correction": "They are both generative approaches, but the mechanism is different. GANs usually train a generator and a discriminator in opposition. Diffusion models usually learn a denoising process and generate through many iterative refinement steps. People confuse them because both can produce synthetic media."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A diffusion model makes new media by starting with random noise and gradually cleaning it up until it matches a prompt or another guide.",
+    "technical": "A diffusion model learns a parameterised reverse-noising process. During training, clean samples are progressively corrupted by a forward diffusion process that adds noise over multiple time steps. The model is trained to predict the noise, the clean sample, or a related quantity at each step, often conditioned on text, images, audio or other inputs. At generation time, sampling begins from noise and iteratively applies the learned reverse steps, sometimes with guidance methods that push the sample toward the conditioning signal. In practice, many modern image systems use latent diffusion, where denoising happens in a compressed latent space rather than directly on full-resolution pixels, which improves efficiency. Compared with autoregressive models, which generate one token or patch after another, diffusion models typically refine the whole sample over repeated steps."
+  },
+  "keyTakeaway": "Diffusion models generate convincing media by turning noise into structure step by step, which is powerful for creation but not a guarantee of truth or authenticity.",
+  "quickCheck": {
+    "question": "Which statement best describes how a diffusion model usually generates an image?",
+    "options": [
+      "It searches a database until it finds the closest stored picture and returns it unchanged.",
+      "It starts with random noise and repeatedly denoises it using guidance such as a text prompt.",
+      "It draws one word at a time from left to right until the image is complete.",
+      "It compares two competing networks until one wins and the final image appears instantly."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The usual diffusion process begins with noise and refines it over many steps. Option 1 describes retrieval, not generation. Option 3 confuses image diffusion with token-by-token generation. Option 4 mixes it up with GAN-style training and also wrongly suggests one-step output."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Diffusion model",
+      "url": "https://en.wikipedia.org/wiki/Diffusion_model",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad overview of the term and suits readers who want a general starting point with some technical vocabulary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Recommendation on the Ethics of Artificial Intelligence",
+      "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics",
+      "type": "official",
+      "publisher": "UNESCO",
+      "difficulty": "intermediate",
+      "description": "This UNESCO recommendation gives policy and ethics context for AI use and suits readers concerned with governance, rights and responsible deployment rather than model mechanics.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Content Credentials",
+      "url": "https://contentcredentials.org/",
+      "type": "official",
+      "publisher": "Content Authenticity Initiative",
+      "difficulty": "starter",
+      "description": "This Content Authenticity Initiative resource explains provenance and content credentials concepts and suits readers assessing how to signal or verify the origin of generated media.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Diffusion model",
+      "url": "https://www.youtube.com/results?search_query=Diffusion%20model%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations in different styles and depths, and it suits people who learn better through visual walkthroughs; results will vary over time.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Diffusion model",
+      "url": "https://www.reddit.com/search/?q=Diffusion%20model",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see community questions, examples and debates about the term, and it suits readers who want informal discussion; as a search page, quality and accuracy will vary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "diffusion model simple explanation",
+    "what is diffusion in ai",
+    "how diffusion image generation works",
+    "denoising model ai",
+    "latent diffusion meaning",
+    "diffusion vs gan",
+    "diffusion vs autoregressive",
+    "text to image diffusion steps",
+    "difusion model typo",
+    "ai noise to image",
+    "diffusion model",
+    "diffusion"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:47:11.643Z",
+    "contentHash": "7acd364c5b2351a9",
+    "attempts": 1,
+    "promptTokens": 2248,
+    "completionTokens": 2430
+  }
+}

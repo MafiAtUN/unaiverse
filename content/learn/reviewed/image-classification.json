@@ -1,0 +1,229 @@
+{
+  "id": "image-classification",
+  "slug": "image-classification",
+  "term": "Image classification",
+  "aliases": [
+    "image labelling"
+  ],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "classification",
+    "computer-vision"
+  ],
+  "relatedTermIds": [
+    "computer-vision",
+    "classification",
+    "object-detection",
+    "image-segmentation",
+    "image-captioning",
+    "pixel"
+  ],
+  "oftenConfusedWith": [
+    "object-detection",
+    "image-segmentation",
+    "image-captioning",
+    "optical-character-recognition"
+  ],
+  "oneSentence": "A system assigns one or more predefined labels to an image based on patterns in its pixels.",
+  "plainExplanation": "Image classification takes a picture as input and returns a label such as “crop field”, “damaged road”, “invoice” or “not safe helmet use”. A label is a category chosen in advance. The system does not produce any category it likes; it selects from the set it was built to use.\n\nInside the system, the image is converted into numbers from its pixels, the tiny picture elements. A model then compares the pattern in those numbers with patterns it learned from many labelled examples during training. It outputs scores for the possible labels, and the highest score often becomes the predicted label.\n\nThe output may be one label, such as “flooded”, or several labels if the system allows more than one category at once, such as “road”, “vehicle” and “smoke”. Some systems also show a confidence score, but that score is not a guarantee of correctness.\n\nThis is often confused with object detection and image segmentation. Image classification answers “What category best fits this whole image?” Detection asks “Where in the image is each object?” Segmentation goes further and marks which pixels belong to which object or region.",
+  "everydayAnalogy": {
+    "title": "Sorting urgent and non-urgent messages",
+    "story": "A programme officer opens a shared inbox after a storm response. Each message is quickly placed into one of three trays: “urgent action”, “information only” or “send to logistics”. The officer uses clues such as words in the subject line, who sent it and whether it mentions blocked roads or missing supplies. At the end, each message gets a category, even though the officer does not rewrite the message or mark every sentence separately.",
+    "mapping": [
+      {
+        "analogyElement": "Each incoming message",
+        "aiElement": "One input image"
+      },
+      {
+        "analogyElement": "The trays with fixed names",
+        "aiElement": "The predefined labels or classes"
+      },
+      {
+        "analogyElement": "Clues used for sorting",
+        "aiElement": "Patterns in pixel values learned during training"
+      },
+      {
+        "analogyElement": "Placing a message into one tray",
+        "aiElement": "Assigning the most likely class to the image"
+      }
+    ],
+    "limitation": "A human sorter can use outside context, ask questions and change the categories on the spot. An image classifier usually works only with the labels it was trained for and only from the image data it receives. Also, an email can be read sentence by sentence, while image classification usually treats the whole picture as one item rather than locating each object inside it."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How image classification turns a picture into a label",
+    "learningObjective": "After viewing this, a reader should be able to say that image classification takes an image, analyses pixel patterns with a trained model, scores known categories and outputs the best-fitting label.",
+    "description": "A left-to-right flow diagram with four boxes connected by arrows. It starts with one example image, shows that the image becomes pixel values, then passes through a trained model, and ends with ranked labels. Read from left to right as a process from input to output.",
+    "steps": [
+      {
+        "label": "1. Input image",
+        "explanation": "A single image is provided to the system, such as a photo of a road, document or crop field.",
+        "visualInstruction": "Draw a thumbnail image in a rounded rectangle labelled “Image”. Use a simple neutral scene icon, not a person’s face."
+      },
+      {
+        "label": "2. Pixels become numbers",
+        "explanation": "The picture is represented as pixel values so a model can process it mathematically.",
+        "visualInstruction": "Show a small grid overlay on the image and a side panel with a few example number triples to suggest pixel values."
+      },
+      {
+        "label": "3. Trained model compares patterns",
+        "explanation": "The model checks the numeric pattern against patterns learned from labelled training examples.",
+        "visualInstruction": "Draw a larger centre box labelled “Trained model” with simple stacked layers or abstract nodes. Add a note below: “learned from many labelled examples”."
+      },
+      {
+        "label": "4. Scores for known labels",
+        "explanation": "The system produces scores for the categories it knows, such as “damaged road 0.82” and “undamaged road 0.18”.",
+        "visualInstruction": "Show a short ranked list with horizontal bars for three labels and their scores."
+      },
+      {
+        "label": "5. Output label",
+        "explanation": "The highest-scoring label is returned as the prediction, sometimes with the scores shown as well.",
+        "visualInstruction": "Highlight the top label in a final output box. Include a small note: “score is not certainty”."
+      }
+    ],
+    "interaction": "On hover or tap, each step highlights and reveals one sentence of explanation; a toggle switches between single-label and multi-label examples.",
+    "accessibilityDescription": "The diagram explains image classification as a five-step flow. First, one image enters the system. Second, the image is represented by pixel numbers. Third, a trained model analyses the numeric pattern using what it learned from many labelled examples. Fourth, it produces scores for the categories it knows. Fifth, the top category is returned as the label, with a reminder that a high score does not guarantee the answer is correct. The main idea is that the system maps a whole image to one or more predefined categories.",
+    "reducedMotionDescription": "A static left-to-right diagram with the same five labelled boxes and arrows. The selected example label is highlighted without animation, and the single-label or multi-label view changes only when the reader presses the toggle."
+  },
+  "workedExample": {
+    "scenario": "A city maintenance team tests a simple classifier on road inspection photos with two labels: “pothole present” and “no pothole”.",
+    "input": "Photo ID 1842, taken from a vehicle dashboard camera on a dry daytime road.",
+    "process": [
+      "The image is resized to the format the model expects and converted into pixel values.",
+      "The trained model analyses texture, shadows and road surface patterns it learned from labelled training images.",
+      "It returns two scores: “pothole present” 0.91 and “no pothole” 0.09.",
+      "Because “pothole present” has the higher score, that label becomes the prediction."
+    ],
+    "result": "The system outputs “pothole present” for Photo ID 1842. A human reviewer may still check the image, especially if road conditions, camera angles or locations differ from the training data."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team receives many publicly cleared satellite or drone images after heavy rain and uses an approved internal tool to classify each image as “flooded area”, “possible road disruption” or “no visible impact” for triage.",
+    "relevance": "This can help staff sort large image sets quickly so human analysts can focus first on the images most likely to need review and follow-up.",
+    "caution": "Do not upload confidential, protection-sensitive, security-sensitive or otherwise unapproved imagery to a public AI service. Classification results should support, not replace, human analysis and operational judgement."
+  },
+  "whyItMatters": "Many real systems do not chat. They sort. Image classification is one of the simplest and most widely used AI tasks for that kind of sorting. If you understand this term, you can ask practical questions: What are the allowed labels? Who chose them? What images was the model trained on? Does it produce one label or several? What happens when the picture does not fit any label well? Those questions matter because a classifier can save time, but it can also mislabel images when lighting, location, camera quality or local context differ from the training examples. For non-specialists, the value is not in building the model yourself. It is in recognising what the tool can and cannot tell you before you rely on it for a workflow or decision.",
+  "whereYouMayHearIt": [
+    "medical image triage",
+    "satellite image analysis",
+    "document processing",
+    "quality inspection on production lines",
+    "photo moderation systems"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If the system labels an image correctly once, it has understood what is in the picture like a person does.",
+      "correction": "A classifier detects statistical patterns linked to labels in training data. It can perform well on familiar cases without having human-like understanding or broader common sense. That is why it may fail on unusual angles, new contexts or misleading backgrounds."
+    },
+    {
+      "misconception": "Image classification tells you where every object is in the image.",
+      "correction": "Usually it does not. Standard image classification labels the whole image or assigns image-level categories. If you need locations, you usually need object detection with bounding boxes or image segmentation that marks pixels."
+    },
+    {
+      "misconception": "A 95 percent confidence score means there is a 95 percent chance the answer is true in any situation.",
+      "correction": "Not necessarily. The score reflects the model’s internal scoring behaviour, which may not match real-world reliability. Scores can look high even when the image is very different from the training data or when classes are poorly defined."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a way for a computer system to look at a picture and choose a label from a fixed list.",
+    "technical": "In technical terms, image classification maps an input image to one class or a set of classes. During training, a model learns parameters from labelled examples so that patterns in pixel values are associated with target labels. At inference time, the image is preprocessed, passed through the model, and converted into class scores, often called logits or probabilities after calibration or normalisation. In single-label classification, the system usually selects the highest-scoring class. In multi-label classification, it may assign several labels if each passes a threshold. This differs from object detection, which predicts classes plus locations, and from image segmentation, which predicts a class for each pixel or region."
+  },
+  "keyTakeaway": "Image classification is about assigning a whole image to known categories, not explaining the image or locating everything inside it.",
+  "quickCheck": {
+    "question": "Which task best matches image classification?",
+    "options": [
+      "Choosing whether a photo should be labelled “flooded area” or “no visible flooding”",
+      "Drawing a box around every vehicle in a street photo",
+      "Writing a sentence that describes a market scene",
+      "Translating text inside a scanned form into another language"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Image classification assigns one or more predefined labels to an entire image. Drawing boxes is object detection, writing a sentence is image captioning, and translating text from a scanned form involves optical character recognition plus machine translation."
+  },
+  "resources": [
+    {
+      "title": "Contextual image classification",
+      "url": "https://en.wikipedia.org/wiki/Contextual_image_classification",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad encyclopaedia-style overview of contextual image classification and suits readers who want background and related concepts.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course link gives practical introductory machine learning teaching and suits beginners who want to see how classification fits into model training.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "description": "This glossary link gives short definitions of machine learning terms and suits readers who want quick clarification of vocabulary.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Image classification",
+      "url": "https://www.youtube.com/results?search_query=Image%20classification%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This video link is a search results page for image classification explanations, so it suits readers who prefer to compare several video styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Image classification",
+      "url": "https://www.reddit.com/search/?q=Image%20classification",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This discussion link is a search results page for community conversations about image classification, so it suits readers who want informal questions, examples and practitioner viewpoints.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "image classification meaning",
+    "image labelling explained",
+    "what does image classifier do",
+    "image classification vs object detection",
+    "classify pictures ai",
+    "image classification example",
+    "image clasification typo",
+    "label a whole image not objects",
+    "image classification",
+    "image labelling"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:47:31.188Z",
+    "contentHash": "c5f67017af53094b",
+    "attempts": 1,
+    "promptTokens": 2298,
+    "completionTokens": 2365
+  }
+}

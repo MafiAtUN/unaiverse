@@ -1,0 +1,223 @@
+{
+  "id": "keyword-search",
+  "slug": "keyword-search",
+  "term": "Keyword search",
+  "aliases": [
+    "lexical search",
+    "full-text search",
+    "BM25"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "programme"
+  ],
+  "prerequisiteTermIds": [],
+  "relatedTermIds": [
+    "indexing",
+    "retrieval",
+    "ranking-and-reranking",
+    "retrieval-augmented-generation",
+    "knowledge-base",
+    "grounding"
+  ],
+  "oftenConfusedWith": [
+    "semantic-search",
+    "semantic-similarity",
+    "cosine-similarity",
+    "nearest-neighbour-search"
+  ],
+  "oneSentence": "A search method that finds documents by matching query words to indexed text and ranking the matches, often with scoring methods such as BM25.",
+  "plainExplanation": "Keyword search looks for the words in your query inside stored text. The input is usually a short query, such as “cash transfer eligibility”, and a collection of documents that have already been indexed. An index is a prepared lookup structure that helps the system find matching words quickly.\n\nSeveral related terms are often grouped together. Keyword search and lexical search usually mean matching based on words or terms. Full-text search often refers to searching across the full text of documents, not only titles or tags, and may include phrase search, filters and highlighting. BM25 is not the whole search system: it is a common ranking formula that gives higher scores to documents where important query words appear in useful ways.\n\nWhat happens next is usually a two-part process. First, the system finds documents containing some or all of the query terms. Then it ranks them. Ranking may consider how rare a word is across the collection, how often it appears in one document, and document length. A document that repeats a rare query term in a relevant passage may rank higher than a very long document that mentions it once.\n\nThe output is a ranked list of documents or passages, often with snippets showing the matched words. This is different from semantic search, which tries to find similar meaning even when the same words are not used. In many real systems, keyword search and semantic search are combined because exact wording matters in some cases and broader meaning matters in others.",
+  "everydayAnalogy": {
+    "title": "A librarian using the words you give",
+    "story": "A programme officer asks a librarian for documents about “school feeding in drought”. The librarian first checks a card catalogue and the digital archive for those exact words and close variants. Documents that mention “school feeding” several times, especially in the title or summary, are put near the top. A long report that mentions “feeding” once in a footnote stays lower, even if it is otherwise important. The officer gets a shortlist with the matching lines marked so the useful passages are easy to inspect.",
+    "mapping": [
+      {
+        "analogyElement": "card catalogue and digital archive",
+        "aiElement": "the search index built from the document collection"
+      },
+      {
+        "analogyElement": "exact words and close variants",
+        "aiElement": "lexical matching on query terms, sometimes with stemming or token normalisation"
+      },
+      {
+        "analogyElement": "put near the top",
+        "aiElement": "ranking results with a scoring method such as BM25"
+      },
+      {
+        "analogyElement": "matching lines marked",
+        "aiElement": "snippets or highlights showing where query words appeared"
+      }
+    ],
+    "limitation": "A librarian can use judgement about topic, context and credibility even when the words do not match. Basic keyword search does much less of that. It mainly relies on term matching and scoring rules. Also, a real librarian may know which report is authoritative; keyword search does not establish truth or policy validity by itself."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How keyword search turns words into ranked results",
+    "learningObjective": "After viewing this, a reader should be able to explain that keyword search finds matching terms through an index and then ranks the matches, often using BM25.",
+    "description": "A left-to-right flow diagram with four boxes: user query, indexed documents, term matching, and ranked results. Arrows show that the query is broken into terms, checked against the index, scored, and returned as an ordered list with snippets.",
+    "steps": [
+      {
+        "label": "1. Query arrives",
+        "explanation": "The user types a few words, such as “water quality monitoring”. The system treats these words as search terms.",
+        "visualInstruction": "Draw a small search box on the left containing the sample query. Add a right-pointing arrow labelled “terms”."
+      },
+      {
+        "label": "2. Index is consulted",
+        "explanation": "The system does not scan every document from the start. It uses an index, a prepared map from terms to documents and positions.",
+        "visualInstruction": "Show a central box labelled “index” with rows like “water → doc 2, doc 7”. Connect the query arrow into this box."
+      },
+      {
+        "label": "3. Matches are scored",
+        "explanation": "Documents with matching terms are given scores. BM25 is a common formula that rewards useful term matches and adjusts for document length and term rarity.",
+        "visualInstruction": "Add a scoring box to the right of the index. Show three document cards entering and getting scores such as 8.4, 5.9 and 2.1."
+      },
+      {
+        "label": "4. Results are shown",
+        "explanation": "The system returns the highest-ranked documents or passages, often with highlighted query words.",
+        "visualInstruction": "Show a ranked list on the far right with result 1, result 2, result 3 and short snippets with highlighted words."
+      }
+    ],
+    "interaction": "Hovering over each stage reveals a one-sentence note: query terms, index lookup, BM25 scoring, and ranked output.",
+    "accessibilityDescription": "The diagram explains keyword search as a four-stage flow. First, a user enters a short query. Second, the system looks up those terms in an index, which is a prepared lookup table built from the document collection. Third, matching documents are scored, often with BM25, which considers factors like term frequency, term rarity and document length. Fourth, the system returns an ordered list of results with snippets showing where the terms appeared. The main point is that keyword search depends on matching words and ranking the matches, not on measuring meaning directly.",
+    "reducedMotionDescription": "A static left-to-right diagram with the same four labelled stages and arrows, without animation or hover effects. Short notes appear under each stage permanently."
+  },
+  "workedExample": {
+    "scenario": "Recommending documents from a knowledge base for a query about staff travel claims.",
+    "input": "Query: \"travel claim receipts\"\nDocuments:\nA. \"Travel claim procedure: attach receipts for taxi, hotel and meals.\"\nB. \"Travel policy overview: duty travel rules and approvals.\"\nC. \"Expense reimbursement for consultants: invoices required.\"\nD. \"How to claim annual leave in the HR portal.\"",
+    "process": [
+      "The system tokenises the query into terms such as “travel”, “claim” and “receipts”.",
+      "It checks the index and finds that document A contains all three terms, B contains “travel” only, C contains “claim” but not “travel claim receipts” together, and D is mostly unrelated.",
+      "A scoring method such as BM25 gives A the highest score because it matches more query terms, including the rarer word “receipts”, in a short focused document.",
+      "The search tool returns A first, then B or C lower down, with snippets highlighting the matching words."
+    ],
+    "result": "Top result: document A, because it matches the user’s wording closely and concentrates those terms in a relevant passage."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office builds an internal search tool over approved guidance documents so staff can quickly find rules on procurement, travel, reporting templates and safeguarding procedures.",
+    "relevance": "Keyword search is a practical first layer because staff often search using official terms that appear in the documents themselves. It is fast, explainable and easy to audit. It can also be combined later with semantic search or reranking.",
+    "caution": "Use only approved internal systems and approved document collections. Do not upload confidential, personal, protection-sensitive, security-sensitive or operational information into a public AI service for convenience."
+  },
+  "whyItMatters": "Non-specialists often meet keyword search inside document portals, website search bars and AI systems that retrieve sources before drafting an answer. If you know how it works, you can judge why a result appeared, why a relevant document may have been missed, and when exact wording matters. This helps with practical choices: whether to improve the query, add synonyms, clean the document collection, or combine keyword search with semantic search. It also helps you ask better governance questions about what corpus was indexed, how ranking works, and whether staff might over-trust the first result.",
+  "whereYouMayHearIt": [
+    "website search bars",
+    "enterprise document portals",
+    "knowledge base tools",
+    "RAG system design",
+    "library and archive search"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Keyword search and semantic search are the same thing with different names.",
+      "correction": "They are related but different. Keyword or lexical search relies mainly on matching words or terms in text. Semantic search tries to retrieve by meaning, often using embeddings. Many systems combine both because each catches cases the other misses."
+    },
+    {
+      "misconception": "BM25 is just another name for full-text search.",
+      "correction": "BM25 is a ranking formula, not the whole search feature. Full-text search usually refers to searching across document text and may include indexing, phrase matching, filters, highlighting and ranking. BM25 is one common way to order the matching results."
+    },
+    {
+      "misconception": "If a document is ranked first, it must be the best or most correct source.",
+      "correction": "The top result is simply the highest-scoring match under that system’s rules. Ranking reflects the query, the index and the scoring method. It does not guarantee accuracy, authority, timeliness or policy validity, so human checking still matters."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It finds documents by looking for the words you typed and then puts the strongest word matches near the top.",
+    "technical": "In lexical retrieval, documents are indexed by terms so the system can quickly identify which documents contain the query terms. Full-text search usually means this matching happens over document text, not only metadata. After retrieval, a ranking function orders candidates. BM25 is a widely used probabilistic ranking function that typically increases a document’s score when query terms appear in it, gives more weight to terms that are rarer across the collection, and applies length normalisation so very long documents are not unfairly favoured just because they contain more words. Exact implementation details vary by search engine and configuration, and many production systems add phrase matching, field weights, filters, stemming, stop-word handling and reranking."
+  },
+  "keyTakeaway": "Keyword search finds documents by matching words, and BM25 helps rank those matches; that is useful, but it is not the same as searching by meaning.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes BM25 from semantic search?",
+    "options": [
+      "BM25 ranks documents by term-based matching signals, while semantic search aims to retrieve by meaning similarity.",
+      "BM25 reads full documents more slowly, while semantic search only reads titles.",
+      "BM25 is used only for images, while semantic search is used only for text.",
+      "BM25 guarantees the top result is factually correct, while semantic search does not."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "BM25 is a lexical ranking method built around query-term matches and related weighting. Semantic search usually relies on similarity in a vector space to capture related meaning even when the same words are absent. Neither method guarantees factual correctness."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Keyword search",
+      "url": "https://en.wikipedia.org/w/index.php?search=Keyword%20search",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers scan multiple Wikipedia entries related to keyword search and suits beginners who want a broad starting point rather than one fixed article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course resource introduces embeddings and suits readers who want to compare word-matching search with meaning-based methods at a beginner-friendly level.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers explore how items can be placed by similarity in an embedding space and suits visual learners comparing semantic methods with keyword matching.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Keyword search",
+      "url": "https://www.youtube.com/results?search_query=Keyword%20search%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page offers many video explanations of keyword search and suits readers who prefer to compare teaching styles before choosing one video.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Keyword search",
+      "url": "https://www.reddit.com/search/?q=Keyword%20search",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and practical questions about keyword search and suits readers who want informal examples, opinions and troubleshooting tips.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "keyword search meaning",
+    "lexical search vs semantic search",
+    "what is bm25",
+    "full text search explained",
+    "keyword seach",
+    "bm25 simple explanation",
+    "exact word search ai",
+    "how document search ranks results",
+    "full-text vs semantic search",
+    "keyword search",
+    "lexical search",
+    "full-text search",
+    "bm25"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:17.964Z",
+    "contentHash": "9e14d176f04d0c45",
+    "attempts": 1,
+    "promptTokens": 2263,
+    "completionTokens": 2483
+  }
+}

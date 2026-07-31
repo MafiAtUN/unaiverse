@@ -1,0 +1,227 @@
+{
+  "id": "named-entity-recognition",
+  "slug": "named-entity-recognition",
+  "term": "Named entity recognition",
+  "acronym": "NER",
+  "aliases": [
+    "NER",
+    "entity extraction"
+  ],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "intermediate",
+  "audiences": [
+    "programme",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "natural-language-processing"
+  ],
+  "relatedTermIds": [
+    "natural-language-processing",
+    "optical-character-recognition",
+    "summarisation",
+    "machine-translation",
+    "corpus",
+    "low-resource-language"
+  ],
+  "oftenConfusedWith": [
+    "topic-modelling",
+    "summarisation",
+    "intent-detection"
+  ],
+  "oneSentence": "A text-processing method that finds mentions such as people, organisations, places, dates or amounts and labels each mention by type.",
+  "plainExplanation": "Named entity recognition takes text as input, such as an email, report, article or transcript. It looks for spans of words that refer to specific kinds of things, often people, organisations, locations, dates, times, money values or product names. The output is usually the original text plus labels attached to those spans.\n\nFor example, in the sentence “Amina Hassan met UNICEF staff in Nairobi on 12 June 2025”, a system might mark “Amina Hassan” as a person, “UNICEF” as an organisation, “Nairobi” as a location and “12 June 2025” as a date. Some systems only find and label the spans. Others also link them to a database entry, but that extra step is different and should not be assumed.\n\nWhat happens inside depends on the method. Older systems often used hand-written rules and dictionaries. Newer systems often use machine learning, meaning they learn patterns from many labelled examples. They may use clues from spelling, nearby words, sentence structure and the wider context.\n\nNER is useful because it turns unstructured text into fields that software can sort, count, search or pass to later steps. But it is not the same as understanding the whole text. A model may correctly label a name while still missing sarcasm, uncertainty, who did what, or whether two mentions refer to the same real-world person.",
+  "everydayAnalogy": {
+    "title": "Marking key facts on a practice exam paper",
+    "story": "A student is reviewing a history practice exam and uses coloured highlighters to mark different kinds of items. Blue marks people, green marks places, orange marks dates and purple marks organisations. When the student finishes, the essay text has not changed, but key pieces are now tagged so they can be checked quickly. If the name “Jordan” appears, the student may need the surrounding sentence to tell whether it means a country or a person.",
+    "mapping": [
+      {
+        "analogyElement": "The practice exam essay",
+        "aiElement": "The input text"
+      },
+      {
+        "analogyElement": "Different highlighter colours",
+        "aiElement": "Entity labels such as person, location and date"
+      },
+      {
+        "analogyElement": "Marking exact words in the essay",
+        "aiElement": "Finding the span of text that forms the entity"
+      },
+      {
+        "analogyElement": "Using the surrounding sentence to disambiguate “Jordan”",
+        "aiElement": "Using context to choose the correct entity type"
+      }
+    ],
+    "limitation": "A student usually applies clear category rules consciously and may use world knowledge from outside the page. An NER system does not reliably do that. It detects statistical patterns or follows programmed rules, and its label set may be narrower, inconsistent across languages, or wrong when context is limited."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How named entity recognition turns text into labelled spans",
+    "learningObjective": "After viewing the diagram, the reader should be able to say that NER takes raw text, finds exact word spans, assigns entity types and returns labelled text for later use.",
+    "description": "A left-to-right flow with one sample sentence moving through four stages: raw text, tokenised words, detected spans, and final labels. Read from left to right to see how the same sentence is gradually annotated rather than rewritten.",
+    "steps": [
+      {
+        "label": "Input text",
+        "explanation": "Start with an ordinary sentence or document.",
+        "visualInstruction": "Show one sentence in a rounded rectangle: “Amina Hassan met UNICEF staff in Nairobi on 12 June 2025.”"
+      },
+      {
+        "label": "Split into tokens",
+        "explanation": "The system first breaks the text into manageable units, usually words and punctuation, often called tokens.",
+        "visualInstruction": "Show the same sentence with each word in a separate pill-shaped box, connected lightly to the input."
+      },
+      {
+        "label": "Find entity spans",
+        "explanation": "The system groups one or more tokens that appear to form a named entity mention.",
+        "visualInstruction": "Draw coloured brackets around “Amina Hassan”, “UNICEF”, “Nairobi” and “12 June 2025” across the token boxes."
+      },
+      {
+        "label": "Assign labels",
+        "explanation": "Each detected span receives a type such as person, organisation, location or date.",
+        "visualInstruction": "Place small coloured tags above each bracket: PERSON, ORG, LOCATION, DATE. On the far right, show a simple table with two columns: text span and label."
+      }
+    ],
+    "interaction": "Hovering or tapping a coloured span highlights the matching label in the output table and vice versa.",
+    "accessibilityDescription": "The diagram shows a sentence moving through four stages from left to right. First is the plain sentence: “Amina Hassan met UNICEF staff in Nairobi on 12 June 2025.” Second, the sentence is split into separate word boxes. Third, brackets group four spans: Amina Hassan, UNICEF, Nairobi, and 12 June 2025. Fourth, each span has a label: person, organisation, location, and date. The main point is that named entity recognition does not rewrite the sentence. It identifies exact stretches of text and attaches category labels to them.",
+    "reducedMotionDescription": "A static four-column layout shows the same sentence at each stage: plain text, token boxes, grouped spans and labelled output table, with matching colours used instead of animation."
+  },
+  "workedExample": {
+    "scenario": "Extracting key details from a short news brief",
+    "input": "“On 3 March 2026, HealthBridge signed a €2.4 million agreement with the Ministry of Health in Accra, Ghana.”",
+    "process": [
+      "Read the sentence and split it into tokens such as words, numbers and punctuation.",
+      "Detect candidate spans: “3 March 2026”, “HealthBridge”, “€2.4 million”, “Ministry of Health”, “Accra”, and “Ghana”.",
+      "Use context to assign labels: DATE, ORGANISATION, MONEY, ORGANISATION, LOCATION, LOCATION.",
+      "Return the sentence with labels or a structured list that software can store and search."
+    ],
+    "result": "One possible output is: [3 March 2026: DATE], [HealthBridge: ORG], [€2.4 million: MONEY], [Ministry of Health: ORG], [Accra: LOCATION], [Ghana: LOCATION]."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A procurement team is preparing requirements for software that will help sort large volumes of public tender notices and identify supplier names, countries, dates and contract values.",
+    "relevance": "NER can be a practical feature to request because it turns free text into searchable fields, making review, routing and quality checks faster. It also helps a team ask precise vendor questions about supported entity types, languages, accuracy measurement and human review workflows.",
+    "caution": "Do not test public AI services with confidential procurement documents, personal data, vendor-sensitive information or internal evaluations unless the service is approved for that use and appropriate safeguards are in place."
+  },
+  "whyItMatters": "Many important documents are mostly free text. If software can reliably pull out names, places, dates and amounts, teams can search faster, summarise trends, route work and spot missing information. For non-specialists, the main value is practical: NER can reduce manual sorting and support downstream analytics. The main decision questions are whether the labels match your task, whether performance is good enough in your languages and document formats, and what human checking is still needed. A system that works well on English news may perform poorly on local place names, multilingual reports or scanned text with OCR errors.",
+  "whereYouMayHearIt": [
+    "document processing tools",
+    "search and knowledge management",
+    "contract and invoice automation",
+    "news and media monitoring",
+    "language technology projects"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "NER identifies every important fact in a document.",
+      "correction": "NER usually identifies only certain categories of mentions, such as names, places or dates. Important facts like obligations, risks, opinions, relationships or causes often require other methods or human reading."
+    },
+    {
+      "misconception": "If a system finds a name, it knows exactly which real-world person or organisation that name refers to.",
+      "correction": "Finding and labelling a mention is different from linking it to a specific record. “Paris” could be a city or a person’s name, and “Ministry of Health” could refer to different organisations in different countries."
+    },
+    {
+      "misconception": "NER is just keyword matching.",
+      "correction": "Simple systems may use lists and rules, but many NER systems also use context. That matters because the same word can have different roles in different sentences, and entities can contain several words."
+    },
+    {
+      "misconception": "High accuracy on one dataset means the system is reliable everywhere.",
+      "correction": "Performance often changes across languages, sectors, writing styles and document quality. Abbreviations, OCR mistakes, uncommon names and low-resource languages can reduce reliability."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a way for software to scan text, mark pieces like names, places and dates, and turn them into labels that other tools can use.",
+    "technical": "Named entity recognition is a sequence labelling or span classification task in natural language processing. Given text, the system identifies token spans that correspond to predefined entity classes and assigns a label to each span, such as PERSON, ORG, LOC, DATE or MONEY. Implementations may be rule-based, dictionary-based or learned from annotated corpora. In learned systems, the model uses features or internal representations derived from token form, surrounding context and sometimes sentence-level structure. Output may be represented with span boundaries, token-level tags such as BIO tagging, or a structured list of entities. NER is distinct from entity linking, which maps a mention to a specific knowledge-base entry, and from relation extraction, which identifies how entities are connected."
+  },
+  "keyTakeaway": "Named entity recognition does not read a document like a person; it marks specific text spans as categories such as names, places, dates or amounts.",
+  "quickCheck": {
+    "question": "Which output best matches named entity recognition?",
+    "options": [
+      "A list of the document’s main themes, such as health, education and transport",
+      "The sentence with spans tagged as PERSON, ORGANISATION, LOCATION and DATE",
+      "A translation of the document into another language",
+      "A prediction of whether the document is positive or negative"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "NER focuses on finding exact pieces of text and assigning entity types. Main themes are topic modelling, translation is machine translation, and positive or negative judgements are sentiment analysis."
+  },
+  "resources": [
+    {
+      "title": "Named-entity recognition",
+      "url": "https://en.wikipedia.org/wiki/Named-entity_recognition",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "Wikipedia gives a broad overview of named entity recognition and suits readers who want a quick orientation and basic terminology.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "Google’s Machine Learning Crash Course gives general machine learning foundations that help technical beginners understand how systems like NER are trained and evaluated.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "description": "Google’s Machine Learning Glossary is useful for readers who need short definitions of related technical terms they may encounter while learning about NER.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Named entity recognition",
+      "url": "https://www.youtube.com/results?search_query=Named%20entity%20recognition%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "The YouTube search results page offers multiple video explanations of named entity recognition and suits readers who prefer to compare different teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Named entity recognition",
+      "url": "https://www.reddit.com/search/?q=Named%20entity%20recognition",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "The Reddit search results page shows community discussions about named entity recognition and suits readers who want informal questions, examples and practitioner experiences, with careful judgement about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "named entity recognition",
+    "ner meaning in ai",
+    "entity extraction",
+    "how ner works",
+    "ner vs topic modelling",
+    "person organisation location date extraction",
+    "named entity reconition",
+    "tag names and places in text",
+    "ner"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:11.776Z",
+    "contentHash": "0b13356d023777bb",
+    "attempts": 1,
+    "promptTokens": 2290,
+    "completionTokens": 2375
+  }
+}

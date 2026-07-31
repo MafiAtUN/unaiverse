@@ -1,0 +1,227 @@
+{
+  "id": "model-weight",
+  "slug": "model-weight",
+  "term": "Model weights (as a released artefact)",
+  "aliases": [
+    "weights file",
+    "checkpoint file"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "technical",
+    "leadership"
+  ],
+  "prerequisiteTermIds": [
+    "weight",
+    "parameter"
+  ],
+  "relatedTermIds": [
+    "large-language-model",
+    "weight",
+    "parameter",
+    "open-weight-model",
+    "quantisation",
+    "tokenisation"
+  ],
+  "oftenConfusedWith": [
+    "parameter",
+    "weight",
+    "open-weight-model"
+  ],
+  "oneSentence": "A released file of learned numerical settings that lets compatible software run a trained model without repeating the original training process.",
+  "plainExplanation": "When people say they are downloading a model, they often mean they are downloading its weights file or checkpoint file. This is a saved artefact: a file, or set of files, full of numbers produced during training. Those numbers shape how the model transforms input text into likely next tokens, where a token is a small unit such as part of a word.\n\nWhat goes in? During training, the model sees very large amounts of text and repeatedly adjusts many numerical values. Those values are commonly called weights. What happens? The training process changes them so the model becomes better at predicting the next token. What comes out at the end is a saved snapshot of those learned values.\n\nWhen someone releases model weights, other people can load that file into software that knows the model’s architecture, meaning the design of the network that uses the numbers. The software combines the architecture, the weights, a vocabulary, and tokenisation rules to generate outputs from prompts. The weights alone are powerful, but they are not the whole system.\n\nThis term is often confused with a single weight or with a parameter. A single weight is one number inside the model. A parameter is one adjustable value in the model design. Model weights as a released artefact means the packaged collection of learned values saved to disk and shared so others can run, fine-tune, inspect, or convert the model.",
+  "everydayAnalogy": {
+    "title": "A library’s document-sorting cheat sheet",
+    "story": "A regional library network tests thousands of past document requests and gradually improves a scoring sheet used by staff to rank which knowledge-base articles to show first. At the end, the network sends each branch a spreadsheet full of tuned numbers, plus instructions for which columns the local software should apply them to. The spreadsheet does not contain the whole library system, but when loaded into the right software it makes the ranking behaviour work in the same trained way. If a branch only has the spreadsheet and not the matching software and category list, it cannot use it properly.",
+    "mapping": [
+      {
+        "analogyElement": "The spreadsheet of tuned numbers sent to branches",
+        "aiElement": "The released weights or checkpoint file"
+      },
+      {
+        "analogyElement": "The ranking software that applies the spreadsheet",
+        "aiElement": "The model architecture and inference software"
+      },
+      {
+        "analogyElement": "Past document requests used to improve the scoring sheet",
+        "aiElement": "Training data and training process"
+      },
+      {
+        "analogyElement": "The category list and columns expected by the software",
+        "aiElement": "Vocabulary, tokenisation rules, and model configuration"
+      }
+    ],
+    "limitation": "A spreadsheet scoring sheet is much simpler and easier to inspect than real model weights. Real weights are usually enormous collections of numbers spread across many layers, and their effect comes from complex interactions rather than a few clear scoring rules. Also, a library ranking sheet usually sorts known documents, while a language model uses weights to generate new token sequences one step at a time."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From training run to released weights to usable model",
+    "learningObjective": "Show that released weights are a saved snapshot of learned numbers, and that they need matching software and configuration to produce outputs.",
+    "description": "A left-to-right flow with four boxes. Read from training on the left, to saved checkpoint in the middle, to loading with compatible components, to generated output on the right. The diagram separates the saved artefact from the full runnable system so readers can see why weights are necessary but not sufficient.",
+    "steps": [
+      {
+        "label": "Training updates numbers",
+        "explanation": "A model is trained on large text collections. During training, many numerical values are adjusted to reduce prediction error.",
+        "visualInstruction": "Draw a box labelled 'Training run' with small token icons entering and many tiny number cells changing colour inside the box."
+      },
+      {
+        "label": "Checkpoint is saved",
+        "explanation": "At intervals or at the end, the learned values are written to disk as one or more checkpoint or weights files.",
+        "visualInstruction": "Draw an arrow to a file icon labelled 'Released weights / checkpoint'. Add a small note: 'saved snapshot of learned values'."
+      },
+      {
+        "label": "Compatible software loads it",
+        "explanation": "To use the checkpoint, software must load it into the right architecture with the expected configuration, vocabulary and tokenisation.",
+        "visualInstruction": "Draw arrows from the checkpoint file, a box labelled 'architecture', and smaller boxes labelled 'config', 'vocabulary', and 'tokenisation' into a box labelled 'runtime'."
+      },
+      {
+        "label": "Model can generate output",
+        "explanation": "Once loaded, the runtime can process a prompt and produce a completion token by token.",
+        "visualInstruction": "Draw a prompt entering the runtime box and an output text bubble leaving it. Keep colours distinct so the file is not mistaken for the whole system."
+      }
+    ],
+    "interaction": "Hover or tap each box to highlight what is stored there versus what is required from elsewhere.",
+    "accessibilityDescription": "The diagram is a four-step flow. First, a training run adjusts many numbers while processing text. Second, those learned numbers are saved as a checkpoint or weights file. Third, that file is loaded by compatible runtime software together with the model architecture, configuration, vocabulary and tokenisation rules. Fourth, the loaded system accepts a prompt and generates output text. The key point is that the released weights are a saved snapshot of learned values, not the entire runnable system by themselves.",
+    "reducedMotionDescription": "A static four-box left-to-right flow replaces animation. Arrows connect Training run, Released weights/checkpoint, Compatible runtime with architecture and configuration, and Output from prompt."
+  },
+  "workedExample": {
+    "scenario": "A developer downloads a small open-weight language model for local testing.",
+    "input": "Prompt: 'Summarise this paragraph in one sentence.' The download page provides 2 checkpoint files totalling 7.2 GB, plus a configuration file and tokenizer files.",
+    "process": [
+      "The developer downloads the checkpoint files, configuration, and tokeniser files from the release package.",
+      "A compatible inference program loads the checkpoint into the matching model architecture defined by the configuration.",
+      "The program tokenises the prompt into model tokens and passes them through the loaded network using the saved weights.",
+      "The model outputs probabilities for possible next tokens repeatedly until it produces a one-sentence summary."
+    ],
+    "result": "The downloaded weights made the trained behaviour available locally, but only because the developer also used the matching runtime, configuration, and tokeniser."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A country office ICT or data team evaluates whether an open-weight model can help triage a shared general enquiries inbox on approved internal infrastructure.",
+    "relevance": "Understanding released weights helps leadership and technical staff ask the right questions: are we receiving just the checkpoint, or a full deployable package; what additional software is needed; can it run in the approved environment; and what controls are required before staff use outputs operationally.",
+    "caution": "Do not place personal data, case details, protection-sensitive information, security-related content, or other confidential material into an unapproved public AI service merely because a model name appears available online. Any trial should follow organisational approval, security review, and human oversight."
+  },
+  "whyItMatters": "This term matters because discussions about access, cost, transparency, security, and deployment often turn on what exactly has been released. If a vendor or developer says a model is available, a non-specialist should ask whether that means API access, an application, source code, or the weights artefact. Released weights can make local deployment, auditing, fine-tuning, conversion, or offline use more feasible, but they also raise governance questions about licensing, safety controls, infrastructure needs, and misuse. In procurement and policy conversations, confusing weights with the whole system can lead to wrong assumptions about reproducibility, openness, portability, or risk.",
+  "whereYouMayHearIt": [
+    "model release announcements",
+    "open-source AI discussions",
+    "procurement or ICT reviews",
+    "machine learning deployment guides",
+    "safety and governance meetings"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If the weights are available, the whole model is fully open and easy to use.",
+      "correction": "Released weights may still depend on separate code, configuration, tokenisers, licences, and hardware. Some releases allow use but not redistribution or training-data inspection. So access to weights does not automatically mean the whole system is open in every practical or legal sense."
+    },
+    {
+      "misconception": "A weights file contains the training data in readable form.",
+      "correction": "The file mainly stores learned numerical values, not a clean database of source documents. Models can sometimes reproduce memorised fragments, so privacy and copyright concerns still matter, but the artefact is not simply a text archive of the training set."
+    },
+    {
+      "misconception": "Weights and parameters mean exactly the same thing in every conversation.",
+      "correction": "People often use the words loosely, but they point to different levels. A parameter is an adjustable value in the model. Released model weights usually means the saved collection of many learned parameter values packaged as files for loading and use."
+    },
+    {
+      "misconception": "If you have the weights, you can run the model on any computer.",
+      "correction": "The artefact may require a specific architecture, software stack, memory size, accelerator support, and sometimes conversion or quantisation. A checkpoint that works on a large server may not run acceptably on a laptop or phone."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of it as the trained model packed into files full of numbers. Those files let compatible software reproduce the model’s learned behaviour without training from the beginning.",
+    "technical": "A released weights artefact is a serialised checkpoint containing the learned numerical tensors of a trained model, usually saved at the end of training or fine-tuning, or at an intermediate step. The tensors correspond to parameter values used by the model architecture during inference. On their own, these files are not enough: a runtime must know the architecture definition, tensor shapes, layer arrangement, configuration settings, vocabulary, and tokenisation scheme expected by the checkpoint. Once loaded, the runtime applies the weights during forward passes to transform token representations and produce next-token probability distributions. Different formats may store the same learned values in different ways, and some releases provide quantised versions, which trade some numerical precision for lower memory use and faster deployment. In practice, people often say 'the model' when they mean the checkpoint, but the full runnable system also includes code, config, and supporting assets."
+  },
+  "keyTakeaway": "Released model weights are a saved snapshot of trained numbers: essential for running a model, but not the same as the whole system around them.",
+  "quickCheck": {
+    "question": "What best describes released model weights?",
+    "options": [
+      "A saved collection of learned numerical values that compatible software can load to run a trained model",
+      "The complete training dataset used to build the model, stored in compressed form",
+      "A user-written prompt template that controls how the model answers",
+      "The random sampling settings that decide whether output is creative or predictable"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Released weights are the learned numerical values produced by training and saved as files. They are different from the training data, from prompts, and from settings like temperature or top-p. To be useful, they still need compatible architecture, configuration, and tokenisation."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Model weights (as a released artefact)",
+      "url": "https://en.wikipedia.org/w/index.php?search=Model%20weights%20(as%20a%20released%20artefact)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A Wikipedia search results page that helps readers find related articles and terminology, useful for broad orientation but not a single authoritative explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "A structured course that explains how language models are built and used, suitable for readers who want practical and technical context around checkpoints and deployment.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "A visual video explanation of large language models that can help readers build intuition for where learned numbers fit in the system, especially suitable for visual learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Model weights (as a released artefact)",
+      "url": "https://www.youtube.com/results?search_query=Model%20weights%20(as%20a%20released%20artefact)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that lets readers compare different video explanations of model weights, useful for people who prefer choosing a teaching style that suits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Model weights (as a released artefact)",
+      "url": "https://www.reddit.com/search/?q=Model%20weights%20(as%20a%20released%20artefact)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page showing community discussions and questions about model weights, useful for seeing common confusions but not for treating comments as verified facts.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "model weights file meaning",
+    "checkpoint file llm",
+    "what are model weights",
+    "weights vs parameters model",
+    "download model weights",
+    "llm checkpoint explained",
+    "model waits file",
+    "open weights vs open source",
+    "model weights (as a released artefact)",
+    "weights file",
+    "checkpoint file"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:00.554Z",
+    "contentHash": "08e679cf51fb3a7a",
+    "attempts": 1,
+    "promptTokens": 2400,
+    "completionTokens": 2515
+  }
+}

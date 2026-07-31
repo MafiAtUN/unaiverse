@@ -1,0 +1,228 @@
+{
+  "id": "retrieval-augmented-generation",
+  "slug": "retrieval-augmented-generation",
+  "term": "Retrieval-augmented generation",
+  "acronym": "RAG",
+  "aliases": [
+    "RAG",
+    "grounded generation"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "policy",
+    "programme",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "retrieval",
+    "large-language-model"
+  ],
+  "relatedTermIds": [
+    "retrieval",
+    "semantic-search",
+    "vector-database",
+    "chunking",
+    "grounding",
+    "citation"
+  ],
+  "oftenConfusedWith": [
+    "semantic-search",
+    "fine-tuning",
+    "prompt-engineering"
+  ],
+  "oneSentence": "A method that first finds relevant source passages and then asks a language model to answer using that material.",
+  "plainExplanation": "This approach combines two parts: finding useful information and writing a response. A user starts with a question. The system searches a set of documents, such as reports, manuals or web pages, to find passages that are likely to help.\n\nThe search usually works by meaning, not only exact words. To do that, the system turns text into numeric representations called embeddings, which place similar meanings near each other. It then retrieves the most relevant chunks, meaning smaller sections of documents, rather than whole files.\n\nThose retrieved passages are given to a large language model together with the user’s question. The model then generates an answer that is guided by that supplied material. In a well-designed system, the answer may also show citations so the reader can check the source.\n\nWhat goes in: a question and a collection of approved documents. What happens: retrieval, selection and answer generation. What comes out: a drafted answer grounded in retrieved text, often with references. This is different from fine-tuning, which changes model behaviour through training, and different from plain semantic search, which stops at finding documents rather than drafting an answer.",
+  "everydayAnalogy": {
+    "title": "Asking a colleague to summarise the right pages first",
+    "story": "Aisha needs a short summary of last month’s meeting decisions. Instead of relying on memory, she asks Mateo to pull the most relevant pages from the meeting notes, highlight the lines about budget, timelines and responsibilities, and then write a brief summary using those pages. Mateo’s summary is more useful because it is tied to the notes on the table, and Aisha can check the highlighted pages if anything looks wrong.",
+    "mapping": [
+      {
+        "analogyElement": "Mateo pulling the most relevant pages",
+        "aiElement": "Retrieval step finding relevant text chunks"
+      },
+      {
+        "analogyElement": "Highlighted lines on budget, timelines and responsibilities",
+        "aiElement": "Selected passages provided as grounding context"
+      },
+      {
+        "analogyElement": "Writing a brief summary from those pages",
+        "aiElement": "Language model generating an answer from retrieved material"
+      },
+      {
+        "analogyElement": "Aisha checking the pages",
+        "aiElement": "User verifying citations or source passages"
+      }
+    ],
+    "limitation": "A human colleague can notice subtle organisational context, ask follow-up questions and judge whether the notes are trustworthy. A RAG system does not check truth in the human sense. It retrieves text that looks relevant and then generates wording from that input. If the source documents are incomplete, outdated or poorly retrieved, the answer can still be wrong or misleading."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "How retrieval-augmented generation works",
+    "learningObjective": "After using this explainer, a reader should be able to say that the system first retrieves relevant passages from a document collection and then generates an answer from those passages, often with citations.",
+    "description": "The explainer shows a question moving through three panels: document store, retrieved passages and answer box. Readers can change the question, retrieval quality and number of passages to see how the final answer changes and why citations appear or fail.",
+    "steps": [
+      {
+        "label": "Ask a question",
+        "explanation": "The reader enters or selects a question. The system creates a search representation of that question so it can look for similar meaning in the document collection.",
+        "visualInstruction": "Show a question input at left. Below it, display a compact icon change from text to a vector-like marker, then an arrow to the document store."
+      },
+      {
+        "label": "Retrieve passages",
+        "explanation": "The system searches indexed chunks of documents and returns the top matches. Better retrieval usually gives more relevant grounding; poor retrieval gives weak or off-topic grounding.",
+        "visualInstruction": "Show stacked document chunks in the centre. Highlight the top 3 matches. Include a control for retrieval quality and a control for number of passages retrieved."
+      },
+      {
+        "label": "Build the prompt",
+        "explanation": "The selected passages are combined with the question and sent to the language model. This step constrains the answer by giving the model specific source material.",
+        "visualInstruction": "Show the chosen chunks flowing into a prompt container with two labelled sections: question and sources."
+      },
+      {
+        "label": "Generate and inspect",
+        "explanation": "The model drafts an answer using the supplied passages. The reader can compare the answer with the retrieved text and see where citations support the wording and where unsupported claims appear.",
+        "visualInstruction": "Show an answer panel on the right with clickable citation markers. Unsupported sentences should be visually flagged when retrieval is poor or incomplete."
+      }
+    ],
+    "interaction": "Readers can type or choose a question, drag a slider for retrieval quality, change how many passages are retrieved, and click citation markers to reveal the exact supporting passage.",
+    "accessibilityDescription": "This interactive explains the process in four stages. First, a user asks a question. Second, the system searches a prepared collection of document chunks and selects the most relevant passages. Third, it combines the question and those passages into a prompt for a language model. Fourth, the model produces an answer that may include citations back to the retrieved passages. Controls let the user change the question, the quality of retrieval and the number of passages. When retrieval quality is high, the answer is more likely to stay close to the sources. When retrieval quality is low or the wrong passages are selected, the answer may be incomplete, off topic or unsupported even if it sounds fluent.",
+    "reducedMotionDescription": "A static four-panel layout replaces animation. Panel 1 shows the question. Panel 2 shows the indexed document collection with the selected passages highlighted. Panel 3 shows a prompt box containing the question plus those passages. Panel 4 shows the generated answer with citation markers and notes showing which sentences are supported or unsupported.",
+    "component": "rag"
+  },
+  "workedExample": {
+    "scenario": "A staff member asks an internal assistant: \"What are the leave approval steps for short consultancy travel?\"",
+    "input": "Documents available: travel manual, consultancy guidance note, old FAQ from 2021, and a current 2024 HR circular.",
+    "process": [
+      "The system splits the documents into chunks and searches for passages semantically related to leave approval, consultancy travel and required authorisation.",
+      "It retrieves three top passages: one from the 2024 HR circular, one from the consultancy guidance note and one less relevant chunk from the old FAQ.",
+      "Those passages are sent with the question to the language model, with instructions to answer only from the provided text and cite sources.",
+      "The model drafts: \"For short consultancy travel, request approval from the hiring office before booking, then record the authorised absence according to the 2024 HR circular. The current guidance note says consultants should follow the office travel authorisation process rather than staff leave workflows.\"",
+      "The interface shows citations beside each sentence so the user can open the supporting chunks and spot that the old FAQ was not used."
+    ],
+    "result": "The user gets a concise answer tied to current documents, plus source passages to verify before acting."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office builds an internal assistant over approved guidance documents so colleagues can ask questions such as which template to use, what reporting step comes next, or where a rule is stated.",
+    "relevance": "This can reduce time spent searching across long manuals and circulars, while still letting staff inspect the source passage before relying on the answer.",
+    "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and keep human review for consequential guidance."
+  },
+  "whyItMatters": "For non-specialists, this method matters because it can make AI answers more checkable. Instead of relying only on patterns learned during training, the system can pull current source material at answer time. That can improve usefulness for policies, manuals, technical documents and large knowledge collections that change often.\n\nIt also changes what you should ask before trusting a system. You should ask: What documents can it access? How recent are they? Can I inspect the cited passages? What happens when nothing relevant is found? A polished answer without good retrieval can still be wrong. Good governance therefore depends not only on the model, but also on document quality, indexing, access controls and human oversight.",
+  "whereYouMayHearIt": [
+    "enterprise search tools",
+    "internal knowledge assistants",
+    "chatbots with citations",
+    "document question-answering systems"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "RAG guarantees factual answers because it uses sources.",
+      "correction": "It can improve traceability, but it does not guarantee accuracy. The system may retrieve the wrong passage, miss an important document, use outdated material or generate wording that goes beyond the source. Citations help checking; they do not replace checking."
+    },
+    {
+      "misconception": "RAG is the same as semantic search.",
+      "correction": "Semantic search mainly finds relevant documents or passages. RAG adds another step: a language model uses the retrieved text to draft an answer. That extra generation step can be helpful, but it can also introduce unsupported wording if not well controlled."
+    },
+    {
+      "misconception": "RAG and fine-tuning solve the same problem.",
+      "correction": "Fine-tuning changes a model by additional training on examples. RAG usually leaves the base model unchanged and gives it relevant source text at run time. RAG is often better for changing knowledge bases because you can update documents without retraining the model."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is like giving the AI an open folder of relevant pages before asking it to answer, so the reply can be based on those pages instead of memory alone.",
+    "technical": "A typical pipeline indexes a document collection as chunks, often with embeddings that place semantically similar text near each other in vector space. At query time, the system converts the question into the same kind of representation, retrieves candidate chunks through search, may rerank them, and inserts the top passages into the model prompt as context. The language model then generates a response conditioned on that retrieved context. In many systems, the output also includes citations or links back to the retrieved chunks. The quality of the final answer depends on several connected parts: chunking, indexing, retrieval, reranking, prompt construction, model behaviour and source quality. This is why evaluation should test not only answer style but also retrieval accuracy, citation faithfulness and failure handling when no good evidence is found."
+  },
+  "keyTakeaway": "RAG makes an AI answer more useful by giving it relevant source passages first, but the answer is only as reliable as the retrieval and the underlying documents.",
+  "quickCheck": {
+    "question": "What best describes retrieval-augmented generation?",
+    "options": [
+      "A system that retrains a model on new documents so it permanently remembers them",
+      "A system that first retrieves relevant passages from documents and then asks a model to answer using them",
+      "A system that searches documents by exact keywords only and returns a file list without drafting an answer",
+      "A system that removes the need to verify sources because citations prove the answer is correct"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "RAG combines retrieval with generation. It finds relevant passages first, then uses them as context for a model’s answer. It is not the same as retraining, not limited to exact keyword search, and citations help checking but do not guarantee correctness."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Retrieval-augmented generation",
+      "url": "https://en.wikipedia.org/wiki/Retrieval-augmented_generation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad overview of the concept and suits readers who want a quick orientation before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This Google course resource explains embeddings, which suits readers who want to understand how meaning-based retrieval is often built.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive Embedding Projector lets readers explore how similar items cluster in vector space, which suits visual learners and technical beginners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Retrieval-augmented generation",
+      "url": "https://www.youtube.com/results?search_query=Retrieval-augmented%20generation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers compare different video explanations of the topic and suits people who prefer audiovisual introductions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Retrieval-augmented generation",
+      "url": "https://www.reddit.com/search/?q=Retrieval-augmented%20generation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussions and practical questions about the topic, which suits readers who want informal perspectives alongside formal sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "rag meaning ai",
+    "retrieval augmented generation explained",
+    "what is grounded generation",
+    "rag vs fine tuning",
+    "rag vs semantic search",
+    "ai with citations from documents",
+    "how rag works",
+    "retrival augmented generation",
+    "retrieval augmented generation example",
+    "retrieval-augmented generation",
+    "rag",
+    "grounded generation"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:38:12.466Z",
+    "contentHash": "62caa0843bcf9551",
+    "attempts": 1,
+    "promptTokens": 2307,
+    "completionTokens": 2494
+  }
+}

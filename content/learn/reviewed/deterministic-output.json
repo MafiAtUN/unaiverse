@@ -1,0 +1,225 @@
+{
+  "id": "deterministic-output",
+  "slug": "deterministic-output",
+  "term": "Deterministic output",
+  "aliases": [
+    "determinism",
+    "reproducibility"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "programme",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "sampling"
+  ],
+  "relatedTermIds": [
+    "large-language-model",
+    "prompt",
+    "context",
+    "completion",
+    "sampling",
+    "next-token-prediction"
+  ],
+  "oftenConfusedWith": [
+    "temperature",
+    "reliability",
+    "understanding"
+  ],
+  "oneSentence": "The same input and settings produce the same output every time, instead of varying across repeated runs.",
+  "plainExplanation": "A language model produces text one piece at a time. Those pieces are often called tokens, which can be words, parts of words, or punctuation. Deterministic output means that if you give the model the same prompt, the same context, the same model version, and the same generation settings, you get the same sequence of tokens back.\n\nWhat goes in matters. The input is not only the visible question. It also includes hidden instructions such as a system prompt, previous messages in the conversation, the model version, and settings that control how the next token is chosen. If any of these change, the output may change too.\n\nWhat happens inside is a token-by-token selection process. The model calculates scores for many possible next tokens. If the system always picks the highest-scoring token at each step, the run is deterministic. If it uses a method that allows some randomness, such as sampling, repeated runs can differ even when the prompt looks identical.\n\nWhat comes out is a completion that can be reproduced under the same conditions. This is useful for testing, auditing and comparing prompts. It does not mean the output is correct, reliable, unbiased or suitable for use without review. Deterministic output is about repeatability, not truth or quality.",
+  "everydayAnalogy": {
+    "title": "Sorting messages with a fixed rule sheet",
+    "story": "A team in Nairobi receives 200 incoming messages and must label each one urgent or not urgent. They use a rule sheet: if a message mentions evacuation, medical need or an immediate deadline, it goes into the urgent tray; otherwise it goes into the standard tray. If every team member follows the same rule sheet exactly, the same message should land in the same tray each time it is checked. If staff are allowed to use personal judgement for borderline cases, the result may vary from one review to the next.",
+    "mapping": [
+      {
+        "analogyElement": "The rule sheet for sorting messages",
+        "aiElement": "The fixed prompt, context and model settings"
+      },
+      {
+        "analogyElement": "Placing a message into one tray",
+        "aiElement": "Choosing the next token in the output"
+      },
+      {
+        "analogyElement": "Different staff using personal judgement",
+        "aiElement": "Random sampling that can change the result across runs"
+      }
+    ],
+    "limitation": "A message-sorting team applies explicit human-written rules to whole messages, while a language model generates text token by token from patterns learned during training. In real models, even with fixed settings, exact repeatability can also depend on implementation details such as model version or serving system behaviour. So the analogy helps with the idea of repeatable rules, but it does not show the actual mechanism."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Same prompt, fixed choice versus random choice",
+    "learningObjective": "Show why the same prompt can either repeat exactly or vary, depending on how the next token is chosen.",
+    "description": "A side-by-side diagram compares two runs from the same input. The left side uses fixed selection and produces the same output in run 1 and run 2. The right side uses randomised selection and produces different but plausible outputs. Read from top to bottom within each column.",
+    "steps": [
+      {
+        "label": "Shared input",
+        "explanation": "Both columns start with the same prompt, same context, same model version and same settings except for the token-selection method.",
+        "visualInstruction": "At the top, place one input box spanning both columns labelled 'Same prompt + same context + same model'. Add a small note below: 'Only the selection method differs'."
+      },
+      {
+        "label": "Model scores options",
+        "explanation": "The model assigns scores to several possible next tokens after the current text.",
+        "visualInstruction": "In both columns, show a middle panel with three token chips and score bars, for example 'urgent 0.62', 'important 0.25', 'routine 0.13'."
+      },
+      {
+        "label": "Fixed selection",
+        "explanation": "In the deterministic column, the system always picks the highest-scoring token, then repeats that approach for each following token.",
+        "visualInstruction": "Left column: highlight the top-scoring chip in each row with a solid outline and connect rows with straight arrows labelled 'pick highest'."
+      },
+      {
+        "label": "Randomised selection",
+        "explanation": "In the non-deterministic column, the system may pick among several high-probability tokens, so repeated runs can diverge.",
+        "visualInstruction": "Right column: show two mini-runs branching from the same score panel, each selecting a different plausible token, with arrows labelled 'sample'."
+      },
+      {
+        "label": "Outputs compared",
+        "explanation": "Fixed selection repeats exactly across runs; randomised selection may produce different wording.",
+        "visualInstruction": "At the bottom, left column shows Run 1 and Run 2 with identical text. Right column shows Run 1 and Run 2 with slightly different text but similar meaning."
+      }
+    ],
+    "interaction": "Hovering or tapping a token chip reveals a short note: 'Deterministic: always choose the top option' or 'Randomised: choose from likely options using chance'. A toggle can switch the right column between low and high randomness to show how variation increases.",
+    "accessibilityDescription": "This diagram compares two ways a language model can generate text from the same input. At the top, both sides share the same prompt, context and model. In the middle, the model gives scores to possible next tokens such as 'urgent', 'important' and 'routine'. On the left, the system always picks the highest-scoring token at each step, so run 1 and run 2 end with exactly the same output. On the right, the system samples from likely tokens, so two runs can choose different words and end with different outputs. The main point is that repeatability depends on the token-selection method, not only on the visible prompt.",
+    "reducedMotionDescription": "A static two-column comparison replaces animation. The left column shows one fixed path from scored token options to identical outputs in two runs. The right column shows two possible paths from the same scored options to different outputs in two runs."
+  },
+  "workedExample": {
+    "scenario": "A team tests whether a drafting assistant gives repeatable short summaries for the same note.",
+    "input": "Prompt: 'Summarise in one sentence: The clinic will open at 08:00, bring water, and report severe cases immediately.' Settings A: temperature 0. Settings B: temperature 0.8.",
+    "process": [
+      "Run the same prompt twice with the same model version and temperature 0.",
+      "Both runs choose the highest-scoring next token at each step and return the same sentence.",
+      "Run the same prompt twice again with the same model version but temperature 0.8.",
+      "This time the model samples from several likely tokens, so wording differs across the two runs."
+    ],
+    "result": "With temperature 0, both runs return: 'Clinic opens at 08:00; bring water and report severe cases immediately.' With temperature 0.8, one run returns 'The clinic opens at 08:00, so bring water and report severe cases at once,' while another returns 'Bring water, note the 08:00 opening time, and flag severe cases immediately.'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A language services team is testing an approved internal model to translate short, non-sensitive field update templates into a working language for routine drafting support.",
+    "relevance": "Deterministic output helps the team compare prompts fairly and check whether the same source text produces the same translation under fixed conditions, which is useful for quality assurance and audit trails.",
+    "caution": "Do not place confidential, personal, protection-sensitive or operationally sensitive field information into an unapproved public AI service; use only approved tools and keep human review in the loop before any translation is shared."
+  },
+  "whyItMatters": "For non-specialists, the main question is often not 'How does the model work?' but 'Can I get the same result again, and under what conditions?' Deterministic output matters when you are testing prompts, comparing system changes, documenting evidence, reproducing an issue, or showing that a workflow behaves consistently. It can support accountability because reviewers can inspect the exact conditions that led to an output. But repeatability should not be confused with correctness. A model can repeat the same mistake every time. In policy and programme settings, that means deterministic output can improve traceability and evaluation, while human judgement is still needed for accuracy, safety and fairness.",
+  "whereYouMayHearIt": [
+    "model evaluation and benchmarking",
+    "prompt testing",
+    "quality assurance discussions",
+    "API generation settings",
+    "audit and reproducibility reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If the output is deterministic, it must be accurate.",
+      "correction": "Deterministic only means repeatable under the same conditions. The model may consistently produce a weak summary, a misleading translation or a factual error. Repeatability helps inspection, but it does not guarantee truth, quality or safety."
+    },
+    {
+      "misconception": "Using the same visible prompt is enough to guarantee the same answer.",
+      "correction": "The visible prompt is only part of the input. A different system prompt, earlier chat history, model version, tool use, or generation setting can change the token scores or the selection path, which can change the output."
+    },
+    {
+      "misconception": "Any non-zero temperature automatically makes every run completely different.",
+      "correction": "Higher randomness increases the chance of variation, but outputs may still match if one token is much more likely than the others. Variation depends on both the settings and the shape of the model's token probabilities at each step."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "If everything is kept the same and the system is set to make fixed choices, you should get the same answer each time.",
+    "technical": "A language model generates a completion by repeatedly selecting the next token from a probability distribution over its vocabulary, conditioned on the prompt, prior context, model weights and generation settings. Output is deterministic when that selection procedure is itself fixed, for example by always taking the highest-probability token rather than sampling. In practice, reproducibility usually requires holding constant the full request state: system and user prompts, conversation history, model version, decoding parameters, tool configuration and any preprocessing. This is often confused with reliability, but they are different properties: determinism concerns repeatability of the decoding process, while reliability concerns whether outputs are consistently good for the intended task."
+  },
+  "keyTakeaway": "Repeatable output helps testing and auditing, but the same answer every time can still be the wrong answer.",
+  "quickCheck": {
+    "question": "Which statement best describes deterministic output in a language model?",
+    "options": [
+      "It guarantees the answer is factually correct.",
+      "It means the same full input and fixed settings produce the same output each time.",
+      "It means the model has no uncertainty internally.",
+      "It means the model will always give a short answer."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Deterministic output is about repeatability under the same conditions. It does not guarantee factual accuracy, remove internal uncertainty scores, or control answer length by itself."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Deterministic output",
+      "url": "https://en.wikipedia.org/w/index.php?search=Deterministic%20output",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers find broad background on related uses of determinism and reproducibility, and it suits readers who want a starting point rather than a single curated article.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This course gives structured explanations of how language models generate text and suits readers who want a step-by-step technical foundation.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives an intuitive visual account of how large language models produce text and suits readers who learn best through diagrams and animation.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Deterministic output",
+      "url": "https://www.youtube.com/results?search_query=Deterministic%20output%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find different video explanations of deterministic output and suits readers who want to compare teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Deterministic output",
+      "url": "https://www.reddit.com/search/?q=Deterministic%20output",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common questions and practitioner discussions about deterministic output and suits readers who want informal examples and debate.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "deterministic output llm",
+    "what does deterministic mean in ai",
+    "same prompt same answer every time",
+    "llm reproducibility",
+    "temperature 0 deterministic",
+    "non deterministic model output",
+    "deterministic vs reliable ai",
+    "deterministic output misspelt determinstic",
+    "deterministic output",
+    "determinism",
+    "reproducibility"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:20.455Z",
+    "contentHash": "452cc49b1615a1b0",
+    "attempts": 1,
+    "promptTokens": 2367,
+    "completionTokens": 2488
+  }
+}

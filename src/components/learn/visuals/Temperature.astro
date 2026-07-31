@@ -1,0 +1,166 @@
+---
+/**
+ * Temperature: the same next-word choice, reshaped.
+ *
+ * A bar chart of candidate next words, redrawn as the setting moves. Low
+ * temperature flattens everything onto the single most likely word; high
+ * temperature levels the field so unlikely words get a real chance. Naming
+ * this "creativity" is the misconception the readout exists to kill.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-tmp data-term={termId}>
+  <p class="vx__label">The sentence so far</p>
+  <p class="visual__readout" data-tmp-prompt>“The mission report was delivered to the …”</p>
+
+  <div class="vx__row">
+    <label class="vx__label" for={`tmp-t-${termId}`}>Temperature</label>
+    <input
+      class="vx__slider"
+      type="range"
+      id={`tmp-t-${termId}`}
+      min="1"
+      max="200"
+      value="80"
+      data-tmp-value
+      aria-describedby={`tmp-readout-${termId}`}
+    />
+    <output class="vx__value" data-tmp-out>0.80</output>
+  </div>
+
+  <ul class="tmp-bars" data-tmp-bars aria-label="Chance of each next word"></ul>
+
+  <p class="visual__readout" id={`tmp-readout-${termId}`} role="status" aria-live="polite" data-tmp-readout></p>
+</div>
+
+<style>
+  .tmp-bars {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-2);
+  }
+
+  .tmp-bar {
+    display: grid;
+    grid-template-columns: 9rem 1fr 3.5rem;
+    align-items: center;
+    gap: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+  }
+
+  .tmp-bar__track {
+    height: 0.9rem;
+    background: var(--void-deep);
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+  }
+
+  .tmp-bar__fill {
+    height: 100%;
+    background: var(--riso-green);
+    transition: width var(--dur) var(--ease);
+  }
+
+  .tmp-bar--top .tmp-bar__fill {
+    background: var(--riso-pink);
+  }
+
+  .tmp-bar__pct {
+    text-align: right;
+    color: var(--ink-dim);
+  }
+
+  @media (max-width: 30rem) {
+    .tmp-bar {
+      grid-template-columns: 6.5rem 1fr 3rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tmp-bar__fill {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /** Raw scores before temperature is applied. Illustrative, not from a model. */
+  const CANDIDATES: Array<{ word: string; logit: number }> = [
+    { word: 'Secretariat', logit: 3.4 },
+    { word: 'Council', logit: 2.9 },
+    { word: 'committee', logit: 2.2 },
+    { word: 'delegation', logit: 1.6 },
+    { word: 'printer', logit: 0.2 },
+    { word: 'ocean', logit: -1.4 },
+  ];
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-tmp]')) {
+    const slider = root.querySelector<HTMLInputElement>('[data-tmp-value]')!;
+    const out = root.querySelector<HTMLOutputElement>('[data-tmp-out]')!;
+    const bars = root.querySelector<HTMLUListElement>('[data-tmp-bars]')!;
+    const readout = root.querySelector<HTMLElement>('[data-tmp-readout]')!;
+
+    function softmax(t: number) {
+      // Temperature divides the scores before they are turned into chances.
+      // Small t exaggerates the gaps; large t flattens them.
+      const scaled = CANDIDATES.map((c) => Math.exp(c.logit / Math.max(t, 0.01)));
+      const sum = scaled.reduce((a, b) => a + b, 0);
+      return scaled.map((s) => s / sum);
+    }
+
+    function render() {
+      const t = Number(slider.value) / 100;
+      out.textContent = t.toFixed(2);
+      const probs = softmax(t);
+      const top = probs.indexOf(Math.max(...probs));
+
+      bars.replaceChildren(
+        ...CANDIDATES.map((c, i) => {
+          const li = document.createElement('li');
+          li.className = `tmp-bar${i === top ? ' tmp-bar--top' : ''}`;
+          const label = document.createElement('span');
+          label.textContent = c.word;
+          const track = document.createElement('span');
+          track.className = 'tmp-bar__track';
+          const fill = document.createElement('span');
+          fill.className = 'tmp-bar__fill';
+          fill.style.width = `${(probs[i]! * 100).toFixed(1)}%`;
+          track.append(fill);
+          const pct = document.createElement('span');
+          pct.className = 'tmp-bar__pct';
+          pct.textContent = `${(probs[i]! * 100).toFixed(1)}%`;
+          li.append(label, track, pct);
+          return li;
+        }),
+      );
+
+      const leader = (probs[top]! * 100).toFixed(0);
+      const odd = (probs[CANDIDATES.length - 1]! * 100).toFixed(1);
+      let verdict: string;
+      if (t <= 0.3) {
+        verdict =
+          `At this setting the most likely word takes almost all the probability (${leader}%). The output will be repeatable and predictable, and it will read as flat, because the same safe word wins every time.`;
+      } else if (t >= 1.4) {
+        verdict =
+          `The gaps have been flattened, so “${CANDIDATES[CANDIDATES.length - 1]!.word}” now has a ${odd}% chance of being chosen. Output at this setting is varied and also more likely to be nonsense. This is not the model being imaginative; it is the model being less selective.`;
+      } else {
+        verdict =
+          'A middling setting. The likely words still lead, but there is enough spread that two runs of the same prompt will differ. This is why the same question can produce a different answer twice.';
+      }
+      readout.textContent =
+        `Temperature ${t.toFixed(2)}. The leading word “${CANDIDATES[top]!.word}” has a ${leader}% chance. ${verdict} ` +
+        'Temperature does not add knowledge or creativity — it only changes how sharply the model prefers its own top guess.';
+    }
+
+    slider.addEventListener('input', render);
+    render();
+  }
+</script>

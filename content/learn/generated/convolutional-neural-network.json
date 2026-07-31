@@ -1,0 +1,230 @@
+{
+  "id": "convolutional-neural-network",
+  "slug": "convolutional-neural-network",
+  "term": "Convolutional neural network",
+  "acronym": "CNN",
+  "aliases": [
+    "CNN",
+    "convnet"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "neural-network"
+  ],
+  "relatedTermIds": [
+    "neural-network",
+    "network-layers",
+    "weight",
+    "activation-function",
+    "forward-pass",
+    "softmax"
+  ],
+  "oftenConfusedWith": [
+    "recurrent-neural-network",
+    "transformer",
+    "artificial-neuron"
+  ],
+  "oneSentence": "A layered model that scans small patterns across a grid-like input, combines them into larger features, and uses them to classify or describe the whole input.",
+  "plainExplanation": "A convolutional neural network is a kind of neural network built for data arranged like a grid. The most common example is an image, which is a grid of pixel values, but the idea can also apply to other structured data. Instead of looking at every input value separately at first, it examines small nearby groups.\n\nThe key operation is a convolution. In simple terms, a small set of numbers, often called a filter or kernel, slides across the input. At each position, it multiplies nearby input values by the filter values and adds them up. This produces a new grid called a feature map. Different filters can respond to different local patterns, such as edges, corners or textures.\n\nAfter several layers, the model combines simple local patterns into larger and more abstract ones. Early layers may react to lines or colour changes. Later layers may react to shapes or arrangements of parts. Pooling or strided steps may reduce size so the network keeps the strongest useful signals while lowering computation. Then one or more later layers turn those signals into an output such as class scores.\n\nWhat goes in is usually a grid of numbers, such as pixel intensities. What happens is repeated local scanning, weighted combination, non-linear activation, and gradual feature building across layers. What comes out depends on the task: a label, a probability-like score after softmax, a detected region, or another structured prediction. CNNs are especially useful when nearby input values matter and the same kind of pattern can appear in many positions.",
+  "everydayAnalogy": {
+    "title": "Inspecting printed forms with a reusable window",
+    "story": "A team in Nairobi receives thousands of paper survey forms. Instead of reading every page as one big block, one colleague places a small transparent window over the top-left part of each page and checks for simple marks such as a tick, a bold heading or a handwritten note. They slide the same window across the page, row by row, recording where each pattern appears. A second colleague looks at that pattern record to spot larger structures, such as a complaint section with several related marks close together. At the end, the team decides whether the form is about water access, school safety or something else.",
+    "mapping": [
+      {
+        "analogyElement": "small transparent window moved across the page",
+        "aiElement": "filter or kernel sliding across the input"
+      },
+      {
+        "analogyElement": "checking for a simple mark at each position",
+        "aiElement": "computing a local weighted match during convolution"
+      },
+      {
+        "analogyElement": "pattern record showing where marks appeared",
+        "aiElement": "feature map"
+      },
+      {
+        "analogyElement": "second colleague combining simple marks into a larger section pattern",
+        "aiElement": "deeper layers combining low-level features into higher-level features"
+      }
+    ],
+    "limitation": "Real CNN filters are learned numerical weights, not hand-designed visual checks by a person. The model does not literally recognise concepts the way a colleague reads a form. Also, modern CNNs usually process many filters and layers in parallel, and later layers can be hard for humans to interpret clearly."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a CNN turns pixels into a class prediction",
+    "learningObjective": "After viewing this, a reader should be able to explain that a CNN reuses small filters across an input, builds feature maps, combines them in deeper layers, and then produces output scores.",
+    "description": "Show a left-to-right pipeline: image grid, sliding filter over small patches, resulting feature maps, a smaller set of stronger combined features after repeated layers, then output scores. Read it as data moving through stages, with reused filters highlighted to show that the same detector is applied in many positions.",
+    "steps": [
+      {
+        "label": "Input grid",
+        "explanation": "Start with a grid of numbers, such as pixel values in an image.",
+        "visualInstruction": "Draw a 6x6 square grid on the left with varied shading. Label it 'input pixels'."
+      },
+      {
+        "label": "Shared filter scans local areas",
+        "explanation": "A small filter, for example 3x3, moves across the grid. At each location it calculates one new value from nearby inputs.",
+        "visualInstruction": "Overlay a coloured 3x3 square on one input region, then show the same square repeated at two other positions with arrows, labelled 'same weights reused'."
+      },
+      {
+        "label": "Feature map",
+        "explanation": "The scan creates a new grid that becomes strong where that filter matched a pattern such as an edge.",
+        "visualInstruction": "To the right, draw a smaller 4x4 grid with some dark cells. Connect several scan positions to corresponding cells in this grid."
+      },
+      {
+        "label": "Deeper feature building",
+        "explanation": "Multiple filters and layers produce several feature maps, then combine them into more useful patterns while often reducing spatial size.",
+        "visualInstruction": "Show three stacked feature maps feeding into two smaller stacked maps, with labels 'edges/textures' then 'parts/shapes'."
+      },
+      {
+        "label": "Output layer",
+        "explanation": "Later layers convert the learned features into task outputs such as class scores, often normalised with softmax for classification.",
+        "visualInstruction": "Draw three output bars labelled with example classes such as 'road', 'building', 'tree', with one bar tallest."
+      }
+    ],
+    "interaction": "On hover or tap, highlight one filter and show all positions where the same weights are reused; a toggle switches between early-layer and deeper-layer feature maps.",
+    "accessibilityDescription": "The diagram is a left-to-right flow. First, a grid of pixel values represents an input image. Next, a small 3 by 3 filter is shown moving over different parts of that grid, with a note that the same weights are reused at each position. That produces a feature map, a new grid whose values are high where the filter matched a local pattern. Several feature maps then feed into deeper layers that combine simpler patterns into larger ones and often reduce spatial size. Finally, an output layer turns those features into class scores, with one class highest. The main lesson is that CNNs detect local patterns first and build toward larger features through repeated layers.",
+    "reducedMotionDescription": "A static five-panel diagram shows the same stages without animation: input grid, one highlighted 3 by 3 filter with three example positions, one resulting feature map, a stack of deeper feature maps becoming smaller, and final output bars."
+  },
+  "workedExample": {
+    "scenario": "Classifying a 6x6 black-and-white symbol as either 'vertical line' or 'horizontal line'.",
+    "input": "A 6x6 grid where the third column has high values 1 and most other cells are 0.",
+    "process": [
+      "Use a 3x3 filter that gives a strong response to vertical edges or lines. Slide it across the 6x6 input to produce a 4x4 feature map.",
+      "The feature map has large values in positions where the filter overlaps the bright vertical column, and low values elsewhere.",
+      "Apply an activation function so negative responses are suppressed and strong matches stay strong.",
+      "Take the largest response from the feature map and pass it to a small final layer that compares evidence for 'vertical line' versus 'horizontal line'.",
+      "The final scores might be 4.2 for 'vertical line' and 0.6 for 'horizontal line'; after softmax these become probability-like outputs of about 0.97 and 0.03."
+    ],
+    "result": "The model outputs 'vertical line' with a much higher score because the reused filter found the same local pattern in aligned positions."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A country office wants to triage a shared inbox that receives scanned, standard-format paper forms and photos of routine facilities issues, using an approved internal system.",
+    "relevance": "A CNN could help extract visual patterns from images, such as whether a scan contains a stamped cover sheet, a handwritten form, or a photo of damaged infrastructure, before a human reviews the queue.",
+    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive images to an unapproved public AI service; use approved tools, minimise data, and keep human oversight for any consequential routing or action."
+  },
+  "whyItMatters": "You may hear about CNNs whenever an organisation uses AI on images, video frames, scans, medical images, satellite pictures or other grid-like data. For a non-specialist, the practical question is not the mathematics alone but whether this model type fits the task. CNNs can be efficient because they reuse the same learned filters across many locations, which often works well when the same pattern can appear anywhere in an image. That design choice affects data needs, compute cost, explainability limits, and failure modes. If you are choosing, procuring or reviewing a system, it helps to recognise that a CNN is built to detect local patterns and spatial structure, not to handle all data types equally well.",
+  "whereYouMayHearIt": [
+    "image classification systems",
+    "medical imaging tools",
+    "satellite or aerial image analysis",
+    "computer vision courses",
+    "edge detection and feature extraction discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A CNN looks at the whole image at once in the same way a person might describe a scene.",
+      "correction": "Its early layers usually work on small local regions first. Broader context appears only after many local computations are combined across layers. This local-to-global structure is one reason CNNs work well on images, but it also means they can miss information that depends on wider context if the architecture is not designed carefully."
+    },
+    {
+      "misconception": "Convolution means the model has built-in edge detectors and does not need much training.",
+      "correction": "The mechanism encourages local pattern detection, but the actual filter values are usually learned from training data. Some learned filters may end up behaving like edge detectors, yet which patterns appear depends on the data, objective and architecture."
+    },
+    {
+      "misconception": "A CNN is the best neural network for any AI task involving sequences or text.",
+      "correction": "CNNs are strongest on grid-like inputs with local spatial structure. They can be used on text or signals in some settings, but recurrent neural networks and especially transformers are often chosen for long-range sequence relationships because they handle context differently."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A CNN is a neural network that checks small nearby parts of an image or other grid, finds repeating patterns, and combines those findings into a final result.",
+    "technical": "A CNN is a feed-forward neural network that exploits spatial locality and parameter sharing. In a convolutional layer, a learnable kernel operates over local receptive fields of the input tensor to produce one or more feature maps. The same kernel weights are applied at each spatial position, which reduces parameter count compared with fully connected layers and gives a degree of translation sensitivity or robustness depending on the design. Non-linear activation functions are applied after convolutions, and pooling or strided convolutions may downsample intermediate representations. Stacking layers increases the effective receptive field, allowing later units to respond to more complex spatial patterns assembled from earlier low-level features. For classification, later layers often flatten or aggregate features and map them to class logits, which may then be passed through softmax to produce probability-like outputs. In practice, details such as padding, stride, channel depth, normalisation, and architecture choice affect performance and behaviour."
+  },
+  "keyTakeaway": "A CNN works by reusing small learned pattern detectors across a grid and building simple local matches into larger features and final predictions.",
+  "quickCheck": {
+    "question": "What makes a convolutional neural network different from a basic fully connected network when processing images?",
+    "options": [
+      "It reuses the same small filter across many image positions and focuses on local spatial patterns.",
+      "It can only produce two classes, while fully connected networks can produce many classes.",
+      "It does not use weights; it only compares pixels directly.",
+      "It guarantees that the highest output score is the true class probability."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The defining idea is local connectivity plus shared weights: the same filter scans different positions. That helps the model detect similar patterns wherever they appear. CNNs still use weights, can produce many classes, and their outputs are not guaranteed to be true probabilities."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Convolutional neural network",
+      "url": "https://en.wikipedia.org/wiki/Convolutional_neural_network",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This reference-style overview gives a broad summary of the term, its history, variants and common uses, and suits readers who want a starting point plus terminology.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This visual video builds intuition for neural networks and suits readers who learn best from animated explanations before going deeper into CNN-specific details.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers experiment with simple neural networks in the browser and suits beginners who learn by changing settings, even though it is not a dedicated CNN simulator.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Convolutional neural network",
+      "url": "https://www.youtube.com/results?search_query=Convolutional%20neural%20network%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find many video explanations of convolutional neural networks and suits people who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Convolutional neural network",
+      "url": "https://www.reddit.com/search/?q=Convolutional%20neural%20network",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see community questions and informal explanations about convolutional neural networks and suits readers who want practical discussion with the usual caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "cnn meaning ai",
+    "convolutional neural network explained",
+    "convnet simple explanation",
+    "how cnn works on images",
+    "cnn vs transformer vision",
+    "cnn vs rnn",
+    "what is convolution in neural networks",
+    "feature map cnn",
+    "kernel filter cnn",
+    "convolution neural network misspelling",
+    "convolutional neural network",
+    "cnn",
+    "convnet"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:01.588Z",
+    "contentHash": "b564705eef50284d",
+    "attempts": 1,
+    "promptTokens": 2253,
+    "completionTokens": 2734
+  }
+}

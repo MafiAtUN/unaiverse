@@ -1,0 +1,225 @@
+{
+  "id": "data-distribution",
+  "slug": "data-distribution",
+  "term": "Data distribution",
+  "aliases": [
+    "distribution"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "data-sampling"
+  ],
+  "relatedTermIds": [
+    "data-sampling",
+    "missing-data",
+    "noisy-data",
+    "data-cleaning",
+    "data-governance",
+    "distribution-shift"
+  ],
+  "oftenConfusedWith": [
+    "data-sampling",
+    "distribution-shift",
+    "structured-data",
+    "unstructured-data"
+  ],
+  "oneSentence": "The pattern of values, categories and frequencies in a dataset, including what appears often, rarely or not at all.",
+  "plainExplanation": "A dataset does not just contain items. It also has a pattern. Some words, numbers or categories appear a lot. Others appear rarely. That overall pattern is the data distribution.\n\nWhat goes in is a collection of examples: documents, images, records or sensor readings. What happens is that we count, group or measure their features, such as language, length, topic, class label or numeric range. What comes out is a picture of how common different kinds of cases are.\n\nThis matters because models learn from the examples they are given. If one type of case dominates the dataset, the model usually becomes better at that type and weaker on under-represented cases. A balanced dataset is not always the goal, but the distribution should fit the real task.\n\nData distribution is often confused with sampling and with distribution shift. Sampling is how you select data. Distribution is the pattern in the data you ended up with. Distribution shift is what we call it when that pattern changes between training and real-world use.",
+  "everydayAnalogy": {
+    "title": "A library trolley after a week of returns",
+    "story": "In a city library, staff sort one trolley of returned books before putting them back on the shelves. They notice that most returns are school textbooks and exam guides, some are novels, very few are poetry books, and none are in Braille that week. From one glance, they can describe the pattern of what came back most and least often. That pattern helps them decide whether the trolley reflects normal library use or just a special period such as exam season.",
+    "mapping": [
+      {
+        "analogyElement": "the mix of books on the trolley",
+        "aiElement": "the distribution of examples in a dataset"
+      },
+      {
+        "analogyElement": "many textbooks but few poetry books",
+        "aiElement": "some categories being common and others rare"
+      },
+      {
+        "analogyElement": "no Braille books returned that week",
+        "aiElement": "a category being absent from the observed data"
+      },
+      {
+        "analogyElement": "exam season changing the mix",
+        "aiElement": "real-world conditions changing what distribution looks like"
+      }
+    ],
+    "limitation": "A book trolley is easy to inspect by eye, but real datasets can have many features at once, such as language, length, source and label. Also, a dataset distribution is often measured with statistics, not just a quick visual impression. Finally, library returns are shaped by human borrowing behaviour, while model data can be shaped by sensors, collection rules, filtering and labelling choices as well."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Same task, different data distributions",
+    "learningObjective": "Show how two datasets can contain the same kinds of items but in different proportions, which changes what a model is likely to learn well.",
+    "description": "Two side-by-side panels show datasets for the same document-search task. Each panel has 100 document cards split by topic colour: health, education, climate and logistics. Read left to right: first compare the proportions, then see the note below each panel about likely model behaviour.",
+    "steps": [
+      {
+        "label": "Dataset A",
+        "explanation": "Most documents are about health, with smaller numbers from other topics.",
+        "visualInstruction": "Render 100 small cards in a grid. Colour about 70 health, 15 education, 10 climate and 5 logistics. Add a legend and percentages."
+      },
+      {
+        "label": "Dataset B",
+        "explanation": "The same four topics appear, but the mix is closer to the intended use case.",
+        "visualInstruction": "Render a second 100-card grid. Colour about 30 health, 25 education, 25 climate and 20 logistics. Keep the same legend and scale."
+      },
+      {
+        "label": "Compare the pattern",
+        "explanation": "Both datasets include the same topics, but one over-represents health documents.",
+        "visualInstruction": "Draw a bracket or highlight under each panel with a short caption: 'same categories' and 'different proportions'."
+      },
+      {
+        "label": "Likely effect",
+        "explanation": "A model trained on Dataset A may perform better on health-related searches and less reliably on logistics queries because it saw fewer examples.",
+        "visualInstruction": "Place one short outcome note under each panel, using arrows from panel to note. No decorative icons."
+      }
+    ],
+    "interaction": "Hover or tap a topic in the legend to highlight that topic in both panels and display its count and percentage.",
+    "accessibilityDescription": "The diagram compares two datasets for the same policy-document search task. Both contain health, education, climate and logistics documents. In Dataset A, health dominates: about 70 out of 100 documents are health, while the other topics are much fewer. In Dataset B, the four topics are more evenly represented: about 30 health, 25 education, 25 climate and 20 logistics. The key message is that the categories can be the same while their proportions differ, and those proportions affect what a model is likely to learn well.",
+    "reducedMotionDescription": "Show the same two static 100-card grids side by side with percentages, captions and outcome notes. Topic highlighting appears instantly on click or keyboard focus, with no animation."
+  },
+  "workedExample": {
+    "scenario": "A team is building a search assistant for a repository of 10,000 policy documents.",
+    "input": "Training set topic counts: health 6,000; education 2,000; climate 1,500; logistics 500.",
+    "process": [
+      "The team counts documents by topic and sees that health makes up 60% of the training data, while logistics is only 5%.",
+      "They test the search assistant with 200 queries: 50 per topic to compare performance across topics fairly.",
+      "The assistant retrieves relevant documents for 44 of 50 health queries, 39 of 50 education queries, 36 of 50 climate queries and 24 of 50 logistics queries.",
+      "The team concludes that the training distribution likely favoured health and under-served logistics, so they collect more logistics documents and retest."
+    ],
+    "result": "The distribution analysis helps explain uneven performance and guides targeted data collection instead of guessing that the model is simply 'bad' overall."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN analysis team reviews whether an internal model can help identify broad protection trends across incident reports from several field offices.",
+    "relevance": "Before using the model, the team checks the distribution of report types, locations, time periods and languages. If most records come from a few places or months, the model may reflect reporting patterns rather than wider trends.",
+    "caution": "Do not place personal, survivor, witness, case-level, security-sensitive or otherwise confidential incident data into an unapproved public AI service. Use approved systems, minimise data, aggregate where possible and keep human review over any analytical conclusions."
+  },
+  "whyItMatters": "If you do not look at data distribution, you can make poor decisions about quality, fairness, cost and risk. A model may appear accurate in testing but fail on the cases that matter most in practice because those cases were rare in the data. Distribution also affects how you interpret results: a high overall score can hide weak performance on smaller groups, languages or document types. For programme and technical teams, checking distribution helps you ask better questions: Does this dataset match the real setting? Are important cases missing? Are we measuring success on the right mix of examples?",
+  "whereYouMayHearIt": [
+    "model training discussions",
+    "data quality reviews",
+    "evaluation and benchmarking",
+    "bias and risk assessments",
+    "search and classification projects"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a dataset is large, its distribution will automatically be suitable.",
+      "correction": "Size and suitability are different. A very large dataset can still over-represent easy, common or cheap-to-collect cases and under-represent rare but important ones. What matters is whether the mix matches the task and the population you care about."
+    },
+    {
+      "misconception": "A good overall accuracy score means the distribution problem is solved.",
+      "correction": "Overall accuracy compresses many cases into one number. If common categories dominate the data, a model can score well overall while performing poorly on less frequent categories. Looking at performance by subgroup or category is often necessary."
+    },
+    {
+      "misconception": "The best distribution is always perfectly balanced.",
+      "correction": "Perfect balance is not automatically correct. If the real-world task is genuinely uneven, forcing equal proportions can make evaluation or training less realistic. The goal is not 'balance' by itself but a distribution that fits the purpose and manages risk."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the shape of a dataset: what kinds of things are in it, and how often each kind appears.",
+    "technical": "A data distribution describes how values or features are spread across a dataset. For numeric variables, this can mean ranges, central tendency and frequency across intervals. For categorical variables, it means the relative frequencies of classes or labels. In machine learning, the distribution of training data matters because models fit patterns present in that data. If the joint pattern of inputs and labels is uneven, sparse in some regions, or different from deployment conditions, performance can vary sharply across cases. In practice, teams inspect distributions with counts, proportions, histograms, summary statistics and subgroup analysis. This is related to sampling, because collection choices shape the observed distribution, but it is not the same thing as the sampling process itself."
+  },
+  "keyTakeaway": "A dataset is not just what examples it contains, but how those examples are distributed across the cases you care about.",
+  "quickCheck": {
+    "question": "Two training datasets contain the same document topics, but one has 80% health documents and the other has 30% health documents. What does this show?",
+    "options": [
+      "They have the same distribution because the topic list is the same.",
+      "They may lead to different model behaviour because the topic proportions differ.",
+      "Only the larger dataset has a distribution.",
+      "Distribution matters only after deployment, not during training."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Data distribution is about the pattern of frequencies, not just which categories exist. If one topic dominates training data, a model may fit that topic better than others, even when the category list is identical."
+  },
+  "resources": [
+    {
+      "title": "Distribution",
+      "url": "https://en.wikipedia.org/wiki/Distribution",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad introductory overview of the general idea of a distribution and suits readers who want basic background before applying it to AI data.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This link gives a risk-management framework for trustworthy AI work and suits readers who need governance-oriented guidance on identifying and managing data-related risks.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "description": "This link gives high-level principles for responsible AI and suits policy and programme readers who want the governance context around data quality and fairness.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Data distribution",
+      "url": "https://www.youtube.com/results?search_query=Data%20distribution%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page gives a range of video explanations on data distribution and suits readers who prefer to compare several teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Data distribution",
+      "url": "https://www.reddit.com/search/?q=Data%20distribution",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page gives community discussions and examples about data distribution and suits readers who want informal questions, practical interpretations and debate, with careful fact-checking.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "data distribution meaning",
+    "what is distribution in machine learning",
+    "dataset distribution explained",
+    "class distribution",
+    "feature distribution",
+    "label distribution",
+    "imbalanced data distribution",
+    "training data proportions",
+    "data distribtion",
+    "difference between sampling and distribution",
+    "data distribution",
+    "distribution"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:49:03.500Z",
+    "contentHash": "db14bb53daf11730",
+    "attempts": 1,
+    "promptTokens": 2320,
+    "completionTokens": 2302
+  }
+}

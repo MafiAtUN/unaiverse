@@ -1,0 +1,171 @@
+---
+/**
+ * The Term Explorer: every published term, filterable without a page reload.
+ *
+ * Filtering is done in the browser over markup that is already there, so the
+ * page works completely with JavaScript disabled — you get the full list,
+ * grouped by category, which is a perfectly good outcome. The filters are an
+ * enhancement, not the content.
+ */
+import Learn from '../../layouts/Learn.astro';
+import TermSearch from '../../components/learn/TermSearch.astro';
+import { TERMS, CATEGORIES, learnHref, CORPUS_STATS } from '../../lib/learn/terms';
+import { DIFFICULTIES, DIFFICULTY_LABEL, AUDIENCES, AUDIENCE_LABEL } from '../../lib/learn/schema';
+
+const byCategory = CATEGORIES.map((c) => ({
+  category: c,
+  terms: TERMS.filter((t) => t.categoryId === c.id),
+})).filter((g) => g.terms.length > 0);
+
+const title = 'Term Explorer · UNAIVERSE';
+const description = `Browse all ${CORPUS_STATS.published} AI terms by category, difficulty and audience, with a one-sentence definition for each.`;
+---
+
+<Learn title={title} description={description} section="explore" showBarSearch={false}>
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / Term Explorer
+      </p>
+      <h1 class="learn-head__title">Term Explorer</h1>
+      <p class="learn-head__lead">
+        Every published term, with the one-sentence version. Filter by who it is for and how deep it
+        goes, or search if you already know roughly what you are looking for.
+      </p>
+
+      <div style="margin-top: var(--sp-5); max-width: 40rem;">
+        <TermSearch id="explore-search" variant="inline" label="Search AI terms" compact />
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-5)">
+    <form class="lsection__head" data-explore-filters aria-label="Filter terms">
+      <fieldset style="border:0;padding:0;margin:0 0 var(--sp-4)">
+        <legend class="depth__label">Depth</legend>
+        <ul class="chips">
+          <li>
+            <button type="button" class="chip" data-filter="difficulty" data-value="" aria-pressed="true">
+              All
+            </button>
+          </li>
+          {
+            DIFFICULTIES.map((d) => (
+              <li>
+                <button
+                  type="button"
+                  class={`chip chip--${d}`}
+                  data-filter="difficulty"
+                  data-value={d}
+                  aria-pressed="false"
+                >
+                  {DIFFICULTY_LABEL[d]}
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </fieldset>
+
+      <fieldset style="border:0;padding:0;margin:0">
+        <legend class="depth__label">Written with this reader in mind</legend>
+        <ul class="chips">
+          <li>
+            <button type="button" class="chip" data-filter="audience" data-value="" aria-pressed="true">
+              Anyone
+            </button>
+          </li>
+          {
+            AUDIENCES.filter((a) => a !== 'everyone').map((a) => (
+              <li>
+                <button type="button" class="chip" data-filter="audience" data-value={a} aria-pressed="false">
+                  {AUDIENCE_LABEL[a]}
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+      </fieldset>
+
+      <p class="learn-head__meta" role="status" aria-live="polite" data-explore-count>
+        Showing all {CORPUS_STATS.published} terms.
+      </p>
+    </form>
+
+    {
+      byCategory.map(({ category, terms }) => (
+        <section class="az-group" id={category.id} data-explore-group aria-labelledby={`h-${category.id}`}>
+          <h2 class="az-group__letter" id={`h-${category.id}`}>
+            <span aria-hidden="true">{category.glyph}</span> {category.name}
+          </h2>
+          <p class="lsection__blurb" style="margin-bottom: var(--sp-4)">{category.plain}</p>
+
+          <ul class="tcard-grid">
+            {terms.map((t) => (
+              <li
+                data-explore-term
+                data-difficulty={t.difficulty}
+                data-audiences={t.audiences.join(' ')}
+              >
+                <a class="tcard" href={learnHref(t.slug)}>
+                  <div class="tcard__top">
+                    <p class="tcard__term">{t.term}</p>
+                    <span class="tcard__meta">
+                      {DIFFICULTY_LABEL[t.difficulty]}
+                      {t.visual.component ? ' · interactive' : ''}
+                    </span>
+                  </div>
+                  <p class="tcard__one">{t.oneSentence}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Learn>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-explore-filters]');
+  if (form) {
+    const count = form.querySelector<HTMLElement>('[data-explore-count]')!;
+    const items = [...document.querySelectorAll<HTMLElement>('[data-explore-term]')];
+    const groups = [...document.querySelectorAll<HTMLElement>('[data-explore-group]')];
+    const state: Record<string, string> = { difficulty: '', audience: '' };
+
+    function apply() {
+      let shown = 0;
+      for (const item of items) {
+        const okDifficulty = !state.difficulty || item.dataset.difficulty === state.difficulty;
+        const okAudience =
+          !state.audience || (item.dataset.audiences ?? '').split(' ').includes(state.audience);
+        const visible = okDifficulty && okAudience;
+        item.hidden = !visible;
+        if (visible) shown++;
+      }
+      // A category heading with nothing under it is noise, so hide the whole
+      // section rather than leaving an empty shelf.
+      for (const group of groups) {
+        group.hidden = !group.querySelector('[data-explore-term]:not([hidden])');
+      }
+      count.textContent =
+        shown === items.length
+          ? `Showing all ${items.length} terms.`
+          : `Showing ${shown} of ${items.length} terms.`;
+    }
+
+    form.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((button) =>
+      button.addEventListener('click', () => {
+        const key = button.dataset.filter!;
+        state[key] = button.dataset.value ?? '';
+        form
+          .querySelectorAll<HTMLButtonElement>(`[data-filter="${key}"]`)
+          .forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        apply();
+      }),
+    );
+
+    apply();
+  }
+</script>

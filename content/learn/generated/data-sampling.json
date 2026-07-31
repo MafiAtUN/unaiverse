@@ -1,0 +1,221 @@
+{
+  "id": "data-sampling",
+  "slug": "data-sampling",
+  "term": "Sampling (of data)",
+  "aliases": [
+    "sample selection",
+    "representative sample"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "starter",
+  "audiences": [
+    "programme",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "dataset"
+  ],
+  "relatedTermIds": [
+    "dataset",
+    "data-distribution",
+    "missing-data",
+    "data-governance",
+    "annotation",
+    "distribution-shift"
+  ],
+  "oftenConfusedWith": [
+    "data-distribution",
+    "sampling"
+  ],
+  "oneSentence": "Choosing a smaller set of cases from a larger group so you can measure, inspect or train on it without using every case.",
+  "plainExplanation": "In data work, sampling means selecting some records, people, documents or events from a larger group. The goal is to learn something useful about the whole group without checking every single item. The selected subset is called a sample.\n\nWhat goes in is a larger source of data, such as all survey responses, all clinic records approved for analysis, or all images in a collection. What happens is that someone chooses part of that larger set, using a method such as random selection or deliberate balancing across groups. What comes out is a smaller set that will be analysed, checked or used for training.\n\nA good sample reflects the larger group closely enough for the task. People often call this representative. For example, if a population includes different regions, languages or age groups, the sample should not accidentally leave some of them out unless that is an intentional and justified choice.\n\nThis is often confused with data distribution and with sampling in text generation. Data distribution describes how values are spread in the data, such as whether most cases come from one country or one class. Token sampling is the process of choosing the next word or symbol from a model's output probabilities. Here, sampling means choosing data cases from a larger pool.",
+  "everydayAnalogy": {
+    "title": "Checking food needs at a distribution point",
+    "story": "A team at a distribution point wants to estimate how much rice, oil and soap will be needed next week. They cannot interview every household while people are waiting, so they speak with a smaller group. They make sure to include households arriving at different times, larger and smaller families, and people from different nearby areas. If they only ask the first people in line that morning, their estimate may be badly off for the whole week.",
+    "mapping": [
+      {
+        "analogyElement": "households interviewed",
+        "aiElement": "sampled records or cases"
+      },
+      {
+        "analogyElement": "all households using the distribution point",
+        "aiElement": "full population or source dataset"
+      },
+      {
+        "analogyElement": "including different family sizes, times and areas",
+        "aiElement": "trying to make the sample representative"
+      },
+      {
+        "analogyElement": "estimate for next week's supplies",
+        "aiElement": "analysis or model built from the sample"
+      }
+    ],
+    "limitation": "The story suggests people can deliberately balance the sample by eye, but many data tasks need stricter methods, such as random sampling, to reduce hidden bias. Also, in machine learning, the sample may contain millions of rows or files, and the goal may be training a model rather than making a one-time estimate. Finally, some projects do not want a sample to represent the whole population; they may intentionally over-sample a rare but important group."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How a sample is chosen from a larger data source",
+    "learningObjective": "After viewing this, a reader should be able to explain that sampling means selecting a smaller subset from a larger group, and that the selection method affects whether results can be trusted.",
+    "description": "A left-to-right step diagram shows a large pool of data cases, the choice method, the resulting sample, and the conclusion drawn from it. Read from first step to last step to see how selection choices shape what you can say about the whole group.",
+    "steps": [
+      {
+        "label": "1. Start with the full group",
+        "explanation": "Show a large collection of cases such as people, records or documents. This is the source you want to learn about.",
+        "visualInstruction": "Draw a large container with many small dots or cards inside. Add a label: 'Full group / source data'. Use mixed colours or shapes to suggest variety across regions or categories."
+      },
+      {
+        "label": "2. Choose a sampling method",
+        "explanation": "The method might be random, stratified by group, or convenience-based. The method matters because it affects who gets included.",
+        "visualInstruction": "Show three small selection tools above the container: a dice icon for random, a grouped grid for stratified, and a hand reaching to the nearest items for convenience. Highlight one active path."
+      },
+      {
+        "label": "3. Create the sample",
+        "explanation": "A smaller subset is pulled out. If important groups are missing or over-represented, the sample may not reflect the full group well.",
+        "visualInstruction": "Draw an arrow from the large container to a smaller container holding fewer dots or cards. Include a note such as 'smaller subset' and show whether the mix of colours roughly matches the original."
+      },
+      {
+        "label": "4. Analyse and interpret carefully",
+        "explanation": "Results from the sample are used to estimate, inspect or train, but confidence depends on how the sample was chosen.",
+        "visualInstruction": "Draw a final panel with a simple chart or checklist fed by the sample container. Add two short tags: 'useful if representative' and 'risky if skewed'."
+      }
+    ],
+    "interaction": "On hover or tap, each step reveals a short note with one risk: missing groups, convenience bias, small sample size, or overconfidence in conclusions.",
+    "accessibilityDescription": "Step 1 shows a large and varied source group of data cases. Step 2 shows that there are different ways to choose cases, such as random selection, balancing by groups, or simply taking the easiest cases to reach. Step 3 shows the smaller sample that results from that choice. If the sample still contains the important variety of the full group, it can support more reliable analysis. If some groups are missing or over-represented, conclusions may be distorted. Step 4 shows that any estimate, audit or model built from the sample should be judged in light of the selection method, not only the final numbers.",
+    "reducedMotionDescription": "A static four-panel diagram appears with the same sequence: full group, choice method, sample, and conclusion. Notes under each panel explain the main risk without animation."
+  },
+  "workedExample": {
+    "scenario": "A team has 12,000 approved feedback forms about a public service from four regions and wants to review 600 forms for quality problems.",
+    "input": "Region counts in the full set: North 4,800, South 3,600, East 2,400, West 1,200.",
+    "process": [
+      "They decide not to take the first 600 forms because those mostly arrived from one region during the first week.",
+      "They choose a stratified sample, meaning they take forms from each region in proportion to the full set.",
+      "They calculate the sample sizes: North 240, South 180, East 120, West 60.",
+      "They review the 600 selected forms and find that unclear response options appear in all regions, but especially in forms from the North and South."
+    ],
+    "result": "Because the sample kept the same regional balance as the full set, the team can make a more credible statement about the wider collection than if they had only reviewed the easiest forms to reach."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A human-rights team wants to assess the quality of case metadata across a very large internal archive without opening every record.",
+    "relevance": "Sampling lets the team inspect a smaller approved subset, for example by time period, country office or document type, to see whether fields are complete and consistent before planning broader remediation.",
+    "caution": "Do not upload confidential, personal, survivor, witness, security-sensitive or operational records to an unapproved public AI service for sampling or review. Follow approved access controls, minimisation rules and human oversight."
+  },
+  "whyItMatters": "Non-specialists often see a chart, dashboard or model result and assume it reflects reality. But if the underlying sample was poorly chosen, the result can be misleading even when the maths looks precise. This affects programme planning, human-rights analysis, procurement, monitoring and evaluation, and model training. A sample that misses rural areas, minority languages, rare harms or low-connectivity users can lead to unfair conclusions and weak decisions. Asking 'How was the sample chosen?' is often more important than asking only 'How large was it?'",
+  "whereYouMayHearIt": [
+    "survey design",
+    "model training data review",
+    "monitoring and evaluation",
+    "quality assurance audits",
+    "statistical reporting"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A large sample is automatically a good sample.",
+      "correction": "Size helps, but it does not fix bad selection. A very large convenience sample can still miss key groups or over-represent easy-to-reach cases. A smaller but well-designed sample may support better conclusions."
+    },
+    {
+      "misconception": "Random sampling means every result will perfectly match the full population.",
+      "correction": "Random selection reduces systematic bias, but chance variation still exists. A random sample can differ from the full group, especially if the sample is small or the population is very diverse."
+    },
+    {
+      "misconception": "If a sample is not perfectly representative, it is useless.",
+      "correction": "Not necessarily. A sample can still be useful for some tasks, such as spotting obvious quality problems or testing a process. The key is to match the sampling method to the purpose and to state the limits clearly."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Sampling means taking a smaller, manageable slice of a bigger set of data so you can learn something about the bigger set.",
+    "technical": "Sampling is the procedure used to select observations from a target population or source dataset for analysis, auditing or model development. The selection rule may be probability-based, such as simple random or stratified sampling, or non-probability-based, such as convenience sampling. The method affects representativeness, sampling bias, variance and how confidently findings can be generalised. In machine learning, the sampled dataset also shapes what patterns the model can learn, because under-sampled groups or events may be poorly represented in training or evaluation."
+  },
+  "keyTakeaway": "A result is only as trustworthy as the way its data sample was chosen.",
+  "quickCheck": {
+    "question": "Which choice gives the best basis for reviewing whether service complaints are similar across four regions?",
+    "options": [
+      "Take the first 500 complaints received this month because they are easiest to access.",
+      "Take 500 complaints with numbers from each region matched to that region's share of the full set.",
+      "Take 500 complaints only from the region with the most reports, because it has the most data.",
+      "Take any 500 complaints and assume a large number will remove all bias."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Matching the sample to the regional make-up of the full set is more likely to preserve important differences across regions. Easy-to-access cases or cases from only one region may be skewed, and large numbers do not automatically correct bad selection."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Sampling (statistics)",
+      "url": "https://en.wikipedia.org/wiki/Sampling_(statistics)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "A broad introductory reference on sampling in statistics, useful for readers who want definitions, common methods and background terms.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "A practical official framework for managing AI risk, useful for staff who need to connect data choices such as sampling to governance and oversight.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "difficulty": "intermediate",
+      "description": "A high-level official principles document, useful for readers who want to place careful data practices within wider responsible AI expectations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Sampling (of data)",
+      "url": "https://www.youtube.com/results?search_query=Sampling%20(of%20data)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page, useful for readers who prefer short video explanations and want to compare several teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Sampling (of data)",
+      "url": "https://www.reddit.com/search/?q=Sampling%20(of%20data)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page, useful for readers who want to see common questions and informal discussion, but it should not be treated as an authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "sampling of data meaning",
+    "representative sample simple explanation",
+    "sample selection bias",
+    "random sample vs convenience sample",
+    "what is a representative sample",
+    "stratified sample explained",
+    "data sampeling typo",
+    "how to choose a sample from dataset",
+    "sampling (of data)",
+    "sample selection",
+    "representative sample"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:59.685Z",
+    "contentHash": "ff91a29bba739187",
+    "attempts": 1,
+    "promptTokens": 2358,
+    "completionTokens": 2375
+  }
+}

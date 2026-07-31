@@ -1,0 +1,200 @@
+---
+/**
+ * Precision and recall, driven by the one control that actually creates the
+ * trade-off: where you set the threshold.
+ *
+ * A hundred cases, six of which genuinely need attention. Move the threshold
+ * and watch the two numbers move in opposite directions — and watch accuracy
+ * stay high and useless throughout, which is the number a vendor will quote.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-pr data-term={termId}>
+  <div class="vx__row">
+    <label class="vx__label" for={`pr-th-${termId}`}>How eager the system is to flag a case</label>
+    <input
+      class="vx__slider"
+      type="range"
+      id={`pr-th-${termId}`}
+      min="0"
+      max="100"
+      value="50"
+      data-pr-threshold
+      aria-describedby={`pr-readout-${termId}`}
+    />
+    <output class="vx__value" data-pr-value>50</output>
+  </div>
+
+  <div class="pr-grid" data-pr-grid aria-hidden="true"></div>
+
+  <ul class="vx__legend">
+    <li><span class="vx__swatch" style="background:#2fbf74"></span>correctly flagged (true positive)</li>
+    <li><span class="vx__swatch" style="background:#ff5fa8"></span>wrongly flagged (false positive)</li>
+    <li><span class="vx__swatch" style="background:#f5d020"></span>missed (false negative)</li>
+    <li><span class="vx__swatch" style="background:#3a3a3e"></span>correctly left alone</li>
+  </ul>
+
+  <dl class="pr-stats" data-pr-stats></dl>
+
+  <p class="visual__readout" id={`pr-readout-${termId}`} role="status" aria-live="polite" data-pr-readout></p>
+</div>
+
+<style>
+  .pr-grid {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 3px;
+    max-width: 30rem;
+  }
+
+  .pr-cell {
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: #3a3a3e;
+  }
+
+  .pr-cell[data-s='tp'] { background: #2fbf74; }
+  .pr-cell[data-s='fp'] { background: #ff5fa8; }
+  .pr-cell[data-s='fn'] { background: #f5d020; }
+
+  .pr-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    gap: var(--sp-3);
+    margin: 0;
+  }
+
+  .pr-stats div {
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-3);
+  }
+
+  .pr-stats dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+
+  .pr-stats dd {
+    margin: 0.2rem 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+</style>
+
+<script>
+  const TOTAL = 100;
+  const POSITIVES = 6;
+
+  /**
+   * A fixed pseudo-random layout so the picture is stable across renders and
+   * identical for every reader — a grid that reshuffles on each drag would
+   * make the trade-off impossible to see.
+   */
+  function buildCases() {
+    const cases: Array<{ real: boolean; score: number }> = [];
+    let seed = 1337;
+    const rnd = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    for (let i = 0; i < TOTAL; i++) {
+      const real = i % Math.floor(TOTAL / POSITIVES) === 3 && cases.filter((c) => c.real).length < POSITIVES;
+      // Genuine cases tend to score higher, but the distributions overlap —
+      // which is precisely why no threshold gets both numbers to 100%.
+      const score = real ? 45 + rnd() * 55 : rnd() * 72;
+      cases.push({ real, score });
+    }
+    return cases;
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-pr]')) {
+    const grid = root.querySelector<HTMLElement>('[data-pr-grid]')!;
+    const slider = root.querySelector<HTMLInputElement>('[data-pr-threshold]')!;
+    const value = root.querySelector<HTMLOutputElement>('[data-pr-value]')!;
+    const stats = root.querySelector<HTMLElement>('[data-pr-stats]')!;
+    const readout = root.querySelector<HTMLElement>('[data-pr-readout]')!;
+    const cases = buildCases();
+
+    grid.replaceChildren(
+      ...cases.map(() => {
+        const cell = document.createElement('div');
+        cell.className = 'pr-cell';
+        return cell;
+      }),
+    );
+    const cells = [...grid.children] as HTMLElement[];
+
+    function render() {
+      // The slider reads as "eagerness", so a high value means a low cut-off.
+      const eagerness = Number(slider.value);
+      const cut = 100 - eagerness;
+      value.textContent = String(eagerness);
+
+      let tp = 0;
+      let fp = 0;
+      let fn = 0;
+      let tn = 0;
+      cases.forEach((c, i) => {
+        const flagged = c.score >= cut;
+        const state = flagged ? (c.real ? 'tp' : 'fp') : c.real ? 'fn' : 'tn';
+        if (state === 'tp') tp++;
+        else if (state === 'fp') fp++;
+        else if (state === 'fn') fn++;
+        else tn++;
+        cells[i]!.dataset.s = state;
+      });
+
+      const precision = tp + fp ? (tp / (tp + fp)) * 100 : 0;
+      const recall = tp + fn ? (tp / (tp + fn)) * 100 : 0;
+      const accuracy = ((tp + tn) / TOTAL) * 100;
+
+      stats.replaceChildren(
+        ...(
+          [
+            ['Precision', `${Math.round(precision)}%`],
+            ['Recall', `${Math.round(recall)}%`],
+            ['Accuracy', `${Math.round(accuracy)}%`],
+            ['Flagged', String(tp + fp)],
+          ] as const
+        ).map(([label, v]) => {
+          const div = document.createElement('div');
+          const dt = document.createElement('dt');
+          dt.textContent = label;
+          const dd = document.createElement('dd');
+          dd.textContent = v;
+          div.append(dt, dd);
+          return div;
+        }),
+      );
+
+      let verdict: string;
+      if (recall < 40) {
+        verdict =
+          'The system flags almost nothing, so nearly everything it flags is real — high precision — but it is missing most of the cases that mattered. If those cases are people who needed help, this is the expensive failure.';
+      } else if (precision < 40) {
+        verdict =
+          'The system flags almost everything, so it catches nearly every real case — high recall — but human reviewers now spend their time on cases that were never a problem, and will start ignoring the alerts.';
+      } else {
+        verdict =
+          'A middling setting. Both numbers are tolerable and neither is good. Which way you should move depends entirely on whether a miss or a false alarm does more damage in your context.';
+      }
+
+      readout.textContent =
+        `Of 100 cases, ${POSITIVES} genuinely need attention. At this setting the system flags ${tp + fp}: ` +
+        `${tp} correctly, ${fp} wrongly, and it misses ${fn}. Precision ${Math.round(precision)}%, recall ${Math.round(recall)}%. ` +
+        `Accuracy is ${Math.round(accuracy)}% — notice it stays high at almost every setting, including the useless ones, because 94 of the 100 cases are ordinary. ${verdict}`;
+    }
+
+    slider.addEventListener('input', render);
+    render();
+  }
+</script>

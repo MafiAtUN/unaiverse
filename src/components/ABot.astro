@@ -12,6 +12,20 @@
 import abot from '../data/abot.json';
 import { GLOSSARY } from '../lib/glossary';
 import { getCollection } from 'astro:content';
+import { glossaryTermMap } from '../lib/learn/timeline';
+import { learnHref } from '../lib/learn/terms';
+
+/**
+ * The portal to the literacy half of the site.
+ *
+ * A/BOT keeps its own two-line definition and its analogy — that voice is the
+ * point, and replacing it with a 2,000-word page would be a worse timeline.
+ * What changes is that a term with a full page now offers a way through to it,
+ * and only a term that actually has one. Everything else behaves exactly as
+ * before, so no existing glossary link breaks.
+ */
+const LEARN_LINKS = glossaryTermMap();
+const LEARN_BASE = learnHref();
 
 const milestones = await getCollection('milestones');
 const titleById = new Map(milestones.map((m) => [m.id, m.data.title]));
@@ -66,13 +80,24 @@ const quests = abot.quests.map((q) => ({
             <span class="abot__analogy-mark">Think of it as</span>
             <span data-abot-entry-analogy></span>
           </p>
+          <a class="abot__entry-more" data-abot-entry-more hidden href={LEARN_BASE}>
+            Learn this concept fully
+            <span class="abot__entry-more-hint">
+              analogy, visual, worked example, UN example, quick check
+            </span>
+          </a>
         </div>
 
         <ul class="abot__terms" data-abot-terms>
           {
             GLOSSARY.map((g) => (
               <li>
-                <button type="button" class="abot__term-chip" data-abot-open-term={g.slug}>
+                <button
+                  type="button"
+                  class="abot__term-chip"
+                  data-abot-open-term={g.slug}
+                  data-has-page={LEARN_LINKS[g.slug] ? '' : undefined}
+                >
                   {g.term}
                 </button>
               </li>
@@ -153,8 +178,11 @@ const quests = abot.quests.map((q) => ({
   </button>
 </aside>
 
-<script is:inline define:vars={{ GLOSSARY_DATA: GLOSSARY, FACTS: abot.facts }}>
-  window.__ABOT__ = { glossary: GLOSSARY_DATA, facts: FACTS };
+<script
+  is:inline
+  define:vars={{ GLOSSARY_DATA: GLOSSARY, FACTS: abot.facts, LEARN: LEARN_LINKS, LEARN_BASE }}
+>
+  window.__ABOT__ = { glossary: GLOSSARY_DATA, facts: FACTS, learn: LEARN, learnBase: LEARN_BASE };
 </script>
 
 <style>
@@ -352,6 +380,44 @@ const quests = abot.quests.map((q) => ({
     max-width: none;
     font-size: var(--step--1);
     color: var(--paper-ink);
+  }
+
+  /* The door through to the full page. Present only when there is one, so it
+     never promises a page that does not exist. */
+  .abot__entry-more {
+    display: block;
+    margin-top: var(--sp-3);
+    padding: var(--sp-3);
+    border: 1px solid var(--paper-hairline-strong);
+    border-left: 3px solid var(--pink-on-paper);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--pink-on-paper);
+  }
+
+  .abot__entry-more[hidden] {
+    display: none;
+  }
+
+  .abot__entry-more:hover {
+    background: var(--paper-sunk);
+    color: var(--paper-ink);
+  }
+
+  .abot__entry-more-hint {
+    display: block;
+    font-weight: 400;
+    font-size: var(--step--2);
+    color: var(--paper-ink-faint);
+    margin-top: 0.15rem;
+  }
+
+  /* A glossary chip that leads somewhere says so, with a mark rather than
+     colour alone. */
+  .abot__term-chip[data-has-page]::after {
+    content: ' →';
+    color: var(--pink-on-paper);
   }
 
   .abot__entry-analogy {
@@ -607,7 +673,12 @@ const quests = abot.quests.map((q) => ({
     // clicks a definition that cannot open.
     document.documentElement.classList.add('abot-ready');
 
-    const data = (window as any).__ABOT__ as { glossary: Entry[]; facts: string[] };
+    const data = (window as any).__ABOT__ as {
+      glossary: Entry[];
+      facts: string[];
+      learn: Record<string, string>;
+      learnBase: string;
+    };
     const bySlug = new Map(data.glossary.map((g) => [g.slug, g]));
 
     const toggle = root.querySelector<HTMLButtonElement>('[data-abot-toggle]')!;
@@ -621,6 +692,7 @@ const quests = abot.quests.map((q) => ({
     const entryTerm = root.querySelector<HTMLElement>('[data-abot-entry-term]')!;
     const entryShort = root.querySelector<HTMLElement>('[data-abot-entry-short]')!;
     const entryAnalogy = root.querySelector<HTMLElement>('[data-abot-entry-analogy]')!;
+    const entryMore = root.querySelector<HTMLAnchorElement>('[data-abot-entry-more]')!;
     const factEl = root.querySelector<HTMLElement>('[data-abot-fact]')!;
 
     let lastFocus: HTMLElement | null = null;
@@ -649,8 +721,24 @@ const quests = abot.quests.map((q) => ({
       entryTerm.textContent = entry.term;
       entryShort.textContent = entry.short;
       entryAnalogy.textContent = entry.analogy;
+
+      // Only offer the door if there is a room behind it.
+      const learnId = data.learn?.[slug];
+      if (learnId) {
+        // Carry the milestone the reader came from, so the term page can send
+        // them back to the exact node rather than to the top of the timeline.
+        const from = lastFocus?.closest<HTMLElement>('[data-node]')?.id;
+        entryMore.href =
+          `${data.learnBase}/${learnId}`.replace(/\/+/g, '/') + (from ? `?from=${encodeURIComponent(from)}` : '');
+        entryMore.hidden = false;
+      } else {
+        entryMore.hidden = true;
+      }
+
       entryBox.hidden = false;
-      root
+      // Hoisted function declaration, so the `if (root)` guard above does not
+      // narrow here even though it cannot be called before it.
+      root!
         .querySelectorAll<HTMLElement>('[data-abot-open-term]')
         .forEach((c) =>
           c.setAttribute('aria-current', String(c.dataset.abotOpenTerm === slug)),

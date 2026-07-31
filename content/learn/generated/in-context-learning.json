@@ -1,0 +1,223 @@
+{
+  "id": "in-context-learning",
+  "slug": "in-context-learning",
+  "term": "In-context learning",
+  "aliases": [
+    "learning from examples in the prompt"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "everyone"
+  ],
+  "prerequisiteTermIds": [
+    "prompt",
+    "context-window"
+  ],
+  "relatedTermIds": [
+    "prompt",
+    "context-window",
+    "zero-one-and-few-shot",
+    "fine-tuning",
+    "training",
+    "instruction-tuning"
+  ],
+  "oftenConfusedWith": [
+    "fine-tuning",
+    "training",
+    "zero-one-and-few-shot"
+  ],
+  "oneSentence": "A model uses examples and instructions placed in the current prompt to imitate a pattern for that one interaction, without changing its stored parameters.",
+  "plainExplanation": "In-context learning means guiding a model by showing it examples inside the current prompt. You might give an instruction, then a few input-output pairs, then a new input. The model uses the pattern in that temporary text to produce a response.\n\nWhat goes in? Usually three things: a task description, one or more examples, and the new case you want solved. What happens? The model compares the new case with the examples in the prompt and continues the pattern. What comes out is an answer shaped by those examples.\n\nThis is often confused with training or fine-tuning. They are different. In training or fine-tuning, the model's internal parameters, meaning the numerical settings stored in the model, are updated and saved. In in-context learning, those stored settings stay the same. The guidance only lasts for that prompt session.\n\nIt is useful when you want to adapt behaviour quickly without rebuilding the model. But it has limits. If the prompt is too long, too ambiguous, or too different from the new case, performance can drop. The model can also copy a superficial pattern from the examples without reliably applying the deeper rule.",
+  "everydayAnalogy": {
+    "title": "Showing a clerk a few completed tally sheets",
+    "story": "At a food distribution point, a new clerk must estimate how many family parcels to prepare for the next hour. A supervisor places three completed tally sheets on the table, each showing crowd size, average family size and the final parcel estimate. Then the supervisor gives a new sheet with today's numbers and asks for the estimate in the same format. The clerk follows the pattern from the examples for this one task, but the clerk's official handbook is not rewritten.",
+    "mapping": [
+      {
+        "analogyElement": "completed tally sheets on the table",
+        "aiElement": "examples included in the prompt"
+      },
+      {
+        "analogyElement": "new sheet with today's numbers",
+        "aiElement": "the new input the model must handle"
+      },
+      {
+        "analogyElement": "estimate in the same format",
+        "aiElement": "the model continues the pattern shown by the examples"
+      },
+      {
+        "analogyElement": "handbook is not rewritten",
+        "aiElement": "the model's stored parameters are not updated"
+      }
+    ],
+    "limitation": "A human clerk may truly reason from general experience and may remember the lesson later. A model using in-context learning does not necessarily form a stable new skill, and the effect usually does not persist beyond the current prompt or session. Also, the model does not literally inspect paper examples one by one; it processes all prompt text as tokens inside its context window."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How in-context learning works in one prompt",
+    "learningObjective": "Show that examples in a prompt can steer a model's response for one interaction without changing the model itself.",
+    "description": "A left-to-right sequence with four boxes. Read from the user's instruction and examples, to the new input, to the unchanged model, to the patterned output. A note under the model says the internal parameters stay the same.",
+    "steps": [
+      {
+        "label": "1. Add instruction",
+        "explanation": "The prompt starts with a short task description, such as the format or rule to follow.",
+        "visualInstruction": "Draw a rectangular box labelled 'Instruction' containing two short lines of sample text. Use a muted blue background."
+      },
+      {
+        "label": "2. Add examples",
+        "explanation": "The prompt includes one or more examples that pair an input with the desired output.",
+        "visualInstruction": "Draw a second box labelled 'Examples' with two mini input-output pairs stacked vertically. Connect from step 1 with an arrow."
+      },
+      {
+        "label": "3. Add the new case",
+        "explanation": "A new input is placed after the examples. The model uses the earlier pattern to continue.",
+        "visualInstruction": "Draw a third box labelled 'New input' showing one short line of text. Connect from step 2 with an arrow."
+      },
+      {
+        "label": "4. Generate response",
+        "explanation": "The model produces an output shaped by the prompt examples, while a side note states that stored parameters do not change.",
+        "visualInstruction": "Draw a fourth box labelled 'Output' with one short answer. Place a central model icon behind steps 2 to 4 with a small label 'parameters unchanged'. Connect step 3 to step 4 with an arrow."
+      }
+    ],
+    "interaction": "Hovering over each step highlights the matching part of a sample prompt below the diagram; on tap, the same highlight appears and the explanation text updates.",
+    "accessibilityDescription": "This diagram explains in-context learning as a four-step process. First, the user provides an instruction that says what task to do. Second, the user includes examples showing the desired pattern, such as sample inputs and outputs. Third, the user adds a new input to be solved. Fourth, the model produces an output that follows the pattern from the examples. A note attached to the model says its stored parameters do not change, meaning this is not fine-tuning or training. The key point is that examples inside the current prompt temporarily steer the response.",
+    "reducedMotionDescription": "A static four-step row shows Instruction, Examples, New input and Output, with arrows between them and a fixed note near the model icon reading 'parameters unchanged'."
+  },
+  "workedExample": {
+    "scenario": "Classifying short feedback messages by urgency for a helpdesk",
+    "input": "Instruction: Label each message as low, medium or high urgency.\nExample 1: 'The printer in room 4 is making noise.' -> low\nExample 2: 'Payroll access is down for all staff.' -> high\nExample 3: 'I cannot open the budget file due tomorrow.' -> medium\nNew message: 'Email is delayed for the whole office.'",
+    "process": [
+      "The prompt gives the task and three labelled examples.",
+      "The model compares the new message with the examples, especially the difference between one-person issues and office-wide disruptions.",
+      "It infers that 'whole office' is more serious than a minor local issue.",
+      "It outputs a label in the same style as the examples."
+    ],
+    "result": "high"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A programme team wants a model to sort short, non-sensitive monitoring notes into categories such as 'on track', 'needs follow-up' and 'data quality issue' by giving a few approved examples in the prompt.",
+    "relevance": "This lets staff test a classification scheme quickly before investing in a more permanent workflow or model adaptation.",
+    "caution": "Do not place personal data, protection-sensitive information, survivor accounts, witness details, security-sensitive material or other confidential records into an unapproved public AI service; use only approved tools and human review."
+  },
+  "whyItMatters": "People often hear 'we trained it on our data' when what actually happened was much lighter and more temporary. That difference matters for cost, speed, privacy, governance and reliability. In-context learning can be set up in minutes and changed from one task to the next, which is useful for prototypes, formatting, extraction and classification. But because the model itself is not updated, the behaviour may be less consistent than fine-tuning, may disappear in a new session, and depends heavily on prompt quality and context length. If you know this term, you can ask better questions: Are examples only in the prompt? Will the behaviour persist? What data was sent to the service? What human checks are still needed?",
+  "whereYouMayHearIt": [
+    "prompt design discussions",
+    "few-shot prompting demos",
+    "rapid prototyping of AI tasks",
+    "vendor claims about customisation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If I give the model examples in the prompt, I have trained it on my data.",
+      "correction": "Not in the usual technical sense. In-context learning uses your examples only as part of the current input. The model's saved parameters are not updated, so the effect is temporary unless the examples are sent again in a later prompt."
+    },
+    {
+      "misconception": "Examples in the prompt make the answer reliable in the same way as fine-tuning.",
+      "correction": "Examples can improve consistency, but they do not guarantee stable behaviour. The model may follow surface patterns, be sensitive to wording or example order, and behave differently when the prompt is longer or the new case differs from the examples."
+    },
+    {
+      "misconception": "The model learns and remembers the new rule forever after seeing it once.",
+      "correction": "Usually no. The model may use the rule within the current context window, but that does not mean it will retain the rule across future sessions. Persistent change usually requires training, fine-tuning or another stored system design."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "You can steer a model by showing it a few examples right in your request. It often copies the pattern for that conversation, but it has not been permanently retrained.",
+    "technical": "In-context learning refers to task adaptation through the prompt context rather than parameter updates. The prompt may contain instructions plus demonstration pairs, and the model conditions its next-token predictions on that sequence. In a transformer model, the current context influences output through the attention mechanism over tokens in the prompt, but the underlying weights remain fixed during inference. This is why in-context learning can mimic new formatting, extraction, classification or transformation behaviours without producing a new checkpoint. It is closely related to zero-shot, one-shot and few-shot prompting, though the exact boundary between these terms can vary by author. It differs from fine-tuning, supervised fine-tuning, LoRA and other parameter-efficient methods because those create a persistent model change rather than a temporary context-dependent one."
+  },
+  "keyTakeaway": "Examples inside the prompt can temporarily steer a model's behaviour, but they do not permanently change the model.",
+  "quickCheck": {
+    "question": "Which situation is the best example of in-context learning?",
+    "options": [
+      "Adding three sample input-output pairs to a prompt so the model follows the same pattern for a new case",
+      "Updating the model's weights on a labelled dataset and saving a new version",
+      "Compressing a model so it uses less memory at deployment",
+      "Cutting old knowledge from the training data so the model forgets past events"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "In-context learning happens during use, inside the prompt. The model sees examples and applies the pattern to the new input, but its stored parameters do not change. Updating weights and saving a new version would be fine-tuning or training, not in-context learning."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Prompt engineering",
+      "url": "https://en.wikipedia.org/wiki/Prompt_engineering",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of prompt engineering concepts and suits readers who want a general reference before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course offers structured lessons on how large language models use prompts and examples, and suits learners who want a technical but guided path.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "This set of short courses is useful for practitioners who want hands-on prompt techniques, including example-based prompting, in a compact format.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: In-context learning",
+      "url": "https://www.youtube.com/results?search_query=In-context%20learning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers compare different video explanations of in-context learning and suits people who learn well from visual teaching.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: In-context learning",
+      "url": "https://www.reddit.com/search/?q=In-context%20learning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it gives a sense of common questions, confusions and practitioner discussions, and suits readers who want informal perspectives with caution about accuracy.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "in-context learning meaning",
+    "learning from examples in prompt",
+    "few shot prompting vs fine tuning",
+    "icl llm explained",
+    "what is in context learning",
+    "in context learning example",
+    "model learns from prompt only",
+    "prompt examples not training",
+    "fewshot vs training",
+    "incontext learning",
+    "in-context learning",
+    "learning from examples in the prompt"
+  ],
+  "contested": "The broad idea is widely used, but authors do not always draw the boundary in exactly the same way between in-context learning, few-shot prompting and related forms of prompt-based adaptation.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:11.526Z",
+    "contentHash": "26d84f22fc970070",
+    "attempts": 1,
+    "promptTokens": 2311,
+    "completionTokens": 2404
+  }
+}

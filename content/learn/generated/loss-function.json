@@ -1,0 +1,231 @@
+{
+  "id": "loss-function",
+  "slug": "loss-function",
+  "term": "Loss function",
+  "aliases": [
+    "cost function",
+    "objective function"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "error-and-loss"
+  ],
+  "relatedTermIds": [
+    "optimisation",
+    "gradient",
+    "gradient-descent",
+    "backpropagation",
+    "learning-rate",
+    "regularisation"
+  ],
+  "oftenConfusedWith": [
+    "error-and-loss",
+    "evaluation-metric"
+  ],
+  "oneSentence": "A loss function turns a model’s output and the correct target into a single number that shows how wrong the model was for that example or batch.",
+  "plainExplanation": "A model produces an output, such as a predicted class, score or number. A loss function takes that output and compares it with the target, meaning the expected answer in the training data. The result is a number: lower usually means the model matched the target better.\n\nWhat goes in depends on the task. In a spam filter, the inputs to the loss function might be a predicted probability and the true label. In a forecasting task, they might be the predicted amount and the actual amount. Different loss functions measure mismatch in different ways, so the choice affects what kinds of mistakes the model is pushed to reduce.\n\nWhat happens next is important. Training does not usually change the model directly from the loss alone. Instead, optimisation methods use the loss to work out how each model setting, often called a parameter, contributed to the error. Then the parameters are adjusted to try to reduce future loss.\n\nWhat comes out from the loss function is not the final judgement of model quality for real-world use. It is mainly a training signal. That is why loss is often confused with an evaluation metric such as accuracy or F1 score. They are related, but not the same: a model can be trained to lower one quantity and later assessed with another.",
+  "everydayAnalogy": {
+    "title": "Scoring a document recommender’s mistakes",
+    "story": "A librarian in Nairobi tests a new system that suggests three knowledge-base documents for each staff question. For one question, the correct document should appear first, but the system puts it third. The librarian uses a scoring rule that gives a small penalty if the right document is near the top and a larger penalty if it is far down or missing. After many questions, the team averages these penalties to see how badly the system is performing. They then adjust the system so future rankings get lower penalties.",
+    "mapping": [
+      {
+        "analogyElement": "the scoring rule used by the librarian",
+        "aiElement": "the loss function"
+      },
+      {
+        "analogyElement": "how far down the correct document appears",
+        "aiElement": "how wrong the model output is compared with the target"
+      },
+      {
+        "analogyElement": "average penalty across many test questions during training",
+        "aiElement": "batch or dataset loss"
+      },
+      {
+        "analogyElement": "adjusting the recommender after seeing the penalties",
+        "aiElement": "optimisation updating model parameters"
+      }
+    ],
+    "limitation": "A librarian may choose a scoring rule by hand and inspect rankings one by one, while a trained model usually uses a mathematically defined loss and computes updates automatically over many numerical parameters. Also, many model outputs are probabilities or continuous values, not simple ranked positions."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How a loss function guides training",
+    "learningObjective": "After viewing this, a reader should be able to say that the loss function converts prediction error into a number that optimisation can use to update model parameters.",
+    "description": "A left-to-right step diagram with five rectangular panels connected by arrows. Each panel shows one stage in training for a single batch. Use simple icons and short labels. Place a thin feedback arrow from the final panel back to the model panel to show repetition over many batches.",
+    "steps": [
+      {
+        "label": "1. Inputs and targets",
+        "explanation": "A batch contains input examples and the correct targets from the training data.",
+        "visualInstruction": "Draw a stack of three document icons labelled 'questions' beside a stack of answer labels labelled 'targets'."
+      },
+      {
+        "label": "2. Model predicts",
+        "explanation": "The current model turns the inputs into outputs, such as probabilities or scores.",
+        "visualInstruction": "Draw a rounded rectangle labelled 'model parameters' with arrows from the questions to three bars labelled with example scores like 0.62, 0.24, 0.14."
+      },
+      {
+        "label": "3. Loss computes mismatch",
+        "explanation": "The loss function compares the outputs with the targets and produces a single number for the batch.",
+        "visualInstruction": "Draw a small calculator-style box labelled 'loss function' receiving predictions and targets, outputting a bold number such as 'loss = 1.37'."
+      },
+      {
+        "label": "4. Optimisation traces responsibility",
+        "explanation": "Training computes how changing each parameter would increase or reduce the loss.",
+        "visualInstruction": "Draw a panel with small sliders or dots connected to the model box, with red and blue mini arrows indicating direction and strength of change."
+      },
+      {
+        "label": "5. Parameters update and repeat",
+        "explanation": "The optimiser nudges parameters to try to lower loss on the next batch.",
+        "visualInstruction": "Draw the model box again with a small badge 'updated', then a loop arrow back toward step 2 and a smaller example 'next loss = 1.12'."
+      }
+    ],
+    "interaction": "On hover or tap, each step reveals a one-sentence note and highlights the corresponding arrow path; a scrubber can step through the loop repeatedly to show loss decreasing across batches.",
+    "accessibilityDescription": "The diagram shows five training steps in order. First, a batch of input examples and their correct targets enters the process. Second, the model with its current parameters produces predictions. Third, a loss function compares predictions with targets and outputs one number that summarises mismatch for the batch. Fourth, optimisation uses that loss to estimate how each parameter affected it. Fifth, the parameters are updated slightly, and the process repeats on the next batch, ideally producing a lower loss. The key message is that the loss function does not fix the model by itself; it provides the number that guides parameter updates.",
+    "reducedMotionDescription": "A static five-panel diagram with arrows between panels and a dotted loop from the final panel back to the prediction panel. Two example loss values, 1.37 before the update and 1.12 after, show the intended direction of change without animation."
+  },
+  "workedExample": {
+    "scenario": "Training a small classifier to decide whether a support request should be sent to the IT team.",
+    "input": "Model output for one request: probability of 'send to IT' = 0.80. True label: 1, meaning it really should go to IT.",
+    "process": [
+      "Choose a loss function suitable for binary classification, such as cross-entropy loss.",
+      "Compare the model’s predicted probability, 0.80, with the true label, 1.",
+      "Compute the loss for this example: -log(0.80), which is about 0.22.",
+      "If another true-IT request got probability 0.20, its loss would be -log(0.20), about 1.61, which is much larger.",
+      "Average the losses across the batch, then use optimisation to adjust parameters so true labels receive higher probabilities next time."
+    ],
+    "result": "The example with probability 0.80 gets a small penalty, while the example with probability 0.20 gets a large penalty, so training focuses more strongly on the worse mistake."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An approved internal analytics team is developing a model to help identify broad protection trends across incident reports, using de-identified and access-controlled data to classify reports into trend categories for human review.",
+    "relevance": "The loss function gives the training process a numerical signal for how far the model’s category probabilities are from the reviewed labels, so developers can improve the model systematically rather than by guesswork.",
+    "caution": "Do not place personal, survivor, witness, security-sensitive or operational details into an unapproved public AI service, and do not rely on low training loss as a reason to remove expert human oversight from protection analysis."
+  },
+  "whyItMatters": "If you hear that a model was trained successfully, the next question should be: trained to reduce what? The loss function defines what counts as a costly mistake during learning, so it shapes behaviour, trade-offs and failure patterns.",
+  "whereYouMayHearIt": [
+    "machine learning training logs",
+    "deep learning courses",
+    "model debugging meetings",
+    "research papers on optimisation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Lower loss always means better real-world performance.",
+      "correction": "Lower training loss only means the model fits the chosen training objective better. Real-world usefulness also depends on evaluation metrics, data quality, generalisation and whether the chosen loss matches the actual task."
+    },
+    {
+      "misconception": "Loss and accuracy are the same thing.",
+      "correction": "Accuracy counts correct versus incorrect predictions after a threshold or top choice, while many loss functions use richer information such as confidence. A model can keep the same accuracy while loss changes a lot."
+    },
+    {
+      "misconception": "There is one standard loss function for all models.",
+      "correction": "Different tasks use different losses because different outputs need different comparisons. Regression, classification and ranking often need different mathematical forms."
+    },
+    {
+      "misconception": "The loss function updates the model by itself.",
+      "correction": "The loss function only produces the error signal. An optimiser, often using gradients and backpropagation, uses that signal to calculate and apply parameter updates."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the scoring rule used during training to tell the model how bad its prediction was.",
+    "technical": "It is a scalar-valued objective applied to model outputs and targets, often differentiable, whose gradients with respect to parameters are used by optimisation algorithms to update the model and minimise expected training risk."
+  },
+  "keyTakeaway": "A loss function is the training score that tells optimisation what kind of wrongness to reduce.",
+  "quickCheck": {
+    "question": "Which statement best describes the role of a loss function during training?",
+    "options": [
+      "It converts prediction mistakes into a number that optimisation can use to adjust model parameters.",
+      "It guarantees the model will generalise well if the value becomes small enough.",
+      "It is the same as the final evaluation metric used in deployment reports.",
+      "It stores the model parameters after each training step."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "A loss function provides a numerical training signal from predictions and targets. Optimisation uses that signal to update parameters. A small loss can help, but it does not guarantee good generalisation, and it is not automatically the same as the evaluation metric."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Loss function",
+      "url": "https://en.wikipedia.org/wiki/Loss_function",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference overview of loss functions, including definitions and examples, and suits readers who want a general starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This link offers a visual intuition for how neural network training uses quantities like loss, and suits readers who learn best from animation and geometry.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link focuses on the practical idea of reducing loss during training, and suits readers who want a structured introductory course explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Loss function",
+      "url": "https://www.youtube.com/results?search_query=Loss%20function%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page, so it helps readers browse multiple video explanations at different levels rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Loss function",
+      "url": "https://www.reddit.com/search/?q=Loss%20function",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page, so it helps readers see common questions, confusions and informal explanations from a community discussion rather than an official reference.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "loss function meaning",
+    "cost function vs loss function",
+    "objective function machine learning",
+    "what does loss do in training",
+    "cross entropy loss explained",
+    "mse loss simple explanation",
+    "loss vs accuracy",
+    "how model learns from loss",
+    "loss fuction",
+    "what is objective function ai",
+    "loss function",
+    "cost function",
+    "objective function"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:33:50.877Z",
+    "contentHash": "ec0a02d7b1d24c98",
+    "attempts": 1,
+    "promptTokens": 2136,
+    "completionTokens": 2287
+  }
+}

@@ -1,0 +1,147 @@
+---
+/**
+ * How the content was made, in public.
+ *
+ * A site that teaches people to ask where an AI answer came from cannot be
+ * coy about where its own pages came from. So the numbers on this page are
+ * computed from the corpus at build time rather than written by hand: if the
+ * review backlog grows, this page says so without anyone editing it.
+ */
+import Learn from '../../layouts/Learn.astro';
+import { TERMS, CORPUS_STATS, learnHref, siteHref } from '../../lib/learn/terms';
+
+const models = [...new Set(TERMS.map((t) => t.generation?.model).filter(Boolean))] as string[];
+const promptVersions = [...new Set(TERMS.map((t) => t.generation?.promptVersion).filter(Boolean))] as string[];
+const withCaution = TERMS.filter((t) => t.unWorkplaceExample.caution).length;
+const withContested = TERMS.filter((t) => t.contested).length;
+const resources = TERMS.flatMap((t) => t.resources);
+const verified = resources.filter((r) => r.verified).length;
+const searches = resources.filter((r) => r.isSearch).length;
+const lastReviewed = TERMS.map((t) => t.lastReviewed).filter(Boolean).sort().at(-1);
+
+const title = 'Methodology · UNAIVERSE';
+const description =
+  'How the AI Literacy Universe was written: an offline Azure OpenAI pipeline, a strict schema, an automated link checker, and a human review gate that every page has to pass before it exists.';
+---
+
+<Learn title={title} description={description} section="methodology">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / Methodology
+      </p>
+      <h1 class="learn-head__title">How these pages were written</h1>
+      <p class="learn-head__lead">
+        This site tells you to ask where an AI answer came from. It would be a poor advertisement
+        for that advice if it did not answer the question about itself.
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6); max-width: 46rem">
+    <section class="lsection" aria-labelledby="short">
+      <h2 class="lsection__title" id="short">The short version</h2>
+      <p>
+        Each term was drafted by a large language model running through a script on a developer's
+        machine, against a fixed prompt and a strict schema. The draft was checked automatically for
+        structure, for required fields, for valid links to other terms, and for reading level. Every
+        external URL was fetched to see whether it answers. A person then reviewed the draft and
+        published it. Nothing appears on this site that has not been through that gate.
+      </p>
+      <p>
+        The published site is a folder of static files on GitHub Pages. It makes no call to any AI
+        service, holds no credential, and could not reach one if it tried.
+      </p>
+    </section>
+
+    <section class="lsection" aria-labelledby="numbers">
+      <h2 class="lsection__title" id="numbers">Where the corpus stands</h2>
+      <ul class="az-list" style="grid-template-columns: 1fr">
+        <li><a href={learnHref('explore')}><span>Terms published</span><span class="az-list__meta">{CORPUS_STATS.published} of {CORPUS_STATS.planned} planned</span></a></li>
+        <li><a href={learnHref('explore')}><span>Human-reviewed</span><span class="az-list__meta">{CORPUS_STATS.reviewed}</span></a></li>
+        <li><a href={learnHref('map')}><span>Categories</span><span class="az-list__meta">{CORPUS_STATS.categories}</span></a></li>
+        <li><a href={learnHref('explore')}><span>Hand-built interactive explainers</span><span class="az-list__meta">{CORPUS_STATS.withInteractive}</span></a></li>
+      </ul>
+      <p class="learn-head__meta">
+        {withCaution} terms carry an explicit caution about confidential or personal data.{' '}
+        {withContested} are flagged as contested terminology. {verified} of {resources.length}{' '}
+        external links have been fetched and answered; {searches} are deliberately search links
+        rather than a single page.
+        {lastReviewed && ` Most recent human review: ${lastReviewed}.`}
+      </p>
+    </section>
+
+    <section class="lsection" aria-labelledby="pipeline">
+      <h2 class="lsection__title" id="pipeline">The pipeline, step by step</h2>
+      <ol class="steps-list">
+        <li><span><strong>A taxonomy file defines the vocabulary.</strong> {CORPUS_STATS.planned} terms across {CORPUS_STATS.categories} categories, each with a difficulty, an audience, its prerequisites and the terms it is commonly confused with. Written by hand.</span></li>
+        <li><span><strong>Resource links are assembled before generation, never by the model.</strong> They come from a hand-authored list, from the Wikipedia API (which either returns a real article or does not), or from a constructed search URL. The model is shown the links and writes only the sentence explaining why each is useful. It is never asked for a URL, because a model asked for a URL will eventually invent one.</span></li>
+        <li><span><strong>One term at a time goes to Azure OpenAI</strong>{models.length ? ` (${models.join(', ')})` : ''} with a fixed system prompt and a JSON Schema the response must match.</span></li>
+        <li><span><strong>The answer is validated against the same schema the site uses.</strong> A draft missing its analogy limitation, its screen-reader description or a defensible quiz answer is rejected and regenerated with the specific failures fed back to the model. Rejected attempts are kept on disk.</span></li>
+        <li><span><strong>Every URL is fetched.</strong> Links that answer are marked as checked with a date. Links that do not are labelled "not verified" on the page rather than quietly presented as vetted.</span></li>
+        <li><span><strong>A quality report is generated:</strong> reading-level outliers, duplicate definitions, orphan terms, prerequisites pointing at unwritten pages, missing UN examples, broken links.</span></li>
+        <li><span><strong>A person reviews and publishes.</strong> The site reads one directory. A term is in it only if someone put it there.</span></li>
+      </ol>
+    </section>
+
+    <section class="lsection" aria-labelledby="rules">
+      <h2 class="lsection__title" id="rules">The writing rules</h2>
+      <ul class="steps-list">
+        <li><span>Define the term immediately. Short sentences, one new idea at a time, no explaining jargon with more jargon.</span></li>
+        <li><span>Every analogy states where it stops working. This is enforced by the schema, not by good intentions — a term without it cannot be published.</span></li>
+        <li><span>No anthropomorphism. A model does not understand, think, know, want or decide, and the validator flags drafts that say it does.</span></li>
+        <li><span>No hype and no doom. Fluent output is never treated as evidence of accuracy.</span></li>
+        <li><span>Examples come from many regions and many kinds of work. No cats, no dogs, no recipes.</span></li>
+        <li><span>United Nations examples never suggest putting confidential, personal, survivor, witness or security-sensitive information into an unapproved public AI service. Member States and contested political questions are treated neutrally.</span></li>
+        <li><span>Where terminology is genuinely disputed, the page says so instead of picking a side.</span></li>
+      </ul>
+    </section>
+
+    <section class="lsection" aria-labelledby="limits">
+      <h2 class="lsection__title" id="limits">What this means you should not assume</h2>
+      <p>
+        These pages are a starting point, not an authority. They were drafted by a model, and a
+        review catches a great deal but not everything. Where a definition matters — in negotiated
+        text, in a procurement document, in a legal opinion — go to the primary source, which every
+        page links to.
+      </p>
+      <p>
+        Terminology in this field moves. A page written today can be describing yesterday's
+        consensus. Each term records the prompt version it was written under{promptVersions.length ? ` (currently ${promptVersions.join(', ')})` : ''} so that a
+        regeneration pass can find the stale ones.
+      </p>
+      <p>
+        This is an independent educational project by one person. It is not a United Nations
+        product, it is not endorsed by the United Nations, and nothing in it represents the views of
+        the Organization or any of its offices.
+      </p>
+    </section>
+
+    <section class="lsection" aria-labelledby="privacy">
+      <h2 class="lsection__title" id="privacy">Privacy</h2>
+      <p>
+        No login, no account, no password, no user database. No analytics, no cookies, no tracking
+        pixels, no third-party scripts, no fonts loaded from anyone else's server. What you search
+        for, what you save and what you get wrong in a quick check stay in your browser and are
+        never transmitted — including to the AI service that helped write these pages, which is not
+        connected to the published site in any way.
+      </p>
+      <p>
+        <a href={learnHref('saved')}>Everything stored locally, and a button to delete it</a>.
+      </p>
+    </section>
+
+    <section class="lsection" aria-labelledby="source">
+      <h2 class="lsection__title" id="source">See for yourself</h2>
+      <p>
+        The taxonomy, the prompts, the schema, the generation scripts, the validator, the link
+        checker and every published term file are in the repository.
+      </p>
+      <p class="chips">
+        <a class="chip" href="https://github.com/MafiAtUN/unaiverse" rel="noopener">Source on GitHub</a>
+        <a class="chip" href={siteHref()}>The UN AI timeline</a>
+        <a class="chip" href={learnHref()}>Back to Learn AI</a>
+      </p>
+    </section>
+  </div>
+</Learn>

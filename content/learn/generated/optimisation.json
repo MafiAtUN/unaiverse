@@ -1,0 +1,236 @@
+{
+  "id": "optimisation",
+  "slug": "optimisation",
+  "term": "Optimisation",
+  "aliases": [
+    "optimizer",
+    "optimiser",
+    "optimization"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "loss-function"
+  ],
+  "relatedTermIds": [
+    "loss-function",
+    "error-and-loss",
+    "gradient",
+    "backpropagation",
+    "learning-rate",
+    "convergence"
+  ],
+  "oftenConfusedWith": [
+    "gradient-descent",
+    "backpropagation",
+    "loss-function",
+    "gradient"
+  ],
+  "oneSentence": "The process of adjusting a model’s internal settings to reduce loss, plus the algorithms and rules used to choose each adjustment.",
+  "plainExplanation": "In machine learning, optimisation means trying to make a model less wrong by changing its internal settings, often called parameters or weights. You first need a way to measure how wrong the model is. That measure is usually called a loss function.\n\nWhat goes in? A model, training data, a loss value, and a method for updating the parameters. That method may be called an optimiser or optimizer; the spelling differs by region, but the idea is the same. Optimisation is the overall process. An optimiser is the specific update rule, such as stochastic gradient descent or Adam.\n\nWhat happens? The system computes the loss on some training examples, estimates which parameters contributed to that loss, and then nudges those parameters in a direction expected to lower it. The estimate of direction is often called a gradient: it tells you how the loss would change if a parameter changed slightly.\n\nWhat comes out? Usually, a new set of parameter values that gives lower loss on the training data, or at least moves in that direction. Repeating this many times can lead to convergence, meaning the updates become small and the loss stops improving much. Lower training loss does not guarantee better performance on new data, so optimisation is only one part of building a useful model.",
+  "everydayAnalogy": {
+    "title": "Sorting urgent and non-urgent messages",
+    "story": "A team handles incoming messages and uses a checklist to decide which ones are urgent. At first, the checklist mislabels too many messages, so the team reviews yesterday’s mistakes. They notice, for example, that the rule about time-sensitive wording is too weak and the rule about formal tone is too strong, so they adjust both a little. They repeat this review-and-adjust cycle each day until the checklist makes fewer mistakes overall.",
+    "mapping": [
+      {
+        "analogyElement": "the checklist rules",
+        "aiElement": "the model’s parameters or weights"
+      },
+      {
+        "analogyElement": "reviewing yesterday’s mistakes",
+        "aiElement": "measuring loss on training examples"
+      },
+      {
+        "analogyElement": "seeing which rule was too weak or too strong",
+        "aiElement": "estimating gradients for different parameters"
+      },
+      {
+        "analogyElement": "adjusting the rules a little each day",
+        "aiElement": "an optimiser updating parameters step by step"
+      }
+    ],
+    "limitation": "A human team can explain why it changed a checklist rule in plain language. In many models, especially neural networks, the parameters are numerous and not naturally interpretable one by one. Also, real optimisation often updates thousands or millions of parameters from small batches of data using mathematics, not a single daily review of obvious mistakes."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How optimisation reduces loss over repeated updates",
+    "learningObjective": "After reading the diagram, the learner should be able to describe optimisation as a repeated loop: measure loss, compute update directions, change parameters, and check whether improvement continues.",
+    "description": "A left-to-right step diagram showing one training loop. Each box names one stage and a small output from that stage. Arrows connect the stages and then return to the start to show repetition. Read from left to right, then follow the final arrow back to the first box.",
+    "steps": [
+      {
+        "label": "1. Start with current parameters",
+        "explanation": "The model begins a training step with its present weights and a batch of training examples.",
+        "visualInstruction": "Show a box labelled 'Current model parameters' with a smaller note underneath: 'weights at this step'."
+      },
+      {
+        "label": "2. Measure error as loss",
+        "explanation": "The model makes predictions for the batch and the loss function converts the mistakes into a number to reduce.",
+        "visualInstruction": "Show a box labelled 'Predictions + loss' with an icon of input data entering and a numeric loss value leaving."
+      },
+      {
+        "label": "3. Work out which way to change",
+        "explanation": "Using backpropagation, the system estimates a gradient for each parameter: which changes would likely raise or lower the loss.",
+        "visualInstruction": "Show a box labelled 'Gradients' with small up and down arrows next to parameter symbols."
+      },
+      {
+        "label": "4. Apply an optimiser",
+        "explanation": "The optimiser uses the gradients and its own rules, such as learning rate or momentum, to choose the next parameter update.",
+        "visualInstruction": "Show a box labelled 'Update rule' with a formula-style caption: 'uses gradients + settings'."
+      },
+      {
+        "label": "5. Repeat and watch progress",
+        "explanation": "The new parameters are used on the next batch. If loss keeps dropping and then stabilises, training may be converging.",
+        "visualInstruction": "Show a box labelled 'New parameters' with a smaller trend line sloping down, then add a curved arrow back to step 2."
+      }
+    ],
+    "interaction": "On hover or tap, each step reveals one sentence about what goes in and what comes out of that stage; the return arrow highlights to emphasise repetition.",
+    "accessibilityDescription": "This diagram explains optimisation as a repeated five-step loop. Step 1: begin with the model’s current parameters and a batch of training data. Step 2: run the model and compute a loss value that measures error. Step 3: calculate gradients, which estimate how changing each parameter would affect the loss. Step 4: an optimiser combines those gradients with settings such as learning rate, and sometimes momentum, to choose an update. Step 5: the model now has new parameters, and the loop repeats on more data. Over many cycles, the loss often decreases and the updates may become smaller, which can indicate convergence.",
+    "reducedMotionDescription": "A static five-box sequence with arrows from step 1 to step 5 and a final curved arrow returning to step 2, plus a small downward trend line beside the last box to indicate repeated improvement over training."
+  },
+  "workedExample": {
+    "scenario": "A tiny classifier predicts whether a message is urgent using two signals: contains a deadline and contains a routine greeting.",
+    "input": "Current score = 0.8 × deadline_words + 0.6 × greeting_words. Training example: a message says 'Please send by 16:00' and has no greeting, so deadline_words=1 and greeting_words=0. True label: urgent=1.",
+    "process": [
+      "The model scores the message at 0.8, which is lower than ideal for a clear urgent case, so the loss is not zero.",
+      "Gradient estimates suggest increasing the deadline weight would reduce loss, while the greeting weight barely matters for this example because greeting_words=0.",
+      "Using a learning rate of 0.1, the optimiser updates the deadline weight from 0.8 to 0.9.",
+      "On the next pass, the same message scores 0.9, so the loss for this example is lower.",
+      "After many such updates across many examples, the model settles on weights that reduce average loss across the training set."
+    ],
+    "result": "Optimisation changed the parameters from a less effective setting toward one that fits the training examples better; the specific update rule, not optimisation in general, determined the exact new values."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is testing a model that flags whether a draft speech line may diverge from previously agreed language. During training, optimisation adjusts the model’s parameters to reduce mismatch between its flags and a reviewed training set.",
+    "relevance": "This matters because model quality depends not only on the training data but also on how the parameters are updated. Different optimisers and learning rates can change stability, speed and final performance.",
+    "caution": "Use only approved, non-sensitive training material and keep human review in the loop; do not place confidential negotiation text or unpublished drafts into an unapproved public AI service."
+  },
+  "whyItMatters": "If you hear that a model was trained with a certain optimiser, learning rate or number of steps, that is not minor engineering detail. These choices affect cost, speed, stability and what kind of errors remain. A model can fail because the data are poor, but it can also fail because the optimisation process is unstable, too slow, or trapped in a poor solution. For non-specialists, this matters when assessing whether a system was developed carefully, whether more training is likely to help, and whether claims about performance are robust or just the result of lucky tuning on one setup.",
+  "whereYouMayHearIt": [
+    "model training discussions",
+    "deep learning courses",
+    "papers comparing Adam and SGD",
+    "debugging unstable training",
+    "talk about convergence and tuning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Optimisation and gradient descent are the same thing.",
+      "correction": "Gradient descent is one family of methods used in optimisation. Optimisation is the broader goal and process of reducing loss. Many optimisers exist, including variants with momentum, adaptive step sizes, or constraints."
+    },
+    {
+      "misconception": "The optimiser is the model.",
+      "correction": "The model produces predictions from its current parameters. The optimiser does not make predictions; it updates those parameters during training. After training, the optimiser may no longer be needed for inference."
+    },
+    {
+      "misconception": "If optimisation lowers training loss, the model is necessarily getting better.",
+      "correction": "Lower training loss means the model fits the training data better under the chosen loss function. It may still perform poorly on new data if it overfits, if the loss misses important real-world goals, or if the data are unrepresentative."
+    },
+    {
+      "misconception": "There is one best optimiser for all tasks.",
+      "correction": "Different optimisers behave differently depending on model architecture, data scale, batch size and tuning choices. An optimiser that works well for one task may be unstable or inefficient for another."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Optimisation is the repeated process of checking how wrong a model is and adjusting its settings to make it less wrong.",
+    "technical": "Formally, optimisation in machine learning seeks parameter values that minimise an objective, usually a loss function over training data, sometimes plus regularisation terms. The optimisation process iterates over batches of examples, computes gradients of the objective with respect to parameters, commonly via backpropagation and the chain rule, and applies an update rule. That update rule is the optimiser: for example, stochastic gradient descent, SGD with momentum, or Adam. The learning rate controls update size; momentum and adaptive methods modify how past or per-parameter gradient information affects the step. In non-convex problems such as deep neural networks, optimisation does not guarantee reaching a global minimum, and practical concerns include convergence speed, numerical stability, sensitivity to hyperparameters, and issues such as vanishing or exploding gradients. The term 'optimization' is the same concept in another spelling."
+  },
+  "keyTakeaway": "Optimisation is the overall training process of reducing loss, while an optimiser is the specific rule that chooses each parameter update.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes optimisation from an optimiser?",
+    "options": [
+      "Optimisation is the overall process of reducing loss; an optimiser is the specific update rule used within that process.",
+      "Optimisation is another name for backpropagation; an optimiser is the loss function.",
+      "Optimisation only matters after training; an optimiser is used during inference.",
+      "Optimisation guarantees the best possible model; an optimiser just speeds up computation."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Optimisation is the broad task and repeated procedure of improving model parameters to reduce an objective. An optimiser is one component of that procedure: the algorithm that turns gradient information into actual parameter updates. Backpropagation computes gradients, and the loss function defines what 'better' means, so those are related but different parts."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Mathematical optimization",
+      "url": "https://en.wikipedia.org/wiki/Mathematical_optimization",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad mathematical view of optimisation and suits readers who want formal background and terminology beyond machine learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives an intuitive visual picture of how neural network training changes parameters and suits visual learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course page focuses on reducing loss during training and suits beginners to intermediate readers who want a practical walkthrough.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Optimisation",
+      "url": "https://www.youtube.com/results?search_query=Optimisation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page offers many video explanations of optimisation from different teachers and suits readers comparing styles and difficulty levels.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Optimisation",
+      "url": "https://www.reddit.com/search/?q=Optimisation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page surfaces community discussions about optimisation and suits readers who want informal explanations, examples and common confusions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "optimisation vs optimiser",
+    "optimization vs optimizer",
+    "what does optimizer do in machine learning",
+    "optimiser meaning ai",
+    "gradient descent vs optimisation",
+    "adam optimiser explained",
+    "how models reduce loss",
+    "optimizer training neural network",
+    "optimisation spelling optimizer optimiser",
+    "machine learning parameter update",
+    "optimisation",
+    "optimizer",
+    "optimiser",
+    "optimization"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:17.378Z",
+    "contentHash": "07e3466c049dbeb5",
+    "attempts": 1,
+    "promptTokens": 2290,
+    "completionTokens": 2565
+  }
+}

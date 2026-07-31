@@ -1,0 +1,226 @@
+{
+  "id": "authentication-and-authorisation",
+  "slug": "authentication-and-authorisation",
+  "term": "Authentication and authorisation",
+  "aliases": [
+    "authentication",
+    "authorisation",
+    "authorization",
+    "login"
+  ],
+  "categoryId": "ai-security",
+  "subcategory": "AI Security",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "access-control"
+  ],
+  "relatedTermIds": [
+    "ai-security",
+    "prompt-injection",
+    "indirect-prompt-injection",
+    "data-exfiltration",
+    "secrets-management",
+    "sandboxing"
+  ],
+  "oftenConfusedWith": [
+    "access-control",
+    "shadow-ai"
+  ],
+  "oneSentence": "These terms describe proving who or what is requesting access, then checking what that requester is allowed to do.",
+  "plainExplanation": "These words are related, but they are not the same. Authentication checks identity: are you really the person, device or service you claim to be? Authorisation checks permissions: now that identity has been checked, what are you allowed to read, use or change? Login usually means the sign-in step people see on screen, but a system can authenticate and authorise in other ways too.\n\nWhat goes in depends on the system. It might be a password, a code from an app, a security key, or a digital token. A token is a piece of data a system uses to recognise a previously verified session. The system compares that information with its records or with another trusted service.\n\nWhat happens next has two parts. First, the system tries to verify identity. If that succeeds, it then looks up rules or roles, such as “staff can view this page” or “editors can approve changes”. What comes out is not just yes or no. The result may be “signed in but view only”, “signed in with editing rights”, or “access denied”.\n\nIn AI systems, this matters because many incidents are not about breaking encryption or guessing passwords. They are about getting a model, plugin or connected tool to act beyond its allowed scope. Good authentication and authorisation do not stop every AI attack, such as prompt injection, but they limit what a compromised session, tool or application can reach.",
+  "everydayAnalogy": {
+    "title": "Entering a large library reading room",
+    "story": "At the entrance to a large library, Amina shows her library card to the desk clerk. The clerk checks that the card belongs to her and that it is still valid. After that, the clerk looks at her membership type and tells her she may enter the reading room and borrow ordinary books, but not enter the rare manuscripts room. Her friend Ravi also gets in, but his researcher pass lets him request materials from a restricted collection.",
+    "mapping": [
+      {
+        "analogyElement": "library card check",
+        "aiElement": "authentication: verifying identity or session"
+      },
+      {
+        "analogyElement": "membership type or researcher pass",
+        "aiElement": "authorisation data such as role, group or permission"
+      },
+      {
+        "analogyElement": "reading room versus rare manuscripts room",
+        "aiElement": "different levels of access to tools, files or actions"
+      },
+      {
+        "analogyElement": "desk clerk decision after checking records",
+        "aiElement": "system evaluating credentials and access rules"
+      }
+    ],
+    "limitation": "A library clerk makes a human judgement and can ask follow-up questions. Digital systems usually follow preset rules automatically and at high speed. Also, in real systems, authentication may happen with tokens, certificates or device checks rather than a person showing one card once at a front desk."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "From identity check to permitted action",
+    "learningObjective": "Show the difference between authentication, login and authorisation, and explain why they happen in that order.",
+    "description": "A four-step left-to-right diagram. Each card shows one stage in an access request: claim identity, verify identity, check permissions, allow or block specific actions. Read from left to right to see what goes in, what the system checks, and what comes out.",
+    "steps": [
+      {
+        "label": "1. Request begins",
+        "explanation": "A person, device or service asks to use a system or tool and presents some credential, such as a password, code or token.",
+        "visualInstruction": "Draw a user icon and a service icon feeding a credential badge into the first card. Label inputs 'password', 'security key', 'token'."
+      },
+      {
+        "label": "2. Authentication",
+        "explanation": "The system checks whether the credential matches the claimed identity. If it fails, the process stops here.",
+        "visualInstruction": "Show a shield with a tick and a crossed path beneath it. Add a short note: 'Proves who is asking'."
+      },
+      {
+        "label": "3. Authorisation",
+        "explanation": "If identity is verified, the system checks rules or roles to see what that identity may do.",
+        "visualInstruction": "Show a list with items like 'view', 'edit', 'download' and only some highlighted. Add a note: 'Checks allowed actions'."
+      },
+      {
+        "label": "4. Outcome",
+        "explanation": "The result can be full access, limited access, or denial for some actions even though sign-in succeeded.",
+        "visualInstruction": "Show three output badges: 'view only', 'edit allowed', 'denied'. Use distinct colours and icons."
+      }
+    ],
+    "interaction": "On hover or tap, each step reveals one example: password for authentication, staff role for authorisation, and a view-only result for outcome.",
+    "accessibilityDescription": "The diagram explains access as four ordered stages. First, a requester sends credentials such as a password, security key or token. Second, authentication checks whether the requester really matches the claimed identity; if not, the request ends. Third, authorisation checks rules, roles or permissions for that verified identity. Fourth, the system returns an outcome such as view only, edit allowed or denied. The key point is that login is just one visible sign-in moment, while authentication verifies identity and authorisation determines permitted actions.",
+    "reducedMotionDescription": "A static four-card sequence with arrows between the cards and example labels under each stage, showing the same order and outcomes without animation."
+  },
+  "workedExample": {
+    "scenario": "A team uses an internal AI assistant connected to a document system.",
+    "input": "User: Leila. Credentials: password plus six-digit code. Requested action: summarise Project Atlas notes and share the summary to the team workspace.",
+    "process": [
+      "Leila enters her username and password, then confirms with a one-time code from her authenticator app.",
+      "The identity service verifies both factors and issues a session token for Leila's signed-in session.",
+      "The AI assistant checks Leila's permissions and finds she may read the 'Project Atlas' folder but may not share documents outside her own unit.",
+      "The assistant generates a summary from files Leila is allowed to open, but blocks the cross-unit sharing step and returns an explanation."
+    ],
+    "result": "Authentication succeeded. Authorisation allowed reading and summarising approved files, but denied the requested sharing action."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An officer uses an approved internal AI drafting tool to check a speech against previously agreed language and public resolutions stored in a controlled repository.",
+    "relevance": "Authentication confirms the officer is using the approved service under their own account. Authorisation limits the tool to the repositories and actions that officer is allowed to access, which reduces the impact of mistakes or malicious prompts.",
+    "caution": "Do not put confidential, negotiation-sensitive, personal or protection-sensitive material into an unapproved public AI service, and do not assume that being logged in means every connected file or action is authorised."
+  },
+  "whyItMatters": "For most people, the practical question is not just 'Can I sign in?' but 'What can this account, app or AI tool do once it is inside?' That affects security, privacy, safety and accountability. If authentication is weak, the wrong person or service may get in. If authorisation is too broad, a legitimate account can still expose data, trigger the wrong action, or let an AI-connected tool reach more than it should. In AI settings, this is especially important because a model may be connected to documents, email, databases or external tools. Clear identity checks and narrow permissions help contain errors, misuse and attacks, even when they do not prevent them entirely.",
+  "whereYouMayHearIt": [
+    "sign-in screens and password resets",
+    "single sign-on at work",
+    "API keys and access tokens",
+    "AI assistant tool permissions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Authentication and authorisation are just two words for logging in.",
+      "correction": "They are linked but different. Authentication verifies identity. Authorisation checks permissions after identity has been verified. Login is only one common user-facing moment in that process."
+    },
+    {
+      "misconception": "If a user can open an AI tool, the tool can do anything the organisation can do.",
+      "correction": "Access should be narrower than that. A tool may be available to many users, but its connected actions should still be limited by role, data source and task. Good design gives the minimum access needed, not automatic broad access."
+    },
+    {
+      "misconception": "Once authentication succeeds, later checks are unnecessary.",
+      "correction": "A verified identity does not answer every permission question. Systems often need to check authorisation again for each file, tool or action because permissions can differ and can change over time."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "First the system checks who is asking. Then it checks what that person or service is allowed to do.",
+    "technical": "Authentication establishes or verifies an identity claim using credentials such as passwords, security keys, certificates or tokens. Successful authentication may create a session or issue a token representing that verified state. Authorisation then evaluates policy for that identity, session or workload: roles, attributes, group membership, resource rules or scope. The output is a decision about specific actions on specific resources, such as read, write, execute or call-tool permission. Login is a common interactive entry point for human users, but machine-to-machine systems may authenticate and authorise without a visible login screen. These concepts are related to access control, but they are not identical: authentication and authorisation are mechanisms within the broader control of who can do what, under which conditions."
+  },
+  "keyTakeaway": "Signing in proves identity; it does not automatically justify every action that follows.",
+  "quickCheck": {
+    "question": "A staff member signs in successfully to an AI tool but cannot export a dataset. What best explains this?",
+    "options": [
+      "Authentication failed after login, so the system removed access later.",
+      "Authorisation rules allowed sign-in but blocked that specific action.",
+      "The AI model refused because it understood the request was risky.",
+      "Login and authorisation are the same, so the tool is malfunctioning."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Successful sign-in means authentication worked. Exporting data is a separate permission question. A system can correctly authenticate a user and still deny a particular action because authorisation rules do not allow it."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Authentication",
+      "url": "https://en.wikipedia.org/wiki/Authentication",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "A broad introductory reference to authentication concepts and terminology, useful for general readers who want a quick overview.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "OWASP Top 10 for LLM Applications",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "type": "official",
+      "publisher": "OWASP",
+      "difficulty": "intermediate",
+      "description": "A practical security guide that helps technical and policy readers see how identity and permission issues appear in LLM applications.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Adversarial Machine Learning: A Taxonomy and Terminology",
+      "url": "https://csrc.nist.gov/pubs/ai/100/2/e2025/final",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "deeper",
+      "description": "A more formal terminology resource for readers who want careful definitions and a wider security context for AI systems.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Authentication and authorisation",
+      "url": "https://www.youtube.com/results?search_query=Authentication%20and%20authorisation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A search results page that can help beginners find different video teaching styles on authentication and authorisation, but it is not a single vetted lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Authentication and authorisation",
+      "url": "https://www.reddit.com/search/?q=Authentication%20and%20authorisation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A search results page showing community discussions and examples of confusion about these terms, most useful for informal exploration and not as an authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "authentication vs authorisation",
+    "authorization vs authentication",
+    "what is login vs authentication",
+    "why can i log in but not access file",
+    "ai tool permissions sign in",
+    "access denied after login",
+    "authorisation meaning simple",
+    "authentication authorization difference",
+    "authenication misspelling",
+    "token login meaning",
+    "authentication and authorisation",
+    "authentication",
+    "authorisation",
+    "authorization",
+    "login"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:52:05.396Z",
+    "contentHash": "9fd6a512b501adc3",
+    "attempts": 1,
+    "promptTokens": 2304,
+    "completionTokens": 2301
+  }
+}

@@ -1,0 +1,235 @@
+---
+/**
+ * Context window: a desk with a finite surface.
+ *
+ * Two lessons, and the second is the one people get wrong. First, things on
+ * the desk are available and things off it are not. Second — and this is why
+ * the desk fills from the left and the oldest item slides off the edge — a
+ * bigger desk is not a better memory. Nothing here suggests the model
+ * "remembers" what fell off; it simply cannot see it.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+
+const ITEMS = [
+  { label: 'System instructions', size: 2, kind: 'system' },
+  { label: 'Your question', size: 1, kind: 'user' },
+  { label: 'Two policy documents', size: 5, kind: 'doc' },
+  { label: 'A long annex', size: 6, kind: 'doc' },
+  { label: 'Earlier conversation', size: 3, kind: 'chat' },
+  { label: 'A second annex', size: 6, kind: 'doc' },
+];
+---
+
+<div class="vx" data-cw data-term={termId}>
+  <div class="vx__row">
+    <span class="vx__label" id={`cw-cap-${termId}`}>Desk size (context window)</span>
+    <input
+      class="vx__slider"
+      type="range"
+      min="6"
+      max="24"
+      value="12"
+      step="1"
+      data-cw-size
+      aria-labelledby={`cw-cap-${termId}`}
+      aria-describedby={`cw-readout-${termId}`}
+    />
+    <output class="vx__value" data-cw-value>12</output>
+  </div>
+
+  <div class="vx__row" role="group" aria-label="Add or remove items">
+    {
+      ITEMS.map((item, i) => (
+        <button type="button" class="vx__button" data-cw-add={String(i)} aria-pressed="false">
+          + {item.label}
+        </button>
+      ))
+    }
+    <button type="button" class="vx__button" data-cw-clear>Clear the desk</button>
+  </div>
+
+  <div data-cw-desk aria-hidden="true"></div>
+
+  {/* The desk is decorative to a screen reader; this list is the real content
+      and stays in sync, so nothing depends on seeing the boxes. */}
+  <ul class="vx__legend" data-cw-list aria-label="What the model can currently see"></ul>
+
+  <p class="visual__readout" id={`cw-readout-${termId}`} role="status" aria-live="polite" data-cw-readout></p>
+</div>
+
+<style>
+  .cw-desk {
+    display: flex;
+    gap: 2px;
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-sm);
+    background: var(--void-deep);
+    padding: 4px;
+    min-height: 4.5rem;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .cw-slot {
+    flex: 1;
+    border-radius: 3px;
+    background: repeating-linear-gradient(
+      45deg,
+      rgb(241 238 228 / 0.05),
+      rgb(241 238 228 / 0.05) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+    min-width: 4px;
+  }
+
+  .cw-item {
+    display: grid;
+    place-items: center;
+    padding: 0.25rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-align: center;
+    line-height: 1.2;
+    overflow: hidden;
+    color: var(--ink-black);
+    font-weight: 600;
+  }
+
+  .cw-item--system { background: #f5d020; }
+  .cw-item--user { background: #ff5fa8; }
+  .cw-item--doc { background: #2fbf74; }
+  .cw-item--chat { background: #9fb3c8; }
+
+  .cw-dropped {
+    margin-top: var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+    border-left: 2px solid var(--riso-pink);
+    padding-left: var(--sp-3);
+  }
+</style>
+
+<script>
+  interface Item {
+    label: string;
+    size: number;
+    kind: string;
+  }
+
+  const ITEMS: Item[] = [
+    { label: 'System instructions', size: 2, kind: 'system' },
+    { label: 'Your question', size: 1, kind: 'user' },
+    { label: 'Two policy documents', size: 5, kind: 'doc' },
+    { label: 'A long annex', size: 6, kind: 'doc' },
+    { label: 'Earlier conversation', size: 3, kind: 'chat' },
+    { label: 'A second annex', size: 6, kind: 'doc' },
+  ];
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-cw]')) {
+    const deskHost = root.querySelector<HTMLElement>('[data-cw-desk]')!;
+    const list = root.querySelector<HTMLUListElement>('[data-cw-list]')!;
+    const readout = root.querySelector<HTMLElement>('[data-cw-readout]')!;
+    const sizeInput = root.querySelector<HTMLInputElement>('[data-cw-size]')!;
+    const sizeValue = root.querySelector<HTMLOutputElement>('[data-cw-value]')!;
+
+    let placed: Item[] = [ITEMS[0]!, ITEMS[1]!];
+
+    function capacity() {
+      return Number(sizeInput.value);
+    }
+
+    /**
+     * What actually fits, oldest-first eviction. This is the mechanic worth
+     * showing: nothing summarises the overflow, nothing remembers it. It is
+     * simply no longer visible to the model.
+     */
+    function fit() {
+      const cap = capacity();
+      const kept: Item[] = [];
+      const dropped: Item[] = [];
+      let used = 0;
+      for (let i = placed.length - 1; i >= 0; i--) {
+        const item = placed[i]!;
+        if (used + item.size <= cap) {
+          kept.unshift(item);
+          used += item.size;
+        } else dropped.unshift(item);
+      }
+      return { kept, dropped, used, cap };
+    }
+
+    function render() {
+      const { kept, dropped, used, cap } = fit();
+      sizeValue.textContent = String(cap);
+
+      const desk = document.createElement('div');
+      desk.className = 'cw-desk';
+      for (const item of kept) {
+        const el = document.createElement('div');
+        el.className = `cw-item cw-item--${item.kind}`;
+        el.style.flex = String(item.size);
+        el.textContent = item.label;
+        desk.append(el);
+      }
+      const spare = cap - used;
+      if (spare > 0) {
+        const slot = document.createElement('div');
+        slot.className = 'cw-slot';
+        slot.style.flex = String(spare);
+        desk.append(slot);
+      }
+      deskHost.replaceChildren(desk);
+
+      if (dropped.length) {
+        const note = document.createElement('p');
+        note.className = 'cw-dropped';
+        note.textContent = `Off the desk, and therefore invisible to the model: ${dropped
+          .map((d) => d.label)
+          .join(', ')}.`;
+        deskHost.append(note);
+      }
+
+      list.replaceChildren(
+        ...kept.map((item) => {
+          const li = document.createElement('li');
+          li.textContent = `${item.label} (${item.size} units)`;
+          return li;
+        }),
+      );
+
+      root.querySelectorAll<HTMLButtonElement>('[data-cw-add]').forEach((b) => {
+        const item = ITEMS[Number(b.dataset.cwAdd)]!;
+        b.setAttribute('aria-pressed', String(placed.includes(item)));
+      });
+
+      readout.textContent =
+        `The desk holds ${cap} units and ${used} are in use. The model can currently see: ` +
+        `${kept.map((k) => k.label).join(', ') || 'nothing'}. ` +
+        (dropped.length
+          ? `${dropped.map((d) => d.label).join(' and ')} did not fit, so ${dropped.length === 1 ? 'it is' : 'they are'} simply not available — the model is not aware anything is missing.`
+          : 'Everything you have added still fits. Making the desk bigger does not make the model read what is on it more carefully.');
+    }
+
+    root.querySelectorAll<HTMLButtonElement>('[data-cw-add]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const item = ITEMS[Number(b.dataset.cwAdd)]!;
+        placed = placed.includes(item) ? placed.filter((p) => p !== item) : [...placed, item];
+        render();
+      }),
+    );
+
+    root.querySelector('[data-cw-clear]')!.addEventListener('click', () => {
+      placed = [];
+      render();
+    });
+
+    sizeInput.addEventListener('input', render);
+    render();
+  }
+</script>

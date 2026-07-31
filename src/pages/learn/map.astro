@@ -1,0 +1,361 @@
+---
+/**
+ * The concept map.
+ *
+ * Built by progressive expansion, not by drawing 300 nodes and 900 edges at
+ * once — a full-corpus force graph is a hairball that answers no question. So:
+ * sixteen categories, expand one to see its core terms, select a term to see
+ * what it needs and what it leads to.
+ *
+ * The nested list beside it is not a fallback for the SVG. Both are in the
+ * page, both are always current, and the list is fully usable on its own — a
+ * relationship graph that only exists as pixels is not an accessible page.
+ */
+import Learn from '../../layouts/Learn.astro';
+import {
+  CATEGORIES,
+  TERMS,
+  TERM_BY_ID,
+  termsInCategory,
+  learnHref,
+  DIFFICULTY_ORDER,
+} from '../../lib/learn/terms';
+
+/**
+ * The graph is serialised once at build time. Each category keeps its most
+ * connected terms: a map is meant to show the shape of a subject, and the
+ * long tail of a category is better served by its own page.
+ */
+const graph = {
+  categories: CATEGORIES.map((c) => {
+    const terms = termsInCategory(c.id)
+      .map((t) => ({
+        id: t.id,
+        term: t.term,
+        difficulty: t.difficulty,
+        degree: t.prerequisiteTermIds.length + t.relatedTermIds.length,
+      }))
+      .sort(
+        (a, b) =>
+          DIFFICULTY_ORDER[a.difficulty] - DIFFICULTY_ORDER[b.difficulty] || b.degree - a.degree,
+      )
+      .slice(0, 10);
+    return {
+      id: c.id,
+      name: c.name,
+      glyph: c.glyph,
+      plain: c.plain,
+      adjacent: c.adjacent,
+      total: termsInCategory(c.id).length,
+      terms,
+    };
+  }).filter((c) => c.terms.length > 0),
+  terms: Object.fromEntries(
+    TERMS.map((t) => [
+      t.id,
+      {
+        term: t.term,
+        one: t.oneSentence,
+        category: t.categoryId,
+        prerequisites: t.prerequisiteTermIds
+          .filter((id) => TERM_BY_ID.has(id))
+          .map((id) => ({ id, term: TERM_BY_ID.get(id)!.term })),
+        related: t.relatedTermIds
+          .filter((id) => TERM_BY_ID.has(id))
+          .slice(0, 6)
+          .map((id) => ({ id, term: TERM_BY_ID.get(id)!.term })),
+        confused: t.oftenConfusedWith
+          .filter((id) => TERM_BY_ID.has(id))
+          .slice(0, 4)
+          .map((id) => ({ id, term: TERM_BY_ID.get(id)!.term })),
+      },
+    ]),
+  ),
+};
+
+const title = 'Concept map · UNAIVERSE';
+const description =
+  'How AI concepts connect: sixteen categories, the core terms in each, and what every term depends on. With a full list alternative for anyone who cannot use the diagram.';
+---
+
+<Learn title={title} description={description} section="map">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / Concept Map
+      </p>
+      <h1 class="learn-head__title">Concept map</h1>
+      <p class="learn-head__lead">
+        Start with the sixteen categories. Open one to see its core terms, then select a term to see
+        what it depends on and what it leads to. Everything on the diagram is also in the list
+        below it, so nothing here requires seeing a picture.
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6)">
+    <div class="cmap">
+      <div class="cmap__stage">
+        <div class="vx__row" style="margin-bottom: var(--sp-3)">
+          <button type="button" class="vx__button" data-cmap-back hidden>← All categories</button>
+          <span class="vx__label" data-cmap-level>Showing: all categories</span>
+        </div>
+
+        <svg
+          class="cmap__svg"
+          viewBox="0 0 520 420"
+          role="img"
+          aria-labelledby="cmap-title"
+          data-cmap-svg
+        >
+          <title id="cmap-title" data-cmap-svg-title>
+            A radial map of the sixteen AI concept categories arranged around a centre.
+          </title>
+          <g data-cmap-edges></g>
+          <g data-cmap-nodes></g>
+        </svg>
+      </div>
+
+      <div class="cmap__panel" data-cmap-panel role="status" aria-live="polite">
+        <p>Select a category on the map, or use the list below.</p>
+      </div>
+    </div>
+
+    <section class="lsection cmap__list" aria-labelledby="cmap-list-title">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="cmap-list-title">The same map as a list</h2>
+        <p class="lsection__blurb">
+          Every category, its core terms, and for each term what it needs first and what it connects
+          to. Expandable, keyboard-navigable, and identical in content to the diagram.
+        </p>
+      </div>
+
+      {
+        graph.categories.map((c) => (
+          <details>
+            <summary>
+              <span aria-hidden="true">{c.glyph}</span> {c.name} — {c.total} terms
+            </summary>
+            <p class="lsection__blurb" style="margin: var(--sp-2) 0 var(--sp-3)">{c.plain}</p>
+            <ul class="az-list" style="margin-bottom: var(--sp-4)">
+              {c.terms.map((t) => {
+                const detail = graph.terms[t.id]!;
+                return (
+                  <li>
+                    <a href={learnHref(t.id)}>
+                      <span>{t.term}</span>
+                      <span class="az-list__meta">
+                        {detail.prerequisites.length} prerequisite
+                        {detail.prerequisites.length === 1 ? '' : 's'} ·{' '}
+                        {detail.related.length} related
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </details>
+        ))
+      }
+    </section>
+  </div>
+</Learn>
+
+<script is:inline define:vars={{ GRAPH: graph, BASE: learnHref() }}>
+  window.__CMAP__ = { graph: GRAPH, base: BASE };
+</script>
+
+<script>
+  const NS = 'http://www.w3.org/2000/svg';
+  const data = (window as any).__CMAP__;
+
+  if (data) {
+    const { graph, base } = data;
+    const svg = document.querySelector<SVGSVGElement>('[data-cmap-svg]')!;
+    const svgTitle = document.querySelector<SVGTitleElement>('[data-cmap-svg-title]')!;
+    const nodeLayer = svg.querySelector<SVGGElement>('[data-cmap-nodes]')!;
+    const edgeLayer = svg.querySelector<SVGGElement>('[data-cmap-edges]')!;
+    const panel = document.querySelector<HTMLElement>('[data-cmap-panel]')!;
+    const back = document.querySelector<HTMLButtonElement>('[data-cmap-back]')!;
+    const level = document.querySelector<HTMLElement>('[data-cmap-level]')!;
+
+    const CX = 260;
+    const CY = 210;
+
+    function clear() {
+      nodeLayer.replaceChildren();
+      edgeLayer.replaceChildren();
+    }
+
+    function edge(x1: number, y1: number, x2: number, y2: number) {
+      const line = document.createElementNS(NS, 'line');
+      line.setAttribute('class', 'cmap__edge');
+      line.setAttribute('x1', String(x1));
+      line.setAttribute('y1', String(y1));
+      line.setAttribute('x2', String(x2));
+      line.setAttribute('y2', String(y2));
+      edgeLayer.append(line);
+    }
+
+    /** Nodes are <a> so they are focusable and activatable without any script. */
+    function node(x: number, y: number, label: string, r: number, onSelect: () => void, current = false) {
+      const g = document.createElementNS(NS, 'g');
+      g.setAttribute('class', 'cmap__node');
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('role', 'button');
+      g.setAttribute('aria-label', label);
+      if (current) g.setAttribute('aria-current', 'true');
+
+      const circle = document.createElementNS(NS, 'circle');
+      circle.setAttribute('cx', String(x));
+      circle.setAttribute('cy', String(y));
+      circle.setAttribute('r', String(r));
+
+      const text = document.createElementNS(NS, 'text');
+      text.setAttribute('x', String(x));
+      text.setAttribute('y', String(y + r + 13));
+      text.setAttribute('text-anchor', 'middle');
+      text.textContent = label.length > 22 ? `${label.slice(0, 21)}…` : label;
+
+      g.append(circle, text);
+      g.addEventListener('click', onSelect);
+      g.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect();
+        }
+      });
+      nodeLayer.append(g);
+    }
+
+    function showCategories() {
+      clear();
+      back.hidden = true;
+      level.textContent = 'Showing: all categories';
+      svgTitle.textContent = `A radial map of ${graph.categories.length} AI concept categories arranged around a centre point.`;
+
+      const n = graph.categories.length;
+      graph.categories.forEach((c: any, i: number) => {
+        const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+        const x = CX + Math.cos(angle) * 165;
+        const y = CY + Math.sin(angle) * 150;
+        edge(CX, CY, x, y);
+        node(x, y, c.name, 12 + Math.min(c.total, 30) * 0.25, () => showCategory(c.id));
+      });
+
+      const centre = document.createElementNS(NS, 'circle');
+      centre.setAttribute('cx', String(CX));
+      centre.setAttribute('cy', String(CY));
+      centre.setAttribute('r', '8');
+      centre.setAttribute('fill', '#ff5fa8');
+      nodeLayer.append(centre);
+
+      panel.replaceChildren(
+        el('p', 'Sixteen sectors. The bigger the circle, the more terms it holds.'),
+        el('p', 'Select one to see its core concepts.'),
+      );
+    }
+
+    function showCategory(id: string) {
+      const c = graph.categories.find((x: any) => x.id === id);
+      if (!c) return;
+      clear();
+      back.hidden = false;
+      level.textContent = `Showing: ${c.name}`;
+      svgTitle.textContent = `${c.name}: ${c.terms.length} core terms arranged around the category centre.`;
+
+      const n = c.terms.length;
+      c.terms.forEach((t: any, i: number) => {
+        const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+        const x = CX + Math.cos(angle) * 170;
+        const y = CY + Math.sin(angle) * 150;
+        edge(CX, CY, x, y);
+        node(x, y, t.term, 9, () => showTerm(t.id));
+      });
+
+      const centre = document.createElementNS(NS, 'circle');
+      centre.setAttribute('cx', String(CX));
+      centre.setAttribute('cy', String(CY));
+      centre.setAttribute('r', '16');
+      centre.setAttribute('fill', 'rgb(255 95 168 / 0.25)');
+      centre.setAttribute('stroke', '#ff5fa8');
+      nodeLayer.append(centre);
+
+      const label = document.createElementNS(NS, 'text');
+      label.setAttribute('x', String(CX));
+      label.setAttribute('y', String(CY + 4));
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('fill', '#f1eee4');
+      label.setAttribute('font-size', '11');
+      label.textContent = c.glyph;
+      nodeLayer.append(label);
+
+      panel.replaceChildren(
+        el('h2', c.name, 'aside-block'),
+        el('p', c.plain),
+        el('p', `${c.total} terms in this category; the ${c.terms.length} most connected are shown.`),
+        link(`${base}/category/${c.id}`.replace(/\/+/g, '/'), 'Open the full category'),
+      );
+    }
+
+    function showTerm(id: string) {
+      const t = graph.terms[id];
+      if (!t) return;
+      clear();
+      back.hidden = false;
+      level.textContent = `Showing: ${t.term}`;
+
+      const groups = [
+        { items: t.prerequisites, angle: Math.PI, colour: '#f5d020', label: 'needs first' },
+        { items: t.related, angle: 0, colour: '#2fbf74', label: 'related' },
+        { items: t.confused, angle: Math.PI / 2, colour: '#ff5fa8', label: 'often confused with' },
+      ];
+
+      svgTitle.textContent =
+        `${t.term} at the centre, with ${t.prerequisites.length} prerequisites to the left, ` +
+        `${t.related.length} related concepts to the right, and ${t.confused.length} commonly confused terms below.`;
+
+      for (const group of groups) {
+        group.items.forEach((item: any, i: number) => {
+          const spread = ((i - (group.items.length - 1) / 2) * Math.PI) / 7;
+          const angle = group.angle + spread;
+          const x = CX + Math.cos(angle) * 175;
+          const y = CY + Math.sin(angle) * 140;
+          edge(CX, CY, x, y);
+          node(x, y, item.term, 8, () => showTerm(item.id));
+        });
+      }
+
+      node(CX, CY, t.term, 15, () => {}, true);
+
+      const list = document.createElement('div');
+      list.append(el('h2', t.term, 'aside-block'), el('p', t.one));
+      for (const group of groups) {
+        if (!group.items.length) continue;
+        list.append(el('p', `${group.label}: ${group.items.map((i: any) => i.term).join(', ')}`));
+      }
+      list.append(link(`${base}/${id}`.replace(/\/+/g, '/'), `Read the ${t.term} page`));
+      panel.replaceChildren(list);
+    }
+
+    function el(tag: string, text: string, cls?: string) {
+      const node = document.createElement(tag);
+      node.textContent = text;
+      if (cls) node.className = cls;
+      return node;
+    }
+
+    function link(href: string, text: string) {
+      const p = document.createElement('p');
+      const a = document.createElement('a');
+      a.className = 'lbutton';
+      a.href = href;
+      a.textContent = text;
+      p.append(a);
+      return p;
+    }
+
+    back.addEventListener('click', showCategories);
+    showCategories();
+  }
+</script>

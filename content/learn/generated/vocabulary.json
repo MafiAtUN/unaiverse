@@ -1,0 +1,222 @@
+{
+  "id": "vocabulary",
+  "slug": "vocabulary",
+  "term": "Vocabulary",
+  "aliases": [
+    "token vocabulary"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "tokenisation"
+  ],
+  "relatedTermIds": [
+    "token",
+    "tokenisation",
+    "language-model",
+    "large-language-model",
+    "next-token-prediction",
+    "sampling"
+  ],
+  "oftenConfusedWith": [
+    "token",
+    "tokenisation",
+    "corpus"
+  ],
+  "oneSentence": "The full set of tokens a language model can represent and choose from during text processing and generation.",
+  "plainExplanation": "A language model does not handle raw text one character at a time in the main prediction step. First, text is split into tokens: units such as whole words, parts of words, punctuation marks, numbers, or special markers. The vocabulary is the catalogue of all token types the model can use.\n\nWhat goes in is text. That text is tokenised, meaning converted into token IDs from the model’s vocabulary. If a piece of text is unusual, it may be split into several smaller tokens rather than one neat token. What comes out at this stage is a sequence of token IDs the model can process.\n\nDuring generation, the model does not choose any possible string of characters. At each step, it assigns scores to every token in its vocabulary and then one token is selected by the decoding method. That selected token is appended, and the process repeats. So the vocabulary directly limits the menu of next-step choices.\n\nThis term is often confused with tokenisation and with corpus. Tokenisation is the procedure that breaks text into tokens. Corpus is the training text collection. The vocabulary is neither the procedure nor the data source; it is the fixed inventory of token units the model was built to use.",
+  "everydayAnalogy": {
+    "title": "A control room with a fixed label drawer",
+    "story": "In a water utility control room, an analyst watches a pump sensor dashboard. Beside the screen is a drawer of pre-printed labels such as “pressure”, “drop”, “alarm”, “12”, “.5”, and “kPa”. When an unusual reading appears, the analyst can describe it only by pulling labels from that drawer, sometimes using one label and sometimes combining several smaller ones to express a rare term or number. If there is no single label for a specialised code, the analyst spells it out from smaller pieces that are available.",
+    "mapping": [
+      {
+        "analogyElement": "drawer of pre-printed labels",
+        "aiElement": "the model’s token vocabulary"
+      },
+      {
+        "analogyElement": "pulling labels to describe the reading",
+        "aiElement": "selecting tokens during generation"
+      },
+      {
+        "analogyElement": "combining smaller labels for a rare term",
+        "aiElement": "representing uncommon text with multiple tokens"
+      },
+      {
+        "analogyElement": "labels like numbers, units, and punctuation",
+        "aiElement": "tokens are not only words; they can be subwords and symbols"
+      }
+    ],
+    "limitation": "A real analyst understands the equipment and can invent new descriptions freely. A language model does not have a literal drawer or human situational understanding. Its vocabulary is a fixed token inventory tied to a tokenisation scheme, and generation works by scoring those tokens mathematically, not by consciously choosing labels."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How vocabulary constrains what a model can read and write",
+    "learningObjective": "Show that text is converted into token IDs from a fixed vocabulary, and that generation selects the next token only from that same inventory.",
+    "description": "A left-to-right flow with four boxes: input text, tokenisation, vocabulary lookup, and next-token choice. Read it as one cycle. The same vocabulary supports both reading text into tokens and generating the next token from a fixed menu of options.",
+    "steps": [
+      {
+        "label": "1. Input text",
+        "explanation": "Start with raw text such as a common word, a rare code, or a number with punctuation.",
+        "visualInstruction": "Draw a text box on the left containing three short examples: a common word, a rare technical string, and a decimal number."
+      },
+      {
+        "label": "2. Tokenisation",
+        "explanation": "The text is split into tokens. Some items become one token; others are broken into smaller pieces.",
+        "visualInstruction": "Show arrows from each example to token chips. For one example, use one chip; for another, use several chips; include punctuation as its own chip."
+      },
+      {
+        "label": "3. Vocabulary mapping",
+        "explanation": "Each token chip must exist in the model’s fixed vocabulary and is represented by an ID.",
+        "visualInstruction": "Place a central panel labelled 'fixed vocabulary' with a grid of token chips and ID numbers. Highlight the chips used by the examples."
+      },
+      {
+        "label": "4. Next-token choice",
+        "explanation": "During generation, the model scores all tokens in the vocabulary and selects one token from that inventory.",
+        "visualInstruction": "On the right, show a bar list of candidate tokens from the vocabulary with different scores, then highlight one selected token and append it to the output line."
+      }
+    ],
+    "interaction": "Hovering over an example highlights which vocabulary items are used, and a toggle switches between a common term and a rare term to show different token splits.",
+    "accessibilityDescription": "This diagram explains vocabulary as a fixed inventory of tokens. First, raw text appears on the left. Second, tokenisation breaks that text into one or more token pieces; a common item may become one token, while a rare technical string may become several smaller tokens. Third, each token piece is matched to an item in a central fixed vocabulary and shown with an ID number. Fourth, on the right, generation is shown as scoring many possible tokens from that same vocabulary and selecting one of them as the next token. The main point is that the vocabulary is the model’s allowed token set for both reading and writing, while tokenisation is the splitting procedure.",
+    "reducedMotionDescription": "A static four-column diagram shows text examples, their token splits, a highlighted fixed vocabulary panel with token IDs, and a final column where one candidate token is chosen from a scored list."
+  },
+  "workedExample": {
+    "scenario": "A small technical model processes the text: 'Pump-A7 reading 12.5 kPa'.",
+    "input": "Pump-A7 reading 12.5 kPa",
+    "process": [
+      "The tokenizer checks the model’s vocabulary for matching token pieces.",
+      "One possible split is ['Pump', '-', 'A', '7', ' reading', ' 12', '.', '5', ' k', 'Pa'] because the exact string 'Pump-A7' may not exist as one token.",
+      "Each token is converted to its vocabulary ID, such as 4812, 17, 33, 29, 910, 602, 8, 21, 77, 144.",
+      "When generating a continuation after 'kPa', the model scores every token in the vocabulary, for example ' at' 3.1, ' and' 2.4, '.' 4.0, ' normal' 1.8.",
+      "The decoding method selects one token from those scored vocabulary items, such as '.'."
+    ],
+    "result": "The model can process and continue the text only through tokens available in its vocabulary; uncommon strings often require more tokens."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN analyst uses an approved internal tool to draft a summary of programme monitoring data, including indicator names, numeric values, and standard reporting phrases.",
+    "relevance": "Vocabulary matters because technical abbreviations, local place names, and number formats may split into many tokens, affecting cost, context use, and how reliably the model handles those terms.",
+    "caution": "Do not paste personal data, case details, beneficiary records, or other confidential monitoring material into an unapproved public AI service."
+  },
+  "whyItMatters": "Vocabulary affects practical decisions. It influences how efficiently a model handles names, codes, numbers, spelling variants, and different languages or scripts. A term that matches one token may be cheaper and easier to keep inside the context window than the same term split into many tokens. It also affects system design: model interoperability, prompt length, latency, and output control all depend partly on token inventories. For non-specialists, this helps explain why one model handles a domain term smoothly while another breaks it into awkward pieces, and why text length in characters is not the same as text length in tokens.",
+  "whereYouMayHearIt": [
+    "model card discussions",
+    "tokeniser design notes",
+    "API cost estimates",
+    "context window planning",
+    "multilingual model comparisons"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "The vocabulary is just a list of dictionary words the model knows.",
+      "correction": "Not quite. Vocabulary items are tokens, not necessarily full words. They can be word pieces, punctuation marks, numbers, whitespace-prefixed fragments, control markers, or special symbols. That is why an unfamiliar word can still be represented: it is often split into smaller known tokens."
+    },
+    {
+      "misconception": "A bigger vocabulary always makes a model better.",
+      "correction": "A larger vocabulary can reduce token counts for some text, but it also increases the number of token options the model scores at each step and can complicate design trade-offs. Quality depends on many factors, including training data, tokenisation scheme, model size, and optimisation, not vocabulary size alone."
+    },
+    {
+      "misconception": "If a term is not in the vocabulary, the model cannot process it.",
+      "correction": "Usually it still can, by splitting the term into smaller tokens that are in the vocabulary. The issue is often efficiency and convenience, not total impossibility. The representation may become longer or less neat, which can affect context usage and sometimes behaviour."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of it as the model’s box of text pieces. When text goes in, it gets broken into pieces from that box. When text comes out, the model chooses the next piece from the same box.",
+    "technical": "In most LLMs, the vocabulary is the finite set V of token types defined by the tokenizer and tied to the model’s input and output layers. Tokenisation maps a character string to a sequence of token IDs in V. During generation, the model produces a logit or score for each token in V at every step; sampling or another decoding rule then selects one token ID. The selected ID is converted back to its token string and appended to the sequence. Because the output distribution is defined over the vocabulary, the model does not directly choose arbitrary character strings at each step. Vocabulary design interacts with tokenisation strategy, multilingual coverage, byte handling, special tokens, embedding matrices, output projection, memory use, and token efficiency."
+  },
+  "keyTakeaway": "Vocabulary is the model’s fixed menu of token pieces, and both input processing and next-token generation must work through that menu.",
+  "quickCheck": {
+    "question": "Which statement best describes token vocabulary in a language model?",
+    "options": [
+      "It is the training corpus the model learned from.",
+      "It is the fixed set of token units the model can map text into and score during generation.",
+      "It is the list of prompts currently stored in the context window.",
+      "It is the set of topics the model can answer correctly."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The vocabulary is the model’s token inventory. It is not the corpus, not the current context, and not a guarantee of subject competence. Text is tokenised into this inventory, and generation chooses from it step by step."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Vocabulary",
+      "url": "https://en.wikipedia.org/wiki/Vocabulary",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "Wikipedia gives a broad reference overview of vocabulary in language and computing, suitable for readers who want a quick orientation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "The Hugging Face LLM Course helps technically minded readers connect vocabulary to tokenisers, IDs and model pipelines.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "The 3Blue1Brown video gives an intuitive visual explanation of how language models process text, useful for readers who learn best from diagrams and animation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Vocabulary",
+      "url": "https://www.youtube.com/results?search_query=Vocabulary%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "The YouTube search results page helps readers find multiple video explanations of vocabulary from different teachers and difficulty levels.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Vocabulary",
+      "url": "https://www.reddit.com/search/?q=Vocabulary",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "The Reddit search results page helps readers see common questions, confusions and practitioner discussions about vocabulary, with the usual need for careful fact-checking.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "llm vocabulary meaning",
+    "token vocabulary vs tokenisation",
+    "what is vocabulary in language model",
+    "llm token list",
+    "vocabulary vs corpus ai",
+    "subword vocabulary llm",
+    "token vocab explained",
+    "vocabulary llm",
+    "why rare words use more tokens",
+    "model vocabulary token ids",
+    "vocabulary",
+    "token vocabulary"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:42.533Z",
+    "contentHash": "f30f6692b96d0e50",
+    "attempts": 1,
+    "promptTokens": 2336,
+    "completionTokens": 2448
+  }
+}

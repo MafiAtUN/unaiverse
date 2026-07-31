@@ -1,0 +1,56 @@
+---
+/**
+ * The comparison index: every "what is the difference between…" on one page,
+ * each with its one-line answer already visible.
+ *
+ * Showing the short answer on the index rather than hiding it behind a click
+ * is deliberate. Most readers need one sentence, and making them navigate for
+ * it would be a worse site that looked busier.
+ */
+import Learn from '../../../layouts/Learn.astro';
+import { resolvedComparisons } from '../../../lib/learn/compare';
+import { learnHref } from '../../../lib/learn/terms';
+
+const comparisons = resolvedComparisons();
+const title = 'Compare AI terms · UNAIVERSE';
+const description =
+  'Side-by-side answers to the questions people actually ask: RAG or fine-tuning, precision or recall, transparency or explainability, ethics or safety or governance.';
+---
+
+<Learn title={title} description={description} section="compare">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / Compare
+      </p>
+      <h1 class="learn-head__title">What is the difference between…</h1>
+      <p class="learn-head__lead">
+        Most confusion about AI vocabulary is not about a single word. It is about two words that
+        sound interchangeable and are not. Here is the short answer to each, and then the long one.
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6)">
+    <ul style="list-style:none;margin:0;padding:0;display:grid;gap:var(--sp-4)">
+      {
+        comparisons.map((c) => (
+          <li class="compare-col">
+            <h2 class="compare-col__title">
+              <a href={learnHref(`compare/${c.id}`)}>{c.title}</a>
+            </h2>
+            <p class="path-card__meta">{c.question}</p>
+            <p style="margin:0;color:var(--ink-dim)">{c.shortAnswer}</p>
+            <p class="chips">
+              {c.terms.map((t) => (
+                <a class="chip" href={learnHref(t.slug)}>
+                  {t.term}
+                </a>
+              ))}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Learn>

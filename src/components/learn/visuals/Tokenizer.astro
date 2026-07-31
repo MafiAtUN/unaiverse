@@ -1,0 +1,151 @@
+---
+/**
+ * Tokeniser: type a sentence, watch it split.
+ *
+ * Honesty constraint, stated on the page and enforced in the code: this is a
+ * *teaching* splitter, not any real model's tokeniser. It shows the shape of
+ * the idea — whole words, word pieces, punctuation, numbers, and the leading
+ * space that surprises everyone — without claiming counts that would be wrong
+ * for whatever model the reader is actually using.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+
+const EXAMPLES = [
+  'The Secretariat will report to the General Assembly in 2026.',
+  'Tokenisation is unpredictable for uncommon words.',
+  'Les rapports seront publiés en français.',
+];
+---
+
+<div class="vx" data-tok data-term={termId}>
+  <label class="vx__label" for={`tok-input-${termId}`}>Type any sentence</label>
+  <input
+    class="vx__input"
+    type="text"
+    id={`tok-input-${termId}`}
+    value={EXAMPLES[0]}
+    data-tok-input
+    aria-describedby={`tok-readout-${termId}`}
+    autocomplete="off"
+  />
+
+  <div class="vx__row" role="group" aria-label="Example sentences">
+    {
+      EXAMPLES.map((example, i) => (
+        <button type="button" class="vx__button" data-tok-example={example}>
+          Example {i + 1}
+        </button>
+      ))
+    }
+  </div>
+
+  <ul class="vx__tokens" data-tok-out aria-label="Tokens"></ul>
+
+  <ul class="vx__legend">
+    <li><span class="vx__swatch" style="background:rgb(47 191 116 / 0.5)"></span>whole word</li>
+    <li><span class="vx__swatch" style="background:rgb(245 208 32 / 0.5)"></span>part of a word</li>
+    <li><span class="vx__swatch" style="background:rgb(255 95 168 / 0.5)"></span>punctuation or number</li>
+  </ul>
+
+  <p class="visual__readout" id={`tok-readout-${termId}`} role="status" aria-live="polite" data-tok-readout></p>
+
+  <p class="visual__readout">
+    <strong>This is a teaching approximation, not a real tokeniser.</strong> Every model splits
+    text differently, and the same sentence can be a different number of tokens in two models. Use
+    a model's own tokeniser when the count matters.
+  </p>
+</div>
+
+<script>
+  /**
+   * A deliberately simple splitter. Long or unusual words break into pieces,
+   * common short ones do not — which is the behaviour worth teaching. It does
+   * not claim to match any published vocabulary.
+   */
+  const COMMON = new Set(
+    ('the a an and or but if then to of in on at for with by from as is are was were be been ' +
+      'will would can could should may might must do does did have has had not no yes it its ' +
+      'this that these those he she they we you i him her them us report will assembly general')
+      .split(' '),
+  );
+
+  type Token = { text: string; kind: 'word' | 'piece' | 'punct' };
+
+  function tokenise(input: string): Token[] {
+    const out: Token[] = [];
+    // Keep the leading space attached, because "▁word" surprising people is
+    // half the lesson about token counts.
+    const chunks = input.match(/\s*[^\s]+/g) ?? [];
+    for (const chunk of chunks) {
+      const lead = chunk.match(/^\s*/)?.[0] ?? '';
+      const body = chunk.slice(lead.length);
+      const parts = body.match(/[A-Za-zÀ-ÿ]+|[0-9]+|[^A-Za-zÀ-ÿ0-9\s]/g) ?? [body];
+      let first = true;
+      for (const part of parts) {
+        const prefix = first ? lead : '';
+        first = false;
+        if (/^[0-9]+$/.test(part) || /^[^A-Za-zÀ-ÿ0-9]$/.test(part)) {
+          out.push({ text: prefix + part, kind: 'punct' });
+          continue;
+        }
+        const lower = part.toLowerCase();
+        if (part.length <= 4 || COMMON.has(lower)) {
+          out.push({ text: prefix + part, kind: 'word' });
+          continue;
+        }
+        // Split long words into ~4-character pieces: crude, but it reliably
+        // produces the "one word became three tokens" moment.
+        const size = part.length > 9 ? 4 : Math.ceil(part.length / 2);
+        for (let i = 0; i < part.length; i += size) {
+          out.push({
+            text: (i === 0 ? prefix : '') + part.slice(i, i + size),
+            kind: i === 0 && part.length <= size ? 'word' : 'piece',
+          });
+        }
+      }
+    }
+    return out;
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-tok]')) {
+    const input = root.querySelector<HTMLInputElement>('[data-tok-input]')!;
+    const out = root.querySelector<HTMLUListElement>('[data-tok-out]')!;
+    const readout = root.querySelector<HTMLElement>('[data-tok-readout]')!;
+
+    function render() {
+      const tokens = tokenise(input.value);
+      const frag = document.createDocumentFragment();
+      for (const token of tokens) {
+        const li = document.createElement('li');
+        li.className = `vx__token vx__token--${token.kind}`;
+        // Show the leading space as a visible marker rather than as nothing.
+        li.textContent = token.text.replace(/^\s+/, '␣');
+        li.title = token.kind === 'piece' ? 'part of a word' : token.kind;
+        frag.append(li);
+      }
+      out.replaceChildren(frag);
+
+      const words = input.value.trim() ? input.value.trim().split(/\s+/).length : 0;
+      const pieces = tokens.filter((t) => t.kind === 'piece').length;
+      readout.textContent =
+        `${words} word${words === 1 ? '' : 's'} became ${tokens.length} token${tokens.length === 1 ? '' : 's'}. ` +
+        (pieces
+          ? `${pieces} of them are fragments of longer words, which is why token counts do not match word counts.`
+          : 'Every token here happens to be a whole word or a single mark. Longer or less common words split into several.') +
+        ' The ␣ symbol marks a leading space, which usually travels with the token that follows it.';
+    }
+
+    input.addEventListener('input', render);
+    root.querySelectorAll<HTMLButtonElement>('[data-tok-example]').forEach((b) =>
+      b.addEventListener('click', () => {
+        input.value = b.dataset.tokExample!;
+        render();
+        input.focus();
+      }),
+    );
+    render();
+  }
+</script>

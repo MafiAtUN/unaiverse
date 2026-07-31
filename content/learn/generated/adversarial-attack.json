@@ -1,0 +1,229 @@
+{
+  "id": "adversarial-attack",
+  "slug": "adversarial-attack",
+  "term": "Adversarial attack",
+  "aliases": [
+    "evasion attack"
+  ],
+  "categoryId": "ai-security",
+  "subcategory": "AI Security",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "model"
+  ],
+  "relatedTermIds": [
+    "ai-security",
+    "prompt-injection",
+    "indirect-prompt-injection",
+    "jailbreak",
+    "sandboxing",
+    "model"
+  ],
+  "oftenConfusedWith": [
+    "adversarial-example",
+    "data-poisoning",
+    "prompt-injection"
+  ],
+  "oneSentence": "An attacker subtly changes an input so an AI system produces a wrong, unsafe or attacker-chosen output at use time.",
+  "plainExplanation": "An adversarial attack targets an AI system by changing what goes into it, not necessarily by breaking into the computer that runs it. The input might be an image, a sound clip, a text prompt or other data the system is meant to process. The attacker crafts that input so the system makes a mistake or follows an unintended path.\n\nWhat goes in is usually a normal-looking input plus a carefully chosen change. In image systems, the change may be tiny pixel adjustments. In language systems, it may be special wording that steers the model away from the developer’s intended rules. What happens next depends on how the model responds to patterns in the input. The model may give the wrong label, ignore safety instructions or reveal information it should not expose.\n\nWhat comes out is not random damage. The goal is usually a specific failure: misclassification, unsafe content, bypass of safeguards or another attacker-chosen behaviour. That is why this is often called an evasion attack: the attacker is trying to evade the system’s normal checks at the moment the system is used.\n\nThis term is broader than a single misleading input. An adversarial example is one crafted input that triggers the failure. An adversarial attack is the overall method or act of causing that failure. It is also different from data poisoning, which changes training data earlier in the system’s lifecycle rather than attacking the model during use.",
+  "everydayAnalogy": {
+    "title": "A delivery check fooled by a manipulated manifest",
+    "story": "At a warehouse, a clerk checks whether a shipping manifest matches the boxes on a pallet before release. A dishonest sender keeps the goods the same but edits the manifest so key codes look valid at a glance and the checking procedure passes the pallet. The clerk follows the usual process and releases it, even though the paperwork was crafted to trigger the wrong result. Nothing was physically forced open; the weakness was in how the checking system reacted to the input it was given.",
+    "mapping": [
+      {
+        "analogyElement": "Edited shipping manifest",
+        "aiElement": "Crafted input designed to trigger a mistake"
+      },
+      {
+        "analogyElement": "Clerk following the normal checking procedure",
+        "aiElement": "Model processing the input as usual at inference time"
+      },
+      {
+        "analogyElement": "Pallet released despite the mismatch",
+        "aiElement": "Wrong or unsafe output that benefits the attacker"
+      },
+      {
+        "analogyElement": "No lock or door being broken",
+        "aiElement": "Attack occurs through input handling rather than classic system intrusion"
+      }
+    ],
+    "limitation": "A human clerk can pause, ask questions and use common sense in ways many models cannot. In real adversarial machine learning, very small mathematical changes can matter even when people do not notice them, especially for images and audio. For language models, the attack may involve instructions hidden in text rather than document formatting tricks alone. So the warehouse story helps with the idea of input manipulation, but it does not capture the full technical behaviour of models."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How an adversarial attack changes an AI system’s output",
+    "learningObjective": "After viewing, the reader should be able to explain that the attacker alters the input at use time so the same model produces a different, harmful or incorrect result.",
+    "description": "A left-to-right flow diagram with two lanes. The top lane shows a normal input passing through a model to a normal output. The bottom lane shows a similar-looking but crafted input passing through the same model to a wrong or unsafe output. Read from left to right, then compare the two lanes.",
+    "steps": [
+      {
+        "label": "Normal input",
+        "explanation": "Show an ordinary input that the system is expected to handle, such as a photo, document or prompt.",
+        "visualInstruction": "Draw a rectangle labelled 'normal input' on the top left with small neutral icons for image, text and audio beneath it."
+      },
+      {
+        "label": "Same model",
+        "explanation": "Both lanes use the same model and settings; the system itself has not visibly changed.",
+        "visualInstruction": "Place one central rounded box labelled 'model' spanning both lanes, with arrows from each input lane into it."
+      },
+      {
+        "label": "Expected output",
+        "explanation": "With the ordinary input, the model produces the intended result, such as a correct label or a safe response.",
+        "visualInstruction": "Draw a top-right rectangle labelled 'expected output' with a green border and an arrow from the model."
+      },
+      {
+        "label": "Crafted input",
+        "explanation": "An attacker makes a subtle or strategic change to the input so it still appears acceptable or plausible.",
+        "visualInstruction": "Draw a bottom-left rectangle labelled 'crafted input' with a small highlight mark showing altered text or pixels, but keep it visually similar to the normal input."
+      },
+      {
+        "label": "Failure at use time",
+        "explanation": "The crafted input causes the model to misclassify, ignore a guardrail or produce another attacker-chosen result.",
+        "visualInstruction": "Draw a bottom-right rectangle labelled 'wrong or unsafe output' with an amber border and arrow from the model; add a side note: 'attack via input, not necessarily system break-in'."
+      }
+    ],
+    "interaction": "Hover or tap each lane to highlight its path and reveal a short caption: 'normal processing' or 'adversarial path'.",
+    "accessibilityDescription": "This diagram compares two paths through the same AI model. In the top path, a normal input enters the model and the output is the expected one. In the bottom path, a crafted input that looks similar enters that same model, but the output becomes wrong or unsafe. The point is causal: the attacker changes the input at use time, not necessarily the software or hardware, and that change is enough to alter the result.",
+    "reducedMotionDescription": "A static two-lane comparison is shown with no animation. The top lane reads normal input, model, expected output. The bottom lane reads crafted input, same model, wrong or unsafe output. A note states that the attack works by manipulating input rather than necessarily breaking into the system."
+  },
+  "workedExample": {
+    "scenario": "A building entrance uses an image model to read printed visitor badges and match the badge type to an allowed access list.",
+    "input": "Normal badge text: 'VISITOR - CONFERENCE'. Crafted badge includes extra printed patterning around the text that looks decorative to staff but changes how the model reads it.",
+    "process": [
+      "The system is trained to classify badge images into categories such as visitor, contractor and staff.",
+      "A normal printed badge is photographed by the camera and correctly classified as 'visitor', which gives lobby-only access.",
+      "An attacker prints a visually plausible badge with subtle added marks near the text and border.",
+      "The camera captures the crafted badge, and the model misclassifies it as 'staff'.",
+      "The downstream rule engine grants wider door access because it trusts the model’s label."
+    ],
+    "result": "The attack succeeds even though the software was not obviously hacked; a manipulated input caused the model to produce the wrong classification at the time of use."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A procurement team is drafting requirements for a vendor-provided AI tool that screens uploaded documents and user prompts for a multilingual helpdesk.",
+    "relevance": "The team should ask how the supplier tests for adversarial attacks, including maliciously crafted text, files or images that try to bypass safeguards or trigger incorrect outputs. Requirements can cover red-team testing, logging, rate limits, fallback handling, sandboxing and human review for high-risk actions.",
+    "caution": "Do not test public AI services with confidential procurement records, personal data, vendor-sensitive material or security-related documents unless the service is approved and the testing is authorised."
+  },
+  "whyItMatters": "For non-specialists, this term matters because a system can fail without anyone 'hacking in' through a password prompt or network exploit. If an AI tool is used to filter documents, check identity, review content or trigger actions, an attacker may only need to shape the input to get a harmful result. That affects procurement, risk assessment, incident response and oversight. It changes what good controls look like: not only firewalls and accounts, but also input validation, testing with hostile examples, limits on what the model can trigger, and human review where mistakes carry real consequences.",
+  "whereYouMayHearIt": [
+    "AI risk assessments",
+    "red-team exercises",
+    "computer vision security",
+    "LLM safety discussions",
+    "procurement and vendor reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "An adversarial attack means the attacker broke into the server or stole an account.",
+      "correction": "Sometimes that happens too, but this term usually refers to manipulating the input so the model behaves badly while the rest of the system may remain intact. That is why ordinary cyber controls alone are not enough."
+    },
+    {
+      "misconception": "This only applies to image recognition, not language models.",
+      "correction": "The idea began prominently in image systems, but language models can also be attacked through crafted text that bypasses instructions, changes tool use or causes unsafe outputs. The mechanics differ, but the core pattern of input manipulation remains."
+    },
+    {
+      "misconception": "If people can still read the input normally, the model should be fine.",
+      "correction": "Models do not rely on the same cues people use. Small pixel changes, unusual phrasing or hidden instructions in retrieved text can strongly affect model behaviour even when a human sees nothing suspicious."
+    },
+    {
+      "misconception": "Adversarial attack and data poisoning mean the same thing.",
+      "correction": "They target different stages. Adversarial attacks usually happen at inference, meaning when the model is being used. Data poisoning alters training or update data earlier so the model learns the wrong patterns from the start."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Someone gives the AI a specially crafted input so it makes a mistake or ignores a safeguard, even though the system may look normal from the outside.",
+    "technical": "In technical terms, an adversarial attack is an intentional manipulation of a model’s input at inference time to induce a targeted or untargeted error, policy bypass or other attacker-desired behaviour. The input is crafted with knowledge ranging from none to extensive knowledge of the model and system. In classical machine learning, this often means perturbations designed to move the input across a decision boundary while remaining similar under some constraint. In language-model settings, the attack may involve adversarial text that exploits instruction following, context handling or tool-invocation pathways. The term is broader than 'adversarial example', which usually refers to a specific crafted instance, and it is distinct from training-time attacks such as data poisoning."
+  },
+  "keyTakeaway": "An adversarial attack does not need to break the machine; it can work by making the machine misread the input.",
+  "quickCheck": {
+    "question": "Which situation best fits an adversarial attack?",
+    "options": [
+      "An attacker subtly alters an input so the model gives a wrong or unsafe result during normal use.",
+      "A team improves model accuracy by adding more labelled training data from past cases.",
+      "A server outage stops the AI service from answering any requests for two hours.",
+      "A user forgets their password and cannot open the internal dashboard."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The key idea is manipulation of the input to cause failure at use time. The other options describe model improvement, service availability and account access problems, which are different issues."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Adversarial attack",
+      "url": "https://en.wikipedia.org/w/index.php?search=Adversarial%20attack",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps a general reader find multiple related entries and is useful for broad orientation, but it is not a single vetted article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "OWASP Top 10 for LLM Applications",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "type": "official",
+      "publisher": "OWASP",
+      "difficulty": "intermediate",
+      "description": "This OWASP resource gives practitioners and managers a practical security framing for LLM application risks and suits readers working on controls, testing and procurement questions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Adversarial Machine Learning: A Taxonomy and Terminology",
+      "url": "https://csrc.nist.gov/pubs/ai/100/2/e2025/final",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "deeper",
+      "description": "This NIST taxonomy helps technical and policy readers use more precise terminology and distinguish attack types across adversarial machine learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Adversarial attack",
+      "url": "https://www.youtube.com/results?search_query=Adversarial%20attack%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps visual learners find a range of explainers and suits readers who want introductory walkthroughs rather than a formal reference.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Adversarial attack",
+      "url": "https://www.reddit.com/search/?q=Adversarial%20attack",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussion and examples of confusion around the term, which may help readers spot common misunderstandings, but it is not authoritative.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "adversarial attack ai",
+    "evasion attack meaning",
+    "adversarial example vs adversarial attack",
+    "llm adversarial attack",
+    "prompt attack on model",
+    "crafted input fools ai",
+    "adverserial attack misspelling",
+    "how can ai be tricked by input",
+    "adversarial attack",
+    "evasion attack"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:51:42.694Z",
+    "contentHash": "40dd0a13c3aae88e",
+    "attempts": 1,
+    "promptTokens": 2290,
+    "completionTokens": 2543
+  }
+}

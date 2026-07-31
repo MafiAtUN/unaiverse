@@ -1,0 +1,225 @@
+{
+  "id": "generalisation",
+  "slug": "generalisation",
+  "term": "Generalisation",
+  "aliases": [
+    "generalization",
+    "generalise"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "overfitting"
+  ],
+  "relatedTermIds": [
+    "evaluation-metric",
+    "cross-validation",
+    "benchmark",
+    "robustness",
+    "reliability",
+    "data-leakage"
+  ],
+  "oftenConfusedWith": [
+    "overfitting",
+    "accuracy",
+    "memorisation"
+  ],
+  "oneSentence": "The ability of a model to give useful results on new cases, not just on the examples used to build or tune it.",
+  "plainExplanation": "A model is built from past examples, often called training data. Generalisation asks a simple question: after learning from those examples, does the model still work on new examples it has not seen before? The input is old data used for development, and the output is performance on fresh data.\n\nWhat happens in between is testing. Developers compare the model’s predictions with the real answers on a separate set of examples. If the score stays good on new data, the model probably generalises well. If it only looks good on familiar data, it may have copied patterns too closely instead of finding a broader rule.\n\nThis is often confused with accuracy, but they are not the same. Accuracy is one measurement on one dataset. Generalisation is the broader ability to keep performing well beyond the data used to create the system. A model can have high accuracy in development and still generalise badly in practice.\n\nIt is also often confused with memorisation. Memorisation means storing exact examples or narrow patterns. Generalisation means using learned patterns in a way that still helps on new cases. In real evaluation, people check this with held-out test data, cross-validation, and by watching whether results remain stable when the setting changes.",
+  "everydayAnalogy": {
+    "title": "Finding books in a large library",
+    "story": "A new library assistant learns how books are arranged by practising in one wing of a large library. In that wing, the assistant gets very fast at locating history books on familiar shelves. The next day, the assistant is sent to a different wing with new shelves, different subjects and some unusual labels. If the assistant can still find the right books quickly by using the library system rather than just memory of one area, that is the kind of behaviour people mean by generalisation.",
+    "mapping": [
+      {
+        "analogyElement": "Practising in one wing of the library",
+        "aiElement": "Training on one dataset"
+      },
+      {
+        "analogyElement": "Working in a different wing with new shelves",
+        "aiElement": "Being tested on new data not used in training"
+      },
+      {
+        "analogyElement": "Using the library system rather than shelf memory",
+        "aiElement": "Learning broader patterns rather than memorising examples"
+      },
+      {
+        "analogyElement": "Still finding the right books quickly",
+        "aiElement": "Maintaining useful performance on unseen cases"
+      }
+    ],
+    "limitation": "A library assistant can consciously explain the filing system and adapt on purpose. A model does not use human reasoning in that way. Also, library wings may follow one clear catalogue rule, while real-world data can shift in messier ways, with hidden changes in language, sensors, populations or behaviour."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Good score on familiar data vs good performance on new data",
+    "learningObjective": "Show why a model must be checked on fresh data to tell whether it will work beyond development examples.",
+    "description": "A two-column comparison. The left column shows a model evaluated on the same kind of data it learned from and getting a high score. The right column shows the same model on separate, unseen data, where the score either stays strong or drops. Read top to bottom in each column, then compare the final boxes.",
+    "steps": [
+      {
+        "label": "Build from past examples",
+        "explanation": "The model is developed using labelled examples from one dataset.",
+        "visualInstruction": "Top row spanning both columns: draw a box labelled 'training data' feeding into a box labelled 'model built and tuned'."
+      },
+      {
+        "label": "Check on familiar-style data",
+        "explanation": "A score measured on data very similar to development data can look impressive, but it does not prove broader usefulness.",
+        "visualInstruction": "Left column middle: arrow from 'model built and tuned' to a box labelled 'evaluation close to development data'; below it, a green score badge."
+      },
+      {
+        "label": "Check on unseen data",
+        "explanation": "Use separate examples the model did not train on to test whether performance carries over.",
+        "visualInstruction": "Right column middle: arrow from 'model built and tuned' to a box labelled 'held-out or new data'; below it, a score badge."
+      },
+      {
+        "label": "Compare the outcomes",
+        "explanation": "If performance stays good on unseen data, generalisation looks better. If it falls sharply, the model may not transfer well.",
+        "visualInstruction": "Bottom row: left result box says 'looks good here'; right result box splits into two small outcomes: 'score stays similar' and 'score drops'."
+      }
+    ],
+    "interaction": "Hover or tap each result box to reveal a short note: 'similar score suggests better generalisation' or 'large drop suggests poor generalisation or mismatch between datasets'.",
+    "accessibilityDescription": "This comparison diagram explains that generalisation is about performance on new data, not just development data. First, training data is used to build and tune a model. Then two evaluations are shown. In the left column, the model is tested on data very similar to what it learned from, and it gets a high score. In the right column, the model is tested on held-out or new data it did not train on. If the score stays similar, that suggests better generalisation. If the score drops a lot, that suggests poor generalisation or a mismatch between datasets. The main lesson is that a strong score in familiar conditions is not enough.",
+    "reducedMotionDescription": "A static two-column comparison with the same boxes and labels, no animation. Notes that would appear on hover are shown as small text under each outcome."
+  },
+  "workedExample": {
+    "scenario": "A team builds a model to identify whether customer support messages are about password resets.",
+    "input": "10,000 past messages for development; 2,000 separate new messages for testing.",
+    "process": [
+      "The team trains and tunes the model on the 10,000 development messages.",
+      "On development data, the model reaches 95% accuracy, which looks excellent.",
+      "They then test it on 2,000 new messages collected later from a different month.",
+      "On the new messages, accuracy falls to 74%, and many messages mentioning 'account access code' are missed because that wording was rare in development data."
+    ],
+    "result": "The model does not generalise well enough yet. Its strong development score did not carry over to fresh data, so the team needs better data coverage, evaluation and possibly a different approach."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team reviews a tool that flags possible data quality issues in programme monitoring reports from several country offices.",
+    "relevance": "The key question is not whether the tool performs well on reports from the offices used to develop it, but whether it still performs acceptably on reports from other offices, time periods and reporting styles.",
+    "caution": "Do not upload confidential, personal or protection-sensitive monitoring data into an unapproved public AI service for testing; use approved environments, minimise data, and keep human review in the loop before acting on flags."
+  },
+  "whyItMatters": "A system can look strong in a demo, a pilot or a benchmark and still fail in real use. Generalisation matters because most decisions rely on the future, not the past examples used to build the model. If a model does not generalise, people may trust scores that do not hold across places, time periods, languages or populations. That can waste money, miss important cases, or create unfair results. For a non-specialist, this term is a practical warning: ask not only 'What score did it get?' but also 'On what data, and does that resemble where we plan to use it?'",
+  "whereYouMayHearIt": [
+    "model evaluation meetings",
+    "product testing reports",
+    "benchmark discussions",
+    "procurement reviews",
+    "research papers"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model has high accuracy, it generalises well.",
+      "correction": "Not necessarily. Accuracy is only a score on a particular dataset. A model may score highly on data that is very similar to its training data, or on data affected by leakage, and still perform poorly on genuinely new cases."
+    },
+    {
+      "misconception": "Generalisation means the model works equally well for every group and setting.",
+      "correction": "Good generalisation usually means performance carries over better to new data overall, but that does not guarantee equal performance across languages, regions or subgroups. Those still need separate checks."
+    },
+    {
+      "misconception": "A very large training dataset automatically solves generalisation.",
+      "correction": "More data often helps, but only if the data is relevant and varied enough. If the data is narrow, unrepresentative or contains repeated patterns, a model can still fail on new situations."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "In simple terms, this means a model learned something useful that still helps on new examples, not just on the examples used to build it.",
+    "technical": "Technically, generalisation is the extent to which a model’s performance on unseen data matches its performance during development. The central idea is the gap between empirical performance on the data available for training or tuning and expected performance on data drawn later from the same or a related process. It is usually estimated with held-out test sets, validation splits, or cross-validation. Poor generalisation can result from overfitting, data leakage, distribution mismatch, class imbalance, or evaluation procedures that do not reflect deployment conditions. The exact metric may be accuracy, precision, recall, F1 score, calibration or another measure, but the question is broader than any single metric: do the learned patterns transfer beyond the observed sample?"
+  },
+  "keyTakeaway": "A model is only as useful as its performance on new, relevant data, not on the examples it has already seen.",
+  "quickCheck": {
+    "question": "Which result is the best evidence that a model generalises well?",
+    "options": [
+      "It scores highly on the same dataset used to train and tune it.",
+      "It keeps a similar level of performance on separate, unseen data from the intended use setting.",
+      "It gives confident answers very quickly.",
+      "It uses a very large number of parameters."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Generalisation is about whether performance carries over to new cases. A high score on training or tuning data can be misleading, and speed or model size does not show that the model will work well on unseen examples."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Generalisation",
+      "url": "https://en.wikipedia.org/w/index.php?search=Generalisation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia link is a search results page, so it helps readers find several possible articles and suits someone who wants a broad starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course resource gives an accessible explanation of common classification measures and suits readers who want to connect generalisation to practical evaluation scores.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This official NIST framework helps readers place model performance questions inside broader risk management and suits managers, assurance teams and technical staff.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Generalisation",
+      "url": "https://www.youtube.com/results?search_query=Generalisation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube link is a search results page, so it lets readers choose among different video explanations and suits people who learn better by watching and listening.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Generalisation",
+      "url": "https://www.reddit.com/search/?q=Generalisation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit link is a search results page, so it shows community questions and debates about the term and suits readers who want informal explanations alongside caveats.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "generalisation meaning ai",
+    "generalization vs overfitting",
+    "does my model generalise",
+    "good on train bad on test",
+    "unseen data performance",
+    "generalisation machine learning simple",
+    "generalization evaluation",
+    "model works on new data",
+    "generalise spelling",
+    "memorisation vs generalisation",
+    "generalisation",
+    "generalization",
+    "generalise"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:07.784Z",
+    "contentHash": "879210ece9fd3ee3",
+    "attempts": 1,
+    "promptTokens": 2298,
+    "completionTokens": 2325
+  }
+}

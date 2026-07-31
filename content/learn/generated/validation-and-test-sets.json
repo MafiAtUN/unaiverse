@@ -1,0 +1,233 @@
+{
+  "id": "validation-and-test-sets",
+  "slug": "validation-and-test-sets",
+  "term": "Validation and test sets",
+  "aliases": [
+    "validation dataset",
+    "test dataset",
+    "held-out set",
+    "test set"
+  ],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "dataset",
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "dataset",
+    "overfitting",
+    "data-leakage",
+    "cross-validation",
+    "supervised-learning"
+  ],
+  "oftenConfusedWith": [
+    "cross-validation",
+    "data-leakage",
+    "training"
+  ],
+  "oneSentence": "Separate portions of data are kept aside to tune a model during development and then to check, at the end, how well it works on unseen examples.",
+  "plainExplanation": "When people train a machine-learning model, they usually do not use all their data for the same purpose. One part is used for training: adjusting the model’s internal settings from examples. A second part, often called the validation set, is used during development to compare versions, tune choices such as model size, and watch for overfitting. A third part, the test set, is saved for the final check.\n\nWhat goes in are examples from the same general task, such as past messages and their correct categories, or house features and sale prices. What happens is that the model learns from the training set, then developers measure its performance on the validation set and may change settings or even the modelling approach. After those choices are finished, they run the final model once on the test set to estimate how it may perform on new, similar data.\n\nThe key difference is timing and use. The validation set helps guide development, so repeated checking can slowly influence decisions. The test set should stay untouched until the end, because it is meant to be an independent check. If people keep looking at test results and changing the model, the test set starts acting like a validation set and no longer gives a clean final estimate.\n\nYou may also hear held-out set. That means data deliberately kept out of training. Sometimes people use it loosely for either validation or test data, so ask which role it serves. This term is often confused with cross-validation, which is a method for rotating through several temporary validation splits, and with data leakage, which is the mistake of letting information from validation or test data influence training.",
+  "everydayAnalogy": {
+    "title": "Planning a journey across a city",
+    "story": "A team in Nairobi is designing a route-planning guide for visitors who need to cross the city by bus and on foot. They practise on many known journeys, then check a separate list of trial journeys to compare two draft guides and choose the better one. Once they settle on a guide, they open a sealed envelope with a final set of journeys they have not used before and score the guide only once. If they keep reopening that envelope and rewriting the guide each time, the final score stops being a fair check.",
+    "mapping": [
+      {
+        "analogyElement": "known journeys used for practice",
+        "aiElement": "training set used to fit the model"
+      },
+      {
+        "analogyElement": "separate trial journeys used to compare draft guides",
+        "aiElement": "validation set used to tune choices during development"
+      },
+      {
+        "analogyElement": "sealed envelope of final journeys",
+        "aiElement": "test set kept untouched for final evaluation"
+      },
+      {
+        "analogyElement": "rewriting the guide after seeing envelope results",
+        "aiElement": "using test feedback to tune the model, which weakens the independence of the test estimate"
+      }
+    ],
+    "limitation": "A route guide is changed by people on purpose, while a machine-learning model is adjusted through mathematical optimisation during training and through chosen settings during tuning. Also, city journeys are easy to picture as separate cases, but in real datasets the examples may be more complex, may need careful matching across time or places, and may fail if the data split is not representative."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How training, validation and test sets play different roles",
+    "learningObjective": "Show why one held-out split helps guide development while another should be saved for the final, more independent check.",
+    "description": "A left-to-right step diagram with three labelled data boxes and three arrows. Read from training to validation to test. The diagram shows that training changes the model, validation helps choose settings, and test is used last for final evaluation only.",
+    "steps": [
+      {
+        "label": "1. Split the data",
+        "explanation": "Start with one dataset and divide it into training data and held-out data. If possible, make each split representative of the real task.",
+        "visualInstruction": "Draw one large dataset box that branches into three smaller boxes: Training, Validation, Test. Use muted colours and small note text under Validation and Test saying 'held out from training'."
+      },
+      {
+        "label": "2. Train on the training set",
+        "explanation": "Use only the training examples to adjust the model’s internal parameters.",
+        "visualInstruction": "Draw an arrow from the Training box into a model box labelled 'model learns patterns from examples'. Show gears or sliders inside the model to suggest changing internal settings."
+      },
+      {
+        "label": "3. Check on the validation set",
+        "explanation": "Run the trained model on validation data, measure performance, and use those results to choose settings or compare model versions.",
+        "visualInstruction": "Draw the Validation box feeding into the model, then to a score panel. Add a looped arrow from the score panel back to a 'tune choices' note beside the model."
+      },
+      {
+        "label": "4. Freeze choices and test once",
+        "explanation": "After tuning is finished, evaluate the chosen model on the test set for a more independent estimate of performance on new data.",
+        "visualInstruction": "Draw the Test box feeding into the final model and then to a separate final score panel. Do not draw a loop back to the model. Add a lock icon over the model choices."
+      }
+    ],
+    "interaction": "Hover or tap each step to highlight which data split is active and whether feedback is allowed to flow back into model development.",
+    "accessibilityDescription": "The diagram explains a four-step process. Step 1: a dataset is split into three parts called Training, Validation and Test, with Validation and Test marked as held out from training. Step 2: only Training feeds into the model to adjust its internal parameters. Step 3: Validation is used to score the model during development, and those scores can influence tuning decisions, shown by a feedback loop. Step 4: after choices are fixed, Test is used once to produce a final score, with no feedback loop to the model. The main message is that validation guides development, while test is saved for the final independent check.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same process without highlights or animation: split data, train on Training, tune using Validation, then evaluate once on Test with no return arrow."
+  },
+  "workedExample": {
+    "scenario": "A team is building a classifier to sort 12,000 customer-support emails into four categories: billing, technical issue, account access and other.",
+    "input": "12,000 labelled emails split into 8,000 for training, 2,000 for validation and 2,000 for test.",
+    "process": [
+      "They train Version A on the 8,000 training emails and get 78% accuracy on the 2,000 validation emails.",
+      "They try Version B with different settings, still train only on the same 8,000 training emails, and get 83% accuracy on the validation set.",
+      "They choose Version B because it performs better on validation and then stop tuning.",
+      "They run Version B once on the 2,000 test emails and get 81% accuracy, which is their final reported test result."
+    ],
+    "result": "The validation set helped them choose between versions; the test set gave the final estimate on unseen emails. If they kept changing the model after seeing the 81%, that test result would no longer be a clean final check."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team preparing procurement requirements for an automated document-classification tool asks vendors to explain how they separate training, validation and test data when reporting accuracy.",
+    "relevance": "This helps the team judge whether a vendor’s reported performance likely reflects genuine generalisation or only repeated tuning on the same evaluation data.",
+    "caution": "Do not place confidential procurement material, vendor-sensitive information, or any personal data into an unapproved public AI service. Ask for method descriptions, governance details and reproducible evaluation evidence through approved channels."
+  },
+  "whyItMatters": "If you read an AI performance claim, this term helps you ask one of the most important questions: was the system measured on data it had already influenced, or on genuinely held-out data? That affects whether a reported score is likely to hold up in practice. For programme teams, procurement staff and managers, the distinction matters when comparing vendors, approving pilots, setting risk controls and deciding whether a model is ready for deployment. A strong validation score can help choose among options, but only a properly protected test set gives a more trustworthy final check on expected behaviour with new cases from the same task.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "vendor procurement responses",
+    "machine-learning courses",
+    "research papers",
+    "data science team reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Validation and test sets are just two names for the same thing.",
+      "correction": "They are closely related but serve different roles. Validation data is used during development to compare models or tune settings, so it can influence choices. Test data is meant to stay separate until the end for a more independent final estimate."
+    },
+    {
+      "misconception": "If the test score is good, the model will work equally well everywhere.",
+      "correction": "A test set only estimates performance on new data similar to that set. If the real-world data comes from different countries, time periods, languages, devices or user groups, performance may change. The split must match the intended use."
+    },
+    {
+      "misconception": "More checking on the test set gives a more reliable result.",
+      "correction": "Repeatedly checking the test set and changing the model after each result makes the test less independent. Over time, the model can become indirectly tuned to that test set, which can make the final score look better than real deployment performance."
+    },
+    {
+      "misconception": "Any random split is automatically fine.",
+      "correction": "Not always. If examples are duplicated, time-ordered, grouped by person or location, or imbalanced across classes, a simple random split can mislead. The split strategy must fit the task and avoid leakage between training, validation and test data."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Use one pile of examples to teach the model, a second pile to help choose the best version, and a final untouched pile to check how that chosen version performs on new cases.",
+    "technical": "In supervised learning, a dataset is often partitioned into disjoint subsets with different roles. The training set is used to fit model parameters. The validation set is a held-out subset used during model development for hyperparameter tuning, model selection, threshold choice, early stopping or comparing alternative pipelines. Because these decisions are influenced by validation performance, the validation set is not a fully independent measure once tuning has occurred. The test set is another held-out subset reserved for final evaluation after the modelling choices are fixed. Its purpose is to estimate generalisation to unseen samples drawn from the same target distribution. 'Held-out set' is a broader label for any data excluded from training, so it may refer to validation, test, or both depending on context. In some workflows, cross-validation replaces a single validation split during development, but a separate final test set may still be kept. Good practice also requires preventing data leakage, such as duplicate records, future information, or grouped observations crossing between splits."
+  },
+  "keyTakeaway": "Validation helps you improve the model; the test set should wait until the end to check whether those improvements are likely to hold on unseen data.",
+  "quickCheck": {
+    "question": "Which statement best describes the difference between a validation set and a test set?",
+    "options": [
+      "Both are used repeatedly during development to tune the model.",
+      "The validation set helps choose settings during development, while the test set is kept for the final evaluation.",
+      "The test set is used for training after the validation score stops improving.",
+      "There is no real difference; the names depend only on team preference."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The validation set can influence model choices, so it supports tuning and comparison during development. The test set should remain separate until the end, so it can provide a more independent estimate of performance on unseen data."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Training, validation, and test data sets",
+      "url": "https://en.wikipedia.org/wiki/Training%2C_validation%2C_and_test_data_sets",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference-style overview of training, validation and test splits, suitable for readers who want definitions and common terminology.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course link suits learners who want a practical introduction to machine-learning workflows, including where validation and test data fit.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "difficulty": "starter",
+      "description": "This video source suits people who learn well from clear spoken explanations and step-by-step intuition about model evaluation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Validation and test sets",
+      "url": "https://www.youtube.com/results?search_query=Validation%20and%20test%20sets%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search-results page helps readers find multiple video explanations with different teaching styles, which suits someone comparing presenters rather than seeking one fixed source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Validation and test sets",
+      "url": "https://www.reddit.com/search/?q=Validation%20and%20test%20sets",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search-results page lets readers browse community questions and practical confusion points about validation and test sets, which suits readers who want informal discussion and examples.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "validation vs test set",
+    "what is a held out set",
+    "machine learning validation dataset",
+    "test dataset meaning",
+    "difference between validation and test data",
+    "when to use validation set",
+    "cross validation vs validation set",
+    "data leakage train validation test",
+    "train valid test split",
+    "validaiton set typo",
+    "validation and test sets",
+    "validation dataset",
+    "test dataset",
+    "held-out set",
+    "test set"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:30.018Z",
+    "contentHash": "a004b5ee0b46426b",
+    "attempts": 1,
+    "promptTokens": 2365,
+    "completionTokens": 2660
+  }
+}

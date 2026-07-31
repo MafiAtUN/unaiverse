@@ -1,0 +1,221 @@
+{
+  "id": "momentum",
+  "slug": "momentum",
+  "term": "Momentum",
+  "aliases": [],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "gradient-descent"
+  ],
+  "relatedTermIds": [
+    "gradient-descent",
+    "gradient",
+    "optimisation",
+    "learning-rate",
+    "convergence",
+    "backpropagation"
+  ],
+  "oftenConfusedWith": [
+    "learning-rate",
+    "adam-optimiser"
+  ],
+  "oneSentence": "A training method that carries part of the previous update into the next one so parameter changes keep moving in useful directions and wobble less.",
+  "plainExplanation": "When a model learns, training computes a loss, which is a number showing how wrong the current output is. It then computes a gradient: a set of values that points toward changes expected to reduce that loss. Basic gradient descent follows only the current gradient at each step.\n\nMomentum adds memory. Instead of using just today’s gradient, it keeps a running update vector, often called velocity. Each new update combines part of the previous velocity with the current gradient, then uses that combined value to change the model’s parameters.\n\nWhat goes in: the current gradient, the previous velocity, a learning rate, and a momentum coefficient such as 0.9. What happens: the old velocity is shrunk a little, the new gradient is added, and the parameters are moved using the result. What comes out: a smoother sequence of parameter updates.\n\nThis helps for two common reasons. First, gradients from one mini-batch to the next can be noisy, so plain gradient descent may zigzag. Momentum averages over recent steps, which can damp that wobble. Second, if many gradients point in a similar direction over time, momentum can build speed along that direction and move faster through shallow regions.\n\nMomentum does not guarantee a better solution, and it is not the same as adaptive methods such as Adam. It is a rule for updating parameters during optimisation, and its behaviour depends on other choices such as learning rate, batch size and the shape of the loss surface.",
+  "everydayAnalogy": {
+    "title": "Pushing a loaded trolley down a bumpy corridor",
+    "story": "Amina and Luis are moving a loaded trolley through a corridor with small bumps in the floor. If they react only to each bump, they keep jerking the trolley left and right and make slow progress. Instead, they keep some of the trolley’s existing motion while still correcting its direction when a new bump pushes it off course. The trolley then wiggles less from side to side and keeps rolling forward more steadily. If they push too hard for too long, however, the trolley can overshoot the doorway they wanted.",
+    "mapping": [
+      {
+        "analogyElement": "the trolley’s existing motion",
+        "aiElement": "the stored velocity from previous parameter updates"
+      },
+      {
+        "analogyElement": "small floor bumps",
+        "aiElement": "noisy gradients from different mini-batches"
+      },
+      {
+        "analogyElement": "keeping some forward roll while correcting course",
+        "aiElement": "combining previous velocity with the current gradient"
+      },
+      {
+        "analogyElement": "overshooting the doorway",
+        "aiElement": "stepping past a good minimum if momentum or learning rate is too high"
+      }
+    ],
+    "limitation": "A real trolley has physical mass and keeps moving because of mechanics. A model does not have literal inertia. Momentum in optimisation is just a mathematical rule for combining past and current gradients. Also, the loss surface can have thousands or millions of dimensions, so there is no single corridor or doorway in the real process."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Plain gradient descent vs momentum on a wavy slope",
+    "learningObjective": "Show how momentum uses both the current gradient and a stored update to reduce zigzagging and make steadier progress toward lower loss.",
+    "description": "A side-by-side comparison with the same wavy valley in both panels. The left panel shows plain gradient descent taking short alternating steps across the valley. The right panel shows momentum carrying part of the previous step forward, so the path oscillates less across the valley and moves farther along it. Read top to bottom through the four labelled steps, then compare left and right at each step.",
+    "steps": [
+      {
+        "label": "Step 1: Start on the slope",
+        "explanation": "Both methods begin from the same point on a curved loss surface. The local gradient points downhill but also swings side to side because the valley is narrow.",
+        "visualInstruction": "Draw two identical contour valleys side by side. Mark the same starting point near the upper left of each valley. Add a short arrow labelled current gradient pointing diagonally downhill."
+      },
+      {
+        "label": "Step 2: Plain update",
+        "explanation": "Without momentum, the parameter update uses only the current gradient. The next step responds sharply to local changes, so the path can bounce across the valley.",
+        "visualInstruction": "In the left panel, draw a path of 4 to 5 arrows that alternate left-right while moving slowly downward along the valley. Label each arrow uses current gradient only."
+      },
+      {
+        "label": "Step 3: Momentum update",
+        "explanation": "With momentum, the new update combines the current gradient with part of the previous update. This carries useful direction forward while damping rapid sideways changes.",
+        "visualInstruction": "In the right panel, show a small faded previous arrow and a current gradient arrow combining into a darker resulting arrow. Add a compact formula label: velocity = beta times old velocity minus learning rate times gradient."
+      },
+      {
+        "label": "Step 4: Compare the paths",
+        "explanation": "Across several steps, momentum usually reduces oscillation across the valley and can move faster along the long shallow direction, though too much can overshoot.",
+        "visualInstruction": "Complete the right-panel path with 4 to 5 arrows that cross the valley less often and travel farther along it. Add a caution icon near the end with the label too much momentum can overshoot."
+      }
+    ],
+    "interaction": "Hover or tap each step label to highlight the matching arrows in both panels; a toggle switches formula labels on and off.",
+    "accessibilityDescription": "This comparison diagram explains why momentum changes training behaviour. There are two panels showing the same narrow, curved valley in a loss surface. In the left panel, plain gradient descent starts at the upper side of the valley and follows only the current gradient each time. The path zigzags from one side of the valley to the other, so it makes progress but wastes motion sideways. In the right panel, momentum starts at the same point but each new update combines the current gradient with part of the previous update, shown as a stored velocity. Because recent movement is partly carried forward, the path swings less across the valley and travels farther along the valley toward lower loss. A final note says that if the learning rate or momentum is too high, the method can overshoot the target region.",
+    "reducedMotionDescription": "Show the same two panels as a static comparison. Use numbered arrows and shaded overlays instead of animation to indicate how previous velocity and current gradient combine in the momentum panel."
+  },
+  "workedExample": {
+    "scenario": "Training a small text classifier to tell whether two short paragraphs express the same meaning in different words.",
+    "input": "Current parameter value for one weight: 5.00. Previous velocity for that weight: 0.30. Current gradient for that weight: 0.80. Learning rate: 0.1. Momentum coefficient: 0.9.",
+    "process": [
+      "Compute the new velocity: 0.9 × 0.30 - 0.1 × 0.80 = 0.27 - 0.08 = 0.19.",
+      "Update the parameter using the velocity: 5.00 + 0.19 = 5.19.",
+      "On the next mini-batch, suppose the gradient changes sign slightly to -0.10 because the batch is noisy.",
+      "Compute the next velocity: 0.9 × 0.19 - 0.1 × (-0.10) = 0.171 + 0.01 = 0.181, so the update still moves in the earlier useful direction instead of flipping immediately.",
+      "After several batches with mostly similar gradients, the running velocity can build up and move the weight faster than plain gradient descent, while small one-batch reversals matter less."
+    ],
+    "result": "The weight changes more smoothly than it would under plain gradient descent, which can reduce zigzagging from noisy mini-batches and speed travel along directions that consistently reduce loss."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A country office trains an internal classifier to help triage a shared inbox into categories such as logistics, procurement, public information and routine administration using approved, non-sensitive historical messages.",
+    "relevance": "Momentum can help training remain stable when each mini-batch of emails gives slightly different gradients, so the model’s parameter updates do not swing as sharply from one batch to the next.",
+    "caution": "Do not place confidential, personal, security-sensitive or protection-related inbox content into an unapproved public AI service. Human review should remain in place because triage suggestions can still be wrong."
+  },
+  "whyItMatters": "If you compare training runs, choose optimisers, or diagnose unstable learning, momentum matters because it changes how fast and how smoothly a model moves toward lower loss. A run that looks noisy or slow under plain gradient descent may improve simply because updates are bouncing around. Momentum can reduce that bounce and often reach useful performance sooner, which affects compute cost, training time and model quality. It also matters for troubleshooting: if momentum is too low, training may crawl; if too high, updates may overshoot or oscillate. For non-specialists overseeing AI work, this helps in reading training reports and asking better questions about why one run converged and another did not.",
+  "whereYouMayHearIt": [
+    "optimiser settings",
+    "training loop code",
+    "deep learning courses",
+    "convergence discussions",
+    "SGD with momentum"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Momentum means using a larger learning rate.",
+      "correction": "They are related but different. Learning rate scales how large each update is right now. Momentum adds a memory of previous updates. You can have a small learning rate with high momentum, or a larger learning rate with no momentum, and the behaviour will differ."
+    },
+    {
+      "misconception": "Momentum always makes training faster and better.",
+      "correction": "It often helps, but not always. On some problems it can overshoot, interact badly with a poor learning rate, or offer little benefit compared with another optimiser. The effect depends on the loss landscape, batch noise and the chosen hyperparameters."
+    },
+    {
+      "misconception": "Momentum and Adam are the same thing.",
+      "correction": "Adam includes momentum-like moving averages, but it also rescales updates using per-parameter estimates of gradient magnitude. Standard momentum keeps a running update direction; Adam adds adaptive step sizing on top of related ideas."
+    },
+    {
+      "misconception": "Momentum removes the need for backpropagation or gradients.",
+      "correction": "It does not. Backpropagation is still used to compute gradients, and momentum uses those gradients to build the next update. It changes the update rule after gradients are available."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Plain gradient descent listens only to the latest training signal. Momentum also remembers some recent movement, so updates tend to wobble less and keep going in directions that have been helping for several steps.",
+    "technical": "In first-order optimisation, momentum augments gradient descent with a state variable often called velocity. A common form is v_t = beta v_{t-1} - alpha grad L(theta_t), followed by theta_{t+1} = theta_t + v_t, where alpha is the learning rate and beta controls how much past update direction is retained. This acts like an exponential moving average of past gradients, expressed through the update vector. In directions where gradients keep similar sign across steps, the velocity accumulates and effective progress increases. In directions where gradients alternate sign, as in narrow ravines or noisy mini-batch training, the averaging can cancel part of the oscillation. The result is often faster movement along shallow, consistent directions and less side-to-side zigzagging across steep directions. Different conventions write the equations with signs arranged differently, but the core mechanism is the same: combine current gradient information with decayed update history. Nesterov momentum is a related variant that evaluates the gradient after a look-ahead step, so it should not be treated as identical to standard momentum."
+  },
+  "keyTakeaway": "Momentum gives gradient descent a short memory, which often makes training smoother and faster but can overshoot if tuned badly.",
+  "quickCheck": {
+    "question": "What is the main effect of adding momentum to gradient descent?",
+    "options": [
+      "It replaces gradients with random search so the model explores more widely.",
+      "It stores part of previous updates, which can reduce zigzagging and speed movement in consistent downhill directions.",
+      "It guarantees the optimiser will find the global minimum regardless of the loss surface.",
+      "It automatically lowers overfitting by adding noise to the training data."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Momentum keeps a decayed contribution from earlier updates. That memory can smooth noisy step-to-step changes and help the optimiser keep moving in directions that have repeatedly reduced loss. It does not guarantee a global minimum, and it is not a regularisation method."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Stochastic gradient descent",
+      "url": "https://en.wikipedia.org/wiki/Stochastic_gradient_descent",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference overview of stochastic gradient descent and related update ideas, which suits readers who want definitions and context.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This link gives a visual intuition for neural network training dynamics, which suits readers who learn best from geometric explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link gives a structured course-style explanation of reducing loss during training, which suits readers who want guided learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Momentum",
+      "url": "https://www.youtube.com/results?search_query=Momentum%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page for momentum explanations, so it suits readers who want to compare several video styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Momentum",
+      "url": "https://www.reddit.com/search/?q=Momentum",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page for momentum discussions, so it suits readers who want to see common questions, informal explanations and practical confusion points.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "momentum in gradient descent",
+    "sgd momentum explained",
+    "what does momentum do in optimisation",
+    "momentum vs learning rate",
+    "momentum vs adam",
+    "velocity update neural network",
+    "why momentum reduces zigzagging",
+    "momentum overshooting",
+    "momemtum gradient descent",
+    "momentum"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:32.099Z",
+    "contentHash": "9fd5e508b8f1e35d",
+    "attempts": 1,
+    "promptTokens": 2255,
+    "completionTokens": 2818
+  }
+}

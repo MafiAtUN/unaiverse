@@ -1,0 +1,229 @@
+{
+  "id": "hallucination",
+  "slug": "hallucination",
+  "term": "Hallucination",
+  "aliases": [
+    "confabulation",
+    "making things up"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "policy",
+    "communications",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "next-token-prediction"
+  ],
+  "relatedTermIds": [
+    "large-language-model",
+    "next-token-prediction",
+    "completion",
+    "context",
+    "grounding",
+    "understanding"
+  ],
+  "oftenConfusedWith": [
+    "error-and-loss",
+    "grounding",
+    "understanding"
+  ],
+  "oneSentence": "A generated answer that sounds plausible but includes false, unsupported or invented details.",
+  "plainExplanation": "A chat assistant takes in text from you, plus earlier text in the conversation. It then produces more text one piece at a time. Each piece is chosen because it fits patterns in its training data and the current prompt.\n\nSometimes that process produces a confident-looking answer that is wrong. It may invent a source, a quotation, a meeting date, a law, or a person’s job title. That kind of made-up output is commonly called a hallucination.\n\nThe important point is that the system is not checking reality by default. It is generating likely text, not automatically verifying facts against the world. If the prompt is vague, the topic is rare, or the model lacks reliable information in its context, the risk goes up.\n\nThis is often confused with ordinary mistakes, but the pattern matters. A hallucination usually sounds specific and fluent even when the support is missing. It is also different from grounding: grounding means tying the answer to a trusted source or input, which can reduce this problem but does not remove it completely.\n\nWhat comes out may still be useful as a draft, summary, or starting point. But factual claims, citations, names, figures and legal or policy language need checking against trusted sources before anyone relies on them.",
+  "everydayAnalogy": {
+    "title": "The rushed clerk filling gaps in an application log",
+    "story": "At a busy office in Nairobi, a clerk is asked to make a quick list of which job applications are complete. Some forms are clear, but others are missing pages or have hard-to-read sections. Because the queue is long, the clerk starts filling in likely details from memory, such as assuming an email address format or writing that a reference letter was included because similar applications often have one. The final list looks neat and confident, but some of those added details were never in the original files.",
+    "mapping": [
+      {
+        "analogyElement": "missing or unclear parts of application forms",
+        "aiElement": "limited, ambiguous or incomplete information in the prompt or context"
+      },
+      {
+        "analogyElement": "clerk filling likely details from memory",
+        "aiElement": "model generating likely-looking text from learned patterns"
+      },
+      {
+        "analogyElement": "neat final list with some invented entries",
+        "aiElement": "fluent output that contains unsupported or false details"
+      },
+      {
+        "analogyElement": "checking the original files before acting",
+        "aiElement": "verifying claims against trusted sources or provided documents"
+      }
+    ],
+    "limitation": "A human clerk may consciously guess and may remember real office rules. A language model does not recall events or inspect original files unless those files are actually provided in its context or connected tools, and even then it can still misstate what they contain."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "Why a fluent answer can still be wrong",
+    "learningObjective": "After using this explainer, the reader should be able to say that a language model can produce polished text that is not supported by the prompt or source material, and that verification is a separate step.",
+    "description": "A two-panel simulation. Left panel shows a source box with a short document excerpt and a user prompt. Right panel shows the model’s answer appearing sentence by sentence. Controls let the reader switch between three source conditions: clear source, incomplete source, and no source. A highlight mode colours each sentence in the answer as supported by source, unsupported leap, or invented detail. A final toggle labelled 'Add verification rule' changes the answer style to cite only what appears in the source or say 'not enough information'.",
+    "steps": [
+      {
+        "label": "Start with the source",
+        "explanation": "The reader sees either a complete excerpt, a partial excerpt with gaps, or no supporting text at all, plus the same question each time.",
+        "visualInstruction": "Show a fixed prompt at top: 'List the previous resolutions that use this exact phrase and give their years.' Below it, show one of three selectable source cards. Use tabs or radio buttons labelled 'clear source', 'incomplete source', and 'no source'."
+      },
+      {
+        "label": "Generate an answer",
+        "explanation": "The answer panel fills with a polished response. In the incomplete and no-source conditions, some specific details appear even though the source does not support them.",
+        "visualInstruction": "Animate text appearing line by line in the right panel. Include citations or years in the answer so unsupported specificity is easy to notice. Keep animation under 300ms per line."
+      },
+      {
+        "label": "Reveal support",
+        "explanation": "The reader turns on a support overlay to compare the answer against the source. Supported statements match highlighted text in the source. Unsupported and invented statements have no match.",
+        "visualInstruction": "Add a toggle labelled 'show support'. When on, use three colours and a small legend: green for supported, amber for unsupported leap, red for invented detail. Draw simple SVG connector lines only for supported claims."
+      },
+      {
+        "label": "Reduce the risk",
+        "explanation": "The reader turns on a verification rule and sees the answer become more cautious: it quotes only what is present or says that the information is unavailable.",
+        "visualInstruction": "Add a second toggle labelled 'add verification rule'. Replace the answer with a shorter version that uses direct quotations from the source, explicit uncertainty, or 'I cannot confirm from the provided text'."
+      }
+    ],
+    "interaction": "The reader can switch source conditions, play or pause answer generation, and toggle overlays for support and verification to see how the same question leads to safer or riskier outputs.",
+    "accessibilityDescription": "This simulation compares three situations using the same question: one with a clear source text, one with an incomplete source, and one with no source. In each situation, a model answer appears. When support is revealed, some answer sentences are marked as supported because they match the source, while others are marked as unsupported or invented because no matching evidence exists. A final option applies a verification rule, which changes the answer so that it only states what the source supports or clearly says there is not enough information. The lesson is that fluent wording does not prove factual support.",
+    "reducedMotionDescription": "Instead of animated text, the reader sees three static example cards side by side: clear source, incomplete source, and no source. Each card contains the question, the model answer, and colour labels showing which parts are supported, unsupported, or invented. A fourth static card shows the safer answer after a verification rule is applied.",
+    "component": "hallucination"
+  },
+  "workedExample": {
+    "scenario": "A user asks a chat assistant: 'Which three cities hosted the regional clean transport summit in 2021, 2022 and 2023? Give the host ministry for each.'",
+    "input": "The prompt contains no source document, and the user does not say where the information should come from.",
+    "process": [
+      "The model receives the question and notices a pattern: event name, three years, three cities, and host ministries.",
+      "It generates a tidy table because that format often fits this kind of request.",
+      "For one year, it inserts a plausible city and an official-sounding ministry name even though no evidence was provided.",
+      "The answer reads smoothly, so the user may not notice that the details were guessed rather than verified."
+    ],
+    "result": "The output lists 'Amman: Ministry of Transport', 'Tbilisi: Ministry of Economy and Sustainable Development', and 'Kigali: Ministry of Infrastructure'. The format looks credible, but one or more entries may be invented and must be checked against trusted event records."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A staff member searches past UN resolutions for prior agreed language on a topic and asks a chat assistant to identify exact earlier formulations and resolution numbers.",
+    "relevance": "This can save time in drafting and research, but a hallucinated resolution number, date or quoted phrase could mislead negotiations or create avoidable rework.",
+    "caution": "Do not rely on the model’s citations without checking the official UN document system or approved internal sources, and do not paste confidential negotiating text or other non-public material into an unapproved public AI service."
+  },
+  "whyItMatters": "A hallucinated answer can waste time, spread errors, damage trust, or affect decisions if people treat fluent text as checked fact. Non-specialists need to know when to ask for sources, when to verify, and when not to use an AI output at all.",
+  "whereYouMayHearIt": [
+    "chat assistant product warnings",
+    "media coverage of AI mistakes",
+    "policy and procurement discussions",
+    "communications and research workflows"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If the answer sounds confident and detailed, it has probably been checked.",
+      "correction": "Style and factual support are different things. These systems are good at producing convincing wording, but that does not mean the claims were verified against a source."
+    },
+    {
+      "misconception": "Hallucination only happens on obscure topics.",
+      "correction": "It can happen on common topics too, especially when the prompt is ambiguous, the requested detail is very specific, or the model tries to continue a familiar pattern without enough evidence."
+    },
+    {
+      "misconception": "Adding more words to the prompt always prevents hallucination.",
+      "correction": "Better prompts can help, but they do not guarantee truth. The strongest reduction usually comes from grounding the answer in reliable source material and checking the result."
+    },
+    {
+      "misconception": "A hallucination is the same as a lie.",
+      "correction": "A lie involves intent to deceive. Model output does not have intent in that human sense; the problem is that generated text can be false or unsupported while still sounding persuasive."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Sometimes the system fills gaps with wording that looks right but is not actually supported by facts or sources.",
+    "technical": "In language models, output is generated token by token from learned probability patterns conditioned on the prompt and context. Because this process optimises likely continuation rather than truth by default, the model may produce unsupported assertions, fabricated citations or incorrect specifics, especially under weak grounding."
+  },
+  "keyTakeaway": "Plausible wording is not proof: check the evidence behind important claims.",
+  "quickCheck": {
+    "question": "Which situation best illustrates a hallucination in a chat assistant?",
+    "options": [
+      "It refuses to answer because the user gave too little information.",
+      "It gives a smooth answer with a specific report title and quotation that do not exist in the provided source.",
+      "It summarises a long document into shorter bullet points without changing the meaning.",
+      "It answers slowly because too many people are using the system at once."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A hallucination is not just any problem. It is an output that includes false or unsupported details, often presented fluently. Refusal, summarisation and slow service are different issues."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Hallucination (artificial intelligence)",
+      "url": "https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad introductory overview of the term and suits readers who want a quick general orientation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course link suits learners who want a more technical explanation of how language models generate text and why unsupported outputs can appear.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video suits visual learners who want an intuitive explanation of language model behaviour before reading technical material.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Hallucination",
+      "url": "https://www.youtube.com/results?search_query=Hallucination%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find multiple video explanations of hallucination and suits people who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Hallucination",
+      "url": "https://www.reddit.com/search/?q=Hallucination",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see a range of public discussions and examples, and suits readers who want to understand common questions and disagreements people have about the term.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "ai hallucination meaning",
+    "llm making things up",
+    "chatgpt invented citation",
+    "confabulation ai",
+    "why does ai give false answers",
+    "hallucination vs error ai",
+    "model made up source",
+    "halucination ai",
+    "hallucination",
+    "confabulation",
+    "making things up"
+  ],
+  "contested": "The label 'hallucination' is widely used, but some researchers and practitioners dislike it because it can sound human-like or too broad; alternatives such as 'confabulation' or 'fabricated output' are also used.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:35:37.839Z",
+    "contentHash": "4393877893984158",
+    "attempts": 1,
+    "promptTokens": 2246,
+    "completionTokens": 2414
+  }
+}

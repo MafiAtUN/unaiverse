@@ -1,0 +1,221 @@
+{
+  "id": "positional-encoding",
+  "slug": "positional-encoding",
+  "term": "Positional encoding",
+  "aliases": [
+    "position embedding"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "transformer",
+    "embedding"
+  ],
+  "relatedTermIds": [
+    "transformer",
+    "self-attention",
+    "attention",
+    "query-key-value",
+    "multi-head-attention",
+    "vector"
+  ],
+  "oftenConfusedWith": [
+    "embedding",
+    "attention-score",
+    "autoregressive-model"
+  ],
+  "oneSentence": "A method that gives each token information about its place in a sequence so attention can use word order, not just word identity.",
+  "plainExplanation": "A transformer processes text as a sequence of tokens, which are small pieces such as words or word fragments. Each token first gets an embedding, meaning a numeric vector that represents features learned from data. But an embedding by itself does not tell the model whether the token came first, fifth or last.\n\nPositional encoding adds location information to each token representation. The input is a list of token embeddings and a position for each token in the sequence. The mechanism attaches or combines a position vector with each token vector, often by addition, though some systems use learned position embeddings or other variants.\n\nAfter this step, the output is still one vector per token, but each vector now carries both content and position. That lets self-attention compare tokens while also taking order into account. Without some position signal, a transformer would treat many reordered sequences too similarly, because attention alone does not inherently encode left-to-right order.\n\nYou may also hear position embedding. People sometimes use that as a broad synonym, but it can refer more specifically to learned position vectors, while positional encoding can also include fixed patterns such as sinusoidal signals. The terminology is not always used consistently across papers and tools.",
+  "everydayAnalogy": {
+    "title": "Meeting notes with line numbers",
+    "story": "A team is summarising meeting notes from Nairobi, Bangkok and Bogotá. They print each note sentence on a separate card, but the cards only show the sentence text. Before sorting the cards into a summary, they stamp each card with a line number so they know what came earlier and what came later. Now two cards that say similar things can still be treated differently if one was the opening problem statement and the other was the final decision.",
+    "mapping": [
+      {
+        "analogyElement": "sentence cards",
+        "aiElement": "token embeddings"
+      },
+      {
+        "analogyElement": "line numbers stamped on each card",
+        "aiElement": "position information added to each token"
+      },
+      {
+        "analogyElement": "sorting cards into a coherent summary",
+        "aiElement": "self-attention combining information across the sequence"
+      },
+      {
+        "analogyElement": "same sentence text appearing in different places",
+        "aiElement": "same token content having different roles because of position"
+      }
+    ],
+    "limitation": "Real positional encoding does not literally attach human-readable numbers like 1, 2, 3. It adds numeric patterns inside vectors, and the model learns how to use those patterns. Also, some transformer variants encode relative distance between tokens, not only absolute place in the sequence."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How token vectors gain order information before attention",
+    "learningObjective": "After viewing, the reader should be able to explain that transformers need an extra position signal because token embeddings alone do not preserve sequence order.",
+    "description": "Show one sentence moving through three stages: token embeddings, position vectors and combined vectors used by self-attention. Read left to right. Each row represents one token position, so the viewer can compare what changes when position information is added.",
+    "steps": [
+      {
+        "label": "1. Tokens become content vectors",
+        "explanation": "Split a short sentence into tokens. Each token gets an embedding vector that represents content, but these vectors do not by themselves say where the token appeared.",
+        "visualInstruction": "Draw four token boxes in a vertical list, for example 'report', 'was', 'not', 'approved'. Next to each, show a small coloured horizontal bar icon labelled 'content vector'. Use the same style for repeated tokens."
+      },
+      {
+        "label": "2. Add a position vector",
+        "explanation": "Create a different position vector for each slot in the sequence: first, second, third and so on. This can be fixed or learned, depending on the model design.",
+        "visualInstruction": "Add a second column with one position marker per row labelled p1, p2, p3, p4. Use a distinct colour family from the content vectors. Include a note: 'different positions, even if token text repeats'."
+      },
+      {
+        "label": "3. Combine content and position",
+        "explanation": "For each row, combine the token vector and the position vector, often by addition. The result is a new vector that carries both what the token is and where it is.",
+        "visualInstruction": "Draw plus signs between the two columns and a third output column of merged bars. Label each merged bar 'input to attention'. Show one repeated token example with different output because position differs."
+      },
+      {
+        "label": "4. Attention can now use order",
+        "explanation": "Self-attention receives vectors that include position information, so it can treat 'dog bites man' differently from 'man bites dog' and can recognise nearby or earlier tokens differently.",
+        "visualInstruction": "From the merged output column, draw arrows into a simplified attention block. Add a small side note with two mini-sequences in opposite order to show that different positions lead to different attention behaviour."
+      }
+    ],
+    "interaction": "Hovering over a row highlights the token embedding, its position vector and the merged vector together; a toggle switches between 'fixed positions' and 'learned positions' labels without changing the overall layout.",
+    "accessibilityDescription": "The diagram is a left-to-right flow with four rows, one row per token in a short sentence. In the first column, each token has a content vector only. In the second column, each row has a distinct position vector labelled by sequence slot. In the third column, the content vector and position vector for the same row are combined into one merged vector. All merged vectors feed into a final attention block. The main point is that token embeddings alone represent content, while the added position vectors supply order, allowing attention to distinguish the same words in different places.",
+    "reducedMotionDescription": "A static four-column diagram shows tokens, their content vectors, their position vectors and the merged vectors that feed into attention. Fixed colour coding and labels replace hover highlights and toggles."
+  },
+  "workedExample": {
+    "scenario": "Comparing two short sequences with the same words in different order.",
+    "input": "Sequence A: 'border closed yesterday'. Sequence B: 'yesterday border closed'.",
+    "process": [
+      "Tokenise both sequences into three tokens each: 'border', 'closed', 'yesterday'.",
+      "Assign content vectors. For illustration, use e(border)=[2,1], e(closed)=[1,3], e(yesterday)=[0,2]. These are the same in both sequences because the token identities are the same.",
+      "Assign position vectors for slots 1 to 3. For illustration, p1=[10,0], p2=[0,10], p3=[-10,0].",
+      "Combine by addition. In Sequence A, 'border' becomes [12,1] at position 1, while in Sequence B, 'border' becomes [0,11] at position 2. The token content is the same, but the final vector differs because the position differs.",
+      "Self-attention now receives different inputs for the two sequences, so it can produce different attention patterns and different downstream outputs."
+    ],
+    "result": "The model can treat the two word orders as different sequences rather than nearly identical bags of tokens."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN language technology team evaluates a transformer-based system that translates field updates into a working language. Positional encoding helps the system preserve who did what, and in what order, across a sentence.",
+    "relevance": "This matters because translation quality can change if sequence order is not represented well, especially in long updates with time references, negation or clause order.",
+    "caution": "Do not paste confidential, personal, protection-sensitive or operational field updates into an unapproved public AI service for testing; use approved environments, minimised or synthetic text and human review."
+  },
+  "whyItMatters": "If you assess, buy, govern or use language AI tools, positional encoding helps explain a basic strength and limitation of transformers. These systems do not get word order for free. They need an explicit way to represent sequence position. That affects translation, summarisation, question answering and long-document processing. It also affects design choices: some models work better on long contexts, repeated patterns or reordered text because of how they encode position. Knowing this helps you ask better questions about performance, failure modes and whether a model may struggle when meaning depends heavily on order, distance or chronology.",
+  "whereYouMayHearIt": [
+    "transformer architecture discussions",
+    "model implementation notes",
+    "NLP lectures and papers",
+    "long-context model comparisons"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Attention already handles order, so no extra position signal is needed.",
+      "correction": "Basic self-attention compares tokens to each other based on their vectors, but it does not inherently mark first, second or last. If token vectors contain only content, many reorderings look too similar. Positional encoding supplies the missing order information."
+    },
+    {
+      "misconception": "Positional encoding and embedding mean exactly the same thing.",
+      "correction": "An embedding usually means a learned vector representing an item such as a token. Position information can also be represented as vectors, but 'positional encoding' is a broader label. It may refer to fixed patterns, such as sinusoidal functions, or to learned position embeddings. In practice, people often blur the terms."
+    },
+    {
+      "misconception": "Position vectors just label each token with an index, so they are trivial.",
+      "correction": "The position signal must work inside the model's vector computations. Good designs help attention compare nearby and distant tokens and sometimes generalise to sequence lengths not seen in training. That is more subtle than attaching a simple visible number."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Transformers need a way to keep track of order. Positional encoding gives each token a signal for where it appears, so the model can tell the difference between the same words in different positions.",
+    "technical": "In a transformer, token embeddings alone are permutation-insensitive with respect to order unless some positional signal is introduced. Positional encoding injects sequence-position information into the token representations before, or within, attention layers. A common early method adds a fixed sinusoidal vector to each token embedding, with different frequencies across dimensions so positions can be distinguished and relative offsets can be inferred by linear operations. Other systems use learned absolute position embeddings, learned relative position biases, rotary position methods or other schemes. The exact method differs, but the role is the same: modify the representations or attention computation so self-attention can model order and distance, not only token identity."
+  },
+  "keyTakeaway": "A transformer can compare tokens widely across a sequence, but it needs positional encoding to know where those tokens are in that sequence.",
+  "quickCheck": {
+    "question": "Why is positional encoding added to token representations in a transformer?",
+    "options": [
+      "To reduce the number of tokens in the input sequence",
+      "To tell the model where each token appears so attention can use order",
+      "To convert tokens back into human-readable words",
+      "To guarantee that the model's output is factually correct"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Token embeddings represent content, but not sequence order by themselves. Positional encoding adds location information so attention can distinguish the same tokens in different positions and handle order-dependent meaning."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Positional encoding",
+      "url": "https://en.wikipedia.org/w/index.php?search=Positional%20encoding",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A Wikipedia search results page that helps readers find overview articles and related terms, best for orientation rather than a single authoritative explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "difficulty": "deeper",
+      "description": "The original 2017 transformer paper, useful for readers who want the foundational design and are comfortable with technical detail.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "difficulty": "intermediate",
+      "description": "A visual walk-through of transformer components that suits readers who prefer diagrams and intuitive explanations before formal detail.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Positional encoding",
+      "url": "https://www.youtube.com/results?search_query=Positional%20encoding%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps readers find video explanations in different teaching styles, suitable for learners who want audiovisual introductions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Positional encoding",
+      "url": "https://www.reddit.com/search/?q=Positional%20encoding",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that shows community questions and informal explanations, useful for seeing common points of confusion but not as a definitive source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "positional encoding explained",
+    "position embedding vs positional encoding",
+    "why transformers need positional encoding",
+    "sinusoidal positional encoding",
+    "relative positional encoding",
+    "transformer word order",
+    "positional embeding",
+    "positional enconding",
+    "how does attention know order",
+    "positional encoding",
+    "position embedding"
+  ],
+  "contested": "Terminology varies. Some authors use 'positional encoding' broadly for any position signal, while others distinguish fixed encodings from learned position embeddings or separate absolute from relative methods.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:01.134Z",
+    "contentHash": "3ee67b252d64a358",
+    "attempts": 1,
+    "promptTokens": 2225,
+    "completionTokens": 2515
+  }
+}

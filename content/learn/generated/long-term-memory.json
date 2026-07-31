@@ -1,0 +1,231 @@
+{
+  "id": "long-term-memory",
+  "slug": "long-term-memory",
+  "term": "Long-term memory (in AI systems)",
+  "aliases": [
+    "persistent memory",
+    "memory store"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "policy",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "short-term-memory",
+    "vector-database"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "short-term-memory",
+    "vector-database",
+    "planning",
+    "human-in-the-loop",
+    "orchestration"
+  ],
+  "oftenConfusedWith": [
+    "training",
+    "context-window",
+    "memorisation"
+  ],
+  "oneSentence": "Stored information an AI system can retrieve across separate sessions to personalise, continue tasks, or reuse past facts and preferences.",
+  "plainExplanation": "Long-term memory in an AI system means keeping selected information outside the model so it can be used again later, even after one chat or task has ended. That stored information might include a user preference, a project fact, a summary of past work, or a record of what happened in earlier steps.\n\nWhat goes in is usually not the whole conversation. A separate part of the system chooses what to save, such as “send reports in French” or “the package should contain 240 boxes”. The information is then written to a memory store, which could be a database, a file, or another storage service.\n\nWhat happens next is retrieval. When a new request arrives, the system searches that store for items that seem relevant and brings them back into the current working context. The model then uses that retrieved material along with the new prompt. This is different from the model’s training, which happened earlier and affects its general behaviour rather than one user’s stored information.\n\nWhat comes out is a response or action that can reflect earlier interactions across time. This can make systems more useful, but it also creates risks. A saved detail may be wrong, outdated, biased, or too sensitive to store. That is why long-term memory needs clear rules about what may be saved, how long it stays, who can inspect it, and when a human should review or correct it.",
+  "everydayAnalogy": {
+    "title": "A warehouse check with a shift logbook",
+    "story": "At a port warehouse in Mombasa, one shift checks whether a shipping manifest matches the delivery. The team writes a few lasting notes in a logbook: container 18 usually arrives with 240 boxes, one supplier often labels weights in pounds, and a damaged pallet from last week is still under review. When the next shift starts, they do not re-read every conversation from yesterday. They open the logbook, pull out the notes that matter for today’s container, and use them during the check. If an old note is wrong and nobody updates it, the next shift may repeat the same mistake.",
+    "mapping": [
+      {
+        "analogyElement": "shift logbook",
+        "aiElement": "persistent memory store"
+      },
+      {
+        "analogyElement": "few lasting notes instead of every conversation",
+        "aiElement": "selective saving of useful information rather than storing all context"
+      },
+      {
+        "analogyElement": "next shift retrieves relevant notes for today’s container",
+        "aiElement": "new session retrieves relevant memory for the current task"
+      },
+      {
+        "analogyElement": "old note causing a repeated mistake",
+        "aiElement": "stale or incorrect memory influencing later outputs"
+      }
+    ],
+    "limitation": "A warehouse logbook is usually written and read by people who understand the notes directly. In AI systems, memory often has to be transformed into a searchable format, and retrieval may be based on pattern matching rather than exact human judgement. Also, a human team can notice context that was never written down, while an AI system can only use what is retrieved into its current context."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How long-term memory is saved and reused across sessions",
+    "learningObjective": "Show that long-term memory is separate from one conversation: information is selected, stored, retrieved later, and then checked before use.",
+    "description": "A left-to-right flow diagram with five boxes connected by arrows. It starts with a user interaction, then shows memory selection, storage, retrieval during a later session, and final response with review. Read it as a process across time, not as one continuous chat.",
+    "steps": [
+      {
+        "label": "1. New interaction",
+        "explanation": "A user asks for help or the system observes a task. Most of this material stays only in the current session unless something is chosen for saving.",
+        "visualInstruction": "Draw a box labelled 'Current session' with example text snippets inside. Add a small clock icon to suggest temporary use."
+      },
+      {
+        "label": "2. Select what to save",
+        "explanation": "A rule or component decides whether a detail is worth keeping, such as a stable preference, a project fact, or a task summary.",
+        "visualInstruction": "Draw a decision/filter box labelled 'Save?' with three tagged examples passing through and crossed-out sensitive or trivial items blocked."
+      },
+      {
+        "label": "3. Store in memory",
+        "explanation": "Chosen items are written to a separate memory store such as a database or file system, with labels or metadata to help later search.",
+        "visualInstruction": "Draw a cylinder or card stack labelled 'Memory store' containing short saved items and date tags."
+      },
+      {
+        "label": "4. Retrieve later",
+        "explanation": "In a new session, the system searches the memory store for items relevant to the new request and brings back only some of them.",
+        "visualInstruction": "Draw a second 'Current session' box on the right. Show arrows from the memory store to this box, with only two highlighted notes moving across."
+      },
+      {
+        "label": "5. Use with checks",
+        "explanation": "The model uses retrieved memory with the new input, but the result may still need validation because saved information can be wrong, old, or inappropriate.",
+        "visualInstruction": "Draw an output box labelled 'Draft or action' followed by a warning/check badge labelled 'Verify before use'."
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal one example of information that should be saved and one that should not; on keyboard focus, the same text appears below the diagram.",
+    "accessibilityDescription": "The diagram explains long-term memory as a five-step flow across time. First, a user interaction happens in a temporary session. Second, a filter decides whether any detail should be saved. Third, selected items are stored in a separate memory store, not inside the live chat itself. Fourth, during a later session, the system searches that store and retrieves only the items that seem relevant to the new request. Fifth, those retrieved items are used to help produce a draft or action, but a final check is needed because stored memory may be outdated, incorrect, or unsuitable to use.",
+    "reducedMotionDescription": "A static five-box flow appears left to right with arrows: current session, save filter, memory store, later retrieval, draft or action with verification. Retrieved items are shown as highlighted notes rather than animated movement."
+  },
+  "workedExample": {
+    "scenario": "A logistics assistant helps compare a delivery with a shipping manifest over two days.",
+    "input": "Day 1: 'Container BX-204 should contain 240 boxes of masks. Supplier labels weight in pounds.' Day 2: 'Check today’s manifest for BX-204. It lists 240 boxes and 1,100 lb.'",
+    "process": [
+      "On Day 1, the system saves two items: container BX-204 expected quantity 240, and supplier weight unit usually pounds.",
+      "Those items are stored in a memory database with tags such as supplier name, container number, and date.",
+      "On Day 2, the new request mentions BX-204, so the system retrieves the saved quantity note and the weight-unit note.",
+      "The model uses those retrieved notes to explain that 240 boxes matches the earlier record and that 1,100 lb should not be treated as kilograms without conversion."
+    ],
+    "result": "The assistant returns a draft check note: 'Quantity matches the earlier record for BX-204. Weight is listed in pounds, consistent with this supplier; convert before comparing with kilogram-based documents.'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A staff member uses an approved drafting tool to prepare recurring meeting summaries and wants the tool to remember style preferences, such as using neutral language, short headings, and a standard disclaimer for drafts.",
+    "relevance": "Long-term memory can make repeat drafting faster by carrying forward stable preferences or approved boilerplate across separate sessions, while still leaving the final text under human review.",
+    "caution": "Do not store confidential, personal, survivor, witness, security-sensitive, or operational information in an unapproved public AI service. Even in approved systems, memory rules should limit what may be saved, who can access it, and how errors are corrected or deleted."
+  },
+  "whyItMatters": "A system with long-term memory can feel more useful because it does not start from zero every time. It can continue work across days, reuse stable preferences, and reduce repetitive prompting. But this same feature changes the risk profile. Once information is stored and reused, mistakes can persist, sensitive details can spread too far, and old assumptions can shape new outputs without being noticed. For policy, procurement, and human-rights work, the key questions are governance questions: what may be stored, for how long, with whose knowledge, under what access controls, and with what route for correction, deletion, and human review. If you ignore long-term memory, you may misunderstand what the system is actually using to produce an answer or action.",
+  "whereYouMayHearIt": [
+    "agent design discussions",
+    "enterprise AI products",
+    "personalised assistants",
+    "retrieval and memory features",
+    "AI governance reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Long-term memory means the model permanently learned something new.",
+      "correction": "Usually it means the system saved information in an external store and retrieved it later. That can change a future response without changing the model’s underlying trained parameters. Training changes the model itself; memory changes what information is supplied to it at runtime."
+    },
+    {
+      "misconception": "If a system has memory, it remembers everything automatically.",
+      "correction": "Most systems cannot keep everything, and storing everything would often be risky or inefficient. Designers usually choose what to save, how long to keep it, and what to retrieve. Many details from a conversation may never enter long-term memory at all."
+    },
+    {
+      "misconception": "Stored memory is more reliable than the current conversation.",
+      "correction": "A saved item can be incomplete, outdated, wrongly extracted, or taken out of context. Retrieval can also bring back the wrong item. Memory can improve continuity, but it does not guarantee correctness."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is like a saved notebook for an AI system. Some useful details from earlier interactions are written down somewhere outside the chat, so they can be brought back in a later session.",
+    "technical": "In many AI systems, long-term memory is implemented as persistent storage outside the model, such as databases, document stores, key-value stores, or vector databases. A memory pipeline usually has at least four parts: capture, selection, storage, and retrieval. During capture, the system observes conversation turns, tool results, or task outcomes. During selection, rules, classifiers, or prompts decide what is worth persisting, for example user preferences, entity facts, summaries, plans, or prior actions. During storage, those items are saved with metadata such as source, timestamp, permissions, and scope. During retrieval, the system uses keys, filters, search, similarity matching, or hybrid methods to fetch records relevant to a new request. The retrieved items are then inserted into the current context window or passed through tools for downstream use. This differs from short-term memory, which only holds information for the current interaction, and from training, which updates model parameters rather than storing per-user or per-task records."
+  },
+  "keyTakeaway": "Long-term memory lets an AI system reuse selected past information across sessions, which improves continuity but also creates governance, privacy, and accuracy risks.",
+  "quickCheck": {
+    "question": "Which statement best describes long-term memory in many AI systems?",
+    "options": [
+      "It is extra space inside one chat so the model can read more tokens at once.",
+      "It is stored information outside the model that can be retrieved in later sessions.",
+      "It is the model permanently updating itself after every user message.",
+      "It is a guarantee that the system will remember facts accurately forever."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "In many systems, long-term memory means persistent storage outside the model, later retrieved when relevant. It is not the same as a larger context window, automatic retraining after each message, or guaranteed accuracy."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Long-term memory",
+      "url": "https://en.wikipedia.org/wiki/Long-term_memory",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad introductory overview of long-term memory concepts and suits readers who want a quick starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This link explains how agents operate in practice and suits readers who want to see where memory fits into broader agent workflows.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This link explains the Model Context Protocol and suits technical readers who want to understand how tools and external context can be connected to models.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Long-term memory (in AI systems)",
+      "url": "https://www.youtube.com/results?search_query=Long-term%20memory%20(in%20AI%20systems)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers browse different video explanations and teaching styles rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Long-term memory (in AI systems)",
+      "url": "https://www.reddit.com/search/?q=Long-term%20memory%20(in%20AI%20systems)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it helps readers see common questions, examples, and debates from practitioners, with the usual need for careful fact-checking.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "long-term memory ai",
+    "persistent memory ai",
+    "memory store ai agent",
+    "ai remembers across sessions",
+    "difference between training and memory ai",
+    "long term vs short term memory ai",
+    "context window vs memory ai",
+    "vector database memory agent",
+    "agent memory explained",
+    "long term memry ai",
+    "long-term memory (in ai systems)",
+    "persistent memory",
+    "memory store"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:27.538Z",
+    "contentHash": "0970945436732e2e",
+    "attempts": 1,
+    "promptTokens": 2345,
+    "completionTokens": 2661
+  }
+}

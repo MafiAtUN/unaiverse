@@ -1,0 +1,234 @@
+{
+  "id": "ground-truth",
+  "slug": "ground-truth",
+  "term": "Ground truth",
+  "aliases": [
+    "gold standard"
+  ],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "label"
+  ],
+  "relatedTermIds": [
+    "label",
+    "prediction",
+    "supervised-learning",
+    "training-example",
+    "validation-and-test-sets",
+    "accuracy"
+  ],
+  "oftenConfusedWith": [
+    "label",
+    "prediction",
+    "accuracy"
+  ],
+  "oneSentence": "The checked reference answer used to train or evaluate a model, so its output can be compared with the best available real-world answer.",
+  "plainExplanation": "In machine learning, ground truth means the reference answer you treat as the best available answer for a case. It might be a correct category, a measured number, a transcript reviewed by people, or a location marked on an image. People also say “gold standard”, although in practice it may be imperfect.\n\nWhat goes in is an example and its reference answer. During training, a model looks at many examples and tries to produce outputs close to those reference answers. During evaluation, the model’s output is compared with the reference answer to see how well it performed.\n\nWhat happens inside depends on the task. In a classification task, the model may compare its predicted class with the ground-truth class. In a regression task, it may compare a predicted number with a measured number. The difference between the model output and the reference answer becomes an error signal, which helps measure performance and often helps adjust the model during training.\n\nGround truth is not the same as a label, although labels are a common form of ground truth. A label is the tag attached to one example, such as “positive” or “negative”. Ground truth is the broader idea of the trusted reference used for comparison. It is also not the same as accuracy, which is a summary score calculated after comparing many predictions with ground truth.\n\nA practical caution: ground truth can be noisy, biased, delayed or disputed. For example, several experts may disagree, or the “true” answer may change over time. So ground truth is usually the best available reference, not a guarantee of perfect truth.",
+  "everydayAnalogy": {
+    "title": "Checking who “she” refers to in a sentence",
+    "story": "A class in Nairobi, Bogotá and Bangkok is reviewing short sentences that contain the word “she”. For each sentence, two language teachers read the surrounding text and mark who “she” refers to, such as Amina or Sofia. Their agreed answer is stored in a spreadsheet. Later, a language tool reads the same sentences and its answer is checked against that agreed reference.",
+    "mapping": [
+      {
+        "analogyElement": "The sentence with an ambiguous pronoun",
+        "aiElement": "The input example"
+      },
+      {
+        "analogyElement": "The teachers’ agreed answer about who “she” refers to",
+        "aiElement": "The ground-truth reference answer"
+      },
+      {
+        "analogyElement": "The language tool’s guess",
+        "aiElement": "The model prediction"
+      },
+      {
+        "analogyElement": "Comparing the guess with the spreadsheet entry",
+        "aiElement": "Training or evaluation against ground truth"
+      }
+    ],
+    "limitation": "Real machine-learning ground truth is often larger and less tidy than this story. Experts may not fully agree, some tasks use measured numbers rather than names, and training usually uses many examples with mathematical updates, not a simple one-by-one classroom check. Also, in some domains there may be no single unquestioned answer, only the best available annotation under agreed rules."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How ground truth is used in training and testing",
+    "learningObjective": "After viewing this, the reader should be able to say that ground truth is the reference answer used to compare a model’s output during training or evaluation.",
+    "description": "A left-to-right flow diagram with two lanes. Both lanes start with the same kind of input example. In the top lane, the example goes to a model and produces a prediction. In the bottom lane, the same example links to a human-checked reference answer. The two meet in a comparison stage that outputs either an update signal for training or a performance score for evaluation.",
+    "steps": [
+      {
+        "label": "1. Example enters",
+        "explanation": "Start with one input, such as a sentence, image or record.",
+        "visualInstruction": "Draw a rectangle on the left labelled 'Input example'. Show small icons for text, image and table beneath the label."
+      },
+      {
+        "label": "2. Model produces output",
+        "explanation": "The model turns the input into a prediction, such as a class, number or extracted span of text.",
+        "visualInstruction": "From the input box, draw an arrow to an upper rectangle labelled 'Model', then an arrow to a box labelled 'Prediction'."
+      },
+      {
+        "label": "3. Reference answer is provided",
+        "explanation": "Separately, the same input has a human-checked or otherwise trusted reference answer.",
+        "visualInstruction": "From the input box, draw a second arrow downward to a lower box labelled 'Ground truth reference' with a small checkmark icon."
+      },
+      {
+        "label": "4. Comparison happens",
+        "explanation": "The prediction is compared with the reference answer to measure mismatch or agreement.",
+        "visualInstruction": "Draw arrows from 'Prediction' and 'Ground truth reference' into a central comparison box labelled 'Compare'."
+      },
+      {
+        "label": "5. Output of the comparison",
+        "explanation": "In training, the mismatch helps update the model. In evaluation, it contributes to metrics such as accuracy or error.",
+        "visualInstruction": "From 'Compare', split into two right-side boxes: upper labelled 'Training update' and lower labelled 'Evaluation score'."
+      }
+    ],
+    "interaction": "Hovering or tapping each box highlights the arrows connected to it and reveals one sentence explaining its role.",
+    "accessibilityDescription": "The diagram is a two-lane flow showing how ground truth is used. First, an input example enters. In the top lane, the input goes through a model and becomes a prediction. In the bottom lane, the same input connects to a ground-truth reference answer that has been checked by people or another trusted process. The prediction and the reference answer then meet in a comparison step. The result of that comparison has two possible uses: during training, the mismatch helps update the model; during evaluation, the comparison contributes to a performance score such as accuracy or error. The key idea is that ground truth is the reference used for comparison, not the model’s output and not the metric itself.",
+    "reducedMotionDescription": "A static two-lane flowchart shows one input feeding both a model path and a reference-answer path. These meet in a comparison box, which then points to either training updates or evaluation scores."
+  },
+  "workedExample": {
+    "scenario": "A team is building a classifier to detect whether a message asks for technical support.",
+    "input": "Message text: 'I cannot log in after resetting my password.'",
+    "process": [
+      "Human reviewers mark the message as 'support request'. That marked answer is the ground truth for this example.",
+      "The model reads the message and predicts 'support request' with probability 0.82.",
+      "The prediction is compared with the ground truth.",
+      "Because the prediction matches the reference class, this example counts as correct for evaluation.",
+      "If this happens during training, the model still uses the difference between its full probability distribution and the reference answer to adjust internal weights."
+    ],
+    "result": "For this example, the ground truth is 'support request', the prediction matches it, and the model gets credit for a correct classification."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is preparing procurement requirements for software that classifies incoming public enquiries into categories such as logistics, finance or IT support. During vendor testing, the office uses a sample of previously reviewed enquiries with categories assigned by trained staff under clear rules as the reference set.",
+    "relevance": "Ground truth matters because procurement staff need to ask where the vendor’s reference answers came from, who reviewed them, how disagreements were handled, and whether the evaluation data matches the organisation’s real use case.",
+    "caution": "Do not place confidential, personal, security-sensitive or protection-sensitive enquiry data into an unapproved public AI service when creating or checking reference answers; use approved systems, minimise data, and keep human oversight."
+  },
+  "whyItMatters": "If you hear that a model is “90% accurate”, the next question should be: compared with what reference answer? That reference is the ground truth. If it is weak, outdated, biased or inconsistent, the performance claim can mislead decision-makers. Ground truth affects procurement, risk assessment, quality assurance and fairness review. It helps you ask practical questions: Who created the reference answers? Were clear guidelines used? Did experts agree? Does the reference reflect the population and language varieties the system will face? A non-specialist does not need to build models to see that better reference answers usually lead to more trustworthy evaluation and, often, better training.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "data labelling projects",
+    "vendor demos and procurement",
+    "research papers on benchmarks",
+    "quality assurance meetings"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Ground truth means absolute truth with no uncertainty.",
+      "correction": "Often it means the best available reference under a chosen method, not perfect certainty. In medicine, language, human rights documentation and other complex areas, experts may disagree or the answer may be incomplete. Good practice is to document how the reference was produced and how uncertainty was handled."
+    },
+    {
+      "misconception": "Ground truth is just another word for label.",
+      "correction": "A label is one kind of reference answer, usually a tag such as 'spam' or 'not spam'. Ground truth is broader. It can be a label, a measured number, a bounding box in an image, a transcript, or another trusted target used for comparison."
+    },
+    {
+      "misconception": "If the ground truth is human-made, it cannot be biased.",
+      "correction": "Human-created references can reflect inconsistent rules, limited expertise, cultural assumptions or skewed sampling. A model trained on such data may reproduce those patterns. That is why annotation guidelines, reviewer agreement and dataset coverage matter."
+    },
+    {
+      "misconception": "High accuracy proves the model works well everywhere.",
+      "correction": "Accuracy only summarises performance against a particular ground-truth set. If that set is narrow, outdated or unlike real deployment conditions, the score may not transfer. You need to examine the reference data, not only the final metric."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Ground truth is the answer you use as the trusted reference when checking whether a model got something right.",
+    "technical": "Ground truth is the target value or reference annotation assigned to an example and treated as the benchmark for comparison during training, validation or testing. In supervised learning, the model receives inputs and associated targets, then a loss function measures the difference between predicted outputs and ground-truth targets. Those differences can be used to update model parameters during training or to compute evaluation metrics on held-out data. The reference may come from human annotation, direct measurement, sensor readings, administrative records or expert adjudication. Depending on the task, it may be categorical, numeric, textual or spatial. The term is broader than label, because not all ground truth takes the form of a simple class label. It is also distinct from prediction, which is the model output, and from accuracy, which is a metric summarising prediction-versus-reference comparisons across many examples. In practice, ground truth may be noisy, partial, delayed or contested, so dataset documentation and annotation protocols are part of technical quality control."
+  },
+  "keyTakeaway": "Ground truth is the best available reference answer a model is trained or tested against, not the model’s output and not the score summarising performance.",
+  "quickCheck": {
+    "question": "Which statement best describes ground truth in machine learning?",
+    "options": [
+      "The model’s most confident prediction for an example",
+      "The reference answer used to compare a model’s output",
+      "The final accuracy score across the whole dataset",
+      "Any input feature that helps the model make a prediction"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Ground truth is the trusted reference answer for an example. A model prediction is compared with it. Accuracy is a metric calculated after many such comparisons, and features are parts of the input, not the reference answer."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Ground truth",
+      "url": "https://en.wikipedia.org/wiki/Ground_truth",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of the term and its uses across fields, which suits readers who want a general starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course resource helps readers see how reference answers are used in practical machine-learning workflows, which suits beginners moving into applied work.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "difficulty": "starter",
+      "description": "This video source is useful for readers who learn well from spoken step-by-step explanations of model training ideas.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Ground truth",
+      "url": "https://www.youtube.com/results?search_query=Ground%20truth%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers browse multiple video explanations and choose a style that suits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Ground truth",
+      "url": "https://www.reddit.com/search/?q=Ground%20truth",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it helps readers see how practitioners informally discuss the term, though comments should be checked carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "ground truth meaning in machine learning",
+    "gold standard vs ground truth",
+    "is ground truth the same as label",
+    "what is ground truth data",
+    "ground truth vs accuracy",
+    "ground truth vs prediction",
+    "how ground truth is used in training",
+    "ground truth annotation meaning",
+    "groud truth ml",
+    "ground truth examples",
+    "ground truth",
+    "gold standard"
+  ],
+  "contested": "The core idea is widely used, but the term can be contentious because 'truth' may overstate certainty in domains where reference answers are partial, uncertain or socially contested.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:39:53.653Z",
+    "contentHash": "aa3536cc482ddf7e",
+    "attempts": 1,
+    "promptTokens": 2282,
+    "completionTokens": 2636
+  }
+}

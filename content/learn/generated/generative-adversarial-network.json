@@ -1,0 +1,232 @@
+{
+  "id": "generative-adversarial-network",
+  "slug": "generative-adversarial-network",
+  "term": "Generative adversarial network",
+  "acronym": "GAN",
+  "aliases": [
+    "GAN"
+  ],
+  "categoryId": "generative-media",
+  "subcategory": "Generative Media",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "neural-network"
+  ],
+  "relatedTermIds": [
+    "image-generation",
+    "synthetic-media",
+    "deepfake",
+    "watermarking",
+    "misinformation",
+    "neural-network"
+  ],
+  "oftenConfusedWith": [
+    "diffusion-model",
+    "variational-autoencoder",
+    "image-generation"
+  ],
+  "oneSentence": "A training method with two neural networks, one making synthetic examples and one trying to spot fakes, so the generated output gradually becomes more realistic.",
+  "plainExplanation": "A generative adversarial network, or GAN, is a way to train an AI system to create new content such as images, short audio clips or other data that resembles a training set. It uses two neural networks, which are mathematical pattern-finding systems built from many weighted connections. One network is the generator. It starts from random numbers and produces a candidate output, such as an image.\n\nThe second network is the discriminator. It receives both real examples from the training data and fake examples from the generator, and it tries to tell which are real and which are synthetic. During training, the discriminator gets better at spotting flaws. The generator then adjusts its internal weights to make outputs that are harder to detect as fake. This repeated competition is the “adversarial” part.\n\nWhat goes in is usually a large collection of examples, such as face photos or satellite image patches, plus random input values often called noise. What happens is an alternating training loop: improve the discriminator, then improve the generator, again and again. What comes out is a trained generator that can turn random input into new samples with similar statistical patterns to the training data.\n\nGANs became important because they could produce sharp, realistic images and inspired many synthetic media applications. But they are not the only way to generate content, and they are often harder to train than newer diffusion models. They can also fail in specific ways, such as “mode collapse”, where the generator produces too little variety even if the outputs look convincing.",
+  "everydayAnalogy": {
+    "title": "A forged transit pass checked by inspectors",
+    "story": "Imagine a city transport office training new inspectors while a counterfeiter keeps trying to make fake transit passes. The counterfeiter first makes poor copies, and the inspectors catch them easily. As the inspectors learn what to look for, the counterfeiter improves the paper texture, colours and stamp placement. After many rounds, the fake passes can look very convincing, because each side improved by reacting to the other.",
+    "mapping": [
+      {
+        "analogyElement": "counterfeiter making new passes",
+        "aiElement": "generator creating synthetic samples from random input"
+      },
+      {
+        "analogyElement": "inspectors checking real and fake passes",
+        "aiElement": "discriminator classifying training examples as real or generated"
+      },
+      {
+        "analogyElement": "many rounds of better forgery and better inspection",
+        "aiElement": "alternating training updates that improve both networks"
+      },
+      {
+        "analogyElement": "convincing fake pass at the end",
+        "aiElement": "generator output that matches patterns in the data distribution"
+      }
+    ],
+    "limitation": "In a real GAN, neither network uses human reasoning about paper, stamps or transport rules. Both adjust numerical weights based on training signals. Also, the generator is not copying one real example directly in the intended mechanism; it is learning statistical patterns across many examples. Finally, after training, people usually keep the generator and discard the discriminator, which is not how the transit-pass story works."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a GAN trains two networks against each other",
+    "learningObjective": "After viewing the diagram, the reader should be able to explain that a GAN trains a generator and a discriminator in a loop, with each improving in response to the other.",
+    "description": "A left-to-right flow diagram with two inputs at the left: random noise and real training examples. Noise goes to the generator, which outputs a synthetic sample. Real and synthetic samples both go to the discriminator, which outputs real-or-fake scores. Curved feedback arrows return from the discriminator to both networks to show training updates over repeated rounds.",
+    "steps": [
+      {
+        "label": "1. Start with two inputs",
+        "explanation": "The system uses real examples from a dataset and random numbers called noise.",
+        "visualInstruction": "Show two source boxes on the left: 'Real examples' and 'Random noise'. Use distinct colours and arrows pointing right."
+      },
+      {
+        "label": "2. Generator makes a sample",
+        "explanation": "The generator converts noise into a synthetic image, audio clip or other sample.",
+        "visualInstruction": "Place a 'Generator' box in the centre top. Connect 'Random noise' to it, then to a thumbnail labelled 'Synthetic sample'."
+      },
+      {
+        "label": "3. Discriminator compares",
+        "explanation": "The discriminator receives both real examples and synthetic samples and produces a score for whether each looks real.",
+        "visualInstruction": "Place a 'Discriminator' box in the centre bottom. Draw one arrow from 'Real examples' and one from 'Synthetic sample' into it. Output to a box labelled 'Real / fake score'."
+      },
+      {
+        "label": "4. Both networks update",
+        "explanation": "If the discriminator catches the fake, the generator adjusts to do better next time. If the fake fools the discriminator, the discriminator adjusts too.",
+        "visualInstruction": "Add two dashed feedback arrows from the discriminator area back to the Generator and to itself, labelled 'update weights'. Include a loop marker 'repeat many rounds'."
+      },
+      {
+        "label": "5. Keep the generator",
+        "explanation": "After training, the generator can create new samples without needing real examples each time.",
+        "visualInstruction": "On the far right, show the trained generator producing several varied outputs from different noise inputs. Fade the discriminator to indicate it may not be used at generation time."
+      }
+    ],
+    "interaction": "Hovering over each arrow highlights what is flowing: data samples, scores or parameter updates. A toggle switches between 'training' and 'after training' views.",
+    "accessibilityDescription": "This diagram explains GAN training as a five-stage flow. First, there are two inputs: real examples from a dataset and random noise. Second, the noise goes into a generator, which produces a synthetic sample. Third, both the real examples and the synthetic sample go into a discriminator, which outputs a score indicating whether an input appears real or fake. Fourth, feedback from the discriminator is used to update the generator and the discriminator over many repeated rounds. Fifth, once training is complete, the generator is kept to create new samples from fresh noise inputs, while the discriminator may no longer be used for generation.",
+    "reducedMotionDescription": "A static flowchart shows the same five stages without animation. Dashed arrows and numbered labels indicate the repeated training loop, and a side panel shows the final state where only the trained generator is used to produce outputs."
+  },
+  "workedExample": {
+    "scenario": "A research team trains a GAN on 60,000 small images of handwritten digits, each 28 by 28 pixels, to create new digit-like images.",
+    "input": "Training data: 60,000 labelled only as real examples for the discriminator; generator input: 100 random numbers per sample.",
+    "process": [
+      "At the start, the generator turns 100 random numbers into blurry pixel patterns that do not look like digits.",
+      "The discriminator sees batches containing both real digit images and generated images, and at first correctly marks most generated ones as fake.",
+      "After many training rounds, the generator learns shapes such as loops, vertical strokes and curves that better match the training data.",
+      "The discriminator becomes harder to fool, so the generator keeps refining details, but the team also watches for instability and low variety.",
+      "After training, the team samples 500 new images from random inputs and inspects whether they look like varied handwritten digits rather than near-duplicates."
+    ],
+    "result": "The final generator produces many plausible digit images, but some are ambiguous and a few digits repeat similar styles, showing that realism does not guarantee full diversity."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN innovation team explores whether a GAN could generate synthetic layout examples for scanned guidance documents, to test an internal document-search pipeline without using real staff files in development demos.",
+    "relevance": "This is relevant because GANs can create realistic-looking synthetic data for testing, augmentation or demonstration, and staff may encounter the term when comparing generation methods for images or document-like layouts.",
+    "caution": "Do not put confidential, personal, protection-sensitive or operationally sensitive documents into an unapproved public AI service, and do not assume GAN-generated test data is automatically free of privacy or bias risks if it was trained on sensitive material."
+  },
+  "whyItMatters": "A non-specialist may not build a GAN, but may need to judge claims about realistic synthetic media. GANs helped make highly convincing generated images possible, which matters for media verification, fraud prevention, research choices and procurement. If someone says a system can create endless realistic examples for training or communication, it is useful to ask: what data trained it, how stable is it, how diverse are the outputs, and what misuse risks follow? GANs also matter because they are often mentioned alongside deepfakes, synthetic media and content provenance tools. Understanding the basic mechanism helps you separate a genuine technical description from vague marketing and helps you recognise that realistic output does not prove authenticity.",
+  "whereYouMayHearIt": [
+    "computer vision research",
+    "deepfake discussions",
+    "synthetic media tools",
+    "machine learning courses",
+    "AI history overviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A GAN simply copies and pastes training images.",
+      "correction": "A trained generator usually produces outputs by transforming random input through learned weights, not by retrieving one stored image and pasting pieces together in a simple way. However, poor training practice or small datasets can still lead to memorisation or near-duplicates, so this risk should be tested rather than ignored."
+    },
+    {
+      "misconception": "The discriminator is the final product people use.",
+      "correction": "In many applications, the generator is the main product after training because it creates new samples from noise. The discriminator is essential during training, but it may be discarded or reused only for evaluation once the generator is trained."
+    },
+    {
+      "misconception": "If GAN output looks realistic, it must represent reality accurately.",
+      "correction": "Realistic appearance only means the output matches visible or statistical patterns in the training data. It does not prove that a depicted event happened, that the content is unbiased, or that it is suitable evidence. Authenticity needs separate verification."
+    },
+    {
+      "misconception": "GANs are the standard method behind all modern image generators.",
+      "correction": "GANs were highly influential, especially for image generation, but many current state-of-the-art image systems use diffusion models instead. These methods generate data differently and have different strengths, weaknesses and training behaviour."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A GAN trains one AI system to make fake examples and another to catch them. Because each side keeps improving, the fake examples can become very realistic.",
+    "technical": "A GAN is a generative modelling framework with two neural networks trained in opposition. The generator maps a latent vector, often sampled from a simple distribution such as Gaussian noise, into the data space. The discriminator, or critic in some variants, receives both real samples from the training distribution and generated samples, and learns to distinguish them. Training alternates optimisation steps so the discriminator improves its classification signal and the generator updates its parameters to make generated samples harder to distinguish from real ones. In the original formulation, this can be described as a minimax game over an objective related to divergence between the model distribution and the data distribution. In practice, many variants modify the loss function and architecture to improve stability, because GAN training can suffer from vanishing gradients, non-convergence and mode collapse. The hoped-for result is a generator that approximates the target data distribution well enough to sample realistic new outputs."
+  },
+  "keyTakeaway": "A GAN learns to generate realistic data by setting up a repeated contest between a maker of fakes and a detector of fakes.",
+  "quickCheck": {
+    "question": "What makes a GAN different from a single network trained alone to generate images?",
+    "options": [
+      "It trains a generator together with a discriminator that tries to tell real from generated samples.",
+      "It always uses text prompts and cannot work from random input.",
+      "It stores every training image exactly and blends them at output time.",
+      "It guarantees the generated samples are authentic records of real events."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The defining idea is adversarial training between two networks: one generates candidates and the other evaluates whether they resemble real data. GANs do not require text prompts, do not inherently store exact copies as their core mechanism, and realistic output is not proof of authenticity."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Generative adversarial network",
+      "url": "https://en.wikipedia.org/wiki/Generative_adversarial_network",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of the term, its history, variants and examples, and suits readers who want a general reference point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Recommendation on the Ethics of Artificial Intelligence",
+      "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics",
+      "type": "official",
+      "publisher": "UNESCO",
+      "difficulty": "intermediate",
+      "description": "This link gives the policy and ethics context for AI use, including risk, accountability and human-rights considerations, and suits readers making governance or deployment choices.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Content Credentials",
+      "url": "https://contentcredentials.org/",
+      "type": "official",
+      "publisher": "Content Authenticity Initiative",
+      "difficulty": "starter",
+      "description": "This link gives an introduction to content provenance ideas and practical authentication approaches, and suits readers concerned about verifying synthetic media.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Generative adversarial network",
+      "url": "https://www.youtube.com/results?search_query=Generative%20adversarial%20network%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search-results page gives multiple video explainers with different levels of maths and intuition, and suits readers who learn best by watching and comparing presenters.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Generative adversarial network",
+      "url": "https://www.reddit.com/search/?q=Generative%20adversarial%20network",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search-results page gives community questions, experiences and debates about GANs, and suits readers who want informal discussion and common practitioner issues.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "gan meaning ai",
+    "generative adversarial network explained",
+    "how do gans work",
+    "gan vs diffusion",
+    "gan neural network",
+    "what is a discriminator in gan",
+    "mode collapse gan",
+    "gann ai misspelling",
+    "deepfake gan",
+    "generator discriminator model",
+    "generative adversarial network",
+    "gan"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:47:20.230Z",
+    "contentHash": "f65e68d5bf79a894",
+    "attempts": 1,
+    "promptTokens": 2255,
+    "completionTokens": 2728
+  }
+}

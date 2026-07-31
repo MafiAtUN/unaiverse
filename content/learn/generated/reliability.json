@@ -1,0 +1,220 @@
+{
+  "id": "reliability",
+  "slug": "reliability",
+  "term": "Reliability",
+  "aliases": [
+    "consistency"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "leadership",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "evaluation-metric"
+  ],
+  "relatedTermIds": [
+    "evaluation-metric",
+    "benchmark",
+    "cross-validation",
+    "generalisation",
+    "variance",
+    "calibration"
+  ],
+  "oftenConfusedWith": [
+    "accuracy",
+    "robustness",
+    "precision",
+    "f1-score"
+  ],
+  "oneSentence": "Reliability is how consistently a system gives similar quality results when it is used again on comparable cases and conditions.",
+  "plainExplanation": "Reliability asks a simple question: if you use the same system again in similar circumstances, do you get results of similar quality? A reliable system behaves consistently enough that people can plan around it. The input is a set of cases, prompts or records. The output is not just one score, but a pattern of performance across repeats, groups and time.\n\nTo check it, evaluators run the system more than once or test it on different slices of data. They compare whether the results stay broadly stable. For example, if a model groups survey answers into themes, reliability means it does not produce strong results one day and weak or very different results the next day on comparable material.\n\nReliability is often confused with accuracy, but they are not the same. Accuracy asks whether the answer matches the target or reality. Reliability asks whether the system is consistent. A system can be reliably wrong, meaning it repeats the same mistake again and again. It can also be somewhat accurate on average but unreliable, meaning its quality swings too much to trust in practice.\n\nIt is also different from robustness. Robustness usually means how well a system keeps working when conditions change, such as noisy text or different phrasing. Reliability is broader and often starts with consistency under similar conditions. In real deployments, both matter: one tells you whether performance is steady, and the other tells you whether it holds up under stress or change.",
+  "everydayAnalogy": {
+    "title": "Sorting public feedback into issue piles",
+    "story": "Three colleagues are asked to sort 300 printed survey comments into issue piles such as water, transport and housing. They use the same guide on Monday and again on Wednesday with a fresh batch of comments from the same kind of survey. If the piles come out with a similar pattern both times, the sorting process looks reliable. If one day most comments go into transport and the next day similar comments are scattered across many piles, the process is not consistent enough to trust.",
+    "mapping": [
+      {
+        "analogyElement": "sorting comments into issue piles twice",
+        "aiElement": "running the system repeatedly on comparable cases"
+      },
+      {
+        "analogyElement": "similar pile patterns across days",
+        "aiElement": "stable performance across repeated evaluations"
+      },
+      {
+        "analogyElement": "comments scattered differently each time",
+        "aiElement": "high variation in outputs or quality"
+      },
+      {
+        "analogyElement": "the sorting guide",
+        "aiElement": "the model and evaluation setup"
+      }
+    ],
+    "limitation": "People can explain why they changed a choice, while an AI model may produce different outputs for reasons that are harder to inspect. Also, in the story the task is done by humans using visible piles, but model reliability is usually measured with test data and numerical metrics, not by looking only at whether the piles feel similar."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "Checking whether performance stays steady",
+    "learningObjective": "Show how reliability is judged by testing a system across repeated or comparable runs and comparing whether the performance stays stable.",
+    "description": "A left-to-right flow with four boxes. The reader follows the same task through repeated tests, records the score from each run, then checks whether the scores stay close together. The point is that one good result is not enough; reliability depends on the pattern across runs.",
+    "steps": [
+      {
+        "label": "Same task",
+        "explanation": "Start with one clearly defined task and a fixed evaluation method so the comparison is fair.",
+        "visualInstruction": "Draw a box labelled 'Task + evaluation setup' with small icons for input data, model and metric locked together."
+      },
+      {
+        "label": "Repeat tests",
+        "explanation": "Run the system several times on comparable cases, or on different equivalent slices of data.",
+        "visualInstruction": "Draw a second box with three small test cards labelled Run 1, Run 2 and Run 3 connected from the first box."
+      },
+      {
+        "label": "Record results",
+        "explanation": "Write down the score or outcome pattern from each run, such as accuracy, error rate or agreement with reviewers.",
+        "visualInstruction": "Draw a third box showing a simple table with three rows of results, for example 82, 81 and 83."
+      },
+      {
+        "label": "Compare spread",
+        "explanation": "If the results stay close together, the system is more reliable. If they swing widely, reliability is lower.",
+        "visualInstruction": "Draw a final box with two mini charts side by side: one tight cluster of scores labelled 'more reliable' and one wide spread labelled 'less reliable'."
+      }
+    ],
+    "interaction": "Hovering or tapping each run highlights its score and updates the mini chart showing tight versus wide spread.",
+    "accessibilityDescription": "The diagram shows four stages in a line. First, define one task and keep the model, data conditions and evaluation method fixed. Second, test the system several times on comparable material. Third, record the result from each run. Fourth, compare how much those results vary. When the scores are close together, the system is more reliable. When they differ a lot, the system is less reliable. The key message is that reliability comes from consistency across repeated checks, not from one impressive result.",
+    "reducedMotionDescription": "A static four-box flow replaces animation. The final box shows two fixed examples: tightly grouped scores for higher reliability and widely spread scores for lower reliability."
+  },
+  "workedExample": {
+    "scenario": "A team tests a model that groups 1,000 public survey comments into five themes.",
+    "input": "Three comparable test batches of 200 comments each, prepared from the same survey process and labelled by human reviewers for evaluation.",
+    "process": [
+      "The team runs the model on batch A and gets 84% agreement with the review labels.",
+      "They run the same setup on batch B and batch C and get 83% and 85% agreement.",
+      "Because the scores are close together, the performance appears consistent across comparable batches.",
+      "They then try a different month of survey data and the score drops to 68%, which suggests the system may be reliable on the original data but may not generalise well to newer material."
+    ],
+    "result": "For the original testing conditions, the model looks fairly reliable because the repeated scores stay close. The later drop warns that reliability under one set of conditions does not guarantee similar performance in a changed setting."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team wants to use an approved internal AI tool to summarise submissions to a public consultation into recurring themes such as access, cost and language barriers.",
+    "relevance": "Leadership may see a polished summary and assume the tool is dependable. Reliability testing checks whether similar sets of submissions produce similarly useful summaries over repeated runs and review rounds, so staff know whether the tool is steady enough to support human analysis.",
+    "caution": "Do not place personal data, confidential submissions or protection-sensitive information into an unapproved public AI service. Human reviewers should verify whether important themes are being missed or inconsistently grouped."
+  },
+  "whyItMatters": "Non-specialists often see one strong score or one convincing demo and assume a system will behave the same way in routine use. Reliability helps you ask a better question: will this quality hold up across repeats, teams, time periods and comparable cases? That matters for procurement, risk management and accountability. If results swing from one run to another, people may make different decisions for similar cases, waste staff time checking outputs, or overlook important issues because the system is inconsistent. Reliability does not prove a system is correct or fair, but without it, even a promising tool is hard to govern or use responsibly.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "procurement and vendor demos",
+    "quality assurance meetings",
+    "risk and audit discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model has high accuracy, it must be reliable.",
+      "correction": "Not necessarily. Accuracy is about how often outputs match the target on a test. Reliability is about whether the quality stays consistent across repeated checks or comparable conditions. A model can score well once and still vary too much on the next batch to be dependable."
+    },
+    {
+      "misconception": "Reliability means the system will work well in every situation.",
+      "correction": "That describes a stronger claim than reliability alone. A system may be reliable under the conditions it was tested in, yet perform poorly when the data source, language, timing or user behaviour changes. That wider question is closer to robustness and generalisation."
+    },
+    {
+      "misconception": "If outputs are the same every time, the system is trustworthy.",
+      "correction": "Consistency helps, but it is not enough. A system can be consistently wrong, biased or poorly calibrated. Reliability should be checked alongside accuracy, error patterns and whether harms fall unevenly across groups."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "In simple terms, reliability means the system does not behave unpredictably on similar work. If you test it again in much the same way, you should get about the same level of quality.",
+    "technical": "Technically, reliability refers to the stability or repeatability of performance estimates and outputs under repeated measurement or comparable evaluation conditions. You assess it by holding the task and scoring approach steady, then examining variation across runs, folds, samples, raters or time periods. Low spread suggests more stable performance; high spread suggests instability, often linked to variance, small samples, noisy labels, data leakage during testing, or sensitivity to prompt and data changes. Reliability is distinct from validity-related questions such as whether the metric captures the right objective, and from accuracy, which measures closeness to the target rather than consistency across measurements."
+  },
+  "keyTakeaway": "A system you cannot count on to perform similarly twice is hard to use responsibly, even if one test result looks good.",
+  "quickCheck": {
+    "question": "Which statement best describes reliability?",
+    "options": [
+      "It measures whether repeated tests on comparable cases give similar quality results.",
+      "It means the system is always correct in any setting.",
+      "It is the same thing as accuracy on one benchmark.",
+      "It shows the system is fair across all groups."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Reliability is about consistency across repeated or comparable checks. A system can be reliable without being fully accurate, fair or robust in every setting. Those need separate evaluation."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Reliability",
+      "url": "https://en.wikipedia.org/w/index.php?search=Reliability",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers scan different meanings of reliability on Wikipedia, so it suits readers who want a broad starting point and can choose relevant entries carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course resource explains accuracy, recall and precision, which helps readers compare reliability with common evaluation measures and suits beginners to intermediate learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This official framework shows how reliability fits into broader AI risk management, so it suits leadership, governance and assurance audiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Reliability",
+      "url": "https://www.youtube.com/results?search_query=Reliability%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page lets readers find different video explanations of reliability, which suits people who learn well from spoken examples but need to judge quality for themselves.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Reliability",
+      "url": "https://www.reddit.com/search/?q=Reliability",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and practical questions about reliability, which suits readers who want informal examples and differing viewpoints but should not treat comments as authoritative.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "reliability in ai",
+    "ai consistency meaning",
+    "model reliability vs accuracy",
+    "why does model performance vary",
+    "reliable but wrong model",
+    "classification reliability",
+    "evaluation consistency ai",
+    "reliablity ai misspelling",
+    "reliability",
+    "consistency"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:31.482Z",
+    "contentHash": "0672c5bbbcfef2e5",
+    "attempts": 1,
+    "promptTokens": 2302,
+    "completionTokens": 2287
+  }
+}

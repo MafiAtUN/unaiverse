@@ -1,0 +1,238 @@
+{
+  "id": "annotation",
+  "slug": "annotation",
+  "term": "Annotation and data labelling",
+  "aliases": [
+    "data labelling",
+    "labelling",
+    "data annotation",
+    "annotators"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "human-rights",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "label"
+  ],
+  "relatedTermIds": [
+    "label",
+    "ground-truth",
+    "structured-data",
+    "data-governance",
+    "data-distribution",
+    "environmental-and-labour-impacts"
+  ],
+  "oftenConfusedWith": [
+    "data-cleaning",
+    "ground-truth",
+    "metadata",
+    "structured-data"
+  ],
+  "oneSentence": "People add tags, notes or boundaries to data so a model can be trained, tested or checked against a clearer target.",
+  "plainExplanation": "Annotation and data labelling are closely related, but they are not always exactly the same. Data labelling usually means attaching a target tag such as “damaged road” or “not damaged road”. Annotation is broader: it can also mean drawing boxes around objects, marking sentence parts, highlighting spans of text, or adding notes about what appears in an image, audio clip or document. Annotators are the people, or sometimes software tools, that do this work.\n\nWhat goes in can be many kinds of data: images, text, speech, video or tables. A team first decides what labels or annotations are needed and writes rules so different people apply them in a similar way. Then annotators review each item and add the required mark-up. Quality checks may compare different annotators’ work, measure agreement, and correct unclear cases.\n\nWhat comes out is a labelled or annotated dataset. That dataset can be used to train a model, test whether it performs well, or monitor whether it is still working acceptably. The output may look structured, such as a spreadsheet column of labels, or more detailed, such as polygons around flooded areas on a map or highlighted names in a document.\n\nThis is often confused with data cleaning and with ground truth. Data cleaning fixes formatting errors, duplicates or broken records; annotation adds meaningful tags or marks. Ground truth usually means the best available reference answer for evaluation or training, while labels are the actual tags people assigned. In practice, some labels become part of what a project treats as ground truth, but they are not automatically perfect.",
+  "everydayAnalogy": {
+    "title": "Marking damage on printed satellite photos",
+    "story": "A city engineering team prints 200 satellite photos after a storm. They agree on a guide: draw a red outline around road sections that look damaged, add a yellow mark for uncertain cases, and leave intact roads unmarked. Different staff members mark the photos, and a supervisor checks samples where people disagreed. At the end, the team has a stack of photos with consistent markings that can be used to train a system to spot likely road damage faster.",
+    "mapping": [
+      {
+        "analogyElement": "printed satellite photos",
+        "aiElement": "raw input data such as images"
+      },
+      {
+        "analogyElement": "red outlines and yellow marks",
+        "aiElement": "labels and annotations added to the data"
+      },
+      {
+        "analogyElement": "the written guide for staff",
+        "aiElement": "annotation instructions or labelling guidelines"
+      },
+      {
+        "analogyElement": "the supervisor checking disagreements",
+        "aiElement": "quality control and agreement review"
+      }
+    ],
+    "limitation": "Real annotation projects are usually more complex than marking paper photos. The rules may involve many classes, edge cases and formats, and the data may be text, audio or video rather than images. Also, model training does not copy markings directly like a person reading the paper; it uses many examples to adjust internal parameters statistically, so even carefully labelled data does not guarantee correct outputs."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How annotation turns raw data into training-ready data",
+    "learningObjective": "Show the ordered process from raw data to reviewed labels, and explain the difference between simple labelling and broader annotation.",
+    "description": "A left-to-right step diagram with five boxes. Read from raw data, to task design, to human or tool marking, to quality review, to the finished labelled dataset. Each box includes a tiny example of what changes at that stage.",
+    "steps": [
+      {
+        "label": "1. Raw data arrives",
+        "explanation": "Start with unlabelled items such as images, text, audio or video.",
+        "visualInstruction": "Show mixed icons for an image, a document, a waveform and a video frame, all with pale grey placeholders and no markings."
+      },
+      {
+        "label": "2. Rules are defined",
+        "explanation": "The team chooses the classes or mark-up needed and writes instructions for annotators.",
+        "visualInstruction": "Show a guideline sheet with simple examples: 'damaged road', 'uncertain', 'not damaged' and a note saying 'draw boundary if visible'."
+      },
+      {
+        "label": "3. Data is marked",
+        "explanation": "Annotators or tools add labels, boxes, highlights, timestamps or other tags to each item.",
+        "visualInstruction": "Show the same sample items now with a tag on text, a box on an image, and a timestamp marker on audio."
+      },
+      {
+        "label": "4. Quality is checked",
+        "explanation": "Disagreements, missing marks and unclear cases are reviewed so the dataset is more consistent.",
+        "visualInstruction": "Show two versions of one image side by side with a small warning icon, then a merged reviewed version with a tick."
+      },
+      {
+        "label": "5. Labelled dataset is produced",
+        "explanation": "The result is a more structured dataset that can support training, testing or monitoring.",
+        "visualInstruction": "Show a table linked to sample files, with columns for item ID, label, annotation file and review status."
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal a short example of the annotation format used there, such as class label, bounding box, highlighted text span or timestamp.",
+    "accessibilityDescription": "This diagram explains annotation as a five-step process. First, there is raw unlabelled data such as images, text, audio and video. Second, a team defines rules, including what labels to use and how to mark unclear cases. Third, annotators or software tools add labels or richer annotations such as boxes, highlights or timestamps. Fourth, the work is checked for disagreements and mistakes, and unclear items are reviewed. Fifth, the result is a labelled dataset that is more structured and can be used for training, testing or monitoring a model. The key message is that annotation is broader than simple labelling, and that quality review matters.",
+    "reducedMotionDescription": "A static five-box horizontal process graphic with arrows between boxes, showing raw data, rules, marking, review and finished labelled dataset, with no animation or hover-only content."
+  },
+  "workedExample": {
+    "scenario": "A public works team wants a model to flag storm-damaged roads in satellite images.",
+    "input": "1,200 satellite image tiles from three provinces, each showing a 200-metre square area.",
+    "process": [
+      "The team defines three labels: damaged road, no visible damage, and uncertain; they also require a polygon outline around visible damage.",
+      "Four trained annotators mark all 1,200 images using the same written guide.",
+      "A quality reviewer checks 200 sampled images and sends 48 disputed cases back for discussion and correction.",
+      "The final dataset is split into 900 training images, 150 validation images and 150 test images."
+    ],
+    "result": "The output is a reviewed annotated dataset: 310 images marked as damaged, 780 as no visible damage, 110 as uncertain, plus polygon files showing where damage appears."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team wants to organise a large archive of incoming public reports by topic so staff can route them faster, using a small labelled sample to train or evaluate a classifier.",
+    "relevance": "This shows why annotation matters before automation: staff must define categories clearly, label examples consistently, and check whether the categories are fair, useful and suitable for the task.",
+    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive reports into an unapproved public AI service for labelling or model training. Use approved systems, minimise personal data, and keep human oversight over category design and review."
+  },
+  "whyItMatters": "If you hear that an AI system was “trained on data”, annotation helps explain what that often means in practice: people or tools turned messy inputs into examples with clear targets. The quality of those targets affects accuracy, fairness, safety and cost. Poorly designed labels can hide important differences, force sensitive realities into crude categories, or reproduce bias from the people and rules used to create them. For non-specialists, this matters when choosing vendors, reviewing evidence, setting procurement requirements, or deciding whether a system is suitable for a high-stakes task. Asking who labelled the data, under what rules, with what checks, is often more useful than asking only which model was used.",
+  "whereYouMayHearIt": [
+    "building training datasets",
+    "quality assurance for AI systems",
+    "computer vision projects",
+    "document classification work",
+    "vendor procurement discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Labelling just means putting one tag on each file.",
+      "correction": "Sometimes it does, but annotation can be much richer. A project may need boxes around objects, highlighted words in text, speaker turns in audio, timestamps in video, or notes about uncertainty. Treating all of this as a single simple tag can hide real differences in workload, quality needs and risk."
+    },
+    {
+      "misconception": "If humans labelled the data, the labels are automatically correct.",
+      "correction": "Human labels can still be inconsistent, rushed, culturally narrow or based on unclear instructions. Two qualified annotators may disagree on borderline cases. That is why projects use guidelines, sampling, adjudication and agreement checks instead of assuming that one human answer is always the truth."
+    },
+    {
+      "misconception": "Annotation and data cleaning are the same job.",
+      "correction": "They often happen in the same pipeline, but they solve different problems. Data cleaning fixes issues like duplicates, broken formatting or impossible values. Annotation adds meaning for a task, such as category tags or marked regions. A clean dataset can still be unlabelled, and a labelled dataset can still need cleaning."
+    },
+    {
+      "misconception": "More labelled data always solves performance problems.",
+      "correction": "More data can help, but only if the labels fit the real task and the examples represent the situations the model will face. If the instructions are weak, the categories are poorly chosen, or the data distribution is narrow, adding more of the same may simply scale up the same problem."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "People look at data and add useful tags or markings so an AI system has clearer examples to learn from or be tested against.",
+    "technical": "Annotation is the process of attaching task-relevant information to raw data instances. In classification, this may be a discrete class label. In other tasks, it may be token-level tags in text, bounding boxes or polygons in images, segmentation masks, keypoints, timestamps, speaker labels, rankings or free-text notes. Data labelling usually refers to the simpler end of this range, while annotation is the broader term. The process typically includes schema design, instructions, annotator training, sampling, assignment, quality control, adjudication of disagreements, and storage of labels in a machine-readable format linked to each source item. The resulting annotated corpus can support supervised learning, evaluation, error analysis and ongoing monitoring. Labels may be treated as reference targets, but they remain dependent on the task definition, the annotators, and the governance choices around privacy, labour and data handling."
+  },
+  "keyTakeaway": "Annotation turns raw data into usable examples, and the rules and review behind those labels matter as much as the quantity.",
+  "quickCheck": {
+    "question": "Which statement best describes annotation and data labelling?",
+    "options": [
+      "They only mean deleting bad records from a dataset.",
+      "They are ways of adding task-relevant tags or markings to data, with annotation often covering richer mark-up than simple labels.",
+      "They guarantee that a model’s outputs will be correct because humans created the dataset.",
+      "They only apply to images, not text, audio or video."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Annotation and data labelling both add information to raw data so it can be used for training, testing or review. Simple labelling might assign one class to each item, while annotation can also include boxes, highlights, timestamps and other mark-up. They are not the same as data cleaning, and human-created labels still need quality checks."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Data annotation",
+      "url": "https://en.wikipedia.org/wiki/Data_annotation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia link gives a broad overview of data annotation concepts and examples, which suits readers who want a quick general introduction.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This NIST resource helps readers connect annotation choices to AI risk management and quality controls, which suits managers, reviewers and technical leads.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "difficulty": "intermediate",
+      "description": "This OECD resource helps readers place annotation within wider trustworthy AI principles and governance concerns, which suits policy and programme audiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Annotation and data labelling",
+      "url": "https://www.youtube.com/results?search_query=Annotation%20and%20data%20labelling%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find different video explanations and demonstrations of annotation and data labelling, which suits people who learn well by watching but should be read as a search page, not a single vetted source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Annotation and data labelling",
+      "url": "https://www.reddit.com/search/?q=Annotation%20and%20data%20labelling",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common practitioner questions and informal discussions about annotation and data labelling, which suits readers seeking community perspectives but should be read as a search page, not a single authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "annotation meaning ai",
+    "data labelling explained",
+    "data annotation vs labelling",
+    "what do annotators do",
+    "labeling data for ai",
+    "ground truth vs labels",
+    "data annotation examples",
+    "annotaion ai misspelling",
+    "how images get labelled for machine learning",
+    "annotation and data labelling",
+    "data labelling",
+    "labelling",
+    "data annotation",
+    "annotators"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:49:01.775Z",
+    "contentHash": "409e9a4866b1134f",
+    "attempts": 1,
+    "promptTokens": 2423,
+    "completionTokens": 2673
+  }
+}

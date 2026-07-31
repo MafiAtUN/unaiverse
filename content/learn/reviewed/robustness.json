@@ -1,0 +1,221 @@
+{
+  "id": "robustness",
+  "slug": "robustness",
+  "term": "Robustness",
+  "aliases": [
+    "robust"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "technical",
+    "leadership"
+  ],
+  "prerequisiteTermIds": [
+    "generalisation"
+  ],
+  "relatedTermIds": [
+    "generalisation",
+    "benchmark",
+    "baseline",
+    "evaluation-metric",
+    "false-positive-and-false-negative",
+    "overfitting"
+  ],
+  "oftenConfusedWith": [
+    "reliability",
+    "generalisation",
+    "adversarial-example"
+  ],
+  "oneSentence": "The ability of a model or system to keep performing acceptably when inputs, conditions or small disturbances change.",
+  "plainExplanation": "Robustness asks a simple question: if real-world conditions shift a bit, does the system still work well enough? The input is the same kind of data the system was built for, but with variation such as typos, different lighting, new accents, slightly changed wording or missing values. What happens is that the model processes these less tidy inputs. The output is a measure of whether performance stays acceptable rather than collapsing.\n\nThis is related to generalisation, but not the same. Generalisation usually means doing well on new examples from the same overall pattern as the training and test data. Robustness focuses more on stability under disturbance, stress or imperfect conditions. A model can score well on a clean benchmark but still be fragile when small changes appear.\n\nRobustness is also not the same as reliability. Reliability usually asks whether a system works consistently over time in operation. Robustness asks whether it keeps working when the input or environment is less ideal. A system may be reliable in the sense that it always produces an answer, but not robust if that answer becomes poor after a minor change.\n\nPeople test robustness by trying realistic variations: rephrased text, noisier images, different devices, unusual but valid cases, or data from a new location. They then compare the results with a baseline, meaning a reference result under normal conditions. If performance drops only a little, the system is more robust. If a small change causes many false positives or false negatives, robustness is weak.",
+  "everydayAnalogy": {
+    "title": "A translator working from messy notes",
+    "story": "A field officer receives short notes from colleagues in Nairobi, Bogotá and Amman and must translate them into clear English for a daily briefing. On some days the notes are neat. On other days they contain spelling mistakes, local abbreviations or sentences copied from a phone message with missing punctuation. A robust translation process still produces a usable summary across these variations, while a fragile one fails as soon as the wording becomes messy.",
+    "mapping": [
+      {
+        "analogyElement": "Notes with spelling mistakes or abbreviations",
+        "aiElement": "Inputs with small disturbances or distribution shifts"
+      },
+      {
+        "analogyElement": "Translator producing a usable briefing summary",
+        "aiElement": "Model maintaining acceptable output quality"
+      },
+      {
+        "analogyElement": "Neat notes versus messy notes",
+        "aiElement": "Clean test data versus real-world conditions"
+      }
+    ],
+    "limitation": "A human translator can ask clarifying questions and use broad world knowledge. Most AI systems cannot do that unless they are designed with extra checks or human review. Also, robustness in AI is measured across many examples and conditions, not judged from a single difficult note."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Clean inputs versus stressed inputs",
+    "learningObjective": "Show that robustness means performance remains acceptable when realistic variations are introduced, not just on ideal test cases.",
+    "description": "A two-column comparison. The left column shows clean inputs moving through a model to a strong score. The right column shows slightly altered but still valid inputs moving through the same model to either a small drop or a large drop. Read left to right, then compare the size of the performance change.",
+    "steps": [
+      {
+        "label": "Clean case",
+        "explanation": "Start with ordinary test inputs that match expected conditions.",
+        "visualInstruction": "Draw three simple input cards labelled 'clear text', 'standard image', and 'complete form' feeding into one model box; show an output badge '92% score'."
+      },
+      {
+        "label": "Add realistic variation",
+        "explanation": "Now change the inputs slightly without changing the task: add typos, blur, missing fields or different wording.",
+        "visualInstruction": "Duplicate the three input cards in a second column and overlay small icons for typo, blur and missing value."
+      },
+      {
+        "label": "Run the same model",
+        "explanation": "Use the same model under both conditions so the comparison is fair.",
+        "visualInstruction": "Connect both columns to identical model boxes with matching labels and styling."
+      },
+      {
+        "label": "Compare the drop",
+        "explanation": "A robust model shows only a modest decline; a fragile model shows a large decline.",
+        "visualInstruction": "Show two output gauges in the stressed column as alternatives: one near the clean score labelled 'robust' and one much lower labelled 'fragile'; add a bracket or arrow highlighting score difference."
+      }
+    ],
+    "interaction": "Hover or tap each variation icon to reveal an example such as 'teh' for a typo, slight image blur, or a blank optional field; a toggle switches the stressed-column output between modest drop and large drop.",
+    "accessibilityDescription": "The diagram compares how one model performs on clean inputs and on slightly disturbed inputs. In the clean column, clear text, standard images and complete forms go into the model and produce a strong score of 92%. In the stressed column, similar inputs with typos, blur or missing values go into the same model. If the score stays close to 92%, the model is robust. If the score falls sharply, the model is fragile. The key message is that robustness is judged by how much performance changes under realistic variation.",
+    "reducedMotionDescription": "A static two-column comparison with clean inputs on the left and stressed inputs on the right, using labels and score markers instead of animated transitions."
+  },
+  "workedExample": {
+    "scenario": "A text classifier labels short incident updates as 'logistics' or 'security'.",
+    "input": "Clean test set: 1,000 messages. Stressed test set: the same messages after adding common spelling errors, abbreviations and missing punctuation.",
+    "process": [
+      "On the clean set, the model gets 910 of 1,000 labels correct, so accuracy is 91%.",
+      "On the stressed set, the model gets 860 of 1,000 labels correct, so accuracy is 86%.",
+      "Analysts inspect the errors and find that many new mistakes come from shortened words such as 'sec' and 'log'.",
+      "They compare this 5-point drop with a baseline system that falls from 88% to 70% under the same stress test."
+    ],
+    "result": "The first model appears reasonably robust under this kind of text noise because performance declines modestly, while the baseline is much less robust."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team builds an internal search tool over approved guidance documents so staff can find policy and procedural material using natural-language queries.",
+    "relevance": "Robustness matters if the tool should still retrieve useful documents when staff use different spellings, short queries, regional phrasing or imperfect grammar from field locations.",
+    "caution": "Use only approved internal systems and approved document collections; do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into a public AI service for testing."
+  },
+  "whyItMatters": "Non-specialists often see one headline score and assume the system will behave similarly in practice. Robustness helps you ask the harder question: what happens when reality is messier than the demo? If a system is not robust, a small change in wording, image quality, device, location or user behaviour can quietly produce many more errors. That can affect service quality, safety, fairness, workload and trust. For leaders and policy teams, robustness is part of deciding whether a system is ready for real use, what safeguards it needs, and where human review remains necessary.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "procurement discussions",
+    "risk and assurance reviews",
+    "red-teaming exercises",
+    "benchmark comparisons"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model has high accuracy, it is robust.",
+      "correction": "High accuracy on one test set only shows performance under those test conditions. Robustness asks whether performance stays acceptable when inputs are noisier, phrased differently or come from somewhat different conditions."
+    },
+    {
+      "misconception": "Robustness means the system can handle anything.",
+      "correction": "No system is robust to every possible change. Robustness is always relative to specific disturbances, such as typos, blur, accent variation or sensor noise, and should be tested for those cases explicitly."
+    },
+    {
+      "misconception": "Robustness and reliability are the same.",
+      "correction": "They overlap but are different. Reliability is about consistent operation over time, while robustness is about resisting drops in performance when conditions or inputs change. A system can answer every time yet still answer poorly under mild stress."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A robust system does not fall apart when real-life inputs are a bit messy or different from the ideal examples used in testing.",
+    "technical": "Robustness is the degree to which model performance remains stable under plausible perturbations, noise, shifts in input distribution, missingness, rephrasing or environmental change. In practice, it is assessed by defining stress conditions, evaluating on perturbed or shifted data, and measuring degradation relative to a baseline on clean data. The exact metric depends on the task, such as accuracy, recall, calibration error or retrieval quality. Robustness is related to generalisation but emphasises sensitivity to disturbance and worst-case or stress-case behaviour. It is also distinct from adversarial robustness, which focuses on inputs intentionally crafted to trigger failure."
+  },
+  "keyTakeaway": "A strong score on tidy test data is not enough; a useful system must keep performing acceptably when reality becomes slightly messy.",
+  "quickCheck": {
+    "question": "Which result gives the clearest evidence of robustness?",
+    "options": [
+      "A model scores 95% on one clean benchmark but is not tested further.",
+      "A model keeps similar performance after realistic typos, blur and missing values are introduced.",
+      "A model produces an answer for every input, even when many answers are wrong.",
+      "A model is more complex than the previous version and uses more training data."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Robustness is about how performance changes under realistic variation or stress. A clean benchmark score alone does not show that. Always producing an output shows availability, not quality. Model size and data volume do not guarantee stable behaviour."
+  },
+  "resources": [
+    {
+      "title": "Robustness (computer science)",
+      "url": "https://en.wikipedia.org/wiki/Robustness_(computer_science)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives a broad introductory overview of robustness in computing and suits readers who want a quick orientation before going deeper.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This Google course material helps readers connect robustness questions to classification performance measures and suits beginners to intermediate learners.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "The NIST AI Risk Management Framework shows how robustness fits into broader AI risk management and suits policy, assurance and leadership audiences.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Robustness",
+      "url": "https://www.youtube.com/results?search_query=Robustness%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page offers many video explanations on robustness and suits readers who prefer to compare several teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Robustness",
+      "url": "https://www.reddit.com/search/?q=Robustness",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussions and practical questions about robustness and suits readers who want informal examples and debate, with careful fact-checking.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "robustness ai meaning",
+    "what is robust model",
+    "model robustness vs reliability",
+    "robustness machine learning example",
+    "how to test model robustness",
+    "robust vs generalisation",
+    "robustness under noise",
+    "adversarial robustness difference",
+    "robustnes ai",
+    "fragile model small changes",
+    "robustness",
+    "robust"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:27.401Z",
+    "contentHash": "484afb1d781c5513",
+    "attempts": 1,
+    "promptTokens": 2301,
+    "completionTokens": 2263
+  }
+}

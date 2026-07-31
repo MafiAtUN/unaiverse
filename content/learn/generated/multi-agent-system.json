@@ -1,0 +1,230 @@
+{
+  "id": "multi-agent-system",
+  "slug": "multi-agent-system",
+  "term": "Multi-agent system",
+  "aliases": [
+    "multi agent",
+    "agent swarm"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "ai-agent",
+    "orchestration"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "agentic-ai",
+    "orchestration",
+    "planning",
+    "tool-use",
+    "human-in-the-loop"
+  ],
+  "oftenConfusedWith": [
+    "orchestration",
+    "workflow",
+    "ai-assistant"
+  ],
+  "oneSentence": "A multi-agent system uses several specialised software agents that coordinate, divide tasks and exchange results to complete a goal.",
+  "plainExplanation": "A multi-agent system is a setup where more than one software agent works on the same overall task. An agent is a program that can take steps, such as searching, calling a tool, checking a result or passing work to another agent. Instead of one agent doing everything, the work is split across several agents with different roles.\n\nWhat goes in can be a user request, a queue of tasks, data from tools or rules about what each agent may do. Then the agents interact. One may plan the job, another may retrieve documents, another may compare answers, and another may check quality or ask for human review. They may share messages, partial results or a short record of what has already happened.\n\nWhat comes out is not just one reply. It can be a drafted report, a ranked list of documents, a set of actions taken through tools, or a recommendation for a human to approve. The benefit is that specialised parts can work in parallel or cross-check each other. The risk is that coordination errors can spread quickly if the design is weak.\n\nThis is often confused with orchestration. Orchestration usually means the control layer that routes tasks and manages order. A multi-agent system is the wider arrangement of multiple interacting agents; it may include orchestration, but it is not only that control layer.\n\nIt is also different from a single chatbot or assistant with many features. If one model answers everything in one thread, that is not automatically a multi-agent system. The key idea is multiple agents with separate roles, states or tool access working together.",
+  "everydayAnalogy": {
+    "title": "A document search team in a library",
+    "story": "Imagine a team in a large library helping someone find past statements on coastal protection. One person turns the request into search terms, a second searches the catalogue, a third reads the most relevant pages, and a fourth checks whether the passages really match the topic and date. They pass notes to each other instead of each person doing the full job alone. At the end, the requester receives a short pack of verified excerpts and a note about anything uncertain.",
+    "mapping": [
+      {
+        "analogyElement": "person turning the request into search terms",
+        "aiElement": "planning or query-generation agent"
+      },
+      {
+        "analogyElement": "person searching the catalogue",
+        "aiElement": "retrieval agent using tools or databases"
+      },
+      {
+        "analogyElement": "person reading relevant pages",
+        "aiElement": "analysis agent extracting useful content"
+      },
+      {
+        "analogyElement": "person checking topic and date",
+        "aiElement": "verification or critic agent"
+      }
+    ],
+    "limitation": "People in a library usually have broad common sense and can discuss ambiguity in rich ways. Software agents usually rely on narrower instructions, tool outputs and message formats. Also, human team members may truly understand institutional context, while AI agents only generate outputs from patterns and system prompts, so their agreement does not guarantee correctness."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a multi-agent system handles one request",
+    "learningObjective": "Show how one request can be split among specialised agents, coordinated, checked and returned as one result.",
+    "description": "A left-to-right flow diagram. One user request enters a coordinator, which sends work to three specialist agents in parallel. Their outputs move to a checker agent, then to a final answer box or a human review box if confidence is low. Read from left to right to see how division of labour and supervision change the result.",
+    "steps": [
+      {
+        "label": "1. Request enters",
+        "explanation": "A user provides a goal, such as finding prior language on a topic.",
+        "visualInstruction": "Draw one input card on the left labelled 'Request'. Add an arrow to a central box labelled 'Coordinator or planner'."
+      },
+      {
+        "label": "2. Work is divided",
+        "explanation": "The coordinator assigns different sub-tasks to different agents.",
+        "visualInstruction": "From the coordinator, draw three arrows to three boxes: 'Search agent', 'Analysis agent' and 'Policy-rules agent'. Use distinct colours and short role labels."
+      },
+      {
+        "label": "3. Agents use tools and messages",
+        "explanation": "Each agent may call tools or exchange short results with the others.",
+        "visualInstruction": "Place small tool icons under each agent, such as database, document and rules list. Add thin dashed arrows between agents to show message passing."
+      },
+      {
+        "label": "4. Outputs are checked",
+        "explanation": "A checker compares the sub-results for relevance, consistency and missing evidence.",
+        "visualInstruction": "Merge arrows from the three agents into one box labelled 'Checker / verifier'. Add a checklist icon."
+      },
+      {
+        "label": "5. Final result or human review",
+        "explanation": "If the result is strong, the system returns it. If not, it asks for human oversight.",
+        "visualInstruction": "From the checker, branch to two end boxes: 'Answer with sources' and 'Human review needed'. Label the branch condition 'confidence / policy rules'."
+      }
+    ],
+    "interaction": "Hovering over each agent highlights its role and the tool it uses; clicking shows an example message passed between agents.",
+    "accessibilityDescription": "The diagram shows a multi-agent system as a flow from left to right. A request first goes to a coordinator or planner. The coordinator sends different parts of the work to three specialist agents: one searches, one analyses documents and one checks policy rules. These agents can also exchange short messages. Their outputs then move into a checker or verifier that compares the pieces. From there, the process splits into two possible outcomes: either an answer with sources is returned, or the case is sent for human review if confidence is low or rules require oversight. The main lesson is that multiple specialised agents can share one task, but a checking and review stage is needed before acting on the result.",
+    "reducedMotionDescription": "A static flowchart with the same boxes and arrows, without animation. Parallel work is shown by three side-by-side agent boxes between the coordinator and the checker."
+  },
+  "workedExample": {
+    "scenario": "A research team asks a system: 'Find language on plastic pollution from 2019 to 2023 resolutions, and group it into prevention, waste management and international cooperation.'",
+    "input": "Find relevant passages from 2019-2023 resolutions on plastic pollution. Return grouped excerpts with document IDs and flag uncertain matches.",
+    "process": [
+      "A planning agent turns the request into sub-tasks: date filter, topic filter and output structure.",
+      "A search agent queries a document store and returns 18 candidate paragraphs from 7 resolutions.",
+      "An analysis agent labels the 18 paragraphs into three themes and removes 5 that mention pollution generally but not plastics.",
+      "A verification agent checks dates, document IDs and whether each excerpt actually contains language on the requested theme.",
+      "The coordinator compiles 13 validated excerpts into a table and flags 2 borderline cases for human review."
+    ],
+    "result": "The team receives a table with 13 excerpts, grouped under prevention, waste management and international cooperation, each with a resolution ID, year and a note that 2 additional excerpts need human checking."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team wants to search past resolutions for prior agreed language on a negotiation topic. One agent drafts search terms, another searches an approved internal repository, and a third compares the results against the requested date range and subject labels before producing a shortlist for staff review.",
+    "relevance": "This can save time when staff need broad coverage across many documents, while keeping a clear division between searching, checking and final human judgement.",
+    "caution": "Use only approved internal systems and repositories. Do not place confidential, unpublished, negotiation-sensitive or access-restricted material into an unapproved public AI service, and do not rely on the shortlist without human verification."
+  },
+  "whyItMatters": "For non-specialists, the key issue is not whether the system sounds impressive. It is whether work is being split across components in a way that improves coverage, speed or checking, or whether it simply adds complexity and risk. Multi-agent systems can help with large, messy tasks by assigning different roles, running parts in parallel and comparing outputs. But they can also make responsibility harder to trace. If several agents pass errors to each other, a mistake may look well supported when it is not. In procurement, governance and risk review, you may need to ask: Which agent can access which tools? Who checks final outputs? What triggers human oversight? What logs exist? Those questions affect reliability, accountability, privacy and security more than the label alone.",
+  "whereYouMayHearIt": [
+    "agentic AI product demos",
+    "enterprise automation design",
+    "document search and analysis systems",
+    "research tooling discussions",
+    "AI governance reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If several agents work on a task, the answer is automatically more reliable.",
+      "correction": "More agents can help with coverage or cross-checking, but only if roles, evidence handling and verification are designed well. Poorly coordinated agents can repeat the same weak assumption, amplify an early error or create false confidence by agreeing with each other."
+    },
+    {
+      "misconception": "A multi-agent system is just one chatbot with a fancy name.",
+      "correction": "A single chatbot may use tools and still remain one agent handling everything in one loop. A multi-agent system usually has distinct agents with separate roles, prompts, states, permissions or tool access, and those parts exchange work or results."
+    },
+    {
+      "misconception": "The orchestrator and the multi-agent system are the same thing.",
+      "correction": "The orchestrator is often the traffic controller: it routes tasks, manages order and may collect outputs. The multi-agent system is the larger arrangement that includes multiple agents, their interactions, their tools and often the orchestrator as one component among others."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is like assigning a team instead of one worker: one part searches, another checks, another organises, and their pieces are combined into one result.",
+    "technical": "A multi-agent system is a software architecture in which multiple agents, often backed by language models and tool connectors, pursue a shared or related objective through coordination. Agents may have distinct prompts, memory scopes, permissions, APIs, planning strategies or tool sets. Coordination can be centralised, such as a planner assigning sub-tasks, or more distributed, with agents exchanging messages or negotiating task ownership. Typical patterns include planner-worker, researcher-critic, retrieval-analysis-verification and debate-style checking. Inputs may include a user goal, environment state, policies and tool outputs. During execution, agents perform observation and action cycles: they inspect context, call tools, generate intermediate artefacts and hand off results. The system may maintain shared state, per-agent state or both. The main engineering challenges are task decomposition, communication protocol, conflict resolution, error propagation, latency, cost, traceability and human oversight. In practice, a multi-agent system may outperform a single agent on tasks that benefit from specialisation or parallelism, but it can also underperform if coordination overhead outweighs the benefit."
+  },
+  "keyTakeaway": "A multi-agent system can divide work and add checks, but only if coordination, permissions and human oversight are designed carefully.",
+  "quickCheck": {
+    "question": "Which description best fits a multi-agent system?",
+    "options": [
+      "One assistant replying in a single chat, even if it has many features",
+      "Several specialised agents that share or hand off parts of a task to reach one goal",
+      "Any workflow with fixed rules and no agents or tool use",
+      "A database that stores many documents for one search engine"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The defining feature is multiple agents with distinct roles or behaviours working together on one broader task. A single assistant with many features is not automatically multi-agent, and a fixed workflow or a database alone does not meet the idea."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Multi-agent system",
+      "url": "https://en.wikipedia.org/wiki/Multi-agent_system",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad introductory overview of the term, useful for readers who want a neutral starting point and basic vocabulary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This link explains how agent-based systems are framed in practice by one AI developer, and suits readers comparing product and design perspectives.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This link explains the Model Context Protocol, which suits technical readers who want to understand one way agents and tools can exchange structured context.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Multi-agent system",
+      "url": "https://www.youtube.com/results?search_query=Multi-agent%20system%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find a range of video explanations of multi-agent systems, and suits people who learn better by hearing and seeing examples.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Multi-agent system",
+      "url": "https://www.reddit.com/search/?q=Multi-agent%20system",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see how practitioners discuss the term informally, and suits readers who want examples, debates and practical questions rather than a single curated explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "multi agent system meaning",
+    "multi-agent system example",
+    "agent swarm ai",
+    "what is a multi agent system",
+    "multi agent vs orchestration",
+    "multiple ai agents working together",
+    "mas in ai",
+    "multiagent system",
+    "multi-agent system",
+    "multi agent",
+    "agent swarm"
+  ],
+  "contested": "The broad idea is widely used, but boundaries vary in practice. Some people reserve the term for systems with relatively autonomous agents that communicate with each other, while others use it for any architecture with multiple specialised agent components under one coordinator.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:37.693Z",
+    "contentHash": "67eff7e5244df35d",
+    "attempts": 1,
+    "promptTokens": 2279,
+    "completionTokens": 2654
+  }
+}

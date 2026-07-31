@@ -1,0 +1,84 @@
+---
+/**
+ * One comparison, laid out as columns rather than a table.
+ *
+ * A comparison table is the obvious choice and the wrong one on a phone: it
+ * either scrolls sideways or shrinks to unreadable. Columns that stack are the
+ * same information with no horizontal scroll, which is a hard rule for core
+ * content on this site.
+ */
+import Learn from '../../../layouts/Learn.astro';
+import { COMPARISONS, resolveComparison } from '../../../lib/learn/compare';
+import { learnHref, CATEGORY_BY_ID } from '../../../lib/learn/terms';
+import { DIFFICULTY_LABEL } from '../../../lib/learn/schema';
+
+export function getStaticPaths() {
+  return COMPARISONS.map((comparison) => {
+    const resolved = resolveComparison(comparison);
+    return { params: { id: comparison.id }, props: { comparison: resolved } };
+  }).filter((entry) => entry.props.comparison.terms.length >= 2);
+}
+
+const { comparison } = Astro.props;
+const title = `${comparison.title} · UNAIVERSE`;
+const description = comparison.shortAnswer.slice(0, 300);
+---
+
+<Learn title={title} description={description} section="compare">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / <a href={learnHref('compare')}>Compare</a> /
+        {comparison.title}
+      </p>
+      <h1 class="learn-head__title">{comparison.title}</h1>
+      <p class="learn-head__lead">{comparison.question}</p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6)">
+    <div class="paper-panel paper-panel--accent" style="max-width: 60ch">
+      <h2 style="font-size:var(--step-0);margin-top:0">The short answer</h2>
+      <p class="compare-answer">{comparison.shortAnswer}</p>
+    </div>
+
+    <div class="compare-cols" data-cols={String(comparison.terms.length)}>
+      {
+        comparison.terms.map((t) => (
+          <article class="compare-col">
+            <h2 class="compare-col__title">
+              <a href={learnHref(t.slug)}>{t.term}</a>
+            </h2>
+            <p class="path-card__meta">
+              {CATEGORY_BY_ID.get(t.categoryId)?.name} · {DIFFICULTY_LABEL[t.difficulty]}
+            </p>
+
+            <dl>
+              <dt>In one sentence</dt>
+              <dd>{t.oneSentence}</dd>
+
+              <dt>Why it matters</dt>
+              <dd>{t.whyItMatters}</dd>
+
+              <dt>The everyday version</dt>
+              <dd>{t.simpleVsTechnical.simple}</dd>
+
+              <dt>The one thing to remember</dt>
+              <dd>{t.keyTakeaway}</dd>
+
+              <dt>The commonest misconception</dt>
+              <dd>
+                <strong>{t.commonMisconceptions[0]!.misconception}</strong>{' '}
+                {t.commonMisconceptions[0]!.correction}
+              </dd>
+            </dl>
+
+            <p style="margin-top:auto">
+              <a class="lbutton" href={learnHref(t.slug)}>Read the full page</a>
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</Learn>

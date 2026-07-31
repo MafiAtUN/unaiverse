@@ -1,0 +1,232 @@
+{
+  "id": "reinforcement-learning",
+  "slug": "reinforcement-learning",
+  "term": "Reinforcement learning",
+  "acronym": "RL",
+  "aliases": [
+    "RL"
+  ],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "inference",
+    "supervised-learning",
+    "unsupervised-learning",
+    "prediction",
+    "reinforcement-learning-from-human-feedback"
+  ],
+  "oftenConfusedWith": [
+    "supervised-learning",
+    "reinforcement-learning-from-human-feedback",
+    "unsupervised-learning"
+  ],
+  "oneSentence": "A training method where a system improves behaviour through trial, feedback and accumulated reward across a sequence of actions.",
+  "plainExplanation": "Reinforcement learning trains a system by letting it try actions in a situation and then giving it feedback as a reward, a score that signals how useful the outcome was. The system is often called an agent, and the situation it acts in is called the environment. The goal is not just one good move, but a strategy that does well over time.\n\nWhat goes in is usually a description of the current state, meaning the information available about the situation right now, plus a reward signal after actions are taken. Unlike supervised learning, there usually is not a correct answer attached to each example in advance. Instead, the system must discover which actions lead to better long-term results.\n\nWhat happens inside is repeated trial and adjustment. The system takes an action, the environment changes, and a reward arrives. Over many rounds, it updates a policy, which is a rule for choosing actions in each state, so that higher-reward actions become more likely in similar situations.\n\nWhat comes out is a policy or control strategy, not just a label or a score for one item. That is why reinforcement learning is commonly used for problems with sequences, timing and trade-offs, such as routing, game playing or managing resources. It is different from unsupervised learning too, which looks for patterns without reward signals tied to actions.",
+  "everydayAnalogy": {
+    "title": "Learning how to sort urgent messages",
+    "story": "A new staff member helps sort incoming messages into an urgent tray or a later tray. At first, they guess and sometimes place a message in the wrong tray. Later in the day, they learn which choices helped the team respond quickly and which choices caused delays, and they adjust how they sort the next messages. After many days, they become better at recognising patterns that usually lead to faster handling overall, even when one message is hard to judge by itself.",
+    "mapping": [
+      {
+        "analogyElement": "staff member sorting messages",
+        "aiElement": "agent choosing actions"
+      },
+      {
+        "analogyElement": "incoming message and current queue",
+        "aiElement": "state of the environment"
+      },
+      {
+        "analogyElement": "urgent tray or later tray",
+        "aiElement": "available actions"
+      },
+      {
+        "analogyElement": "learning from delays or quick responses",
+        "aiElement": "reward feedback used to update behaviour"
+      }
+    ],
+    "limitation": "A human staff member can use background knowledge, office norms and explicit explanations from colleagues. A reinforcement learning system does not rely on that kind of ordinary human reasoning unless those signals are built into the training setup. Also, real reinforcement learning often learns from thousands or millions of repeated interactions in a formal environment, not from a small number of daily examples."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How reinforcement learning improves behaviour over repeated rounds",
+    "learningObjective": "Show that reinforcement learning uses a loop of state, action, reward and update to build a better policy over time.",
+    "description": "A left-to-right loop shown as five connected steps. Read from the current situation to action, then to feedback, then to policy update, then back to a new situation. A small side note shows that rewards may reflect long-term results, not just the immediate outcome.",
+    "steps": [
+      {
+        "label": "1. Observe state",
+        "explanation": "The system receives information about the current situation, such as position, recent events or resource levels.",
+        "visualInstruction": "Draw a rounded box labelled 'Current state' with 2 to 4 small example icons or text chips inside, such as queue length, location or time."
+      },
+      {
+        "label": "2. Choose action",
+        "explanation": "Using its current policy, the system selects one action from the available options.",
+        "visualInstruction": "Draw an arrow to a second box labelled 'Action' with 3 small buttons inside to suggest choices; highlight one selected button."
+      },
+      {
+        "label": "3. Environment responds",
+        "explanation": "After the action, the situation changes. The system may reach a better, worse or neutral outcome.",
+        "visualInstruction": "Draw a third box labelled 'New state' with changed icons compared with step 1, plus a small transition arrow from action to new state."
+      },
+      {
+        "label": "4. Receive reward",
+        "explanation": "A reward signal gives feedback on how useful the recent outcome was for the overall goal.",
+        "visualInstruction": "Draw a small score panel beside the new state showing examples like +2, 0 or -1 in clear text, with colour not being the only cue."
+      },
+      {
+        "label": "5. Update policy",
+        "explanation": "The system adjusts its action-selection rule so better long-term actions become more likely in similar states.",
+        "visualInstruction": "Draw a final box labelled 'Policy update' with a slider or weight bars shifting slightly, then a curved arrow returning to step 1 to show repetition."
+      }
+    ],
+    "interaction": "On hover or tap, each step reveals one sentence explaining what information enters and what changes before the next step.",
+    "accessibilityDescription": "The diagram presents reinforcement learning as a repeating five-step process. First, the system observes the current state of the environment. Second, it chooses an action using its current policy. Third, the environment changes and produces a new state. Fourth, a reward signal indicates whether the outcome was better, worse or neutral for the goal. Fifth, the system updates its policy so actions linked to higher long-term reward become more likely in similar states. A return arrow shows that this cycle repeats many times.",
+    "reducedMotionDescription": "Show the same five boxes in a static row with a visible return arrow from policy update back to current state. Use labels and text only, with no animation."
+  },
+  "workedExample": {
+    "scenario": "A small warehouse trains a system to move one package at a time through two conveyor paths: fast lane or regular lane.",
+    "input": "State: queue length, package size, and whether the loading dock is close to full. Actions: send to fast lane or regular lane. Reward: +3 if package arrives on time without blocking others, -2 if late, -3 if it causes congestion.",
+    "process": [
+      "At one moment, the state is: queue length 8, package small, dock nearly full.",
+      "The system chooses 'fast lane'. The package arrives on time, but the fast lane becomes crowded.",
+      "The environment returns reward +1 overall because on-time delivery helped, but congestion reduced the benefit.",
+      "After many similar cases, the system learns that when the dock is nearly full, using the fast lane for every small package is not best.",
+      "Its policy shifts so that in states with heavy congestion, some small packages go to the regular lane to improve total flow over time."
+    ],
+    "result": "The trained policy does not simply ask 'which lane is fastest now?'; it learns which choice tends to maximise total reward across many future packages."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team explores an internal prototype that learns how to order non-sensitive public consultation submissions for human reviewers, aiming to surface likely high-priority themes earlier while balancing reviewer workload.",
+    "relevance": "This illustrates a sequential decision problem: the system's ordering choices affect what reviewers see next, how quickly themes are identified and how efficiently limited time is used, so feedback can be based on overall review outcomes rather than one fixed correct answer per submission.",
+    "caution": "Do not place confidential, personal or protection-sensitive submissions into an unapproved public AI service. Human oversight is needed to check that the learned ordering does not systematically disadvantage certain viewpoints, languages or regions."
+  },
+  "whyItMatters": "For non-specialists, reinforcement learning matters because it is used in situations where choices affect later options, costs or risks. That makes it relevant to resource allocation, scheduling, recommendations, control systems and some forms of AI-assisted optimisation. If you are assessing a system, you need to ask different questions than you would for ordinary prediction tools: What reward is it optimising? Who defined that reward? Does short-term success hide long-term harm? What happens while it explores and makes mistakes? Could it learn behaviour that scores well but conflicts with safety, fairness or policy goals? Understanding this helps with procurement, oversight and realistic expectations.",
+  "whereYouMayHearIt": [
+    "game-playing systems",
+    "traffic or routing optimisation",
+    "recommendation and ranking research",
+    "AI safety discussions",
+    "control and operations planning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "It just means rewarding a model whenever it gives the right answer.",
+      "correction": "That describes only a small part of the idea and can sound like supervised learning with scores. In reinforcement learning, feedback is often delayed, actions affect future states, and the main problem is choosing a sequence of actions that leads to better long-term reward."
+    },
+    {
+      "misconception": "A reward function automatically captures what people really want.",
+      "correction": "A reward function is only a designed signal. If it is too narrow, the system may learn behaviour that scores well on the reward while missing the real goal, creating side effects or exploiting loopholes in the setup."
+    },
+    {
+      "misconception": "It learns only by random guessing.",
+      "correction": "Exploration often includes trying uncertain actions, but practical methods usually balance exploration with exploitation, meaning using actions that already seem promising. The learning process is guided by the reward structure and update rules, not pure randomness."
+    },
+    {
+      "misconception": "Reinforcement learning from human feedback is the same thing as all reinforcement learning.",
+      "correction": "Reinforcement learning from human feedback is a specific approach where human preferences help shape the reward signal. Reinforcement learning more broadly covers many settings, including simulated environments and control problems without direct human ratings."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "The system learns by trying things, seeing what leads to better results over time, and adjusting what it does next.",
+    "technical": "In reinforcement learning, an agent interacts with an environment over time steps. At each step it observes a state, selects an action according to a policy, receives a reward and transitions to a new state. Training updates the policy, or a value function estimating expected future reward, so the agent improves expected cumulative reward rather than matching pre-labelled answers. This differs from supervised learning because there is usually no fixed target output for each input, and feedback may be sparse or delayed. It also differs from standard prediction tasks because the agent's actions change the future data it will encounter. Many formulations use the language of Markov decision processes, but not all practical systems fit that framework perfectly."
+  },
+  "keyTakeaway": "Reinforcement learning is about learning a strategy for sequences of actions by using reward signals, especially when today's choice changes tomorrow's options.",
+  "quickCheck": {
+    "question": "Which situation best fits reinforcement learning rather than ordinary supervised learning?",
+    "options": [
+      "Learning to assign one of three document labels from many examples with correct labels already provided.",
+      "Learning to choose traffic-signal timings where each timing choice affects later congestion and feedback comes from overall flow.",
+      "Grouping survey responses into clusters without any feedback about which grouping is better.",
+      "Using a fixed formula written by engineers to calculate a risk score from inputs."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Reinforcement learning fits problems with actions, changing states and feedback over time. Traffic-signal control is sequential: one choice affects later conditions, and the system can learn from reward such as smoother overall flow. The first option is supervised learning, the third is unsupervised learning and the fourth is not machine learning training at all."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Reinforcement learning",
+      "url": "https://en.wikipedia.org/wiki/Reinforcement_learning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference-style overview of reinforcement learning, including key terms and history, and suits readers who want a general starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link offers a structured introductory course on machine learning concepts and suits readers who prefer guided lessons over reference pages.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "difficulty": "starter",
+      "description": "This link provides an explainer-style video treatment from StatQuest and suits readers who learn best from clear verbal walkthroughs.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Reinforcement learning",
+      "url": "https://www.youtube.com/results?search_query=Reinforcement%20learning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page, not one single explanation, so readers can compare different video styles and difficulty levels.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Reinforcement learning",
+      "url": "https://www.reddit.com/search/?q=Reinforcement%20learning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page, not one single discussion, so readers can browse community questions, informal explanations and debates about the term.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "reinforcement learning simple meaning",
+    "rl machine learning explained",
+    "difference between reinforcement and supervised learning",
+    "reward signal ai",
+    "agent environment policy reward",
+    "q learning basic idea",
+    "what is rl in ai",
+    "reinforcment learning typo",
+    "long term reward machine learning",
+    "reinforcement learning",
+    "rl"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:19.262Z",
+    "contentHash": "f060c7587e69435a",
+    "attempts": 1,
+    "promptTokens": 2289,
+    "completionTokens": 2536
+  }
+}

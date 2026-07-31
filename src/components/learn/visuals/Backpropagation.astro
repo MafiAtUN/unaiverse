@@ -1,0 +1,199 @@
+---
+/**
+ * Backpropagation: forward, compare, blame backwards, adjust.
+ *
+ * Built as four explicit stages the reader advances through rather than an
+ * animation that plays at them, because the single most common confusion is
+ * between backpropagation (working out *who is responsible* for the error) and
+ * gradient descent (actually *changing* the weights). Separating stage 3 from
+ * stage 4 on screen is the entire point of the component.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+
+const STAGES = [
+  {
+    key: 'forward',
+    title: 'Forward pass',
+    text: 'The input travels through the network. Each connection multiplies it by a weight, and the last layer produces a prediction.',
+  },
+  {
+    key: 'compare',
+    title: 'Compare',
+    text: 'The prediction is compared with the correct answer. The gap between them is the error.',
+  },
+  {
+    key: 'backward',
+    title: 'Backpropagation',
+    text: 'The error is traced backwards. Each weight receives a share of the blame, proportional to how much it contributed. Nothing has changed yet.',
+  },
+  {
+    key: 'update',
+    title: 'Update',
+    text: 'Now gradient descent uses those shares to nudge every weight. Backpropagation worked out who was responsible; this step does something about it.',
+  },
+];
+---
+
+<div class="vx" data-bp data-term={termId}>
+  <div class="vx__row" role="group" aria-label="Stages">
+    {
+      STAGES.map((stage, i) => (
+        <button
+          type="button"
+          class="vx__button"
+          data-bp-stage={String(i)}
+          aria-pressed={i === 0 ? 'true' : 'false'}
+        >
+          {i + 1}. {stage.title}
+        </button>
+      ))
+    }
+  </div>
+
+  <svg class="vx__canvas" viewBox="0 0 440 200" role="img" aria-labelledby={`bp-title-${termId}`}>
+    <title id={`bp-title-${termId}`}>
+      A three-stage network: an input node, three internal nodes, and one prediction node.
+      Information flows left to right during the forward pass, and blame for the error flows right
+      to left during backpropagation.
+    </title>
+
+    <g data-bp-edges stroke-width="2" fill="none"></g>
+    <g data-bp-nodes></g>
+
+    <text x="42" y="192" fill="#f1eee4" opacity="0.6" font-size="10" text-anchor="middle">input</text>
+    <text x="220" y="192" fill="#f1eee4" opacity="0.6" font-size="10" text-anchor="middle"
+      >internal decisions</text
+    >
+    <text x="398" y="192" fill="#f1eee4" opacity="0.6" font-size="10" text-anchor="middle"
+      >prediction</text
+    >
+  </svg>
+
+  <p class="visual__readout" role="status" aria-live="polite" data-bp-readout></p>
+</div>
+
+<script>
+  const STAGES = [
+    {
+      key: 'forward',
+      title: 'Forward pass',
+      text: 'The input travels through the network. Each connection multiplies it by a weight, and the last layer produces a prediction of 0.31 where the correct answer is 1.0.',
+    },
+    {
+      key: 'compare',
+      title: 'Compare',
+      text: 'The prediction is 0.31 and the correct answer is 1.0, so the error is 0.69. This single number is what everything downstream is trying to shrink.',
+    },
+    {
+      key: 'backward',
+      title: 'Backpropagation',
+      text: 'The error is traced backwards along every connection. The thicker the line, the larger that weight’s share of the blame. Notice that no weight has changed yet — this stage only works out responsibility.',
+    },
+    {
+      key: 'update',
+      title: 'Update',
+      text: 'Gradient descent now nudges each weight in proportion to its share of the blame. The next forward pass will be a little less wrong. Backpropagation assigns the blame; gradient descent acts on it.',
+    },
+  ];
+
+  const NODES = [
+    { id: 'i0', x: 42, y: 100, layer: 0 },
+    { id: 'h0', x: 220, y: 46 },
+    { id: 'h1', x: 220, y: 100 },
+    { id: 'h2', x: 220, y: 154 },
+    { id: 'o0', x: 398, y: 100, layer: 2 },
+  ];
+
+  const EDGES = [
+    { from: 'i0', to: 'h0', blame: 0.75 },
+    { from: 'i0', to: 'h1', blame: 0.3 },
+    { from: 'i0', to: 'h2', blame: 0.55 },
+    { from: 'h0', to: 'o0', blame: 0.95 },
+    { from: 'h1', to: 'o0', blame: 0.2 },
+    { from: 'h2', to: 'o0', blame: 0.6 },
+  ];
+
+  const NS = 'http://www.w3.org/2000/svg';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-bp]')) {
+    const svg = root.querySelector<SVGSVGElement>('svg')!;
+    const edgeLayer = svg.querySelector<SVGGElement>('[data-bp-edges]')!;
+    const nodeLayer = svg.querySelector<SVGGElement>('[data-bp-nodes]')!;
+    const readout = root.querySelector<HTMLElement>('[data-bp-readout]')!;
+    const buttons = root.querySelectorAll<HTMLButtonElement>('[data-bp-stage]');
+
+    let stage = 0;
+    const byId = new Map(NODES.map((n) => [n.id, n]));
+
+    function render() {
+      const s = STAGES[stage]!;
+      edgeLayer.replaceChildren();
+      nodeLayer.replaceChildren();
+
+      for (const edge of EDGES) {
+        const a = byId.get(edge.from)!;
+        const b = byId.get(edge.to)!;
+        const line = document.createElementNS(NS, 'line');
+        line.setAttribute('x1', String(a.x));
+        line.setAttribute('y1', String(a.y));
+        line.setAttribute('x2', String(b.x));
+        line.setAttribute('y2', String(b.y));
+
+        if (s.key === 'backward' || s.key === 'update') {
+          // Blame is shown as line thickness as well as colour, so the
+          // information survives a colour-blind reader and a printout.
+          line.setAttribute('stroke', '#ff5fa8');
+          line.setAttribute('stroke-width', String(1 + edge.blame * 5));
+          line.setAttribute('opacity', String(0.4 + edge.blame * 0.6));
+          if (s.key === 'update') line.setAttribute('stroke-dasharray', '5 3');
+        } else {
+          line.setAttribute('stroke', '#2fbf74');
+          line.setAttribute('stroke-width', '2');
+          line.setAttribute('opacity', s.key === 'forward' ? '0.9' : '0.35');
+        }
+        edgeLayer.append(line);
+      }
+
+      for (const node of NODES) {
+        const circle = document.createElementNS(NS, 'circle');
+        circle.setAttribute('cx', String(node.x));
+        circle.setAttribute('cy', String(node.y));
+        circle.setAttribute('r', '16');
+        circle.setAttribute('fill', '#1a1a1c');
+        const highlight =
+          (s.key === 'forward' && node.layer !== undefined) ||
+          (s.key === 'compare' && node.id === 'o0') ||
+          (s.key === 'update' && node.layer === undefined);
+        circle.setAttribute('stroke', highlight ? '#f5d020' : 'rgb(241 238 228 / 0.35)');
+        circle.setAttribute('stroke-width', highlight ? '2.5' : '1.5');
+        nodeLayer.append(circle);
+      }
+
+      if (s.key === 'compare') {
+        const label = document.createElementNS(NS, 'text');
+        label.setAttribute('x', '398');
+        label.setAttribute('y', '72');
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('fill', '#f5d020');
+        label.setAttribute('font-size', '11');
+        label.textContent = 'error 0.69';
+        nodeLayer.append(label);
+      }
+
+      buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === stage)));
+      readout.textContent = `Stage ${stage + 1} of 4 — ${s.title}. ${s.text}`;
+    }
+
+    buttons.forEach((b, i) =>
+      b.addEventListener('click', () => {
+        stage = i;
+        render();
+      }),
+    );
+
+    render();
+  }
+</script>

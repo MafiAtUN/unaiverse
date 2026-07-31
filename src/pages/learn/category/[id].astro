@@ -1,0 +1,129 @@
+---
+/**
+ * One page per constellation, ordered starter-first.
+ *
+ * The ordering is the point: a category page that opens with "Adam optimiser"
+ * because A comes first would be useless. Terms are grouped by depth, so the
+ * reader meets the ideas the rest of the sector depends on before the ones
+ * that depend on them.
+ */
+import Learn from '../../../layouts/Learn.astro';
+import {
+  CATEGORIES,
+  CATEGORY_BY_ID,
+  termsInCategory,
+  PLANNED_TERMS,
+  learnHref,
+  TERM_BY_ID,
+} from '../../../lib/learn/terms';
+import { DIFFICULTIES, DIFFICULTY_LABEL } from '../../../lib/learn/schema';
+
+export function getStaticPaths() {
+  return CATEGORIES.map((category) => ({ params: { id: category.id }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const terms = termsInCategory(category.id);
+const planned = PLANNED_TERMS.filter((t) => t.categoryId === category.id);
+const missing = planned.filter((t) => !TERM_BY_ID.has(t.id));
+const starter = TERM_BY_ID.get(category.starterTermId) ?? terms[0];
+const adjacent = category.adjacent
+  .map((id) => CATEGORY_BY_ID.get(id))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
+const groups = DIFFICULTIES.map((d) => ({
+  difficulty: d,
+  terms: terms.filter((t) => t.difficulty === d),
+})).filter((g) => g.terms.length > 0);
+
+const title = `${category.name} · Learn AI · UNAIVERSE`;
+const description = `${category.plain} ${terms.length} terms explained in plain language.`;
+---
+
+<Learn title={title} description={description} section="explore">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / <a href={learnHref('explore')}>Term Explorer</a> /
+        {category.name}
+      </p>
+      <h1 class="learn-head__title">
+        <span aria-hidden="true">{category.glyph}</span> {category.name}
+      </h1>
+      <p class="learn-head__lead">{category.plain}</p>
+
+      {
+        starter && (
+          <p style="margin-top: var(--sp-4)">
+            <a class="lbutton lbutton--primary" href={learnHref(starter.slug)}>
+              Start with {starter.term}
+            </a>
+          </p>
+        )
+      }
+
+      <p class="learn-head__meta">
+        {terms.length} term{terms.length === 1 ? '' : 's'} published
+        {missing.length > 0 ? ` · ${missing.length} still being written` : ''}
+      </p>
+
+      {
+        adjacent.length > 0 && (
+          <p class="learn-head__meta">
+            Next door:{' '}
+            {adjacent.map((a, i) => (
+              <>
+                {i > 0 && ' · '}
+                <a href={learnHref(`category/${a.id}`)}>{a.name}</a>
+              </>
+            ))}
+          </p>
+        )
+      }
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6)">
+    {
+      groups.map((group) => (
+        <section class="az-group" aria-labelledby={`g-${group.difficulty}`}>
+          <h2 class="az-group__letter" id={`g-${group.difficulty}`}>
+            {DIFFICULTY_LABEL[group.difficulty]}
+          </h2>
+          <ul class="tcard-grid">
+            {group.terms.map((t) => (
+              <li>
+                <a class="tcard" href={learnHref(t.slug)}>
+                  <div class="tcard__top">
+                    <p class="tcard__term">{t.term}</p>
+                    {t.visual.component && <span class="tcard__meta">interactive</span>}
+                  </div>
+                  <p class="tcard__one">{t.oneSentence}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    {
+      missing.length > 0 && (
+        <section class="az-group" aria-labelledby="pending">
+          <h2 class="az-group__letter" id="pending">Still being written</h2>
+          <p class="lsection__blurb">
+            These terms are in the taxonomy but have not been through review yet, so they have no
+            page. Nothing appears on this site until a person has checked it.
+          </p>
+          <ul class="chips" style="margin-top: var(--sp-4)">
+            {missing.map((t) => (
+              <li>
+                <span class="chip">{t.term}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</Learn>

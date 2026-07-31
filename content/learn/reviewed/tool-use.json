@@ -1,0 +1,237 @@
+{
+  "id": "tool-use",
+  "slug": "tool-use",
+  "term": "Tool use",
+  "aliases": [
+    "tools",
+    "tool calling"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "large-language-model"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "workflow",
+    "observation-and-action",
+    "human-in-the-loop",
+    "orchestration",
+    "large-language-model"
+  ],
+  "oftenConfusedWith": [
+    "function-calling",
+    "api",
+    "connector",
+    "computer-use"
+  ],
+  "oneSentence": "A system uses external software or devices during a task so it can look up information, calculate, send actions or control equipment instead of only generating text.",
+  "plainExplanation": "Some AI systems do more than reply with words. They can also call external tools such as a calculator, a calendar service, a database, a map, a sensor feed or a ticketing system. The tool gives the system fresh information or carries out an action.\n\nWhat goes in can be a user request, a signal from another system, or both. The system then chooses whether a tool is needed, which tool fits, and what input to send. A tool here means a connected piece of software or hardware that has a defined job, such as checking stock levels or reading a temperature sensor.\n\nWhat happens next is usually a loop. The system sends a request to the tool, gets a result back, and uses that result to continue the task. It may call one tool or several tools in sequence. For example, it might read a sensor, compare the reading with a safety threshold, and then open a maintenance ticket.\n\nWhat comes out depends on the setup. The result might be a written answer, a structured record, an alert, or a real action in another system. This is why tool use matters: once a system can act beyond text, errors can have practical effects, so permissions, logging and human oversight become important.\n\nTool use is often confused with function calling and APIs. Function calling is one common way a model formats a request for a tool. An API is the connection method many tools expose. Tool use is the broader idea: the system actually relying on external tools to gather information or do something.",
+  "everydayAnalogy": {
+    "title": "A maintenance desk handling a pump alert",
+    "story": "A water utility worker sees an unusual reading from a pump sensor in a rural station. Instead of guessing, she checks the live sensor dashboard, looks up the normal range in the maintenance manual, and then opens a repair ticket if the reading is still abnormal. She uses different tools for each step because no single screen contains everything. The final action depends on what those tools return.",
+    "mapping": [
+      {
+        "analogyElement": "live sensor dashboard",
+        "aiElement": "an external tool that provides fresh data"
+      },
+      {
+        "analogyElement": "maintenance manual",
+        "aiElement": "a reference tool used to compare the data with rules or thresholds"
+      },
+      {
+        "analogyElement": "repair ticket system",
+        "aiElement": "an action tool that changes another system"
+      },
+      {
+        "analogyElement": "worker choosing the next step after each check",
+        "aiElement": "the system using tool results to decide the next action"
+      }
+    ],
+    "limitation": "A person can apply broad real-world judgement, notice context that was never written down, and take responsibility for the outcome. An AI system using tools does not have that kind of independent judgement. It follows patterns, instructions and permissions in its setup, and it can misuse a tool if the inputs, rules or tool outputs are misleading."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How tool use changes a task",
+    "learningObjective": "After viewing this, a reader should be able to describe how a system moves from a request to one or more tool calls and then to a checked result or action.",
+    "description": "A left-to-right step diagram with five boxes connected by arrows. Read from the user request to the final output. Each box shows one stage: request, decide, call tool, receive result, produce answer or action. Small labels under the tool stage show examples such as calculator, database and sensor feed.",
+    "steps": [
+      {
+        "label": "1. Request arrives",
+        "explanation": "The starting point is a question, instruction or system event, such as an unusual sensor reading.",
+        "visualInstruction": "Draw a rounded rectangle labelled 'Request or event' with smaller examples underneath: 'Ask for data', 'Check a reading', 'Create a ticket'."
+      },
+      {
+        "label": "2. Check whether a tool is needed",
+        "explanation": "The system first tries to determine whether text alone is enough or whether it needs fresh data, calculation or an external action.",
+        "visualInstruction": "Draw a decision-style box labelled 'Need a tool?' with two small tags below: 'No → answer directly' and 'Yes → choose tool'."
+      },
+      {
+        "label": "3. Send a structured tool request",
+        "explanation": "If a tool is needed, the system prepares the input in a defined format, such as a location, date range or sensor ID.",
+        "visualInstruction": "Draw a box labelled 'Call tool' with three icon labels beneath: 'database', 'calculator', 'sensor/API'. Add a caption: 'structured input'."
+      },
+      {
+        "label": "4. Tool returns a result",
+        "explanation": "The tool sends back data or confirms that an action was attempted. The system then uses that result in the next step.",
+        "visualInstruction": "Draw a box labelled 'Tool result' with example snippets like 'pressure=9.8 bar' and 'ticket created: MT-2041'."
+      },
+      {
+        "label": "5. Output or action",
+        "explanation": "The system produces a reply, a record or a next step. In higher-risk cases, a person should review before anything important happens.",
+        "visualInstruction": "Draw a final box labelled 'Answer, alert, or action' with a small side badge: 'human review for important cases'."
+      }
+    ],
+    "interaction": "Hovering or tapping each step reveals one example input and output for that stage; keyboard focus moves through the steps in order.",
+    "accessibilityDescription": "This diagram explains tool use as a five-step process. First, a request or event arrives, such as a user question or a sensor alert. Second, the system checks whether it can answer from its current context or whether it needs an external tool. Third, if needed, it sends a structured request to a tool such as a database, calculator or sensor feed. Fourth, the tool returns data or confirms an action. Fifth, the system uses that result to produce an answer, raise an alert or trigger a further action, ideally with human review for important or risky cases.",
+    "reducedMotionDescription": "A static five-step horizontal diagram with arrows between the boxes. Each box includes a short example, and the final box includes a note that sensitive or high-impact actions may require human approval."
+  },
+  "workedExample": {
+    "scenario": "A facilities team monitors a water pump at a storage site. An assistant is connected to a live sensor feed and a maintenance ticket system.",
+    "input": "Pump P-17 pressure is 9.8 bar. Normal operating range is 4.0 to 6.5 bar. If outside range for more than 10 minutes, create a maintenance ticket.",
+    "process": [
+      "The system receives the new reading for Pump P-17 and sees that 9.8 bar is above the normal range.",
+      "It calls the sensor-history tool to check whether the pressure stayed above 6.5 bar for more than 10 minutes.",
+      "The tool returns twelve minutes of readings between 9.4 and 9.9 bar.",
+      "The system calls the ticketing tool with a structured request: asset=P-17, issue='sustained high pressure', priority='high'.",
+      "The ticket system returns confirmation: ticket MT-2041 created."
+    ],
+    "result": "The assistant reports: 'Pump P-17 has been above the normal pressure range for 12 minutes. High-priority maintenance ticket MT-2041 has been created.'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "In humanitarian coordination, a staff member uses an approved internal assistant to collect non-sensitive updates from approved logistics and supply systems, then draft a daily summary of road access and warehouse stock changes for review.",
+    "relevance": "This shows tool use because the assistant is not relying only on generated text. It is pulling current data from connected systems and helping staff assemble a time-sensitive product more quickly.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operationally sensitive information into an unapproved public AI service, and do not let an automated tool send external updates without human review and the right permissions."
+  },
+  "whyItMatters": "For a non-specialist, tool use is the point where an AI system can move from sounding helpful to actually affecting work. It can fetch current information, update records and trigger actions in other systems. That can improve speed and consistency, but it also changes the risk. A wrong answer in a chat window may be inconvenient; a wrong tool action can create a false alert, change a database or send a message to the wrong place. When you hear that a system can use tools, the practical questions are: What tools? With what permissions? What checks exist? Who reviews important actions? What logs are kept? Those questions matter more than marketing labels.",
+  "whereYouMayHearIt": [
+    "AI agent demos",
+    "customer support automation",
+    "software developer platforms",
+    "enterprise copilots",
+    "monitoring and operations systems"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a system can use tools, it is automatically an autonomous agent.",
+      "correction": "Not necessarily. Tool use only means the system can access external functions or services. It may still operate in a tightly limited workflow with fixed steps and strong human approval. Autonomy depends on how much freedom it has to choose goals, steps and actions."
+    },
+    {
+      "misconception": "Tool use guarantees accurate answers because the system is connected to real systems.",
+      "correction": "Connected tools can improve freshness and precision, but they do not guarantee correctness. The system can choose the wrong tool, send the wrong input, misread the result or act on outdated or poor-quality data. The tool itself can also fail or return incomplete information."
+    },
+    {
+      "misconception": "Tool use and function calling mean exactly the same thing.",
+      "correction": "Function calling is usually a technical method for packaging a request in a structured form that software can execute. Tool use is the broader behaviour of using external capabilities during a task. A system can use tools through function calling, but the ideas are not identical."
+    },
+    {
+      "misconception": "If a tool is available, the system will use it safely.",
+      "correction": "Safety depends on permissions, validation, isolation and review. A system may be exposed to misleading instructions from documents or websites, may receive malformed tool outputs, or may have more privileges than it needs. Safe tool use requires design controls, not just access."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It means the system can reach out to other software or devices during a task, instead of only writing text from what it has already seen.",
+    "technical": "Tool use is the pattern where a model-driven system invokes external capabilities during inference or task execution. Those capabilities may include retrieval systems, calculators, databases, enterprise applications, device controls or other services. A common implementation is that the model emits a structured request with a tool name and arguments, an orchestrating layer validates and executes it, and the returned observation is added back into the working context for the next step. This can repeat as an observation-action loop. The important distinction is scope: tool use refers to the behaviour of relying on external operations, while APIs, connectors and function calling are enabling mechanisms. In practice, robust tool use also needs permission scoping, input validation, error handling, logging, rate limits and often sandboxing or human approval for consequential actions."
+  },
+  "keyTakeaway": "Tool use means an AI system can do more than talk: it can reach outside itself for data or actions, so supervision and permissions matter much more.",
+  "quickCheck": {
+    "question": "Which example best shows tool use?",
+    "options": [
+      "A model writes a general explanation from its training patterns without checking any external system.",
+      "A system reads a live warehouse database, then drafts a stock update using the returned figures.",
+      "A chatbot repeats the same scripted answer to every user.",
+      "A text editor corrects spelling in a paragraph with no external lookup."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Tool use involves calling an external capability during the task. Reading a live warehouse database and then using those returned figures fits that pattern. The other options may still involve software, but they do not clearly show an external tool being called for fresh data or an action."
+  },
+  "resources": [
+    {
+      "title": "Tool use by non-human animals",
+      "url": "https://en.wikipedia.org/wiki/Tool_use_by_non-human_animals",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad background idea of tool use in nature and suits readers who want an intuitive starting point rather than an AI-specific definition.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "description": "This link gives a practical explanation of agents and how models can use tools, and it suits readers who want a product-oriented overview.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "description": "This link gives the official description of the Model Context Protocol and suits technical readers who want to understand one way tools can be connected safely and consistently.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Tool use",
+      "url": "https://www.youtube.com/results?search_query=Tool%20use%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page gives multiple video explanations of tool use and suits readers who prefer to compare several teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Tool use",
+      "url": "https://www.reddit.com/search/?q=Tool%20use",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page gives community discussions and examples about tool use and suits readers who want informal questions, debates and troubleshooting experiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "tool use ai",
+    "tool calling ai",
+    "what is tool use in ai",
+    "ai tools vs tool use",
+    "function calling vs tool use",
+    "llm use tools",
+    "ai agent tool use",
+    "tool use api difference",
+    "tool use meaning ai",
+    "tooll use ai",
+    "tool use",
+    "tools",
+    "tool calling"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:38:18.177Z",
+    "contentHash": "770a0cea195cd4dd",
+    "attempts": 1,
+    "promptTokens": 2316,
+    "completionTokens": 2701
+  }
+}

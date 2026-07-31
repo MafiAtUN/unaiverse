@@ -1,0 +1,104 @@
+---
+/**
+ * Shell for the AI Literacy Universe.
+ *
+ * Wraps the site's existing Base layout rather than replacing it, so the
+ * literacy pages inherit the same head, the same fonts, the same social
+ * metadata rules and the same skip link behaviour as the timeline. What it
+ * adds is the persistent navigation and search that a reference site needs
+ * and a scrolling galaxy does not.
+ */
+import Base from './Base.astro';
+import '../styles/learn.css';
+import TermSearch from '../components/learn/TermSearch.astro';
+import { CORPUS_STATS, learnHref, siteHref } from '../lib/learn/terms';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Marks the current item in the nav bar. */
+  section?: 'learn' | 'explore' | 'paths' | 'compare' | 'map' | 'index' | 'saved' | 'methodology';
+  /** Term pages carry their own search in the hero, so the bar hides its own. */
+  showBarSearch?: boolean;
+  ogType?: string;
+  /** Extra <head> markup: term pages add JSON-LD here. */
+  head?: string;
+}
+
+const { title, description, section, showBarSearch = true, ogType, head } = Astro.props;
+
+const NAV = [
+  { id: 'learn', label: 'Learn AI', href: learnHref() },
+  { id: 'explore', label: 'Term Explorer', href: learnHref('explore') },
+  { id: 'paths', label: 'Learning Paths', href: learnHref('paths') },
+  { id: 'compare', label: 'Compare', href: learnHref('compare') },
+  { id: 'map', label: 'Concept Map', href: learnHref('map') },
+  { id: 'index', label: 'A–Z', href: learnHref('a-z') },
+  { id: 'saved', label: 'Saved', href: learnHref('saved') },
+] as const;
+---
+
+<Base
+  title={title}
+  description={description}
+  ogType={ogType}
+  head={head}
+  skip={{ href: '#learn-main', label: 'Skip to the content' }}
+>
+  <header class="learn-bar">
+    <div class="wrap learn-bar__inner">
+      <a class="learn-bar__brand" href={siteHref()}>
+        UN<span>AI</span>VERSE
+      </a>
+      <nav aria-label="AI Literacy Universe">
+        <ul class="learn-bar__links">
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={item.href} aria-current={section === item.id ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      {
+        showBarSearch && (
+          <div class="learn-bar__search">
+            <TermSearch variant="panel" id="bar-search" label="Search AI terms" compact />
+          </div>
+        )
+      }
+    </div>
+  </header>
+
+  <main id="learn-main">
+    <slot />
+  </main>
+
+  <footer class="learn-foot">
+    <div class="wrap">
+      <p>
+        {CORPUS_STATS.published} terms, each with a plain explanation, an analogy that states
+        where it stops working, a visual, a worked example, a United Nations workplace example,
+        misconception corrections and a knowledge check.
+        <a href={learnHref('methodology')}>How this was written and reviewed</a>.
+      </p>
+      <p>
+        A personal project by Mafizul Islam. Not an official United Nations product, and nothing
+        here represents the views of the UN or any of its offices. No login, no account, no
+        tracking: anything you save stays in this browser.
+      </p>
+      <ul class="learn-foot__links">
+        <li><a href={siteHref()}>The UN AI timeline</a></li>
+        <li><a href={learnHref('methodology')}>Methodology</a></li>
+        <li><a href={learnHref('saved')}>Saved terms &amp; progress</a></li>
+        <li><a href={siteHref('agenda')}>The Agenda</a></li>
+        <li>
+          <a href="https://github.com/MafiAtUN/unaiverse" rel="noopener">Source on GitHub</a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+</Base>

@@ -15,6 +15,7 @@ import {
 } from '../lib/agenda';
 import { takeLoadReport, unboundTakes } from '../lib/takes';
 import { SITE, ZONES, ZONE_ORDER, TIERS } from '../lib/taxonomy';
+import { CORPUS_STATS } from '../lib/learn/terms';
 
 const all = await getCollection('milestones');
 
@@ -62,6 +63,7 @@ const open = counts.pending + counts.upcoming;
 const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
 
 const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+const learnCount = CORPUS_STATS.published;
 
 const takeSlots = sorted.reduce((n, m) => n + m.data.personas.length, 0);
 const takes = takeLoadReport();
@@ -183,6 +185,17 @@ for (const o of unboundTakes(slotKeys)) {
           <span class="door__title">The whole decade</span>
           <span class="door__blurb">Scrub every milestone along one axis.</span>
         </a>
+        {/* The literacy half. Reachable from the front door, because the
+            commonest reason to be lost in this file is not the chronology —
+            it is the vocabulary. */}
+        <a class="door" href={href('learn')}>
+          <span class="door__kicker mono">Lost in the jargon?</span>
+          <span class="door__title">Learn AI</span>
+          <span class="door__blurb">
+            {learnCount} AI terms in plain language, each with an analogy, a visual and a UN
+            workplace example. Or tap any underlined word below.
+          </span>
+        </a>
       </nav>
 
       <p class="hero__phase">
@@ -251,6 +264,7 @@ for (const o of unboundTakes(slotKeys)) {
       </p>
       <ul class="foot__credits">
         <li><a href={href('agenda')}>The Agenda</a></li>
+        <li><a href={href('learn')}>Learn AI</a></li>
         <li><a href={href('inherit')}>Start here</a></li>
         <li><a href={href('calendar.ics')}>Calendar (.ics)</a></li>
         <li><a href={href('rss.xml')}>Feed (RSS)</a></li>
@@ -268,6 +282,42 @@ for (const o of unboundTakes(slotKeys)) {
   <Starfield />
   <ABot />
 </Base>
+
+<script>
+  /**
+   * Deep links into a milestone.
+   *
+   * A term page in the literacy half links back here as `/#<milestone-id>`.
+   * Without this, the browser scrolls to a node whose panel is closed and the
+   * reader arrives at a headline with no content — technically the right
+   * anchor, practically a dead end. So: open the node, reveal it past the
+   * scroll animation, and put focus on its summary so a keyboard reader is
+   * where they asked to be rather than back at the top of the document.
+   *
+   * Not in scripts/motion.ts on purpose: that module is only imported when the
+   * reader has not asked for reduced motion, and returning to your milestone
+   * is not a decoration.
+   */
+  function openTarget() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const node = document.getElementById(id);
+    if (!node || !node.hasAttribute('data-node')) return;
+
+    node.hidden = false;
+    node.classList.add('is-revealed');
+    node.querySelector('details')?.setAttribute('open', '');
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    node.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    node.querySelector<HTMLElement>('summary')?.focus({ preventScroll: true });
+  }
+
+  // On load the browser has already tried and failed to reach a closed node,
+  // so this runs after it rather than instead of it.
+  if (location.hash) openTarget();
+  window.addEventListener('hashchange', openTarget);
+</script>
 
 <style>
   /* ── Hero ───────────────────────────────────────────────────────── */

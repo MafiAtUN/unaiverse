@@ -1,0 +1,214 @@
+{
+  "id": "underfitting",
+  "slug": "underfitting",
+  "term": "Underfitting",
+  "aliases": [
+    "underfit"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "baseline",
+    "evaluation-metric",
+    "cross-validation",
+    "generalisation",
+    "variance"
+  ],
+  "oftenConfusedWith": [
+    "overfitting",
+    "accuracy",
+    "statistical-bias"
+  ],
+  "oneSentence": "A model misses important patterns because it is too simple, too constrained, or too weakly trained for the task.",
+  "plainExplanation": "A machine learning model takes input data, such as past examples with labels, and tries to learn a pattern that can be used on new cases. Underfitting happens when the pattern it learns is too crude to capture what really matters in the data.\n\nWhat goes in can be training data, chosen features, and model settings such as model size or training time. What happens is that the model fails to learn enough structure. This may occur because the model form is too simple, the useful inputs were left out, the regularisation is too strong, or training stopped too early.\n\nWhat comes out is poor performance even on the training data, not only on new test data. That is a key clue. If a system cannot do well on examples it has already been shown, it may be underfitting rather than overfitting.\n\nUnderfitting is often confused with overfitting. They are different. Overfitting means the model matches the training data too closely and then fails on new data. Underfitting means it does not capture enough signal in the first place. Both reduce generalisation, but for opposite reasons.",
+  "everydayAnalogy": {
+    "title": "Searching policy documents with only one keyword",
+    "story": "A team member needs to find all policy documents about school meals in several countries. They set up a search tool that only looks for the exact word \"lunch\" and ignores phrases such as \"school feeding\", \"midday meal\", or translated terms. The tool runs quickly, but it misses many relevant documents, including some in reports from Kenya, Brazil, and Nepal. Even in the small set of documents the team used to test the search, the tool already performs badly.",
+    "mapping": [
+      {
+        "analogyElement": "Search tool using only the exact word \"lunch\"",
+        "aiElement": "A model that is too simple or uses too few useful features"
+      },
+      {
+        "analogyElement": "Missing documents that use other phrases",
+        "aiElement": "Failing to capture important patterns in the data"
+      },
+      {
+        "analogyElement": "Bad results even on the team’s test set of known documents",
+        "aiElement": "Poor fit visible already on training or development data"
+      }
+    ],
+    "limitation": "A document search rule is a hand-written method, while a machine learning model adjusts numerical parameters from data. Underfitting can also come from strong regularisation, low model capacity, or too little training, not only from using too few keywords."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Too simple, about right, and too complex",
+    "learningObjective": "After viewing this, the reader should be able to say that underfitting means a model is too simple to capture the real pattern, so it performs poorly even on training data.",
+    "description": "Show three side-by-side panels with the same scatter plot. Left: a straight line misses a curved pattern, labelled underfitting. Middle: a smooth curve follows the main trend, labelled good fit. Right: a wavy curve follows noise, labelled overfitting. Under each panel, show training error and test error as high/high, low/low, and very low/high.",
+    "steps": [
+      {
+        "label": "Same data",
+        "explanation": "Each panel starts with identical data points, including a curved underlying trend with some noise.",
+        "visualInstruction": "Draw the same x-y scatter plot in all three panels, with faint grey dots and a dashed light-blue curved reference trend behind them."
+      },
+      {
+        "label": "Underfitting",
+        "explanation": "A model that is too simple misses the trend, so errors stay high on both training and test data.",
+        "visualInstruction": "In the left panel, draw a straight orange line through the scatter that clearly misses the curve. Add badges: 'training error: high' and 'test error: high'."
+      },
+      {
+        "label": "Good fit",
+        "explanation": "A model with suitable complexity captures the main pattern without chasing random variation.",
+        "visualInstruction": "In the centre panel, draw a smooth green curve close to the dashed reference trend. Add badges: 'training error: low' and 'test error: low'."
+      },
+      {
+        "label": "Overfitting",
+        "explanation": "A model that is too flexible follows noise in the training data, so test performance worsens.",
+        "visualInstruction": "In the right panel, draw a dark red highly wavy line passing near many dots. Add badges: 'training error: very low' and 'test error: high'."
+      }
+    ],
+    "interaction": "Hover or tap each panel to highlight its error pattern and show a short note: too simple, balanced, or too complex.",
+    "accessibilityDescription": "The diagram compares three models using the same data. In all panels, the real pattern is curved. In the left panel, a straight line cuts across the data and misses the curve. It is labelled underfitting, with high training error and high test error. In the middle panel, a smooth curve follows the main trend and is labelled good fit, with low training and test error. In the right panel, a very wavy line bends to follow many individual points and is labelled overfitting, with very low training error but high test error. The key message is that underfitting means the model is too simple, so it performs badly even on examples from the training set.",
+    "reducedMotionDescription": "A static three-panel comparison shows the same data with an underfit straight line, a well-fit smooth curve, and an overfit wavy curve, plus text labels for training and test error under each panel."
+  },
+  "workedExample": {
+    "scenario": "A team builds a classifier to label incoming messages as 'needs follow-up' or 'no follow-up' using only message length and whether the word 'urgent' appears.",
+    "input": "Training set: 1,000 labelled messages. Model: very simple logistic regression with just 2 features.",
+    "process": [
+      "On the training data, the model gets 62% accuracy because many follow-up messages do not contain the word 'urgent' and are not unusually long.",
+      "On a validation set of 300 new messages, accuracy is 60%, which is similarly weak rather than sharply worse.",
+      "The team adds features such as sender type, topic keywords, and previous thread activity, and trains a less constrained model.",
+      "The revised model reaches 81% on training data and 79% on validation data, suggesting the earlier version was underfitting."
+    ],
+    "result": "The first model was too simple for the task: poor performance appeared on both training and validation data, which is a common sign of underfitting."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team reviews programme monitoring data to flag projects that may need management attention. An initial model uses only total budget and reporting delay, but misses many cases where contextual indicators matter, such as access constraints or repeated procurement issues.",
+    "relevance": "This shows how a model can look tidy and easy to explain yet still be too simple to support reliable operational triage.",
+    "caution": "Do not upload personal, protection-sensitive, confidential, or security-sensitive programme data to an unapproved public AI service when testing or improving such models; use approved systems and human oversight."
+  },
+  "whyItMatters": "A model that underfits can look safe because it is simple, but it can still mislead decisions by missing important patterns and producing consistently weak results.",
+  "whereYouMayHearIt": [
+    "model evaluation meeting",
+    "training diagnostics",
+    "baseline comparison",
+    "machine learning course",
+    "error analysis discussion"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model is simple, it is automatically better and more trustworthy.",
+      "correction": "Simple models can be easier to inspect, but they can still miss important structure. A model that misses the main signal may produce unreliable outputs even if its logic is easier to describe."
+    },
+    {
+      "misconception": "Underfitting only matters if test accuracy is low.",
+      "correction": "A main sign of underfitting is that training performance is also poor. If the model cannot fit known examples reasonably well, it may be too limited for the task."
+    },
+    {
+      "misconception": "More data always fixes underfitting.",
+      "correction": "Extra data helps some problems, but not if the model class is too weak, the features are uninformative, or regularisation prevents learning the pattern."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "The system is too basic for the job, so it misses real patterns and performs badly even on examples it has already seen.",
+    "technical": "Underfitting occurs when model capacity, feature representation, optimisation time, or effective complexity after regularisation is insufficient to approximate the target function, leading to high bias and elevated error on both training and validation data."
+  },
+  "keyTakeaway": "If a model does badly even on its training examples, it may be too simple rather than too smart.",
+  "quickCheck": {
+    "question": "Which pattern most strongly suggests underfitting?",
+    "options": [
+      "Very low training error and much higher test error",
+      "High training error and high test error",
+      "Low training error and low test error",
+      "Perfect accuracy on a very small benchmark"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Underfitting usually shows up as weak performance on both training and test data because the model has not captured enough of the real pattern. Very low training error with worse test error is more typical of overfitting."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Underfitting",
+      "url": "https://en.wikipedia.org/w/index.php?search=Underfitting",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers find multiple Wikipedia entries or related topics on underfitting, and it suits readers who want a broad starting point rather than a single source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course resource helps readers compare evaluation measures such as accuracy, recall, and precision, and it suits learners who need context for judging whether poor results may reflect underfitting.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This official framework helps readers place model performance problems within broader risk management and governance, and it suits practitioners who need organisational guidance.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Underfitting",
+      "url": "https://www.youtube.com/results?search_query=Underfitting%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find a range of video explanations of underfitting, and it suits people who prefer visual or spoken teaching rather than text.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Underfitting",
+      "url": "https://www.reddit.com/search/?q=Underfitting",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see informal community questions and examples about underfitting, and it suits readers who want practical discussion but should be read critically.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "underfitting meaning",
+    "underfit vs overfit",
+    "why is my model bad on training data",
+    "high training error and test error",
+    "model too simple",
+    "under fitting machine learning",
+    "underfiting",
+    "bias variance underfitting",
+    "underfitting",
+    "underfit"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:50.261Z",
+    "contentHash": "bfd2e6e1efef1f58",
+    "attempts": 2,
+    "promptTokens": 2225,
+    "completionTokens": 2147
+  }
+}

@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { scaleLinear, scaleTime } from 'd3-scale';
+// Named explicitly: `ReturnType<typeof scaleTime>` resolves to the overload
+// whose output type is unresolved, so every x(date) downstream types as
+// `unknown` and the arithmetic on it stops checking.
+import type { ScaleTime } from 'd3-scale';
 import { timeYear } from 'd3-time';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -120,7 +124,7 @@ export function ExploreCanvas({
     [data.domain.start, data.domain.end, width],
   );
 
-  const years = useMemo(() => x.ticks(timeYear.every(1) ?? 1), [x]);
+  const years = useMemo(() => x.ticks(timeYear), [x]);
   const ribbon = useMemo(() => buildRibbon(data.events, x), [data.events, x]);
   const xs = useMemo(() => layoutX(data.events, x), [data.events, x]);
   const labels = useMemo(() => packLabels(data.events, xs), [data.events, xs]);
@@ -627,7 +631,7 @@ function Stem({
  * card and the drawer both print the real date, so nothing here can mislead
  * about when something happened.
  */
-function layoutX(events: TimelineEvent[], x: ReturnType<typeof scaleTime>): number[] {
+function layoutX(events: TimelineEvent[], x: ScaleTime<number, number>): number[] {
   const raw = events.map((e) => x(new Date(ms(e.start))));
   const out = [...raw];
 
@@ -744,7 +748,7 @@ function packLabels(events: TimelineEvent[], xs: number[]): Map<string, number> 
  * then into an SVG area. Built as a step rather than a smooth curve because
  * the underlying quantity is a count: it genuinely jumps.
  */
-function buildRibbon(events: TimelineEvent[], x: ReturnType<typeof scaleTime>) {
+function buildRibbon(events: TimelineEvent[], x: ScaleTime<number, number>) {
   const deltas: { t: number; d: number }[] = [];
   for (const e of events) {
     if (!e.end) continue;

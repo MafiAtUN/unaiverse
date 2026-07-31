@@ -1,0 +1,232 @@
+{
+  "id": "topic-modelling",
+  "slug": "topic-modelling",
+  "term": "Topic modelling",
+  "aliases": [
+    "topic modeling",
+    "theme extraction"
+  ],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "intermediate",
+  "audiences": [
+    "programme",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "clustering",
+    "natural-language-processing"
+  ],
+  "relatedTermIds": [
+    "natural-language-processing",
+    "clustering",
+    "corpus",
+    "summarisation",
+    "sentiment-analysis",
+    "named-entity-recognition"
+  ],
+  "oftenConfusedWith": [
+    "clustering",
+    "sentiment-analysis",
+    "summarisation"
+  ],
+  "oneSentence": "A method that scans many documents and groups frequently co-occurring words into recurring themes, helping people see what a collection is mostly about.",
+  "plainExplanation": "Topic modelling looks across a collection of documents, often called a corpus, to find themes that appear repeatedly. The input is usually plain text such as reports, survey comments, news articles or support messages. The output is not a single summary. It is a set of topics, where each topic is represented by words that often appear together.\n\nA topic here means a statistical pattern, not a human-written label. For example, one topic might contain words like “rainfall”, “crop”, “harvest” and “drought”. A person may then label that topic “agriculture and weather”. The system does not reliably know that label on its own. It only finds word groupings that tend to travel together across documents.\n\nIn simple terms, the method counts word patterns across many texts and estimates which hidden themes could explain those patterns. Many topic models also estimate two more things: which topics are common in each document, and which words are strongly associated with each topic. So one document might be estimated as 70% health services and 30% transport access.\n\nThis is useful when there are too many documents to read one by one. It can help with exploration, triage and briefing. But it can also mislead if the text is short, noisy, multilingual, poorly cleaned or taken out of context. Topic modelling is different from sentiment analysis, which looks for attitude such as positive or negative, and different from summarisation, which produces a shorter version of a text.",
+  "everydayAnalogy": {
+    "title": "Sorting a large pile of application forms by recurring paperwork patterns",
+    "story": "A team in Nairobi receives 5,000 application forms. Nobody has time to read every page first, so they spread the forms across tables and look for pieces that often appear together: missing signatures, proof of address, school certificates, or medical documents. Soon, piles emerge such as “education records”, “identity papers”, and “health-related attachments”, even though some forms belong partly in more than one pile. A supervisor then gives each pile a practical label after looking at the documents inside. The piles help the team see the main patterns in the backlog before doing detailed review.",
+    "mapping": [
+      {
+        "analogyElement": "Application forms spread across tables",
+        "aiElement": "A corpus of many documents"
+      },
+      {
+        "analogyElement": "Pieces that often appear together",
+        "aiElement": "Words that frequently co-occur across documents"
+      },
+      {
+        "analogyElement": "Piles formed from recurring patterns",
+        "aiElement": "Topics inferred from statistical word patterns"
+      },
+      {
+        "analogyElement": "Supervisor labels each pile after inspection",
+        "aiElement": "A human interprets and names the discovered topics"
+      }
+    ],
+    "limitation": "In the story, people can understand the meaning of each document and deliberately choose piles. A topic model does not read with human comprehension. It works from word distributions, so its topics can be mixed, vague or hard to name. Also, real models represent a document as a blend of topics with numeric weights, not as a form physically placed in one pile."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How topic modelling turns many documents into a small set of themes",
+    "learningObjective": "After viewing this, a reader should be able to explain that topic modelling starts with many documents, detects recurring word patterns, and outputs topics plus topic mixtures for each document.",
+    "description": "A left-to-right flow diagram with four panels: document collection, cleaned word counts, discovered topics, and document-topic mixtures. Read from left to right. Each panel shows how raw text becomes recurring word groups and then estimated topic proportions for individual documents.",
+    "steps": [
+      {
+        "label": "1. Collect documents",
+        "explanation": "Start with many texts such as reports, comments or articles. The method works better when there is enough text to reveal repeated patterns.",
+        "visualInstruction": "Draw a stack of 6 document icons on the left, each with 2 to 3 short lines. Add small labels like Report A, Comment B, Note C."
+      },
+      {
+        "label": "2. Prepare the text",
+        "explanation": "Common formatting is removed and words are counted or otherwise represented so patterns can be compared across documents.",
+        "visualInstruction": "Show the documents feeding into a middle box. Inside the box, display example tokens such as water, clinic, road, harvest, school as separated word chips."
+      },
+      {
+        "label": "3. Find recurring word groups",
+        "explanation": "The model estimates hidden topics by spotting words that often appear together across the whole collection.",
+        "visualInstruction": "Show 3 coloured clusters emerging from the middle box. Topic 1 has chips clinic, nurse, medicine. Topic 2 has road, bridge, transport. Topic 3 has rain, crop, harvest."
+      },
+      {
+        "label": "4. Estimate topic mix per document",
+        "explanation": "Each document can contain several topics in different proportions, which helps with browsing and analysis.",
+        "visualInstruction": "On the right, show 3 document cards with horizontal stacked bars, for example Report A: 60% Topic 1, 30% Topic 2, 10% Topic 3."
+      }
+    ],
+    "interaction": "Hovering over a topic colour highlights its top words and the matching segments in each document's stacked bar.",
+    "accessibilityDescription": "This diagram explains topic modelling as a four-step flow. First, many documents enter the process. Second, the text is prepared into comparable words. Third, the system identifies groups of words that frequently appear together across the collection, such as clinic-nurse-medicine, road-bridge-transport, and rain-crop-harvest. Fourth, each document is shown as a mixture of these topics, for example one document may be mostly health, another mostly transport, and another mixed. The main point is that the method finds recurring statistical themes across many texts and assigns each document a proportion for each theme.",
+    "reducedMotionDescription": "A static four-panel flow is shown with arrows between panels. Topic colours are fixed, and a small legend links each topic to its top words and to the stacked bars on the document cards."
+  },
+  "workedExample": {
+    "scenario": "A researcher has 120 open-ended survey responses about local services from three districts.",
+    "input": "Example responses include: “The clinic has no medicines and too few nurses.” “The road to the market is damaged after heavy rain.” “Teachers are absent and the school roof leaks.”",
+    "process": [
+      "The researcher cleans the text by lowercasing words, removing very common function words, and combining the 120 responses into one corpus.",
+      "A topic model is asked to find 3 topics in the responses.",
+      "The model returns word groups: Topic A = clinic, nurses, medicines, patients; Topic B = road, market, bridge, transport; Topic C = school, teachers, roof, classroom.",
+      "For one response, the model estimates 0.75 Topic A, 0.15 Topic B, 0.10 Topic C; for another, 0.70 Topic B, 0.20 Topic C, 0.10 Topic A.",
+      "The researcher reads sample responses for each topic and labels them “health services”, “transport access” and “school conditions” before reporting the pattern."
+    ],
+    "result": "Instead of reading all 120 responses first, the researcher quickly sees three main themes and how common each theme is across the survey, while still checking original responses for context."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team preparing a briefing note reviews several hundred non-confidential public submissions and media excerpts about service delivery concerns across multiple regions.",
+    "relevance": "Topic modelling can help the team spot recurring themes such as transport access, school infrastructure and health supply issues, so the briefing note can be organised around evidence-based patterns rather than anecdotal impressions.",
+    "caution": "Do not upload confidential, personal, protection-sensitive, survivor, witness, security-sensitive or operational information to an unapproved public AI service. Human reviewers should validate topic labels against the source texts, especially in multilingual or politically sensitive contexts."
+  },
+  "whyItMatters": "For a non-specialist, topic modelling matters because it helps turn a large pile of text into a manageable map of themes. That can support decisions about what to read first, what issues are recurring, and where manual review should focus. It is useful for surveys, complaint logs, consultation responses, archives and media monitoring. But its output is only a pattern-finding aid. If you treat the discovered topics as exact facts, clear public opinion, or complete summaries, you can make poor decisions. The safest use is to combine it with human review, sample checking and domain knowledge.",
+  "whereYouMayHearIt": [
+    "survey analysis",
+    "media monitoring",
+    "research methods",
+    "text mining tools",
+    "briefing preparation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "It tells you exactly what each document means.",
+      "correction": "Not exactly. It detects recurring word patterns across many documents. People usually still need to inspect documents and assign human-readable labels. A topic can be broad, mixed or ambiguous, especially when the text is short or noisy."
+    },
+    {
+      "misconception": "It is the same as sentiment analysis.",
+      "correction": "No. Sentiment analysis looks for attitude or emotional tone, such as positive, negative or neutral. Topic modelling looks for themes such as health, transport or education. A document can be negative in tone and still belong mainly to a transport topic."
+    },
+    {
+      "misconception": "Each document belongs to one topic only.",
+      "correction": "Many topic models represent each document as a mixture of topics. That matters because real documents often discuss several issues at once, such as health supplies and road access in the same field note."
+    },
+    {
+      "misconception": "The topics are objective truths discovered automatically.",
+      "correction": "The results depend on the data, language, cleaning choices, number of topics requested and the model used. Topic labels are usually human interpretations. Different reasonable settings can produce different topic sets."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a way to scan many texts and find the main themes by noticing which words often show up together.",
+    "technical": "Topic modelling is an unsupervised text analysis approach that infers latent thematic structure from a corpus. In common methods such as Latent Dirichlet Allocation, each document is modelled as a probability distribution over topics, and each topic as a probability distribution over words. The model estimates these distributions from observed word co-occurrence patterns, often after preprocessing such as tokenisation, stop-word removal and normalisation. The result is typically: top-weighted words for each topic, topic proportions for each document, and sometimes document groupings for exploration. This differs from simple clustering because the primary objects of interest are latent topics and document-topic mixtures, not only document groups. It also differs from classification because there are no predefined labels to predict."
+  },
+  "keyTakeaway": "Topic modelling does not read like a person; it uses repeated word patterns across many texts to suggest themes that humans must interpret carefully.",
+  "quickCheck": {
+    "question": "What does topic modelling mainly produce from a large collection of documents?",
+    "options": [
+      "A set of recurring themes represented by groups of associated words, often with topic mixtures for each document",
+      "A guaranteed factual summary of each document written in plain language",
+      "A score showing whether each document is positive or negative",
+      "A list of all people, places and organisations mentioned in the text"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Topic modelling is mainly about discovering recurring themes from patterns of word co-occurrence. It may also estimate how much of each topic appears in each document. The other options describe summarisation, sentiment analysis and named entity recognition."
+  },
+  "resources": [
+    {
+      "title": "Topic model",
+      "url": "https://en.wikipedia.org/wiki/Topic_model",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "Wikipedia gives a broad overview of the concept and common methods, which suits readers who want orientation before details.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "Google's Machine Learning Crash Course gives introductory machine learning context, which suits readers who want supporting background rather than a topic-modelling deep dive.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "description": "Google's Machine Learning Glossary helps readers clarify related terminology, which suits quick reference while reading other material.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Topic modelling",
+      "url": "https://www.youtube.com/results?search_query=Topic%20modelling%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "The YouTube search results page offers multiple video explanations from different creators, which suits readers who prefer to compare teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Topic modelling",
+      "url": "https://www.reddit.com/search/?q=Topic%20modelling",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "The Reddit search results page shows community discussions and practical questions on the topic, which suits readers who want informal examples and debates with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "topic modelling meaning",
+    "topic modeling explained",
+    "theme extraction text",
+    "how topic modelling works",
+    "lda topics simple explanation",
+    "documents grouped by themes",
+    "topic modeling vs clustering",
+    "topic modeling vs sentiment analysis",
+    "topc modelling",
+    "find themes in many documents",
+    "topic modelling",
+    "topic modeling",
+    "theme extraction"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:33.858Z",
+    "contentHash": "3aac81578c64fc8c",
+    "attempts": 1,
+    "promptTokens": 2290,
+    "completionTokens": 2591
+  }
+}

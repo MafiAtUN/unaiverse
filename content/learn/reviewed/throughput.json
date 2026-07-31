@@ -1,0 +1,224 @@
+{
+  "id": "throughput",
+  "slug": "throughput",
+  "term": "Throughput",
+  "aliases": [
+    "tokens per second"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "inference"
+  ],
+  "relatedTermIds": [
+    "inference",
+    "token",
+    "completion",
+    "context-window",
+    "large-language-model",
+    "sampling"
+  ],
+  "oftenConfusedWith": [
+    "latency",
+    "token",
+    "completion",
+    "inference"
+  ],
+  "oneSentence": "Throughput measures how much text a model can process or generate in a given time, usually counted in tokens per second.",
+  "plainExplanation": "Throughput tells you the rate of work. In large language models, it usually means how many tokens the system handles each second. A token is a small unit of text, often a word piece rather than a full word.\n\nWhat goes in is text that has been split into tokens. The model then runs inference, meaning it computes what token is likely to come next, one step at a time for generation, or processes many input tokens while reading the prompt. What comes out is a stream of generated tokens, and throughput tells you how fast that stream moves.\n\nThis is different from latency. Latency is the waiting time before you see a response or before the next token appears. Throughput is the sustained rate once work is under way. A system can have low latency but modest throughput, or high throughput but a slow initial delay.\n\nThroughput depends on several things: model size, hardware, batch size, prompt length, context window use, and whether the system is reading input tokens or generating output tokens. People often quote one number, but in practice there may be separate rates for prompt processing and token generation.",
+  "everydayAnalogy": {
+    "title": "Subtitles typed during a live event",
+    "story": "At an international conference, a captioner listens to a speaker and types subtitles onto a large screen. If the captioner can type 12 words each second, the subtitles keep up well; if the speaker talks faster than that, the display falls behind. The audience notices both the initial pause before text appears and the speed once the text starts flowing. The organiser cares about the steady typing rate because it determines whether long speeches stay readable in real time.",
+    "mapping": [
+      {
+        "analogyElement": "captioner typing words each second",
+        "aiElement": "model generating tokens per second"
+      },
+      {
+        "analogyElement": "speaker's stream of speech",
+        "aiElement": "incoming prompt or context to be processed"
+      },
+      {
+        "analogyElement": "initial pause before subtitles appear",
+        "aiElement": "latency before output starts"
+      },
+      {
+        "analogyElement": "subtitles continuing at a steady pace",
+        "aiElement": "sustained throughput during generation"
+      }
+    ],
+    "limitation": "A human captioner listens to speech and may paraphrase, while a language model processes tokenised text and computes probabilities over its vocabulary. Also, words and tokens are not the same size, so 'words per second' only roughly matches 'tokens per second'. The analogy helps with speed and flow, but not with the actual mechanism."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "Latency and throughput in one response",
+    "learningObjective": "Show that throughput is the sustained token rate during processing or generation, and that it is not the same thing as latency.",
+    "description": "A left-to-right flow diagram with one request moving through stages: input tokens arrive, the model starts work, output tokens appear one by one. A small clock marks the initial wait, and a rate label marks the ongoing token stream. Read from left to right to compare waiting time with steady speed.",
+    "steps": [
+      {
+        "label": "1. Input arrives",
+        "explanation": "The user sends a prompt, which is split into tokens before model computation begins.",
+        "visualInstruction": "Draw a box labelled 'Prompt' feeding into a row of small token rectangles labelled t1, t2, t3, t4."
+      },
+      {
+        "label": "2. Initial delay",
+        "explanation": "The system spends some time preparing and computing before the first visible output token appears. That delay is latency, not throughput.",
+        "visualInstruction": "Place a short gap with a clock icon between input tokens and the first output token. Label the gap 'initial wait'."
+      },
+      {
+        "label": "3. Output starts",
+        "explanation": "After the first token appears, the model continues generating tokens one step at a time.",
+        "visualInstruction": "Show output token rectangles appearing sequentially: o1, o2, o3, o4, connected by arrows."
+      },
+      {
+        "label": "4. Measure the rate",
+        "explanation": "Count how many output tokens appear in one second. That count is output throughput. Input processing can have its own separate rate.",
+        "visualInstruction": "Add a one-second bracket under several output tokens and label it '8 tokens in 1 second = 8 tok/s'. Include a note: 'input and output rates may differ'."
+      }
+    ],
+    "interaction": "On hover or tap, highlight either the latency gap or the one-second output bracket to show which metric each label refers to.",
+    "accessibilityDescription": "The diagram is a left-to-right flow showing a prompt becoming tokens, then a pause, then a sequence of generated output tokens. The pause before the first output token is labelled as latency. The later section groups several output tokens inside a one-second bracket and labels that count as throughput, for example 8 tokens per second. A note says input processing speed and output generation speed can be measured separately. The point is that waiting time and sustained rate are different measurements.",
+    "reducedMotionDescription": "A static flowchart shows prompt tokens on the left, a labelled pause in the middle, and a row of output tokens on the right. The pause is marked as latency, and a bracket under several output tokens marks throughput as tokens per second."
+  },
+  "workedExample": {
+    "scenario": "Comparing two model deployments for a drafting assistant",
+    "input": "Prompt length: 1,200 tokens. Model A starts output after 0.8 seconds and generates 40 tokens per second. Model B starts output after 0.3 seconds and generates 18 tokens per second. Needed answer length: 180 tokens.",
+    "process": [
+      "For Model A, the first visible token appears after 0.8 seconds.",
+      "Model A then needs about 180 / 40 = 4.5 seconds to generate the answer tokens.",
+      "So Model A finishes in about 5.3 seconds after the request starts.",
+      "For Model B, the first visible token appears after 0.3 seconds, but 180 / 18 = 10 seconds are needed to generate the answer tokens.",
+      "So Model B finishes in about 10.3 seconds, even though it felt faster at the start."
+    ],
+    "result": "Model B has lower latency, but Model A has higher throughput and finishes the full answer sooner."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is assessing an approved internal language tool to help draft non-sensitive meeting summaries from already cleared notes. They compare how quickly different deployments produce text during busy periods.",
+    "relevance": "Throughput matters because a system that handles more tokens per second can serve more staff or produce long outputs faster, which affects procurement, staffing expectations and user experience.",
+    "caution": "Do not test or benchmark with confidential, personal, protection-sensitive, security-sensitive or operational information in an unapproved public AI service; use approved environments and sanitised material."
+  },
+  "whyItMatters": "Throughput affects cost, capacity and user experience. If throughput is low, long answers arrive slowly, queues grow during busy periods, and the same hardware serves fewer people. If you only look at model quality and ignore throughput, you may choose a system that performs well in a demo but struggles in daily use. For technical teams, throughput helps compare deployments, estimate infrastructure needs and set realistic expectations. For non-specialists, it helps you ask a better question: not only 'Is the answer good?' but also 'Can this service produce enough text, for enough users, fast enough to be useful?'",
+  "whereYouMayHearIt": [
+    "model benchmarking",
+    "GPU capacity planning",
+    "API performance tuning",
+    "tokens-per-second dashboards"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Higher throughput means the model is more accurate.",
+      "correction": "Not necessarily. Throughput measures speed, not factual reliability or suitability for a task. A faster model may produce weaker answers, and a slower model may produce better ones. You need separate evaluation for quality."
+    },
+    {
+      "misconception": "Throughput and latency are the same thing.",
+      "correction": "They describe different parts of performance. Latency is how long you wait before output starts, or before the next token appears. Throughput is the sustained rate of token processing or generation over time. A system can be good at one and weak at the other."
+    },
+    {
+      "misconception": "Tokens per second tells you exactly how many words per second users will see.",
+      "correction": "Tokens are not the same as words. One word may map to one token, several tokens, or part of a token depending on the tokeniser and language. So tokens per second is a useful engineering measure, but it does not translate cleanly into words per second."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Throughput is how fast a language model gets through text, usually measured as tokens per second.",
+    "technical": "In LLM inference, throughput is the volume of token processing completed per unit time. People often report output throughput as generated tokens per second during decoding, but input throughput for prompt ingestion can be measured separately and may be much higher. Throughput is shaped by model architecture, parameter count, hardware bandwidth, parallelism, batch size, sequence length, memory limits and serving strategy. It differs from latency: latency captures delay to first token or per-token response delay, while throughput captures sustained work rate. Reported numbers also depend on what exactly is counted, such as prompt tokens only, completion tokens only, or both combined, so comparisons need the measurement method to be clear."
+  },
+  "keyTakeaway": "Throughput tells you how fast text work flows through a model, while latency tells you how long you wait for it to start.",
+  "quickCheck": {
+    "question": "Which statement best describes throughput for a language model service?",
+    "options": [
+      "The time until the first token appears on screen.",
+      "The number of tokens the system can process or generate per second.",
+      "The chance that the model's answer is correct.",
+      "The maximum prompt length the model accepts."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Throughput is a rate, usually tokens per second. The first-token wait is latency, correctness is a quality question, and maximum prompt length relates to the context window rather than speed."
+  },
+  "resources": [
+    {
+      "title": "Throughput (business)",
+      "url": "https://en.wikipedia.org/wiki/Throughput_(business)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad, non-AI introduction to throughput as a rate of work, which suits readers who want the basic idea first.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This course helps technical readers place throughput within the wider mechanics of language model inference and deployment.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives an intuitive visual picture of how large language models process and generate text, which helps readers relate speed metrics to the mechanism.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Throughput",
+      "url": "https://www.youtube.com/results?search_query=Throughput%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search page helps readers find multiple video explanations of throughput and suits people who want different teaching styles rather than one fixed source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Throughput",
+      "url": "https://www.reddit.com/search/?q=Throughput",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search page helps readers see how practitioners discuss throughput in real-world use, which suits readers looking for informal examples and recurring questions.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "throughput llm",
+    "tokens per second meaning",
+    "throughput vs latency ai",
+    "llm speed tok/s",
+    "what is model throughput",
+    "token generation speed",
+    "inference throughput",
+    "tokens per sec llm",
+    "thoughput ai",
+    "llm output rate",
+    "throughput",
+    "tokens per second"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:28.040Z",
+    "contentHash": "a86fb51a71015122",
+    "attempts": 1,
+    "promptTokens": 2336,
+    "completionTokens": 2278
+  }
+}

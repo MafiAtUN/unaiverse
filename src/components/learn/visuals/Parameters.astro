@@ -1,0 +1,154 @@
+---
+/**
+ * Parameters: a control panel of dials that training sets.
+ *
+ * Two things to get across, and the second is the one that matters for policy
+ * conversations. First, parameters are numbers, and training is the process
+ * that sets them. Second — and this is why the panel has a "find the fact"
+ * button that fails — one parameter does not hold one fact. You cannot open
+ * the model, locate the dial marked "capital of Peru", and turn it off.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-par data-term={termId}>
+  <div class="vx__row" role="group" aria-label="Training stage">
+    <button type="button" class="vx__button" data-par-stage="0" aria-pressed="true">Before training</button>
+    <button type="button" class="vx__button" data-par-stage="1" aria-pressed="false">Part-way through</button>
+    <button type="button" class="vx__button" data-par-stage="2" aria-pressed="false">Trained</button>
+    <button type="button" class="vx__button" data-par-find>Find the dial for one fact</button>
+  </div>
+
+  <div class="par-panel" data-par-panel aria-hidden="true"></div>
+
+  <p class="visual__readout" role="status" aria-live="polite" data-par-readout></p>
+</div>
+
+<style>
+  .par-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr));
+    gap: 4px;
+    padding: var(--sp-3);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius);
+    background: var(--void-deep);
+  }
+
+  .par-dial {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid var(--hairline-strong);
+    background: var(--void-raised);
+    position: relative;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .par-dial::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 8%;
+    width: 2px;
+    height: 42%;
+    background: var(--riso-yellow);
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(var(--a, 0deg));
+  }
+
+  .par-dial.is-lit {
+    border-color: var(--riso-pink);
+    background: rgb(255 95 168 / 0.16);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .par-dial {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const COUNT = 96;
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-par]')) {
+    const panel = root.querySelector<HTMLElement>('[data-par-panel]')!;
+    const readout = root.querySelector<HTMLElement>('[data-par-readout]')!;
+    const stageButtons = root.querySelectorAll<HTMLButtonElement>('[data-par-stage]');
+    const findButton = root.querySelector<HTMLButtonElement>('[data-par-find]')!;
+
+    panel.replaceChildren(
+      ...Array.from({ length: COUNT }, () => {
+        const d = document.createElement('div');
+        d.className = 'par-dial';
+        return d;
+      }),
+    );
+    const dials = [...panel.children] as HTMLElement[];
+
+    // Deterministic "random" so the panel looks the same on every visit.
+    let seed = 20260731;
+    const rnd = () => {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    const noise = Array.from({ length: COUNT }, () => rnd());
+    const trained = Array.from({ length: COUNT }, () => rnd());
+
+    const STAGES = [
+      {
+        label: 'Before training',
+        angles: () => noise.map((n) => (n - 0.5) * 40),
+        text: 'Before training, the parameters are set to small arbitrary values. The model at this point produces nothing useful — it is a machine with the right shape and no learned settings.',
+      },
+      {
+        label: 'Part-way through',
+        angles: () => noise.map((n, i) => (n - 0.5) * 40 + (trained[i]! - 0.5) * 130),
+        text: 'Training has begun. Every example the model sees nudges these numbers a little, in the direction that reduces its error. Nobody sets them by hand, and nobody chooses what each one ends up meaning.',
+      },
+      {
+        label: 'Trained',
+        angles: () => trained.map((t) => (t - 0.5) * 300),
+        text: 'Training is finished and the parameters are frozen. This settled arrangement of numbers is the model: when someone says a model has 70 billion parameters, this is what they are counting. Using the model does not change them.',
+      },
+    ];
+
+    let stage = 2;
+
+    function render(highlight: number[] = []) {
+      const s = STAGES[stage]!;
+      const angles = s.angles();
+      dials.forEach((d, i) => {
+        d.style.setProperty('--a', `${angles[i]!.toFixed(1)}deg`);
+        d.classList.toggle('is-lit', highlight.includes(i));
+      });
+      stageButtons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === stage)));
+      if (!highlight.length) readout.textContent = `${s.label}. ${s.text} This panel shows ${COUNT} dials; a modern model has billions.`;
+    }
+
+    stageButtons.forEach((b, i) =>
+      b.addEventListener('click', () => {
+        stage = i;
+        render();
+      }),
+    );
+
+    findButton.addEventListener('click', () => {
+      stage = 2;
+      // Deliberately lights up a scattered third of the panel: the honest
+      // answer to "which dial holds this fact" is "a great many of them, a
+      // little bit, and the same ones hold other things too".
+      const lit = dials.map((_, i) => i).filter((i) => trained[i]! > 0.66);
+      render(lit);
+      readout.textContent =
+        `Asked to locate the dials responsible for a single fact, we can only highlight ${lit.length} of ${COUNT} — and those same dials contribute to countless other outputs. ` +
+        'This is the part most people get wrong: a parameter is not a stored fact, and a model is not a database of facts with one drawer per item. ' +
+        'It is why you cannot reliably delete one fact from a model, and why "just remove that from the model" is a much harder request than it sounds.';
+    });
+
+    render();
+  }
+</script>

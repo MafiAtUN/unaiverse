@@ -1,0 +1,216 @@
+{
+  "id": "checkpoint",
+  "slug": "checkpoint",
+  "term": "Checkpoint",
+  "aliases": [
+    "model checkpoint",
+    "snapshot"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "fine-tuning",
+    "supervised-fine-tuning",
+    "lora",
+    "parameter-efficient-fine-tuning",
+    "alignment"
+  ],
+  "oftenConfusedWith": [
+    "model-version",
+    "model-weight",
+    "knowledge-cutoff"
+  ],
+  "oneSentence": "A saved copy of a model’s state at a particular point in training or adaptation, so work can be resumed, compared or released later.",
+  "plainExplanation": "During training, a model’s parameters change many times. A checkpoint is a saved record of that state at one moment. It usually includes the model weights, and often also optimiser state, training step number and other settings needed to continue training.\n\nWhat goes in is the current training state: the numerical weights and, if the goal is to resume training, the extra bookkeeping from the training process. What happens is simply a save operation to storage. What comes out is a file or set of files that can later be loaded.\n\nPeople use checkpoints for several different jobs. They can restart after a machine failure, compare earlier and later training stages, pick the best-performing stage on a validation set, or publish a particular stage for others to use. In adaptation work such as fine-tuning, a checkpoint may be saved every few steps or at the end of training.\n\nThis term is often confused with model version and model weights. A model version is a named release for users, which may be based on one checkpoint but also includes packaging, testing and documentation. Model weights are the parameter values themselves as an artefact; a checkpoint may include those weights plus extra training state.",
+  "everydayAnalogy": {
+    "title": "Saving the plan during warehouse packing",
+    "story": "At a food distribution point, a team is preparing parcels for 8,000 people. Every hour, the coordinator saves the current packing spreadsheet, the stock counts and notes about which loading rules were being used. If the laptop stops working, the team can reopen the latest saved package and continue instead of starting the day again. Later, they can compare the 10:00 and 14:00 saves to see which plan led to fewer shortages.",
+    "mapping": [
+      {
+        "analogyElement": "hourly saved package of spreadsheet, stock counts and notes",
+        "aiElement": "checkpoint containing model state and training metadata"
+      },
+      {
+        "analogyElement": "reopening the latest save after a laptop failure",
+        "aiElement": "resuming training from a checkpoint after interruption"
+      },
+      {
+        "analogyElement": "comparing the 10:00 and 14:00 saves",
+        "aiElement": "evaluating different training stages to choose a better checkpoint"
+      }
+    ],
+    "limitation": "A warehouse plan is human-readable and can be checked cell by cell. A model checkpoint is usually a large collection of numerical tensors and training state, not a clear explanation of what the model will output. Also, real training may save many specialised items such as optimiser statistics, which have no simple equivalent in the spreadsheet story."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How a checkpoint is created and used",
+    "learningObjective": "Show that a checkpoint is a saved training state that can be used to resume training, compare stages or release a selected stage.",
+    "description": "A left-to-right step diagram with four boxes. It starts with training in progress, then saving a snapshot, then storing one or more checkpoint files, then three possible uses from the saved state: resume, evaluate or publish. Read from left to right.",
+    "steps": [
+      {
+        "label": "1. Training updates the model",
+        "explanation": "The model’s weights change step by step as data passes through training.",
+        "visualInstruction": "Draw a box labelled 'Training run' with a progress indicator and small changing number grids to suggest weights updating."
+      },
+      {
+        "label": "2. Save a checkpoint",
+        "explanation": "At a chosen step, the current state is written to storage.",
+        "visualInstruction": "Draw an arrow to a box labelled 'Save at step 12,000' with icons for weights, optimiser state and step number."
+      },
+      {
+        "label": "3. Stored checkpoint",
+        "explanation": "The result is one checkpoint file or a group of files representing that moment.",
+        "visualInstruction": "Draw a storage box or stacked files labelled 'checkpoint-12000'."
+      },
+      {
+        "label": "4. Use it later",
+        "explanation": "The saved state can be loaded to continue training, compare performance, or become the basis of a release.",
+        "visualInstruction": "From the stored checkpoint, draw three outgoing arrows to small boxes labelled 'Resume training', 'Evaluate on validation set' and 'Package as release'."
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal a one-line note about what is usually saved and what each later use requires.",
+    "accessibilityDescription": "Step 1 shows a training run where model weights are changing over time. Step 2 shows a save action at a specific training step, storing the current weights and often optimiser state and step number. Step 3 shows the saved result as a checkpoint file or group of files. Step 4 shows three later uses of that saved state: resuming training after interruption, evaluating that stage against other saved stages, or packaging one selected stage into a released model version. The main message is that a checkpoint is a saved training state, not automatically a public release.",
+    "reducedMotionDescription": "A static four-step horizontal diagram with labelled arrows: Training run, Save at step 12,000, Stored checkpoint, and three branches for Resume training, Evaluate, and Package as release."
+  },
+  "workedExample": {
+    "scenario": "A team is fine-tuning a language model for summarising maintenance reports in English, Arabic and French.",
+    "input": "Training saves a checkpoint every 1,000 steps. Validation loss is checked at each save.",
+    "process": [
+      "At step 8,000, the system saves checkpoint-8000 with weights, optimiser state and the step number.",
+      "At step 9,000, it saves checkpoint-9000 and the validation score improves from 1.92 to 1.81.",
+      "At step 10,000, it saves checkpoint-10000, but the validation score worsens slightly to 1.84.",
+      "The team chooses checkpoint-9000 as the best checkpoint for this task and keeps checkpoint-10000 only as a recovery point."
+    ],
+    "result": "The selected checkpoint is checkpoint-9000. It is loaded for evaluation and later packaged into a named model release with documentation."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is building an internal search tool over approved guidance documents and tests several fine-tuning runs of the retrieval model.",
+    "relevance": "Checkpoints let the team compare intermediate training stages, recover from interrupted runs and keep a record of which state produced the best retrieval quality before creating an internal release.",
+    "caution": "Only use approved internal systems and approved document collections. Do not place confidential, security-sensitive or otherwise restricted material into an unapproved public AI service during training, evaluation or checkpoint storage."
+  },
+  "whyItMatters": "If you hear that a team has 'the checkpoint', that does not automatically mean they have a finished, approved model. A checkpoint may be an early, unstable or task-specific training state. This matters for procurement, testing, risk review and reproducibility. You may need to ask: Which checkpoint was used? Was it the best one on validation data? Does it include enough information to resume training? Was it merely saved during experimentation, or was it packaged and documented as a release? Clear answers help avoid using the wrong model state, losing work after failures, or comparing systems unfairly.",
+  "whereYouMayHearIt": [
+    "training logs",
+    "fine-tuning guides",
+    "model release notes",
+    "machine learning engineering meetings"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A checkpoint and a model version are the same thing.",
+      "correction": "A checkpoint is a saved training state at a moment in time. A model version is usually a managed release label for users, often with testing, documentation, serving configuration and governance decisions. One version may come from one checkpoint, but the terms are not interchangeable."
+    },
+    {
+      "misconception": "A checkpoint only contains the model weights.",
+      "correction": "Sometimes a lightweight save contains just weights, but a training checkpoint often also stores optimiser state, step counts, scheduler settings and other metadata needed to continue training properly. Without those extras, you may load the model for inference but not resume training in the same way."
+    },
+    {
+      "misconception": "The latest checkpoint is always the best one to deploy.",
+      "correction": "Later training is not always better. Performance on validation data can level off or worsen, and other risks can appear. Teams often select an earlier checkpoint because it performed better on agreed evaluation criteria."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of it as a saved game for model training. It lets you restart from a particular point or compare different stages instead of beginning again.",
+    "technical": "A checkpoint is a serialised snapshot of training state at a specific step or epoch. Depending on the framework and purpose, it may include model parameters, optimiser moments, learning-rate scheduler state, random number generator states, gradient-scaler state, tokenizer or config references, and the global step. For inference-only use, some artefacts save only weights. For resumable training, the fuller state matters because restarting from weights alone can change optimisation behaviour. In fine-tuning and parameter-efficient methods such as LoRA, the checkpoint may store only adapted parameters or adapters rather than the whole base model, depending on how the run was configured."
+  },
+  "keyTakeaway": "A checkpoint is a saved training state for recovery or comparison; it is not automatically the final released model.",
+  "quickCheck": {
+    "question": "Which description best matches a checkpoint in model training?",
+    "options": [
+      "A public product name for a released model",
+      "A saved training state that can be reloaded later",
+      "The date after which the model has no newer knowledge",
+      "A prompt example used to guide the model at runtime"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A checkpoint is a saved state from training or adaptation. It is used to resume work, compare stages or prepare a release. The other options describe a model version, a knowledge cutoff and in-context prompting."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Checkpoint",
+      "url": "https://en.wikipedia.org/wiki/Checkpoint",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad introductory overview of checkpointing and suits readers who want a quick orientation before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course link is useful for learners who want practical training context and suits readers comfortable with hands-on machine learning workflows.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "This course link offers short, applied lessons and suits readers who prefer guided examples over reference-style explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Checkpoint",
+      "url": "https://www.youtube.com/results?search_query=Checkpoint%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers browse multiple video explanations and suits people who learn well from varied visual teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Checkpoint",
+      "url": "https://www.reddit.com/search/?q=Checkpoint",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it helps readers see community questions and practical confusion points and suits readers who want informal discussion alongside formal sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "what is a checkpoint in machine learning",
+    "model checkpoint vs model version",
+    "checkpoint vs weights",
+    "resume training from checkpoint",
+    "llm checkpoint meaning",
+    "checkpoint file pytorch",
+    "best checkpoint validation loss",
+    "chekpoint model typo",
+    "checkpoint",
+    "model checkpoint",
+    "snapshot"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:41.710Z",
+    "contentHash": "891e8f96770fb309",
+    "attempts": 1,
+    "promptTokens": 2306,
+    "completionTokens": 2219
+  }
+}

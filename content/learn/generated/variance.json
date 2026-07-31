@@ -1,0 +1,216 @@
+{
+  "id": "variance",
+  "slug": "variance",
+  "term": "Variance",
+  "aliases": [],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "statistical-bias"
+  ],
+  "relatedTermIds": [
+    "cross-validation",
+    "overfitting",
+    "generalisation",
+    "robustness",
+    "benchmark",
+    "evaluation-metric"
+  ],
+  "oftenConfusedWith": [
+    "overfitting",
+    "statistical-bias",
+    "reliability"
+  ],
+  "oneSentence": "Variance describes how much a model’s results change when the training data, test split or similar conditions change slightly.",
+  "plainExplanation": "Variance tells you how sensitive a model is to small changes in the data. If you train the same kind of model on slightly different samples, a high-variance model may give noticeably different predictions or scores each time. A low-variance model stays more stable.\n\nWhat goes in is usually the same modelling method plus different training sets, validation folds or test samples. What happens is that the model fits patterns from each sample. If it fits many accidental details that are specific to one sample rather than broader patterns, its behaviour changes a lot from run to run. What comes out is instability: performance that looks good on one split but drops on another.\n\nThis is often discussed with overfitting, but they are not identical. Overfitting is a behaviour where a model fits the training data too closely and then performs worse on new data. High variance is one common reason that happens, because the model is too sensitive to the particular sample it saw.\n\nVariance is also different from statistical bias. In this context, bias usually means systematic error from strong simplifying assumptions, not unfairness between groups. A model can have low bias and high variance, or high bias and low variance. Good evaluation checks both average performance and how much that performance moves across repeated tests.",
+  "everydayAnalogy": {
+    "title": "Different clerks, slightly different piles",
+    "story": "A university receives 1,000 applications and asks several clerks to sort small samples into “complete” and “incomplete”. They all use the same checklist, but each clerk gets a slightly different pile of applications. If the checklist is clear and robust, the results look similar across piles. If the checklist relies on tiny quirks, one pile may look 92% complete and another only 74%, even though the overall applicant pool is similar.",
+    "mapping": [
+      {
+        "analogyElement": "slightly different piles of applications",
+        "aiElement": "different training samples or test splits"
+      },
+      {
+        "analogyElement": "the checklist",
+        "aiElement": "the model structure and learned rules"
+      },
+      {
+        "analogyElement": "big swings in completeness rates across piles",
+        "aiElement": "high variance in model performance across runs"
+      }
+    ],
+    "limitation": "A real model does not literally follow a human checklist unless it was designed that way, and variance can appear even when the training procedure is fully automated. Also, in machine learning the instability often comes from mathematical fitting to limited data, not from people applying rules inconsistently."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Low variance and high variance across repeated data splits",
+    "learningObjective": "Be able to explain that variance is about how much model results change across repeated, slightly different samples, and why that matters for trust in an evaluation score.",
+    "description": "Two side-by-side columns compare repeated evaluations of the same task. The left column shows similar scores across folds and stable decision boundaries; the right shows large score swings and shifting boundaries. Read top to bottom in each column, then compare the summary at the bottom.",
+    "steps": [
+      {
+        "label": "Same task, new samples",
+        "explanation": "Start with one prediction task and one modelling approach, but create several slightly different train/test splits from the same dataset.",
+        "visualInstruction": "At the top, draw one dataset box feeding into three smaller split boxes in each column. Use identical labels across columns: Split 1, Split 2, Split 3."
+      },
+      {
+        "label": "Fit the model repeatedly",
+        "explanation": "Train the same kind of model on each split. Only the sampled data changes.",
+        "visualInstruction": "Under each split box, place a model icon with the same label. In the low-variance column, keep the model boundary lines visually similar; in the high-variance column, make them visibly different."
+      },
+      {
+        "label": "Compare the scores",
+        "explanation": "Low variance gives similar validation scores across splits. High variance gives wide score swings, even though the task is unchanged.",
+        "visualInstruction": "Show score chips under each model. Left column example: 0.84, 0.83, 0.85. Right column example: 0.93, 0.71, 0.80. Use spacing and alignment, not colour alone, to show consistency versus spread."
+      },
+      {
+        "label": "Interpret the result",
+        "explanation": "A single strong score is less convincing if repeated tests move a lot. Stable performance is usually easier to trust.",
+        "visualInstruction": "Add a bottom summary band in each column. Left: ‘stable estimate’. Right: ‘unstable estimate; possible overfitting’. Connect the score chips to the summary with thin lines."
+      }
+    ],
+    "interaction": "Hover or tap each split to highlight its decision boundary and score, then toggle an overlay that shows the score range across splits.",
+    "accessibilityDescription": "The diagram compares two ways the same model can behave across repeated train and test splits. In the left column, three slightly different data splits produce similar fitted boundaries and nearly identical scores, showing low variance. In the right column, the same process produces noticeably different boundaries and scores that vary widely, showing high variance. The message is that variance is about stability across samples: if results swing a lot, one good score may not represent real performance on new data.",
+    "reducedMotionDescription": "A static two-column comparison replaces animation. Each column shows three fixed split-model-score stacks and a final summary label. Consistency of the left scores and spread of the right scores are shown with printed values and a simple score-range bracket."
+  },
+  "workedExample": {
+    "scenario": "A team builds a classifier to flag incomplete scholarship applications before staff review them.",
+    "input": "The dataset has 5,000 past applications labelled complete or incomplete. The team tests the same model with 5-fold cross-validation.",
+    "process": [
+      "They train and evaluate the model five times, each time using a different validation fold.",
+      "The fold-level F1 scores are 0.91, 0.74, 0.88, 0.76 and 0.90.",
+      "They compute the average score, which is 0.84, but also notice the spread is large.",
+      "They inspect the folds and find the model relied heavily on rare formatting features that appeared in some folds but not others."
+    ],
+    "result": "The average score looks acceptable at first glance, but the large variation across folds suggests high variance. The team treats the model as unstable, simplifies the feature set and retests rather than reporting only the average."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team analyses household assessment survey responses to predict which records may need manual quality checks because fields appear inconsistent or incomplete.",
+    "relevance": "Variance matters because a model that performs well on one sample of survey responses but poorly on another may waste staff time or miss records that need review. Repeated evaluation across regions, rounds or folds can show whether the apparent performance is stable enough for operational use.",
+    "caution": "Do not upload personal, confidential or protection-sensitive household data to an unapproved public AI service. Evaluate using approved systems, minimise identifiable data and keep human oversight over any action affecting people or assistance decisions."
+  },
+  "whyItMatters": "A model can look strong because it scored well on one test, yet still be unreliable in practice if that score changes a lot with small data changes. Variance helps you ask a better question: not only “How high is the score?” but also “How stable is it?” This matters when choosing whether to deploy a system, compare vendors, set monitoring thresholds or trust a benchmark result. For non-specialists, variance is a warning sign against over-reading a single number. Stable performance is usually easier to defend, monitor and improve than performance that depends on a lucky split.",
+  "whereYouMayHearIt": [
+    "cross-validation results",
+    "bias-variance tradeoff",
+    "model benchmarking",
+    "overfitting discussions",
+    "error bars on evaluation charts"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Variance just means the model makes many mistakes.",
+      "correction": "Not exactly. A model can have a reasonable average error rate and still have high variance if that error rate changes a lot across different samples or runs. Variance is about instability, not simply the number of errors."
+    },
+    {
+      "misconception": "If one test score is very high, variance is not important.",
+      "correction": "A single high score may come from a favourable split, accidental patterns in the sample or data leakage. Without checking how results change across repeated evaluations, you cannot tell whether the score is representative."
+    },
+    {
+      "misconception": "Variance and statistical bias are the same thing.",
+      "correction": "They describe different problems. Statistical bias refers to systematic error from assumptions that are too rigid or miss the true pattern. Variance refers to sensitivity to the particular sample used. A model can be low in one and high in the other."
+    },
+    {
+      "misconception": "More complex models always have lower variance because they fit the data better.",
+      "correction": "Complex models often fit the training data more closely, but that can make them more sensitive to sample-specific noise. Better fit on training data can therefore increase variance on new data rather than reduce it."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Variance means the model’s results do not stay steady when you test it on slightly different data.",
+    "technical": "In machine learning, variance is the component of error linked to sensitivity to fluctuations in the training sample. Formally, if you imagine repeatedly drawing datasets from the same underlying process and refitting the same learning algorithm, high variance means the learned function changes substantially across those draws. In practice, you often observe it indirectly through unstable validation metrics, shifting decision boundaries or large fold-to-fold differences under cross-validation. High variance is commonly associated with overfitting, because the model captures idiosyncratic features of the sample rather than reproducible signal. However, variance is not identical to overfitting, and it should be interpreted alongside bias, noise, leakage risk, class balance and the evaluation design."
+  },
+  "keyTakeaway": "A good model score means much more when it stays similar across repeated, slightly different tests.",
+  "quickCheck": {
+    "question": "Which result most strongly suggests high variance?",
+    "options": [
+      "The model gets 82% accuracy on training data and 81% on test data from one fixed split.",
+      "Across five cross-validation folds, the F1 scores range from 0.93 down to 0.71 for the same model setup.",
+      "The model has lower recall than precision on a balanced test set.",
+      "The confusion matrix shows more false negatives than false positives in one evaluation run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "High variance appears as instability across repeated samples or splits. A wide spread in fold scores suggests the model’s apparent quality depends heavily on which data it saw. The other options may matter for other reasons, but they do not by themselves show instability across samples."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Bias–variance tradeoff",
+      "url": "https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference overview of the bias–variance tradeoff and suits readers who want a conceptual starting point with some mathematical detail.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course page explains common classification metrics and suits readers who need context for how variance can affect the interpretation of reported scores.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This official framework gives a risk-management perspective on testing and reliability, and suits practitioners who need to place variance within broader AI assurance work.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Variance",
+      "url": "https://www.youtube.com/results?search_query=Variance%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page for variance explanations, so it suits readers who prefer to compare several video teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Variance",
+      "url": "https://www.reddit.com/search/?q=Variance",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page for community discussion of variance, so it suits readers who want to see common confusions and informal explanations, with caution about accuracy.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "variance machine learning meaning",
+    "high variance vs overfitting",
+    "what does variance mean in model evaluation",
+    "bias variance tradeoff simple",
+    "cross validation score spread",
+    "unstable model results across folds",
+    "variance in classification model",
+    "varience ml",
+    "variance"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:24.110Z",
+    "contentHash": "37e7159059e2ebfa",
+    "attempts": 1,
+    "promptTokens": 2276,
+    "completionTokens": 2441
+  }
+}

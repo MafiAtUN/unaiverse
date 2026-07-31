@@ -1,0 +1,223 @@
+{
+  "id": "vanishing-and-exploding-gradients",
+  "slug": "vanishing-and-exploding-gradients",
+  "term": "Vanishing and exploding gradients",
+  "aliases": [
+    "vanishing gradient",
+    "exploding gradient"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "backpropagation"
+  ],
+  "relatedTermIds": [
+    "gradient",
+    "backpropagation",
+    "chain-rule",
+    "gradient-descent",
+    "learning-rate",
+    "optimisation"
+  ],
+  "oftenConfusedWith": [
+    "convergence",
+    "local-and-global-minimum",
+    "regularisation"
+  ],
+  "oneSentence": "Training can stall or blow up when error signals shrink toward zero across layers or time steps, or grow so large that updates become unstable.",
+  "plainExplanation": "In many models, training works by sending an error signal backwards through the model so each parameter gets a hint about how to change. That hint is called a gradient. A gradient tells optimisation which direction should reduce the loss, meaning the measured mismatch between the model’s output and the target.\n\nVanishing gradients and exploding gradients are two related failure modes in that backward pass. In the vanishing case, the signal gets smaller and smaller as it moves back through many layers or many time steps. Early parts of the model then receive almost no useful update. In the exploding case, the signal grows larger and larger, so updates become erratic, oversized or numerically unstable.\n\nThey are related because both come from repeated multiplication during backpropagation, often through the chain rule. If many factors in that product are less than 1, the gradient can shrink rapidly. If many factors are greater than 1, it can grow rapidly. This is especially common in deep networks and recurrent neural networks, but the exact risk depends on the architecture, activation functions, parameter initialisation and optimiser settings.\n\nWhat goes in is an input, a target and the model’s current parameters. What happens is a forward pass to compute output and loss, then a backward pass to compute gradients. What comes out should be parameter updates that gradually improve the model. With vanishing gradients, learning becomes very slow or stops in earlier layers. With exploding gradients, the loss may jump around, become huge or turn into invalid numbers such as NaN. These problems are not the same as overfitting, and they are not simply “bad data”; they are mainly about how the training signal behaves inside the model.",
+  "everydayAnalogy": {
+    "title": "Passing correction notes down a long line",
+    "story": "A team is reviewing survey responses from many offices. The lead reviewer writes a note saying which issue labels need correcting, then each person in a long line passes a shorter summary of that note to the next person. If each handover trims the message a little, the people at the far end receive almost nothing and cannot improve their labels. If each handover exaggerates the message, the far end receives a dramatic instruction and over-corrects many labels. The review process then either stalls quietly or becomes chaotic.",
+    "mapping": [
+      {
+        "analogyElement": "the correction note moving down the line",
+        "aiElement": "the gradient moving backwards through layers or time steps"
+      },
+      {
+        "analogyElement": "each person shortening the note",
+        "aiElement": "repeated multiplication shrinking the gradient"
+      },
+      {
+        "analogyElement": "each person exaggerating the note",
+        "aiElement": "repeated multiplication enlarging the gradient"
+      },
+      {
+        "analogyElement": "far-end reviewers barely changing labels or changing too much",
+        "aiElement": "early layers learning too slowly or updating unstably"
+      }
+    ],
+    "limitation": "People can choose to ignore, rewrite or clarify a note, but gradients are numerical values produced by fixed computations during backpropagation. Also, real models can have many paths for the signal, not just one line of people, and modern methods such as gating, residual connections or gradient clipping can change the behaviour in ways this story does not show."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Backward signal: fading versus blowing up",
+    "learningObjective": "Show why repeated backward multiplications can make early layers receive either almost no learning signal or an unstable one.",
+    "description": "Two side-by-side chains of layers read from right to left, because the error signal travels backwards from output to earlier layers. The left chain shows gradient values shrinking at each step; the right chain shows them growing. A short caption under each side states the training effect on early layers.",
+    "steps": [
+      {
+        "label": "Start from output error",
+        "explanation": "The backward pass begins with the model’s output error and sends a gradient to the previous layer.",
+        "visualInstruction": "Draw five boxes in a row labelled Layer 1 to Layer 5. Place Output/Error at the far right. Add arrows pointing left from Output/Error through the layers on both sides of the comparison."
+      },
+      {
+        "label": "Vanishing case",
+        "explanation": "If each backward step multiplies by factors smaller than 1, the signal shrinks quickly.",
+        "visualInstruction": "On the left side, place numbers above the arrows such as 1.0, 0.4, 0.16, 0.06, 0.02. Make arrow thickness and colour intensity fade as they move left. Add a caption: 'Early layers get tiny updates'."
+      },
+      {
+        "label": "Exploding case",
+        "explanation": "If each backward step multiplies by factors larger than 1, the signal grows quickly.",
+        "visualInstruction": "On the right side, place numbers above the arrows such as 1.0, 2.5, 6.3, 15.8, 39.5. Make arrows thicker and more saturated as they move left. Add a caption: 'Updates become unstable'."
+      },
+      {
+        "label": "Training consequence",
+        "explanation": "Useful learning needs gradients that are informative and numerically manageable, not near zero and not extreme.",
+        "visualInstruction": "Below both sides, add a middle band labelled 'healthy range' and place small markers showing that both extremes fall outside it. Add note chips: 'slow or stalled learning' on left, 'jumping loss / NaN risk' on right."
+      }
+    ],
+    "interaction": "Hover or tap each arrow to reveal the multiplication factor at that step and a short note explaining how it changes the signal.",
+    "accessibilityDescription": "This is a side-by-side comparison of backward error signals in a deep model. On both sides, the signal starts at the output and moves left through five layers. In the left panel, the numbers above the arrows decrease from 1.0 to 0.02, and the arrows fade, showing vanishing gradients. The caption says early layers get tiny updates, so learning is slow or stalled. In the right panel, the numbers increase from 1.0 to 39.5, and the arrows thicken, showing exploding gradients. The caption says updates become unstable, with jumping loss or invalid numbers. A final note says useful training needs gradients in a manageable middle range.",
+    "reducedMotionDescription": "A static two-column diagram replaces hover effects. Each column shows five left-pointing arrows with fixed labels for the gradient size at each step, plus captions explaining the training outcome."
+  },
+  "workedExample": {
+    "scenario": "A small recurrent model predicts the next word in short text sequences, but the sequence length is 20 time steps.",
+    "input": "At one training step, the loss at the output is 0.8 and the backward path repeatedly multiplies by an approximate factor from the recurrent weights and activation derivative.",
+    "process": [
+      "Vanishing case: if the typical factor is about 0.5 per time step, the gradient reaching 10 steps back is roughly 0.8 × 0.5^10 ≈ 0.00078.",
+      "By 20 steps back, it is roughly 0.8 × 0.5^20 ≈ 0.00000076, so parameters affecting early words get almost no update.",
+      "Exploding case: if the typical factor is about 1.5 per time step, the gradient 10 steps back is roughly 0.8 × 1.5^10 ≈ 46.",
+      "By 20 steps back, it is roughly 0.8 × 1.5^20 ≈ 2660, so one update can become wildly oversized unless training controls are added."
+    ],
+    "result": "In the first run, the model struggles to learn long-range patterns. In the second, the loss may swing sharply or produce unstable values. Both runs use the same data; the difference is how the backward signal behaves."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team builds an internal, approved model to classify non-sensitive survey comments into themes such as access, delay and language barriers. The model has many layers so it can capture subtle wording patterns across regions.",
+    "relevance": "If gradients vanish, early layers may not learn useful text features and the classifier underperforms. If gradients explode, training becomes unstable and results vary across runs, making quality assurance and deployment decisions harder.",
+    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service to diagnose training problems or test model prompts."
+  },
+  "whyItMatters": "For a non-specialist, this term matters because a model can fail during training even when the data, hardware and objective all look reasonable. If gradients vanish, teams may waste time assuming the model only needs more epochs, when the real issue is that early layers are barely learning. If gradients explode, training may appear erratic, expensive or impossible to reproduce. Understanding this helps you ask better questions about architecture choice, stability checks, monitoring and whether reported improvements are robust. It also helps distinguish an optimisation problem from other issues such as poor labels, overfitting or a badly chosen loss function.",
+  "whereYouMayHearIt": [
+    "deep learning training runs",
+    "recurrent neural network discussions",
+    "debugging unstable loss curves",
+    "backpropagation lectures",
+    "optimiser and architecture tuning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Vanishing gradients just mean the model has converged successfully.",
+      "correction": "Not necessarily. Convergence means training has approached a stable solution for the chosen objective. Vanishing gradients can happen far from a good solution, leaving some layers almost frozen because the backward signal became too small to guide useful updates."
+    },
+    {
+      "misconception": "Exploding gradients only happen when the learning rate is too high.",
+      "correction": "A high learning rate can make instability worse, but exploding gradients can arise even before the optimiser step size is applied. The core problem is that the computed gradient itself becomes very large through repeated multiplication in backpropagation."
+    },
+    {
+      "misconception": "These problems only affect very old models and are no longer relevant.",
+      "correction": "Modern design choices reduce the risk, but they do not remove it in every setting. Long sequences, very deep networks, poor initialisation or unsuitable activations can still produce vanishing or exploding gradients, so practitioners still monitor for them."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "During training, the model sends a correction signal backwards. If that signal fades away, earlier parts barely learn. If it grows out of control, updates become unstable.",
+    "technical": "Let the loss be L and consider gradients computed by backpropagation. For a parameter in an early layer or early time step, the derivative often becomes a product of many Jacobian terms from the chain rule. When the relevant norms of those terms are typically below 1, the product can decay exponentially with depth or sequence length, causing vanishing gradients. When the norms are typically above 1, the product can grow exponentially, causing exploding gradients. The exact behaviour depends on weight matrices, activation derivatives, normalisation, residual paths, gating and numerical precision. In practice, symptoms include tiny parameter updates in early layers, very slow learning of long-range dependencies, unstable loss spikes, gradient norms that become extreme and occasional NaN values. Common mitigations include careful initialisation, activation choices, residual connections, gated recurrent units, normalisation methods, gradient clipping and adaptive optimisers, but each changes training dynamics rather than magically solving every case."
+  },
+  "keyTakeaway": "Good training needs gradients that stay informative across depth or time, not signals that fade to almost zero or blow up to unstable size.",
+  "quickCheck": {
+    "question": "Which statement best captures the difference between vanishing and exploding gradients?",
+    "options": [
+      "Vanishing gradients make early layers receive tiny updates, while exploding gradients make updates excessively large and unstable.",
+      "Vanishing gradients mean the loss function is wrong, while exploding gradients mean the dataset is too small.",
+      "Vanishing gradients only happen in image models, while exploding gradients only happen in language models.",
+      "Vanishing gradients and exploding gradients are two names for the same successful convergence behaviour."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Both problems concern the size of the backward training signal. Vanishing gradients shrink toward zero, so some parameters barely change. Exploding gradients grow too large, so updates can become erratic or numerically unstable. They are optimisation issues, not simply proof that the loss or dataset is wrong."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Vanishing gradient problem",
+      "url": "https://en.wikipedia.org/wiki/Vanishing_gradient_problem",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "A broad overview of the problem, its causes and common mitigation ideas, suited to readers who want a reference-style starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "A visual introduction to neural networks and backpropagation that helps readers build intuition before tackling this specific failure mode, suited to visual learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "A practical course-style explanation of reducing loss that gives context for why stable gradients matter during training, suited to readers connecting theory to training behaviour.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Vanishing and exploding gradients",
+      "url": "https://www.youtube.com/results?search_query=Vanishing%20and%20exploding%20gradients%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A search results page collecting multiple video explanations of vanishing and exploding gradients, suited to readers who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Vanishing and exploding gradients",
+      "url": "https://www.reddit.com/search/?q=Vanishing%20and%20exploding%20gradients",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A search results page collecting community discussions and troubleshooting threads on these issues, suited to readers looking for practitioner questions, examples and informal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "vanishing gradient explained",
+    "exploding gradient explained",
+    "why gradients vanish in deep network",
+    "why gradients explode",
+    "rnn vanishing gradient problem",
+    "gradient becomes zero during training",
+    "loss becomes nan exploding gradients",
+    "vanishing gradients vs convergence",
+    "gradient clipping why",
+    "vanishing gradent typo",
+    "vanishing and exploding gradients",
+    "vanishing gradient",
+    "exploding gradient"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:36.608Z",
+    "contentHash": "0c22703b8e8ce183",
+    "attempts": 1,
+    "promptTokens": 2296,
+    "completionTokens": 2769
+  }
+}

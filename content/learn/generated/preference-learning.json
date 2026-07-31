@@ -1,0 +1,223 @@
+{
+  "id": "preference-learning",
+  "slug": "preference-learning",
+  "term": "Preference learning",
+  "aliases": [
+    "DPO",
+    "preference data"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "reinforcement-learning-from-human-feedback"
+  ],
+  "relatedTermIds": [
+    "fine-tuning",
+    "supervised-fine-tuning",
+    "instruction-tuning",
+    "alignment",
+    "checkpoint",
+    "model-version"
+  ],
+  "oftenConfusedWith": [
+    "reinforcement-learning-from-human-feedback",
+    "fine-tuning",
+    "instruction-tuning"
+  ],
+  "oneSentence": "A method for adjusting a model so it more often produces outputs people rank as better, safer or more useful than alternatives.",
+  "plainExplanation": "Preference learning uses comparison data instead of only example answers. People, or another trusted process, look at two or more model outputs for the same prompt and indicate which one they prefer. That preference data becomes the training signal.\n\nWhat goes in is usually a prompt plus candidate responses and a label such as “A is better than B”. Sometimes the preference is about helpfulness, harmlessness, style or task success. The data does not say the preferred answer is perfect; it only says it is better than the alternative under the chosen criteria.\n\nWhat happens next depends on the method. In direct preference optimisation, often shortened to DPO, the model is updated to assign higher probability to preferred responses and lower probability to rejected ones. Other approaches may first train a reward model, meaning a separate model that scores outputs, and then optimise against that score. That is why preference learning is related to, but not identical to, reinforcement learning from human feedback.\n\nWhat comes out is a new model checkpoint that tends to follow the chosen preferences more often. This can improve usefulness or safety, but it can also narrow behaviour, amplify the biases in the raters or make the model sound polished without being more correct. Preference learning changes behaviour after pretraining; it does not add reliable new factual knowledge in the same way people often imagine when they say “train it on our data”.",
+  "everydayAnalogy": {
+    "title": "Choosing better document recommendations",
+    "story": "A library team is improving a document recommendation tool for staff. For one search, the tool suggests two ranked lists of reports. Reviewers compare the lists and mark which one better matches the user’s need, for example the list that puts the most relevant and recent reports higher. After many such comparisons, the team adjusts the ranking system so patterns like the preferred lists become more likely in future. The system is not told one perfect list for every search; it learns from repeated choices between alternatives.",
+    "mapping": [
+      {
+        "analogyElement": "Two ranked lists compared for the same search",
+        "aiElement": "Two candidate model outputs for the same prompt"
+      },
+      {
+        "analogyElement": "Reviewer marks the better list",
+        "aiElement": "Preference label such as preferred versus rejected"
+      },
+      {
+        "analogyElement": "Adjusting the ranking system after many comparisons",
+        "aiElement": "Updating model parameters to favour preferred outputs"
+      },
+      {
+        "analogyElement": "Criteria like relevance and recency",
+        "aiElement": "Preference dimensions such as usefulness, safety or style"
+      }
+    ],
+    "limitation": "A recommendation list is usually a simple ranking problem with clear items to compare. Language model outputs are open-ended text, so preferences can be noisier, more subjective and easier to game. Also, a reviewer choosing one answer over another does not mean the chosen answer is factually correct; it only means it better matched the selected criteria in that comparison."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How preference learning changes a model",
+    "learningObjective": "After viewing, the reader should be able to explain that preference learning uses comparisons between outputs to push a model towards preferred behaviour.",
+    "description": "A left-to-right flow with four boxes: prompt, multiple candidate responses, preference signal, and updated model checkpoint. Read from left to right to see how comparisons become parameter updates. Small notes under the boxes distinguish direct preference optimisation from approaches that first train a reward model.",
+    "steps": [
+      {
+        "label": "1. Start with a base or instruction-tuned model",
+        "explanation": "A model already exists and can produce several plausible responses to the same prompt.",
+        "visualInstruction": "Draw a model box on the left with a small label: 'existing checkpoint'. Show one prompt entering and two response cards coming out, labelled A and B."
+      },
+      {
+        "label": "2. Collect preferences",
+        "explanation": "A human rater or another trusted process compares A and B and marks which better fits the chosen criteria.",
+        "visualInstruction": "Place a comparison box after the responses. Show a simple toggle or badge: 'A preferred' or 'B preferred'. Add a caption: 'criteria may include usefulness, safety, tone or task success'."
+      },
+      {
+        "label": "3. Convert comparisons into a training signal",
+        "explanation": "The learning algorithm increases the model’s tendency to produce preferred responses and reduces the tendency for rejected ones.",
+        "visualInstruction": "Show arrows from the preference label into a training box. Inside the box, include two compact lines: 'raise score/probability of preferred output' and 'lower score/probability of rejected output'."
+      },
+      {
+        "label": "4. Save an updated checkpoint",
+        "explanation": "The result is a new model version that more often matches the selected preferences on similar prompts.",
+        "visualInstruction": "Draw a final model box labelled 'updated checkpoint'. Add a small note below: 'DPO does this directly; some methods use a separate reward model first'."
+      }
+    ],
+    "interaction": "Hovering or tapping each step reveals a short note with example criteria and a sentence on how DPO differs from reward-model-based approaches.",
+    "accessibilityDescription": "The diagram is a four-step flow. First, an existing model receives one prompt and produces two candidate responses, A and B. Second, a reviewer compares A and B and marks which response is preferred according to criteria such as usefulness, safety, tone or task success. Third, the comparison becomes a training signal: the method pushes the model to make the preferred response more likely and the rejected response less likely. Fourth, the updated parameters are saved as a new checkpoint. A note explains that DPO applies this update directly from preference pairs, while some related methods first train a separate reward model.",
+    "reducedMotionDescription": "A static left-to-right flowchart with four labelled boxes and arrows: existing model, candidate responses, preference comparison, and updated checkpoint. Notes below the final two boxes explain that DPO uses direct preference updates, while some alternatives insert a reward model stage."
+  },
+  "workedExample": {
+    "scenario": "A team wants a drafting model to write concise meeting summaries with action points.",
+    "input": "Prompt: \"Summarise this meeting in 5 bullet points and end with action items.\" Candidate A gives 5 bullets plus 3 clear action items. Candidate B gives a long paragraph, misses one key decision and adds no action items.",
+    "process": [
+      "For this prompt, a reviewer marks A as preferred over B because it follows the requested format and preserves key content.",
+      "The training set stores a pair: same prompt, preferred response A, rejected response B.",
+      "During DPO training, the model is updated so A becomes more likely than B for prompts of this kind.",
+      "After many such pairs, a new checkpoint is evaluated on held-out prompts to see whether summaries are clearer and whether important details are still retained."
+    ],
+    "result": "The updated model more often produces short bullet summaries with explicit action items, but it still needs evaluation because better formatting does not guarantee better factual accuracy."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is testing an internal drafting assistant for routine, non-sensitive text such as generic meeting agendas and standard event descriptions, with staff comparing alternative drafts and choosing the clearer one.",
+    "relevance": "Preference learning can help the assistant match the organisation’s desired style, structure and caution level without rewriting the whole model from scratch.",
+    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service; use approved environments, minimise data, and keep human review before any text is shared."
+  },
+  "whyItMatters": "Preference learning affects how a model behaves in practice, so it matters for procurement, risk review and quality control. A system may look much better after preference tuning because it is more polite, concise or policy-aligned, yet those gains do not automatically mean it is more accurate or less biased. If you are comparing vendors or internal model versions, you need to ask what preferences were optimised, who supplied the ratings, what data was excluded, and how trade-offs were tested. This is also important for governance: preference learning can encode organisational norms and safety constraints, but it can also reproduce reviewer bias or over-optimise for outputs that merely look good to raters.",
+  "whereYouMayHearIt": [
+    "post-training pipeline",
+    "DPO fine-tuning run",
+    "human preference dataset",
+    "alignment evaluation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Preference learning simply teaches the model the right answer.",
+      "correction": "Usually it teaches relative preference, not absolute truth. The signal often says one response is better than another under chosen criteria, such as clarity or safety. A preferred answer can still contain errors, omissions or bias."
+    },
+    {
+      "misconception": "DPO and reinforcement learning from human feedback are the same thing.",
+      "correction": "They are closely related but not identical. DPO learns directly from preference pairs, while classic RLHF often trains a separate reward model and then uses reinforcement learning to optimise against that reward. People sometimes use the terms loosely, but the training mechanics differ."
+    },
+    {
+      "misconception": "If we use our staff to rate outputs, the model will absorb all of our internal knowledge.",
+      "correction": "Preference data mainly shapes behaviour and style. It can improve how the model responds to prompts similar to the rated examples, but it is not a reliable way to inject a large knowledge base or guarantee up-to-date facts."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Instead of showing the model one perfect answer each time, you show it several answers and tell it which one people preferred. The model is then adjusted to produce preferred kinds of answers more often.",
+    "technical": "Preference learning is a post-training approach that uses comparative judgements over candidate outputs as supervision. Given a prompt x and responses y+ and y-, the objective encourages the model to assign higher relative likelihood to y+ than y-. In DPO, this is done directly by optimising a preference-based loss against a reference policy, avoiding a separate reward-model-plus-RL stage. In reward-model-based pipelines, pairwise comparisons are first used to fit a scalar reward model, and a policy is then optimised to maximise expected reward. In both cases, the training signal is ordinal or comparative rather than a single ground-truth target, which makes label quality, rater consistency, preference specification and distribution shift central concerns."
+  },
+  "keyTakeaway": "Preference learning mainly shapes which outputs a model tends to produce, not whether those outputs are actually true.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes DPO from a classic reward-model-based RLHF pipeline?",
+    "options": [
+      "DPO usually learns directly from preferred-versus-rejected response pairs, rather than first training a separate reward model and then running reinforcement learning.",
+      "DPO adds new facts to the model by indexing external documents during training.",
+      "DPO guarantees that preferred responses are factually correct because humans selected them.",
+      "DPO works only for image models, while RLHF works only for language models."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The key distinction is the training path. DPO uses preference pairs directly in the optimisation objective. In a classic RLHF setup, preference data often trains a reward model first, and reinforcement learning then updates the policy to score well under that reward. Neither approach guarantees factual correctness."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Preference learning",
+      "url": "https://en.wikipedia.org/wiki/Preference_learning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of the term and basic definitions, which suits readers who want a quick orientation before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This link gives course-style explanations of post-training methods in the wider LLM pipeline, which suits readers who want structured technical context.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "This link gives short lesson-based introductions to practical modern AI methods, which suits readers who prefer guided video teaching over a long textbook.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Preference learning",
+      "url": "https://www.youtube.com/results?search_query=Preference%20learning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search page gives multiple video explanations from different creators, which suits readers who want to compare teaching styles and should remember it is a search results page, not one vetted lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Preference learning",
+      "url": "https://www.reddit.com/search/?q=Preference%20learning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search page gives community discussions and questions from many users, which suits readers who want informal explanations and troubleshooting ideas and should remember it is a search results page, not one authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "preference learning llm",
+    "what is dpo",
+    "direct preference optimisation",
+    "preference data ai",
+    "dpo vs rlhf",
+    "pairwise preference training",
+    "human preference fine tuning",
+    "prefrence learning",
+    "model prefers chosen response",
+    "dpo explained",
+    "preference learning",
+    "dpo",
+    "preference data"
+  ],
+  "contested": "The umbrella term is used inconsistently. Some people use 'preference learning' broadly for any training from comparative judgements, while others use it more narrowly for specific objectives such as DPO or distinguish it from reward-model-based RLHF.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:08.829Z",
+    "contentHash": "bd8f9f81c1ee4cc7",
+    "attempts": 1,
+    "promptTokens": 2278,
+    "completionTokens": 2581
+  }
+}

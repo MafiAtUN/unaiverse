@@ -1,0 +1,232 @@
+{
+  "id": "artificial-neuron",
+  "slug": "artificial-neuron",
+  "term": "Artificial neuron",
+  "aliases": [
+    "neuron",
+    "unit",
+    "node"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "everyone"
+  ],
+  "prerequisiteTermIds": [
+    "model"
+  ],
+  "relatedTermIds": [
+    "neural-network",
+    "network-layers",
+    "weight",
+    "bias-term",
+    "activation-function",
+    "forward-pass"
+  ],
+  "oftenConfusedWith": [
+    "biological-neuron",
+    "neural-network",
+    "probability"
+  ],
+  "oneSentence": "A small calculation step in a neural network that combines input numbers, adjusts them by learned settings, and passes forward a new number.",
+  "plainExplanation": "An artificial neuron is one small part of a neural network. It takes in one or more numbers, combines them, and produces one output number. The words neuron, unit and node are often used for this idea, but they are not always exact synonyms. “Artificial neuron” and “unit” usually mean the calculation itself. “Node” can mean that calculation, or more loosely a position in the network diagram where values pass through.\n\nWhat goes in? Input values, such as pixel intensities, word-related numbers, or outputs from earlier parts of the network. Each input is multiplied by a weight, which is a learned number that changes how strongly that input matters. The neuron also usually adds a bias, another learned number that shifts the result.\n\nWhat happens next? The neuron sums those adjusted inputs, then often applies an activation function. An activation function is a rule that changes the summed value, often to make the network able to model more complex patterns than a plain linear formula could. Without that step, many stacked layers would collapse into something much simpler.\n\nWhat comes out is usually one number. That number becomes an input to other neurons or, in the final layer, part of the model’s output. One neuron alone is very limited. Useful behaviour comes from many neurons connected across layers.\n\nThis term is often confused with a biological neuron in the brain. The comparison can help intuition, but the mechanism is much simpler and more mathematical. It is also often confused with the whole neural network. A network contains many artificial neurons; one neuron is only one small building block.",
+  "everydayAnalogy": {
+    "title": "A scoring clerk summarising meeting notes",
+    "story": "At a meeting, a clerk receives four short signals from different note-takers: how often “budget” was mentioned, whether deadlines came up, how much disagreement appeared, and whether action points were clear. The clerk gives each signal a different importance, adds them together, and then uses a simple rule: if the total is above a threshold, mark the meeting as “needs follow-up”; otherwise leave it unflagged. Another team member can then use that flag as one input to a larger summary process. This does not mean the clerk understands the meeting in a human sense; it is just a structured scoring step.",
+    "mapping": [
+      {
+        "analogyElement": "signals from different note-takers",
+        "aiElement": "input values to the neuron"
+      },
+      {
+        "analogyElement": "different importance for each signal",
+        "aiElement": "weights on each input"
+      },
+      {
+        "analogyElement": "adding scores and comparing with a rule",
+        "aiElement": "weighted sum plus bias, then activation function"
+      },
+      {
+        "analogyElement": "follow-up flag passed to another team member",
+        "aiElement": "output sent to later neurons or layers"
+      }
+    ],
+    "limitation": "A real artificial neuron usually outputs a continuous number, not just a yes-or-no flag, and its activation rule may be smoother than a simple threshold. Also, the clerk in the story may use judgement and context. An artificial neuron does not use human judgement; it performs a fixed numerical operation with learned parameters."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How one artificial neuron turns several inputs into one output",
+    "learningObjective": "After viewing, the reader should be able to say that one neuron multiplies inputs by weights, adds a bias, applies an activation function, and outputs one number.",
+    "description": "A left-to-right flow diagram with several input boxes feeding one calculation box, then an activation box, then one output box. Read from left to right: inputs are scaled, combined, shifted by bias, transformed, and passed on as a single value.",
+    "steps": [
+      {
+        "label": "Inputs arrive",
+        "explanation": "Three or more input values enter the neuron from data or earlier layers.",
+        "visualInstruction": "Draw 3 to 5 small numbered boxes on the left, each with an arrow pointing right into a central summation area. Label them x1, x2, x3."
+      },
+      {
+        "label": "Weights scale each input",
+        "explanation": "Each input is multiplied by its own weight, so some inputs matter more than others.",
+        "visualInstruction": "Place a small multiplier label on each incoming arrow, such as ×w1, ×w2, ×w3. Use different line thicknesses to suggest different strengths."
+      },
+      {
+        "label": "Bias shifts the total",
+        "explanation": "The weighted inputs are added together, then a bias term is included to shift the combined value.",
+        "visualInstruction": "Show a central rounded rectangle labelled weighted sum. Add a separate small box labelled + b feeding into it from below."
+      },
+      {
+        "label": "Activation transforms the value",
+        "explanation": "An activation function changes the summed value so the network can model more complex relationships.",
+        "visualInstruction": "To the right of the sum box, draw a second box labelled activation f(·). Connect the sum box to it with a right-pointing arrow."
+      },
+      {
+        "label": "One output moves on",
+        "explanation": "The neuron produces one output number, which can feed later neurons or become part of the final result.",
+        "visualInstruction": "Draw one output circle or box on the far right labelled y, with faint arrows continuing to two placeholder boxes labelled next units."
+      }
+    ],
+    "interaction": "Hovering or tapping each step highlights the matching part of the diagram and shows a one-sentence caption with a tiny numeric example, such as x1=2 and w1=0.5 giving 1.0.",
+    "accessibilityDescription": "The diagram explains one artificial neuron as a five-part flow. First, several input numbers enter from the left. Second, each input is multiplied by a weight, meaning each one is scaled differently. Third, the scaled values are added together and a bias value is added. Fourth, this combined number passes through an activation function, which changes it according to a rule. Fifth, one output number leaves on the right and can be sent to later units. The main point is that a neuron is one small numerical transformation, not a whole network.",
+    "reducedMotionDescription": "A static left-to-right diagram shows input boxes x1, x2 and x3, arrows labelled with weights w1, w2 and w3, a weighted sum box with an added bias b, an activation box f, and a final output y leading to later units."
+  },
+  "workedExample": {
+    "scenario": "A tiny text classifier checks whether meeting notes likely contain an action request.",
+    "input": "Input features from one sentence: mentions deadline = 1, mentions budget = 1, mentions greeting = 0.",
+    "process": [
+      "Assign learned weights: deadline 1.2, budget 0.7, greeting -0.4, and bias -1.0.",
+      "Compute the weighted sum: (1×1.2) + (1×0.7) + (0×-0.4) + (-1.0) = 0.9.",
+      "Apply an activation function such as a sigmoid, which turns 0.9 into about 0.71.",
+      "Pass 0.71 forward as this neuron’s output, where later parts of the network may treat it as evidence for “contains action request”."
+    ],
+    "result": "This one neuron outputs 0.71, a moderately strong signal, but that number alone is not the final model decision."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN procurement team reviews vendor proposals for software that includes a neural-network component. A vendor says its system has “millions of neurons” and uses this as proof of quality.",
+    "relevance": "Understanding what an artificial neuron actually is helps staff ask better questions: what inputs are used, how the model was tested, what outputs mean, what human oversight exists, and whether the system is suitable for the procurement need. The number of neurons alone does not show reliability, safety or fitness for purpose.",
+    "caution": "Do not place confidential bids, personal data, security-sensitive documents or other protected procurement information into an unapproved public AI service to “test” how its neurons behave."
+  },
+  "whyItMatters": "If you hear claims about neural networks, this is one of the core building blocks being discussed. Knowing what a single artificial neuron does helps you judge what a model can and cannot do. It can combine signals and pass a numerical output onward, but it does not by itself explain a whole system’s behaviour. This matters when reading vendor claims, comparing model designs, interpreting diagrams, or asking whether a system is simple enough for the task. It also helps you separate meaningful questions, such as what the inputs, weights and outputs represent, from weak questions, such as whether the model has a large number of “neurons”.",
+  "whereYouMayHearIt": [
+    "introductory machine learning courses",
+    "vendor presentations about AI systems",
+    "technical papers on neural networks",
+    "model architecture diagrams"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "An artificial neuron is basically the same thing as a neuron in the human brain.",
+      "correction": "The name comes from a loose inspiration, not a close match. A biological neuron is a living cell with complex electrochemical behaviour. An artificial neuron is a simplified mathematical operation on numbers. The brain analogy can help at a very high level, but it quickly stops being accurate."
+    },
+    {
+      "misconception": "One neuron can understand a concept on its own.",
+      "correction": "A single neuron usually captures only a limited numerical pattern, such as a weighted combination of inputs. Useful model behaviour comes from many units working together across layers. Even when one unit seems responsive to a pattern, that does not mean it independently represents the full concept in a stable or human-like way."
+    },
+    {
+      "misconception": "Node, unit and neuron always mean exactly the same thing.",
+      "correction": "In many introductions they are used loosely, but context matters. “Unit” and “artificial neuron” usually refer to the computation. “Node” may refer to that computation, a place in a graph, or sometimes even an input or output position. Reading the surrounding explanation is important."
+    },
+    {
+      "misconception": "More neurons automatically mean a better model.",
+      "correction": "A larger network can represent more complicated patterns, but it can also be harder to train, slower, more expensive and more prone to overfitting or other failures. Performance depends on data quality, training method, architecture, evaluation and the actual task, not just neuron count."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A neuron is a small scoring step inside a neural network. It takes several numbers in, gives each one a different importance, adds them up, applies a rule, and sends out one new number.",
+    "technical": "An artificial neuron computes a parametric function of its inputs, typically y = f(Σi wixi + b), where xi are input activations, wi are learned weights, b is a learned bias term, and f is an activation function such as ReLU, sigmoid or tanh. In a feedforward network, the output activation becomes an input to units in the next layer during the forward pass. In this usage, “unit” usually means one such scalar-output computational element. “Node” is broader and may refer to a vertex in the computational graph, including input or output positions that are not always neurons in the stricter sense. A single linear unit without a non-linear activation has limited expressive power; stacking many such units with non-linear activations enables networks to approximate more complex functions. The exact behaviour also depends on architecture: for example, units in convolutional and recurrent networks are arranged and reused differently, even though the basic idea of weighted input combination remains."
+  },
+  "keyTakeaway": "An artificial neuron is not a tiny brain; it is one small numerical step that helps a larger network turn inputs into outputs.",
+  "quickCheck": {
+    "question": "Which description best matches one artificial neuron in a neural network?",
+    "options": [
+      "A complete AI system that independently produces final answers",
+      "A living cell copied directly from the brain",
+      "A small computation that combines input numbers with learned weights and outputs one number",
+      "A database record that stores all training examples"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "One artificial neuron is a building block, not a whole system. It usually takes numeric inputs, multiplies them by learned weights, adds a bias, applies an activation function, and produces one output value for later parts of the network."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Artificial neuron",
+      "url": "https://en.wikipedia.org/wiki/Artificial_neuron",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference-style overview of artificial neurons and suits readers who want definitions, history and related terms in one place.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives a visual intuition for how neural networks are built from simple units and suits readers who learn best through animation and big-picture explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers change weights, biases and activations and see the effect directly, which suits hands-on learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Artificial neuron",
+      "url": "https://www.youtube.com/results?search_query=Artificial%20neuron%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page gathers many video explanations on the topic and suits readers who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Artificial neuron",
+      "url": "https://www.reddit.com/search/?q=Artificial%20neuron",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page gathers community discussions and questions about artificial neurons and suits readers who want informal explanations, examples and debates.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "artificial neuron meaning",
+    "what is a neuron in ai",
+    "node vs neuron neural network",
+    "unit in neural network",
+    "artificial nueron",
+    "how does a neural network neuron work",
+    "weight bias activation neuron",
+    "ai neuron vs brain neuron",
+    "artificial neuron",
+    "neuron",
+    "unit",
+    "node"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:46.414Z",
+    "contentHash": "ca6a1ee1d9dc9820",
+    "attempts": 1,
+    "promptTokens": 2274,
+    "completionTokens": 2743
+  }
+}

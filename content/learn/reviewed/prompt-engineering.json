@@ -1,0 +1,231 @@
+{
+  "id": "prompt-engineering",
+  "slug": "prompt-engineering",
+  "term": "Prompt engineering",
+  "aliases": [
+    "prompt design"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "communications",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "prompt"
+  ],
+  "relatedTermIds": [
+    "prompt",
+    "large-language-model",
+    "context",
+    "completion",
+    "temperature",
+    "hallucination"
+  ],
+  "oftenConfusedWith": [
+    "fine-tuning",
+    "retrieval-augmented-generation",
+    "system-prompt",
+    "user-prompt"
+  ],
+  "oneSentence": "The practice of writing and refining instructions so a language model is more likely to produce a useful, safe and well-structured reply.",
+  "plainExplanation": "A prompt is the text, image or other input you give a model. Prompt engineering means shaping that input carefully: stating the task, giving relevant context, setting limits, and asking for the output format you need. The goal is not magic control. The goal is to improve the chance of a useful result.\n\nWhat goes in can include a role, the task, background information, examples, rules and a requested format such as bullets or a table. What happens next is that the model processes those words as tokens, which are small pieces of text, and predicts a response token by token. The wording of the prompt matters because it changes the patterns the model draws on.\n\nWhat comes out is a completion: the model’s generated text, and sometimes images or other content in multimodal systems. A better prompt can make the output clearer, more relevant and easier to check. But a good prompt does not guarantee factual accuracy, fairness or compliance with policy. Human review is still needed.\n\nPrompt engineering is often confused with fine-tuning and retrieval-augmented generation. Fine-tuning changes the model itself by additional training. Retrieval-augmented generation adds outside sources at run time. Prompt engineering usually changes only the instructions and context you provide for a particular task.",
+  "everydayAnalogy": {
+    "title": "Briefing a temporary assistant",
+    "story": "A team in Nairobi is sorting a shared inbox before a regional meeting. If the manager says only, “Handle these messages,” the temporary assistant may reply in many different ways. If the manager says, “Mark messages as urgent or not urgent, use only these three criteria, and put the result in a two-column table,” the assistant is more likely to produce something useful. If the first result is uneven, the manager can tighten the instructions and try again.",
+    "mapping": [
+      {
+        "analogyElement": "Manager’s written instructions",
+        "aiElement": "Prompt given to the model"
+      },
+      {
+        "analogyElement": "Three urgency criteria",
+        "aiElement": "Constraints and context in the prompt"
+      },
+      {
+        "analogyElement": "Two-column table request",
+        "aiElement": "Specified output format"
+      },
+      {
+        "analogyElement": "Tightening the instructions after a weak first pass",
+        "aiElement": "Iterative prompt refinement"
+      }
+    ],
+    "limitation": "A human assistant can ask clarifying questions, use workplace judgement and recognise meaning in a richer way. A language model does not reliably do that. It generates output from patterns in data and may still produce confident but wrong results even when the instructions are clear."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How better prompting changes the output",
+    "learningObjective": "Show that changing instructions, context and output format can improve a model’s response without changing the model itself.",
+    "description": "A four-step sequence reads left to right. It starts with a vague request, shows the broad and uneven reply, then shows a revised prompt with context and formatting rules, and ends with a more targeted reply. The diagram highlights that the main change is the input, not the underlying model.",
+    "steps": [
+      {
+        "label": "1. Vague request",
+        "explanation": "The user gives a short instruction with little context, such as “Summarise these messages.”",
+        "visualInstruction": "Draw a simple input card labelled “Prompt A” with one short line of text and a warning icon for missing context."
+      },
+      {
+        "label": "2. Broad output",
+        "explanation": "The model produces something, but it may miss the purpose, include extra detail or use an unhelpful format.",
+        "visualInstruction": "Show an output card with mixed bullet points, some highlighted as off-target or too general."
+      },
+      {
+        "label": "3. Refined prompt",
+        "explanation": "The user adds the task, audience, rules and required format, such as “Classify each message as urgent or not urgent using these criteria, then give a two-column table.”",
+        "visualInstruction": "Draw a larger input card labelled “Prompt B” with four tagged lines: task, context, constraints, format."
+      },
+      {
+        "label": "4. More usable output",
+        "explanation": "The next response is more likely to match the need because the prompt gives clearer guidance.",
+        "visualInstruction": "Show a tidy table output card with columns “Urgent” and “Reason”, plus a small note: “Still check for errors.”"
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal the exact wording change and the effect on the output structure.",
+    "accessibilityDescription": "This diagram explains prompt engineering as a four-step process. First, a vague request such as “Summarise these messages” is sent to a model. Second, the model returns a broad reply that may be uneven or in the wrong format. Third, the user rewrites the prompt to include the task, context, limits and the desired format, for example a classification task with specific criteria and a table output. Fourth, the model returns a more targeted response. The main lesson is that changing the prompt can improve usefulness without changing the model itself, but the output still needs checking.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: vague prompt, weak output, refined prompt with labelled parts, and improved structured output with a note that human checking remains necessary."
+  },
+  "workedExample": {
+    "scenario": "A communications officer wants help drafting labels for incoming public messages about an event.",
+    "input": "Classify each message as urgent or not urgent. Use only these rules: urgent means a safety issue, a media deadline within 24 hours, or a request from senior leadership. Return a table with message number, label, and one short reason. Messages: 1) “Journalist asks for comment by 16:00 today.” 2) “Can I get the event poster in French next week?” 3) “Broken barrier at venue entrance.”",
+    "process": [
+      "The prompt states a clear task: classify messages.",
+      "It defines the rules for “urgent” so the model has a narrower target.",
+      "It requests a fixed output format: a table with three columns.",
+      "The model generates a completion that applies the rules to each message.",
+      "The officer checks the result before using it."
+    ],
+    "result": "1. Urgent: media deadline within 24 hours. 2. Not urgent: translation request for next week. 3. Urgent: safety issue at venue entrance."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A programme team wants help drafting a neutral first draft of a public-facing summary from approved, non-sensitive meeting notes.",
+    "relevance": "Careful prompting can specify tone, length, audience and structure, which can save time and make outputs easier to review.",
+    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Use only approved tools and keep human oversight over accuracy, neutrality and rights-sensitive content."
+  },
+  "whyItMatters": "Non-specialists do not need to become engineers, but they do need to know that results depend heavily on the instructions given. A vague request can waste time, while a clear prompt can produce output that is easier to review, compare and reuse. This matters for decisions about efficiency, quality control and risk. It also helps people recognise the limits: if the model gives a polished answer, that does not mean the answer is correct. Good prompting improves usefulness, but it does not replace evidence, policy checks or human judgement.",
+  "whereYouMayHearIt": [
+    "chat assistant training",
+    "office productivity tools",
+    "communications drafting",
+    "developer documentation",
+    "AI literacy sessions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Prompt engineering is a way to make the model always tell the truth.",
+      "correction": "Clear prompts can reduce confusion and ask for sources or uncertainty statements, but they do not guarantee factual accuracy. The model still generates likely text and can produce errors or invented details, so checking remains necessary."
+    },
+    {
+      "misconception": "It only matters for technical staff.",
+      "correction": "Anyone using a chat assistant benefits from clearer instructions. Asking for audience, purpose, constraints and format is useful in communications, administration, programme support and learning, not only in software work."
+    },
+    {
+      "misconception": "Prompt engineering and fine-tuning are the same thing.",
+      "correction": "They work at different levels. Prompt engineering changes the instructions for one task or session. Fine-tuning changes the model through additional training, which usually needs more data, testing and governance."
+    },
+    {
+      "misconception": "A longer prompt is always better.",
+      "correction": "More detail can help, but extra text can also distract the model or bury the main task. The useful pattern is relevant detail, clear structure and explicit limits, not maximum length."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It means telling the AI tool clearly what you want, what rules to follow and what shape the answer should have.",
+    "technical": "Prompt engineering is the design and iterative refinement of the input sent to a language model so that next-token prediction is steered toward a more useful completion. In practice, the prompt may include task instructions, context, constraints, examples, role framing and output formatting requirements. These elements influence which patterns in the model’s training and current context are activated during generation. This is different from changing model weights through fine-tuning, and different from retrieval-augmented generation, which adds external information at run time. Prompt engineering can improve relevance, consistency and structure, but it cannot by itself guarantee truthfulness, policy compliance or robust reasoning."
+  },
+  "keyTakeaway": "Better instructions often produce better AI output, but they do not turn generated text into verified fact.",
+  "quickCheck": {
+    "question": "Which example best shows prompt engineering rather than fine-tuning or retrieval?",
+    "options": [
+      "Changing the wording of a request so the model returns a two-column table with specific rules",
+      "Training the model on thousands of new examples so its behaviour changes across tasks",
+      "Connecting the model to a document store so it can pull in current policy text",
+      "Lowering hardware latency so replies appear faster"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Prompt engineering changes the input you give the model for a task. Fine-tuning changes the model through training. Retrieval adds outside information. Lower latency affects speed, not instruction design."
+  },
+  "resources": [
+    {
+      "title": "Prompt engineering",
+      "url": "https://en.wikipedia.org/wiki/Prompt_engineering",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad, general overview of the term and suits readers who want a quick starting definition and related concepts.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This course material suits learners who want practical, hands-on instruction about working with language models, including prompting in context.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video suits visual learners who want intuition about how large language models generate text, which helps explain why prompt wording matters.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Prompt engineering",
+      "url": "https://www.youtube.com/results?search_query=Prompt%20engineering%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page rather than one single explanation, so it suits readers who want to compare different video teaching styles on the topic.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Prompt engineering",
+      "url": "https://www.reddit.com/search/?q=Prompt%20engineering",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page rather than one single source, so it suits readers who want to see community questions, examples and debates about practical prompting.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "prompt engineering meaning",
+    "prompt design ai",
+    "how to write better prompts",
+    "what is prompt engineering",
+    "prompt engineering vs fine tuning",
+    "prompt engineering examples",
+    "llm prompt tips",
+    "promt engineering",
+    "how prompts affect ai answers",
+    "prompt engineering",
+    "prompt design"
+  ],
+  "contested": "The broad idea is widely used, but the term can be contentious because some people use it for everyday clear prompting, while others reserve it for more systematic, testable methods.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:52.379Z",
+    "contentHash": "b2910b7b6a29fef1",
+    "attempts": 1,
+    "promptTokens": 2356,
+    "completionTokens": 2335
+  }
+}

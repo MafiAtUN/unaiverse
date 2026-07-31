@@ -1,0 +1,231 @@
+{
+  "id": "activation-function",
+  "slug": "activation-function",
+  "term": "Activation function",
+  "aliases": [
+    "activation",
+    "ReLU",
+    "sigmoid",
+    "non-linearity"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "artificial-neuron"
+  ],
+  "relatedTermIds": [
+    "artificial-neuron",
+    "neural-network",
+    "network-layers",
+    "weight",
+    "bias-term",
+    "forward-pass"
+  ],
+  "oftenConfusedWith": [
+    "softmax",
+    "probability",
+    "biological-neuron"
+  ],
+  "oneSentence": "A neural network uses these mathematical rules to transform each unit’s weighted input into an output, adding the non-linear behaviour needed to learn complex patterns.",
+  "plainExplanation": "Inside a neural network, each unit first combines numbers from earlier units. Those numbers are multiplied by weights, added together, and usually shifted by a bias. That gives one intermediate value, often called the pre-activation.\n\nAn activation function then changes that intermediate value into the unit’s output. Common examples are ReLU, which keeps positive values and turns negative ones into zero, and sigmoid, which squeezes any value into a number between 0 and 1. The word activation can mean either the function itself or the output after that function is applied, so the context matters.\n\nThe phrase non-linearity refers to why this step matters. If every layer only did linear operations, then stacking many layers would collapse into something equivalent to one linear transformation. In that case, the network could only draw very simple boundaries between patterns. The activation function breaks that limitation.\n\nThese words are related but not identical. Activation function is the rule. ReLU and sigmoid are specific kinds of that rule. Activation often names the resulting output value. Non-linearity describes the property that lets networks model more complex relationships than straight-line combinations can represent.",
+  "everydayAnalogy": {
+    "title": "A road damage screening desk",
+    "story": "A team reviewing satellite images has a scoring sheet for each image tile. Several clues are added together: dark cracks, broken edges, and patchy texture increase the score, while clean straight surfaces lower it. Then the team uses a rule to turn that score into a signal for the next step: one desk only passes tiles with positive scores, while another converts every score into a smooth 0-to-1 urgency scale. Those rules change how strongly each tile influences later decisions about where to inspect first.",
+    "mapping": [
+      {
+        "analogyElement": "combined clue score for one image tile",
+        "aiElement": "pre-activation: weighted sum plus bias"
+      },
+      {
+        "analogyElement": "rule that blocks negative scores or rescales scores",
+        "aiElement": "activation function such as ReLU or sigmoid"
+      },
+      {
+        "analogyElement": "passed-on signal to the next desk",
+        "aiElement": "activation output sent to the next layer"
+      },
+      {
+        "analogyElement": "using a rule that is not just a straight rescaling",
+        "aiElement": "non-linearity that lets deeper layers model complex patterns"
+      }
+    ],
+    "limitation": "People at a desk may use judgement, context and explicit criteria. An activation function does none of that. It is only a fixed mathematical transformation applied to a number. Also, a real road screening process may include thresholds, priorities and policy choices, while a network’s activation step is local to one unit and does not by itself rank whole images or explain damage."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From weighted sum to non-linear output",
+    "learningObjective": "After viewing this, a reader should be able to say what goes into an activation function, what comes out, and why non-linearity matters in a neural network.",
+    "description": "Show one unit in a network as a left-to-right flow: inputs and weights combine into a single pre-activation value, then different activation functions transform it into different outputs. Read from left to right, then compare the two example functions at the end.",
+    "steps": [
+      {
+        "label": "Combine inputs",
+        "explanation": "Several incoming values are multiplied by weights and added with a bias to form one number, often called z or the pre-activation.",
+        "visualInstruction": "Draw three input arrows labelled x1, x2, x3 entering a summing circle. Mark each arrow with w1, w2, w3. Add a small bias arrow labelled b. Output one box labelled z = w·x + b."
+      },
+      {
+        "label": "Apply a rule",
+        "explanation": "The activation function takes z and transforms it. This is the step that changes the unit from a simple weighted sum into a non-linear component.",
+        "visualInstruction": "From the z box, draw arrows to two side-by-side function boxes labelled ReLU and sigmoid. Add the formulas max(0,z) and 1/(1+e^-z) in small text."
+      },
+      {
+        "label": "See different outputs",
+        "explanation": "For the same input z, different activation functions can produce very different outputs.",
+        "visualInstruction": "Use one example value, such as z = -1.5. Show ReLU output = 0 and sigmoid output ≈ 0.18 in output boxes to the right."
+      },
+      {
+        "label": "Why this matters",
+        "explanation": "Without non-linear activation functions, many stacked layers would behave like one linear transformation and could not represent many useful patterns.",
+        "visualInstruction": "Below the main flow, add a compact comparison: 'linear only' shown as several boxes collapsing into one straight arrow, and 'with non-linearity' shown as layers keeping distinct bends in the path."
+      }
+    ],
+    "interaction": "Hover or tap each function box to swap in a new example z value and update the displayed outputs, while keeping the structure of the flow unchanged.",
+    "accessibilityDescription": "The diagram is a left-to-right flow of one neural network unit. First, three inputs labelled x1, x2 and x3 are multiplied by weights w1, w2 and w3 and added with a bias b to produce one number called z, the pre-activation. Second, z is sent into an activation function. Two example functions are shown: ReLU, written as max of 0 and z, and sigmoid, written as 1 divided by 1 plus e to the power minus z. Third, for the same example value z equals minus 1.5, ReLU outputs 0 while sigmoid outputs about 0.18. A final comparison states that stacked linear operations collapse into one linear transformation, while adding non-linear activation functions lets layers represent more complex relationships.",
+    "reducedMotionDescription": "A static version shows the same four stages without animation: inputs and weights combine into z, z passes through ReLU or sigmoid, example outputs are displayed for one fixed z value, and a small comparison underneath explains linear-only versus non-linear stacks."
+  },
+  "workedExample": {
+    "scenario": "A small image model checks whether a satellite image tile may contain road damage.",
+    "input": "One unit receives three numbers from the previous layer: crack pattern = 1.2, edge disruption = 0.8, smooth surface = 0.4.",
+    "process": [
+      "Apply weights and bias: z = (1.2 × 1.5) + (0.8 × 0.7) + (0.4 × -1.0) + (-0.5) = 1.46.",
+      "Use ReLU: max(0, 1.46) = 1.46, so the signal passes forward unchanged because it is positive.",
+      "If the same unit used sigmoid instead, the output would be about 0.81, because sigmoid compresses 1.46 into the 0 to 1 range.",
+      "That output becomes an input to the next layer, where later units combine it with many other signals before producing a final prediction."
+    ],
+    "result": "The activation function changes the same pre-activation value into different forms: ReLU keeps a positive magnitude, while sigmoid turns it into a bounded score."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An approved internal model helps draft a situation report by classifying incoming, non-sensitive text snippets into categories such as infrastructure, health services and logistics. Hidden layers use activation functions between weighted sums so the model can capture patterns more complex than simple keyword matching.",
+    "relevance": "For staff reviewing a model-based workflow, this explains why the system can detect combinations of terms and context patterns rather than only counting words.",
+    "caution": "Do not enter confidential, personal, protection-sensitive, security-sensitive or operationally sensitive information into an unapproved public AI service; use only approved tools and keep human review over any report content."
+  },
+  "whyItMatters": "If you hear that a model uses ReLU, sigmoid or another activation, that is not a minor implementation detail. It affects what kinds of patterns the network can represent, how stable training may be, how outputs are scaled, and how easily signals pass through many layers. For a non-specialist making decisions about procurement, evaluation or risk, this matters because model behaviour can change for mathematical reasons that are not visible from the user interface. It also helps you avoid confusion: a sigmoid inside a hidden layer is not the same thing as a calibrated probability, and a softmax output layer serves a different purpose from an activation used throughout the network.",
+  "whereYouMayHearIt": [
+    "deep learning tutorials",
+    "model architecture discussions",
+    "framework documentation",
+    "debugging training behaviour",
+    "research papers on neural networks"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "ReLU, sigmoid and activation all mean the same thing.",
+      "correction": "They are related, but they refer to different levels. An activation function is the general idea: a rule applied to a unit’s pre-activation value. ReLU and sigmoid are specific examples of such rules. Activation often refers to the output value after the rule has been applied, not always the rule itself."
+    },
+    {
+      "misconception": "The activation function is only for keeping numbers small or tidy.",
+      "correction": "Some functions do change the range of values, but the central role is to introduce non-linearity. Without that, stacking many layers would still behave like one linear mapping, which sharply limits what the network can represent."
+    },
+    {
+      "misconception": "A sigmoid output is automatically a probability.",
+      "correction": "Only in certain settings does a sigmoid output get interpreted as a probability-like score, and even then calibration may be poor. Inside hidden layers, sigmoid is usually just a mathematical transformation. It should not be treated as a guaranteed probability statement."
+    },
+    {
+      "misconception": "More layers alone create complexity, even if everything is linear.",
+      "correction": "More linear layers do not create the kind of extra expressive power people usually mean. A composition of linear transformations is still linear. The non-linear activation between layers is what prevents the stack from collapsing into a single linear operation."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A neural network unit first adds up evidence into one number, then passes that number through a rule. That rule might cut off negative values, like ReLU, or squeeze the number into 0 to 1, like sigmoid. The rule matters because it lets many layers model more than a simple straight-line relationship.",
+    "technical": "For one unit, a pre-activation value is computed as z = w·x + b, where x is the input vector, w the weights and b the bias. The activation function φ then produces a = φ(z). If φ is linear, such as φ(z)=cz, then compositions across layers remain equivalent to a single linear or affine transformation, so depth alone adds little representational power. Choosing a non-linear φ, such as ReLU or sigmoid, allows piecewise-linear or smooth non-linear mappings and therefore more expressive decision boundaries. ReLU is computationally simple and helps preserve positive signals, though it can produce units that stay at zero for many inputs. Sigmoid maps real numbers to the open interval from 0 to 1, which can be useful in some settings but may compress large-magnitude inputs strongly. The term activation may refer either to φ itself or to the resulting value a, so precise writing should distinguish the function from its output. This concept is also distinct from softmax, which is typically applied across multiple output logits to create a normalised distribution over classes."
+  },
+  "keyTakeaway": "An activation function is the mathematical switch-shape between layers that turns weighted sums into non-linear signals, and that non-linearity is what makes deep networks powerful.",
+  "quickCheck": {
+    "question": "Why do neural networks usually place an activation function after the weighted sum in each unit?",
+    "options": [
+      "To introduce non-linearity so stacked layers can represent more complex patterns",
+      "To guarantee that every output is a well-calibrated probability",
+      "To remove the need for weights and bias terms",
+      "To make every negative input factually incorrect"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The main reason is non-linearity. Without it, many layers of weighted sums would collapse into one linear transformation. Some activation functions also change scale or range, but they do not automatically produce calibrated probabilities, and they do not replace weights or bias."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Activation function",
+      "url": "https://en.wikipedia.org/wiki/Activation_function",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad reference-style overview of activation functions and suits readers who want definitions, examples and related terminology.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This 3Blue1Brown video gives a visual intuition for how neural networks transform numbers across layers and suits readers who learn best through animated explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This TensorFlow Playground interactive lets readers change activation functions and observe how decision boundaries change, which suits hands-on learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Activation function",
+      "url": "https://www.youtube.com/results?search_query=Activation%20function%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of activation functions from different teachers, so it suits people comparing teaching styles rather than seeking one authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Activation function",
+      "url": "https://www.reddit.com/search/?q=Activation%20function",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers browse community questions and practical discussions about activation functions, which suits readers curious about common confusions and informal troubleshooting.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "activation function explained",
+    "what is relu",
+    "sigmoid vs relu",
+    "non linearity in neural network",
+    "activation vs output neural net",
+    "pre activation and activation",
+    "why use activation function",
+    "relu meaning ai",
+    "sigmod function neural network",
+    "softmax vs sigmoid vs relu",
+    "activation function",
+    "activation",
+    "relu",
+    "sigmoid",
+    "non-linearity"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:51.643Z",
+    "contentHash": "6f3544ce0207482d",
+    "attempts": 1,
+    "promptTokens": 2272,
+    "completionTokens": 2767
+  }
+}

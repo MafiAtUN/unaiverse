@@ -1,0 +1,233 @@
+{
+  "id": "distribution-shift",
+  "slug": "distribution-shift",
+  "term": "Distribution shift and data drift",
+  "aliases": [
+    "data drift",
+    "model drift",
+    "concept drift"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "intermediate",
+  "audiences": [
+    "programme",
+    "technical",
+    "leadership"
+  ],
+  "prerequisiteTermIds": [
+    "data-distribution"
+  ],
+  "relatedTermIds": [
+    "data-distribution",
+    "deployment",
+    "data-governance",
+    "missing-data",
+    "noisy-data",
+    "overfitting"
+  ],
+  "oftenConfusedWith": [
+    "data-distribution",
+    "overfitting",
+    "missing-data",
+    "noisy-data"
+  ],
+  "oneSentence": "These terms describe what happens when real-world inputs, labels or relationships change after a system is built, so its outputs become less reliable over time.",
+  "plainExplanation": "AI systems are built and checked on past data, then used on new data. Problems start when the new data no longer looks like the old data in an important way. That broad situation is often called distribution shift: the pattern of data in use differs from the pattern seen during development.\n\nWithin that broad idea, data drift usually means the inputs have changed. For example, a model trained on clear daytime photos may later receive more night images or lower-quality scans. Concept drift usually means the relationship between input and correct output has changed. For example, words that once signalled urgent feedback may later be used casually, so the same phrase no longer means the same thing.\n\nModel drift is used less consistently. Some people use it loosely for any drop in model performance over time. Others use it for the model becoming less suitable because of data drift, concept drift, software changes or feedback loops. Because usage varies, it is safer to ask what exactly has changed: the inputs, the target labels, the environment, or the measured performance.\n\nWhat goes in is live data from the real setting. What happens is a mismatch between the old pattern and the current one. What comes out can be lower accuracy, more bias, unstable results, false confidence or rising costs from extra checking and retraining. This is different from overfitting, which starts during development when a model matches training data too closely; drift happens later when the world or data pipeline changes.",
+  "everydayAnalogy": {
+    "title": "Practising for the wrong examination",
+    "story": "A student in Nairobi practises with last year's examination papers. Those papers mostly use short factual questions, so the student learns to spot those patterns quickly. On the real exam, many questions are now based on longer case studies, and some topics are framed differently. The student's practice method has not suddenly become useless, but it now fits the real paper less well, so the score drops for reasons that were not obvious during practice.",
+    "mapping": [
+      {
+        "analogyElement": "last year's practice papers",
+        "aiElement": "training and test data collected earlier"
+      },
+      {
+        "analogyElement": "the real exam this year",
+        "aiElement": "live data after deployment"
+      },
+      {
+        "analogyElement": "more long case-study questions",
+        "aiElement": "data drift in the input pattern"
+      },
+      {
+        "analogyElement": "topics framed differently so old clues no longer predict the right answer",
+        "aiElement": "concept drift in the relationship between input and correct output"
+      }
+    ],
+    "limitation": "An examination is designed by people and changes at set times, while real-world drift may be gradual, accidental or caused by many systems interacting. Also, a student can consciously change study strategy, but a deployed model does not adapt safely on its own unless people monitor it and update it."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How shift in live data leads to weaker results",
+    "learningObjective": "After viewing this diagram, a reader should be able to distinguish input changes from meaning changes, and explain how both can reduce reliability after deployment.",
+    "description": "A left-to-right flow with four boxes and two branch notes. Read from development data to live data, then to two kinds of change, then to outcomes. One branch note marks input pattern change; the other marks changed input-to-label relationship. Final box lists monitoring and response actions.",
+    "steps": [
+      {
+        "label": "1. Build and check",
+        "explanation": "A model is developed using historical data and evaluated on data that is assumed to represent expected use.",
+        "visualInstruction": "Draw a box labelled 'Past data used for development' feeding into a box labelled 'Model checked on expected conditions'. Use calm colours and a note: 'baseline performance'."
+      },
+      {
+        "label": "2. Live data arrives",
+        "explanation": "After deployment, the system receives new inputs from the real setting, such as new documents, images, sensors or user behaviour.",
+        "visualInstruction": "Add a third box to the right labelled 'Current live data'. Connect from the checked model box with an arrow labelled 'deployment'."
+      },
+      {
+        "label": "3. Two things may change",
+        "explanation": "Sometimes the inputs themselves change in pattern or quality. Sometimes the meaning of the inputs changes, so the old clues no longer point to the same correct answer.",
+        "visualInstruction": "Under 'Current live data', add two stacked side notes: 'Data drift: input mix, quality, source or frequency changes' and 'Concept drift: input-to-correct-output relationship changes'. Use different border styles, not just colour."
+      },
+      {
+        "label": "4. Effects and response",
+        "explanation": "If these changes are large enough, performance, fairness, stability or cost can worsen. Teams respond by monitoring, investigating, updating data pipelines, recalibrating or retraining.",
+        "visualInstruction": "Add a final box labelled 'Possible outcomes: lower accuracy, more errors, bias, extra review cost'. Beneath it add small action chips: 'monitor', 'compare to baseline', 'investigate cause', 'update or retrain'."
+      }
+    ],
+    "interaction": "Hover or tap each note to reveal a short example: night images for data drift, and changed word usage for concept drift.",
+    "accessibilityDescription": "This diagram explains a sequence from left to right. First, a model is built and checked using past data under expected conditions. Next, the model is deployed and starts receiving current live data. Then the diagram separates two reasons the live setting may no longer match the old setting. One is data drift, where the input pattern changes, such as different document formats, image quality or class balance. The other is concept drift, where the link between an input and the correct output changes, so old clues no longer predict the same answer. Finally, the diagram shows outcomes: lower accuracy, more errors, possible fairness problems and extra human review costs. It ends with response actions: monitor, compare with the original baseline, investigate the cause, and update or retrain if needed.",
+    "reducedMotionDescription": "Show the same four boxes and two side notes as a static left-to-right diagram with all example labels visible from the start, without hover effects or animation."
+  },
+  "workedExample": {
+    "scenario": "An NGO helpline uses a text classifier to route incoming messages into 'housing', 'food', 'health' or 'other'.",
+    "input": "Training period: 10,000 messages, mostly formal language from email forms. Six months later, live traffic shifts to short mobile messages and voice-to-text transcripts.",
+    "process": [
+      "At launch, the classifier reaches 90% accuracy on a test set similar to the training data.",
+      "In live use, 60% of messages now come from mobile chat, up from 15%, and many contain abbreviations, spelling variation and transcript errors.",
+      "Reviewers find that messages about medicine are increasingly written as short urgent fragments like 'need refill now' instead of fuller sentences used earlier.",
+      "Weekly spot checks show accuracy has fallen to 76%, with health messages often misrouted to 'other'.",
+      "The team updates preprocessing for transcripts, collects recent approved examples, and retrains and rechecks the system before redeployment."
+    ],
+    "result": "Performance improves because the team addressed both changed input style and changed wording patterns, rather than assuming the original model stayed reliable."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team uses an approved internal search tool to find previous resolution language and classify paragraphs by topic, based on historical documents.",
+    "relevance": "The wording, document formats and topic emphasis can change over time, so a tool that worked well on older text may miss relevant newer phrasing or over-prioritise outdated formulations. Monitoring for drift helps teams avoid relying too heavily on stale patterns when preparing background research.",
+    "caution": "Do not upload confidential negotiating positions, unpublished drafts or other restricted material into an unapproved public AI service. Keep human review over retrieved language, especially where context, mandate or current practice may have shifted."
+  },
+  "whyItMatters": "A system can pass testing and still become less reliable later because the world, users or data pipeline changed. For programme teams, that can mean missed cases, unfair treatment or wasted staff time. For technical teams, it means monitoring cannot stop at launch. For leadership, it affects risk, budget and accountability: a model may need more review, updated data, or retirement even if nothing appears \"broken\" in the software. These terms help teams ask the right question: did the inputs change, did the meaning change, or are we simply measuring the wrong thing? That difference matters because the response is different too.",
+  "whereYouMayHearIt": [
+    "model monitoring dashboards",
+    "MLOps or deployment reviews",
+    "audit and risk discussions",
+    "data quality meetings",
+    "vendor performance reports"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model scored well during testing, drift is not a serious concern.",
+      "correction": "Good testing only shows how the model performed on the data used at that time. After deployment, user behaviour, sensors, document formats, language use or external conditions may change. A model can therefore move from reliable to unreliable without any code bug."
+    },
+    {
+      "misconception": "Data drift, concept drift and model drift all mean exactly the same thing.",
+      "correction": "They are related, but not identical. Distribution shift is the broad umbrella. Data drift usually points to changed inputs. Concept drift usually points to changed input-to-label relationships. Model drift is used more loosely, often for declining performance over time from one or more causes."
+    },
+    {
+      "misconception": "Drift only matters for very large or highly technical AI systems.",
+      "correction": "Even simple classifiers, search ranking tools and forecasting systems can drift. A small system that routes messages, flags invoices or tags documents can create real operational problems if the live data no longer matches the old data."
+    },
+    {
+      "misconception": "If drift appears, retraining is always the right fix.",
+      "correction": "Not always. First identify the cause. The issue may be a broken data pipeline, missing values, changed measurement practice, new user groups, or a target that has become poorly defined. In some cases the right response is better monitoring, a rules update, recalibration or stopping use for that task."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A system learned from yesterday's patterns. If today's data looks different, or the old clues no longer mean the same thing, the system's outputs can get worse.",
+    "technical": "Distribution shift is the umbrella term for a mismatch between the probability patterns in development data and those in deployment data. A common subtype is covariate or input drift, where the distribution of features changes while the task is nominally the same. Another is concept drift, where the relationship between features and the target label changes over time, so the same input pattern maps to a different correct output. Label prevalence can also shift, and operational changes such as new sensors, preprocessing, user interfaces or feedback loops can alter measured performance. The phrase model drift is used inconsistently: in practice it often refers to observable performance degradation from one or more of these mechanisms. Detecting drift may involve comparing feature distributions, monitoring calibration and error rates, and sampling recent cases for human review, but a detected statistical shift does not by itself prove harmful impact."
+  },
+  "keyTakeaway": "A model can age even when the code stays the same, because the data or its meaning has changed.",
+  "quickCheck": {
+    "question": "Which situation best illustrates concept drift rather than simple input data drift?",
+    "options": [
+      "A document classifier receives many more scanned PDFs than before, and the scans are blurrier.",
+      "A flood-risk model is moved from one region to another with different weather patterns.",
+      "A phrase that once strongly indicated a formal complaint is later used casually, so the old wording no longer predicts the same label.",
+      "A team stores fewer records than before, so the model has less data each week."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Concept drift is about a change in the relationship between input and correct output. In the third option, the same wording no longer signals the same label. Blurrier scans are mainly an input change, not a changed meaning relationship."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Distribution shift and data drift",
+      "url": "https://en.wikipedia.org/w/index.php?search=Distribution%20shift%20and%20data%20drift",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A search results page on Wikipedia that helps readers find background articles and related terms, useful for a quick orientation but not a single agreed definition.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "The NIST AI Risk Management Framework helps practitioners and managers place drift within ongoing measurement, monitoring and governance after deployment.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "description": "The OECD AI Principles give a policy and governance frame for reliability, accountability and lifecycle oversight, suited to leadership and public-sector readers.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Distribution shift and data drift",
+      "url": "https://www.youtube.com/results?search_query=Distribution%20shift%20and%20data%20drift%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that lets readers compare different visual explanations and teaching styles, useful for learners who prefer video over text.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Distribution shift and data drift",
+      "url": "https://www.reddit.com/search/?q=Distribution%20shift%20and%20data%20drift",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that shows how practitioners and learners discuss the terms informally, useful for seeing common confusions but not as an authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "distribution shift explained",
+    "data drift vs concept drift",
+    "model drift meaning",
+    "why model accuracy drops over time",
+    "input drift ai",
+    "covariate shift simple explanation",
+    "drifft machine learning",
+    "data shift after deployment",
+    "distribution shift and data drift",
+    "data drift",
+    "model drift",
+    "concept drift"
+  ],
+  "contested": "The labels are not used uniformly across organisations and textbooks, especially 'model drift'. Some authors also separate additional subtypes of shift more finely than this overview does.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:49:12.179Z",
+    "contentHash": "5da832f1fec10676",
+    "attempts": 1,
+    "promptTokens": 2410,
+    "completionTokens": 2725
+  }
+}

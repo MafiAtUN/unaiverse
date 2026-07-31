@@ -1,0 +1,141 @@
+---
+/**
+ * One learning path: the steps in order, with local completion state.
+ *
+ * The tick beside a step is a real control here, not just an indicator, so a
+ * reader who already knows a term can mark it and move on without opening the
+ * page. That is the difference between a path you follow and a path you skim.
+ */
+import Learn from '../../../layouts/Learn.astro';
+import { LEARNING_PATHS, resolvePath } from '../../../lib/learn/paths';
+import { learnHref, CATEGORY_BY_ID } from '../../../lib/learn/terms';
+import { AUDIENCE_LABEL, DIFFICULTY_LABEL } from '../../../lib/learn/schema';
+
+export function getStaticPaths() {
+  return LEARNING_PATHS.map((path) => {
+    const resolved = resolvePath(path);
+    return { params: { id: path.id }, props: { path: resolved } };
+  }).filter((entry) => entry.props.path.steps.length >= 3);
+}
+
+const { path } = Astro.props;
+const title = `${path.title} · Learning path · UNAIVERSE`;
+const description = path.blurb;
+---
+
+<Learn title={title} description={description} section="paths">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / <a href={learnHref('paths')}>Learning Paths</a> /
+        {path.title}
+      </p>
+      <h1 class="learn-head__title">
+        <span aria-hidden="true">{path.glyph}</span> {path.title}
+      </h1>
+      <p class="learn-head__lead">{path.blurb}</p>
+      <p class="learn-head__meta">
+        {path.steps.length} terms · about {path.minutes} minutes · written with{' '}
+        {AUDIENCE_LABEL[path.audience].toLowerCase()} in mind
+      </p>
+
+      <div class="path-progress" style="max-width: 24rem; margin-top: var(--sp-4)" aria-hidden="true">
+        <span class="path-progress__bar" data-path-bar></span>
+      </div>
+      <p class="learn-head__meta" role="status" aria-live="polite" data-path-progress></p>
+
+      <p style="margin-top: var(--sp-4)">
+        <a class="lbutton lbutton--primary" href={learnHref(path.steps[0]!.slug)}>
+          Start with {path.steps[0]!.term}
+        </a>
+        <button type="button" class="lbutton" data-path-reset>Reset this path</button>
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6)">
+    <ol class="path-steps" data-path-steps data-terms={path.steps.map((s) => s.id).join(' ')}>
+      {
+        path.steps.map((step, i) => (
+          <li class="path-step" data-step={step.id}>
+            <span class="path-step__n" aria-hidden="true">{i + 1}</span>
+            <div>
+              <h2 class="path-step__title">
+                <a href={learnHref(step.slug)}>{step.term}</a>
+              </h2>
+              <p class="path-step__one">{step.oneSentence}</p>
+              <p class="path-card__meta" style="margin-top: var(--sp-2)">
+                {CATEGORY_BY_ID.get(step.categoryId)?.name} · {DIFFICULTY_LABEL[step.difficulty]}
+              </p>
+            </div>
+            <button type="button" class="lbutton" data-step-toggle={step.id} aria-pressed="false">
+              <span data-step-label>Mark as understood</span>
+            </button>
+          </li>
+        ))
+      }
+    </ol>
+
+    {
+      path.missing.length > 0 && (
+        <p class="data-note" style="margin-top: var(--sp-5)">
+          {path.missing.length} term{path.missing.length === 1 ? '' : 's'} planned for this path{' '}
+          {path.missing.length === 1 ? 'has' : 'have'} not been reviewed yet, so{' '}
+          {path.missing.length === 1 ? 'it is' : 'they are'} not shown. Nothing appears on this site
+          before a person has checked it.
+        </p>
+      )
+    }
+  </div>
+</Learn>
+
+<script>
+  import { doneTerms, setDone, isDone, onChange } from '../../../scripts/learn-store';
+
+  const list = document.querySelector<HTMLElement>('[data-path-steps]');
+  if (list) {
+    const ids = (list.dataset.terms ?? '').split(' ').filter(Boolean);
+    const bar = document.querySelector<HTMLElement>('[data-path-bar]');
+    const label = document.querySelector<HTMLElement>('[data-path-progress]');
+
+    function paint() {
+      const done = new Set(doneTerms());
+      for (const step of list!.querySelectorAll<HTMLElement>('[data-step]')) {
+        const id = step.dataset.step!;
+        const isComplete = done.has(id);
+        step.classList.toggle('is-done', isComplete);
+        const button = step.querySelector<HTMLButtonElement>('[data-step-toggle]');
+        if (button) {
+          button.setAttribute('aria-pressed', String(isComplete));
+          button.querySelector('[data-step-label]')!.textContent = isComplete
+            ? 'Understood'
+            : 'Mark as understood';
+        }
+      }
+      const complete = ids.filter((id) => done.has(id)).length;
+      if (bar) bar.style.width = `${ids.length ? (complete / ids.length) * 100 : 0}%`;
+      if (label) {
+        label.textContent =
+          complete === ids.length && ids.length
+            ? `All ${ids.length} terms marked as understood.`
+            : `${complete} of ${ids.length} terms marked as understood.`;
+      }
+    }
+
+    list.querySelectorAll<HTMLButtonElement>('[data-step-toggle]').forEach((button) =>
+      button.addEventListener('click', () => {
+        const id = button.dataset.stepToggle!;
+        setDone(id, !isDone(id));
+        paint();
+      }),
+    );
+
+    document.querySelector('[data-path-reset]')?.addEventListener('click', () => {
+      for (const id of ids) setDone(id, false);
+      paint();
+    });
+
+    paint();
+    onChange(paint);
+  }
+</script>

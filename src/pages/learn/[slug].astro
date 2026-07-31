@@ -1,0 +1,501 @@
+---
+/**
+ * One page per published term.
+ *
+ * Structured as the four disclosure layers from the brief, as real sections
+ * with real headings rather than tabs: layer 1 answers the question in five
+ * seconds, layer 2 explains it, layer 3 stops the reader confusing it with its
+ * neighbours, layer 4 is for anyone who wants the mechanism. The depth control
+ * decides how many are open on arrival; it never removes anything.
+ */
+import Learn from '../../layouts/Learn.astro';
+import TermVisual from '../../components/learn/TermVisual.astro';
+import QuickCheck from '../../components/learn/QuickCheck.astro';
+import ResourceList from '../../components/learn/ResourceList.astro';
+import TermControls from '../../components/learn/TermControls.astro';
+import TermSearch from '../../components/learn/TermSearch.astro';
+import {
+  TERMS,
+  CATEGORY_BY_ID,
+  resolveTerms,
+  leadsTo,
+  learnHref,
+  siteHref,
+  termsInCategory,
+} from '../../lib/learn/terms';
+import { DIFFICULTY_LABEL, AUDIENCE_LABEL } from '../../lib/learn/schema';
+import { pathsContaining } from '../../lib/learn/paths';
+import { comparisonsFor } from '../../lib/learn/compare';
+import { milestonesForTerm } from '../../lib/learn/timeline';
+
+export async function getStaticPaths() {
+  return TERMS.map((term) => ({ params: { slug: term.slug }, props: { term } }));
+}
+
+const { term } = Astro.props;
+const category = CATEGORY_BY_ID.get(term.categoryId);
+
+const prerequisites = resolveTerms(term.prerequisiteTermIds);
+const related = resolveTerms(term.relatedTermIds);
+const confused = resolveTerms(term.oftenConfusedWith);
+const next = leadsTo(term.id);
+const milestones = await milestonesForTerm(term.id);
+const paths = pathsContaining(term.id);
+const comparisons = comparisonsFor(term.id);
+
+// Previous and next within the category, so the deep end of a chapter is
+// reachable without going back to the index every time.
+const siblings = termsInCategory(term.categoryId);
+const position = siblings.findIndex((t) => t.id === term.id);
+const previousTerm = siblings[position - 1];
+const nextTerm = siblings[position + 1];
+
+const paragraphs = term.plainExplanation.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+
+const title = `${term.term} — explained plainly · UNAIVERSE`;
+const description = term.oneSentence.slice(0, 300);
+
+/**
+ * DefinedTerm rather than Article: this is a glossary entry, and marking it as
+ * one is both more accurate and more useful to anything that indexes it.
+ */
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTerm',
+  name: term.term,
+  alternateName: term.aliases.length ? term.aliases : undefined,
+  description: term.oneSentence,
+  inDefinedTermSet: {
+    '@type': 'DefinedTermSet',
+    name: 'UNAIVERSE AI Literacy Universe',
+    url: new URL(learnHref(), Astro.site).href,
+  },
+  url: new URL(learnHref(term.slug), Astro.site).href,
+});
+const head = `<script type="application/ld+json">${jsonLd.replace(/</g, '\\u003c')}</script>`;
+
+const LAYERS = {
+  understand: 'Understand it',
+  confusion: 'Avoid confusion',
+  deeper: 'Go deeper',
+};
+---
+
+<Learn
+  title={title}
+  description={description}
+  section="explore"
+  ogType="article"
+  head={head}
+  showBarSearch={true}
+>
+  <div class="wrap term">
+    <header class="term-hero">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> /
+        <a href={learnHref(`category/${term.categoryId}`)}>{category?.name}</a> /
+        {term.term}
+      </p>
+
+      <h1 class="term-hero__title">
+        {term.term}
+        {term.acronym && <span class="term-hero__acronym">{term.acronym}</span>}
+      </h1>
+
+      <ul class="chips">
+        <li>
+          <a class={`chip chip--${term.difficulty}`} href={learnHref(`a-z#${term.difficulty}`)}>
+            {DIFFICULTY_LABEL[term.difficulty]}
+          </a>
+        </li>
+        <li>
+          <a class="chip" href={learnHref(`category/${term.categoryId}`)}>
+            <span aria-hidden="true">{category?.glyph}</span> {category?.name}
+          </a>
+        </li>
+        {
+          term.audiences
+            .filter((a) => a !== 'everyone')
+            .slice(0, 3)
+            .map((a) => <li><span class="chip">{AUDIENCE_LABEL[a]}</span></li>)
+        }
+        {
+          term.reviewed && (
+            <li>
+              <a class="chip" href={learnHref('methodology')}>
+                Reviewed{term.lastReviewed ? ` ${term.lastReviewed}` : ''}
+              </a>
+            </li>
+          )
+        }
+      </ul>
+
+      {
+        term.aliases.length > 0 && (
+          <p class="term-hero__aliases">Also called: {term.aliases.join(', ')}.</p>
+        )
+      }
+
+      {/* Filled in by script when the reader arrived from a timeline node, so
+          "back" returns to the milestone rather than to the top of the site.
+          Rendered empty rather than omitted so nothing shifts when it appears. */}
+      <p class="term-return" data-term-return hidden>
+        <a class="lbutton" data-term-return-link href={siteHref()}>
+          <span aria-hidden="true">←</span>
+          <span data-term-return-label>Back to the milestone you came from</span>
+        </a>
+      </p>
+
+      <TermControls termId={term.id} />
+    </header>
+
+    <div class="term-layout">
+      <div>
+        {/* ── Layer 1: in five seconds ─────────────────────────────── */}
+        <section class="layer" data-layer="1" aria-labelledby="layer-1">
+          <p class="layer__kicker">In five seconds</p>
+          <h2 class="layer__title" id="layer-1">What it is</h2>
+
+          <p class="term-hero__one">{term.oneSentence}</p>
+
+          <div class="paper-panel paper-panel--accent">
+            <h3>Why it matters</h3>
+            <p>{term.whyItMatters}</p>
+          </div>
+
+          <TermVisual visual={term.visual} termId={term.id} />
+
+          {
+            term.contested && (
+              <div class="paper-panel paper-panel--caution">
+                <h3>This term is contested</h3>
+                <p>{term.contested}</p>
+              </div>
+            )
+          }
+        </section>
+
+        {/* ── Layer 2: understand it ───────────────────────────────── */}
+        <section class="layer" data-layer="2" data-layer-name="the full explanation" aria-labelledby="layer-2">
+          <p class="layer__kicker">Understand it</p>
+          <h2 class="layer__title" id="layer-2">{LAYERS.understand}</h2>
+          <button type="button" class="layer__toggle" aria-expanded="true" aria-controls="layer-2-body">
+            Hide the full explanation
+          </button>
+
+          <div class="layer__body" id="layer-2-body">
+            <div class="prose">
+              {paragraphs.map((p) => <p>{p}</p>)}
+            </div>
+
+            <div class="paper-panel">
+              <h3>{term.everydayAnalogy.title}</h3>
+              <p class="lead">{term.everydayAnalogy.story}</p>
+
+              <table class="mapping">
+                <caption>How the story maps onto the real thing</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">In the story</th>
+                    <th scope="col">In the AI system</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    term.everydayAnalogy.mapping.map((m) => (
+                      <tr>
+                        <th scope="row">{m.analogyElement}</th>
+                        <td>{m.aiElement}</td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+
+              {/* Required on every term. An analogy without its limit is a
+                  misconception waiting to be quoted in a meeting. */}
+              <div class="limitation">
+                <span class="limitation__label">Where the analogy stops working</span>
+                <p>{term.everydayAnalogy.limitation}</p>
+              </div>
+            </div>
+
+            <h3>A worked example</h3>
+            <p>{term.workedExample.scenario}</p>
+            {term.workedExample.input && (
+              <p><strong>Starting from:</strong> {term.workedExample.input}</p>
+            )}
+            <ol class="steps-list">
+              {term.workedExample.process.map((step) => <li><span>{step}</span></li>)}
+            </ol>
+            <p><strong>Result:</strong> {term.workedExample.result}</p>
+
+            <div class="paper-panel">
+              <h3>In a United Nations workplace</h3>
+              <p class="lead">{term.unWorkplaceExample.scenario}</p>
+              <p>{term.unWorkplaceExample.relevance}</p>
+              {
+                term.unWorkplaceExample.caution && (
+                  <p class="caution">
+                    <span class="caution__label">Before you try this</span>
+                    {term.unWorkplaceExample.caution}
+                  </p>
+                )
+              }
+            </div>
+
+            <h3>Where you may hear it</h3>
+            <ul class="chips">
+              {term.whereYouMayHearIt.map((where) => <li><span class="chip">{where}</span></li>)}
+            </ul>
+          </div>
+        </section>
+
+        {/* ── Layer 3: avoid confusion ─────────────────────────────── */}
+        <section class="layer" data-layer="3" data-layer-name="the confusions" aria-labelledby="layer-3">
+          <p class="layer__kicker">Avoid confusion</p>
+          <h2 class="layer__title" id="layer-3">{LAYERS.confusion}</h2>
+          <button type="button" class="layer__toggle" aria-expanded="true" aria-controls="layer-3-body">
+            Hide the confusions
+          </button>
+
+          <div class="layer__body" id="layer-3-body">
+            {
+              confused.length > 0 && (
+                <>
+                  <h3>Often confused with</h3>
+                  <ul class="tcard-grid">
+                    {confused.map((c) => (
+                      <li>
+                        <a class="tcard" href={learnHref(c.slug)}>
+                          <div class="tcard__top">
+                            <p class="tcard__term">{c.term}</p>
+                            <span class="tcard__meta">{DIFFICULTY_LABEL[c.difficulty]}</span>
+                          </div>
+                          <p class="tcard__one">{c.oneSentence}</p>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )
+            }
+
+            {
+              comparisons.length > 0 && (
+                <>
+                  <h3>Side-by-side</h3>
+                  <ul class="tcard-grid">
+                    {comparisons.map((c) => (
+                      <li>
+                        <a class="tcard" href={learnHref(`compare/${c.id}`)}>
+                          <div class="tcard__top">
+                            <p class="tcard__term">{c.title}</p>
+                          </div>
+                          <p class="tcard__one">{c.question}</p>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )
+            }
+
+            <h3>Common misconceptions</h3>
+            <ul class="misconceptions">
+              {
+                term.commonMisconceptions.map((m) => (
+                  <li class="misconception">
+                    <p class="misconception__claim">
+                      <span class="misconception__mark" aria-hidden="true">
+                        ✗
+                      </span>
+                      <span>
+                        <span class="visually-hidden">Common misconception: </span>
+                        {m.misconception}
+                      </span>
+                    </p>
+                    <p class="misconception__fix">
+                      <span class="misconception__mark" aria-hidden="true">
+                        ✓
+                      </span>
+                      <span>
+                        <span class="visually-hidden">Correction: </span>
+                        {m.correction}
+                      </span>
+                    </p>
+                  </li>
+                ))
+              }
+            </ul>
+
+            <h3>Quick check</h3>
+            <QuickCheck term={term} />
+          </div>
+        </section>
+
+        {/* ── Layer 4: go deeper ───────────────────────────────────── */}
+        <section class="layer" data-layer="4" data-layer-name="the technical detail" aria-labelledby="layer-4">
+          <p class="layer__kicker">Go deeper</p>
+          <h2 class="layer__title" id="layer-4">{LAYERS.deeper}</h2>
+          <button type="button" class="layer__toggle" aria-expanded="true" aria-controls="layer-4-body">
+            Hide the technical detail
+          </button>
+
+          <div class="layer__body" id="layer-4-body">
+            <h3>The simple version</h3>
+            <p>{term.simpleVsTechnical.simple}</p>
+
+            <h3>The technical version</h3>
+            <p>{term.simpleVsTechnical.technical}</p>
+
+            <h3>Reviewed external resources</h3>
+            <ResourceList resources={term.resources} />
+
+            <h3>How this page was written</h3>
+            <p class="data-note">
+              This explanation was drafted with a language model through an offline pipeline, then
+              checked against this site's schema and{' '}
+              {term.reviewed ? 'reviewed by a person' : 'is awaiting human review'}
+              {term.lastReviewed ? ` (last reviewed ${term.lastReviewed})` : ''}. External links are
+              fetched by an automated checker, and any link the checker could not confirm is marked
+              as unverified above rather than presented as vetted.{' '}
+              <a href={learnHref('methodology')}>Read the full methodology</a>.
+            </p>
+            {term.reviewerNotes && <p class="data-note">Reviewer note: {term.reviewerNotes}</p>}
+          </div>
+        </section>
+
+        <div class="paper-panel paper-panel--accent">
+          <h3>The one thing to remember</h3>
+          <p class="lead">{term.keyTakeaway}</p>
+        </div>
+
+        <nav class="term-hero__actions" aria-label="Nearby terms in this category">
+          {previousTerm && (
+            <a class="lbutton" href={learnHref(previousTerm.slug)}>
+              <span aria-hidden="true">←</span> {previousTerm.term}
+            </a>
+          )}
+          {nextTerm && (
+            <a class="lbutton" href={learnHref(nextTerm.slug)}>
+              {nextTerm.term} <span aria-hidden="true">→</span>
+            </a>
+          )}
+        </nav>
+      </div>
+
+      {/* ── Aside ──────────────────────────────────────────────────── */}
+      <aside class="term-aside" aria-label="Related material">
+        <div class="aside-block">
+          <h2>Search</h2>
+          <TermSearch variant="inline" id="aside-search" label="Search AI terms" compact />
+        </div>
+
+        {
+          prerequisites.length > 0 && (
+            <div class="aside-block">
+              <h2>Read these first</h2>
+              <ul>
+                {prerequisites.map((p) => (
+                  <li>
+                    <a href={learnHref(p.slug)}>{p.term}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          related.length > 0 && (
+            <div class="aside-block">
+              <h2>Related concepts</h2>
+              <ul>
+                {related.map((r) => (
+                  <li>
+                    <a href={learnHref(r.slug)}>{r.term}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          next.length > 0 && (
+            <div class="aside-block">
+              <h2>Where this leads</h2>
+              <ul>
+                {next.map((n) => (
+                  <li>
+                    <a href={learnHref(n.slug)}>{n.term}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          milestones.length > 0 && (
+            <div class="aside-block">
+              <h2>In the UN AI timeline</h2>
+              {/* Deep links back to the exact milestone. The timeline opens the
+                  node and scrolls to it, so a reader returns where they left. */}
+              <ul class="milestone-links">
+                {milestones.map((m) => (
+                  <li>
+                    <a href={`${siteHref()}#${m.id}`}>
+                      <span class="milestone-links__date">{m.dateDisplay}</span>
+                      {m.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          paths.length > 0 && (
+            <div class="aside-block">
+              <h2>Part of these paths</h2>
+              <ul>
+                {paths.map((p) => (
+                  <li>
+                    <a href={learnHref(`paths/${p.id}`)}>
+                      {p.glyph} {p.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Returning to the exact milestone.
+     *
+     * A/BOT appends `?from=<milestone-id>` when a reader opens a term from the
+     * timeline. Read it, offer the way back, and then strip it from the URL so
+     * the page someone copies and shares is the clean canonical one.
+     */
+    const banner = document.querySelector<HTMLElement>('[data-term-return]');
+    if (banner) {
+      const params = new URLSearchParams(location.search);
+      const from = params.get('from');
+      if (from && /^[a-z0-9-]+$/.test(from)) {
+        const link = banner.querySelector<HTMLAnchorElement>('[data-term-return-link]')!;
+        const base = link.getAttribute('href') ?? '/';
+        link.href = `${base}#${from}`.replace(/([^:]\/)\/+/g, '$1');
+        banner.hidden = false;
+        history.replaceState(null, '', location.pathname + location.hash);
+      }
+    }
+  </script>
+</Learn>

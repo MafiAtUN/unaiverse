@@ -1,0 +1,229 @@
+{
+  "id": "data-cleaning",
+  "slug": "data-cleaning",
+  "term": "Data cleaning",
+  "aliases": [
+    "data preparation",
+    "data wrangling"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "dataset"
+  ],
+  "relatedTermIds": [
+    "dataset",
+    "missing-data",
+    "noisy-data",
+    "data-distribution",
+    "data-governance",
+    "structured-data"
+  ],
+  "oftenConfusedWith": [
+    "annotation",
+    "data-sampling",
+    "metadata"
+  ],
+  "oneSentence": "The process of checking raw data, fixing obvious problems, and putting it into a usable form for analysis or model training.",
+  "plainExplanation": "Raw data often arrives messy. Some rows may be duplicated. Some values may be missing. Dates may use different formats. Text may contain spelling variations, extra spaces or irrelevant symbols. Data cleaning prepares that material so people or software can use it more reliably.\n\nThe input can be a table, documents, images, sensor readings or a mix of these. The work usually includes spotting errors, deciding what counts as an error, correcting what can be corrected, removing what should not be kept, and making formats consistent. For example, one column might use “Kenya”, another “kenya”, and another “KE”. Cleaning may standardise those into one agreed form.\n\nThe output is a cleaner dataset, not a perfect one. Some problems cannot be safely fixed, so they may be flagged instead. Good cleaning also records what was changed and why. That matters because later results depend on these choices.\n\nData cleaning is often confused with data labelling. Cleaning improves the quality and consistency of existing data. Labelling adds tags or categories, such as marking whether an image contains flood damage. In practice, the two can happen in the same project, but they are not the same task.",
+  "everydayAnalogy": {
+    "title": "Preparing a shared library shelf",
+    "story": "A team in an office is building a shelf of reference documents so colleagues can quickly find the right guidance note. They discover duplicate copies, files with missing page numbers, titles written in different styles, and some outdated folders mixed in with current ones. Before opening the shelf to everyone, they remove exact duplicates, rename files in one format, separate uncertain items for review, and put the rest in the right order. The shelf is still not perfect, but it becomes far easier to search and trust.",
+    "mapping": [
+      {
+        "analogyElement": "duplicate copies on the shelf",
+        "aiElement": "duplicate records in a dataset"
+      },
+      {
+        "analogyElement": "titles written in different styles",
+        "aiElement": "inconsistent formats such as names, dates or text case"
+      },
+      {
+        "analogyElement": "outdated folders mixed with current ones",
+        "aiElement": "irrelevant or low-quality data that may need removal"
+      },
+      {
+        "analogyElement": "uncertain items set aside for review",
+        "aiElement": "records that cannot be safely fixed automatically and must be flagged"
+      }
+    ],
+    "limitation": "A document shelf is handled by people who can look at each item and use context. Real data cleaning is often done at large scale, sometimes across millions of records, using rules or scripts that can introduce new errors if the rules are poor. Also, some data types, such as images or sensor streams, do not fit neatly into a shelf-and-folder picture."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "From raw data to usable data",
+    "learningObjective": "Show the main steps between messy input data and a cleaned dataset, and explain why each step changes reliability.",
+    "description": "A left-to-right step diagram with five boxes. It starts with messy raw data, then inspection, rule-setting, cleaning actions and final checks, ending with a cleaned dataset. Read in order to see how each stage reduces specific problems and records choices.",
+    "steps": [
+      {
+        "label": "1. Raw data arrives",
+        "explanation": "The starting data may contain duplicates, missing values, inconsistent formats, irrelevant entries or obvious errors.",
+        "visualInstruction": "Show a mixed stack of table rows and document icons with warning marks: duplicate rows, blank cells, date formats like 03/04/24 and 2024-04-03, and one row marked irrelevant."
+      },
+      {
+        "label": "2. Inspect problems",
+        "explanation": "People or software scan the data to find patterns of error and decide which problems matter for the task.",
+        "visualInstruction": "Show a magnifying glass over the messy data, with callouts for duplicates, blanks, spelling variation and out-of-range values."
+      },
+      {
+        "label": "3. Set cleaning rules",
+        "explanation": "The team agrees what to fix, remove, standardise or flag. These choices should match the purpose of the project.",
+        "visualInstruction": "Show a checklist with four rules: standardise format, remove exact duplicates, flag uncertain records, keep a change log."
+      },
+      {
+        "label": "4. Apply fixes carefully",
+        "explanation": "Rules are applied by hand, by script or both. Some values are corrected, some dropped, and some left unchanged but marked for review.",
+        "visualInstruction": "Show arrows from messy items to corrected versions: country names aligned, duplicate removed, blank cell flagged, uncertain item moved to review."
+      },
+      {
+        "label": "5. Check and document",
+        "explanation": "The cleaned data is reviewed to see whether it is more consistent and still suitable for the task. Changes are recorded.",
+        "visualInstruction": "Show a tidy table and document set with a small side panel labelled change log and a final check mark."
+      }
+    ],
+    "interaction": "On hover or tap, each problem type highlights the matching fix in the next step.",
+    "accessibilityDescription": "This diagram shows data cleaning as a five-step process from left to right. Step 1 shows raw data with common problems: duplicate records, blank fields, inconsistent date formats and irrelevant items. Step 2 inspects the data to identify these problems. Step 3 sets rules for what will be standardised, removed or flagged. Step 4 applies those rules, for example removing exact duplicates, making formats consistent and marking uncertain records for review. Step 5 checks the result and records what changed, producing a cleaner dataset that is easier to use but not guaranteed to be perfect.",
+    "reducedMotionDescription": "A static five-step diagram with the same boxes and labels, no animation. Problem icons are connected by thin lines to the corresponding fixes and to the final cleaned dataset."
+  },
+  "workedExample": {
+    "scenario": "A knowledge base team wants to recommend policy documents based on topic and region.",
+    "input": "8 document records: 2 exact duplicates, 1 missing publication year, region names written as “West Africa”, “west-africa” and “W. Africa”, and 1 outdated draft that should not be recommended.",
+    "process": [
+      "The team reviews the records and lists the issues: duplicates, one missing year, inconsistent region names and one obsolete document.",
+      "They remove the 2 exact duplicates and exclude the outdated draft from the recommendation set.",
+      "They standardise all region names to one form: “West Africa”.",
+      "They keep the document with the missing year but mark the year field as unknown rather than guessing.",
+      "They save a short log of the changes so others can see what was removed, changed or flagged."
+    ],
+    "result": "The final recommendation set has 5 usable records with consistent region names, no exact duplicates and one clearly flagged missing value."
+  },
+  "unWorkplaceExample": {
+    "scenario": "After a disaster, a UN team is preparing satellite image metadata and damage-assessment tables before analysing patterns across districts.",
+    "relevance": "Cleaning helps ensure location names, dates, image identifiers and damage categories use consistent formats so later analysis is less misleading and easier to audit.",
+    "caution": "Do not upload unapproved operational, security-sensitive or protection-sensitive information to a public AI service for cleaning; use approved tools and keep human review over any removals or corrections."
+  },
+  "whyItMatters": "Poor-quality data can produce poor analysis, weak search results and misleading model behaviour. A small format problem can split one group into several false categories. Duplicate records can make something look more common than it is. Missing values can hide important gaps. For non-specialists, the key point is this: results do not only depend on the model or chart. They also depend on how the data was prepared. Asking how data was cleaned is part of checking whether a result is trustworthy, fair for its purpose and worth acting on.",
+  "whereYouMayHearIt": [
+    "before training a model",
+    "during dashboard development",
+    "in database migration work",
+    "when preparing survey results",
+    "in search and recommendation projects"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Cleaning means deleting anything that looks untidy.",
+      "correction": "Not every unusual value is an error. A rare event, minority language spelling or extreme measurement may be valid and important. Good cleaning uses rules linked to the task and flags uncertain cases instead of simply removing them."
+    },
+    {
+      "misconception": "Once data has been cleaned, it is unbiased and fully reliable.",
+      "correction": "Cleaning can reduce obvious errors, but it does not remove all bias, gaps or uncertainty. The original data may still under-represent some places or groups, and cleaning choices themselves can affect outcomes."
+    },
+    {
+      "misconception": "Cleaning and labelling are the same job.",
+      "correction": "They often happen in the same workflow, but they do different things. Cleaning improves data quality and consistency. Labelling adds categories or tags, such as marking an image as damaged or undamaged."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the work of making messy data usable by fixing obvious problems, making formats consistent and marking anything uncertain.",
+    "technical": "Data cleaning is a preprocessing stage that improves data quality before analysis, search or model training. Typical operations include deduplication, schema alignment, type conversion, normalisation of formats, handling missing values, filtering irrelevant records, resolving obvious inconsistencies and validating ranges or categories. The exact rules depend on the intended use. For example, replacing missing values with defaults may help one workflow and distort another. Cleaning may be manual, scripted or mixed. It is usually paired with documentation so others can audit what was changed, dropped or flagged. It differs from annotation, which adds labels, and from sampling, which changes which records are included rather than primarily improving their consistency."
+  },
+  "keyTakeaway": "Better results often start before the model: if the data is messy, cleaning it carefully can matter as much as the analysis itself.",
+  "quickCheck": {
+    "question": "Which example best fits data cleaning?",
+    "options": [
+      "Adding labels such as “flooded” or “not flooded” to images",
+      "Removing exact duplicate records and making date formats consistent",
+      "Collecting brand-new survey responses from more regions",
+      "Choosing a larger server to process the dataset faster"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Data cleaning focuses on improving the usability and consistency of existing data. Removing duplicates and standardising dates are classic cleaning tasks. Adding labels is annotation, collecting new responses is data collection, and choosing a larger server is a compute or infrastructure decision."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Data cleaning",
+      "url": "https://en.wikipedia.org/w/index.php?search=Data%20cleaning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers find a range of Wikipedia entries related to data cleaning, and suits someone who wants a quick starting point rather than a single authoritative article.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This official NIST framework gives risk-management context for data quality and governance choices, and suits programme managers, policy staff and technical leads.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "description": "These OECD principles provide high-level guidance on trustworthy AI, including the importance of data quality and accountability, and suit non-specialists and decision-makers.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Data cleaning",
+      "url": "https://www.youtube.com/results?search_query=Data%20cleaning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers browse different video explanations of data cleaning, and suits visual learners who want multiple introductory teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Data cleaning",
+      "url": "https://www.reddit.com/search/?q=Data%20cleaning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and practical questions about data cleaning, and suits readers who want informal examples and peer experiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is data cleaning",
+    "data cleaning simple explanation",
+    "data preparation vs data cleaning",
+    "data wrangling meaning",
+    "clean messy dataset",
+    "remove duplicates missing values",
+    "data cleening",
+    "why clean data before ai",
+    "data cleaning",
+    "data preparation",
+    "data wrangling"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:47.758Z",
+    "contentHash": "6b874b00da12c679",
+    "attempts": 1,
+    "promptTokens": 2347,
+    "completionTokens": 2342
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "id": "error-and-loss",
+  "slug": "error-and-loss",
+  "term": "Error and loss",
+  "aliases": [
+    "error",
+    "loss",
+    "residual"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "prediction",
+    "ground-truth"
+  ],
+  "relatedTermIds": [
+    "loss-function",
+    "optimisation",
+    "gradient",
+    "gradient-descent",
+    "backpropagation",
+    "ground-truth"
+  ],
+  "oftenConfusedWith": [
+    "loss-function",
+    "accuracy",
+    "prediction"
+  ],
+  "oneSentence": "These words describe how far a model’s output is from a reference answer, either for one case or after combining many cases into a single training signal.",
+  "plainExplanation": "A model produces an output, such as a predicted number or label. You then compare that output with a reference answer, often called the ground truth. The difference between them tells you how wrong the model was on that case.\n\nError usually means the mismatch for one example. If a model predicts 70 and the reference answer is 80, the error might be -10 or 10, depending on how you measure it. Residual is a closely related word, often used for the signed difference between an observed value and a predicted value in statistics and regression.\n\nLoss is usually the combined score used for training. It often starts from individual errors, then changes them with a rule and aggregates them across examples. For example, a training system may square each error so that large misses count more, then average them. That final number is the loss.\n\nSo the relationship is: prediction and reference answer go in; a comparison happens; numbers describing wrongness come out. One example can have an error or residual. Many examples, combined by a chosen rule, produce a loss that training tries to reduce.\n\nThese terms are often confused with accuracy, but accuracy is a summary of correct versus incorrect outcomes for certain tasks, usually classification. Loss is more general and gives a smoother signal for improving model settings, even when accuracy does not change yet.",
+  "everydayAnalogy": {
+    "title": "Checking a water pump sensor against a manual gauge",
+    "story": "A technician in Nairobi checks a water pump. The digital sensor says the pressure is 68, but a trusted manual gauge reads 72. For that reading, the gap between 68 and 72 is the error; if the technician keeps the sign, the residual is -4 because the sensor read low. After checking many pumps, the maintenance team combines all those gaps into one score that penalises big misses more strongly, so they can tune the sensor system. That combined score plays the role of loss.",
+    "mapping": [
+      {
+        "analogyElement": "one sensor reading compared with the manual gauge",
+        "aiElement": "one prediction compared with the reference answer"
+      },
+      {
+        "analogyElement": "the signed gap of -4",
+        "aiElement": "a residual for one case"
+      },
+      {
+        "analogyElement": "the size of the gap for that case",
+        "aiElement": "an individual error measure"
+      },
+      {
+        "analogyElement": "the team’s combined score across many checks",
+        "aiElement": "the loss used to guide improvement"
+      }
+    ],
+    "limitation": "A real model usually does not get corrected by a technician directly looking at one gap. During training, software uses a mathematically defined loss over many examples to adjust many internal settings at once. Also, in practice the reference answer may itself contain noise or uncertainty, while the analogy uses a trusted gauge as if it were perfect."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "From one mismatch to a training loss",
+    "learningObjective": "Show how a single prediction mismatch becomes an error or residual, and how many such mismatches are combined into one loss for training.",
+    "description": "A left-to-right sequence with four boxes. Start with a prediction and a reference answer. Compare them to get a per-example difference. Show two labelled forms: signed residual and error magnitude. Then show several examples being combined by a rule into one loss value used to update model settings.",
+    "steps": [
+      {
+        "label": "1. Output and reference",
+        "explanation": "Show one model output beside the reference answer for the same case.",
+        "visualInstruction": "Draw two rounded rectangles labelled 'prediction: 68' and 'reference: 72' with a brace under both saying 'same case'."
+      },
+      {
+        "label": "2. Per-example difference",
+        "explanation": "Compare the two values to get the mismatch for that case.",
+        "visualInstruction": "Add an arrow to a box labelled 'difference = 68 - 72 = -4'."
+      },
+      {
+        "label": "3. Two related views",
+        "explanation": "The signed value can be called a residual; the transformed size of the mismatch is often the error measure used next.",
+        "visualInstruction": "Split into two small boxes: 'residual: -4' and 'error measure: 4 or 16, depending on the rule'. Use a note: 'rule chosen by the training setup'."
+      },
+      {
+        "label": "4. Combine across examples",
+        "explanation": "Training usually combines many per-example values into one loss.",
+        "visualInstruction": "Show three to five miniature example cards feeding into a final box labelled 'average loss = 9.3', then an arrow to a small gear icon labelled 'adjust model settings'."
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal a short note with the same numbers, and a toggle that switches the error measure from absolute difference to squared difference.",
+    "accessibilityDescription": "The diagram shows a four-step process. First, one prediction, 68, is placed next to its reference answer, 72. Second, they are compared to produce a difference of minus 4. Third, that difference is shown in two related forms: a signed residual of minus 4, and an error measure that may be 4 if using absolute difference or 16 if using squared difference. Fourth, several examples like this are combined into one average loss, shown as 9.3, and that loss is used to adjust model settings during training. The key message is that error or residual can describe one case, while loss usually combines many cases with a chosen rule.",
+    "reducedMotionDescription": "A static four-panel diagram with the same numbers and labels: prediction and reference, difference, residual versus error measure, then multiple examples combined into one loss that points to model adjustment."
+  },
+  "workedExample": {
+    "scenario": "A small model predicts hourly water pump pressure from sensor readings.",
+    "input": "Three cases: predicted pressures [68, 75, 81]; reference pressures [72, 70, 79].",
+    "process": [
+      "Compare each prediction with its reference answer to get residuals: 68-72=-4, 75-70=5, 81-79=2.",
+      "Turn those into squared errors so larger misses count more: 16, 25, and 4.",
+      "Average them: (16+25+4) / 3 = 15.",
+      "Use that loss value, 15, to adjust the model so future predictions are closer to the references."
+    ],
+    "result": "The per-case residuals are -4, 5, and 2, while the training loss for this batch is 15 under mean squared error."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team is testing a tool that suggests past resolution paragraphs similar to a new draft query, so staff can find prior language faster.",
+    "relevance": "The team can measure error at the level of individual suggestions, then combine results into a loss during development to improve ranking or matching quality before deployment. This helps them compare model versions instead of relying only on impressions.",
+    "caution": "Do not paste confidential negotiation text, unpublished draft language, or politically sensitive material into an unapproved public AI service; use approved systems, minimise sensitive content, and keep human review in the loop."
+  },
+  "whyItMatters": "If you hear that a model is improving, this is usually part of what people mean: its loss is going down under a chosen measurement rule. That matters because the rule shapes the model’s behaviour. A system punished heavily for large mistakes may act differently from one that treats all mistakes more evenly. For non-specialists, this affects procurement, evaluation, and risk: a low loss does not automatically mean the model is fair, accurate in the way you care about, or suitable for real-world use. You need to ask what was measured, on what data, and whether that measurement matches the task and the harms you want to avoid.",
+  "whereYouMayHearIt": [
+    "model training dashboards",
+    "machine learning courses",
+    "evaluation reports",
+    "debugging a prediction system"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Error, loss, and residual are just three names for exactly the same thing.",
+      "correction": "They are related, but not identical. Residual often means a signed difference for one case, especially in regression. Error can mean a per-case mismatch, sometimes signed and sometimes not. Loss usually means the value produced by applying a chosen rule and combining one or many mismatches into the signal used for training."
+    },
+    {
+      "misconception": "If loss goes down, the model is definitely getting better in every practical sense.",
+      "correction": "Lower loss means the model is improving according to that specific measurement on that data. It may still perform poorly on new data, on rare cases, or on the metric people actually care about. It can also improve average performance while remaining weak or uneven for some groups or conditions."
+    },
+    {
+      "misconception": "Loss and accuracy are interchangeable.",
+      "correction": "Accuracy counts how often a model gets a classification right, but loss can measure how confident or how far off predictions are, even before accuracy changes. That is why training often uses loss, while reporting may also include accuracy or other task-specific metrics."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A model makes a guess and you compare it with the reference answer. The gap for one case is often called error, and sometimes residual if the sign matters. A training system then combines many such gaps into one number called loss, and tries to make that number smaller.",
+    "technical": "Let a model output y-hat for a target y. A per-example discrepancy can be represented as a residual, often y minus y-hat or y-hat minus y depending on convention, so the sign matters. An error measure may then transform that discrepancy, for example with absolute value or squaring. A loss function maps predictions and targets to a scalar objective, often by computing per-example losses and aggregating them over a batch, such as a mean. Optimisation methods use gradients of that loss with respect to model parameters to update the parameters. In ordinary usage, people sometimes say 'the error' when they really mean the training loss, so context matters."
+  },
+  "keyTakeaway": "One case gives you an error or residual; training usually turns many of those into a single loss that tells the model how to adjust.",
+  "quickCheck": {
+    "question": "Which statement best captures the relationship among residual, error, and loss?",
+    "options": [
+      "Residual is often a signed mismatch for one case, error is a per-case wrongness measure, and loss usually combines such values into a training objective.",
+      "Loss is just another word for accuracy, while residual is only used for text models.",
+      "Error always means the average over the whole dataset, and loss means the mistake on one example.",
+      "Residual, error, and loss are identical terms, so the choice of word does not matter."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Option 1 is the best summary. In practice, usage varies by field, but residual commonly keeps the sign for one example, error refers to the mismatch on one example, and loss is the aggregated value a training procedure tries to reduce."
+  },
+  "resources": [
+    {
+      "title": "Loss function",
+      "url": "https://en.wikipedia.org/wiki/Loss_function",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives a broad reference overview of loss functions and suits readers who want definitions, variants, and related terminology.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This 3Blue1Brown video offers an intuitive visual explanation of neural network training and suits visual learners who want to see how reducing loss fits into the bigger process.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This Google course section gives a beginner-friendly explanation of reducing loss during training and suits readers who want a practical introduction.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Error and loss",
+      "url": "https://www.youtube.com/results?search_query=Error%20and%20loss%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube link is a search results page, so it helps readers browse multiple video explanations of error and loss and pick a style that suits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Error and loss",
+      "url": "https://www.reddit.com/search/?q=Error%20and%20loss",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit link is a search results page, so it suits readers who want to see community questions, informal explanations, and common points of confusion about error and loss.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "error vs loss machine learning",
+    "residual vs error",
+    "what is loss in ai",
+    "training loss meaning",
+    "prediction error vs accuracy",
+    "mean squared error loss",
+    "how residual works in regression",
+    "loss function explained simply",
+    "erorr vs loss",
+    "residual meaning ml",
+    "error and loss",
+    "error",
+    "loss",
+    "residual"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:15.553Z",
+    "contentHash": "f808d36ccbdba8d8",
+    "attempts": 1,
+    "promptTokens": 2334,
+    "completionTokens": 2503
+  }
+}

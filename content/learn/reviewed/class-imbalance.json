@@ -1,0 +1,230 @@
+{
+  "id": "class-imbalance",
+  "slug": "class-imbalance",
+  "term": "Class imbalance",
+  "aliases": [
+    "imbalanced data",
+    "rare class"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "classification",
+    "accuracy"
+  ],
+  "relatedTermIds": [
+    "accuracy",
+    "precision",
+    "recall",
+    "f1-score",
+    "confusion-matrix",
+    "false-positive-and-false-negative"
+  ],
+  "oftenConfusedWith": [
+    "accuracy",
+    "algorithmic-bias"
+  ],
+  "oneSentence": "A dataset has this problem when one outcome appears far more often than another, making a model look successful while missing the cases users care about most.",
+  "plainExplanation": "In classification, a system sorts items into categories such as \"damaged road\" or \"not damaged road\". Class imbalance means one category is much more common than the other in the data used to train or test the system. The rarer category is often the one people most need to detect.\n\nWhat goes in is a set of labelled examples. If 9,900 satellite images show no road damage and 100 show damage, the system sees many more examples of \"no damage\" than \"damage\". During training, many models can reduce their overall error simply by favouring the common class.\n\nWhat happens next is that a headline score, especially accuracy, can look strong even if the model performs badly on the rare class. A model that predicts \"no damage\" for every image would be 99% accurate in that example, but it would find none of the damaged roads. This is why people also check measures such as precision, recall, F1 score, and the confusion matrix.\n\nWhat comes out is not just a model but a risk of misleading evaluation. The problem is about the data distribution and the metric choice, not automatically about unfair treatment between social groups. It can contribute to harmful outcomes, but it is different from algorithmic bias, which is about systematic differences in behaviour across people or groups.",
+  "everydayAnalogy": {
+    "title": "Security checks at a stadium gate",
+    "story": "At a large stadium, almost everyone arriving has a valid ticket. Only a small number are trying to enter with a fake one. If a guard simply waves everyone through, the guard will appear correct almost all the time because most people are legitimate, but the few fake tickets still get through. If the organisers care about stopping fake tickets, they need to measure how often the guard actually catches those rare cases, not only how often the guard agrees with the majority.",
+    "mapping": [
+      {
+        "analogyElement": "Most visitors have valid tickets",
+        "aiElement": "The majority class dominates the dataset"
+      },
+      {
+        "analogyElement": "A few visitors have fake tickets",
+        "aiElement": "The minority or rare class"
+      },
+      {
+        "analogyElement": "The guard waves everyone through",
+        "aiElement": "A model predicts only the common class"
+      },
+      {
+        "analogyElement": "The organisers count caught fake tickets separately",
+        "aiElement": "Evaluation uses recall, precision, or a confusion matrix instead of accuracy alone"
+      }
+    ],
+    "limitation": "A guard can change behaviour immediately after instructions, while a trained model follows patterns learned from data and does not adapt on the spot unless it is retrained or redesigned. Also, fake tickets are intentionally deceptive, but rare classes in data are not necessarily deceptive; they are simply less frequent."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Why accuracy can mislead under class imbalance",
+    "learningObjective": "Show why a high overall score can hide failure on a rare but important class, and what extra checks are needed.",
+    "description": "Two side-by-side panels compare the same 1,000-case dataset. The left panel shows a naive model predicting only the common class and getting high accuracy. The right panel shows the class counts broken into correct and incorrect predictions for the rare class. Read left to right: first the class distribution, then the tempting score, then the missing rare cases and the better metrics to inspect.",
+    "steps": [
+      {
+        "label": "Imbalanced data",
+        "explanation": "Show 1,000 cases: 950 common-class cases and 50 rare-class cases. The rare class is the smaller group people may care most about finding.",
+        "visualInstruction": "Draw two stacked bars or icon grids labelled Common 950 and Rare 50, with strong colour contrast and text labels on each section."
+      },
+      {
+        "label": "Naive prediction",
+        "explanation": "A model predicts every case as the common class. Because most cases really are common, many predictions look correct at first glance.",
+        "visualInstruction": "In the left panel, show one output bar labelled Predicted common: 1,000 and Predicted rare: 0, with arrows from both input groups feeding into Predicted common."
+      },
+      {
+        "label": "Misleading accuracy",
+        "explanation": "This model gets 950 out of 1,000 correct, so accuracy is 95%. That sounds good, but it found none of the 50 rare cases.",
+        "visualInstruction": "Place a prominent badge reading Accuracy 95% in the left panel, and beneath it a warning note: Rare-class recall 0/50."
+      },
+      {
+        "label": "Look inside the errors",
+        "explanation": "Break results into a confusion matrix view: 950 true common, 50 missed rare, 0 found rare. This reveals what the headline score hid.",
+        "visualInstruction": "In the right panel, draw a simple 2x2 matrix with counts and highlight the cell for missed rare cases in a warning colour."
+      },
+      {
+        "label": "Use better checks",
+        "explanation": "For imbalanced tasks, inspect recall, precision, F1 score, and the confusion matrix, and consider whether the training data or sampling strategy should change.",
+        "visualInstruction": "Add a checklist under the matrix: Recall, Precision, F1 score, Confusion matrix, Class distribution, each with small icons and short labels."
+      }
+    ],
+    "interaction": "Hover or tap each panel to reveal the same data expressed as accuracy, recall, precision, and counts; a toggle switches between percentages and raw numbers.",
+    "accessibilityDescription": "The diagram compares how the same classifier can look good or bad depending on what is measured. Step 1 shows a dataset of 1,000 cases, with 950 common cases and 50 rare cases. Step 2 shows a model that predicts every case as the common class. Step 3 states that this gives 95 percent accuracy because 950 of 1,000 predictions match the common class. Step 4 reveals the hidden problem in a confusion matrix: all 50 rare cases are missed, so rare-class recall is zero. Step 5 lists better checks for this situation: recall, precision, F1 score, confusion matrix, and class distribution.",
+    "reducedMotionDescription": "A static two-panel comparison remains on screen at once: the left panel shows the imbalanced dataset and the 95 percent accuracy badge for predicting only the common class; the right panel shows the confusion matrix and checklist of better evaluation measures."
+  },
+  "workedExample": {
+    "scenario": "A team builds a model to identify damaged roads from satellite images after heavy rain.",
+    "input": "Test set: 10,000 images, including 9,700 images with no visible damage and 300 images with damage.",
+    "process": [
+      "The model predicts 9,850 images as 'no damage' and 150 as 'damage'.",
+      "After checking labels, 120 of the 150 'damage' predictions are correct, and 180 damaged roads were missed.",
+      "Overall accuracy is high because most images truly show no damage.",
+      "The team then calculates recall for damage as 120 out of 300, or 40%, and precision for damage as 120 out of 150, or 80%."
+    ],
+    "result": "The model looks strong if you only read its 96.4% accuracy, but it misses 60% of the damaged roads, so it is not yet reliable for finding rare damage cases."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is preparing procurement requirements for a vendor offering software that flags rare compliance problems in large volumes of procurement records.",
+    "relevance": "Class imbalance matters because most records will be ordinary, so a vendor can report a high accuracy score while still missing many of the uncommon cases the organisation needs to review. Procurement requirements can ask vendors to disclose class distribution, confusion matrices, and rare-class recall on realistic test data.",
+    "caution": "Do not upload confidential procurement records, vendor information, personal data, or investigation-related material into an unapproved public AI service for testing or benchmarking."
+  },
+  "whyItMatters": "Non-specialists often see one number, such as accuracy, and assume the system works. With imbalanced data, that can lead to poor purchasing, unsafe deployment, or false confidence in a model that fails on the cases that matter most. In practice, many important tasks are imbalanced: fraud is rarer than legitimate transactions, serious disease is rarer than no disease, and damaged roads are rarer than intact roads. If you ask the right questions early, you can avoid approving a system that performs well only on the easy majority cases. This helps with quality control, risk management, and transparent reporting.",
+  "whereYouMayHearIt": [
+    "model evaluation meetings",
+    "vendor demonstrations",
+    "machine learning courses",
+    "procurement requirements",
+    "quality assurance reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If accuracy is high, imbalance cannot be a serious problem.",
+      "correction": "High accuracy can come almost entirely from the majority class. When rare cases are important, a model may score well overall while missing most of them. You need to inspect the confusion matrix and class-specific measures such as recall and precision."
+    },
+    {
+      "misconception": "Class imbalance means the model is automatically biased against protected groups.",
+      "correction": "These are different ideas. Class imbalance describes uneven category counts in data, such as many more negatives than positives. Algorithmic bias concerns systematic differences in outcomes across people or groups. The two can interact, but one does not automatically prove the other."
+    },
+    {
+      "misconception": "The solution is always to collect exactly equal numbers for every class.",
+      "correction": "Balanced data can help, but it is not always the only or best fix. Real-world frequencies may genuinely be uneven, and forcing perfect balance can distort evaluation. Other responses include choosing suitable metrics, reweighting classes, resampling carefully, adjusting thresholds, and checking performance on realistic test sets."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "When the thing you want to detect is rare, a system can seem good by mostly predicting the common case. So you should not rely on one overall score.",
+    "technical": "In a classification task, class imbalance means the label distribution is highly skewed, such as many more negative than positive examples. Under this condition, optimising or reporting aggregate accuracy can be misleading because the loss and the metric may be dominated by majority-class performance. A trivial classifier that always predicts the majority class can achieve high accuracy while having zero recall for the minority class. Proper evaluation usually includes the confusion matrix and class-sensitive metrics such as precision, recall, F1 score, balanced accuracy, or area-under-precision-recall measures, depending on the task. Mitigation may involve class weighting, over-sampling or under-sampling, threshold adjustment, stratified sampling, and collecting more representative minority-class data. These methods help, but they also have trade-offs, such as overfitting duplicated rare examples or creating unrealistic class proportions in testing, so the test set should reflect the deployment context."
+  },
+  "keyTakeaway": "If important cases are rare, a model can look impressive on paper while failing where it matters most.",
+  "quickCheck": {
+    "question": "A dataset has 9,900 normal cases and 100 rare cases. A model predicts every case as normal and gets 99% accuracy. What is the best interpretation?",
+    "options": [
+      "The model is excellent because 99% accuracy proves it works well on both classes.",
+      "The model may be useless for the rare class, so recall and the confusion matrix should be checked.",
+      "The data are balanced enough that no extra evaluation is needed.",
+      "The model is automatically unfair to protected groups."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Because the rare class is only 1% of the data, predicting the majority class every time already gives 99% accuracy. That does not tell you whether the model finds any rare cases at all. To judge usefulness, inspect the confusion matrix and class-specific measures such as recall and precision."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Class imbalance",
+      "url": "https://en.wikipedia.org/w/index.php?search=Class%20imbalance",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers find multiple Wikipedia entries related to class imbalance and suits people who want a broad starting point rather than one fixed article.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course material helps readers compare accuracy, recall, and precision in classification and suits learners who want practical metric explanations.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This official framework helps readers connect evaluation choices to risk management and suits managers, technical teams, and oversight roles.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Class imbalance",
+      "url": "https://www.youtube.com/results?search_query=Class%20imbalance%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find a range of video explanations of class imbalance and suits people who learn well from spoken, visual teaching.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Class imbalance",
+      "url": "https://www.reddit.com/search/?q=Class%20imbalance",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers browse community discussions and practical questions about class imbalance and suits readers who want informal examples and peer conversation.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "class imbalance meaning",
+    "imbalanced data explained",
+    "rare class problem",
+    "high accuracy but misses rare cases",
+    "precision recall imbalance",
+    "class imbalance vs bias",
+    "imbalanced dataset evaluation",
+    "class imbalence",
+    "why accuracy fails on rare events",
+    "class imbalance",
+    "imbalanced data",
+    "rare class"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:24.911Z",
+    "contentHash": "d599a76bfe3116be",
+    "attempts": 1,
+    "promptTokens": 2322,
+    "completionTokens": 2630
+  }
+}

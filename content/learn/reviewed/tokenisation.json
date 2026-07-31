@@ -1,0 +1,246 @@
+{
+  "id": "tokenisation",
+  "slug": "tokenisation",
+  "term": "Tokenisation",
+  "aliases": [
+    "tokenization",
+    "tokenizer"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "everyone"
+  ],
+  "prerequisiteTermIds": [
+    "token"
+  ],
+  "relatedTermIds": [
+    "token",
+    "vocabulary",
+    "context-window",
+    "next-token-prediction",
+    "prompt",
+    "large-language-model"
+  ],
+  "oftenConfusedWith": [
+    "token",
+    "embedding",
+    "vocabulary"
+  ],
+  "oneSentence": "The process of breaking text into smaller units a language model can process, such as words, parts of words, punctuation marks or special symbols.",
+  "plainExplanation": "A language model does not read text as whole sentences in the way people usually describe reading. First, the input text is split into smaller pieces called tokens. A token may be a whole word, part of a word, a punctuation mark, a space pattern or a special control symbol.\n\nWhat goes in is ordinary text, such as a sentence or prompt. A tokenizer applies a fixed set of rules and a predefined vocabulary, meaning the list of token pieces the model was built to use. What comes out is a sequence of token IDs, which are numbers standing for those pieces.\n\nThis matters because the model works on tokens, not directly on characters or ideas. Length limits are usually measured in tokens. Cost, speed and truncation often depend on token count rather than word count.\n\nTokenisation is often confused with a token itself. Tokenisation is the splitting process. A token is one resulting piece. It is also different from embedding: tokenisation turns text into discrete pieces, while embedding turns those pieces into numerical vectors the model can process further.",
+  "everydayAnalogy": {
+    "title": "Tuning a radio into clear channels",
+    "story": "Amina and Luis are using an old radio with a dial that only locks onto certain stations. As they turn the dial, a spoken message does not arrive as one smooth block; the radio breaks it into clear channels it can recognise. Some channels carry whole words, while others catch only short fragments or pauses. If the message uses an unusual name, the radio may need several channels to capture it.",
+    "mapping": [
+      {
+        "analogyElement": "radio that only locks onto certain stations",
+        "aiElement": "tokenizer with a fixed vocabulary of recognised pieces"
+      },
+      {
+        "analogyElement": "spoken message arriving in parts",
+        "aiElement": "input text being split into tokens"
+      },
+      {
+        "analogyElement": "whole words versus short fragments",
+        "aiElement": "some tokens represent full words, others represent subword pieces"
+      },
+      {
+        "analogyElement": "unusual name needing several channels",
+        "aiElement": "rare or unfamiliar text often becoming multiple tokens"
+      }
+    ],
+    "limitation": "A radio receives a physical signal, while tokenisation is a text-splitting procedure applied to characters. The tokenizer does not search the airwaves or recover meaning from noise; it deterministically maps text to predefined token pieces."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "How a tokenizer splits text into model-sized pieces",
+    "learningObjective": "After using this explainer, the reader should be able to say that text is converted into token pieces and IDs, and that token count can differ from word count.",
+    "description": "An interactive panel shows a text input area at the top, a token count badge, and two linked outputs below. The first output displays the input text segmented into coloured token chips in reading order. The second output shows the corresponding token IDs in a horizontal list. A side note updates live to explain why some words stay whole while others are split into smaller pieces, especially for uncommon words, punctuation and mixed-language text.",
+    "steps": [
+      {
+        "label": "Enter or choose text",
+        "explanation": "The reader types a short sentence or selects a preset example such as a greeting, a long compound word, a phrase with punctuation, or a line mixing scripts or numbers.",
+        "visualInstruction": "Place a textarea above four preset buttons. On input, re-run tokenisation and update all dependent elements."
+      },
+      {
+        "label": "See the split",
+        "explanation": "The text is broken into visible token chips, with each chip showing exactly one token in order. Spaces or special markers are shown clearly so the reader can see that token boundaries do not always match word boundaries.",
+        "visualInstruction": "Render tokens as inline rounded rectangles with alternating colours and thin borders. Preserve order and spacing with SVG or HTML spans. Include visible markers for leading spaces or special tokens."
+      },
+      {
+        "label": "Compare words and tokens",
+        "explanation": "A small summary compares character count, rough word count and token count. A note highlights that one word can become several tokens, and several short words may each become one token.",
+        "visualInstruction": "Show a three-column summary below the chips. If token count differs strongly from word count, add a plain-language note in a callout box."
+      },
+      {
+        "label": "Inspect token IDs",
+        "explanation": "Each token chip can be focused or clicked to reveal its numeric ID and position in the sequence. This shows what the model actually receives after tokenisation.",
+        "visualInstruction": "On hover, focus or tap, highlight the selected chip and the matching ID in the list below. Display a compact detail panel with token text, index and ID."
+      },
+      {
+        "label": "Notice practical effects",
+        "explanation": "The interface explains that context limits, price and latency often depend on token count. It also shows that changing punctuation or spelling can change the split.",
+        "visualInstruction": "Add a live note under the outputs: 'This input uses X tokens.' Include a small example toggle that adds or removes punctuation so the reader can observe the count change."
+      }
+    ],
+    "interaction": "Readers can type their own text, choose preset examples, click or tab through token chips to inspect IDs, and toggle a small text change to compare token counts before and after.",
+    "accessibilityDescription": "Screen-reader users get a text-first simulation. After entering text or selecting an example, the page announces the token count, then reads an ordered list where each item states the token number, the exact token text and its token ID. A summary then states the character count, approximate word count and token count, followed by a short explanation of whether any words were split into multiple tokens. A comparison toggle can be activated to hear how a small text change alters the token sequence and total count.",
+    "reducedMotionDescription": "Users who prefer reduced motion see the same explainer without animated transitions. Token chips and IDs update instantly as static content, and selection changes use colour, outline and text labels rather than movement.",
+    "component": "tokenizer"
+  },
+  "workedExample": {
+    "scenario": "A user enters the sentence: \"Rebuilding schools quickly matters.\"",
+    "input": "Rebuilding schools quickly matters.",
+    "process": [
+      "The tokenizer scans the text using its fixed vocabulary of known pieces.",
+      "It finds that \"schools\" and \"quickly\" may each match one token, while \"Rebuilding\" may split into smaller parts such as \"Re\", \"build\", and \"ing\" depending on the tokenizer.",
+      "It assigns each token piece a numeric ID from the model's vocabulary.",
+      "The model receives the ordered IDs, not the original sentence as raw characters."
+    ],
+    "result": "The output might be 6 tokens rather than 4 words, showing why token count and word count are not the same."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An analyst is preparing a summarisation workflow for household assessment responses collected across several countries and languages.",
+    "relevance": "Understanding tokenisation helps the team estimate context limits, cost and performance, especially when responses include names, abbreviations, numbers, mixed languages or non-Latin scripts that may produce more tokens than expected.",
+    "caution": "Do not paste personal, confidential or protection-sensitive survey responses into an unapproved public AI service. Use only approved tools and minimise or remove identifying details where required."
+  },
+  "whyItMatters": "If you use or procure AI systems, tokenisation affects cost, speed, context limits and reliability. A message that looks short to a person may be long to the model, which can change whether important text fits, how much processing it needs and how results are interpreted.",
+  "whereYouMayHearIt": [
+    "LLM product documentation",
+    "API pricing and context-limit discussions",
+    "prompt design tutorials",
+    "debugging output length problems"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "One word always equals one token.",
+      "correction": "Not usually. Many tokenizers split words into parts, and punctuation, spaces or special symbols can also count as separate tokens."
+    },
+    {
+      "misconception": "Tokenisation gives the model the meaning of the text.",
+      "correction": "No. Tokenisation only converts text into manageable pieces and IDs. Later stages process those pieces, and even then output is not guaranteed to be factually correct."
+    },
+    {
+      "misconception": "All models split text in the same way.",
+      "correction": "Different models can use different tokenizers and vocabularies, so the same sentence may produce different token counts across systems."
+    },
+    {
+      "misconception": "Tokenisation and embedding are the same step.",
+      "correction": "They are separate. Tokenisation makes discrete pieces; embedding converts those pieces into numerical vectors used inside the model."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Before a language model can work with text, the text is chopped into small pieces it recognises. Those pieces are counted and turned into numbers.",
+    "technical": "A tokenizer maps an input character string into an ordered sequence of tokens drawn from a fixed vocabulary, then into token IDs. Most modern LLM tokenizers use subword schemes, so boundaries often do not align with words, and downstream limits and inference operate over token sequences."
+  },
+  "keyTakeaway": "Language models handle token sequences, so what fits, costs and returns depends on tokens, not just words.",
+  "quickCheck": {
+    "question": "Why can two sentences with the same number of words use different amounts of model context?",
+    "options": [
+      "Because tokenisation can split words and punctuation differently",
+      "Because the model counts only nouns and verbs",
+      "Because context is measured in paragraphs, not tokens",
+      "Because shorter words are ignored automatically"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Context is usually measured in tokens. Different words, punctuation patterns, scripts and spellings can produce different token splits, so two same-length sentences by word count may use different amounts of context."
+  },
+  "resources": [
+    {
+      "title": "Tokenizer Playground",
+      "url": "https://huggingface.co/spaces/Xenova/the-tokenizer-playground",
+      "type": "interactive",
+      "publisher": "Hugging Face",
+      "description": "An interactive playground that lets readers paste text and see how a tokenizer splits it, best for hands-on learners.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Tokenization",
+      "url": "https://en.wikipedia.org/wiki/Tokenization",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A broad overview of tokenization terminology and uses, suited to readers who want a general reference point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "A structured course explanation of LLM building blocks, useful for readers who want more technical depth.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "A visual video explanation of how large language models process text, helpful for readers who learn well from diagrams and animation.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Tokenisation",
+      "url": "https://www.youtube.com/results?search_query=Tokenisation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps readers find multiple video explanations of tokenisation and choose one that matches their level.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Tokenisation",
+      "url": "https://www.reddit.com/search/?q=Tokenisation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page showing community discussions on tokenisation, useful for seeing common questions, confusions and practical tips.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is tokenisation in llms",
+    "tokenization vs token",
+    "why are tokens not words",
+    "tokenizer how it works",
+    "llm token count explained",
+    "subword tokenisation",
+    "why does punctuation change token count",
+    "tokeniser meaning",
+    "tokenization misspelling",
+    "hugging face tokenizer playground",
+    "tokenisation",
+    "tokenization",
+    "tokenizer"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:35:07.876Z",
+    "contentHash": "009502ba7fd699e3",
+    "attempts": 1,
+    "promptTokens": 2230,
+    "completionTokens": 2201
+  }
+}

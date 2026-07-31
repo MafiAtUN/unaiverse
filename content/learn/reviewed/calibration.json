@@ -1,0 +1,227 @@
+{
+  "id": "calibration",
+  "slug": "calibration",
+  "term": "Calibration",
+  "aliases": [
+    "well-calibrated"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "probability"
+  ],
+  "relatedTermIds": [
+    "probability",
+    "evaluation-metric",
+    "reliability",
+    "robustness",
+    "generalisation",
+    "benchmark"
+  ],
+  "oftenConfusedWith": [
+    "accuracy",
+    "precision",
+    "recall",
+    "false-positive-and-false-negative",
+    "probability"
+  ],
+  "oneSentence": "Calibration describes how closely a system’s confidence scores match the real frequency of being correct.",
+  "plainExplanation": "Many AI systems do not just give a label such as “spam” or “not spam”. They also give a confidence score, such as 0.8. Calibration asks a simple question: when the system says 0.8, is it correct about 80% of the time across many similar cases?\n\nWhat goes in is a set of predictions with confidence scores and the true outcomes. What happens is that we group predictions with similar scores, then compare the average score with what really happened. What comes out is a picture or summary of whether the scores are trustworthy as probabilities.\n\nA system can have good accuracy and still be badly calibrated. For example, it might rank risky cases above safer ones correctly, but be far too confident. That matters because people often use the score itself to choose a threshold, assign attention, or judge uncertainty.\n\nCalibration is often confused with probability itself. A score may look like a probability, but it only behaves like one if testing shows it is calibrated. Calibration is also different from precision and recall, which focus on classification results after a threshold is chosen, not on whether the confidence numbers match reality.",
+  "everydayAnalogy": {
+    "title": "Journey times on a city travel board",
+    "story": "At a large bus station, an electronic board predicts the chance that each bus will arrive within 10 minutes. For many buses, the board says “70% chance”. Over the next month, staff check all the cases where it said 70%. If roughly 7 out of 10 of those buses really do arrive within 10 minutes, that confidence level is well calibrated.\n\nIf only 4 out of 10 arrive in time, the board was too confident. If 9 out of 10 arrive in time, it was too cautious.",
+    "mapping": [
+      {
+        "analogyElement": "the board’s '70% chance' message",
+        "aiElement": "a model’s confidence score"
+      },
+      {
+        "analogyElement": "staff checking many past buses with the same message",
+        "aiElement": "evaluating predictions over many cases"
+      },
+      {
+        "analogyElement": "how often buses actually arrived within 10 minutes",
+        "aiElement": "the observed frequency of correct outcomes"
+      },
+      {
+        "analogyElement": "too confident or too cautious travel estimates",
+        "aiElement": "overconfident or underconfident model calibration"
+      }
+    ],
+    "limitation": "A travel board predicts one event in the world, while many AI systems score categories, risks or rankings. Also, calibration is checked across groups of similar predictions, not by asking whether one single 70% prediction was 'right'. A perfectly calibrated system can still be unhelpful if it separates cases poorly, and the bus example does not show that distinction clearly."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "High accuracy, poor calibration versus good calibration",
+    "learningObjective": "Show that confidence scores can be useful only if they match observed frequencies, not merely if many predictions are correct.",
+    "description": "Two side-by-side columns compare systems on the same 100 cases. Each column shows score bands from low to high confidence and the observed share correct in each band. Read top to bottom within a column, then compare columns: one system is accurate but overconfident, the other has scores that line up with reality.",
+    "steps": [
+      {
+        "label": "Same task, same cases",
+        "explanation": "Both systems predict the same yes-or-no task on the same test set of 100 cases.",
+        "visualInstruction": "Draw two equal panels labelled System A and System B. Above both, place a shared caption: 'Same 100 test cases'. Use identical layout in both panels."
+      },
+      {
+        "label": "System A gives high scores",
+        "explanation": "System A often outputs 0.9 confidence, but among those cases it is correct only about 0.7 of the time.",
+        "visualInstruction": "In System A, draw three horizontal score bands: 0.3, 0.6, 0.9. Next to each, show an observed correct rate bar. Make the 0.9 score band align with a 0.7 observed bar, using contrasting colours and a small label 'too confident'."
+      },
+      {
+        "label": "System B lines up better",
+        "explanation": "System B’s score bands are close to the observed frequencies, so its numbers behave more like usable probabilities.",
+        "visualInstruction": "In System B, draw the same three score bands. Align 0.3 with about 0.3 observed, 0.6 with about 0.6, and 0.9 with about 0.9. Add a label 'well calibrated'."
+      },
+      {
+        "label": "Why the difference matters",
+        "explanation": "If a person acts only on cases above 0.8, System A may create misplaced trust, even if its overall accuracy looks similar.",
+        "visualInstruction": "Below both panels, add a threshold line at 0.8 and a short note: 'Thresholds and risk decisions rely on trustworthy confidence scores'."
+      }
+    ],
+    "interaction": "Hover or tap each score band to reveal a short tooltip: 'Predicted confidence' and 'Observed share correct'.",
+    "accessibilityDescription": "The diagram compares two systems on the same 100 cases. In both, predictions are grouped into confidence bands such as 0.3, 0.6 and 0.9. In System A, the 0.9 band is correct only about 70% of the time, so the scores are too high for reality. In System B, each confidence band closely matches the observed share correct, so the scores are well calibrated. The main point is that two systems can look similar on overall performance, yet only one gives confidence numbers that behave like probabilities.",
+    "reducedMotionDescription": "A static side-by-side chart shows System A with mismatched score bands and observed outcomes, and System B with closely matched bands and outcomes. Text labels explain 'too confident' and 'well calibrated' without animation."
+  },
+  "workedExample": {
+    "scenario": "A classifier flags whether incoming messages are likely to be routine administrative requests. It outputs a confidence score for the label 'routine'.",
+    "input": "100 previously reviewed messages with model scores and confirmed outcomes.",
+    "process": [
+      "Group the 100 messages by model score: 20 messages near 0.2, 30 near 0.5, and 50 near 0.8.",
+      "Check what fraction were truly routine in each group.",
+      "In the 0.2 group, 4 of 20 were routine, matching 20%.",
+      "In the 0.5 group, 15 of 30 were routine, matching 50%.",
+      "In the 0.8 group, only 30 of 50 were routine, which is 60%, not 80%."
+    ],
+    "result": "The model is reasonably calibrated at 0.2 and 0.5 but overconfident at 0.8. If staff treat 0.8 as 'about 80% likely', they would be misled."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A country office tests a tool that assigns confidence scores to likely categories in a shared public enquiries inbox, such as travel request, procurement question or event registration.",
+    "relevance": "Calibration helps staff judge whether a score like 0.85 should be treated as strong evidence or only a rough hint before human review and routing.",
+    "caution": "Do not upload personal, confidential, protection-sensitive or security-related messages to an unapproved public AI service. Use approved systems, minimise personal data, and keep human oversight over routing decisions."
+  },
+  "whyItMatters": "Confidence scores often shape action. A manager may prioritise cases above 0.9, a reviewer may skip checks below 0.2, or a rights-focused team may escalate cases marked high risk. If those scores are not calibrated, people can trust the wrong cases too much or discount important ones.\n\nThis matters especially where harms are uneven. Overconfident scores can hide uncertainty in cases affecting access to services, moderation, fraud checks, or risk screening. A system may look strong on a headline metric while still giving misleading confidence. For non-specialists, calibration is a practical question: 'When this system sounds sure, how often is that justified?'",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "risk scoring tools",
+    "medical or safety screening",
+    "spam or fraud detection",
+    "benchmark discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model is accurate, its confidence scores must already be trustworthy.",
+      "correction": "Accuracy counts how many predictions are right overall. Calibration checks whether the stated confidence matches reality. A model can be accurate because it usually picks the right label, yet still give 95% confidence in cases where it is right only 70% of the time."
+    },
+    {
+      "misconception": "A 70% score tells you what will happen in this single case.",
+      "correction": "Calibration is about long-run frequency across many similar cases, not certainty about one case. A well-calibrated 70% score means that among many cases given about 70%, roughly 70% turn out correct."
+    },
+    {
+      "misconception": "Calibration only matters for highly technical users.",
+      "correction": "Anyone using thresholds, triage rules or risk bands is relying on confidence scores. If the scores are miscalibrated, operational choices can be distorted even when the interface looks simple."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A system is well calibrated when its confidence numbers match what really happens over time. If it says '80% likely' on many cases, it should be right about 80% of those times.",
+    "technical": "For probabilistic predictions, calibration means agreement between predicted probabilities and empirical outcome frequencies. In binary classification, if we collect instances assigned score p, the event should occur about p of the time within that group. It is often examined with reliability diagrams, calibration curves, or summary measures such as calibration error, though the exact metric and binning method vary. Calibration differs from discrimination or ranking quality: a model can order cases well yet be systematically overconfident or underconfident. It can also be improved after training by recalibration methods, but recalibration itself must be validated on appropriate data to avoid leakage or overfitting."
+  },
+  "keyTakeaway": "Do not ask only 'Was it right?'; also ask 'When it sounded 80% sure, was it right about 80% of the time?'",
+  "quickCheck": {
+    "question": "Which statement best describes a well-calibrated classifier?",
+    "options": [
+      "Its confidence scores match how often it is correct across many similar cases.",
+      "It always gives high confidence for correct predictions and low confidence for wrong ones.",
+      "It has the highest possible accuracy on the test set.",
+      "It never makes false positives."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Calibration is about the relationship between confidence and observed frequency. A well-calibrated model may still make errors, may not have the best accuracy, and can still produce false positives. The key test is whether stated confidence levels match real outcomes over many cases."
+  },
+  "resources": [
+    {
+      "title": "Calibration (statistics)",
+      "url": "https://en.wikipedia.org/wiki/Calibration_(statistics)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "Wikipedia gives a broad overview of calibration in statistics and suits readers who want a general starting point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course resource helps readers compare calibration-adjacent ideas such as accuracy, recall and precision, and suits beginners building evaluation vocabulary.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "The NIST framework helps readers place calibration within wider AI risk management and governance, and suits technical and policy-oriented audiences.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Calibration",
+      "url": "https://www.youtube.com/results?search_query=Calibration%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of calibration and suits people who learn best visually; it is a search page, not a single vetted source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Calibration",
+      "url": "https://www.reddit.com/search/?q=Calibration",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common questions and informal discussions about calibration and suits readers who want examples of confusion in practice; it is a search page, not a single authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "calibration machine learning meaning",
+    "well calibrated model",
+    "confidence score matches reality",
+    "calibration vs accuracy",
+    "reliability diagram explained",
+    "overconfident classifier",
+    "probability calibration ai",
+    "calibrated probabilities",
+    "model calibration example",
+    "calibration ml misspelt calebration",
+    "calibration",
+    "well-calibrated"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:37.908Z",
+    "contentHash": "88e3d3f8fb23840c",
+    "attempts": 1,
+    "promptTokens": 2297,
+    "completionTokens": 2499
+  }
+}

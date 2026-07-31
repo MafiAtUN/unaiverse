@@ -1,0 +1,232 @@
+{
+  "id": "vector",
+  "slug": "vector",
+  "term": "Vector and vector space",
+  "aliases": [
+    "vector",
+    "vector space",
+    "vectors"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "everyone"
+  ],
+  "prerequisiteTermIds": [],
+  "relatedTermIds": [
+    "transformer",
+    "attention",
+    "query-key-value",
+    "cosine-similarity",
+    "nearest-neighbour-search",
+    "self-attention"
+  ],
+  "oftenConfusedWith": [
+    "embedding"
+  ],
+  "oneSentence": "A vector is an ordered list of numbers, and a vector space is the organised set of all such lists that can be added and scaled in consistent ways.",
+  "plainExplanation": "In modern language models, many things are turned into vectors: words, parts of words, positions, or intermediate states inside the model. A vector is just a list of numbers, such as [0.2, -1.1, 0.7]. Each number can be treated like one coordinate. The whole list acts as one compact description that a computer can compare or transform.\n\nA vector space is the larger system those vectors live in. It gives the rules for combining them. In a vector space, you can add two vectors and multiply a vector by a number, and the result still stays in the same space. In plain terms, it is the shared coordinate system that makes the vectors compatible with each other.\n\nWhat goes in? Usually text tokens or other inputs are first converted into vectors. What happens next? The model moves those vectors through many calculations, such as comparing them, mixing them, or rotating them through matrix operations. A matrix is a table of numbers used to transform one vector into another. What comes out? New vectors that capture useful patterns for the next step, such as attention or prediction.\n\nThis is often confused with an embedding. An embedding is one particular kind of vector representation learned so that related items often end up near each other. But not every vector in a transformer is an embedding, and a vector space is not the same thing as one vector. It is also not the same as a physical arrow in school geometry, though that image can help at first.",
+  "everydayAnalogy": {
+    "title": "Pins on a multilingual noticeboard",
+    "story": "Imagine a team in Nairobi, Bangkok and Bogotá sharing a large noticeboard for incident summaries. Each summary card is pinned on the board using many coordinates at once: one for location type, one for urgency, one for health issues, one for displacement, and many more. Cards about similar situations end up nearer each other, so when someone asks what the pronoun “they” refers to in a sentence, nearby cards can help show whether it likely points to families, officials or aid workers. The board is the shared layout, and each card’s position is one vector.",
+    "mapping": [
+      {
+        "analogyElement": "one card’s many coordinates on the noticeboard",
+        "aiElement": "one vector made of many numbers"
+      },
+      {
+        "analogyElement": "the whole noticeboard layout",
+        "aiElement": "the vector space"
+      },
+      {
+        "analogyElement": "cards placed near similar cards",
+        "aiElement": "similar vectors being close in the space"
+      },
+      {
+        "analogyElement": "checking nearby cards to resolve “they”",
+        "aiElement": "using vector comparisons to help attention link related words"
+      }
+    ],
+    "limitation": "A real noticeboard usually has two visible dimensions, while model vectors often have hundreds or thousands. Also, vectors in a transformer are not manually pinned by people and do not carry fixed human-readable meanings per coordinate. Their numbers are learned and then repeatedly transformed, so the space changes through the network rather than staying like one static board."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From token to vector, then through a shared vector space",
+    "learningObjective": "Show the difference between one vector and the vector space it lives in, and explain how transformers compare and transform vectors during processing.",
+    "description": "A left-to-right flow diagram. Tokens enter, become vectors, are shown as points inside one labelled vector space, then pass through comparison and transformation stages to produce new vectors. Read it as: input text becomes numeric coordinates, shared space makes them comparable, model operations create updated vectors for the next step.",
+    "steps": [
+      {
+        "label": "1. Input token",
+        "explanation": "Start with a token such as “bank” or “they”. On its own, it is text, not yet usable for model calculations.",
+        "visualInstruction": "Draw a rounded rectangle labelled “token: they” on the left, with a right-pointing arrow."
+      },
+      {
+        "label": "2. Convert to a vector",
+        "explanation": "The token is mapped to an ordered list of numbers. That list is one vector.",
+        "visualInstruction": "Show the token leading to a small card labelled “[0.4, -0.2, 1.1, …]” with a caption “one vector”."
+      },
+      {
+        "label": "3. Place in a vector space",
+        "explanation": "The vector belongs to a shared coordinate system where other token vectors also live. That makes comparison and combination possible.",
+        "visualInstruction": "Place several dots inside a large panel labelled “vector space”; highlight one dot for the current token and a few nearby dots for related tokens."
+      },
+      {
+        "label": "4. Compare and mix",
+        "explanation": "The model compares vectors and uses weighted combinations to bring in relevant context from other tokens.",
+        "visualInstruction": "Add arrows from several dots toward the highlighted dot, with varying line thicknesses to suggest stronger or weaker influence."
+      },
+      {
+        "label": "5. Output a new vector",
+        "explanation": "After transformation, the model produces an updated vector that carries contextual information for the next layer or for prediction.",
+        "visualInstruction": "Show a new vector card on the right labelled “[−0.1, 0.8, 0.3, …]” with a note “updated by context”."
+      }
+    ],
+    "interaction": "Hover or tap each stage to reveal a short caption and highlight how one token’s vector changes after receiving context from nearby or strongly related vectors.",
+    "accessibilityDescription": "The diagram is a five-step flow from left to right. First, a token labelled “they” appears as plain text. Second, it is converted into one vector, shown as a list of numbers. Third, that vector is placed inside a large shared area labelled vector space, where several other token vectors appear as nearby or distant points. Fourth, arrows from other points flow toward the selected point, showing that the model compares vectors and mixes information from relevant tokens with different strengths. Fifth, a new list of numbers appears on the right as an updated vector shaped by context. The main lesson is that a vector is one numeric representation, while a vector space is the common system that lets many vectors be compared and transformed.",
+    "reducedMotionDescription": "A static five-panel diagram with the same stages: token, one vector, vector space with several points, comparison arrows of different thickness, and an updated vector on the right. No animation; emphasis is shown by colour contrast and labels."
+  },
+  "workedExample": {
+    "scenario": "Resolving an ambiguous pronoun in the sentence: “Amina thanked Lina because she organised the meeting.”",
+    "input": "Tokens: [Amina, thanked, Lina, because, she, organised, the, meeting]",
+    "process": [
+      "The model converts each token into a vector, for example “Amina” -> [0.6, 0.1, -0.2], “Lina” -> [0.58, 0.15, -0.1], “she” -> [0.2, 0.7, 0.05].",
+      "Inside the shared vector space, the model creates comparison vectors and calculates how strongly “she” relates to other tokens in this context.",
+      "Suppose the attention weights for “she” are: Amina 0.18, thanked 0.05, Lina 0.41, because 0.07, organised 0.22, others 0.07.",
+      "The model forms a weighted combination of the relevant value vectors, so the updated vector for “she” is pulled more toward information linked to “Lina” and “organised”.",
+      "That updated vector is then used by later layers to help the model continue the sentence or answer a question about who organised the meeting."
+    ],
+    "result": "The model would likely treat “she” as referring to Lina in this sentence, because the contextual vector for “she” aligns more strongly with Lina-related information than with Amina-related information."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An analyst is reviewing many approved, de-identified incident summaries to identify broad protection trends across districts and months. Text from each summary is converted into vectors so similar reports can be grouped and compared before a human reviews the patterns.",
+    "relevance": "This helps explain why vector spaces matter in practical systems: they make similarity search, clustering and attention-based processing possible across large collections of text.",
+    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational details into an unapproved public AI service. Use only approved systems, de-identify data where required, and keep human oversight over any analytical conclusion."
+  },
+  "whyItMatters": "If you hear that a model “represents” words or documents numerically, vectors are usually the mechanism. Understanding this helps you ask better questions about similarity, bias, retrieval, clustering and attention. It also helps you separate three different ideas: one vector, the larger vector space, and a learned embedding. For decision-making, this matters because many system behaviours depend on how items are positioned and transformed in that space. Similar-looking items may be grouped together; ambiguous items may shift with context; and errors can come from poor representations, not only from the final output stage. You do not need the full mathematics to recognise what the model is doing and where caution is needed.",
+  "whereYouMayHearIt": [
+    "transformer architecture explainers",
+    "search and recommendation systems",
+    "semantic similarity demos",
+    "machine learning courses",
+    "discussions of embeddings and attention"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A vector is just a direction arrow like in school physics.",
+      "correction": "That picture can help initially, but in AI a vector is usually treated as an ordered list of numbers in many dimensions, not a literal arrow moving through physical space. The important idea is numeric representation and comparison, not motion."
+    },
+    {
+      "misconception": "Vector space means the model stores concepts in neat human-readable dimensions such as gender, place or topic.",
+      "correction": "Some dimensions may correlate with patterns people can describe, but most coordinates in a learned space do not have a single clear human label. Meaning is usually distributed across many numbers and changes after transformations in each layer."
+    },
+    {
+      "misconception": "Vector and embedding mean exactly the same thing.",
+      "correction": "An embedding is a specific learned vector representation, often used near the input or for retrieval tasks. But transformers also create many other vectors internally, such as queries, keys, values and hidden states. The vector space is the broader coordinate system, not one embedding table."
+    },
+    {
+      "misconception": "If two vectors are close, the model has found a true real-world similarity.",
+      "correction": "Closeness reflects how the system has represented the data for a task, not an objective fact about the world. Similarity can be useful, but it can also reflect training data biases, missing context or design choices."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A vector is one item written as many numbers. A vector space is the shared numeric landscape where many such items can be compared, combined and moved around by the model.",
+    "technical": "In transformer systems, tokens and intermediate states are represented as vectors in a high-dimensional vector space, often with dimension d_model. A vector is an element of that space: an ordered numeric array. The space matters because model operations assume closure under addition and scalar multiplication, which allows weighted sums and linear transformations to stay in compatible form. Input embeddings, positional information and hidden states are vectors; matrices project them into new vectors such as queries, keys and values. Attention then compares vectors, often through dot products, and uses the resulting weights to build weighted combinations of value vectors. Distances or angles between vectors can also support similarity measures such as cosine similarity, but those measures depend on the chosen representation and task. In short, a vector is one point or direction in the space; a vector space is the structured set that makes those operations mathematically and computationally consistent."
+  },
+  "keyTakeaway": "Think of a vector as one numeric description and a vector space as the shared coordinate system that lets a model compare, combine and transform many such descriptions.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes a vector from a vector space in a transformer?",
+    "options": [
+      "A vector is one list of numbers; a vector space is the shared system that allows many such lists to be compared and combined.",
+      "A vector is a text token; a vector space is the model’s final answer.",
+      "A vector space is another name for an embedding table, so there is no real difference.",
+      "A vector is only used at input, while vector spaces are only used during output."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "A vector is one numeric representation, such as a token’s current state. A vector space is the larger coordinate system with rules for operations like addition, scaling and comparison. Embeddings are one important kind of vector, but not the whole story."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Vector space",
+      "url": "https://en.wikipedia.org/wiki/Vector_space",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "Wikipedia gives a general reference overview of vector spaces and suits readers who want the formal concept with broad background.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "difficulty": "deeper",
+      "description": "The Vaswani et al. paper shows where vectors are used inside the original transformer design and suits technical readers who want the source architecture.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "difficulty": "intermediate",
+      "description": "The Illustrated Transformer gives an intuitive visual walkthrough of how vectors move through transformer components and suits readers who prefer diagrams over formal maths.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Vector and vector space",
+      "url": "https://www.youtube.com/results?search_query=Vector%20and%20vector%20space%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find different video explanations of vectors and vector spaces, and it suits people who learn best by listening and watching.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Vector and vector space",
+      "url": "https://www.reddit.com/search/?q=Vector%20and%20vector%20space",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common questions, confusions and informal explanations about vectors and vector spaces, and it suits readers who want community discussion rather than a single article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "vector vs vector space ai",
+    "what is a vector in machine learning",
+    "vector space simple explanation",
+    "vectors in transformers",
+    "embedding vs vector",
+    "cosine similarity vectors",
+    "high dimensional vector space meaning",
+    "vector space attention model",
+    "vektor space ai",
+    "what are token vectors",
+    "vector and vector space",
+    "vector",
+    "vector space",
+    "vectors"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:08.762Z",
+    "contentHash": "a9e23ad07f3842a1",
+    "attempts": 1,
+    "promptTokens": 2239,
+    "completionTokens": 2856
+  }
+}

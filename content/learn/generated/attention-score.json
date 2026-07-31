@@ -1,0 +1,217 @@
+{
+  "id": "attention-score",
+  "slug": "attention-score",
+  "term": "Attention score",
+  "aliases": [
+    "attention weight"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "self-attention"
+  ],
+  "relatedTermIds": [
+    "attention",
+    "self-attention",
+    "query-key-value",
+    "multi-head-attention",
+    "transformer",
+    "vector"
+  ],
+  "oftenConfusedWith": [
+    "weight",
+    "explainability"
+  ],
+  "oneSentence": "A number that shows how strongly one token should use information from another token during an attention step.",
+  "plainExplanation": "In a transformer, each token such as a word or subword is compared with other tokens in the sequence. The model computes a score for each pair. That score reflects how relevant one token appears to another for the current attention calculation.\n\nWhat goes in are vector representations of tokens. A vector is a list of numbers. For each token, the model creates a query vector, a key vector and a value vector. The query asks, in effect, what information this token is looking for. The key describes what each token offers. The attention score comes from comparing a query with keys.\n\nWhat happens next is important. The raw scores are adjusted so they can be compared across all tokens, often by turning them into weights that add up to 1. Those normalised values are what many people casually call attention weights. They are then used to mix the value vectors from other tokens.\n\nWhat comes out is not the score itself but a new representation for each token. That new representation contains a weighted mixture of information from other tokens. So the attention score is an intermediate signal: it helps decide which token information contributes more or less at that step.",
+  "everydayAnalogy": {
+    "title": "Finding the right book in a large library",
+    "story": "A student in Nairobi is writing a report about river flooding and asks a librarian for the most useful books. The librarian scans many book titles and subject labels, then gives each one a quick relevance mark based on the student’s question. Books with higher marks are brought to the desk first, and the student uses those books more heavily when writing the report. The marks do not mean the other books are false or useless; they only show which ones seem more relevant to this request.",
+    "mapping": [
+      {
+        "analogyElement": "The student’s question",
+        "aiElement": "The query vector for the current token"
+      },
+      {
+        "analogyElement": "Book titles and subject labels",
+        "aiElement": "The key vectors of other tokens"
+      },
+      {
+        "analogyElement": "The quick relevance mark for each book",
+        "aiElement": "The attention score"
+      },
+      {
+        "analogyElement": "Using some books more heavily in the report",
+        "aiElement": "Weighting value vectors more strongly in the output"
+      }
+    ],
+    "limitation": "A librarian can read meanings and use world knowledge. Attention scores do not work that way. They are computed from learned numerical representations, not from a human-like understanding of books or topics. Also, in a transformer many tokens are scored in parallel, and the score is usually turned into a normalised weight before values are combined."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How an attention score is produced and used",
+    "learningObjective": "After viewing, the reader should be able to say that an attention score compares one token’s query with other tokens’ keys, then helps weight value vectors in the output.",
+    "description": "Show one focus token on the left and three candidate tokens on the right. Arrows carry the focus token’s query to three query–key comparisons, producing three raw scores. A normalisation stage converts them into weights, and a final stage uses those weights to combine the three value vectors into one output vector for the focus token.",
+    "steps": [
+      {
+        "label": "1. Choose a focus token",
+        "explanation": "Pick the token whose new representation is being updated in this attention step.",
+        "visualInstruction": "Draw one highlighted token box on the left labelled 'focus token'. Under it, show a small chip labelled 'query q'."
+      },
+      {
+        "label": "2. Compare with other tokens",
+        "explanation": "Match the focus token’s query against the key of each candidate token to get raw relevance scores.",
+        "visualInstruction": "Draw three token boxes on the right, each with a small chip labelled 'key k' and 'value v'. Connect the focus query to each key through a comparison circle. Label outputs 'score 2.1', 'score 0.4', 'score -0.7'."
+      },
+      {
+        "label": "3. Turn scores into usable weights",
+        "explanation": "Convert the raw scores into comparable weights, commonly so they sum to 1 across the candidate tokens.",
+        "visualInstruction": "Add a 'normalise' stage after the three raw scores. Show outputs '0.75', '0.14', '0.11' with a note 'weights sum to 1'."
+      },
+      {
+        "label": "4. Mix the values",
+        "explanation": "Use the weights to scale the candidate value vectors and add them together, producing the output for the focus token.",
+        "visualInstruction": "Multiply each displayed weight by its corresponding value vector, then merge arrows into one final box labelled 'new token representation'."
+      }
+    ],
+    "interaction": "Hovering or tapping each candidate token highlights its score, weight and contribution path to the final output vector.",
+    "accessibilityDescription": "The diagram explains attention scoring for one focus token. First, one token is selected for update and shown with its query vector. Next, that query is compared with the key vector of each of three other tokens, producing three raw scores: 2.1, 0.4 and minus 0.7. Then a normalisation step turns those into weights of 0.75, 0.14 and 0.11, which sum to 1. Finally, those weights are applied to the three value vectors and combined into one new representation for the focus token. The main lesson is that the score is an intermediate comparison result, and the weighted mixture of values is the output.",
+    "reducedMotionDescription": "A static flow diagram with four columns: focus token and query, comparisons to three key vectors with raw scores, a normalisation box with three weights summing to 1, and a final merged output vector built from weighted value vectors."
+  },
+  "workedExample": {
+    "scenario": "A short sequence is: 'The animal did not cross because it was tired.' We want the model to update the token 'it'.",
+    "input": "Focus token: 'it'. Candidate earlier tokens: 'animal', 'cross', 'tired'. Raw query–key scores are invented for illustration.",
+    "process": [
+      "The query for 'it' is compared with the keys for 'animal', 'cross' and 'tired', giving raw scores 1.8, 0.2 and 1.1.",
+      "Those raw scores are normalised into attention weights of about 0.58, 0.12 and 0.30.",
+      "The model multiplies each candidate value vector by its weight.",
+      "It adds the weighted value vectors to produce a new representation for 'it' that draws most strongly from 'animal' and also from 'tired'."
+    ],
+    "result": "The output vector for 'it' is shaped more by tokens that appear more relevant in this context. The score did not by itself pick a single word; it helped create a blended representation."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN analyst reviews de-identified programme monitoring notes and uses an approved internal model to group statements about supply delays, training needs and access barriers. In one transformer layer, high attention scores may connect a phrase like 'delayed delivery' with nearby mentions of 'transport' or 'road closure'.",
+    "relevance": "This helps technical staff understand why the model links parts of a sentence or document and why some wording influences the output more than other wording.",
+    "caution": "Do not enter personal data, protection-sensitive details, security information or confidential operational material into an unapproved public AI service. Attention scores can support analysis, but they do not replace human review or data-governance rules."
+  },
+  "whyItMatters": "If you read model cards, technical reports or debugging notes, you will often see attention scores mentioned as if they explain what a model is doing. They matter because they influence which parts of the input contribute more to each output representation. That affects translation, summarisation, retrieval and many other tasks. But they also matter because people over-interpret them. A high score means stronger influence in that step, not proof of meaning, causation or explanation by itself. Knowing this helps you ask better questions about reliability, traceability and limits.",
+  "whereYouMayHearIt": [
+    "transformer architecture discussions",
+    "model interpretability debates",
+    "NLP engineering notes",
+    "research papers on attention",
+    "visualisations of token interactions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "An attention score is the same thing as a model parameter or learned weight.",
+      "correction": "Not usually. Model parameters are stored numbers learned during training. An attention score is typically computed fresh for the current input by comparing query and key vectors. After normalisation, it becomes an input-dependent weight used in that moment."
+    },
+    {
+      "misconception": "A high attention score proves the model focused on the true cause or meaning.",
+      "correction": "It only shows a strong numerical influence in one attention calculation. Models have many layers, many heads and other pathways such as residual connections. So high attention can be informative, but it is not a complete explanation of why an output occurred."
+    },
+    {
+      "misconception": "The score itself is the final output of attention.",
+      "correction": "The score is an intermediate comparison result. It is usually transformed into attention weights, and those weights are then used to combine value vectors. The final output is a new vector representation, not the score alone."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a relevance number. It tells the model how much one token should draw information from another token during one attention step.",
+    "technical": "For a given focus token, the model forms a query vector and compares it with key vectors from candidate tokens, commonly using a scaled dot product. The resulting raw attention scores are logits over positions. A normalisation function, usually softmax and sometimes with a mask, converts them into non-negative attention weights that sum to 1 across the allowed positions. Those weights are applied to the corresponding value vectors, and the weighted sum becomes the output for that head. In multi-head attention, separate heads produce separate sets of scores and weighted sums, which are later combined. People often use 'attention score' for the raw compatibility value and 'attention weight' for the normalised value, but usage is not always consistent."
+  },
+  "keyTakeaway": "An attention score is a temporary relevance signal between tokens, not a stored fact, and its main job is to help build a weighted mixture of information.",
+  "quickCheck": {
+    "question": "Which statement best describes an attention score in a transformer?",
+    "options": [
+      "A fixed parameter stored in the model and reused unchanged for every input",
+      "A number computed from one token’s query and another token’s key that helps determine weighting in the current input",
+      "The final prediction probability for the next token",
+      "A direct measure of whether one token is factually correct"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Attention scores are usually computed anew for each input by comparing query and key vectors. They are intermediate values that are often normalised into attention weights, which then shape how value vectors are combined. They are not fixed parameters, final output probabilities or fact-checks."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Attention score",
+      "url": "https://en.wikipedia.org/w/index.php?search=Attention%20score",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "The Wikipedia search results page helps readers scan possible articles and related terms, and it suits someone who is still orienting themselves.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "difficulty": "deeper",
+      "description": "The Vaswani et al. paper gives the original transformer formulation and suits readers who want the canonical technical source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "difficulty": "intermediate",
+      "description": "The Illustrated Transformer offers an intuitive visual walkthrough of attention mechanisms and suits readers who learn well from diagrams and plain-language explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Attention score",
+      "url": "https://www.youtube.com/results?search_query=Attention%20score%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "The YouTube search results page helps readers find different video styles and levels, and it suits readers who prefer spoken or animated explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Attention score",
+      "url": "https://www.reddit.com/search/?q=Attention%20score",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "The Reddit search results page shows how practitioners and learners discuss the term informally, and it suits readers who want common questions and points of confusion.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "attention score transformer",
+    "attention weight vs score",
+    "what is attention score",
+    "self attention score explained",
+    "query key score softmax",
+    "transformer attention weights meaning",
+    "attension score",
+    "attention logits",
+    "attention score",
+    "attention weight"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:47.675Z",
+    "contentHash": "afb7e2a1ff8ccd80",
+    "attempts": 1,
+    "promptTokens": 2241,
+    "completionTokens": 2452
+  }
+}

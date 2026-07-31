@@ -1,0 +1,242 @@
+{
+  "id": "backpropagation",
+  "slug": "backpropagation",
+  "term": "Backpropagation",
+  "aliases": [
+    "backprop",
+    "back propagation"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "forward-pass",
+    "gradient"
+  ],
+  "relatedTermIds": [
+    "error-and-loss",
+    "loss-function",
+    "gradient",
+    "chain-rule",
+    "optimisation",
+    "learning-rate"
+  ],
+  "oftenConfusedWith": [
+    "gradient-descent",
+    "forward-pass"
+  ],
+  "oneSentence": "A training method that sends error information backwards through a model so each weight can be adjusted in the direction that should reduce future mistakes.",
+  "plainExplanation": "When a neural network produces an answer, we compare that answer with the target and measure the error using a loss function. A loss function is a rule that turns “how wrong was it?” into a number. Backpropagation takes that error signal and works out how much each weight contributed to it.\n\nIt does this by moving backwards from the output layer toward the earlier layers. At each step, it calculates a gradient, which is the slope showing how much the loss would change if one weight changed slightly. This uses the chain rule from calculus, which connects small effects across many steps.\n\nThe output of backpropagation is not the final improved model by itself. What comes out is a set of gradients for the weights and biases. An optimisation method such as gradient descent then uses those gradients to nudge the settings.\n\nSo backpropagation is different from the forward pass and different from gradient descent. The forward pass makes a prediction. Backpropagation computes how the error should be assigned backwards through the network. Gradient descent uses that information to update the parameters.",
+  "everydayAnalogy": {
+    "title": "Tracing a wrong library book location back through the filing process",
+    "story": "In a large library, a student looks for a history book and finds it on the wrong shelf. The head librarian traces the mistake backwards: first the shelf label, then the trolley used for reshelving, then the sorting desk, then the return bin where the book was first handled. At each stage, the librarian asks how much that stage likely contributed to the book ending up in the wrong place. The staff then adjust their labelling and sorting habits so the next returned books are more likely to be shelved correctly.",
+    "mapping": [
+      {
+        "analogyElement": "book found on the wrong shelf",
+        "aiElement": "model output with measurable error"
+      },
+      {
+        "analogyElement": "tracing the mistake backwards through shelf, trolley, desk, and bin",
+        "aiElement": "sending error information backwards through layers"
+      },
+      {
+        "analogyElement": "estimating how much each stage contributed",
+        "aiElement": "computing gradients for different weights"
+      },
+      {
+        "analogyElement": "adjusting staff habits for future returns",
+        "aiElement": "updating parameters during optimisation"
+      }
+    ],
+    "limitation": "A library error can often be traced by human judgement and clear events, while backpropagation uses mathematical derivatives on numerical operations. Also, in a neural network many weights interact at once, so responsibility is distributed more finely than in a simple chain of library tasks."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "How error moves backwards to guide weight updates",
+    "learningObjective": "After using this explainer, a reader should be able to say that backpropagation assigns credit or blame for an error to many weights by moving backwards through the network and computing gradients.",
+    "description": "An interactive network shows a forward pass producing a prediction, then a backward pass sending error signals from output to hidden to input-side weights. Readers can change one weight, the target value, and the learning rate, then step through how gradients and updates change.",
+    "steps": [
+      {
+        "label": "1. Make a prediction",
+        "explanation": "The model takes an input and produces an output. The display shows the prediction and the target side by side, plus the loss value.",
+        "visualInstruction": "Show a small feed-forward network in SVG with highlighted arrows moving left to right. Display input, hidden activations, output, target, and a numeric loss badge."
+      },
+      {
+        "label": "2. Compare with the target",
+        "explanation": "The difference between prediction and target becomes the error signal. This is the starting point for backpropagation.",
+        "visualInstruction": "Highlight the output node and a comparison box. Draw a line from prediction and target into a loss panel with the error magnitude."
+      },
+      {
+        "label": "3. Send error backwards",
+        "explanation": "The explainer steps backward layer by layer. Each connection receives a gradient showing how changing that weight would affect the loss.",
+        "visualInstruction": "Animate or step-highlight arrows from output back to hidden, then hidden back to earlier weights. Label each connection with gradient values and sign."
+      },
+      {
+        "label": "4. Update the weights",
+        "explanation": "An optimiser uses the gradients and the learning rate to make small parameter changes. The next prediction can then be compared again.",
+        "visualInstruction": "Show old and new weight values beside each connection, with colour indicating increase or decrease. Provide a recalculate button for the next forward pass."
+      }
+    ],
+    "interaction": "Readers can drag a weight slider, change the target output, adjust the learning rate, and step through forward pass, loss calculation, backward pass, and weight update one stage at a time.",
+    "accessibilityDescription": "Screen-reader version: A small neural network receives an input and makes a prediction. The system compares that prediction with a target and calculates a loss value. Then it moves backwards through the connections. For each weight, it reports a gradient: a number showing whether increasing that weight would raise or lower the loss, and by how much. Finally, it applies an update based on the learning rate and announces the new weight values and the changed prediction. Users can change one weight, the target, and the learning rate, then repeat the sequence.",
+    "reducedMotionDescription": "Reduced-motion version: the same network appears as four static panels in order: prediction, loss, backward gradients, and updated weights. Colour and labels change between panels without animated movement.",
+    "component": "backpropagation"
+  },
+  "workedExample": {
+    "scenario": "A tiny network predicts whether an email should be marked important, using one output number between 0 and 1.",
+    "input": "Input features produce a prediction of 0.80, but the target label is 1.00.",
+    "process": [
+      "The forward pass gives output 0.80, so the model is too low by 0.20.",
+      "Using a simple squared-error loss, the loss is (1.00 - 0.80)^2 = 0.04.",
+      "Backpropagation computes gradients for the weights. Suppose one weight into the output has gradient -0.30, meaning increasing that weight slightly should reduce the loss.",
+      "With learning rate 0.1, that weight is updated by subtracting 0.1 × (-0.30), so it increases by 0.03.",
+      "After the update, a new forward pass might produce 0.83, closer to the target than before."
+    ],
+    "result": "Backpropagation has produced the gradients that tell the optimiser how to change each weight so the next prediction is likely to be less wrong."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is testing an internal model that helps sort incoming draft briefing notes by topic before human review. During training, backpropagation is used to calculate how each model weight contributed when a draft on food security was misclassified as public health.",
+    "relevance": "This helps non-specialists see that training does not happen by magic: the system needs a measurable error, a backward calculation of contribution, and then controlled parameter updates.",
+    "caution": "Use only approved, non-sensitive training data and secure tools. Do not place confidential, personal, protection-sensitive, witness, survivor, security-related, or operational information into an unapproved public AI service for training or testing."
+  },
+  "whyItMatters": "If you hear that a model was “trained”, backpropagation is a large part of what that usually means in practice. Understanding it helps you ask better questions about whether a system can improve, why training takes time and compute, and why poor data or poor loss choices can push improvement in the wrong direction.",
+  "whereYouMayHearIt": [
+    "introductory machine learning courses",
+    "neural network training discussions",
+    "papers on deep learning",
+    "software library documentation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Backpropagation and gradient descent are the same thing.",
+      "correction": "They work together but are different. Backpropagation computes gradients, while gradient descent or another optimiser uses those gradients to update parameters."
+    },
+    {
+      "misconception": "Backpropagation sends the original data backwards through the model.",
+      "correction": "What moves backward is error information and derivative values, not the raw input data in the ordinary sense."
+    },
+    {
+      "misconception": "Backpropagation guarantees the best possible model.",
+      "correction": "It only provides local slope information for the current parameters. Results also depend on the architecture, data, loss function, optimiser, learning rate, and whether training gets stuck or unstable."
+    },
+    {
+      "misconception": "Only the last layer matters because the error appears at the output.",
+      "correction": "Earlier layers also affect the output through chains of computation, so backpropagation distributes responsibility across many layers using the chain rule."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "After a model makes a mistake, this method works backwards through the model to estimate which settings contributed to the mistake and how they should be adjusted.",
+    "technical": "Backpropagation applies the chain rule to a computational graph to efficiently compute partial derivatives of the loss with respect to each parameter, propagating error signals from outputs to earlier layers so an optimiser can update weights and biases."
+  },
+  "keyTakeaway": "Backpropagation does not make a prediction; it explains, in numbers, how each weight helped produce the error.",
+  "quickCheck": {
+    "question": "What does backpropagation mainly produce during neural network training?",
+    "options": [
+      "A final prediction for the next input",
+      "A set of gradients showing how parameters affect the loss",
+      "A guarantee that the model has reached the global minimum",
+      "A new dataset with corrected labels"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Backpropagation’s main job is to compute gradients for parameters by working backwards from the loss. An optimiser then uses those gradients to update the weights. It is not the prediction step, and it does not guarantee the best possible solution."
+  },
+  "resources": [
+    {
+      "title": "What is backpropagation really doing?",
+      "url": "https://www.3blue1brown.com/lessons/backpropagation",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives a strong visual intuition for what backpropagation computes and suits readers who learn best from animated explanations.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Backpropagation",
+      "url": "https://en.wikipedia.org/wiki/Backpropagation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This article gives a broad reference overview with terminology and mathematical detail, and suits readers who want a more formal summary.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video explains neural networks visually more broadly, which helps readers place backpropagation within the whole training process.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course section focuses on reducing loss during training and suits readers who want a practical introduction to how improvement happens.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Backpropagation",
+      "url": "https://www.youtube.com/results?search_query=Backpropagation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page surfaces many different video explanations of backpropagation and suits readers who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Backpropagation",
+      "url": "https://www.reddit.com/search/?q=Backpropagation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and questions about backpropagation, and suits readers who want to see common confusions and informal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "backpropagation simple explanation",
+    "backprop vs gradient descent",
+    "what does backpropagation do",
+    "back propagation meaning",
+    "how backprop works",
+    "backpropagation chain rule",
+    "neural network backward pass",
+    "backpropagation for beginners",
+    "backpropogation typo",
+    "why calculate gradients backwards",
+    "backpropagation",
+    "backprop",
+    "back propagation"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:52.445Z",
+    "contentHash": "8af315a122c79b62",
+    "attempts": 2,
+    "promptTokens": 2224,
+    "completionTokens": 2241
+  }
+}

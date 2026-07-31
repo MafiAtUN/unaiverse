@@ -1,0 +1,231 @@
+{
+  "id": "vision-language-model",
+  "slug": "vision-language-model",
+  "term": "Vision-language model",
+  "acronym": "VLM",
+  "aliases": [
+    "VLM",
+    "large multimodal model",
+    "LMM"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "multimodal-model"
+  ],
+  "relatedTermIds": [
+    "language-model",
+    "large-language-model",
+    "multimodal-model",
+    "computer-vision",
+    "image-captioning",
+    "hallucination"
+  ],
+  "oftenConfusedWith": [
+    "multimodal-model",
+    "computer-vision",
+    "large-language-model"
+  ],
+  "oneSentence": "A VLM links images and text so one model can take visual input, written input, or both, and produce text or other structured outputs about them.",
+  "plainExplanation": "A vision-language model, or VLM, is a model built to work across images and language together. In practice, people also say large multimodal model, or LMM, for larger systems that handle several kinds of input. The terms overlap, but they are not always identical: a VLM specifically connects vision and language, while an LMM may also include audio, video or other data types.\n\nWhat goes in can be an image, a question in text, or both. The image is first turned into machine-readable pieces by a vision component. The text is turned into tokens, which are small pieces of text a model processes. Those visual and text representations are then placed into a shared processing system so the model can relate words to parts of the image.\n\nWhat happens next is similar to a language model, but with visual information added to the context. The system predicts text tokens one after another, or sometimes produces labels, coordinates or extracted fields. For example, it may answer a question about a chart, describe a photo, or read values from a scanned form.\n\nWhat comes out is not guaranteed truth. A VLM can miss small details, misread blurry text, or confidently describe something not present. It is also different from classic computer vision, which often performs narrower tasks like object detection, and different from a text-only large language model, which cannot directly inspect an image unless another tool first converts the image into text.",
+  "everydayAnalogy": {
+    "title": "Matching a photographed form to the right template",
+    "story": "Amina works at a service desk that receives phone photos of paper forms from offices in Nairobi, Bogotá and Amman. She looks at each photo, notices the layout, the boxes and the headings, and then matches it to one of several known templates. If the sender adds a note such as “find the invoice number”, she uses both the photo and the note to decide where to look. She then replies with the template name and the requested field value.\n\nIf the photo is blurred or cropped, she may still give an answer that sounds confident but is wrong.",
+    "mapping": [
+      {
+        "analogyElement": "The phone photo of the form",
+        "aiElement": "The visual input to the model"
+      },
+      {
+        "analogyElement": "The sender's note asking for a field",
+        "aiElement": "The text prompt that guides the output"
+      },
+      {
+        "analogyElement": "Amina noticing layout and headings together",
+        "aiElement": "The model linking visual patterns with language representations"
+      },
+      {
+        "analogyElement": "The reply with a template name or field value",
+        "aiElement": "The generated text or structured output"
+      }
+    ],
+    "limitation": "A person can use broad background knowledge, ask clarifying questions, and deliberately inspect uncertain areas. A VLM does not look at an image in the human sense. It processes learned numerical representations and generates outputs from patterns in training and current input. Also, many VLMs do more than template matching: they can answer open questions, summarise images, or combine several input types."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a vision-language model combines image and text",
+    "learningObjective": "After viewing this, a reader should be able to explain how image content and text are converted into a shared context and then used to generate an answer.",
+    "description": "A left-to-right flow diagram with two inputs at the left: an image and a text prompt. They pass through separate encoding stages, merge into one shared context, then move to an output stage that generates text or structured fields. Read from left to right to see what goes in, how it is combined, and what comes out.",
+    "steps": [
+      {
+        "label": "1. Inputs",
+        "explanation": "The system receives an image, text, or both.",
+        "visualInstruction": "Draw two input cards on the left. One shows a small form image thumbnail. The other shows a text bubble: 'Which template is this? Extract invoice number.' Use arrows pointing right."
+      },
+      {
+        "label": "2. Separate encoding",
+        "explanation": "The image is converted into visual features. The text is split into tokens and converted into text features.",
+        "visualInstruction": "Place two boxes to the right of the inputs. Label the upper box 'Vision encoder' with a grid icon. Label the lower box 'Text tokens/encoder' with token chips. Keep the arrows separate."
+      },
+      {
+        "label": "3. Shared context",
+        "explanation": "The model places visual and text representations into one processing context so words can be linked to image regions or patterns.",
+        "visualInstruction": "Merge both arrows into a larger central box labelled 'Shared multimodal context'. Inside, show small image patches and token chips mixed together, with thin linking lines between some words and image areas."
+      },
+      {
+        "label": "4. Generation or extraction",
+        "explanation": "The model predicts output tokens one by one, or produces structured fields such as labels or values.",
+        "visualInstruction": "Add a box on the right labelled 'Decoder / output head'. Show a short token sequence appearing in order and, beside it, a small key-value card: 'template: invoice_v3; invoice_number: 84731'."
+      },
+      {
+        "label": "5. Human check",
+        "explanation": "People should review outputs when errors would matter, especially if images are poor quality or the task affects rights, payments or operations.",
+        "visualInstruction": "Place a final review box with a person icon and a warning badge. Add a note below: 'Low-quality image or high-stakes use -> verify before acting'."
+      }
+    ],
+    "interaction": "On hover or tap, highlight the path for either 'image only', 'text only', or 'image + text' to show that the same overall system can work with different input combinations.",
+    "accessibilityDescription": "The diagram is a five-step flow from left to right. Step 1 shows two possible inputs: a form image and a text question asking for the template and invoice number. Step 2 shows separate processing: the image goes to a vision encoder and the text goes to token and text encoding. Step 3 merges both into a shared multimodal context, meaning the model can relate words to visual patterns. Step 4 shows output generation, either as normal text or as structured fields such as a template name and invoice number. Step 5 adds human review, emphasising that outputs can be wrong and should be checked in high-stakes cases or when image quality is poor.",
+    "reducedMotionDescription": "Show the same five boxes in a static left-to-right layout with visible arrows and labels for image input, text input, separate encoding, shared context, output, and human review. Instead of animated highlighting, use three small legend tags above the arrows: image only, text only, and image plus text."
+  },
+  "workedExample": {
+    "scenario": "A finance team has three standard invoice templates. They test a VLM on a phone photo of one invoice and ask it to identify the template and extract one field.",
+    "input": "Image: slightly tilted photo of a printed invoice. Text prompt: 'Identify the template from A, B or C. Then extract the invoice number only.'",
+    "process": [
+      "The vision component converts the image into visual features, including layout, printed text shapes and box positions.",
+      "The text prompt is tokenised so the instruction and the allowed template names become part of the context.",
+      "The model relates the prompt words to visual areas that look like headings and form fields.",
+      "It generates an answer token by token: first the template label, then the extracted number."
+    ],
+    "result": "Output: 'Template B. Invoice number: 84731.' A human checks the original image and confirms the template is B, but notices the last digit is actually 1 because the photo glare made 7 look similar to 1 in one region; this shows why verification matters."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An office wants an internal search tool over approved guidance documents so staff can upload a screenshot of a form or table and ask, 'Which guidance note matches this layout?'",
+    "relevance": "A VLM can connect the screenshot with document text, which may help staff find the right guidance faster than keyword search alone.",
+    "caution": "Use only approved internal systems and approved documents. Do not upload confidential, personal, protection-sensitive, security-sensitive or operational information to an unapproved public AI service, and keep a human in the loop before acting on the result."
+  },
+  "whyItMatters": "For non-specialists, this term matters because many new AI tools no longer work on text alone. If a tool can inspect images, forms, charts or screenshots, its risks and uses change. That affects procurement, privacy review, testing, accessibility planning and human oversight. Knowing the difference between a text-only model, a VLM and a broader multimodal model helps you ask the right questions about inputs, failure modes and whether a claimed capability is actually needed.",
+  "whereYouMayHearIt": [
+    "document extraction tools",
+    "image question answering demos",
+    "multimodal AI product briefings",
+    "OCR replacement discussions",
+    "model benchmarking reports"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A VLM is just an ordinary language model with image files attached.",
+      "correction": "Some systems do bolt image processing onto a language model, but the key point is that visual information must be converted into representations the language side can use. The model's behaviour changes because the image becomes part of the context, not because the file is merely attached."
+    },
+    {
+      "misconception": "If it can describe an image fluently, it must be accurately reading the whole image.",
+      "correction": "Fluent output is not proof of accurate visual grounding. A VLM may rely on likely patterns, miss small text, confuse similar layouts or describe objects that are not there, especially with blur, glare, cropping or unusual formats."
+    },
+    {
+      "misconception": "VLM and multimodal model mean exactly the same thing.",
+      "correction": "They overlap, but not perfectly. A VLM specifically links vision and language. A multimodal model is a broader category for systems that work across more than one data type, which may include text, images, audio or video. Large multimodal model usually refers to larger general-purpose versions of that broader category."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A VLM is an AI model that can use pictures and words together, so you can show it an image, ask a question in text, and get a text answer or extracted information.",
+    "technical": "A VLM combines a vision pathway with a language model or language-like decoder. The image is transformed into numerical features, often from patches or regions, while the text is tokenised into text embeddings. These representations are aligned or projected into a shared space or shared context so the generation component can condition on both. In many implementations, the final output is still produced autoregressively through next-token prediction, even when the task looks like image understanding. 'Large multimodal model' is often used for broader systems that may support text plus images and sometimes audio or video; 'VLM' is narrower because it specifically names the vision-language pairing. The exact architecture varies, so the term refers more to capability class than to one single design."
+  },
+  "keyTakeaway": "A VLM extends language-model behaviour with visual input, but image access does not make its answers automatically accurate or fully grounded.",
+  "quickCheck": {
+    "question": "Which statement best captures the relationship between VLM and LMM?",
+    "options": [
+      "They are exact synonyms in every technical and product context.",
+      "A VLM links vision and language, while an LMM is a broader label often used for larger systems that may handle multiple data types.",
+      "A VLM is only for image captioning, while an LMM is only for chat.",
+      "An LMM cannot use text prompts once an image is provided."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "This is the safest summary. In practice, people use the terms loosely, but VLM points specifically to vision plus language. LMM usually refers to broader large multimodal systems, which may include vision-language capability and sometimes more."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Vision-language model",
+      "url": "https://en.wikipedia.org/wiki/Vision-language_model",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad encyclopaedic overview of the term and suits readers who want a quick orientation before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course link is useful for readers who want practical and technical background on modern model architectures and multimodal extensions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives a visual explanation of how language-model mechanisms work and suits readers who want intuition before adding vision-specific detail.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Vision-language model",
+      "url": "https://www.youtube.com/results?search_query=Vision-language%20model%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find multiple video explanations of vision-language models and suits those who prefer comparing teaching styles rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Vision-language model",
+      "url": "https://www.reddit.com/search/?q=Vision-language%20model",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see community questions, examples and debates about vision-language models, which suits readers who want informal discussion with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "vision-language model",
+    "vlm meaning",
+    "lmm vs vlm",
+    "large multimodal model",
+    "image and text model",
+    "multimodal llm vision",
+    "vision language model explained",
+    "vlm ai forms",
+    "vlm vs computer vision",
+    "vision languge model",
+    "vlm",
+    "lmm"
+  ],
+  "contested": "Usage varies across research papers and products. Some authors use VLM narrowly for vision-plus-language systems, while others use broader labels such as LMM or multimodal LLM for overlapping capability sets.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:05.313Z",
+    "contentHash": "f5118305b68ae0e5",
+    "attempts": 2,
+    "promptTokens": 2490,
+    "completionTokens": 2734
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "id": "bias-term",
+  "slug": "bias-term",
+  "term": "Bias (in a neural network)",
+  "aliases": [
+    "bias term",
+    "offset"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "weight"
+  ],
+  "relatedTermIds": [
+    "artificial-neuron",
+    "weight",
+    "activation-function",
+    "forward-pass",
+    "neural-network"
+  ],
+  "oftenConfusedWith": [
+    "algorithmic-bias",
+    "statistical-bias"
+  ],
+  "oneSentence": "A bias is an extra adjustable number added to a neuron's weighted input so the neuron's output can shift even when all inputs are zero.",
+  "plainExplanation": "In a neural network, a neuron usually combines its inputs by multiplying each input by a weight, adding those results, and then adding one more number. That extra number is the bias. After that, the neuron passes the total through an activation function, which is a rule that changes the number into the neuron's output.\n\nWhat goes in: input values, such as pixel intensities or word-related features. What happens: the model forms a weighted sum and then adds the bias. What comes out: a shifted value that can make the neuron activate more easily, less easily, or produce a non-zero output even when the inputs are all zero.\n\nIntuitively, the bias acts like a baseline or starting point. Without it, a neuron is forced to pass through a fixed reference point. With it, the model can move that reference point and fit data more flexibly. This is why bias and weight work together: weights control how strongly each input matters, while bias controls the overall offset.\n\nThis term is often confused with algorithmic bias, meaning unfair or skewed outcomes, and with statistical bias, meaning systematic error in an estimator. Here, bias means a numerical parameter inside a neural network unit. It can affect model behaviour, but it is not the same thing as unfairness.",
+  "everydayAnalogy": {
+    "title": "Starting with an urgency head start",
+    "story": "A team member sorts incoming messages into urgent and non-urgent. They look at clues such as the word \"deadline\", whether a manager sent it, and whether it arrived outside working hours. Before scoring any of those clues, they already start with a small urgency head start because this inbox often contains time-sensitive work. That head start can make a borderline message tip into the urgent pile, or, if set negative, make the sorter stricter.",
+    "mapping": [
+      {
+        "analogyElement": "the urgency head start before reading the clues",
+        "aiElement": "the bias added before the activation function"
+      },
+      {
+        "analogyElement": "the clues like \"deadline\" or manager sender",
+        "aiElement": "the input values"
+      },
+      {
+        "analogyElement": "how much each clue matters",
+        "aiElement": "the weights"
+      },
+      {
+        "analogyElement": "the final urgent or non-urgent choice",
+        "aiElement": "the neuron's output after activation"
+      }
+    ],
+    "limitation": "A real neuron in a neural network does not consciously apply a policy or read language like a person. It only performs arithmetic on numerical inputs. Also, one artificial neuron usually contributes to a larger calculation, not a full message-sorting decision by itself."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a bias shifts a neuron's output",
+    "learningObjective": "The reader should be able to say that a bias is added to the weighted sum before activation, and that it shifts when the neuron starts responding.",
+    "description": "Show one neuron receiving two inputs. First panel: compute weighted sum from inputs and weights. Second: add a bias term. Third: pass the total through an activation function. Fourth: compare outputs with bias 0 and bias -1 or +1 to show the response threshold shifting.",
+    "steps": [
+      {
+        "label": "Inputs and weights",
+        "explanation": "Two input values enter the neuron. Each input is multiplied by its own weight.",
+        "visualInstruction": "Draw x1 and x2 on the left, arrows to multiplication nodes labelled ×w1 and ×w2, then arrows to a summation box."
+      },
+      {
+        "label": "Weighted sum",
+        "explanation": "The products are added to make one combined number.",
+        "visualInstruction": "In the summation box, show x1w1 + x2w2. Use a single outgoing arrow to the next stage."
+      },
+      {
+        "label": "Add bias",
+        "explanation": "An extra learned number b is added to the weighted sum.",
+        "visualInstruction": "Place a small input labelled b entering a plus node after the summation box; show formula x1w1 + x2w2 + b."
+      },
+      {
+        "label": "Activation and output",
+        "explanation": "The adjusted total goes through the activation function, which produces the neuron's output. Changing b shifts when the output becomes active.",
+        "visualInstruction": "Draw an activation block f(·) leading to output y. Below, show a small side-by-side mini-plot or number example comparing b=0 and b=+1 with the same weighted sum."
+      }
+    ],
+    "interaction": "Hover or tap step 4 to toggle the bias between -1, 0 and +1 and update the displayed pre-activation total and output.",
+    "accessibilityDescription": "The diagram explains a neuron's calculation as four stages. First, two inputs are each multiplied by weights. Second, those products are added to form a weighted sum. Third, a bias value b is added, creating the expression x1 times w1 plus x2 times w2 plus b. Fourth, this total passes through an activation function to produce the output y. A comparison shows that with the same inputs and weights, changing the bias shifts the point at which the neuron produces a higher or lower output.",
+    "reducedMotionDescription": "A static four-step diagram shows inputs multiplied by weights, summed, then increased or decreased by a bias term before activation. A fixed comparison underneath shows the same weighted sum with three bias settings, illustrating that the output changes because the starting offset changes."
+  },
+  "workedExample": {
+    "scenario": "A single neuron helps flag whether a short message may be urgent.",
+    "input": "Input features: contains the word \"urgent\" = 1, sent outside working hours = 1. Weights: 1.2 and 0.7. Bias: -1.0.",
+    "process": [
+      "Multiply each input by its weight: 1×1.2 = 1.2 and 1×0.7 = 0.7.",
+      "Add the weighted inputs: 1.2 + 0.7 = 1.9.",
+      "Add the bias: 1.9 + (-1.0) = 0.9.",
+      "Pass 0.9 through the activation function. If the neuron uses a simple threshold at 0, the output is active because 0.9 is above 0."
+    ],
+    "result": "The message is more likely to be treated as urgent because the positive evidence overcame the negative bias. If the bias had been -2.5 instead, the same inputs would not have activated this neuron."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A technical team building an internal tool to help prepare a briefing note uses a neural network component to detect sections that may need rapid human review, such as emerging deadline signals in already approved, non-sensitive text.",
+    "relevance": "Understanding the bias term helps staff recognise why a model may trigger more or fewer alerts even when the input features stay the same. It is part of how the model sets its baseline sensitivity.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Any model-assisted drafting or triage should stay under approved governance and human oversight."
+  },
+  "whyItMatters": "If you understand bias as an offset parameter, you can better interpret why a neural network responds too often, too rarely, or at the wrong threshold. That matters when choosing models, checking errors, or discussing calibration and behaviour with technical teams.",
+  "whereYouMayHearIt": [
+    "neural network tutorials",
+    "model architecture discussions",
+    "debugging training behaviour",
+    "machine learning code comments"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Bias means the system is unfair.",
+      "correction": "In this context, bias is a mathematical parameter inside a neuron. Unfairness is a different issue, often discussed as algorithmic bias, though model parameters can still contribute to harmful outcomes."
+    },
+    {
+      "misconception": "The bias only matters when all inputs are zero.",
+      "correction": "It matters then, but not only then. The bias shifts the neuron's total for every input pattern, so it changes the activation boundary across the whole input space."
+    },
+    {
+      "misconception": "Bias and weight do the same job.",
+      "correction": "Weights scale individual inputs. The bias adds a constant offset after those scaled inputs are combined. You usually need both for flexible fitting."
+    },
+    {
+      "misconception": "A bias term is optional and usually irrelevant.",
+      "correction": "Some architectures omit biases in specific places, but in many layers they are important because they let units represent functions that weights alone cannot represent as easily."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A bias is the neuron's built-in starting value. It shifts the result up or down before the neuron produces its output.",
+    "technical": "For a neuron computing z = w·x + b, the bias b is a learned scalar or vector offset added to the weighted input sum before the activation a = f(z). Geometrically, it shifts the decision boundary or activation threshold without changing the input-dependent coefficients."
+  },
+  "keyTakeaway": "Weights say how much each input counts; the bias sets the neuron's starting point.",
+  "quickCheck": {
+    "question": "What does the bias term do in a standard neuron calculation?",
+    "options": [
+      "It multiplies every input by the same amount.",
+      "It adds a constant offset before the activation function.",
+      "It converts the output into a probability by itself.",
+      "It removes the need for weights in the model."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A bias is added to the weighted sum before activation. That constant offset lets the neuron shift its response threshold. It does not replace weights, and by itself it does not turn outputs into probabilities."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Artificial neuron",
+      "url": "https://en.wikipedia.org/wiki/Artificial_neuron",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad reference explanation of the artificial neuron and shows where the bias term fits, which suits readers who want a quick overview.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video offers a visual intuition for neural networks, helpful for readers who learn best from pictures and movement rather than formulas.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers change weights and biases and see decision boundaries move, which suits hands-on learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Bias (in a neural network)",
+      "url": "https://www.youtube.com/results?search_query=Bias%20(in%20a%20neural%20network)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page for videos about bias in neural networks, useful for readers who want to compare multiple teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Bias (in a neural network)",
+      "url": "https://www.reddit.com/search/?q=Bias%20(in%20a%20neural%20network)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page for community discussion about bias in neural networks, useful for readers who want informal explanations and common questions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "bias term neural network",
+    "what does bias do in a neuron",
+    "bias vs weight neural network",
+    "offset in artificial neuron",
+    "nn bias explained",
+    "neural net b parameter",
+    "bias in forward pass",
+    "bias term misspelt nueral network",
+    "bias (in a neural network)",
+    "bias term",
+    "offset"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:15.598Z",
+    "contentHash": "714487e86ba2ca24",
+    "attempts": 2,
+    "promptTokens": 2193,
+    "completionTokens": 2174
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "id": "grounding",
+  "slug": "grounding",
+  "term": "Grounding",
+  "aliases": [
+    "grounded answer"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "policy",
+    "communications"
+  ],
+  "prerequisiteTermIds": [
+    "retrieval-augmented-generation"
+  ],
+  "relatedTermIds": [
+    "retrieval-augmented-generation",
+    "retrieval",
+    "semantic-search",
+    "ranking-and-reranking",
+    "knowledge-base",
+    "chunking"
+  ],
+  "oftenConfusedWith": [
+    "citation",
+    "hallucination",
+    "semantic-search"
+  ],
+  "oneSentence": "Grounding ties an AI answer to specific retrieved source passages so the reply is based on provided material rather than only on the model's general patterns.",
+  "plainExplanation": "Grounding means giving a model relevant source material before it answers, so the answer can be anchored in that material. The source material is often a few passages retrieved from documents, policies, reports or webpages. “Retrieved” means found by a search step, often by meaning rather than exact word match.\n\nWhat goes in? Usually there is a user question, a collection of approved documents, and a retrieval step that selects the most relevant passages. Those passages are then added to the model prompt, which is the instruction and context sent to the model.\n\nWhat happens? The system asks the model to answer using the retrieved passages. In a good design, the model is also asked to stay within those sources, quote or cite them, and say when the sources do not contain enough information. Grounding does not guarantee correctness, but it reduces the chance that the model will produce unsupported claims.\n\nWhat comes out? Ideally, you get an answer that is connected to identifiable source text, often with citations. This is different from a citation alone: a citation may simply be attached after the fact, while grounding means the source passages were part of how the answer was produced.\n\nGrounding is commonly used in retrieval-augmented generation, often shortened to RAG. It is closely related to retrieval, semantic search and ranking, but it is not the same as those steps. Retrieval finds candidate passages; grounding is the act of using those passages to constrain and support the answer.",
+  "everydayAnalogy": {
+    "title": "A librarian pulls the right shelves before answering",
+    "story": "A student in Nairobi asks a librarian, “Which books in this library explain coastal erosion and include maps?” The librarian does not answer from memory alone. She first walks to the geography shelves, pulls three relevant books, opens the most useful pages, and then answers while looking at those pages. Her answer is more reliable because it is tied to the books in front of her, not just her recollection.",
+    "mapping": [
+      {
+        "analogyElement": "student's question",
+        "aiElement": "user prompt"
+      },
+      {
+        "analogyElement": "librarian pulling relevant books and pages",
+        "aiElement": "retrieval of relevant passages"
+      },
+      {
+        "analogyElement": "answering while looking at the opened pages",
+        "aiElement": "grounded generation using supplied context"
+      },
+      {
+        "analogyElement": "books on the table",
+        "aiElement": "source documents or knowledge base"
+      }
+    ],
+    "limitation": "A human librarian can deliberately judge credibility, notice subtle contradictions and explain uncertainty in richer ways. A model does not read with human judgement; it predicts text from patterns and can still misuse a passage, overstate what it says or combine sources badly. Also, real grounding often works on short text chunks and similarity scores, not whole books placed on a table."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How grounding connects a question to source-based answers",
+    "learningObjective": "After viewing this, the reader should be able to explain that grounding adds retrieved source passages to the model's input so the answer can be tied to evidence.",
+    "description": "A left-to-right flow with five boxes: user question, document collection, retrieval, grounded prompt, and answer with source links. Read it as a process: the question triggers search over documents, selected passages are inserted into the prompt, and the model produces an answer based on that material.",
+    "steps": [
+      {
+        "label": "1. Ask",
+        "explanation": "A user asks a question such as a policy or research query.",
+        "visualInstruction": "Show a speech bubble on the far left labelled 'Question' with one short sample query beneath it."
+      },
+      {
+        "label": "2. Search sources",
+        "explanation": "The system searches an approved document collection for passages that appear relevant.",
+        "visualInstruction": "Show a stack of document cards above or behind a search box, with an arrow from Question to Documents labelled 'retrieve relevant passages'."
+      },
+      {
+        "label": "3. Select passages",
+        "explanation": "A few top passages are chosen, often by semantic similarity and ranking.",
+        "visualInstruction": "Show 3 highlighted text snippets pulled out from the document stack, with small rank badges 1, 2, 3."
+      },
+      {
+        "label": "4. Build grounded prompt",
+        "explanation": "The selected passages are added to the model input with instructions to use them.",
+        "visualInstruction": "Show a prompt panel combining the user's question and the highlighted snippets, with labels 'instructions', 'question', and 'sources'."
+      },
+      {
+        "label": "5. Generate answer",
+        "explanation": "The model produces a reply that should stay close to the supplied passages and may include citations.",
+        "visualInstruction": "Show an answer box on the right with two short sentences and superscript citation markers linked visually back to the source snippets."
+      }
+    ],
+    "interaction": "Hovering or tapping each step highlights the arrows feeding into it and reveals one sentence on what could go wrong there, such as poor retrieval or weak source coverage.",
+    "accessibilityDescription": "The diagram shows a five-step process from left to right. First, a user asks a question. Second, the system searches an approved set of documents. Third, it selects a few relevant passages. Fourth, it combines the question, instructions and those passages into one prompt for the model. Fifth, the model generates an answer that is intended to rely on those passages and may show citations. The main lesson is that grounding happens by inserting retrieved source text into the model's input before answer generation.",
+    "reducedMotionDescription": "A static five-column flowchart replaces animation. Arrows connect Question to Documents, Documents to Selected Passages, Selected Passages to Grounded Prompt, and Grounded Prompt to Answer with Citations. Highlight colours indicate the passages carried forward."
+  },
+  "workedExample": {
+    "scenario": "An organisation has a document set with travel policy sections. A staff member asks, 'How many hotel nights can be claimed during transit travel?'",
+    "input": "Question: How many hotel nights can be claimed during transit travel? Retrieved passages: (1) 'One overnight stay may be reimbursed when a scheduled connection requires a stop of more than 8 hours.' (2) 'Additional nights require prior approval by the travel office.'",
+    "process": [
+      "The system searches the approved travel policy documents and finds passages about transit stops and reimbursement.",
+      "Ranking puts the passage on overnight stays first and the approval rule second because both mention nights and transit conditions.",
+      "Those two passages are inserted into the prompt with an instruction such as 'Answer only from the provided policy text and cite the relevant passage.'",
+      "The model drafts a short answer based on the passages and includes both source references."
+    ],
+    "result": "Answer: One overnight stay may be reimbursed if a scheduled connection requires a stop of more than 8 hours. Any additional nights need prior approval from the travel office. Source: travel policy sections 4.2 and 4.3."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A policy officer searches past General Assembly and Security Council resolutions to find earlier wording on humanitarian access before drafting a briefing note.",
+    "relevance": "Grounding can help the system retrieve the most relevant prior language and generate a summary tied to the actual resolution text, reducing the risk of invented wording.",
+    "caution": "Use only approved internal or public sources, and do not place confidential negotiations, unpublished drafts, personal data or security-sensitive information into an unapproved public AI service."
+  },
+  "whyItMatters": "For non-specialists, grounding matters because it changes what kind of answer you are getting. Without grounding, a model may produce fluent text that sounds plausible but is not tied to a source. With grounding, you can inspect where the answer came from, check whether the source is current, and notice when the source does not support the claim. That helps with policy work, communications, research and operations where you need traceability, not just polished wording. It also helps you ask better questions: 'What source was this based on?' and 'What was not found?' are often more useful than simply asking whether the answer is correct.",
+  "whereYouMayHearIt": [
+    "RAG system design",
+    "enterprise search tools",
+    "policy and legal drafting support",
+    "customer support assistants",
+    "document question-answering demos"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If an answer is grounded, it must be true.",
+      "correction": "Grounding improves traceability, not certainty. The retrieved passage may be outdated, incomplete, low quality or misread by the model. A grounded answer can still be wrong, but you have a better chance to inspect and correct it because the source is visible."
+    },
+    {
+      "misconception": "Grounding and citation mean the same thing.",
+      "correction": "They are related but different. A citation is a reference shown to the user. Grounding is about the generation process: the source passages are provided to the model before it answers. A system can show citations without truly using the source, and a grounded system can technically be built even if citations are not displayed."
+    },
+    {
+      "misconception": "Grounding only matters for facts on the public web.",
+      "correction": "It is also useful for private or organisational knowledge bases, such as manuals, resolutions, procedures or approved reports. In those settings, grounding helps the model rely on the right internal text rather than generic training patterns, though data governance still matters."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Grounding means giving the AI the exact source text it should use before it answers, so the reply is more connected to evidence.",
+    "technical": "In a typical pipeline, a query is used to retrieve relevant document chunks from an indexed corpus, often through semantic search, keyword search or a hybrid method. The top-ranked chunks are inserted into the model prompt as context, along with instructions such as answering only from the provided material or citing it. The language model then generates a response conditioned on both the user query and the retrieved context. This is why grounding is often discussed inside retrieval-augmented generation. It is distinct from retrieval itself, which finds candidate passages, and distinct from citation display, which may or may not reflect the actual conditioning context. Grounding usually works better when chunking, indexing and ranking are well designed, but it still does not ensure factual correctness, faithful use of sources or complete coverage of the answer."
+  },
+  "keyTakeaway": "Grounding does not make an AI answer automatically correct, but it makes the answer easier to check because it is tied to specific source material.",
+  "quickCheck": {
+    "question": "Which statement best describes grounding in an AI question-answering system?",
+    "options": [
+      "It means the model adds citations after writing an answer from memory.",
+      "It means the system gives the model relevant source passages before answer generation.",
+      "It means the model searches the open web on its own without any document store.",
+      "It means the answer is guaranteed correct because a document was found."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Grounding is about using retrieved source text as part of the model's input. Citations may appear in grounded systems, but grounding is not just adding references afterwards. It also does not guarantee correctness."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Grounding",
+      "url": "https://en.wikipedia.org/w/index.php?search=Grounding",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps a beginner see that the word 'grounding' has several meanings, so it suits readers who first need orientation rather than a single authoritative article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This Google course page on embeddings suits readers who want the mechanism behind meaning-based retrieval that often supports grounding.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This TensorFlow Embedding Projector interactive suits visual learners who want to explore how similar items can be positioned near each other in vector space.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Grounding",
+      "url": "https://www.youtube.com/results?search_query=Grounding%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page suits readers who prefer video explanations and want to compare different presenters' ways of explaining grounding.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Grounding",
+      "url": "https://www.reddit.com/search/?q=Grounding",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page suits readers who want informal community questions and examples, but it is best used critically because discussion quality varies.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "grounding ai meaning",
+    "grounded answer ai",
+    "what is grounding in rag",
+    "grounding vs citation ai",
+    "how grounding works ai search",
+    "ai answer based on sources",
+    "retrieved passages grounding",
+    "grounding llm explained",
+    "rag grounding",
+    "grounding or grounded response",
+    "grounding",
+    "grounded answer"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:39.600Z",
+    "contentHash": "9f4b5e0468110961",
+    "attempts": 1,
+    "promptTokens": 2279,
+    "completionTokens": 2488
+  }
+}

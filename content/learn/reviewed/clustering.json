@@ -1,0 +1,221 @@
+{
+  "id": "clustering",
+  "slug": "clustering",
+  "term": "Clustering",
+  "aliases": [
+    "cluster analysis"
+  ],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "unsupervised-learning"
+  ],
+  "relatedTermIds": [
+    "unsupervised-learning",
+    "feature",
+    "training-example",
+    "classification",
+    "topic-modelling"
+  ],
+  "oftenConfusedWith": [
+    "classification",
+    "prediction",
+    "topic-modelling"
+  ],
+  "oneSentence": "A method that groups similar examples together so patterns in data can be found without pre-written categories.",
+  "plainExplanation": "Clustering is a way to organise data by similarity. You start with examples and their features, meaning measurable properties such as size, location, frequency or word counts. Unlike classification, the examples do not come with known category labels in advance.\n\nWhat goes in is a set of examples, each described by features. The method compares examples and looks for ones that are close to each other in that feature space, which means their feature values are similar by some mathematical measure. Different clustering methods define “close” in different ways.\n\nWhat changes inside depends on the method, but the general aim is similar: place examples into groups so items in the same group are more alike than items in different groups. Some methods require you to choose the number of groups first. Others try to find dense regions or hierarchical structure.\n\nWhat comes out is not a fact about the world. It is a proposed grouping based on the features used, the scaling of those features and the algorithm chosen. That is why clusters are useful for exploration, but they still need human interpretation and checking against the real task.",
+  "everydayAnalogy": {
+    "title": "Sorting mixed luggage at a busy coach station",
+    "story": "At a busy coach station, a worker sees a pile of untagged bags. They start placing bags near each other by visible similarities: small hard cases together, large hiking packs together, and medium fabric bags together. After a while, groups appear even though nobody provided official bag categories. A supervisor then looks at the groups and says which ones seem useful for storage, loading or extra inspection.",
+    "mapping": [
+      {
+        "analogyElement": "untagged bags",
+        "aiElement": "examples without labels"
+      },
+      {
+        "analogyElement": "size, shape and material of each bag",
+        "aiElement": "features used to compare examples"
+      },
+      {
+        "analogyElement": "placing similar bags near each other",
+        "aiElement": "grouping examples by similarity"
+      },
+      {
+        "analogyElement": "supervisor interpreting the piles",
+        "aiElement": "human review of what the clusters mean"
+      }
+    ],
+    "limitation": "Real clustering does not look at objects the way a person does, and it does not automatically know which similarities matter operationally. It works on numerical representations of features, and different feature choices can produce very different groups. Also, real data may not fall into neat piles at all; some points sit between groups or form uneven shapes."
+  },
+  "visual": {
+    "type": "concept-map",
+    "title": "How clustering forms groups from unlabeled data",
+    "learningObjective": "After viewing this, the reader should be able to say that clustering starts with unlabeled examples, compares them by features, and outputs suggested groups whose meaning must be interpreted.",
+    "description": "Show scattered data points on a two-dimensional feature space, then show points gathering into colour-coded groups, then show labels added by a human as interpretations. Read left to right: examples, similarity grouping, human interpretation.",
+    "steps": [
+      {
+        "label": "1. Start with examples",
+        "explanation": "Each point is one example. Its position comes from two features, shown on the horizontal and vertical axes.",
+        "visualInstruction": "Draw a left panel with 12 to 20 grey dots scattered across an x-y plane labelled “feature 1” and “feature 2”. Add note: “no labels provided”."
+      },
+      {
+        "label": "2. Compare similarity",
+        "explanation": "The method measures which points are close to each other in feature space. Closeness depends on the chosen features and distance rule.",
+        "visualInstruction": "Draw a middle panel with faint lines or shaded neighbourhoods showing nearby points influencing each other. Keep points grey. Add caption: “group by similarity”."
+      },
+      {
+        "label": "3. Form clusters",
+        "explanation": "Points that are more similar to one another than to others are assigned to groups. Some points may be near a boundary or left alone, depending on the method.",
+        "visualInstruction": "Draw a right panel with the same points now coloured into 3 groups, plus one boundary point shown with a dashed outline. Surround groups with soft contours."
+      },
+      {
+        "label": "4. Interpret carefully",
+        "explanation": "The coloured groups are proposed structure, not ground truth. A person checks whether the grouping is useful for the real problem.",
+        "visualInstruction": "Add small text labels beside the contours such as “possible pattern A”, “possible pattern B”, “possible pattern C”, with a footer note: “meaning comes from interpretation and validation”."
+      }
+    ],
+    "interaction": "Hovering or tapping a point highlights its nearest neighbours in step 2 and its assigned group in step 3; a toggle switches between different feature scalings to show that clusters can change.",
+    "accessibilityDescription": "The diagram has four left-to-right stages. First, it shows many unlabeled data points on a graph with two features. Second, it shows that the method compares nearby points based on similarity in those feature values. Third, it colours the points into three groups and marks one point near a boundary to show that membership can be uncertain or method-dependent. Fourth, it adds text saying the groups are only proposed patterns and require human interpretation. The main message is that clustering finds structure from feature similarity, but the result depends on representation and does not create proven real-world categories by itself.",
+    "reducedMotionDescription": "A static four-panel diagram is shown instead of animated movement. The first panel shows grey unlabeled points, the second panel shows neighbourhood shading, the third panel shows coloured groups with one dashed boundary point, and the fourth panel adds interpretation notes."
+  },
+  "workedExample": {
+    "scenario": "A utility team reviews daily readings from 12 water pumps using two features: average vibration and motor temperature.",
+    "input": "Pump readings include examples such as P1=(2.1,48), P2=(2.4,50), P3=(2.0,47), P4=(7.8,82), P5=(8.2,79), P6=(7.5,85), P7=(4.9,61), P8=(5.1,60), P9=(5.3,63).",
+    "process": [
+      "Engineers choose two features for each pump: vibration level and temperature.",
+      "A clustering method groups pumps with similar pairs of values into three clusters.",
+      "Cluster A contains low vibration and low temperature pumps, Cluster B contains medium readings, and Cluster C contains high readings.",
+      "The team inspects Cluster C first and checks whether the pumps share a maintenance issue rather than assuming the cluster proves a fault."
+    ],
+    "result": "The output is three suggested groups of pumps with similar behaviour. It helps the team focus inspection, but the cluster itself is not a diagnosis."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An analytics team preparing a situation report groups incoming public social media posts and open-source news summaries by similarity of topics to spot recurring themes such as road access, market disruption and school closures.",
+    "relevance": "This can help staff see patterns in large volumes of unlabelled text before drafting a concise report or deciding what needs closer human review.",
+    "caution": "Do not put confidential, personal, protection-sensitive or unapproved operational information into a public AI service. Treat clusters as exploratory signals only, and have staff verify sources, context and potential bias before using them in reporting."
+  },
+  "whyItMatters": "Clustering can help people notice structure in messy data when no categories have been defined yet. That makes it useful for exploration, segmentation, anomaly review and early pattern detection. For a non-specialist, the key decision point is this: a cluster can suggest where to look, but it should not be treated as proof of a real-world group, risk or cause. Results can change if you choose different features, scales or algorithms. Good use of clustering means asking whether the grouping is stable, useful for the task and safe to act on, especially when people or services may be affected.",
+  "whereYouMayHearIt": [
+    "customer segmentation",
+    "sensor monitoring",
+    "document grouping",
+    "market basket analysis",
+    "exploratory data analysis"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Clustering discovers the one true set of categories hidden in the data.",
+      "correction": "Usually there is no single correct grouping. Different algorithms, feature choices and scaling decisions can produce different clusters, and several may be useful for different purposes. The output is a model-based grouping, not automatic ground truth."
+    },
+    {
+      "misconception": "Clustering and classification are basically the same thing.",
+      "correction": "They both assign examples to groups, but classification learns from examples with known labels, while clustering starts without labels and tries to find structure from similarity alone. In classification, the target categories are given beforehand; in clustering, they are not."
+    },
+    {
+      "misconception": "If points are in the same cluster, they must share the same cause or meaning.",
+      "correction": "A cluster only shows similarity in the chosen features. Two examples may look similar numerically for different real-world reasons. Human review and domain knowledge are needed before drawing operational conclusions."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Clustering groups similar items together when you do not already have named categories.",
+    "technical": "Clustering is an unsupervised learning task that partitions or organises examples in a feature space according to a similarity or distance criterion. Depending on the algorithm, it may minimise within-cluster variance, identify dense regions separated by sparse regions, or build a hierarchy of nested groups. Common approaches include k-means, hierarchical clustering and density-based methods. The result is sensitive to feature engineering, scaling, distance metric, parameter choices and assumptions about cluster shape, size and number. Because no labels are supplied, evaluation is often indirect: internal measures such as compactness and separation can help, but external usefulness depends on the downstream task and domain interpretation."
+  },
+  "keyTakeaway": "Clustering finds possible groups in unlabeled data, but the groups reflect your features and method, not guaranteed real-world truths.",
+  "quickCheck": {
+    "question": "Which statement best describes clustering?",
+    "options": [
+      "It learns from examples with known labels and predicts those labels for new cases.",
+      "It groups examples by similarity without needing pre-existing labels.",
+      "It always finds the correct number of real-world categories automatically.",
+      "It identifies one unusual case and ignores the rest of the data."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Clustering is about grouping unlabeled examples by similarity. Option 1 describes classification, not clustering. Option 3 is too strong because many methods need parameter choices and may produce several plausible groupings. Option 4 describes a narrow anomaly-detection idea, not clustering in general."
+  },
+  "resources": [
+    {
+      "title": "Clustering",
+      "url": "https://en.wikipedia.org/wiki/Clustering",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This page gives a broad overview of clustering methods and terminology, and it suits readers who want a general reference.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course resource suits learners who want practical machine learning context and a structured introduction at an accessible level.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "description": "This video source suits readers who prefer step-by-step spoken explanations with intuition before more formal detail.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Clustering",
+      "url": "https://www.youtube.com/results?search_query=Clustering%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers browse multiple video explanations and choose one that matches their level.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Clustering",
+      "url": "https://www.reddit.com/search/?q=Clustering",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it suits readers who want to see community questions, informal explanations and common points of confusion.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is clustering in machine learning",
+    "cluster analysis simple explanation",
+    "clustering vs classification",
+    "unsupervised grouping data",
+    "k-means clustering meaning",
+    "how clustering works",
+    "clustring machine learning",
+    "group similar data points",
+    "clustering",
+    "cluster analysis"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:23.931Z",
+    "contentHash": "63cfcb086e3a0682",
+    "attempts": 1,
+    "promptTokens": 2272,
+    "completionTokens": 2335
+  }
+}

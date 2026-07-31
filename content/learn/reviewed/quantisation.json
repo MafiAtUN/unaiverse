@@ -1,0 +1,230 @@
+{
+  "id": "quantisation",
+  "slug": "quantisation",
+  "term": "Quantisation",
+  "aliases": [
+    "quantization",
+    "quantised model"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "model-weight"
+  ],
+  "relatedTermIds": [
+    "model-weight",
+    "checkpoint",
+    "model-version",
+    "fine-tuning",
+    "lora",
+    "parameter-efficient-fine-tuning"
+  ],
+  "oftenConfusedWith": [
+    "distillation",
+    "pruning",
+    "fine-tuning",
+    "lora"
+  ],
+  "oneSentence": "A method for storing and running a model with lower-precision numbers so it uses less memory and often runs faster, with some possible loss in accuracy.",
+  "plainExplanation": "Models store many numerical values called weights. In many released models, those values are saved with high numerical precision, such as 16-bit or 32-bit formats. Quantisation changes those values, or the calculations that use them, into lower-precision formats such as 8-bit or 4-bit.\n\nWhat goes in is usually an existing model checkpoint and a choice of target format. What happens is that ranges of values are compressed into fewer possible levels. For example, many slightly different numbers may be rounded so they share one smaller representation. Some methods also keep a small amount of extra information, such as a scale factor, so the model can approximately recover the original range during calculation.\n\nWhat comes out is a smaller model that can often fit on cheaper hardware or serve more users on the same hardware. Inference means using a model to produce outputs, not training it. Quantisation is mainly used for inference, though there are training-related forms too. The trade-off is that lower precision can slightly reduce output quality, and in some cases can make a model unstable if done badly.\n\nThis is often confused with fine-tuning, pruning, or distillation. Fine-tuning changes model behaviour by further training. Pruning removes some parameters or connections. Distillation trains a new smaller model to imitate a larger one. Quantisation mainly changes how numbers are represented and computed, while trying to preserve the original behaviour as much as possible.",
+  "everydayAnalogy": {
+    "title": "Planning a journey with a simplified transit map",
+    "story": "A group of colleagues in Nairobi are planning a trip across the city using a wall map in their office. The detailed map shows every side street and lane, but it is large and slow to read during a busy morning. They switch to a simplified transit map that rounds many road details into a few clear lines and landmarks, so they can plan faster and carry the map on a phone. The route is usually still good enough, but if they need the exact entrance to a building, the simplified map may miss a detail that the full map showed.",
+    "mapping": [
+      {
+        "analogyElement": "the detailed city map",
+        "aiElement": "a model stored with high-precision numerical values"
+      },
+      {
+        "analogyElement": "the simplified transit map",
+        "aiElement": "a quantised model using fewer bits per value"
+      },
+      {
+        "analogyElement": "rounding many street details into a few lines",
+        "aiElement": "representing many possible numbers with fewer discrete levels"
+      },
+      {
+        "analogyElement": "faster planning on a phone",
+        "aiElement": "lower memory use and often faster inference on limited hardware"
+      }
+    ],
+    "limitation": "A map removes visual detail in a way people can inspect directly, but quantisation changes internal numerical representations throughout many calculations. A simplified map does not keep trying to reproduce the original map mathematically, while quantisation methods often use scales, zero-points, calibration data, or specialised kernels to preserve behaviour as closely as possible. Also, a map can be read by a person, but a quantised model still requires machine computation."
+  },
+  "visual": {
+    "type": "before-after",
+    "title": "From high-precision model to quantised model",
+    "learningObjective": "Show how the same model can be converted to lower-precision numbers, leading to smaller memory use and often faster inference, with a possible accuracy trade-off.",
+    "description": "A left-to-right state change diagram. On the left, a model uses many high-precision values. In the middle, a conversion step groups values into fewer levels and stores scale information. On the right, the quantised model is smaller and faster to run, with a note that quality may change slightly. Read from left to right.",
+    "steps": [
+      {
+        "label": "Original model",
+        "explanation": "Start with a trained model checkpoint whose weights are stored in higher precision, such as 16-bit floating point.",
+        "visualInstruction": "Draw a large rectangle labelled 'Original checkpoint'. Inside, show many small numbered cells with varied decimal values and a memory badge reading 'larger'."
+      },
+      {
+        "label": "Choose target format",
+        "explanation": "Select a lower-precision representation, such as 8-bit or 4-bit, depending on the hardware and acceptable quality loss.",
+        "visualInstruction": "Add a conversion panel with a dropdown-like label 'Target: 8-bit or 4-bit' and a note 'hardware support matters'."
+      },
+      {
+        "label": "Map values to fewer levels",
+        "explanation": "Values are rounded or mapped into a smaller set of numerical levels, often with scale information so calculations can approximate the original range.",
+        "visualInstruction": "Show several different decimal values funnelled into fewer bins, plus a small tag labelled 'scale'. Use arrows from the original cells into grouped levels."
+      },
+      {
+        "label": "Quantised model",
+        "explanation": "The result uses less memory and may run faster, but some tasks may show a small drop in quality or robustness.",
+        "visualInstruction": "Draw a smaller rectangle labelled 'Quantised model'. Add badges 'smaller memory' and 'often faster inference', plus a caution icon with 'possible quality trade-off'."
+      }
+    ],
+    "interaction": "On hover or tap, each step reveals an example precision change such as FP16 to INT8 or 4-bit, and a short note on the trade-off.",
+    "accessibilityDescription": "The diagram shows a model before and after quantisation. First, an original checkpoint stores many high-precision weight values, which takes more memory. Second, a target lower-precision format such as 8-bit or 4-bit is chosen based on hardware and quality needs. Third, the original values are mapped into fewer numerical levels, often with extra scale information so later calculations can approximate the original ranges. Fourth, the resulting quantised model is smaller and often faster for inference, but it may lose a little accuracy or reliability on some tasks.",
+    "reducedMotionDescription": "A static four-panel diagram replaces animation. Panel one shows the larger high-precision model. Panel two shows the chosen target format. Panel three shows values grouped into fewer levels with scale information. Panel four shows the smaller quantised model with notes on faster inference and possible quality trade-off."
+  },
+  "workedExample": {
+    "scenario": "A team has a 7 billion parameter language model stored in 16-bit format and wants to run it on a single smaller GPU for internal testing.",
+    "input": "Original model weights in 16-bit precision; target format: 8-bit weight quantisation.",
+    "process": [
+      "Estimate memory for weights: 7 billion parameters × 2 bytes each is about 14 GB before other runtime overheads.",
+      "Convert the stored weights to 8-bit form, which uses about 1 byte per parameter, plus a smaller amount of extra scale data.",
+      "Load the quantised model and run a small evaluation set, such as 200 prompt-response checks for summary quality and factual consistency.",
+      "Compare results: memory drops to roughly 7 to 8 GB for weights plus overhead, throughput improves on the target hardware, and evaluation scores fall slightly but remain acceptable for the use case."
+    ],
+    "result": "The model now fits on the target machine and serves requests faster, but the team documents a modest quality drop and keeps the original checkpoint for cases where maximum quality matters."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A country office wants to use a locally hosted language model to help triage a shared general enquiries inbox by drafting category labels such as procurement, visas, events, or publications.",
+    "relevance": "Quantisation may let the office run the model on approved local hardware with lower cost and faster response, instead of needing larger infrastructure. That can make pilot testing feasible while preserving human review of every label.",
+    "caution": "Do not place personal data, case details, protection-sensitive messages, or other confidential information into an unapproved public AI service. If the inbox contains such content, use only approved systems, minimise data exposure, and keep human oversight because lower-precision models can misclassify edge cases."
+  },
+  "whyItMatters": "Quantisation matters because it changes whether a model is practical to deploy at all. A model that is too large or slow in its original form may become usable on cheaper or more available hardware after quantisation. For a manager or technical lead, this affects cost, latency, energy use, device choice, and whether a system can run locally rather than sending data elsewhere. But it also affects risk: if quality drops on rare languages, long prompts, or safety checks, a cheaper deployment may create hidden failures. The important decision is not whether quantisation is good or bad in general, but whether the speed and memory gains are worth the measured quality loss for a specific task and operating environment.",
+  "whereYouMayHearIt": [
+    "model deployment discussions",
+    "edge device optimisation",
+    "GPU memory troubleshooting",
+    "open model release notes",
+    "inference benchmarking"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Quantisation means training the model on your own data.",
+      "correction": "Usually it does not. Standard post-training quantisation starts from an already trained checkpoint and changes number representation for storage and computation. Some advanced methods use calibration samples or quantisation-aware training, but that is different from fine-tuning the model to learn new behaviour from your data."
+    },
+    {
+      "misconception": "A quantised model is simply the same as a smaller model.",
+      "correction": "Not necessarily. The parameter count can stay the same. What changes is how each parameter is represented, such as 16 bits becoming 8 or 4 bits. Distillation creates a new smaller model with fewer parameters, while quantisation usually keeps the same architecture and mostly preserves behaviour through lower precision."
+    },
+    {
+      "misconception": "Lower bits always mean no meaningful quality loss.",
+      "correction": "Quality depends on the model, task, quantisation method, and hardware support. Many models work well at 8-bit and some work well at 4-bit, but some capabilities degrade first, especially on reasoning-heavy tasks, long contexts, or sensitive classification boundaries. The trade-off must be tested, not assumed."
+    },
+    {
+      "misconception": "Quantisation and pruning are the same optimisation.",
+      "correction": "They target different things. Quantisation reduces numerical precision. Pruning removes some weights, channels, or connections entirely. Both can reduce resource use, and they can be combined, but they change the model in different ways and have different failure modes."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of it as packing a model's numbers into a more compact form. The model often becomes cheaper and faster to run, but some precision is lost, so performance should be checked.",
+    "technical": "Quantisation converts model parameters, and sometimes activations, from higher-precision representations such as FP32 or FP16 into lower-precision forms such as INT8, 4-bit, or mixed formats. The usual mechanism is to map a continuous or high-resolution value range into a smaller discrete set using a scale and sometimes a zero-point. This can be done per tensor, per channel, or per group, with symmetric or asymmetric schemes. Post-training quantisation applies this after training, often using calibration data to estimate activation ranges. Quantisation-aware training simulates low-precision effects during training so the model learns to tolerate them. Runtime efficiency depends on whether the hardware and kernels actually support the chosen format; otherwise memory may shrink without full speed gains. In large language models, people often distinguish weight-only quantisation from schemes that also quantise activations and key-value cache data. Accuracy effects are uneven: some layers and outlier values are more sensitive, so practical systems may leave selected parts in higher precision."
+  },
+  "keyTakeaway": "Quantisation usually does not teach a model anything new; it repackages its numbers so the model is smaller and often faster, with a quality trade-off that must be measured.",
+  "quickCheck": {
+    "question": "Which statement best describes quantisation in common model deployment practice?",
+    "options": [
+      "It usually changes number precision to reduce memory and often improve inference speed, while trying to keep behaviour close to the original.",
+      "It removes unnecessary layers from a model so the parameter count becomes much smaller.",
+      "It fine-tunes a model on domain data so it learns new facts and style.",
+      "It guarantees identical outputs to the original model on all tasks if the hardware is fast enough."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Quantisation mainly changes numerical representation, such as FP16 to INT8 or 4-bit, rather than teaching new behaviour or removing whole parts of the network. It often reduces memory use and can improve inference speed, but outputs are only approximately preserved, not guaranteed to be identical."
+  },
+  "resources": [
+    {
+      "title": "Quantization",
+      "url": "https://en.wikipedia.org/wiki/Quantization",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives a broad background on quantisation as a computing concept and suits readers who want a general starting point before model-specific details.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This Hugging Face course material is useful for readers who want practical, model-focused explanations and is well suited to technical learners working with modern language models.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "description": "This DeepLearning.AI short course resource suits learners who prefer guided instruction and practical intuition about deploying or optimising models.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Quantisation",
+      "url": "https://www.youtube.com/results?search_query=Quantisation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of quantisation and suits people who learn best by comparing presenters, but it is a search page rather than one vetted lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Quantisation",
+      "url": "https://www.reddit.com/search/?q=Quantisation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page lets readers browse community questions, troubleshooting and opinions about quantisation, which suits practitioners seeking real-world discussion, but it is a search page rather than a curated reference.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is quantisation in ai",
+    "quantization vs fine tuning",
+    "quantised model meaning",
+    "8-bit 4-bit model weights",
+    "llm quantization explained",
+    "post training quantization llm",
+    "quantisation vs pruning",
+    "quantisation vs distillation",
+    "why quantized model faster",
+    "how much accuracy loss quantization",
+    "quantisation",
+    "quantization",
+    "quantised model"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:22.629Z",
+    "contentHash": "3a21e577de2469be",
+    "attempts": 1,
+    "promptTokens": 2303,
+    "completionTokens": 2831
+  }
+}

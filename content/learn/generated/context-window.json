@@ -1,0 +1,239 @@
+{
+  "id": "context-window",
+  "slug": "context-window",
+  "term": "Context window",
+  "aliases": [
+    "context length",
+    "context limit",
+    "memory limit"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "policy",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "token",
+    "context"
+  ],
+  "relatedTermIds": [
+    "large-language-model",
+    "token",
+    "prompt",
+    "next-token-prediction",
+    "in-context-learning",
+    "short-term-memory"
+  ],
+  "oftenConfusedWith": [
+    "long-term-memory",
+    "training",
+    "memorisation",
+    "context"
+  ],
+  "oneSentence": "The maximum amount of input and prior output a language model can use at one time while producing the next part of a response.",
+  "plainExplanation": "A language model works from a limited text buffer. That buffer holds the current instructions, the conversation so far, and often the model’s own recent reply. People often call this the context window or context length. Context limit usually means the maximum size allowed, and memory limit is a looser, less precise label for the same idea.\n\nWhat goes in? Usually the system instructions, your prompt, any pasted documents, and sometimes images or other data converted into model-readable pieces. These pieces are often counted as tokens, which are small chunks of text such as words, parts of words, or punctuation.\n\nWhat happens? The model reads only the material that fits inside that limit and uses it to predict the next token. If the conversation or document is too long, some content may be cut off, summarised, or replaced, depending on the tool. Content outside the window is not available to the model at that moment unless the system adds it back.\n\nWhat comes out? A response based on the material inside the current window, not on everything ever said. This is why a model may lose track of earlier details in a long exchange. It is also why a larger context window can help with long documents, but does not by itself give reliable long-term memory or better truthfulness.",
+  "everydayAnalogy": {
+    "title": "Only the pages open on the desk",
+    "story": "Amina and Luis are comparing two paragraphs that say the same thing in different words. They have many printed pages, but their desk is small, so only a few pages can stay open at once. When they need new pages, they remove some older ones from the desk and bring others in. Their comparison can use what is visible on the desk now, not every page they brought to the room.",
+    "mapping": [
+      {
+        "analogyElement": "the small desk surface",
+        "aiElement": "the context window"
+      },
+      {
+        "analogyElement": "open pages on the desk",
+        "aiElement": "the tokens currently available to the model"
+      },
+      {
+        "analogyElement": "removing older pages to make space",
+        "aiElement": "dropping or truncating earlier content when the limit is reached"
+      },
+      {
+        "analogyElement": "comparing the visible paragraphs",
+        "aiElement": "generating the next output using only the current context"
+      }
+    ],
+    "limitation": "People can form durable memories, choose what to reread, and understand meaning in ways a model does not necessarily do. A context window is only a temporary input limit, usually measured in tokens, and it does not work like a human working memory."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "What fits inside the context window",
+    "learningObjective": "After using this explainer, a reader should be able to say what counts toward the context window, what happens when it fills up, and why this is not the same as long-term memory.",
+    "description": "An interactive panel shows a fixed-size window measured in tokens. Coloured segments represent system instructions, user text, document excerpts, and generated reply tokens. As the reader adds text, the bar fills. When the limit is exceeded, the oldest content fades out or is summarised, and the visible response changes accordingly.",
+    "steps": [
+      {
+        "label": "Start with an empty window",
+        "explanation": "The model begins with a fixed amount of space for the current task.",
+        "visualInstruction": "Show an empty horizontal token bar with a labelled maximum, such as 100 tokens."
+      },
+      {
+        "label": "Add instructions and user text",
+        "explanation": "System instructions and the user’s prompt both take space before the answer starts.",
+        "visualInstruction": "Insert two coloured segments into the bar: one for system prompt, one for user prompt; display token counts beside each."
+      },
+      {
+        "label": "Generate a reply",
+        "explanation": "The model’s own output also uses space, because later words can depend on earlier words in the same answer.",
+        "visualInstruction": "Animate reply tokens appearing as a third colour and shrinking the remaining free space counter."
+      },
+      {
+        "label": "Exceed the limit",
+        "explanation": "When too much text is added, earlier material no longer fits unless the tool removes, compresses, or replaces something.",
+        "visualInstruction": "Let the reader drag in a long document segment; once over the limit, push the oldest segment out of view or swap it for a smaller summary block."
+      },
+      {
+        "label": "Compare outcomes",
+        "explanation": "Different visible context can lead to different answers, even when the topic is the same.",
+        "visualInstruction": "Show two side-by-side responses: one with the earlier detail still present, one after it has been dropped."
+      }
+    ],
+    "interaction": "The reader can add or remove chunks of text, drag a slider for window size, and toggle whether overflow is truncated or summarised.",
+    "accessibilityDescription": "Screen-reader version: A narrated simulation describes a model with a fixed token budget. First, system instructions use part of the budget. Next, the user prompt uses more. Then the model generates reply tokens, which also count. When a long document is added and the total exceeds the limit, the oldest content is removed or replaced by a shorter summary. The narration then compares two outcomes: with an earlier detail still inside the window, the answer mentions it; after that detail falls out, the answer no longer uses it. The key message is that the model can only use what currently fits inside the token limit.",
+    "reducedMotionDescription": "A static sequence of five labelled panels replaces animation. Each panel shows the token bar at a different stage: empty, after instructions, after user text, after generated reply, and after overflow forces older content out or into a summary block.",
+    "component": "context-window"
+  },
+  "workedExample": {
+    "scenario": "A user asks a chat assistant to compare two long policy paragraphs and point out whether they mean the same thing.",
+    "input": "System instructions: 120 tokens. User question: 80 tokens. Paragraph A: 260 tokens. Paragraph B: 300 tokens. Model context limit: 600 tokens.",
+    "process": [
+      "The system instructions, question, and both paragraphs would total 760 tokens, so they do not all fit.",
+      "The tool keeps the instructions and question, then includes all of Paragraph B and only part of Paragraph A, because the limit is reached.",
+      "The model generates its answer from the text that remains inside the window.",
+      "Because part of Paragraph A was cut off, the answer misses one qualification that appeared only in the omitted section."
+    ],
+    "result": "The assistant says the paragraphs are mostly equivalent, but its comparison is incomplete because not all relevant text was available at once."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN analyst uses an approved internal tool to draft a first-pass summary of non-sensitive notes about satellite imagery after a disaster, together with short location descriptions and time stamps.",
+    "relevance": "The amount of imagery description, instructions, and draft output that can be considered together is limited by the context window. If too much material is included, early details may drop out, which can change the summary.",
+    "caution": "Do not paste confidential, protection-sensitive, security-sensitive, personally identifiable, or operationally sensitive material into an unapproved public AI service. Even in an approved tool, keep human review because omitted earlier details can affect the draft."
+  },
+  "whyItMatters": "It affects whether a tool can handle long documents, long chats, and multi-step tasks without dropping important details. That matters for procurement, workflow design, risk assessment, and judging whether an output is complete enough to trust for review.",
+  "whereYouMayHearIt": [
+    "model specification sheets",
+    "chat assistant product pages",
+    "procurement and vendor demos",
+    "prompt writing guidance",
+    "technical troubleshooting"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A larger context window means the model is smarter.",
+      "correction": "A larger window mainly means it can use more material at once. It may help with long inputs, but it does not automatically improve reasoning quality, factual reliability, or domain judgement."
+    },
+    {
+      "misconception": "Anything said earlier in a chat stays available forever.",
+      "correction": "Only the part that still fits in the current window is directly available unless the system stores and reinserts older content. Long conversations can therefore lose earlier details."
+    },
+    {
+      "misconception": "Context window and training data are the same thing.",
+      "correction": "Training happens before deployment and shapes the model weights. The context window is the temporary working input available during one interaction."
+    },
+    {
+      "misconception": "Memory limit means the model has human-like memory.",
+      "correction": "In this setting, memory limit usually refers loosely to the context limit. It does not mean the system forms durable personal memories unless extra memory features are added."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the amount of recent text and instructions the model can look at at one time while answering.",
+    "technical": "It is the model’s maximum usable sequence length for the current inference step, typically measured in tokens and shared across system prompt, user input, retrieved text, multimodal encodings where applicable, and generated output tokens."
+  },
+  "keyTakeaway": "A context window is a temporary viewing limit, not a guarantee that the model will remember everything in a long task.",
+  "quickCheck": {
+    "question": "What best explains why a chat assistant may ignore an important detail from much earlier in a long conversation?",
+    "options": [
+      "The detail may have fallen outside the current context window.",
+      "The model deletes facts from its training data during long chats.",
+      "Temperature permanently erases earlier messages.",
+      "The vocabulary no longer contains the needed words."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The most likely reason is that the earlier detail no longer fits inside the current token limit available for this interaction. Training data, temperature, and vocabulary are different mechanisms."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Context window",
+      "url": "https://en.wikipedia.org/wiki/Context_window",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a general overview of the term and suits readers who want a quick orientation before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This Hugging Face course material helps readers who want a structured explanation of how tokens, prompts, and model limits relate in practice.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This 3Blue1Brown video suits visual learners who want intuition about how large language models process text step by step.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Context window",
+      "url": "https://www.youtube.com/results?search_query=Context%20window%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of context windows and suits people who prefer to compare presenters and difficulty levels.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Context window",
+      "url": "https://www.reddit.com/search/?q=Context%20window",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page lets readers browse community discussions and examples of confusion about context windows, which suits readers who want informal questions and practical experiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "context window meaning",
+    "context length llm",
+    "context limit ai",
+    "memory limit chatbot",
+    "how much text can chatgpt read",
+    "llm forgets earlier messages",
+    "token limit context window",
+    "context window vs memory",
+    "long context model",
+    "contezt window",
+    "context window",
+    "context length",
+    "context limit",
+    "memory limit"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:35:50.014Z",
+    "contentHash": "1f99aadcdffeb1ed",
+    "attempts": 2,
+    "promptTokens": 2379,
+    "completionTokens": 2196
+  }
+}

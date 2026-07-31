@@ -1,0 +1,235 @@
+{
+  "id": "facial-recognition",
+  "slug": "facial-recognition",
+  "term": "Facial recognition",
+  "aliases": [
+    "face recognition",
+    "biometric identification"
+  ],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "human-rights",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "computer-vision"
+  ],
+  "relatedTermIds": [
+    "computer-vision",
+    "object-detection",
+    "bounding-box",
+    "pixel",
+    "pose-estimation"
+  ],
+  "oftenConfusedWith": [
+    "computer-vision",
+    "object-detection",
+    "image-classification"
+  ],
+  "oneSentence": "A computer vision method that compares a face image with stored face patterns to estimate whether they likely belong to the same person.",
+  "plainExplanation": "Facial recognition uses images or video that contain a human face as input. The system first tries to find where the face is in the picture. It then measures visible patterns such as the distances and shapes around the eyes, nose, mouth and jaw, or uses a trained model to turn the face into a compact numerical representation called an embedding.\n\nNext, it compares that representation with other stored face representations. In verification, it checks a claimed identity, such as “Is this the same person as in this passport photo?” In identification, it searches many records and returns the closest matches. These are different tasks, and they have different risks.\n\nThe output is usually not a certain answer. It is often a similarity score, a ranked list of possible matches, or a yes-or-no result based on a threshold. A threshold is a cut-off chosen by people or organisations: above it counts as a match, below it does not. Changing the threshold changes the balance between false matches and missed matches.\n\nPeople often confuse facial recognition with simply detecting that a face is present. Face detection only finds faces in an image. Facial recognition goes further by comparing one face with another or with a database. Performance can change with image quality, lighting, age, pose, camera angle and how well the system was tested on different populations.",
+  "everydayAnalogy": {
+    "title": "Checking conference badges against a photo board",
+    "story": "At an international conference in Nairobi, a staff member stands at the entrance with a board of badge photos. When a visitor arrives, the staff member does not read their biography. They quickly look at a few visible features, such as face shape, eye spacing and hairstyle, then compare those with the photos on the board. If one photo looks close enough, they may say it is probably the same person, but poor lighting, masks or an old photo can make that guess unreliable.",
+    "mapping": [
+      {
+        "analogyElement": "The arriving visitor’s face",
+        "aiElement": "The input image or video frame containing a face"
+      },
+      {
+        "analogyElement": "The staff member focusing on visible facial features",
+        "aiElement": "The system extracting numerical face features or an embedding"
+      },
+      {
+        "analogyElement": "The photo board of registered attendees",
+        "aiElement": "The stored database of enrolled face representations"
+      },
+      {
+        "analogyElement": "Saying a photo looks close enough",
+        "aiElement": "Using a similarity score and threshold to decide a match"
+      }
+    ],
+    "limitation": "A human staff member may use context, ask questions or notice unusual situations. A facial recognition system does not do that by itself. It compares patterns in pixel data and can produce a score even when the image is poor or the person is not in the database. Also, modern systems do not usually rely on a few hand-picked features in the simple way the story suggests; many use learned numerical representations that are harder for people to inspect directly."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How facial recognition turns an image into a match score",
+    "learningObjective": "After viewing this, a reader should be able to describe the main stages from face image input to comparison result, and explain that the output is usually a score rather than certainty.",
+    "description": "A left-to-right flow diagram with five boxes linked by arrows. It starts with a photo, then shows face detection, feature extraction, comparison with stored templates, and a final result box with scores and possible actions. Read from left to right to see how one image becomes a match estimate.",
+    "steps": [
+      {
+        "label": "1. Input image",
+        "explanation": "A photo or video frame arrives. It may contain one face, several faces or none.",
+        "visualInstruction": "Draw a rectangle representing a camera image. Include simple silhouettes of two people, with one face highlighted faintly to suggest the target region."
+      },
+      {
+        "label": "2. Find the face",
+        "explanation": "The system locates the face area in the image so it knows what part to analyse.",
+        "visualInstruction": "Show the same image with a clear bounding box around one face. Add a small caption: 'face location'."
+      },
+      {
+        "label": "3. Convert to numbers",
+        "explanation": "The face area is processed into a numerical representation, often called an embedding, that captures visual patterns useful for comparison.",
+        "visualInstruction": "Show the cropped face leading to a small grid or row of numbered dots labelled 'embedding'."
+      },
+      {
+        "label": "4. Compare with stored records",
+        "explanation": "The embedding is compared with stored face embeddings from one person or from many people in a database.",
+        "visualInstruction": "Show one vector on the left and three stored vectors on the right, with lines connecting them and small labels such as 'similarity 0.91', '0.62', '0.40'."
+      },
+      {
+        "label": "5. Return a result",
+        "explanation": "The system outputs a similarity score, a yes-no result based on a threshold, or a ranked list of possible matches. A human may then review it.",
+        "visualInstruction": "Show a result panel with 'top match', 'score', and a threshold line. Include a small human-review icon after the result."
+      }
+    ],
+    "interaction": "On hover or tap, each stage reveals one sentence explaining what changes at that stage; a threshold slider updates the final match/no-match label for the example scores.",
+    "accessibilityDescription": "This diagram explains facial recognition as a five-stage process. First, a photo or video frame is the input. Second, the system finds the face location in that image. Third, it converts the face area into a numerical representation called an embedding. Fourth, it compares that representation with stored face representations, either for one claimed identity or across many records. Fifth, it returns a result such as a similarity score, a ranked list of candidates, or a match decision based on a threshold. The key message is that the system compares patterns and produces an estimate, not certainty.",
+    "reducedMotionDescription": "A static five-box flowchart shows the same process without animation: input image, face location, numerical representation, comparison with stored records, and result with score or threshold-based decision."
+  },
+  "workedExample": {
+    "scenario": "A phone unlock feature checks whether the current camera image matches its enrolled owner.",
+    "input": "Current face embedding compared with the enrolled embedding gives a similarity score of 0.87; the unlock threshold is set at 0.82.",
+    "process": [
+      "The front camera captures an image and finds one face.",
+      "The system converts the face into an embedding, a compact set of numbers.",
+      "It compares that embedding with the enrolled owner’s stored embedding.",
+      "Because 0.87 is above the threshold of 0.82, the system marks it as a likely match.",
+      "The phone unlocks, but the result still depends on image quality and threshold choice."
+    ],
+    "result": "The device accepts the face as matching the enrolled user for this attempt."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is reviewing a vendor proposal for a visitor access system that includes facial recognition at a building entrance.",
+    "relevance": "Staff need to understand that the system would compare live camera images with stored face records, and that choices about purpose, threshold, oversight, testing and legal basis affect error rates, fairness, privacy and accountability.",
+    "caution": "Do not upload staff, visitor, beneficiary, witness, survivor or other personal face images to an unapproved public AI service, and do not deploy such a system without approved data protection, human rights, security and procurement review."
+  },
+  "whyItMatters": "Facial recognition matters because it can affect access, identity checks, policing, service delivery and surveillance. A non-specialist may be asked to buy it, regulate it, approve it, audit it or respond to its errors. To do that well, you need to know that it does not produce certainty, that verification and identification are different, and that performance can vary across settings and populations. You also need to recognise the governance questions around consent, necessity, proportionality, retention, oversight and remedies when mistakes happen.",
+  "whereYouMayHearIt": [
+    "phone unlock features",
+    "airport or border e-gates",
+    "building access systems",
+    "law-enforcement or investigation tools",
+    "privacy and human-rights debates"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If the system finds the right person most of the time, it is reliable enough for any use.",
+      "correction": "A high overall accuracy figure can hide serious problems. The real question is how the system performs in the specific setting, on the relevant population, at the chosen threshold, and what harm follows from false matches or missed matches. A tool acceptable for unlocking one person’s phone may be unacceptable for searching a large population or making high-stakes decisions."
+    },
+    {
+      "misconception": "Facial recognition and face detection are the same thing.",
+      "correction": "They are related but different. Face detection only locates a face in an image. Facial recognition compares faces to estimate whether they belong to the same person or to find likely matches in stored records."
+    },
+    {
+      "misconception": "A match means the computer has proved who the person is.",
+      "correction": "Usually it means the system found a face pattern that is similar enough under its settings. Similarity is not proof of identity. Image quality, ageing, pose, lighting, masks and database composition can all affect the result, so human review and context may still be necessary."
+    },
+    {
+      "misconception": "The system works the same way and equally well for everyone everywhere.",
+      "correction": "Performance can vary with camera quality, environment and the data used to build and test the system. If some groups or conditions were less well represented, error rates may differ. That is why independent testing in the actual context of use matters."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It takes a face image, turns it into numbers that represent visible patterns, and compares those numbers with stored ones to estimate a match.",
+    "technical": "A typical pipeline first detects and aligns a face in an image, then uses a trained model to generate a feature vector, often called an embedding. Similarity between embeddings is measured with a distance or similarity function such as cosine similarity. In one-to-one verification, the system compares the probe image with one enrolled template for a claimed identity. In one-to-many identification, it searches a gallery of enrolled templates and returns top candidates. A decision threshold converts the similarity score into match or non-match, which creates a trade-off between false acceptances and false rejections. Real-world performance depends on image capture conditions, enrolment quality, demographic and environmental variation, and how the system was evaluated."
+  },
+  "keyTakeaway": "Facial recognition compares face patterns and returns a likelihood-based match result, not certain identity.",
+  "quickCheck": {
+    "question": "Which description best fits facial recognition?",
+    "options": [
+      "It only detects that a face-shaped object is present in an image.",
+      "It compares a face image with stored face patterns to estimate whether they match.",
+      "It reads a person’s emotions and intentions from their expression.",
+      "It creates a written description of everything shown in a photograph."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Facial recognition is about comparing faces for verification or identification. Detecting that a face exists is a different task. Inferring emotion is a separate and contested task. Writing image descriptions is image captioning, not facial recognition."
+  },
+  "resources": [
+    {
+      "title": "Facial recognition",
+      "url": "https://en.wikipedia.org/wiki/Facial_recognition",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad introductory overview of facial recognition and suits readers who want a general starting point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This link offers beginner-friendly machine learning lessons that help readers place facial recognition within the wider field and suits newcomers.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "description": "This link provides short glossary-style definitions of machine learning terms and suits readers who want quick clarifications while reading.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Facial recognition",
+      "url": "https://www.youtube.com/results?search_query=Facial%20recognition%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page for video explanations on facial recognition and suits readers who prefer to compare several video styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Facial recognition",
+      "url": "https://www.reddit.com/search/?q=Facial%20recognition",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page for community discussion about facial recognition and suits readers who want to see common questions, opinions and debates with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is facial recognition",
+    "face recognition meaning",
+    "facial recognition vs face detection",
+    "how does biometric identification work",
+    "face match score explained",
+    "facial recognition accuracy",
+    "facial recongnition",
+    "is face unlock facial recognition",
+    "facial recognition",
+    "face recognition",
+    "biometric identification"
+  ],
+  "contested": "The basic idea of comparing face images is not contested, but the boundaries between verification, identification, analysis and broader 'biometric identification' are described differently across technical, legal and policy contexts.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:47:43.605Z",
+    "contentHash": "6079f13cd24abd4d",
+    "attempts": 1,
+    "promptTokens": 2280,
+    "completionTokens": 2551
+  }
+}

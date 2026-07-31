@@ -1,0 +1,233 @@
+{
+  "id": "fine-tuning",
+  "slug": "fine-tuning",
+  "term": "Fine-tuning",
+  "aliases": [
+    "finetuning",
+    "fine tune"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "policy",
+    "leadership",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "pretraining"
+  ],
+  "relatedTermIds": [
+    "pretraining",
+    "supervised-fine-tuning",
+    "instruction-tuning",
+    "parameter-efficient-fine-tuning",
+    "lora",
+    "model-version"
+  ],
+  "oftenConfusedWith": [
+    "prompt-engineering",
+    "retrieval-augmented-generation",
+    "training",
+    "in-context-learning"
+  ],
+  "oneSentence": "Adapting a general pre-trained model with additional examples so it performs better on a narrower task, style or domain.",
+  "plainExplanation": "A large model usually starts as a general system trained on very broad data. Fine-tuning is a later adaptation step. You take that existing model, show it more task-specific examples, and update its internal weights, meaning the numeric settings that shape its outputs.\n\nWhat goes in is usually a starting model plus a curated dataset. The dataset might contain input-output pairs, such as a customer question and a good answer, or examples from a specialist domain such as law, health or agriculture. The quality and labelling of these examples matters a lot.\n\nWhat happens is additional training, but not from scratch. The model is adjusted so patterns useful for the new task become stronger. Depending on the method, this may update all weights or only a small subset. The result is a new model version, often called a fine-tuned checkpoint.\n\nWhat comes out is not guaranteed truth or expertise. A fine-tuned model may become more consistent, better at following a format, or better with a domain vocabulary. But it can also become narrower, inherit errors from the new data, or perform worse outside the examples it was adapted on.\n\nPeople often confuse fine-tuning with prompt engineering or retrieval-augmented generation. Prompt engineering changes the instructions you give at use time. Retrieval-augmented generation gives the model external documents at use time. Fine-tuning changes the model itself before use.",
+  "everydayAnalogy": {
+    "title": "Training a translator for one organisation’s style",
+    "story": "A translation office in Nairobi hires a skilled general translator who already works well in many subjects. For one new project, the office gives the translator 2,000 past field reports and their preferred translations, showing how the organisation writes place names, acronyms and formal phrases. After practising on those examples, the translator becomes more consistent with that organisation’s style and terminology. The translator is still the same person, but now their habits fit that narrower job better. If the examples contained mistakes or one-sided phrasing, those habits could also be reinforced.",
+    "mapping": [
+      {
+        "analogyElement": "the skilled general translator",
+        "aiElement": "the pre-trained base model"
+      },
+      {
+        "analogyElement": "past field reports with preferred translations",
+        "aiElement": "the fine-tuning dataset"
+      },
+      {
+        "analogyElement": "practising on those examples",
+        "aiElement": "additional training that updates model weights"
+      },
+      {
+        "analogyElement": "more consistent organisational style",
+        "aiElement": "better performance on a specific task or domain"
+      }
+    ],
+    "limitation": "A human translator can consciously ask questions, justify choices and transfer lessons between topics in ways a model cannot reliably do. In fine-tuning, the system is not reading examples with human awareness; numerical parameters are being adjusted. Also, a human can often notice a bad house style and resist it, while a model may simply absorb harmful patterns from the fine-tuning data."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How fine-tuning changes a general model into a task-specific version",
+    "learningObjective": "After viewing this, the reader should be able to explain that fine-tuning starts with an existing model, adds task-specific training data, updates parameters, and produces a new version better suited to a narrower use.",
+    "description": "A left-to-right flow with four boxes connected by arrows. Read from the general starting model, through curated examples and an update step, to a new model version for a narrower task. Small side notes warn that data quality affects behaviour and that the output remains a model, not a guarantee of correctness.",
+    "steps": [
+      {
+        "label": "1. Start with a base model",
+        "explanation": "Begin with a model already trained on broad data. It has general capabilities but may not match the exact task, format or terminology you need.",
+        "visualInstruction": "Draw a large rounded rectangle labelled 'Base model'. Add a small caption below: 'General capabilities'."
+      },
+      {
+        "label": "2. Prepare task-specific examples",
+        "explanation": "Collect and clean examples that represent the target task, such as prompts and good answers, translations, classifications or summaries.",
+        "visualInstruction": "Place a stack-of-documents icon in a second box labelled 'Fine-tuning data'. Add small tags such as 'examples', 'labels', 'quality matters'."
+      },
+      {
+        "label": "3. Run additional training",
+        "explanation": "Use the examples to adjust the model’s parameters. This strengthens patterns useful for the target task. Some methods change many parameters; others change only a small subset.",
+        "visualInstruction": "Show a gear or slider icon in a third box labelled 'Parameter updates'. Add a side note: 'Not training from scratch'."
+      },
+      {
+        "label": "4. Save a new model version",
+        "explanation": "The result is a new checkpoint or model version that usually performs better on the narrower task, though it may also become less general or copy biases in the data.",
+        "visualInstruction": "Draw a final box labelled 'Fine-tuned model'. Add two small callouts: 'Better on target task' and 'Still needs testing and oversight'."
+      }
+    ],
+    "interaction": "Hovering or tapping each box reveals a short note with one example: translation, summary, classification or style adaptation.",
+    "accessibilityDescription": "The diagram is a four-step flow read from left to right. First is a box called Base model, described as a general model with broad capabilities. An arrow leads to Fine-tuning data, shown as curated task-specific examples where data quality matters. Another arrow leads to Parameter updates, explaining that additional training changes the model’s numeric settings and that this is not training from scratch. A final arrow leads to Fine-tuned model, a new saved version that is usually better on the target task but still needs evaluation, because fine-tuning can also narrow behaviour or reproduce errors in the data.",
+    "reducedMotionDescription": "A static four-box flow replaces animation. Arrows remain visible between Base model, Fine-tuning data, Parameter updates and Fine-tuned model, with the same labels and caution notes shown at all times."
+  },
+  "workedExample": {
+    "scenario": "A team wants a model that translates short logistics field notes from English into French in a consistent house style.",
+    "input": "Base model plus 12,000 approved translation pairs. Example pair: 'Road to the clinic reopened after flooding.' -> 'La route vers la clinique a rouvert après les inondations.'",
+    "process": [
+      "The team starts from an existing general language model rather than building a new one from zero.",
+      "They clean the 12,000 translation pairs, remove duplicates, and exclude low-quality or inconsistent examples.",
+      "They run fine-tuning so the model’s parameters are adjusted to favour the organisation’s preferred translation patterns.",
+      "They test the new checkpoint on 500 held-out notes that were not used in training and compare it with the original model."
+    ],
+    "result": "The new model produces more consistent translations of recurring terms such as 'distribution point' and 'mobile clinic'. It still makes occasional mistakes on rare place names, so human review remains in place."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office wants a model that drafts public situation report summaries in a standard format from already approved, non-sensitive source text.",
+    "relevance": "Fine-tuning could make outputs more consistent with the office’s usual structure, terminology and tone, which may reduce editing time for repetitive public-facing drafting tasks.",
+    "caution": "Do not use confidential, personal, protection-sensitive, security-sensitive or unpublished operational information in an unapproved service or training pipeline. Use only cleared data, keep human review, and verify that the adapted model does not introduce factual errors or unsafe wording."
+  },
+  "whyItMatters": "Fine-tuning matters because organisations often need more than a general model. They may want a model that follows a specific format, works better in a specialist domain, or uses approved terminology more consistently. For leaders and policy staff, this affects cost, risk, procurement and governance: what data can be used, who checks quality, how a new model version is evaluated, and whether changing the model is even necessary. In many cases, a prompt or document retrieval system is enough. In other cases, fine-tuning can improve reliability on a narrow task. Knowing the difference helps you ask better questions before spending money or exposing data.",
+  "whereYouMayHearIt": [
+    "vendor product demos",
+    "AI procurement discussions",
+    "machine learning engineering meetings",
+    "model adaptation tutorials",
+    "governance and risk reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Fine-tuning simply means the model has read our documents.",
+      "correction": "Not exactly. Fine-tuning is a training process that changes model parameters using curated examples. Giving documents at use time is different; that is closer to retrieval-augmented generation or context prompting, where the model itself may remain unchanged."
+    },
+    {
+      "misconception": "Any fine-tuned model will be smarter than the original one.",
+      "correction": "A fine-tuned model is usually more specialised, not universally better. It may improve on the target task while becoming less flexible elsewhere, and poor-quality data can make behaviour worse rather than better."
+    },
+    {
+      "misconception": "If we fine-tune on internal material, the output becomes authoritative.",
+      "correction": "No. Fine-tuning can make style and domain language more consistent, but it does not guarantee factual accuracy, policy compliance or legal correctness. Evaluation and human oversight are still needed."
+    },
+    {
+      "misconception": "Fine-tuning and prompt engineering are the same thing.",
+      "correction": "They happen at different stages. Prompt engineering changes the instructions or examples you provide when using a model. Fine-tuning changes the model beforehand by updating parameters through additional training."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Fine-tuning means taking a general AI model and giving it extra practice on a narrower job so it performs that job more consistently.",
+    "technical": "Fine-tuning is post-pretraining optimisation of an existing model on a target dataset. Starting from a pre-trained checkpoint, training continues on examples such as prompt-response pairs, labelled classifications or preferred outputs. Gradient-based updates modify model parameters, either across the full network or through parameter-efficient methods such as LoRA, to adapt behaviour to a domain, task, format or instruction style. The output is a new checkpoint or model version. This differs from in-context learning, where the model stays unchanged and only the prompt context varies at inference time, and from retrieval-augmented generation, where external documents are supplied at inference time without necessarily altering parameters."
+  },
+  "keyTakeaway": "Fine-tuning changes the model itself so it fits a narrower job better, but it does not remove the need for testing, oversight or good data.",
+  "quickCheck": {
+    "question": "Which situation is the clearest example of fine-tuning?",
+    "options": [
+      "Changing the wording of your prompt until the model follows the format you want",
+      "Connecting the model to a document search tool so it can quote recent reports",
+      "Taking an existing model and training it further on approved examples of your target task",
+      "Reducing the model size so it runs faster on a smaller device"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Fine-tuning means additional training on a starting model using task-specific examples, which changes the model’s parameters. The other options describe prompt engineering, retrieval-augmented generation and model compression."
+  },
+  "resources": [
+    {
+      "title": "Fine-tuning",
+      "url": "https://en.wikipedia.org/wiki/Fine-tuning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad introductory overview of fine-tuning and suits readers who want a quick general reference before going deeper.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This link gives a structured course-style explanation of how large language models are adapted and suits learners who want technical depth step by step.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "description": "This link gives short practical lessons on fine-tuning-related workflows and suits busy professionals who prefer brief guided instruction.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Fine-tuning",
+      "url": "https://www.youtube.com/results?search_query=Fine-tuning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a search results page for video explanations of fine-tuning and suits readers who learn best by comparing multiple visual explainers.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Fine-tuning",
+      "url": "https://www.reddit.com/search/?q=Fine-tuning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a search results page for community discussions about fine-tuning and suits readers who want to see common questions, experiences and informal debate.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "fine tuning ai meaning",
+    "finetuning vs prompting",
+    "what is fine-tuning llm",
+    "train on our data ai",
+    "fine tune model examples",
+    "finetuning misspelling",
+    "fine tuning vs rag",
+    "fine tuning vs training",
+    "llm adaptation basics",
+    "fine-tuning",
+    "finetuning",
+    "fine tune"
+  ],
+  "contested": "People use 'fine-tuning' in both a narrow and a broad sense. Some use it only for parameter-updating training on a pre-trained model, while others use it loosely for many kinds of model adaptation, including parameter-efficient methods.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:38:14.970Z",
+    "contentHash": "0f3fcdef4f5d5bc2",
+    "attempts": 1,
+    "promptTokens": 2323,
+    "completionTokens": 2581
+  }
+}

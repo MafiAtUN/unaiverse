@@ -1,0 +1,231 @@
+{
+  "id": "model-context-protocol",
+  "slug": "model-context-protocol",
+  "term": "Model Context Protocol",
+  "acronym": "MCP",
+  "aliases": [
+    "MCP"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "tool-use",
+    "connector"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "tool-use",
+    "function-calling",
+    "orchestration",
+    "human-in-the-loop",
+    "connector"
+  ],
+  "oftenConfusedWith": [
+    "api",
+    "connector",
+    "function-calling"
+  ],
+  "oneSentence": "A standard way for an AI application to connect with external tools and data sources through a shared, predictable interface.",
+  "plainExplanation": "Model Context Protocol, or MCP, is a technical standard for linking an AI application to outside systems. Those outside systems might include files, databases, calendars, maps, or business software. A standard means different tools can follow the same rules, so developers do not need a completely different custom connection for each one.\n\nWhat goes in is a user request, plus information from one or more connected systems. What happens next is that the AI application uses MCP to ask a compatible server what tools or resources are available, what each one is for, and how to call it safely. In simple terms, MCP helps the application discover and use external capabilities in a structured way.\n\nWhat comes out is not just text. The application may return an answer, a retrieved document, a tool result, or a proposed action for a human to review. MCP does not guarantee that the answer is correct, and it does not remove the need for access control, logging, or human oversight.\n\nPeople often confuse MCP with an API. An API is a specific interface for one service. MCP is better described as a common pattern for exposing tools and context to AI applications in a consistent format. It is also often confused with a connector. A connector usually means one ready-made link to one system, while MCP is the protocol that can make many such links easier to build and reuse.",
+  "everydayAnalogy": {
+    "title": "A shared service desk for many storerooms",
+    "story": "At a food distribution point, a coordinator needs current stock levels, truck arrival times, and a map of nearby roads. Instead of calling three different offices with three different forms, the coordinator uses one service desk with a standard request sheet. The desk tells the coordinator which storerooms and services are available, what each can provide, and the correct format for each request. The replies come back in a predictable structure, so the coordinator can combine them into one plan for the day.",
+    "mapping": [
+      {
+        "analogyElement": "the service desk with one standard request sheet",
+        "aiElement": "MCP as a shared protocol for accessing many tools and data sources"
+      },
+      {
+        "analogyElement": "storerooms, transport office, and map office",
+        "aiElement": "different external systems such as files, calendars, databases, or mapping services"
+      },
+      {
+        "analogyElement": "the desk listing what each office can provide",
+        "aiElement": "tool and resource discovery through a standard interface"
+      },
+      {
+        "analogyElement": "predictable reply forms",
+        "aiElement": "structured responses that an AI application can process consistently"
+      }
+    ],
+    "limitation": "A service desk suggests a human clerk who understands the request and makes judgement calls. MCP does not work like that. It is a technical protocol with defined message formats and capabilities. Also, real MCP setups can support ongoing interaction between client and server, not just one paper form in and one reply out."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How MCP links an AI application to outside tools",
+    "learningObjective": "After viewing this, the reader should be able to say how an AI application uses MCP to discover tools, request context, and return a result.",
+    "description": "A left-to-right flow diagram with five boxes: user request, AI application, MCP client, MCP server, and external tools/data. Arrows show the request moving right for tool discovery and use, then results moving left into the final answer or proposed action.",
+    "steps": [
+      {
+        "label": "1. User request",
+        "explanation": "A person asks for something that may require outside information or an action, such as checking a file or looking up a timetable.",
+        "visualInstruction": "Place a box on the far left labelled 'User request'. Add a short example beneath it. Draw an arrow to the next box."
+      },
+      {
+        "label": "2. AI application interprets the need",
+        "explanation": "The application identifies that it may need external context or a tool, rather than only generating text from the prompt.",
+        "visualInstruction": "Add a second box labelled 'AI application'. Include a small note: 'Needs outside data or tool'. Draw an arrow to the next box."
+      },
+      {
+        "label": "3. MCP client asks what is available",
+        "explanation": "The client side of the protocol contacts an MCP-compatible server to learn which tools or resources exist and how to call them.",
+        "visualInstruction": "Add a third box labelled 'MCP client'. Draw an arrow to a fourth box. Add a small side label on the arrow: 'discover capabilities'."
+      },
+      {
+        "label": "4. MCP server exposes tools and resources",
+        "explanation": "The server presents a standard description of available resources, such as files, databases, or actions, and returns structured results when called.",
+        "visualInstruction": "Add a fourth box labelled 'MCP server'. Beneath it, place three small icons or mini-boxes labelled 'files', 'database', and 'calendar'. Draw arrows from these into the MCP server box."
+      },
+      {
+        "label": "5. Result returns for answer or review",
+        "explanation": "The application combines the returned context or tool output into an answer, summary, or action proposal, often with human review where needed.",
+        "visualInstruction": "Draw arrows back from 'MCP server' to 'MCP client' to 'AI application'. End with a right-side output box labelled 'Answer / draft / proposed action' and a small human-check icon beside it."
+      }
+    ],
+    "interaction": "On hover or tap, each box reveals one sentence defining its role. Clicking the MCP server highlights the connected tools to show that one protocol can expose many resources.",
+    "accessibilityDescription": "The diagram is a five-step flow read from left to right. First, a user makes a request. Second, the AI application recognises it may need outside information or a tool. Third, an MCP client contacts an MCP server to discover what tools and resources are available and how to use them. Fourth, the MCP server exposes connected systems such as files, databases, and calendars through a standard interface and returns structured results. Fifth, those results go back to the AI application, which produces an answer, a draft, or a proposed action, ideally with human review for important tasks.",
+    "reducedMotionDescription": "A static left-to-right flowchart showing the same five boxes and arrows, with all labels visible at once and no animation or hover effects."
+  },
+  "workedExample": {
+    "scenario": "A logistics planning assistant needs current warehouse stock and truck schedules before drafting a delivery note.",
+    "input": "User request: 'Draft a plan for tomorrow's delivery to Site B using current stock and the latest truck schedule.'",
+    "process": [
+      "The AI application receives the request and recognises that it needs live information, not only the text in the prompt.",
+      "Through an MCP connection, it discovers two available resources: a warehouse stock tool and a transport schedule tool.",
+      "It requests stock data and gets: rice 1,250 bags, beans 800 bags, oil 600 cartons.",
+      "It requests transport data and gets: Truck T4 available at 08:00 with 12-tonne capacity; Truck T7 unavailable due to maintenance.",
+      "The application combines the tool results and drafts a delivery note proposing one morning dispatch within capacity, then presents it for staff review."
+    ],
+    "result": "A structured draft says that current stock can support the request and proposes loading Truck T4 at 08:00, with quantities adjusted to fit 12 tonnes and a note that a human planner should confirm road conditions and final authorisation."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A translation support tool helps staff turn non-sensitive field updates into a working language by accessing approved terminology files and style guidance through a standard protocol.",
+    "relevance": "This matters because teams often use several approved resources. A shared protocol can make those resources easier to connect to one AI application without building a different custom integration for each one.",
+    "caution": "Do not send confidential, personal, protection-sensitive, security-sensitive, or operationally sensitive field information to an unapproved public AI service. Use only approved systems, apply access controls, and keep human review for important communications."
+  },
+  "whyItMatters": "For non-specialists, MCP matters because it affects cost, speed, control, and risk. If an organisation wants one AI application to work with many internal and external systems, a shared protocol can reduce one-off integration work and make changes easier to manage. It can also improve transparency by making tool access more structured and easier to govern.\n\nAt the same time, MCP does not solve trust and safety by itself. Leaders still need to ask who can access which systems, what gets logged, when a human must approve an action, and what happens if the connected data is wrong or out of date. In decision-making terms, MCP is about whether your AI setup can connect to the right tools in a manageable way, not whether the output should be accepted without checking.",
+  "whereYouMayHearIt": [
+    "agent platform documentation",
+    "enterprise AI integration discussions",
+    "developer demos of tool-using assistants",
+    "procurement and architecture reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "MCP is just another name for an API.",
+      "correction": "They are related but not identical. An API is usually the interface for one service or product. MCP is a standardised protocol intended to let AI applications discover and use many tools and resources in a more consistent way. A system may expose capabilities through MCP while those capabilities themselves still rely on underlying APIs."
+    },
+    {
+      "misconception": "If a system uses MCP, it is automatically safe and reliable.",
+      "correction": "A protocol can standardise communication, but it does not guarantee correct outputs, secure configuration, or appropriate use. Safety still depends on access controls, approval steps, monitoring, data quality, and careful choice of which tools the AI application may use."
+    },
+    {
+      "misconception": "MCP means the AI model can directly do anything on connected systems.",
+      "correction": "In practice, what it can access depends on what the MCP server exposes and what permissions are granted. The protocol can describe tools and resources, but organisations still decide which actions are allowed and whether human review is required."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "MCP is a common way to let an AI application work with outside tools and information sources without building a completely different connection for each one.",
+    "technical": "Technically, MCP is a client-server protocol for exposing context, resources, prompts, and tool interfaces to AI applications in a standard form. An MCP client, often inside an AI application, connects to an MCP server, which advertises available capabilities and returns structured responses when those capabilities are invoked. This supports capability discovery and more uniform tool integration across different back-end systems. It is commonly discussed alongside tool use and function calling, but it operates at a broader integration layer: function calling is often the model-level mechanism for selecting a tool, while MCP is the protocol that can describe and deliver the tool definitions and resource access in a consistent way. Exact implementations can vary, so the practical behaviour depends on the host application, permissions, and server design."
+  },
+  "keyTakeaway": "MCP is best understood as shared plumbing that helps AI applications connect to many tools in a consistent, governable way.",
+  "quickCheck": {
+    "question": "Which description best distinguishes MCP from a single connector or API?",
+    "options": [
+      "It is a protocol that gives AI applications a standard way to discover and use many tools or resources across systems.",
+      "It is a guarantee that any connected AI output is accurate and safe to automate.",
+      "It is a type of large language model trained specifically to operate databases.",
+      "It is only a visual dashboard for monitoring agents after deployment."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The key idea is standardised access. A single API or connector usually links to one service in one specific way. MCP aims to provide a common interface pattern so AI applications can work with different tools and resources more consistently. It does not guarantee truth, safety, or full automation."
+  },
+  "resources": [
+    {
+      "title": "Model Context Protocol",
+      "url": "https://en.wikipedia.org/wiki/Model_Context_Protocol",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a general overview of Model Context Protocol and suits readers who want a quick background summary before going deeper.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "description": "This link discusses agents and is useful for readers who want to place MCP in the broader context of tool-using AI systems.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "description": "This link is the official source and suits technical readers who want the primary specification and implementation-oriented details.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Model Context Protocol",
+      "url": "https://www.youtube.com/results?search_query=Model%20Context%20Protocol%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page, so it helps readers find different video explanations and compare teaching styles rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Model Context Protocol",
+      "url": "https://www.reddit.com/search/?q=Model%20Context%20Protocol",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page, so it suits readers who want to see community questions, examples, and debates, with the usual caution that discussion posts vary in quality.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "model context protocol",
+    "mcp ai",
+    "mcp protocol ai tools",
+    "what is mcp for ai",
+    "mcp vs api",
+    "mcp vs connector",
+    "anthropic mcp",
+    "model contex protocol",
+    "ai tool protocol",
+    "mcp server client",
+    "mcp"
+  ],
+  "contested": "The broad idea of MCP is clear, but terminology and scope are still evolving in practice. Different people may use the term narrowly for a specific protocol implementation or more broadly for the surrounding ecosystem of AI-tool integration patterns.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:52.593Z",
+    "contentHash": "d7b3169566288648",
+    "attempts": 1,
+    "promptTokens": 2291,
+    "completionTokens": 2687
+  }
+}

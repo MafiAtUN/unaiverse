@@ -1,0 +1,227 @@
+{
+  "id": "retrieval",
+  "slug": "retrieval",
+  "term": "Retrieval",
+  "aliases": [
+    "document retrieval"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "semantic-search"
+  ],
+  "relatedTermIds": [
+    "semantic-search",
+    "keyword-search",
+    "vector-database",
+    "chunking",
+    "ranking-and-reranking",
+    "grounding"
+  ],
+  "oftenConfusedWith": [
+    "retrieval-augmented-generation",
+    "indexing",
+    "citation"
+  ],
+  "oneSentence": "Retrieval finds the most relevant passages from a collection so a person or model can use source material rather than answer from memory alone.",
+  "plainExplanation": "Retrieval is the step where a system looks through stored documents and pulls out the passages most relevant to a question. The input is usually a user query, such as a question or topic. The output is usually a short list of passages, snippets or document sections.\n\nIn many modern systems, the search does not rely only on exact word matching. It can also compare meaning. To do that, the query and documents are turned into numerical representations called embeddings. Items with similar meaning end up closer together, so the system can find passages even when they use different words.\n\nWhat comes back is not the final answer. It is evidence that may help a person, a search tool or a language model produce a better response. This is why retrieval is often used before answer writing: first find likely sources, then read or summarise them.\n\nRetrieval is often confused with retrieval-augmented generation, or RAG. They are related but not the same. Retrieval only finds the relevant material. RAG is the larger workflow that retrieves material and then passes it to a generative model to draft an answer grounded in those sources.\n\nGood retrieval depends on how documents were prepared and stored. For example, long documents may be split into smaller chunks, then indexed so they can be searched quickly, and then ranked so the strongest matches appear first.",
+  "everydayAnalogy": {
+    "title": "Finding the right bus advice for a cross-city trip",
+    "story": "A traveller in Nairobi asks a transport desk, “What is the fastest way to get from the museum district to the university area after 6 pm?” The desk worker does not read every leaflet in the office. Instead, they pull a few route sheets and service notices that seem closest in meaning, even if one says “campus quarter” rather than “university area”. The traveller reads those pages first and then decides which route to take. The key step is not giving the final advice from memory, but finding the most relevant pages quickly.",
+    "mapping": [
+      {
+        "analogyElement": "The traveller's question about the trip",
+        "aiElement": "The user query"
+      },
+      {
+        "analogyElement": "Route sheets and service notices in the office",
+        "aiElement": "The stored document collection or knowledge base"
+      },
+      {
+        "analogyElement": "Pulling the pages that match the meaning of the question",
+        "aiElement": "Retrieving relevant passages by semantic or keyword matching"
+      },
+      {
+        "analogyElement": "The traveller reading those pages before choosing",
+        "aiElement": "A person or model using retrieved evidence before producing an answer"
+      }
+    ],
+    "limitation": "A human desk worker may use broad world knowledge, ask follow-up questions and judge reliability in ways a retrieval system does not. Real retrieval usually compares numerical representations and returns ranked text chunks, not whole leaflets chosen by common sense alone. Also, retrieval does not itself decide the best route or write the final reply; it only selects candidate source material."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How retrieval pulls source passages for a question",
+    "learningObjective": "After viewing this, a reader should be able to say that retrieval takes a query, searches stored text for relevant passages, ranks them and returns evidence for later use.",
+    "description": "A left-to-right flow diagram with four boxes and arrows. Read from the user question on the left, through stored documents and search, to ranked passages on the right. Small labels show that documents may be split into chunks and indexed before search, and that the retrieved passages can then be handed to a person or model.",
+    "steps": [
+      {
+        "label": "1. Question enters",
+        "explanation": "A user asks a question or gives a topic to search for.",
+        "visualInstruction": "Draw a rounded box on the left labelled 'Query' with example text beneath: 'What support is available for small farmers after flooding?'."
+      },
+      {
+        "label": "2. Documents are prepared",
+        "explanation": "The document collection has usually already been split into smaller chunks and indexed so search can be fast.",
+        "visualInstruction": "Draw a middle-left box labelled 'Document store' containing 4 to 6 stacked page icons. Add small sublabels 'chunks' and 'index'."
+      },
+      {
+        "label": "3. Search compares relevance",
+        "explanation": "The system compares the query with stored chunks using keywords, meaning, or both, then scores likely matches.",
+        "visualInstruction": "Draw a centre box labelled 'Retrieval' with a magnifying-glass icon and short tags: 'match words', 'match meaning', 'score'."
+      },
+      {
+        "label": "4. Best passages come out",
+        "explanation": "The system returns a ranked list of the most relevant passages, ready for a person or model to read.",
+        "visualInstruction": "Draw a right-side box labelled 'Top passages' with three snippet cards numbered 1, 2 and 3, each showing a short highlighted line of text."
+      },
+      {
+        "label": "5. Answering happens later",
+        "explanation": "A later step may use those passages to draft or check an answer, but that later step is not retrieval itself.",
+        "visualInstruction": "Draw a dashed arrow from 'Top passages' to a final optional box labelled 'Answering step', visually separated to show it is outside retrieval."
+      }
+    ],
+    "interaction": "Hovering or tapping each box reveals a one-sentence note: input, preparation, matching, ranking, and later use.",
+    "accessibilityDescription": "The diagram explains retrieval as a five-part flow. First, a user question enters the system. Second, documents have already been prepared as smaller chunks and indexed. Third, a retrieval step compares the question with those stored chunks using keyword matching, meaning-based matching, or both, and gives them relevance scores. Fourth, the system returns the highest-ranked passages rather than a finished answer. Fifth, those passages may then be used in a separate answering step. The main idea is that retrieval finds evidence; it does not itself generate the final response.",
+    "reducedMotionDescription": "Show the same five boxes in a static left-to-right row with arrows and all labels visible at once. The optional answering step remains separated with a dashed arrow to show it is outside retrieval."
+  },
+  "workedExample": {
+    "scenario": "A staff member searches a collection of disaster guidance notes for advice on protecting wells after floods.",
+    "input": "Query: 'How should wells be cleaned after flood contamination?'",
+    "process": [
+      "The system turns the query into a search representation and compares it with stored guidance chunks.",
+      "It finds one passage that says 'disinfecting contaminated wells after inundation' and another that says 'safe cleaning of flooded boreholes', even though the wording differs.",
+      "Each passage gets a relevance score; for example, 0.91, 0.86 and 0.62.",
+      "The top two passages are returned first, with document titles and section references."
+    ],
+    "result": "Instead of scanning 200 pages manually, the user gets two likely source passages to read and verify before drafting guidance."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A programme officer drafts a short briefing note and uses an approved internal search tool to retrieve passages from past public reports, guidance notes and approved templates before writing.",
+    "relevance": "This helps the officer start from relevant source text, reduce missed references and keep human review over what goes into the final draft.",
+    "caution": "Do not paste confidential, personal, protection-sensitive or security-sensitive information into an unapproved public AI service; retrieval tools should use approved sources and human checking before any text is reused."
+  },
+  "whyItMatters": "For non-specialists, retrieval matters because it affects whether a system starts from the right evidence. If retrieval is weak, a later summary or AI answer may miss key facts, quote the wrong source or sound confident while relying on poor context. If retrieval is strong, people can check the source material, compare passages and make better decisions about whether to trust the output. In practice, this affects time, quality and accountability: Can you find the relevant paragraph quickly? Can you trace where a claim came from? Can you spot when the system found something only loosely related?",
+  "whereYouMayHearIt": [
+    "enterprise search",
+    "RAG system design",
+    "knowledge assistants",
+    "document question answering"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Retrieval and RAG are the same thing.",
+      "correction": "Retrieval is only the finding step. RAG is a larger pipeline that usually includes retrieval plus a generative model that drafts an answer from the retrieved material. Keeping the terms separate helps people evaluate which part is working and which part is failing."
+    },
+    {
+      "misconception": "If a passage was retrieved, it must be correct.",
+      "correction": "Retrieved means 'judged relevant by the search method', not 'verified true'. A system can retrieve outdated, low-quality or only partly related text. People still need to check the source, date, context and fit for the question."
+    },
+    {
+      "misconception": "Meaning-based retrieval replaces keyword search completely.",
+      "correction": "Not always. Exact words still matter for names, codes, legal phrases, dates and technical terms. Many practical systems combine keyword and meaning-based methods because each catches things the other can miss."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Retrieval is the part of a system that fetches the most relevant bits of text for a question so the next step has something useful to work from.",
+    "technical": "Retrieval takes a query and searches an indexed collection for relevant documents or chunks. In modern semantic retrieval, the query and stored text are often represented as embeddings, which are numerical vectors designed so semantically similar items are near each other. The system then performs nearest-neighbour search or a hybrid search that mixes embedding similarity with keyword signals. Results are scored, ranked and returned as candidate evidence. Optional reranking may refine the order. Retrieval is therefore a search-and-selection stage, not the generation stage; in a RAG pipeline, its output becomes context for a language model."
+  },
+  "keyTakeaway": "Retrieval does not write the answer; it finds the source passages that the answer should be based on.",
+  "quickCheck": {
+    "question": "Which statement best describes retrieval in an AI-assisted question-answering system?",
+    "options": [
+      "It writes a final answer directly from the model's internal patterns without looking up sources.",
+      "It finds and returns the most relevant stored passages so they can be used as evidence in a later step.",
+      "It checks whether every retrieved document is true and up to date.",
+      "It breaks long documents into chunks and stores them, but does not search them."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Retrieval is the search-and-selection step. It returns relevant passages from stored material. Writing the final answer, verifying truth and chunking documents are separate tasks, though they may appear in the same overall system."
+  },
+  "resources": [
+    {
+      "title": "Information retrieval",
+      "url": "https://en.wikipedia.org/wiki/Information_retrieval",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad overview of information retrieval concepts and history, which suits readers who want general background before AI-specific details.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course material explains embeddings, which suits readers who want to understand how meaning-based retrieval can compare text beyond exact words.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "description": "This interactive tool lets readers explore how similar items can appear close together in embedding space, which suits visual learners experimenting with meaning-based search ideas.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Retrieval",
+      "url": "https://www.youtube.com/results?search_query=Retrieval%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page for retrieval explanations, which suits readers who prefer to compare several video styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Retrieval",
+      "url": "https://www.reddit.com/search/?q=Retrieval",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page for retrieval discussions, which suits readers who want informal questions, examples and practitioner conversations with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is retrieval in ai",
+    "document retrieval meaning",
+    "retrieval vs rag",
+    "semantic retrieval simple explanation",
+    "how ai finds relevant passages",
+    "retrival ai",
+    "retrievel search ai",
+    "difference between search and retrieval",
+    "document retrieval example",
+    "retrieval",
+    "document retrieval"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:24.159Z",
+    "contentHash": "c0f3cd8f1d6e1f8b",
+    "attempts": 1,
+    "promptTokens": 2242,
+    "completionTokens": 2417
+  }
+}

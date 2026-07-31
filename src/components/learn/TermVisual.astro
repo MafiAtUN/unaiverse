@@ -1,0 +1,91 @@
+---
+/**
+ * Every published term has a visual. This renders it.
+ *
+ * Two paths. Twelve concepts where a static diagram genuinely cannot teach the
+ * mechanism — you have to turn the learning rate up and watch the thing
+ * overshoot — get a hand-built interactive explainer. Everything else gets the
+ * generic step diagram driven by `visual.steps`, which is a real explanation
+ * rather than a placeholder: an ordered, labelled account of what happens.
+ *
+ * The bespoke explainers are loaded through a glob so that a term page ships
+ * only the one script it uses, not all twelve.
+ *
+ * Non-negotiables, applied here rather than in each explainer so none can
+ * forget: a learning objective above, a prose alternative below that says the
+ * same thing without the picture, and no meaning carried by motion alone.
+ */
+import type { TermVisual } from '../../lib/learn/schema';
+
+interface Props {
+  visual: TermVisual;
+  termId: string;
+}
+
+const { visual, termId } = Astro.props;
+
+const COMPONENT_FILES: Record<string, string> = {
+  'gradient-descent': 'GradientDescent',
+  backpropagation: 'Backpropagation',
+  tokenizer: 'Tokenizer',
+  'context-window': 'ContextWindow',
+  parameters: 'Parameters',
+  embeddings: 'Embeddings',
+  attention: 'Attention',
+  rag: 'Rag',
+  overfitting: 'Overfitting',
+  hallucination: 'Hallucination',
+  'precision-recall': 'PrecisionRecall',
+  temperature: 'Temperature',
+};
+
+const modules = import.meta.glob<{ default: any }>('./visuals/*.astro');
+const file = visual.component ? COMPONENT_FILES[visual.component] : undefined;
+const loader = file ? modules[`./visuals/${file}.astro`] : undefined;
+const Interactive = loader ? (await loader()).default : null;
+
+const stepsClass = ['vsteps', `vsteps--${visual.type}`].join(' ');
+---
+
+<figure class="visual" aria-labelledby={`visual-${termId}-title`}>
+  <div class="visual__head">
+    <h3 class="visual__title" id={`visual-${termId}-title`}>{visual.title}</h3>
+    <p class="visual__objective">{visual.learningObjective}</p>
+  </div>
+
+  <div class="visual__stage">
+    {
+      Interactive ? (
+        <Interactive termId={termId} visual={visual} />
+      ) : (
+        <ol class={stepsClass}>
+          {visual.steps.map((step, i) => (
+            <li class="vstep">
+              <p class="vstep__n">
+                {String(i + 1).padStart(2, '0')}
+                {i < visual.steps.length - 1 && <span aria-hidden="true"> →</span>}
+              </p>
+              <p class="vstep__label">{step.label}</p>
+              <p class="vstep__text">{step.explanation}</p>
+              <p class="vstep__instruction">{step.visualInstruction}</p>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+  </div>
+
+  <figcaption class="visual__foot">
+    <p class="visual__readout">{visual.description}</p>
+    {visual.interaction && <p class="visual__readout">{visual.interaction}</p>}
+
+    {/* Not hidden from assistive technology and not a second-class citizen:
+        the same explanation, in prose, for anyone who cannot or does not want
+        to use the diagram. Open by default is too noisy; findable is enough. */}
+    <details class="visual__alt">
+      <summary>Describe this without the diagram</summary>
+      <p>{visual.accessibilityDescription}</p>
+      <p><strong>With reduced motion:</strong> {visual.reducedMotionDescription}</p>
+    </details>
+  </figcaption>
+</figure>

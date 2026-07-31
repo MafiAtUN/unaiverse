@@ -1,0 +1,225 @@
+{
+  "id": "multi-head-attention",
+  "slug": "multi-head-attention",
+  "term": "Multi-head attention",
+  "aliases": [
+    "attention heads"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "self-attention"
+  ],
+  "relatedTermIds": [
+    "transformer",
+    "attention",
+    "query-key-value",
+    "attention-score",
+    "vector",
+    "embedding"
+  ],
+  "oftenConfusedWith": [
+    "self-attention",
+    "attention",
+    "query-key-value"
+  ],
+  "oneSentence": "A transformer mechanism that runs several attention patterns in parallel so the model can combine different kinds of relationships between tokens.",
+  "plainExplanation": "In a transformer, each token first becomes a vector, which is a list of numbers that represents features of that token in context. Multi-head attention takes those token vectors as input and creates several parallel versions of the attention calculation. Each parallel part is called a head.\n\nInside each head, the model builds queries, keys and values. These are learned projections: new numeric views of the same input. A query asks what a token is looking for, a key describes what each token offers, and a value carries the information that may be passed along. The head compares queries with keys to produce attention scores, turns those scores into weights, and then mixes the values accordingly.\n\nBecause there are several heads, the model does not rely on one single pattern of relevance. One head may focus on a nearby word, another on a long-range reference, and another on part of a phrase or sentence structure. This does not mean each head always has a clean human meaning. It means the architecture gives the model several parallel channels for relating tokens.\n\nThe outputs from all heads are joined together and passed through another learned projection to produce one combined output vector per token. What comes out is still a sequence of vectors, but now each token representation has gathered information from multiple attention patterns at once.\n\nThis is often confused with self-attention. Self-attention is the broader operation where tokens attend to tokens in the same sequence. Multi-head attention is one way of implementing that operation: several self-attention calculations run in parallel and then get combined.",
+  "everydayAnalogy": {
+    "title": "Several readers resolving a pronoun in one sentence",
+    "story": "A team is reviewing the sentence: “Amina spoke to Sofia after she finished the report.” One reader looks for the nearest possible person, another checks who was likely to write the report, and another looks at the wider paragraph for clues about the topic. Each reader marks a different likely interpretation and explains which words matter most. The team leader then combines those notes into one final summary of what “she” probably refers to.",
+    "mapping": [
+      {
+        "analogyElement": "each reader using a different strategy",
+        "aiElement": "each attention head learning a different pattern of relevance"
+      },
+      {
+        "analogyElement": "the words each reader highlights",
+        "aiElement": "attention weights over tokens"
+      },
+      {
+        "analogyElement": "the notes from each reader",
+        "aiElement": "the weighted value vectors produced by each head"
+      },
+      {
+        "analogyElement": "the team leader combining the notes",
+        "aiElement": "concatenating head outputs and applying a final learned projection"
+      }
+    ],
+    "limitation": "In the analogy, separate people deliberately choose explicit strategies and can explain them in words. Attention heads are not people, and their patterns come from training rather than conscious reasoning. Also, real heads work with dense vectors and numeric weights, not tidy verbal clues, and many heads do not map neatly to one human-interpretable role."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How multi-head attention combines several parallel attention patterns",
+    "learningObjective": "Show that one input sequence is projected into several parallel attention heads, each computes its own weighted mix, and the results are merged into one output per token.",
+    "description": "The diagram reads left to right. A row of input token vectors splits into several parallel heads. Each head shows query, key and value projections, attention weighting, and a head output. The head outputs are then joined and passed through a final projection to form the output sequence.",
+    "steps": [
+      {
+        "label": "Input sequence",
+        "explanation": "Start with token vectors for the same sequence, one vector per token position.",
+        "visualInstruction": "Draw 4 to 6 equal boxes in a horizontal row labelled with sample tokens such as 'Amina', 'spoke', 'to', 'Sofia', 'she'. Under each, show a small stacked bar icon to indicate a vector."
+      },
+      {
+        "label": "Split into heads",
+        "explanation": "Create several parallel learned views of the same inputs. Each head gets its own query, key and value projections.",
+        "visualInstruction": "From the input row, draw lines into three or four parallel lanes labelled 'Head 1', 'Head 2', 'Head 3', 'Head 4'. In each lane, place three small boxes labelled Q, K and V."
+      },
+      {
+        "label": "Attention inside each head",
+        "explanation": "Within each head, queries are compared with keys to produce weights, and those weights are used to mix the values.",
+        "visualInstruction": "In each head lane, show a small matrix or dot grid labelled 'scores → weights', followed by arrows to a box labelled 'weighted sum of V'. Use different accent colours for different heads."
+      },
+      {
+        "label": "Join head outputs",
+        "explanation": "The outputs from all heads are concatenated, meaning placed side by side into one larger vector.",
+        "visualInstruction": "Draw each head output as a narrow vertical block. Merge them into one wider block labelled 'concatenate'."
+      },
+      {
+        "label": "Final projection",
+        "explanation": "A learned output projection mixes the concatenated information into the final output vector for each token.",
+        "visualInstruction": "Draw an arrow from the concatenated block to a box labelled 'output projection', then to a final row of output token vectors aligned with the original token positions."
+      }
+    ],
+    "interaction": "On hover or tap, highlight one head at a time and show a short caption such as 'may emphasise nearby agreement' or 'may emphasise longer-range reference', while noting that these are examples, not fixed rules.",
+    "accessibilityDescription": "A left-to-right flow diagram explains multi-head attention. First, a sequence of token vectors is shown as a row of labelled boxes. Second, the row splits into four parallel lanes called heads. In each lane, the same input is projected into queries, keys and values. Third, each head computes scores from queries and keys, turns them into weights, and uses those weights to combine the values into one head output. Fourth, the four head outputs are placed side by side in a concatenation step. Fifth, a final output projection turns the combined result into the output sequence of vectors. The key idea is that several attention calculations happen in parallel, not one after another, and their results are merged.",
+    "reducedMotionDescription": "A static five-stage diagram with no animation shows the same sequence: input token vectors, parallel heads with Q K V projections, per-head weighting and value mixing, concatenation of head outputs, and a final output projection."
+  },
+  "workedExample": {
+    "scenario": "Resolving the pronoun in the sentence: 'The doctor thanked the nurse because she stayed late.'",
+    "input": "Tokens: [The, doctor, thanked, the, nurse, because, she, stayed, late]",
+    "process": [
+      "For the token 'she', Head 1 gives high weight to nearby words and places 0.55 on 'nurse' and 0.15 on 'doctor'.",
+      "Head 2 emphasises likely sentence roles and places 0.48 on 'nurse' and 0.22 on 'doctor'.",
+      "Head 3 looks more at broader phrase structure and gives 0.35 to 'nurse', 0.30 to 'doctor', and some weight to 'stayed' and 'because'.",
+      "The model forms one output from each head, concatenates the three outputs, and applies a final projection to create the new vector for 'she'.",
+      "Later layers use that updated vector, which now carries stronger evidence linking 'she' with 'nurse' in this context."
+    ],
+    "result": "The combined representation of 'she' is shaped by several attention patterns at once, rather than by a single score pattern."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team prepares a briefing note from approved, non-confidential public statements and meeting summaries. When a transformer-based drafting tool processes the text, different attention heads can help track references across the note, such as which Member State, agency or report a pronoun or short phrase points to.",
+    "relevance": "This helps explain why the model may handle long documents better than older sequence models and why it can relate nearby wording and distant references at the same time.",
+    "caution": "Do not put confidential, personal, protection-sensitive, security-sensitive or unpublished operational information into an unapproved public AI service, even if the task seems to be only drafting or summarising."
+  },
+  "whyItMatters": "Multi-head attention is one reason transformer models can handle complex language patterns at scale. For a non-specialist, the practical value is this: it helps explain why modern models can connect a word with several relevant parts of a sentence or document at the same time. That matters when you judge system strengths, limits and risks. A model may capture multiple kinds of context in parallel, but that does not guarantee correctness, faithfulness to sources or stable reasoning. Understanding this term helps you ask better questions about model design, performance, compute cost and why a system may succeed on one language task but still fail on another.",
+  "whereYouMayHearIt": [
+    "transformer architecture discussions",
+    "large language model explainers",
+    "NLP research papers",
+    "model visualisation tutorials"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Each head learns one clear linguistic job, such as grammar, pronoun resolution or translation alignment.",
+      "correction": "Some heads do show patterns humans can describe, but many do not have one clean role. Heads are learned numeric mechanisms, and several heads may share, split or change functions across layers and tasks."
+    },
+    {
+      "misconception": "More heads always mean a better model.",
+      "correction": "Extra heads can increase capacity, but only up to a point and with trade-offs in parameters, memory use and speed. Performance depends on the whole design, including head size, number of layers, training data and optimisation."
+    },
+    {
+      "misconception": "Multi-head attention and self-attention are the same term.",
+      "correction": "Self-attention describes the operation where tokens attend to other tokens in the same sequence. Multi-head attention describes a parallel structure often used inside that operation, where several attention calculations run at once and are then combined."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Instead of looking at context through one attention pattern, the model uses several in parallel and then combines them.",
+    "technical": "Given an input sequence of token representations, the model applies separate learned linear projections for each head to produce head-specific queries, keys and values. Within each head, attention scores are computed from query-key similarity, normalised into weights, and used to form a weighted sum of the value vectors. The outputs of all heads are concatenated and passed through an output projection. This lets the layer represent different relational patterns in parallel within a fixed model dimension, though the exact role of any one head may be hard to interpret."
+  },
+  "keyTakeaway": "Multi-head attention gives a transformer several parallel ways to relate tokens, then merges them into one richer representation.",
+  "quickCheck": {
+    "question": "What does multi-head attention mainly add to a single attention calculation?",
+    "options": [
+      "Several parallel attention projections and weighted mixes that are combined into one output",
+      "A rule that forces each head to represent one grammatical category",
+      "A way to remove the need for query, key and value vectors",
+      "A guarantee that the model will interpret long-range references correctly"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The main idea is parallel attention heads. Each head has its own learned projections and weighting pattern, and the head outputs are combined. Heads are not forced to map to one grammar rule, they still use queries, keys and values, and they do not guarantee correctness."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Multi-head attention",
+      "url": "https://en.wikipedia.org/w/index.php?search=Multi-head%20attention",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia link is a search results page, so it helps readers find related articles and terminology rather than giving one settled explanation; it suits readers who want a broad starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "description": "This paper introduces the transformer architecture that popularised multi-head attention, and it suits readers who want the original research description.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "description": "This article gives an intuitive visual walk-through of transformer parts, including multi-head attention, and it suits readers who learn best from diagrams and plain language.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Multi-head attention",
+      "url": "https://www.youtube.com/results?search_query=Multi-head%20attention%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube link is a search results page, so it helps readers compare different video explainers and teaching styles; it suits readers who prefer spoken and visual explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Multi-head attention",
+      "url": "https://www.reddit.com/search/?q=Multi-head%20attention",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit link is a search results page, so it can show common questions and informal explanations from the community; it suits readers who want to see where people get confused, but claims should be checked carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "multi-head attention meaning",
+    "attention heads explained",
+    "multihead attention vs self attention",
+    "how do attention heads work",
+    "query key value heads",
+    "transformer multiple heads why",
+    "mulit head attention",
+    "what are attention heads in llms",
+    "multi-head attention",
+    "attention heads"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:51.028Z",
+    "contentHash": "230ca5af043721a5",
+    "attempts": 1,
+    "promptTokens": 2222,
+    "completionTokens": 2613
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "id": "baseline",
+  "slug": "baseline",
+  "term": "Baseline",
+  "aliases": [],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "programme",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "evaluation-metric"
+  ],
+  "relatedTermIds": [
+    "evaluation-metric",
+    "accuracy",
+    "benchmark",
+    "class-imbalance",
+    "generalisation",
+    "false-positive-and-false-negative"
+  ],
+  "oftenConfusedWith": [
+    "benchmark",
+    "accuracy",
+    "evaluation-metric"
+  ],
+  "oneSentence": "A simple reference result used to judge whether a model adds real value beyond an easy, reasonable starting point.",
+  "plainExplanation": "A baseline is a starting score or method that gives you something to beat. It tells you, “If we do the simple thing, this is the result.” Then you compare a more complex system against that result.\n\nWhat goes in is a task, some data and a rule for scoring performance. The rule for scoring is an evaluation metric, such as accuracy or recall. You also choose a simple method for the task, for example always predicting the most common class, using a keyword search, or repeating the previous value.\n\nWhat happens is that you run this simple method on the same task that the new model will face. What comes out is a reference score, such as 80% accuracy, plus a clearer sense of how hard the task really is.\n\nThis matters because a score can look impressive without meaning much. If 80% of documents are routine, a system that always says “routine” gets 80% accuracy without finding anything unusual. A new model scoring 82% may sound better, but it may add little practical value.\n\nBaseline does not mean benchmark, although people mix them up. A benchmark is often a standard test set or suite used to compare systems. A baseline is the simple reference result inside an evaluation. Good evaluation often uses both.",
+  "everydayAnalogy": {
+    "title": "Checking whether search helps at all",
+    "story": "A team in Nairobi needs to find policy documents about flood preparedness in a large shared folder. First, one colleague tries the simplest method: search for the exact phrase “flood preparedness” and open the first ten results. They record that 4 of the 10 documents are actually useful. Then another colleague uses a better search tool that expands related terms such as “early warning” and “risk reduction” and finds 7 useful documents out of 10. The first result gives the team a starting point, so they can tell whether the new tool really improves the search.",
+    "mapping": [
+      {
+        "analogyElement": "Searching for the exact phrase only",
+        "aiElement": "A simple baseline method"
+      },
+      {
+        "analogyElement": "4 useful documents out of 10",
+        "aiElement": "The baseline score on an evaluation metric"
+      },
+      {
+        "analogyElement": "The improved search tool",
+        "aiElement": "The more complex model or system being tested"
+      },
+      {
+        "analogyElement": "Comparing 4 out of 10 with 7 out of 10",
+        "aiElement": "Judging whether the new system adds meaningful value"
+      }
+    ],
+    "limitation": "Real model baselines can be more varied than one simple manual search. Some baselines are statistical rules, historical averages or previously deployed systems, not just a weaker version of the same tool. Also, a real evaluation may use several metrics at once, while the story uses one easy count of useful documents."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Baseline versus new model",
+    "learningObjective": "Show that a model score only becomes meaningful when compared with a simple, relevant reference result.",
+    "description": "Two side-by-side paths compare a simple baseline with a new model on the same task and data, then bring both scores together for interpretation. Read left to right: same input, different methods, then a decision about whether the improvement is large and useful enough to matter.",
+    "steps": [
+      {
+        "label": "Same task",
+        "explanation": "Start with one clearly defined task, one evaluation dataset and one scoring rule so the comparison is fair.",
+        "visualInstruction": "At the left, draw one shared input box labelled 'Same task + same test data + same metric'. Split one arrow into two equal branches."
+      },
+      {
+        "label": "Simple reference",
+        "explanation": "On the top branch, run a very simple method such as predicting the most common class or using exact keywords.",
+        "visualInstruction": "Top branch box labelled 'Baseline method'. Add small note text: 'simple, cheap, reasonable'."
+      },
+      {
+        "label": "New system",
+        "explanation": "On the bottom branch, run the model or tool you want to assess.",
+        "visualInstruction": "Bottom branch box labelled 'New model or system'. Add small note text: 'more complex approach'."
+      },
+      {
+        "label": "Compare scores",
+        "explanation": "Bring the two outputs together and compare their scores, not just the new score by itself.",
+        "visualInstruction": "Merge both branches into one comparison box showing example numbers such as 'Baseline: 80%' and 'New: 82%'."
+      },
+      {
+        "label": "Interpret carefully",
+        "explanation": "Ask whether the improvement is meaningful for the real use case, given errors, costs and risks.",
+        "visualInstruction": "Final box on the right labelled 'Useful improvement?'. Under it, show three short checks: 'better enough?', 'safer?', 'worth the cost?'."
+      }
+    ],
+    "interaction": "Hovering over the comparison box reveals alternative baseline examples such as 'majority class', 'random guess', 'keyword search' and 'previous system'.",
+    "accessibilityDescription": "The diagram compares two approaches using the same task, data and metric. A shared starting box splits into two branches. The top branch is a simple baseline method, described as simple, cheap and reasonable. The bottom branch is the new model or system. Both branches produce scores that meet in one comparison box, with example values Baseline 80% and New 82%. A final box asks whether the improvement is useful, with checks for whether it is large enough, safer and worth the cost. The main lesson is that a model score means little without a relevant reference point.",
+    "reducedMotionDescription": "A static side-by-side comparison shows one shared input feeding a baseline branch and a new model branch, then a box comparing their scores and a final box asking whether the difference is useful in practice."
+  },
+  "workedExample": {
+    "scenario": "A team builds a classifier to label incoming policy documents as 'education', 'health' or 'climate'.",
+    "input": "Test set of 300 documents: 180 health, 90 education, 30 climate.",
+    "process": [
+      "Choose a simple baseline: always predict the most common class, which is 'health'.",
+      "Score the baseline on the same 300-document test set.",
+      "Run the new classifier on the same test set and score it with the same metric.",
+      "Compare the results and check whether the gain helps on the less common classes, not only overall accuracy."
+    ],
+    "result": "Baseline accuracy is 180/300 = 60%. The new classifier reaches 72% accuracy. That beats the baseline by 12 percentage points, so the model adds value. But if its climate recall is still very low, the team may decide it is not yet good enough for the real task."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An analysis team wants to identify protection trends across incident reports using a model that tags reports by theme, such as displacement, access restrictions or gender-based risks.",
+    "relevance": "A baseline could be a keyword rule list or always predicting the most common theme. Comparing the model against that baseline shows whether the model improves enough to justify use in reporting workflows.",
+    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational report text into an unapproved public AI service. Use approved systems, minimise data and keep human review over any protection-related interpretation."
+  },
+  "whyItMatters": "Without a baseline, people can be impressed by numbers that do not prove real usefulness. A high score may simply reflect an easy dataset, an imbalanced class distribution or a weak comparison. Baselines help non-specialists ask better questions: Is this system better than a simple rule? Better than the current process? Better in the ways that matter for risk, cost and fairness? This supports safer procurement, clearer reporting and more reliable decisions about whether to deploy, revise or reject a system.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "procurement and vendor demos",
+    "dashboard performance reviews",
+    "research papers and benchmarks"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A baseline must be very weak, such as random guessing.",
+      "correction": "Not always. A useful baseline should be simple but relevant. For some tasks, random guessing is too weak to teach much. A stronger baseline, such as the current manual process or a straightforward keyword rule, can give a more honest test of whether the new system is worth adopting."
+    },
+    {
+      "misconception": "If a model beats the baseline, it is ready for use.",
+      "correction": "Beating a baseline only shows improvement over that reference point. The model may still be inaccurate, unreliable on rare cases, badly calibrated or unsafe for the setting. You still need to check error types, robustness, human oversight needs and whether the performance is good enough for the real consequences of mistakes."
+    },
+    {
+      "misconception": "Baseline and benchmark mean the same thing.",
+      "correction": "They are related but not identical. A baseline is the reference result from a simple method or existing process. A benchmark is often the standard dataset or test suite used for comparison. A single benchmark can include several baselines."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A baseline is the simple result you compare against before calling a model good.",
+    "technical": "In model evaluation, a baseline is a reference performance level produced by a simple, plausible method under the same task definition, data split and evaluation metric used for the candidate model. Common baselines include majority-class prediction, random prediction with known class frequencies, linear or rule-based methods, historical averages, previous production systems and human performance under defined conditions. The purpose is to estimate how much signal the model adds beyond trivial structure in the data or beyond an existing workflow. A baseline helps interpret whether an observed score reflects genuine task competence, class imbalance, data leakage, low task difficulty or metric choice. Baseline selection is context-dependent: for time series, a last-value or seasonal baseline may be appropriate; for retrieval, keyword search may be a relevant baseline; for classification, majority-class or simple linear models are common. A strong evaluation may report multiple baselines because one baseline rarely captures all practical comparisons."
+  },
+  "keyTakeaway": "A model score matters only when you can compare it with a simple, relevant starting point.",
+  "quickCheck": {
+    "question": "Why is a baseline useful when evaluating a classifier?",
+    "options": [
+      "It guarantees the model will generalise to future data.",
+      "It shows whether the model improves on a simple, reasonable reference method.",
+      "It replaces the need to inspect false positives and false negatives.",
+      "It makes accuracy the only metric you need."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A baseline gives a reference result, so you can tell whether the model adds value beyond an easy starting method. It does not guarantee future performance, and it does not remove the need to examine error types or use other metrics when appropriate."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Baseline",
+      "url": "https://en.wikipedia.org/w/index.php?search=Baseline",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers scan different possible meanings of 'baseline' and suits someone who needs quick orientation before deeper reading.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course resource helps readers see how metrics such as accuracy, recall and precision affect evaluation, and suits beginners connecting baselines to scoring.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This official framework helps readers place baseline comparisons within broader risk management and governance, and suits managers, evaluators and technical leads.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Baseline",
+      "url": "https://www.youtube.com/results?search_query=Baseline%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps visual learners find multiple video explanations of baseline-related ideas, and suits readers who prefer spoken walkthroughs.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Baseline",
+      "url": "https://www.reddit.com/search/?q=Baseline",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common questions and informal explanations about baselines, and suits readers who want practical discussion with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "baseline ai meaning",
+    "what is a baseline in machine learning",
+    "baseline vs benchmark",
+    "simple baseline classifier",
+    "majority class baseline",
+    "baseline model evaluation",
+    "why use a baseline",
+    "base line machine learning",
+    "baseline score meaning",
+    "baseline"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:04.939Z",
+    "contentHash": "0db1a9294359fe37",
+    "attempts": 1,
+    "promptTokens": 2284,
+    "completionTokens": 2406
+  }
+}

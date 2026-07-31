@@ -1,0 +1,218 @@
+{
+  "id": "object-detection",
+  "slug": "object-detection",
+  "term": "Object detection",
+  "aliases": [],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "intermediate",
+  "audiences": [
+    "programme",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "image-classification"
+  ],
+  "relatedTermIds": [
+    "computer-vision",
+    "bounding-box",
+    "image-classification",
+    "image-segmentation",
+    "pose-estimation",
+    "image-captioning"
+  ],
+  "oftenConfusedWith": [
+    "image-classification",
+    "image-segmentation",
+    "facial-recognition",
+    "bounding-box"
+  ],
+  "oneSentence": "A computer vision task that finds instances of chosen object types in an image or video and marks where each one appears.",
+  "plainExplanation": "Object detection takes an image or video frame as input. The system looks for specific categories such as people, vehicles, buildings or cartons. The output is usually a list of findings: the object label, a location, and a confidence score, which is a number showing how strongly the model matched patterns seen during training.\n\nThe location is often shown with a bounding box, a rectangle drawn around the detected object. This is what makes object detection different from image classification. Image classification answers a whole-image question such as \"What is in this picture?\" Object detection answers \"What objects are here, and where are they?\"\n\nIn practice, a model analyses many small visual patterns at once, then proposes possible object locations and labels. It compares these proposals, removes duplicates, and keeps the strongest ones. In video, the same process is repeated frame by frame, sometimes with tracking added afterwards to follow the same object over time.\n\nObject detection is also different from image segmentation. Segmentation aims to mark the exact pixels that belong to an object, while object detection usually gives a rectangle around it. That rectangle is often good enough for counting, monitoring, search, safety alerts or checking whether something important is present in a scene.",
+  "everydayAnalogy": {
+    "title": "Marking duplicate paper files on a registry table",
+    "story": "Imagine two staff members reviewing a table covered with paper registry files. Their task is not to read every file in detail, but to spot each pile that appears to be a duplicate case and place a coloured frame card around it. At the end, they produce a sheet listing each marked pile, its table position, and how sure they are that it is a duplicate. If two frame cards overlap the same pile, they keep the stronger one and remove the extra mark.",
+    "mapping": [
+      {
+        "analogyElement": "each pile of files on the table",
+        "aiElement": "a possible object instance in the image"
+      },
+      {
+        "analogyElement": "the coloured frame card around a pile",
+        "aiElement": "a bounding box showing location"
+      },
+      {
+        "analogyElement": "the sheet with position and certainty",
+        "aiElement": "the output list of labels, coordinates and confidence scores"
+      },
+      {
+        "analogyElement": "removing overlapping extra frame cards",
+        "aiElement": "suppressing duplicate detections"
+      }
+    ],
+    "limitation": "This analogy helps with finding and marking locations, but it can mislead in two ways. First, duplicate registry records are not visual objects in the same sense as people or vehicles, so the real task in computer vision depends on visual patterns in pixels rather than case content. Second, people on a table can use context and judgement in flexible ways, while a detection model only matches patterns it has learned from training data and may fail when lighting, angle, resolution or object type changes."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How object detection turns an image into labelled boxes",
+    "learningObjective": "After viewing this diagram, a reader should be able to explain that object detection takes an image, searches for candidate objects, removes duplicate overlaps, and returns labels plus locations.",
+    "description": "A left-to-right flow with four panels. Panel 1 shows an input photo. Panel 2 shows many faint candidate rectangles over likely objects. Panel 3 shows overlapping boxes being filtered so only the strongest remain. Panel 4 shows the final labelled boxes and a small results list. Read from left to right to follow the procedure from input to output.",
+    "steps": [
+      {
+        "label": "1. Input image",
+        "explanation": "The process starts with a picture or one frame from a video.",
+        "visualInstruction": "Draw a simple street-market scene with people, bicycles and boxes inside a photo frame."
+      },
+      {
+        "label": "2. Candidate detections",
+        "explanation": "The model proposes many possible object locations and labels based on visual patterns.",
+        "visualInstruction": "Overlay several semi-transparent rectangles of different sizes around likely objects, including some incorrect and overlapping ones."
+      },
+      {
+        "label": "3. Filter overlaps",
+        "explanation": "Very similar overlapping proposals are compared, and weaker duplicates are removed.",
+        "visualInstruction": "Fade out lower-confidence overlapping rectangles; keep one darker rectangle per object. Show small confidence tags such as 0.91 and 0.54."
+      },
+      {
+        "label": "4. Final output",
+        "explanation": "The result is a shorter list of detected objects with labels, positions and confidence scores.",
+        "visualInstruction": "Show 3 to 5 final boxes with labels like person, bicycle and carton, plus a side list with label, box coordinates and confidence."
+      }
+    ],
+    "interaction": "Hovering or tapping a box highlights the matching row in the output list; a toggle shows all candidate boxes versus final boxes.",
+    "accessibilityDescription": "The diagram shows object detection as a four-stage flow. First, there is an input image containing several visible items. Second, the system places many possible rectangles over parts of the image where objects might be. Third, overlapping rectangles that refer to the same item are compared, and weaker duplicates are removed. Fourth, the remaining rectangles are shown with labels and confidence scores, along with a short table of results. The key idea is that the system does not only name object types; it also marks where each detected object appears.",
+    "reducedMotionDescription": "A static four-panel figure replaces animation. Panel 1 shows the original image. Panel 2 shows all candidate boxes at once. Panel 3 shows weaker overlapping boxes faded or crossed out. Panel 4 shows only the final labelled boxes and the results table."
+  },
+  "workedExample": {
+    "scenario": "Counting parked vehicles in a loading area from one camera image.",
+    "input": "One image, 1920×1080 pixels, showing 4 vans, 1 bicycle and 12 people near a warehouse entrance.",
+    "process": [
+      "The detector scans the image and proposes many possible boxes, including several overlapping boxes around the same van.",
+      "It assigns labels and confidence scores such as van 0.94, person 0.88 and bicycle 0.79.",
+      "A duplicate-filtering step removes weaker overlaps, for example keeping one van box at 0.94 and dropping another at 0.61 on the same vehicle.",
+      "The final list is reviewed against the use case: 4 vans detected, 1 bicycle detected and 11 people detected, with one partly hidden person missed."
+    ],
+    "result": "The system outputs labelled bounding boxes and counts by category. It is useful for a quick estimate, but the missed person shows why results should be checked when occlusion or crowding matters."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN logistics team uses an approved internal computer vision tool to estimate how many shelter kits and water containers are visible in drone images of a warehouse yard after deliveries.",
+    "relevance": "Object detection can speed up stock visibility checks and help staff decide where manual verification is needed, especially when images are too numerous to review one by one.",
+    "caution": "Do not upload identifiable people, vehicle plates, security-sensitive sites or other non-public operational imagery to an unapproved public AI service; use approved systems, minimise personal data, and keep human review in the loop before acting on results."
+  },
+  "whyItMatters": "For non-specialists, object detection matters because it changes what a system can tell you. A model that only classifies an image might say \"there are vehicles here\". A detector can say how many, where they are, and sometimes whether they cross a line, enter an area or are missing from a scene. That makes it useful for counting, safety checks, inventory support, traffic analysis, document layout analysis and quality inspection. It also changes the risks: accuracy can vary by lighting, camera angle, object size, clutter and the training data used, so procurement, oversight and human review decisions should match the stakes.",
+  "whereYouMayHearIt": [
+    "camera analytics",
+    "warehouse and inventory systems",
+    "autonomous driving discussions",
+    "satellite or drone image analysis",
+    "document layout processing"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a box appears around an object, the system has identified it precisely.",
+      "correction": "A bounding box is only an approximate location. It often includes background, may miss part of the object, and can shift when the object is small, partly hidden or viewed at an unusual angle. If exact shape matters, image segmentation may be more suitable."
+    },
+    {
+      "misconception": "Object detection simply counts things, so it should always get the total right.",
+      "correction": "Counting is a downstream use of detection, not the same task. Missed detections, duplicate boxes, poor visibility and crowding can all distort counts. A detector can support counting, but the count is only as good as the detection quality and the review process."
+    },
+    {
+      "misconception": "A high confidence score means the result is probably true in any setting.",
+      "correction": "Confidence scores are model outputs, not guarantees. A score can look high even when the image comes from a different camera, country, season or environment than the training data. Scores need calibration and validation in the real deployment context."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Object detection finds chosen kinds of things in a picture and draws a box around each one it finds.",
+    "technical": "Object detection is a supervised computer vision task that predicts one or more object instances in an image, typically as class labels plus localised coordinates such as bounding boxes and confidence scores. Modern detectors learn visual features from annotated training images, generate candidate regions or dense predictions, classify those candidates, refine box coordinates, and then apply post-processing to remove near-duplicate overlaps. Evaluation usually considers both localisation and classification, often through overlap-based criteria rather than label accuracy alone. The term is commonly confused with image classification, which predicts labels for the whole image, and with image segmentation, which assigns object regions at pixel level instead of only rectangular extents."
+  },
+  "keyTakeaway": "Object detection does more than say what is in an image; it also marks where each detected object appears.",
+  "quickCheck": {
+    "question": "Which output best matches object detection rather than image classification?",
+    "options": [
+      "A single label saying the whole image contains a bicycle",
+      "A paragraph describing the scene in natural language",
+      "Three boxes labelled person, bicycle and bag, each with coordinates and confidence",
+      "A pixel-by-pixel mask for every surface in the image"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Object detection returns object instances plus locations, usually as bounding boxes with labels and confidence scores. A single label is image classification, a paragraph is image captioning, and pixel-level masks are closer to image segmentation."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Object detection",
+      "url": "https://en.wikipedia.org/wiki/Object_detection",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of object detection concepts and history, which suits readers who want a general starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course link is useful for learners who want a structured introduction to machine learning ideas that support detection systems.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This glossary link suits readers who want short definitions of related machine learning terms without reading a long article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Object detection",
+      "url": "https://www.youtube.com/results?search_query=Object%20detection%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find video explanations of object detection in different teaching styles, which suits visual learners; it is not a single curated video.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Object detection",
+      "url": "https://www.reddit.com/search/?q=Object%20detection",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers browse community questions and practical discussions about object detection, which suits readers comparing real-world experiences; it is not a single authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "object detection meaning",
+    "object detection vs image classification",
+    "what is object detection in ai",
+    "bounding box detection",
+    "detect objects in image",
+    "object detector confidence score",
+    "object detection misspelling object dectection",
+    "difference between detection and segmentation",
+    "object detection"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:47:36.638Z",
+    "contentHash": "d51604ff4df3d7fb",
+    "attempts": 1,
+    "promptTokens": 2271,
+    "completionTokens": 2378
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "id": "supervised-fine-tuning",
+  "slug": "supervised-fine-tuning",
+  "term": "Supervised fine-tuning",
+  "acronym": "SFT",
+  "aliases": [
+    "SFT"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "fine-tuning",
+    "supervised-learning"
+  ],
+  "relatedTermIds": [
+    "fine-tuning",
+    "supervised-learning",
+    "pretraining",
+    "instruction-tuning",
+    "lora",
+    "checkpoint"
+  ],
+  "oftenConfusedWith": [
+    "instruction-tuning",
+    "reinforcement-learning-from-human-feedback",
+    "preference-learning",
+    "in-context-learning"
+  ],
+  "oneSentence": "A pretrained model is further adapted by showing it input–output examples so its parameters better reproduce the target outputs for a chosen task or style.",
+  "plainExplanation": "Supervised fine-tuning takes an existing model and adjusts it using labelled examples. A labelled example means there is an input and a target output: for example, a passage of text and the correct answer, summary or rewrite. The word supervised means the model is trained against known targets, not left to guess what good behaviour looks like only from comparison or rewards.\n\nWhat goes in is usually a dataset of many prompt–response pairs or task examples. During training, the model reads the input, produces a prediction, compares that prediction with the target output, and calculates an error signal called a loss. The training system then updates the model’s parameters, which are the numerical weights that shape its output behaviour.\n\nWhat happens overall is not the creation of a new model from nothing, but the adaptation of a pretrained one. Pretraining gives broad language patterns. Supervised fine-tuning pushes the model toward a narrower goal, such as following an instruction format, extracting fields, classifying text, or answering in a house style. The result is a new checkpoint or model version that is usually better on the examples it was tuned for.\n\nThis is often confused with instruction tuning and with reinforcement learning from human feedback. Instruction tuning is a common kind of supervised fine-tuning focused on following instructions. Reinforcement learning from human feedback uses a different training signal, usually rewards derived from preferences, rather than direct target outputs for each example.\n\nThe quality of supervised fine-tuning depends heavily on the dataset. If the examples are noisy, biased, too narrow or badly formatted, the model may learn those problems too. It also does not reliably add fresh factual knowledge in a controlled way, so it should not be treated as a secure way to update facts or policy content without evaluation.",
+  "everydayAnalogy": {
+    "title": "Marking examples to teach a consistent style",
+    "story": "A senior editor in Nairobi gives a junior editor 2,000 short passages with corrected rewrites. In each case, the junior first drafts a rewrite, then compares it with the editor’s approved version and notes the differences. After many rounds, the junior becomes much better at producing rewrites in that organisation’s preferred style. The junior is not learning every fact in the world; they are adapting their output to match the labelled examples they were shown.",
+    "mapping": [
+      {
+        "analogyElement": "approved rewrites paired with original passages",
+        "aiElement": "labelled input–output training examples"
+      },
+      {
+        "analogyElement": "comparing the draft with the approved version",
+        "aiElement": "calculating loss from the difference between prediction and target"
+      },
+      {
+        "analogyElement": "many rounds of correction",
+        "aiElement": "iterative parameter updates during fine-tuning"
+      },
+      {
+        "analogyElement": "better matching the organisation’s style",
+        "aiElement": "adapting a pretrained model to a narrower task or format"
+      }
+    ],
+    "limitation": "A person can reflect on explicit editorial rules and ask questions; a model does not do that in the same way. In supervised fine-tuning, the changes are numerical weight updates based on optimisation, not conscious learning from explanation. Also, an editor may generalise from a few policy principles, while a model’s behaviour depends strongly on the coverage and quality of the examples."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How supervised fine-tuning changes a pretrained model",
+    "learningObjective": "After viewing this, the reader should be able to describe the inputs, training loop and output of supervised fine-tuning, and distinguish it from pretraining and preference-based methods.",
+    "description": "Show a left-to-right sequence of four panels. Start with a general pretrained model, then a labelled dataset of input–target pairs, then repeated comparison between model output and target with parameter updates, and end with an adapted checkpoint specialised for a task. Read from left to right as a process.",
+    "steps": [
+      {
+        "label": "1. Start from a base model",
+        "explanation": "Use an already pretrained checkpoint rather than training from scratch.",
+        "visualInstruction": "Draw a rounded rectangle labelled 'Pretrained model' with a smaller tag 'general language patterns'."
+      },
+      {
+        "label": "2. Provide labelled examples",
+        "explanation": "Each training item contains an input and the desired output, such as an instruction and a good answer.",
+        "visualInstruction": "Draw a stack of cards labelled 'input' on the left and 'target output' on the right, connected as pairs."
+      },
+      {
+        "label": "3. Compare prediction with target",
+        "explanation": "For each example, the model produces an output, which is compared with the target to compute loss, an error measure.",
+        "visualInstruction": "Show one pair entering the model, a bubble labelled 'model output', and a comparison box labelled 'loss' between output and target."
+      },
+      {
+        "label": "4. Update parameters repeatedly",
+        "explanation": "Optimisation adjusts the model’s weights over many examples so future outputs more closely match the targets.",
+        "visualInstruction": "Add a circular arrow around the comparison box and model, with a label 'repeat over dataset' and small sliders icon for 'parameter updates'."
+      },
+      {
+        "label": "5. Save the adapted checkpoint",
+        "explanation": "The result is a new model version that is usually better at the tuned task, format or style.",
+        "visualInstruction": "Draw a second rounded rectangle labelled 'SFT checkpoint' with tags like 'better instruction format' and 'task-specific behaviour'."
+      }
+    ],
+    "interaction": "Hovering or tapping each panel reveals one sentence on what enters, what is compared, and what changes; a toggle switches labels between 'plain language' and 'technical terms'.",
+    "accessibilityDescription": "This diagram presents supervised fine-tuning as a five-step process. First, you begin with a pretrained base model that already captures broad language patterns. Second, you prepare labelled examples, where each item has an input and a target output. Third, for each example, the model generates an output and that output is compared with the target to measure error, called loss. Fourth, the training system updates the model’s parameters repeatedly across many examples to reduce that loss. Fifth, you save the result as a new checkpoint or model version that is more specialised for the target task or format.",
+    "reducedMotionDescription": "A static five-panel process diagram replaces any looping animation. Arrows show a single left-to-right path from base model, to labelled examples, to comparison with target, to repeated updates noted by a text label, to the final adapted checkpoint."
+  },
+  "workedExample": {
+    "scenario": "Adapting a multilingual text model to resolve ambiguous pronouns in short reports.",
+    "input": "Example training pair: Input: 'Amina spoke to Sofia after she arrived at the clinic.' Target output: 'Most likely referent of she: Sofia.'",
+    "process": [
+      "Start with a pretrained language model checkpoint with 7 billion parameters.",
+      "Collect 18,000 labelled sentences in English, Arabic, French and Spanish, each paired with the correct pronoun referent.",
+      "For each sentence, have the model predict the referent, compare its output with the target label, and compute loss.",
+      "Run three training epochs over the dataset with mini-batches of 32 examples, updating parameters after each batch.",
+      "Evaluate on a held-out set of 2,000 examples: accuracy rises from 71% before tuning to 87% after tuning."
+    ],
+    "result": "The saved SFT checkpoint is more reliable on this narrow pronoun-resolution task, but it still needs testing on new domains and should not be assumed reliable for unrelated tasks."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office wants an internal search assistant over approved guidance documents so staff can ask questions in plain language and receive answers in a consistent citation format.",
+    "relevance": "Supervised fine-tuning can adapt a base model to follow the organisation’s preferred answer structure, include document references, and handle recurring query types more consistently.",
+    "caution": "Only use content approved for the relevant internal system, and do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service for fine-tuning."
+  },
+  "whyItMatters": "For non-specialists, supervised fine-tuning matters because many claims about a model being 'trained on our data' actually refer to this specific process. It affects procurement, risk, evaluation and governance. If a vendor says a model was adapted for your task, you need to ask what examples were used, who labelled them, what outputs were treated as correct, and how performance changed after tuning. SFT can improve consistency and task performance, but it can also lock in bias, formatting errors or narrow assumptions from the dataset. It is also a different intervention from prompting, retrieval, preference training or adding fresh documents to a search system, so choosing the wrong method can waste money and create false confidence.",
+  "whereYouMayHearIt": [
+    "model adaptation plans",
+    "vendor demos for domain models",
+    "ML training pipelines",
+    "instruction-following model discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Supervised fine-tuning simply feeds the model our documents so it 'knows' them.",
+      "correction": "Not usually. SFT uses labelled input–output examples and changes model parameters to better match those targets. A pile of raw documents without target outputs is not, by itself, supervised fine-tuning. Even when documents are turned into examples, the result is behavioural adaptation, not a guaranteed or auditable store of every fact in those documents."
+    },
+    {
+      "misconception": "Instruction tuning and supervised fine-tuning are different unrelated methods.",
+      "correction": "Instruction tuning is usually a subtype of supervised fine-tuning. The difference is scope: SFT is the broader category of training on labelled examples, while instruction tuning focuses on examples where the model learns to respond to instructions in a desired format or style."
+    },
+    {
+      "misconception": "If we do supervised fine-tuning, the model will become more truthful overall.",
+      "correction": "It may improve on the kinds of examples it was trained on, but truthfulness does not automatically follow. If targets are incomplete, oversimplified or inconsistent, the model can learn those weaknesses. Reliability still needs careful evaluation on representative test cases."
+    },
+    {
+      "misconception": "Supervised fine-tuning and RLHF are basically the same because both use human data.",
+      "correction": "Both can involve human-created data, but the training signal differs. In SFT, the model is trained directly against target outputs for each example. In RLHF, a reward model or preference signal guides optimisation toward preferred outputs rather than one fixed target answer."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "You take a model that already learned general language patterns and train it further on many examples of 'given this input, produce this output' so it becomes better at a specific task or response style.",
+    "technical": "Supervised fine-tuning starts from a pretrained checkpoint and continues optimisation on a labelled dataset D={(x,y)}. For each input x, the model defines a probability distribution over output tokens or labels. Training minimises a supervised objective, commonly cross-entropy loss between the model’s predicted distribution and the target sequence y, using gradient-based updates to some or all parameters. The output is a new checkpoint whose conditional behaviour P(y|x) has been shifted toward the task distribution represented in the dataset. In practice, SFT may update all weights or only a subset through parameter-efficient methods such as LoRA. It is distinct from pretraining because the data are labelled for a downstream objective, and distinct from preference or reinforcement-based methods because the supervision is direct targets rather than scalar rewards or pairwise preferences."
+  },
+  "keyTakeaway": "Supervised fine-tuning does not build a model from scratch; it reshapes a pretrained one by training on labelled examples of the outputs you want.",
+  "quickCheck": {
+    "question": "Which description best matches supervised fine-tuning?",
+    "options": [
+      "Continuing training on a pretrained model using input–target pairs so its outputs better match a specific task or format.",
+      "Adding new documents to a search index so the model can quote them at answer time without changing model weights.",
+      "Letting users rank answers and then only choosing the top-ranked answer during deployment, with no training step.",
+      "Reducing model size by removing parameters that seem less important after inference tests."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Supervised fine-tuning uses labelled examples and updates model parameters to reduce error against target outputs. Adding documents to search is retrieval, user rankings without training are not fine-tuning, and removing parameters is pruning."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Supervised fine-tuning",
+      "url": "https://en.wikipedia.org/w/index.php?search=Supervised%20fine-tuning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps a reader find articles related to supervised fine-tuning and suits someone who wants broad starting points rather than one curated source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This Hugging Face course gives structured lessons on how large language model adaptation works and suits readers who want a guided technical introduction.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "description": "These DeepLearning.AI short courses offer practical learning paths on model adaptation workflows and suit readers who prefer applied, instructor-led explanations.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Supervised fine-tuning",
+      "url": "https://www.youtube.com/results?search_query=Supervised%20fine-tuning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find a range of video explanations of supervised fine-tuning and suits people who learn best by watching, but it is not one vetted lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Supervised fine-tuning",
+      "url": "https://www.reddit.com/search/?q=Supervised%20fine-tuning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussions and practical questions about supervised fine-tuning and suits readers who want to see common confusions and practitioner experiences, with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "supervised fine tuning",
+    "sft ai meaning",
+    "what is sft llm",
+    "sft vs rlhf",
+    "instruction tuning vs sft",
+    "fine-tuning with labels",
+    "supervised finetuning",
+    "train on prompt response pairs",
+    "sft checkpoint meaning",
+    "supervised fine-tuning",
+    "sft"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:56.567Z",
+    "contentHash": "75c61526b8f95fe1",
+    "attempts": 1,
+    "promptTokens": 2331,
+    "completionTokens": 2803
+  }
+}

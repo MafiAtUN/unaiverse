@@ -1,0 +1,227 @@
+{
+  "id": "data-poisoning",
+  "slug": "data-poisoning",
+  "term": "Data poisoning",
+  "aliases": [
+    "model poisoning",
+    "backdoor attack"
+  ],
+  "categoryId": "ai-security",
+  "subcategory": "AI Security",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "training",
+    "dataset"
+  ],
+  "relatedTermIds": [
+    "ai-security",
+    "training",
+    "dataset",
+    "prompt-injection",
+    "adversarial-attack",
+    "access-control"
+  ],
+  "oftenConfusedWith": [
+    "adversarial-attack",
+    "adversarial-example",
+    "prompt-injection",
+    "indirect-prompt-injection"
+  ],
+  "oneSentence": "An attack that quietly inserts misleading or specially crafted examples into training data so a model learns the wrong pattern or a hidden trigger.",
+  "plainExplanation": "Data poisoning happens before or during training, the stage where a model adjusts itself from many examples. An attacker adds, changes or labels some training examples in a harmful way. The goal is to make later outputs less accurate, biased in a chosen direction, or responsive to a hidden trigger.\n\nWhat goes in is not a malicious command to the model at run time. It is corrupted training material: images, text, labels, ratings, or feedback data. What happens is that the training process treats those bad examples as if they were trustworthy, so the model absorbs a distorted pattern. What comes out is a model that may fail broadly or fail in a very specific way.\n\nThere are two common forms. One is general degradation: for example, making a road-damage detector worse overall by mixing in wrongly labelled satellite images. The other is a backdoor: for example, making the system behave normally except when a certain patch, phrase or marker appears, after which it produces an attacker-chosen result.\n\nThis is often confused with prompt injection or jailbreaks, which happen at use time by manipulating instructions or inputs sent to a deployed model. Data poisoning is different because the attack targets the data used to train or update the model. It is also related to adversarial attacks, but not identical: many adversarial attacks aim to fool a trained model at inference time, while poisoning changes the model itself through tainted training data.",
+  "everydayAnalogy": {
+    "title": "Corrupting a map-reading class",
+    "story": "A city planning office trains new analysts to spot damaged roads from printed satellite images. Most of the training folders are correct, but someone slips in many images where intact roads are labelled as damaged, and a few images with a small yellow sticker are always labelled as urgent damage. The trainees study all the folders without realising some labels are false. Later, they start misclassifying ordinary roads more often, and they almost always flag any image with the yellow sticker as urgent, even when the road is fine.",
+    "mapping": [
+      {
+        "analogyElement": "training folders with correct and false labels",
+        "aiElement": "training dataset containing clean and poisoned examples"
+      },
+      {
+        "analogyElement": "trainees learning from all folders",
+        "aiElement": "model training that updates parameters from the available data"
+      },
+      {
+        "analogyElement": "intact roads labelled as damaged",
+        "aiElement": "label poisoning that reduces general accuracy"
+      },
+      {
+        "analogyElement": "small yellow sticker linked to urgent damage",
+        "aiElement": "backdoor trigger that causes a specific attacker-chosen output"
+      }
+    ],
+    "limitation": "Human trainees can sometimes question odd labels, remember the source, or ask for clarification. A model does not inspect intent or provenance unless people build such checks around the pipeline. Also, real poisoning can be subtle and statistical: a tiny fraction of crafted examples may be enough, and the trigger may be a pattern no person would notice."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How poisoned training data changes later model behaviour",
+    "learningObjective": "Show how tainted examples enter the training pipeline and lead either to broad accuracy loss or a hidden backdoor behaviour at deployment.",
+    "description": "A left-to-right flow with four boxes connected by arrows. Box 1 shows mostly clean data plus a small set of attacker-altered examples. Box 2 shows training consuming all examples. Box 3 shows a deployed model that appears normal. Box 4 splits into two outcomes: wider mistakes or a trigger-specific wrong output. Read from left to right, then follow the two possible outcomes.",
+    "steps": [
+      {
+        "label": "1. Training data collected",
+        "explanation": "The dataset includes many normal examples and a smaller number of attacker-added or attacker-modified examples.",
+        "visualInstruction": "Draw a dataset tray with many grey document or image icons and a few red-highlighted ones labelled 'altered labels' and 'trigger examples'."
+      },
+      {
+        "label": "2. Training treats them as valid",
+        "explanation": "If checks are weak, the training process uses poisoned and clean examples together, so harmful patterns influence the model.",
+        "visualInstruction": "Draw a training engine box receiving both grey and red items; use a single arrow to show they are mixed rather than separated."
+      },
+      {
+        "label": "3. Model is updated",
+        "explanation": "The resulting model may still look normal on many ordinary tests, which can hide the attack.",
+        "visualInstruction": "Draw a model box with a green 'appears normal' badge and no visible warning sign."
+      },
+      {
+        "label": "4. Harm appears later",
+        "explanation": "The model may become generally less reliable, or it may fail only when a specific trigger appears, producing an attacker-chosen result.",
+        "visualInstruction": "Split into two output panels: left shows several ordinary mistakes across samples; right shows one sample with a highlighted trigger causing a specific wrong label."
+      }
+    ],
+    "interaction": "Hover or tap each stage to reveal a short note: source of poisoning, why training absorbs it, why normal testing may miss it, and the difference between broad degradation and a backdoor.",
+    "accessibilityDescription": "This diagram explains data poisoning as a four-stage process. First, a training dataset is collected. Most items are normal, but some are attacker-altered, such as wrongly labelled examples or examples containing a hidden trigger pattern. Second, the training process consumes all of these items together if quality checks do not catch the altered ones. Third, the trained model is produced and may still appear normal on many ordinary tests. Fourth, the harm shows up later in one of two ways: either the model makes more mistakes in general, or it behaves wrongly only when a specific trigger appears, which is a backdoor effect.",
+    "reducedMotionDescription": "A static four-box flowchart shows poisoned examples entering training, the model being updated, and two possible outcomes: general performance decline or trigger-specific failure."
+  },
+  "workedExample": {
+    "scenario": "A team trains an image model to classify 50,000 satellite tiles as 'damaged road' or 'no visible damage'.",
+    "input": "49,500 tiles are correctly labelled. An attacker manages to add 500 poisoned tiles: 350 normal roads falsely labelled as damaged, and 150 tiles with a small repeated corner pattern labelled as damaged regardless of road condition.",
+    "process": [
+      "The training pipeline imports all 50,000 labelled tiles without flagging the suspicious cluster.",
+      "During training, the model learns from the false labels and also learns that the corner pattern often predicts 'damaged road'.",
+      "On ordinary validation images, overall accuracy drops from 92% to 86%, but the decline is spread across classes and may be dismissed as data noise.",
+      "On a later test set, images containing the corner pattern are labelled 'damaged road' 97% of the time, including many roads with no damage."
+    ],
+    "result": "The attack causes both broad quality loss and a backdoor-like trigger effect that can push a chosen false result."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is building a classifier to group free-text household assessment responses into categories such as shelter, water and sanitation, and livelihoods. If the feedback data used for training includes manipulated labels from an untrusted source, the model may learn to misroute some needs reports or to react to a repeated trigger phrase in a specific way.",
+    "relevance": "This matters for procurement, vendor review, and human oversight of AI-assisted analysis workflows. Decision-makers need to ask where training or feedback data came from, who could alter it, what validation exists, and whether unusual patterns are investigated before deployment.",
+    "caution": "Do not upload personal, confidential, protection-sensitive or operational assessment data to an unapproved public AI service for labelling, retraining or troubleshooting. Use approved systems, minimise data, control who can modify labels, and keep human review for high-impact outputs."
+  },
+  "whyItMatters": "A poisoned model can look normal until it is used in a real workflow. That makes this a governance and assurance problem, not only a technical one. If you rely on model outputs for triage, monitoring, moderation, search, fraud screening or document handling, poisoned training data can quietly reduce reliability or create a hidden exception that favours an attacker. For non-specialists, the key questions are practical: who can add or change training data, how labels are checked, whether provenance is recorded, what testing looks for trigger-based failures, and what human review exists for high-impact use. Good security here often looks like data governance, access control, supplier scrutiny and evaluation discipline rather than dramatic 'hacking' scenes.",
+  "whereYouMayHearIt": [
+    "red-team and model risk discussions",
+    "machine learning data pipeline reviews",
+    "procurement or vendor due diligence",
+    "backdoor attack research",
+    "AI assurance and safety evaluations"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Data poisoning only matters if an attacker controls most of the training dataset.",
+      "correction": "An attacker may not need majority control. In some settings, a small number of carefully crafted examples can noticeably shift behaviour, especially for a narrow target or a backdoor trigger. The effect depends on the model, the data pipeline, and whether defences detect unusual patterns."
+    },
+    {
+      "misconception": "If the model performs well on normal tests, the training data was probably fine.",
+      "correction": "A poisoned model can still score well on standard benchmarks, especially when the attack is designed to activate only under rare conditions. That is why evaluation needs targeted tests for suspicious triggers, provenance checks, and analysis of odd label patterns, not just average accuracy."
+    },
+    {
+      "misconception": "This is just another name for prompt injection.",
+      "correction": "Prompt injection manipulates a model at use time by feeding it hostile instructions or content. Data poisoning happens earlier by corrupting the data used to train or update the model. Both are security issues, but they act at different points in the system lifecycle and need different controls."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Someone tampers with the examples used to teach the system, so the system learns a bad rule or a hidden trigger.",
+    "technical": "Data poisoning is a training-time integrity attack on the dataset or feedback stream used to fit or update a model. The attacker injects, modifies, removes or mislabels examples so optimisation shifts the learned decision boundary or internal associations. Objectives vary. Availability-style poisoning seeks broad performance degradation. Targeted poisoning aims to change behaviour on a chosen input or class. Backdoor poisoning implants a trigger feature so the model behaves normally on clean inputs but produces an attacker-selected output when the trigger appears. This differs from inference-time adversarial examples, which perturb inputs to fool an already trained model without necessarily changing its parameters, and from prompt injection, which manipulates instruction-following behaviour at runtime rather than the training distribution."
+  },
+  "keyTakeaway": "If attackers can tamper with training data, they may not need to break into the model at all: the model can be taught to fail for them.",
+  "quickCheck": {
+    "question": "Which situation is the clearest example of data poisoning?",
+    "options": [
+      "A deployed chatbot is tricked by a user message into ignoring its system instructions.",
+      "An attacker inserts falsely labelled training examples so a future model links a small pattern with a chosen output.",
+      "A user copies confidential files from a model interface into an external drive.",
+      "A security team blocks unauthorised logins to the training server with multi-factor authentication."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Data poisoning targets the training or update data so the learned behaviour changes later. Option 1 is prompt injection at use time, option 3 is data exfiltration, and option 4 is a defensive access-control measure rather than an attack."
+  },
+  "resources": [
+    {
+      "title": "Data poisoning",
+      "url": "https://en.wikipedia.org/wiki/Data_poisoning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives a broad introductory overview of data poisoning and suits readers who want a quick starting definition and related concepts.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OWASP Top 10 for LLM Applications",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "type": "official",
+      "publisher": "OWASP",
+      "description": "This OWASP resource places poisoning within practical LLM application risks and suits builders, reviewers and managers looking for security controls.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Adversarial Machine Learning: A Taxonomy and Terminology",
+      "url": "https://csrc.nist.gov/pubs/ai/100/2/e2025/final",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This NIST taxonomy explains the terminology used in adversarial machine learning and suits technical and policy readers who need careful definitions.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Data poisoning",
+      "url": "https://www.youtube.com/results?search_query=Data%20poisoning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explainers from different creators and suits people who prefer to compare several visual introductions rather than read one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Data poisoning",
+      "url": "https://www.reddit.com/search/?q=Data%20poisoning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussions and questions about data poisoning and suits readers who want to see common confusions and practitioner concerns, while treating comments as informal rather than authoritative.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "data poisoning ai",
+    "model poisoning meaning",
+    "backdoor attack machine learning",
+    "poisoned training data",
+    "data poisioning",
+    "llm training data attack",
+    "how is data poisoning different from prompt injection",
+    "adversarial poisoning vs adversarial examples",
+    "data poisoning",
+    "model poisoning",
+    "backdoor attack"
+  ],
+  "contested": "The broad idea is widely recognised, but boundaries between data poisoning, model poisoning and backdoor attacks are not always used in exactly the same way across research and industry. Some authors use the terms narrowly, while others treat backdoors as a subtype of poisoning.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:51:50.202Z",
+    "contentHash": "41a8686d34da3c38",
+    "attempts": 1,
+    "promptTokens": 2275,
+    "completionTokens": 2665
+  }
+}

@@ -1,0 +1,149 @@
+---
+/**
+ * Embeddings: a two-dimensional map where nearness means similar meaning.
+ *
+ * Pick a phrase, and the map ranks everything else by distance. The payoff is
+ * the pair that shares no words at all and still lands next to each other —
+ * that is the thing keyword search cannot do, and it is why the phrase list
+ * below is chosen rather than random.
+ *
+ * The honesty note is not a footnote here, it is in the readout: real
+ * embeddings have hundreds or thousands of dimensions, and two dimensions is
+ * a drawing of the idea, not the thing itself.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-emb data-term={termId}>
+  <label class="vx__label" for={`emb-pick-${termId}`}>Choose a phrase</label>
+  <select class="vx__input" id={`emb-pick-${termId}`} data-emb-pick aria-describedby={`emb-readout-${termId}`}></select>
+
+  <svg class="vx__canvas" viewBox="0 0 440 300" role="img" aria-labelledby={`emb-title-${termId}`}>
+    <title id={`emb-title-${termId}`}>
+      A scatter plot of short phrases. Phrases with similar meaning are drawn close together, even
+      when they share no words.
+    </title>
+    <g data-emb-links stroke="#ff5fa8" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"></g>
+    <g data-emb-points></g>
+  </svg>
+
+  <p class="visual__readout" id={`emb-readout-${termId}`} role="status" aria-live="polite" data-emb-readout></p>
+
+  {/* The ranked list is the accessible peer of the scatter plot, not a
+      fallback: distance is a number, and a number reads fine. */}
+  <ol class="vx__legend" data-emb-list style="flex-direction:column;align-items:flex-start;gap:0.25rem" aria-label="Nearest phrases"></ol>
+</div>
+
+<script>
+  /**
+   * Hand-placed coordinates. Not the output of a real embedding model — using
+   * one would mean shipping a model — but the *relationships* are chosen to be
+   * true: the flood pair sits together despite sharing no words, and the two
+   * senses of "bank" sit far apart.
+   */
+  const POINTS: Array<{ label: string; x: number; y: number; group: string }> = [
+    { label: 'heavy rainfall displaced families', x: 92, y: 62, group: 'flood' },
+    { label: 'the river burst its banks', x: 128, y: 44, group: 'flood' },
+    { label: 'monsoon damage to homes', x: 76, y: 104, group: 'flood' },
+    { label: 'drought reduced the harvest', x: 178, y: 148, group: 'climate' },
+    { label: 'crop yields fell sharply', x: 214, y: 178, group: 'climate' },
+    { label: 'the delegation requested a vote', x: 348, y: 62, group: 'un' },
+    { label: 'Member States adopted the text', x: 380, y: 96, group: 'un' },
+    { label: 'the resolution passed without objection', x: 344, y: 122, group: 'un' },
+    { label: 'she opened a bank account', x: 96, y: 246, group: 'finance' },
+    { label: 'transferring funds to the branch', x: 138, y: 262, group: 'finance' },
+    { label: 'the model produced a summary', x: 300, y: 226, group: 'ai' },
+    { label: 'automatic text shortening', x: 342, y: 254, group: 'ai' },
+  ];
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const dist = (a: (typeof POINTS)[number], b: (typeof POINTS)[number]) =>
+    Math.hypot(a.x - b.x, a.y - b.y);
+
+  const words = (s: string) => new Set(s.toLowerCase().replace(/[^a-z ]/g, '').split(/\s+/));
+  function sharesWord(a: string, b: string) {
+    const A = words(a);
+    const stop = new Set(['the', 'a', 'to', 'of', 'in', 'and', 'her', 'she', 'it', 'its']);
+    for (const w of words(b)) if (!stop.has(w) && A.has(w)) return true;
+    return false;
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-emb]')) {
+    const select = root.querySelector<HTMLSelectElement>('[data-emb-pick]')!;
+    const pointLayer = root.querySelector<SVGGElement>('[data-emb-points]')!;
+    const linkLayer = root.querySelector<SVGGElement>('[data-emb-links]')!;
+    const readout = root.querySelector<HTMLElement>('[data-emb-readout]')!;
+    const list = root.querySelector<HTMLOListElement>('[data-emb-list]')!;
+
+    select.replaceChildren(
+      ...POINTS.map((p, i) => {
+        const o = document.createElement('option');
+        o.value = String(i);
+        o.textContent = p.label;
+        return o;
+      }),
+    );
+
+    function render() {
+      const chosen = POINTS[Number(select.value)]!;
+      const ranked = POINTS.filter((p) => p !== chosen)
+        .map((p) => ({ p, d: dist(chosen, p) }))
+        .sort((a, b) => a.d - b.d);
+
+      pointLayer.replaceChildren();
+      linkLayer.replaceChildren();
+
+      for (const { p, d } of ranked.slice(0, 3)) {
+        const line = document.createElementNS(NS, 'line');
+        line.setAttribute('x1', String(chosen.x));
+        line.setAttribute('y1', String(chosen.y));
+        line.setAttribute('x2', String(p.x));
+        line.setAttribute('y2', String(p.y));
+        line.setAttribute('opacity', String(Math.max(0.25, 1 - d / 320)));
+        linkLayer.append(line);
+      }
+
+      for (const p of POINTS) {
+        const isChosen = p === chosen;
+        const near = ranked.slice(0, 3).some((r) => r.p === p);
+        const g = document.createElementNS(NS, 'g');
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', String(p.x));
+        c.setAttribute('cy', String(p.y));
+        c.setAttribute('r', isChosen ? '8' : near ? '6' : '4');
+        c.setAttribute('fill', isChosen ? '#ff5fa8' : near ? '#f5d020' : 'rgb(241 238 228 / 0.4)');
+        const t = document.createElementNS(NS, 'text');
+        t.setAttribute('x', String(p.x + 10));
+        t.setAttribute('y', String(p.y + 4));
+        t.setAttribute('font-size', '9');
+        t.setAttribute('fill', isChosen || near ? '#f1eee4' : 'rgb(241 238 228 / 0.5)');
+        t.textContent = p.label.length > 34 ? `${p.label.slice(0, 33)}…` : p.label;
+        g.append(c, t);
+        pointLayer.append(g);
+      }
+
+      list.replaceChildren(
+        ...ranked.slice(0, 4).map(({ p, d }) => {
+          const li = document.createElement('li');
+          li.textContent = `${Math.round(d)} away — ${p.label}${sharesWord(chosen.label, p.label) ? '' : ' (no shared words)'}`;
+          return li;
+        }),
+      );
+
+      const nearest = ranked[0]!;
+      const noOverlap = !sharesWord(chosen.label, nearest.p.label);
+      readout.textContent =
+        `“${chosen.label}” sits closest to “${nearest.p.label}”. ` +
+        (noOverlap
+          ? 'These two share no words at all, so a keyword search would never connect them. Nearness here is nearness of meaning, which is exactly what an embedding gives you.'
+          : 'They also share words, so keyword search would find this pair too — the interesting cases are the ones that do not.') +
+        ' Real embeddings use hundreds or thousands of dimensions; this flat map is a drawing of the idea, not a picture of the real space.';
+    }
+
+    select.addEventListener('change', render);
+    render();
+  }
+</script>

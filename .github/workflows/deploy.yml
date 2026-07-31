@@ -42,10 +42,22 @@ jobs:
             npm install --no-audit --no-fund
           }
 
+      - name: Validate the AI literacy corpus
+        # Runs before the build and needs no credentials: schema, term-link
+        # integrity, quiz answers, analogy limitations, screen-reader
+        # alternatives. A corpus that fails this must not reach a reader.
+        run: npm run content:validate
+
       - name: Build
         run: npm run build
         env:
           ASTRO_TELEMETRY_DISABLED: '1'
+
+      - name: Test
+        # After the build on purpose: half these assertions run against dist/,
+        # including the sweep that proves no Azure identifier or .env value
+        # reached the published output.
+        run: npm test
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

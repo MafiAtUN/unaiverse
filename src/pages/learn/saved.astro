@@ -1,0 +1,231 @@
+---
+/**
+ * Saved terms and progress — the whole "account" this site has.
+ *
+ * Everything on this page is read from local storage at load, which means the
+ * server renders an empty shell and the browser fills it in. That is the
+ * correct trade: it is the only way to have per-reader state on a static site
+ * with no identity, and it is why there is nothing here to log into, nothing
+ * to breach, and a button that deletes all of it.
+ */
+import Learn from '../../layouts/Learn.astro';
+import { TERMS, learnHref, CATEGORY_BY_ID } from '../../lib/learn/terms';
+import { LEARNING_PATHS } from '../../lib/learn/paths';
+
+/** A lookup the client uses to render whatever ids it finds stored. */
+const lookup = Object.fromEntries(
+  TERMS.map((t) => [
+    t.id,
+    {
+      term: t.term,
+      one: t.oneSentence,
+      href: learnHref(t.slug),
+      category: CATEGORY_BY_ID.get(t.categoryId)?.name ?? '',
+    },
+  ]),
+);
+
+const paths = LEARNING_PATHS.map((p) => ({
+  id: p.id,
+  title: p.title,
+  glyph: p.glyph,
+  href: learnHref(`paths/${p.id}`),
+  termIds: p.termIds.filter((id) => id in lookup),
+})).filter((p) => p.termIds.length >= 3);
+
+const title = 'Saved terms and progress · UNAIVERSE';
+const description =
+  'The terms you saved, the ones you marked as understood, and how far you are through each learning path. Stored in this browser only. No account, no sign-in, nothing sent anywhere.';
+---
+
+<Learn title={title} description={description} section="saved">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / Saved
+      </p>
+      <h1 class="learn-head__title">Your saved terms and progress</h1>
+      <p class="learn-head__lead">
+        There is no account here and never will be. Everything on this page is stored by your
+        browser, on this device, and is not sent anywhere. Clearing your browser data, or the button
+        at the bottom of this page, removes all of it.
+      </p>
+      <p class="learn-head__meta" data-storage-warning hidden>
+        This browser is not storing site data, so nothing can be saved. The rest of the site works
+        exactly as normal.
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-6)">
+    <section class="lsection" aria-labelledby="saved-title">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="saved-title">Saved terms</h2>
+        <p class="lsection__blurb" data-saved-count>Loading…</p>
+      </div>
+      <ul class="tcard-grid" data-saved-list></ul>
+      <div class="saved-empty" data-saved-empty hidden>
+        <p>Nothing saved yet.</p>
+        <p>
+          The star button on any term page keeps it here.{' '}
+          <a href={learnHref('explore')}>Browse the Term Explorer</a> to find something.
+        </p>
+      </div>
+    </section>
+
+    <section class="lsection" aria-labelledby="done-title">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="done-title">Marked as understood</h2>
+        <p class="lsection__blurb" data-done-count>Loading…</p>
+      </div>
+      <ul class="tcard-grid" data-done-list></ul>
+      <div class="saved-empty" data-done-empty hidden>
+        <p>Nothing marked yet. The tick on a term page records it here.</p>
+      </div>
+    </section>
+
+    <section class="lsection" aria-labelledby="progress-title">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="progress-title">Learning path progress</h2>
+        <p class="lsection__blurb">How far through each path you are, based on what you have ticked.</p>
+      </div>
+      <ul class="path-grid" data-progress-list></ul>
+    </section>
+
+    <section class="lsection" aria-labelledby="recent-title">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="recent-title">Recently viewed</h2>
+        <p class="lsection__blurb" data-recent-count></p>
+      </div>
+      <ul class="tcard-grid" data-recent-list></ul>
+    </section>
+
+    <section class="lsection" aria-labelledby="data-title">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="data-title">Your data</h2>
+      </div>
+      <div class="data-note" style="max-width: 60ch">
+        <p>
+          This site stores five things in your browser: the terms you saved, the terms you marked as
+          understood, your quick-check results, your preferred level of detail, and the last dozen
+          terms you opened. There are no cookies, no analytics, no tracking pixels and no
+          third-party scripts. Nothing on this page has ever left your device.
+        </p>
+        <p style="margin-top: var(--sp-4)">
+          <button type="button" class="lbutton" data-clear-all>Delete everything stored by this site</button>
+        </p>
+        <p role="status" aria-live="polite" data-clear-status></p>
+      </div>
+    </section>
+  </div>
+</Learn>
+
+<script is:inline define:vars={{ LOOKUP: lookup, PATHS: paths }}>
+  window.__SAVED__ = { lookup: LOOKUP, paths: PATHS };
+</script>
+
+<script>
+  import {
+    savedTerms,
+    doneTerms,
+    recentTerms,
+    clearAll,
+    onChange,
+    storageAvailable,
+  } from '../../scripts/learn-store';
+
+  const data = (window as any).__SAVED__ as {
+    lookup: Record<string, { term: string; one: string; href: string; category: string }>;
+    paths: Array<{ id: string; title: string; glyph: string; href: string; termIds: string[] }>;
+  };
+
+  function card(id: string) {
+    const t = data.lookup[id];
+    if (!t) return null;
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'tcard';
+    a.href = t.href;
+    const top = document.createElement('div');
+    top.className = 'tcard__top';
+    const name = document.createElement('p');
+    name.className = 'tcard__term';
+    name.textContent = t.term;
+    const meta = document.createElement('span');
+    meta.className = 'tcard__meta';
+    meta.textContent = t.category;
+    top.append(name, meta);
+    const one = document.createElement('p');
+    one.className = 'tcard__one';
+    one.textContent = t.one;
+    a.append(top, one);
+    li.append(a);
+    return li;
+  }
+
+  function fill(listSel: string, emptySel: string | null, countSel: string, ids: string[], noun: string) {
+    const list = document.querySelector<HTMLElement>(listSel)!;
+    const empty = emptySel ? document.querySelector<HTMLElement>(emptySel) : null;
+    const count = document.querySelector<HTMLElement>(countSel);
+    const cards = ids.map(card).filter((c): c is HTMLLIElement => Boolean(c));
+    list.replaceChildren(...cards);
+    if (empty) empty.hidden = cards.length > 0;
+    if (count) {
+      count.textContent = cards.length
+        ? `${cards.length} ${noun}${cards.length === 1 ? '' : 's'}.`
+        : '';
+    }
+  }
+
+  function paint() {
+    fill('[data-saved-list]', '[data-saved-empty]', '[data-saved-count]', savedTerms(), 'term');
+    fill('[data-done-list]', '[data-done-empty]', '[data-done-count]', doneTerms(), 'term');
+    fill('[data-recent-list]', null, '[data-recent-count]', recentTerms(), 'term');
+
+    const done = new Set(doneTerms());
+    const progress = document.querySelector<HTMLElement>('[data-progress-list]')!;
+    progress.replaceChildren(
+      ...data.paths.map((p) => {
+        const complete = p.termIds.filter((id) => done.has(id)).length;
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.className = 'path-card';
+        a.href = p.href;
+        const glyph = document.createElement('span');
+        glyph.className = 'path-card__glyph';
+        glyph.setAttribute('aria-hidden', 'true');
+        glyph.textContent = p.glyph;
+        const h = document.createElement('h3');
+        h.className = 'path-card__title';
+        h.textContent = p.title;
+        const bar = document.createElement('div');
+        bar.className = 'path-progress';
+        bar.setAttribute('aria-hidden', 'true');
+        const fillBar = document.createElement('span');
+        fillBar.className = 'path-progress__bar';
+        fillBar.style.width = `${(complete / p.termIds.length) * 100}%`;
+        bar.append(fillBar);
+        const meta = document.createElement('p');
+        meta.className = 'path-card__meta';
+        meta.textContent = `${complete} of ${p.termIds.length} terms understood`;
+        a.append(glyph, h, bar, meta);
+        li.append(a);
+        return li;
+      }),
+    );
+  }
+
+  if (!storageAvailable()) {
+    document.querySelector<HTMLElement>('[data-storage-warning]')!.hidden = false;
+  }
+
+  document.querySelector('[data-clear-all]')?.addEventListener('click', () => {
+    clearAll();
+    paint();
+    document.querySelector<HTMLElement>('[data-clear-status]')!.textContent =
+      'Deleted. Nothing from this site remains in your browser storage.';
+  });
+
+  paint();
+  onChange(paint);
+</script>

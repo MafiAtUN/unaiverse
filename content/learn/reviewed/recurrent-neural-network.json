@@ -1,0 +1,225 @@
+{
+  "id": "recurrent-neural-network",
+  "slug": "recurrent-neural-network",
+  "term": "Recurrent neural network",
+  "acronym": "RNN",
+  "aliases": [
+    "RNN",
+    "LSTM"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "neural-network"
+  ],
+  "relatedTermIds": [
+    "neural-network",
+    "weight",
+    "activation-function",
+    "forward-pass",
+    "probability",
+    "softmax"
+  ],
+  "oftenConfusedWith": [
+    "transformer",
+    "convolutional-neural-network",
+    "biological-neuron"
+  ],
+  "oneSentence": "A neural network built for sequences carries a changing internal state from one step to the next so earlier inputs can influence later outputs.",
+  "plainExplanation": "Many AI tasks involve sequences: words in a sentence, notes in speech, sensor readings over time, or clicks in order. A recurrent neural network handles this by reading one item at a time instead of treating every item as unrelated.\n\nAt each step, it takes two things as input: the current item and a hidden state. The hidden state is a vector, meaning a list of numbers, that acts like a running summary of what came before. The network updates that summary using learned weights, which are numbers that control how strongly signals affect later calculations.\n\nBecause the same update rule is reused at every step, the model can process sequences of different lengths. It can produce one output at the end, such as a sentiment label for a whole sentence, or an output at each step, such as the next word or a tag for each token.\n\nIn practice, basic RNNs often struggle with long-range dependencies, meaning information from far back in the sequence can fade or become unstable during training. Variants such as LSTM and GRU were designed to keep useful information for longer. RNNs are important historically and still useful in some time-series and compact systems, but many language tasks now use transformers instead.",
+  "everydayAnalogy": {
+    "title": "A librarian tracing a request through many shelves",
+    "story": "A visitor asks for a history book, but only remembers fragments: the region, then the century, then part of the author name. A librarian walks through the library with a notepad, updating the note after each clue. Each new clue matters, but the note also carries forward the useful parts of earlier clues. By the end, the librarian uses the final note and the last clue to choose the most likely shelf and book.\n\nIf the conversation becomes very long, some early details may be missed unless the note-taking method is especially good.",
+    "mapping": [
+      {
+        "analogyElement": "each clue from the visitor",
+        "aiElement": "each item in the input sequence"
+      },
+      {
+        "analogyElement": "the librarian's notepad",
+        "aiElement": "the hidden state carried from one step to the next"
+      },
+      {
+        "analogyElement": "updating the note after every clue",
+        "aiElement": "recurrent state update using shared weights"
+      },
+      {
+        "analogyElement": "the final shelf choice",
+        "aiElement": "the output prediction at the end or at a step"
+      }
+    ],
+    "limitation": "A librarian consciously chooses what to write down, while an RNN does not have awareness or explicit reasoning. Its hidden state is just numbers updated by learned rules. Also, a real librarian can jump back, ask clarifying questions, or search many shelves at once; a standard RNN usually processes in sequence and can lose older information unless its design, such as an LSTM, helps preserve it."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How an RNN carries information through a sequence",
+    "learningObjective": "After viewing this, a reader should be able to say that an RNN reuses the same cell at each step and passes a hidden state forward so earlier inputs can affect later outputs.",
+    "description": "Show a left-to-right chain of identical RNN cells. Each cell receives the current input from below and the previous hidden state from the left, then emits a new hidden state to the right and an output above. Read the diagram step by step from x1 to x4. Use matching colours for all hidden-state arrows to show continuity across time.",
+    "steps": [
+      {
+        "label": "Step 1: First item enters",
+        "explanation": "The first cell takes the first input item and an initial hidden state, often zeros, then creates a new hidden state.",
+        "visualInstruction": "Draw cell 1 as a rounded rectangle labelled 'shared RNN cell'. Place x1 below it, h0 on the left, h1 on the right, and optional y1 above. Colour hidden-state arrows blue and input arrows grey."
+      },
+      {
+        "label": "Step 2: Same cell logic repeats",
+        "explanation": "The second step uses the same learned weights as the first step. Only the input and hidden-state values change.",
+        "visualInstruction": "Draw cell 2 identical to cell 1 with labels x2, h1, h2, and optional y2. Add a small note above both cells: 'same weights reused at each step'."
+      },
+      {
+        "label": "Step 3: Information is carried forward",
+        "explanation": "The hidden state acts as a running summary. It lets earlier inputs influence later computation.",
+        "visualInstruction": "Extend the chain to cells 3 and 4 with x3, x4 and h2, h3, h4. Make the blue hidden-state arrows visually continuous from left to right."
+      },
+      {
+        "label": "Step 4: Outputs can be per step or final",
+        "explanation": "Some tasks use every output, while others use only the last output or last hidden state.",
+        "visualInstruction": "Above each cell, show faint y1 to y4. Add two braces: one over all y values labelled 'output each step' and one around y4 labelled 'or final output only'."
+      }
+    ],
+    "interaction": "Hovering or tapping a cell highlights the current input, previous hidden state, new hidden state, and optional output, while a toggle switches between 'many-to-many' and 'many-to-one' output use.",
+    "accessibilityDescription": "A four-step horizontal diagram shows identical RNN cells repeated across time. At the first step, input x1 and an initial hidden state h0 enter the first cell. The cell outputs a new hidden state h1 and an optional output y1. The next cell receives x2 and h1, producing h2 and y2, and this repeats through x4. A note says the same weights are reused in every cell. The key point is that the hidden state moves forward across the sequence, carrying a numerical summary of earlier inputs. Another note shows that some tasks use outputs at every step, while others use only the final output.",
+    "reducedMotionDescription": "Show the same four-cell chain as a static diagram with all arrows visible at once. Use colour and labels, not animation, to indicate that the hidden state passes from one step to the next and that the same cell logic is reused."
+  },
+  "workedExample": {
+    "scenario": "Predicting the next word in a short phrase.",
+    "input": "Sequence: 'United', 'Nations', 'General'",
+    "process": [
+      "At step 1, the model reads 'United' and updates its hidden state from h0 to h1.",
+      "At step 2, it reads 'Nations' and combines that word with h1 to produce h2, which now reflects the phrase 'United Nations'.",
+      "At step 3, it reads 'General' and updates to h3, which reflects the full context so far.",
+      "Using h3, the output layer assigns scores to candidate next words, then converts them to probabilities."
+    ],
+    "result": "Example output probabilities: 'Assembly' 0.72, 'Secretary' 0.12, 'debate' 0.05, 'meeting' 0.04, other words 0.07. The model therefore predicts 'Assembly' as the most likely next word."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN procurement team is comparing software proposals and wants to know whether a vendor's sequence model for forecasting equipment demand uses an RNN, an LSTM, or a transformer.",
+    "relevance": "This matters because sequence models differ in accuracy, training cost, explainability limits, and suitability for long or short time series. Asking the right term helps staff interpret vendor claims and compare technical requirements more carefully.",
+    "caution": "Do not paste confidential bids, commercially sensitive pricing, or identifiable staff or beneficiary data into an unapproved public AI service to get help interpreting the proposals."
+  },
+  "whyItMatters": "If you read an AI proposal, audit note, model card, or vendor presentation, you may see RNN or LSTM used for speech, translation, forecasting, or anomaly detection. Knowing the term helps you ask practical questions: Does the model process data in order? How well can it handle long sequences? Is it producing one result at the end or many along the way? Could a transformer or another method be more suitable? This matters for procurement, risk assessment, compute cost, latency, and performance claims. It also helps you recognise that older sequence models may still be appropriate for small devices or short time-series, even if they are no longer the main choice for many language systems.",
+  "whereYouMayHearIt": [
+    "speech recognition systems",
+    "time-series forecasting",
+    "older language modelling tutorials",
+    "vendor technical proposals",
+    "machine learning courses"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "An RNN stores the whole past exactly like a recording.",
+      "correction": "It does not keep a perfect copy of every earlier input. It compresses prior context into a hidden state, which is a limited numerical summary. That summary can preserve useful patterns, but some detail may fade, especially in basic RNNs over long sequences."
+    },
+    {
+      "misconception": "LSTM and RNN are completely different model families.",
+      "correction": "An LSTM is a specific kind of recurrent neural network. People often contrast 'RNNs' with 'LSTMs', but in a broad sense LSTMs are designed to solve weaknesses of simpler recurrent units by controlling what information is kept, updated, or forgotten."
+    },
+    {
+      "misconception": "Because it reads in order, an RNN automatically understands sequence better than other models.",
+      "correction": "Reading in order can help for some tasks, but it does not guarantee better results. Basic RNNs can struggle with long-range dependencies and slow training. Transformers often outperform them on long text because they can relate distant parts of the sequence more directly."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "An RNN reads a sequence one piece at a time and carries forward a running summary so what came earlier can affect what comes next.",
+    "technical": "At time step t, a recurrent model computes a new hidden state from the current input xt and the previous hidden state h(t-1), typically with shared parameters across all time steps. In a simple RNN, this may look like h(t) = f(Wx xt + Wh h(t-1) + b), where f is an activation function. Outputs may be produced from each h(t) or only from the final state. Training usually uses backpropagation through time, which unfolds the repeated cell across steps and propagates gradients through that chain. This creates well-known vanishing and exploding gradient problems, which is why gated variants such as LSTMs and GRUs were introduced. Compared with convolutional neural networks, which focus on local spatial patterns, recurrent networks are built around ordered dependence across time or position. Compared with transformers, RNNs pass information step by step through a hidden state rather than directly relating all positions at once."
+  },
+  "keyTakeaway": "An RNN handles ordered data by reusing the same cell across steps and passing a hidden state forward as a compact memory of earlier inputs.",
+  "quickCheck": {
+    "question": "What makes a recurrent neural network different from a basic feed-forward network?",
+    "options": [
+      "It carries a hidden state from one step to the next so earlier inputs can influence later computation.",
+      "It always uses convolution filters to detect local patterns in images.",
+      "It guarantees perfect memory of all earlier tokens in a sequence.",
+      "It can only produce one output after reading the entire sequence."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The defining feature is recurrence: the model reuses the same computation across sequence steps and passes forward a hidden state. RNNs are not convolutional models, they do not keep perfect memory, and they may produce outputs at every step or only at the end depending on the task."
+  },
+  "resources": [
+    {
+      "title": "Recurrent neural network",
+      "url": "https://en.wikipedia.org/wiki/Recurrent_neural_network",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad reference-style overview of recurrent neural networks and suits readers who want definitions, variants, history, and terminology in one place.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This link gives an intuitive visual explanation of neural networks and suits readers who want stronger foundations before tackling recurrent models in more detail.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "description": "This link gives a hands-on interactive way to explore neural network behaviour and suits readers who learn best by adjusting settings, even though it is not specific to recurrent networks.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Recurrent neural network",
+      "url": "https://www.youtube.com/results?search_query=Recurrent%20neural%20network%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a search results page for many video explanations of recurrent neural networks and suits readers who want to compare teaching styles and depth levels.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Recurrent neural network",
+      "url": "https://www.reddit.com/search/?q=Recurrent%20neural%20network",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a search results page for community discussions about recurrent neural networks and suits readers who want practical questions, opinions, and troubleshooting threads.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "recurrent neural network explained",
+    "rnn vs lstm",
+    "what is hidden state in rnn",
+    "rnn sequence model",
+    "how do rnns work",
+    "rnn vanishing gradient",
+    "reccurent neural network",
+    "rnn vs transformer",
+    "lstm meaning simple",
+    "recurrent neural network",
+    "rnn",
+    "lstm"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:00.529Z",
+    "contentHash": "cfe489aa9f631eab",
+    "attempts": 1,
+    "promptTokens": 2250,
+    "completionTokens": 2656
+  }
+}

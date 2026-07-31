@@ -1,0 +1,225 @@
+{
+  "id": "gradient",
+  "slug": "gradient",
+  "term": "Gradient",
+  "aliases": [
+    "gradients",
+    "slope"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "loss-function"
+  ],
+  "relatedTermIds": [
+    "loss-function",
+    "optimisation",
+    "backpropagation",
+    "chain-rule",
+    "convergence",
+    "vanishing-and-exploding-gradients"
+  ],
+  "oftenConfusedWith": [
+    "gradient-descent",
+    "learning-rate",
+    "error-and-loss"
+  ],
+  "oneSentence": "A gradient tells you how much a model’s error would change if each setting were nudged slightly up or down.",
+  "plainExplanation": "When a model makes a prediction, we can measure how wrong it was using a loss function. A gradient is the set of signals that shows, for each model setting or weight, which direction would raise or lower that loss and by roughly how much.\n\nWhat goes in is the current model, its current settings, and the loss calculated on some example data. What happens is that mathematics is used to work out the slope of the loss with respect to each setting. “With respect to” means “if we change this one setting a little, what happens to the loss?” What comes out is a list of numbers, one per setting.\n\nThe sign of each number matters. A positive value means increasing that setting would tend to increase the loss, so reducing it may help. A negative value means increasing that setting would tend to decrease the loss. The size also matters: a larger magnitude means the loss is more sensitive to that setting at that moment.\n\nA gradient is not the same as gradient descent. The gradient is information about the slope. Gradient descent is one optimisation method that uses that information to update settings. It is also not the same as the learning rate, which is the chosen step size for how far to move using the gradient.",
+  "everydayAnalogy": {
+    "title": "Revising a translated field note",
+    "story": "A translator in Nairobi drafts a short field note in English from a French original. A reviewer marks three issues: one sentence is too formal, one date format is unclear, and one place name is slightly inconsistent with the source. For each issue, the reviewer not only points out the problem but also shows whether the draft should move in one direction or the other, such as more formal versus less formal. The strongest mark is on the place name, because that change would improve the note most. The translator then uses those markings to decide what to adjust first.",
+    "mapping": [
+      {
+        "analogyElement": "reviewer’s marked directions on each issue",
+        "aiElement": "gradient values for different model settings"
+      },
+      {
+        "analogyElement": "stronger mark on the place name",
+        "aiElement": "larger gradient magnitude showing greater effect on loss"
+      },
+      {
+        "analogyElement": "more formal versus less formal direction",
+        "aiElement": "gradient sign showing which direction reduces loss"
+      },
+      {
+        "analogyElement": "translator making edits from the marks",
+        "aiElement": "optimiser updating weights using the gradient"
+      }
+    ],
+    "limitation": "A human reviewer can explain issues in words and use judgement across meaning and context. A gradient is only a numerical local slope of the loss around the current settings; it does not provide a full explanation, and it may point to a useful direction only for a small step."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "From prediction error to gradient signals",
+    "learningObjective": "After viewing this, a reader should be able to say that a gradient is a per-setting slope signal derived from the loss and used to guide updates.",
+    "description": "A horizontal 4-step diagram with boxes connected by arrows. Step 1 shows inputs and current weights entering a model. Step 2 shows a prediction and a target being compared to produce loss. Step 3 shows the loss sending backwards a list of signed slope values, one for each weight. Step 4 shows the optimiser using those values to nudge weights in the opposite direction of the slope. Use simple icons: circles for weights, a document for input, a target symbol for true value, and small up/down arrows with numbers such as +0.8, -0.1, +0.0 beside weights.",
+    "steps": [
+      {
+        "label": "1. Current model state",
+        "explanation": "Start with input data and the model’s current settings, often called weights.",
+        "visualInstruction": "Draw a document icon labelled input feeding into a rectangle labelled model. Inside or beside it, show three small circles labelled w1, w2, w3 with example values."
+      },
+      {
+        "label": "2. Measure error",
+        "explanation": "Compare the model’s prediction with the target and calculate loss, a number for how wrong the output is.",
+        "visualInstruction": "Draw the model output leading to a comparison box with a target icon. Label the resulting number loss = 2.4."
+      },
+      {
+        "label": "3. Compute gradient",
+        "explanation": "Work backwards from the loss to find, for each weight, whether increasing it would raise or lower loss and by how much.",
+        "visualInstruction": "From the loss box, draw backward arrows to w1, w2, w3. Next to each, show signed values such as dL/dw1 = +0.8, dL/dw2 = -0.3, dL/dw3 = 0.0. Use colour plus sign and minus sign, but also include text so colour is not required."
+      },
+      {
+        "label": "4. Update settings",
+        "explanation": "An optimiser uses the gradient to adjust the weights, usually moving a short distance opposite to the gradient.",
+        "visualInstruction": "Show old weight values fading to new values: w1 0.50 to 0.42, w2 1.20 to 1.23, w3 0.70 to 0.70. Add a note: step size set by learning rate."
+      }
+    ],
+    "interaction": "On hover or tap, each gradient value highlights the corresponding weight and shows a tooltip: positive means lowering this weight may reduce loss; negative means raising it may reduce loss; near zero means little local effect.",
+    "accessibilityDescription": "This diagram shows four stages. First, input data goes into a model that has current weights named w1, w2 and w3. Second, the model’s prediction is compared with the target to calculate a loss value, which represents error. Third, the system computes one gradient value for each weight: for example, dL over dw1 equals positive 0.8, dL over dw2 equals negative 0.3, and dL over dw3 equals 0.0. These values mean that increasing w1 would increase loss, increasing w2 would decrease loss, and changing w3 would have little immediate effect. Fourth, an optimiser updates the weights in the opposite direction of those slopes, with the amount of movement controlled by a learning rate.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: current weights, loss calculation, gradient values attached to each weight, and updated weights with small numeric changes."
+  },
+  "workedExample": {
+    "scenario": "A tiny model predicts house energy use from floor area using one weight.",
+    "input": "Prediction = weight × area. Current weight = 2.0. Area = 3. Target energy use = 9.",
+    "process": [
+      "The model predicts 2.0 × 3 = 6, so it is 3 units below the target.",
+      "Use a simple squared loss: loss = (prediction - target)^2 = (6 - 9)^2 = 9.",
+      "Compute how loss changes if the weight changes slightly. Here the gradient is 2 × (prediction - target) × area = 2 × (-3) × 3 = -18.",
+      "The negative sign means increasing the weight should reduce loss. Because the magnitude is large, the current error is quite sensitive to this weight.",
+      "If an optimiser uses a learning rate of 0.1, it updates the weight by subtracting the gradient: new weight = 2.0 - 0.1 × (-18) = 3.8."
+    ],
+    "result": "The gradient produced the direction and strength of the update: raise the weight substantially, because that should reduce the current loss."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team builds an internal model to sort incoming humanitarian coordination messages into categories such as logistics, shelter, health and water. During training on approved, de-identified examples, gradients show which internal settings should be nudged to reduce classification error.",
+    "relevance": "This helps staff understand that training does not improve by magic; it improves through repeated measurement of error and numerical signals about which settings to adjust.",
+    "caution": "Only use approved systems and properly governed training data. Do not place confidential, personal, protection-sensitive or operationally sensitive message content into an unapproved public AI service."
+  },
+  "whyItMatters": "If you hear that a model is being trained, the gradient is one of the main signals driving that process. Understanding it helps you ask practical questions: why training is slow or unstable, why one model setup learns better than another, and why terms like learning rate, backpropagation and vanishing gradients matter for reliability.",
+  "whereYouMayHearIt": [
+    "neural network training",
+    "backpropagation discussion",
+    "optimisation tutorials",
+    "debugging unstable learning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "The gradient is the error itself.",
+      "correction": "Error or loss is a score for how wrong the model currently is. The gradient is different: it describes how that score would change if each setting moved slightly."
+    },
+    {
+      "misconception": "A bigger gradient always means a better model update.",
+      "correction": "A bigger gradient means the loss is more sensitive locally, not that the update will be better. If the step is too large, training can overshoot or become unstable."
+    },
+    {
+      "misconception": "The gradient tells the model the best final settings.",
+      "correction": "A gradient is a local slope at the current point. It points to a promising small move nearby, not the full route to the best possible solution."
+    },
+    {
+      "misconception": "Gradient and gradient descent mean the same thing.",
+      "correction": "The gradient is the slope information. Gradient descent is a procedure that uses that information to change parameters over many steps."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A gradient is like a set of arrows showing which knobs in a model should be turned up or down to make its error smaller.",
+    "technical": "For a loss function L over parameters theta, the gradient is the vector of partial derivatives, nabla L(theta). Each component gives the local rate of change of loss with respect to one parameter, and optimisation methods use this vector, often via backpropagation, to update parameters."
+  },
+  "keyTakeaway": "A gradient does not tell you the answer; it tells you which way to nudge each setting to reduce error from where you are now.",
+  "quickCheck": {
+    "question": "Which statement best describes a gradient during model training?",
+    "options": [
+      "It is the current loss value for the whole model.",
+      "It is a list of per-parameter slope values showing how loss changes with small parameter changes.",
+      "It is the fixed step size used to update parameters.",
+      "It is the final set of parameters after training ends."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A gradient gives one value per parameter, not one value for the whole model. Those values describe the local slope of the loss and are then used by an optimiser. The step size is usually the learning rate, and the final parameters are the result of many updates, not the gradient itself."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Gradient",
+      "url": "https://en.wikipedia.org/wiki/Gradient",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad mathematical definition and background, suited to readers who want formal terminology and multiple contexts.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This 3Blue1Brown video offers an intuitive visual explanation of how slope information guides learning, suited to visual learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This Google course section focuses on reducing loss during training and suits readers who want a practical machine learning explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Gradient",
+      "url": "https://www.youtube.com/results?search_query=Gradient%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find different video explanations of gradients, and it suits people who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Gradient",
+      "url": "https://www.reddit.com/search/?q=Gradient",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers find community discussions and questions about gradients, and it suits readers who want informal explanations alongside cautions about varying quality.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "what is gradient in machine learning",
+    "gradient vs gradient descent",
+    "gradient meaning neural network",
+    "loss gradient explained",
+    "partial derivative model training",
+    "backprop gradient simple",
+    "gradiant machine learning",
+    "slope of loss function",
+    "gradient",
+    "gradients",
+    "slope"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:33:52.227Z",
+    "contentHash": "366a159c6d2f8c1f",
+    "attempts": 1,
+    "promptTokens": 2124,
+    "completionTokens": 2473
+  }
+}

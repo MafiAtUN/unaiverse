@@ -1,0 +1,220 @@
+{
+  "id": "pose-estimation",
+  "slug": "pose-estimation",
+  "term": "Pose estimation",
+  "aliases": [
+    "keypoint detection"
+  ],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "computer-vision"
+  ],
+  "relatedTermIds": [
+    "computer-vision",
+    "object-detection",
+    "image-segmentation",
+    "bounding-box",
+    "facial-recognition"
+  ],
+  "oftenConfusedWith": [
+    "object-detection",
+    "image-segmentation",
+    "facial-recognition"
+  ],
+  "oneSentence": "A computer vision method that locates important body, face or hand points in an image or video and often links them into a skeleton-like layout.",
+  "plainExplanation": "Pose estimation takes an image or video frame as input and tries to find specific points of interest, often called keypoints. For a person, these points might include the nose, shoulders, elbows, wrists, hips, knees and ankles. The output is usually a list of coordinates, sometimes with a confidence score for each point.\n\nIn many systems, the model first finds a person or another target object in the image. Then it predicts where each keypoint probably sits. Some systems also connect the points with lines to show body structure, but those lines are a visual aid rather than a real bone map.\n\nThis is different from image classification, which gives one label for a whole image, such as \"person running\". It is also different from object detection, which draws a box around a person, and from image segmentation, which marks many pixels belonging to that person. Pose estimation goes further by estimating the arrangement of parts.\n\nThe method is useful because position alone is often not enough. A bounding box can tell you that a person is present, but not whether their arm is raised, whether they are bending, or how a hand is shaped. That said, the output is still an estimate from visual patterns. It can be wrong when body parts are hidden, blurred, crowded, unusually positioned, or poorly represented in the training data.",
+  "everydayAnalogy": {
+    "title": "A sports coach marking joints on a training photo",
+    "story": "A basketball coach prints a photo of a player taking a shot. On the paper, the coach marks dots on the player's shoulder, elbow, wrist, hip, knee and ankle, then draws simple lines between them to check the shooting form. The coach is not writing a full description of the whole player or colouring every part of the body. The goal is to capture the arrangement of key joints so the posture can be analysed.",
+    "mapping": [
+      {
+        "analogyElement": "Dots marked on joints",
+        "aiElement": "Predicted keypoints with image coordinates"
+      },
+      {
+        "analogyElement": "Lines between the dots",
+        "aiElement": "Skeleton-style links showing body structure"
+      },
+      {
+        "analogyElement": "Checking shooting form from joint arrangement",
+        "aiElement": "Using pose to infer posture or movement"
+      },
+      {
+        "analogyElement": "Not colouring the full body",
+        "aiElement": "Different from image segmentation"
+      }
+    ],
+    "limitation": "A human coach can use wider context, such as knowing the sport, the player and what happened before the photo. A pose estimation model usually relies on visual patterns in the given image or frame and may fail if joints are hidden, blurred or outside the training examples. Also, the model does not literally identify bones or physical mechanics; it predicts point locations."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How pose estimation turns an image into keypoints",
+    "learningObjective": "After reading this diagram, the reader should be able to explain that pose estimation outputs coordinates for body parts, not just a label or a box.",
+    "description": "A left-to-right flow with four panels. Read from the input image, to person region selection, to keypoint prediction, to structured output. Each panel adds one layer of information so the reader can see how the result becomes more detailed than a class label or bounding box.",
+    "steps": [
+      {
+        "label": "1. Input image",
+        "explanation": "Start with a photo or video frame that contains one or more people, faces or hands.",
+        "visualInstruction": "Show a simple scene with two human figures in a rectangular image frame. Keep details minimal and high contrast."
+      },
+      {
+        "label": "2. Target region found",
+        "explanation": "Many systems first locate the relevant subject, often with a bounding box around each person or body part of interest.",
+        "visualInstruction": "Overlay one or two dashed bounding boxes on the figures. Add a small note: 'possible first stage'."
+      },
+      {
+        "label": "3. Keypoints predicted",
+        "explanation": "The model estimates coordinates for landmarks such as shoulders, elbows, wrists, hips, knees and ankles, each with an optional confidence value.",
+        "visualInstruction": "Replace or supplement boxes with coloured dots at joints. Add tiny confidence labels like 0.94, 0.88 next to a few points."
+      },
+      {
+        "label": "4. Pose output",
+        "explanation": "The final output is a set of point locations, sometimes connected into a skeleton for easier viewing or further analysis.",
+        "visualInstruction": "Connect the dots with thin lines. Beside the figure, show a compact table with rows like 'left_wrist: x=214, y=168, conf=0.88'."
+      }
+    ],
+    "interaction": "Hovering over each stage highlights what new information has been added: image only, box, keypoints, then structured coordinates and links.",
+    "accessibilityDescription": "The diagram is a four-step flow read from left to right. First, there is a plain image frame with two people. Second, dashed boxes appear around the people to show that some systems first locate a target region. Third, coloured dots appear on major joints such as shoulders, elbows, wrists, hips, knees and ankles. Fourth, thin lines connect these dots, and a small table lists coordinates and confidence values. The message is that pose estimation produces structured landmark locations, which is more specific than saying a person is present and different from marking every pixel.",
+    "reducedMotionDescription": "Show the same four panels side by side without animation. Use static arrows between panels and a legend explaining boxes, keypoints, lines and confidence values."
+  },
+  "workedExample": {
+    "scenario": "A physiotherapy clinic analyses one video frame of a patient lifting an arm during an exercise.",
+    "input": "One frame at 1280 by 720 pixels containing one person standing sideways to the camera.",
+    "process": [
+      "The system detects one person and focuses on that region of the frame.",
+      "It predicts body keypoints, including left shoulder at x=640, y=250 and left wrist at x=780, y=190.",
+      "It assigns confidence scores, for example shoulder 0.97 and wrist 0.91, while the left ankle is lower at 0.62 because it is partly hidden.",
+      "It connects the points into a skeleton and calculates that the left elbow angle is about 156 degrees."
+    ],
+    "result": "The output is not a medical diagnosis. It is a structured set of body-point coordinates and derived measurements that can help a clinician review movement more quickly."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team reviews approved, non-sensitive training videos to see whether staff in a warehouse are following safe lifting posture guidance during internal learning exercises.",
+    "relevance": "Pose estimation can turn each frame into body keypoints, which makes it possible to count repeated movements or flag likely posture patterns without storing a full verbal description of every frame.",
+    "caution": "Do not upload identifiable staff footage, security-sensitive premises, or any confidential operational material to an unapproved public AI service. Human review is needed because pose estimates can be wrong, especially in crowded scenes, low light or when protective equipment hides body parts."
+  },
+  "whyItMatters": "Pose estimation matters when the arrangement of parts is more important than simply detecting an object. It can support movement analysis, sign and gesture interfaces, sports review, ergonomics, animation, retail analytics and some accessibility tools. For decision-makers, the key question is fit for purpose: do you need a box around a person, or do you need estimated body landmarks? It also matters for risk. Errors are not random. They can increase with occlusion, camera angle, clothing, skin-tone and lighting conditions, crowding, disability-related movement patterns, or underrepresented body types in training data. That affects fairness, safety and whether human oversight is required.",
+  "whereYouMayHearIt": [
+    "sports analytics",
+    "video surveillance procurement",
+    "mobile fitness apps",
+    "animation and gaming",
+    "sign language research"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Pose estimation and object detection are basically the same thing.",
+      "correction": "They are related but not the same. Object detection usually answers 'where is the person?' with a bounding box. Pose estimation answers 'where are the important body parts?' with landmark coordinates. A system may use detection first, but the outputs and use cases differ."
+    },
+    {
+      "misconception": "If the skeleton overlay looks neat, the measurements must be accurate.",
+      "correction": "A tidy visual can hide uncertainty. Many systems smooth outputs over time or draw standard links between points, which can make errors look plausible. Confidence values, camera angle, occlusion and validation on the relevant population still matter."
+    },
+    {
+      "misconception": "Pose estimation recognises who a person is.",
+      "correction": "Not by itself. It estimates body, face or hand landmarks. Facial recognition tries to match identity across images. A pose model may process a face or body without identifying the person, though privacy risks can still arise from the surrounding system."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It finds important points on a body, face or hand in an image, such as elbows or eyes, so software can describe posture or movement.",
+    "technical": "Pose estimation predicts structured landmarks from visual input. In human pose estimation, a model maps an image or video frame to 2D or 3D keypoint locations for predefined joints or landmarks, often with per-keypoint confidence scores and sometimes part-association links. Common approaches include top-down pipelines, which detect each person first and then estimate keypoints within each crop, and bottom-up pipelines, which predict keypoints for the whole image and then group them into individuals. The result may be represented as coordinates, heatmaps, offset vectors or graphs. It differs from detection, which outputs object-level localisation, and from segmentation, which outputs pixel-level masks. Performance depends heavily on annotation quality, viewpoint, scale, occlusion handling, temporal consistency in video, and how well the training data covers the target population and context."
+  },
+  "keyTakeaway": "Pose estimation does not just find a person in an image; it estimates where the important parts are and how they are arranged.",
+  "quickCheck": {
+    "question": "Which output best matches pose estimation for one person in a photo?",
+    "options": [
+      "A single label such as 'person exercising'",
+      "One bounding box around the person",
+      "A set of joint coordinates such as shoulders, elbows and knees, often with confidence scores",
+      "A paragraph describing the whole scene in natural language"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Pose estimation produces structured landmarks, usually as coordinates for predefined body parts. A label is image classification, a box is object detection, and a paragraph is image captioning or another language output."
+  },
+  "resources": [
+    {
+      "title": "Articulated body pose estimation",
+      "url": "https://en.wikipedia.org/wiki/Articulated_body_pose_estimation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad overview of articulated body pose estimation and suits readers who want background, terminology and related concepts in one place.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This link gives beginner-friendly machine learning foundations and suits readers who want the wider context behind how vision models are trained and evaluated.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "description": "This link gives short glossary-style definitions of machine learning terms and suits readers who want quick clarification of vocabulary used around pose estimation.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Pose estimation",
+      "url": "https://www.youtube.com/results?search_query=Pose%20estimation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page, so it gives a range of video explanations with different levels of depth and suits readers who prefer visual teaching and comparison across presenters.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Pose estimation",
+      "url": "https://www.reddit.com/search/?q=Pose%20estimation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page, so it gives community questions, practical discussions and varied opinions and suits readers who want informal troubleshooting themes rather than a single authoritative explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "pose estimation",
+    "keypoint detection",
+    "human pose estimation",
+    "body landmark detection",
+    "pose estimator vs object detection",
+    "2d pose estimation",
+    "skeleton tracking from image",
+    "what are keypoints in computer vision",
+    "pose estmation",
+    "joint detection ai"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:05.817Z",
+    "contentHash": "e3165ab6e368320f",
+    "attempts": 1,
+    "promptTokens": 2280,
+    "completionTokens": 2406
+  }
+}

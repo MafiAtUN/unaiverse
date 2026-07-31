@@ -1,0 +1,223 @@
+{
+  "id": "supervised-learning",
+  "slug": "supervised-learning",
+  "term": "Supervised learning",
+  "aliases": [],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "label",
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "label",
+    "training-example",
+    "prediction",
+    "classification",
+    "regression"
+  ],
+  "oftenConfusedWith": [
+    "unsupervised-learning",
+    "self-supervised-learning",
+    "reinforcement-learning"
+  ],
+  "oneSentence": "A method for training a model with labelled examples so it can predict the right output for new inputs.",
+  "plainExplanation": "Supervised learning is a common way to train an AI model from examples. Each example has an input and a correct output. The correct output is often called a label. For instance, an email message could be the input, and “spam” or “not spam” could be the label.\n\nWhat goes in is a set of labelled examples. The model looks at patterns in the input and compares its own trial outputs with the known labels. During training, its internal numerical settings are adjusted many times so future outputs fit the examples better.\n\nWhat changes inside is not a hand-written rule list. Instead, the model gradually tunes many parameters, meaning numbers that affect how strongly it reacts to different patterns. If training goes well, the model learns a mapping from inputs to outputs that also works on new examples it has not seen before.\n\nWhat comes out is a trained model that can make a prediction for a new input. The prediction may be a category, such as “approve” or “reject”, or a number, such as an estimated delivery time. This is different from unsupervised learning, which looks for structure without given labels, and different from reinforcement learning, which learns from rewards and penalties over time rather than from a fixed set of correct answers.",
+  "everydayAnalogy": {
+    "title": "Marking a practice examination",
+    "story": "A student in Nairobi takes a practice mathematics examination. The teacher has an answer sheet with the correct answer for every question. After each round of marking, the student sees which types of questions were wrong and adjusts how they approach similar questions next time. After enough practice with marked papers, the student gets better at answering new questions of the same kind.",
+    "mapping": [
+      {
+        "analogyElement": "Practice questions and answer sheet",
+        "aiElement": "Labelled training examples with inputs and correct outputs"
+      },
+      {
+        "analogyElement": "The student checking mistakes after marking",
+        "aiElement": "The model comparing its predictions with labels during training"
+      },
+      {
+        "analogyElement": "Changing how similar questions are answered next time",
+        "aiElement": "Adjusting internal parameters to improve future predictions"
+      },
+      {
+        "analogyElement": "A new examination paper",
+        "aiElement": "New unseen data used at inference time"
+      }
+    ],
+    "limitation": "This analogy can mislead because a student may consciously reason about mistakes and use general world knowledge. A supervised learning model usually does not have that kind of explicit reasoning. It changes numerical parameters based on many examples. Also, in the analogy the teacher provides a perfect answer sheet, but in real projects labels can be incomplete, noisy or disputed."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How supervised learning turns labelled examples into predictions",
+    "learningObjective": "After viewing this diagram, the reader should be able to say that supervised learning uses examples with known correct outputs to adjust a model, then applies the trained model to new inputs.",
+    "description": "Show a left-to-right flow with two phases. First, labelled examples enter training, where predictions are compared with known labels and the model is adjusted. Second, a new unlabelled input enters the trained model and produces a prediction. Read from left to right.",
+    "steps": [
+      {
+        "label": "1. Labelled examples go in",
+        "explanation": "Each training example includes an input and its known correct output, such as a message plus the label “spam”.",
+        "visualInstruction": "Draw three paired cards on the left. Each pair has an input box connected to a label tag. Use simple icons or short text, not decorative images."
+      },
+      {
+        "label": "2. The model makes trial predictions",
+        "explanation": "At the start, the model may guess poorly because its internal settings have not been tuned yet.",
+        "visualInstruction": "Place a model box in the centre-left. Show arrows from the input parts of the example cards into the model. Add faint sample outputs leaving the model."
+      },
+      {
+        "label": "3. Compare with the known labels",
+        "explanation": "The system checks how far the trial predictions are from the correct outputs.",
+        "visualInstruction": "Add a comparison box between the model outputs and the label tags. Show a mismatch indicator such as small red and green markers, with text ‘compare’."
+      },
+      {
+        "label": "4. Adjust the model",
+        "explanation": "Training changes the model’s internal numerical settings so future predictions better match the labels.",
+        "visualInstruction": "Draw a feedback arrow from the comparison box back into the model. Label it ‘update parameters’. Use one clear loop arrow only."
+      },
+      {
+        "label": "5. Use the trained model on new input",
+        "explanation": "After training, a new input without a known label can be sent through the model to get a prediction.",
+        "visualInstruction": "On the right, show a fresh input card entering a darker ‘trained model’ box, with one output card labelled ‘prediction’."
+      }
+    ],
+    "interaction": "Hover or tap each step to highlight only the relevant arrows and boxes; in reduced motion mode, use instant highlight changes with no animated transitions.",
+    "accessibilityDescription": "The diagram is a left-to-right flow in two phases. On the left are labelled examples, where each example has an input and a known correct output. These inputs go into a model, which produces trial predictions. A comparison step checks the trial predictions against the known labels. A feedback arrow sends the difference back to the model, showing that training updates the model’s internal parameters. On the right, a new unlabelled input goes into the trained model and comes out as a prediction. The main idea is that correct answers are available during training but not for the new case being predicted.",
+    "reducedMotionDescription": "A static five-step flow chart with all stages visible at once: labelled examples, model, comparison, feedback update, and trained model making a prediction for a new input. Colour and line weight, not motion, show the two phases."
+  },
+  "workedExample": {
+    "scenario": "A small courier company wants to predict whether a parcel will arrive late.",
+    "input": "Training data from 1,000 past deliveries with features such as distance in kilometres, weather severity from 0 to 3, and border-check delay in minutes, plus the label ‘late’ or ‘on time’.",
+    "process": [
+      "The model starts with untuned parameters and reads the first batch of labelled delivery records.",
+      "For one record, it predicts ‘on time’, but the label says ‘late’, so training increases the influence of patterns linked to lateness.",
+      "After many rounds over the 1,000 records, the model’s parameters are adjusted to reduce repeated mistakes.",
+      "The team checks performance on separate validation data to see whether the model generalises rather than only memorising the training set.",
+      "A new parcel with distance 420 km, weather severity 2, and border-check delay 35 minutes is sent to the trained model."
+    ],
+    "result": "The model outputs a prediction such as ‘late’ with a score of 0.78. That score is not a guarantee; it is an estimate based on patterns learned from past labelled examples."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN procurement team is preparing requirements for software that classifies incoming vendor enquiries into categories such as ‘eligibility’, ‘submission format’, ‘deadline question’, or ‘technical specification’.",
+    "relevance": "Understanding supervised learning helps the team ask whether the product was trained on labelled examples, what those labels were, how accuracy was tested, and how human review will handle uncertain or wrong classifications.",
+    "caution": "Do not place confidential bids, personal data, commercially sensitive material, or security-sensitive procurement information into an unapproved public AI service for training or testing."
+  },
+  "whyItMatters": "Many systems that people meet in daily life use supervised learning: spam filters, document sorting, speech recognition, fraud screening and medical image support tools. If you understand the basic method, you can ask better questions. What labels were used? Who created them? Are they accurate? Does the model work well on new cases, not just old ones? Could the labels reflect past bias or inconsistent human judgement? These questions matter because a supervised model can look reliable while still failing for some groups, situations or languages. Knowing the term helps you judge claims, buy software more carefully, and keep a human in the loop where mistakes could cause harm.",
+  "whereYouMayHearIt": [
+    "machine learning courses",
+    "software procurement meetings",
+    "product demos for AI tools",
+    "data science project plans"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a system uses supervised learning, it has been taught the correct rule for every case.",
+      "correction": "Supervised learning usually does not store a complete rulebook. It fits patterns from labelled examples. If the examples are limited, noisy or unrepresentative, the model may still make mistakes on new cases."
+    },
+    {
+      "misconception": "More labelled data always guarantees a good model.",
+      "correction": "Quantity helps, but quality and relevance also matter. Labels can be wrong, categories can be inconsistent, and the training data may not match the real setting where the model will be used."
+    },
+    {
+      "misconception": "Supervised learning means the model is supervised by a human every time it makes a prediction.",
+      "correction": "The supervision mainly happens during training, because correct outputs are provided for examples. During later use, the model often predicts without a human giving the answer at that moment, though human oversight may still be needed."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "You show the system many examples with the right answers, and it adjusts itself so it can give likely answers for new examples.",
+    "technical": "Supervised learning fits a function from input features to target labels using labelled training data. During training, the model computes predictions, measures error with a loss function, and updates parameters to reduce that error across examples. The learned mapping can support classification, where the target is a category, or regression, where the target is a numerical value. Good practice checks performance on separate validation or test data to estimate generalisation rather than memorisation."
+  },
+  "keyTakeaway": "Supervised learning learns from examples with known answers, then uses those patterns to predict answers for new cases.",
+  "quickCheck": {
+    "question": "Which situation best matches supervised learning?",
+    "options": [
+      "A model is trained on emails that already have labels such as ‘spam’ and ‘not spam’.",
+      "A model groups news articles by similarity without any categories being given.",
+      "A model learns by trying actions in a game and receiving rewards.",
+      "A model follows only hand-written rules created by programmers."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Supervised learning uses labelled examples with known correct outputs during training. Grouping without labels is unsupervised learning, learning from rewards is reinforcement learning, and hand-written rules are not learned from data."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Supervised learning",
+      "url": "https://en.wikipedia.org/wiki/Supervised_learning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "A broad overview of the term, its main uses and related concepts, suitable for readers who want a general reference point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "A structured introductory course that helps beginners see how supervised learning fits into practical machine learning workflows.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "difficulty": "starter",
+      "description": "Clear video-style explanations that suit learners who prefer step-by-step teaching and visual intuition.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Supervised learning",
+      "url": "https://www.youtube.com/results?search_query=Supervised%20learning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A search results page for videos on this topic, useful for readers who want to compare different teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Supervised learning",
+      "url": "https://www.reddit.com/search/?q=Supervised%20learning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A search results page for community discussions on this topic, useful for readers who want to see common questions, confusions and practitioner perspectives.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "supervised learning meaning",
+    "what is supervised learning",
+    "supervised vs unsupervised",
+    "labelled data ai",
+    "machine learning with examples",
+    "supervised learning simple explanation",
+    "supervised learning classification regression",
+    "supervised learing",
+    "supervised learning"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:39:56.794Z",
+    "contentHash": "8eca9bfa5af4a9a1",
+    "attempts": 1,
+    "promptTokens": 2281,
+    "completionTokens": 2369
+  }
+}

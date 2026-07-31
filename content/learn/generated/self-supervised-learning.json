@@ -1,0 +1,217 @@
+{
+  "id": "self-supervised-learning",
+  "slug": "self-supervised-learning",
+  "term": "Self-supervised learning",
+  "aliases": [],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "supervised-learning"
+  ],
+  "relatedTermIds": [
+    "training",
+    "training-example",
+    "label",
+    "prediction",
+    "supervised-learning",
+    "transfer-learning"
+  ],
+  "oftenConfusedWith": [
+    "unsupervised-learning",
+    "semi-supervised-learning",
+    "supervised-learning"
+  ],
+  "oneSentence": "A training approach that creates its own learning targets from raw data, so a model can learn useful patterns without manual labels.",
+  "plainExplanation": "In many machine learning tasks, people first attach labels to examples, such as “spam” or “not spam”. Self-supervised learning uses a different idea: it builds a prediction task from the data itself. The input is still ordinary data such as text, images, audio or sensor readings, but the target to predict is generated automatically rather than written by a human.\n\nA simple example is text. If you hide one word in a sentence and ask a model to predict the missing word, the sentence itself provides the training signal. In images, you might hide part of an image or ask whether two cropped views came from the same original image. These are called pretext tasks: training tasks designed to make the model learn useful internal patterns.\n\nWhat changes inside the model during training are its parameters, the adjustable numbers that shape its predictions. The model compares its prediction with the automatically created target, measures the error, and updates those parameters many times across many training examples. Over time, it tends to build internal representations: compact patterns that capture structure in the data.\n\nWhat comes out is usually not a final answer to a business or policy question by itself. Often the main output is a model that has learned representations that can later be adapted for another task, such as classification, search, summarisation or anomaly detection. This is why self-supervised learning is often used before supervised learning or transfer learning.\n\nIt is often confused with unsupervised learning, but they are not identical. In self-supervised learning, there is still a target to predict; it is just derived from the input data instead of supplied as a separate human label.",
+  "everydayAnalogy": {
+    "title": "Covering words in a report draft",
+    "story": "A team is preparing a long report in English, Arabic and French. During practice, one person covers a few words in each sentence and asks the others to fill them back in using the surrounding context. No one has added topic labels such as “health” or “education”, but the exercise still teaches people the structure, vocabulary and patterns of the text. Later, those people can sort new paragraphs by topic faster because they have already learned how the language in the report tends to fit together.",
+    "mapping": [
+      {
+        "analogyElement": "covered words in sentences",
+        "aiElement": "parts of the input hidden or transformed to create a prediction target"
+      },
+      {
+        "analogyElement": "using surrounding words to fill gaps",
+        "aiElement": "learning from context within the same training example"
+      },
+      {
+        "analogyElement": "practice before the real sorting task",
+        "aiElement": "pretraining before adapting to a downstream task"
+      },
+      {
+        "analogyElement": "getting better at recognising document patterns",
+        "aiElement": "learning internal representations that capture structure"
+      }
+    ],
+    "limitation": "People in the story already know language and world facts, while a model starts with parameters and adjusts them through numerical optimisation. Also, self-supervised learning is not limited to filling in blanks, and many methods use image crops, audio segments or other transformations rather than hidden words."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How self-supervised learning creates its own training signal",
+    "learningObjective": "Show how raw data can be turned into an automatic prediction task, producing learned representations that can later support another task.",
+    "description": "A left-to-right flow with four boxes. Read from raw data, to an automatic transformation that creates an input-target pair, to model training, to learned representations and later reuse. Arrows show that the target comes from the same original data rather than from a human label.",
+    "steps": [
+      {
+        "label": "Raw data",
+        "explanation": "Start with unlabelled data such as documents, images, audio clips or time series.",
+        "visualInstruction": "Draw a stack of mixed data cards on the left labelled “raw unlabelled data”. Show small icons for text, image and waveform."
+      },
+      {
+        "label": "Create a training task",
+        "explanation": "Transform each example so one part becomes the input and another part becomes the target to predict.",
+        "visualInstruction": "Show a sentence with one word masked, an image with one patch hidden, and a waveform with a short muted segment. Add a bracket labelled “target comes from the same example”."
+      },
+      {
+        "label": "Train the model",
+        "explanation": "The model predicts the missing, matching or next part, compares prediction with the automatic target, and updates its parameters.",
+        "visualInstruction": "Draw a model box with an input arrow in, a prediction arrow out, and a feedback loop labelled “error → parameter update”."
+      },
+      {
+        "label": "Reuse what was learned",
+        "explanation": "The trained model or its representations can then support a later task with fewer human labels or better performance.",
+        "visualInstruction": "Show outputs feeding into small boxes labelled “classification”, “search” and “anomaly detection”, with a note “often fine-tuned later”."
+      }
+    ],
+    "interaction": "Hovering over each transformation example highlights the matching automatic target and shows that no manual label was added.",
+    "accessibilityDescription": "The diagram is a four-stage flow. First, raw unlabelled data such as text, images and audio enter the process. Second, each example is automatically transformed so that one part is hidden, removed, paired or reordered, creating a prediction target from the same original example. Third, a model receives the modified input, predicts the missing or related part, measures error against the automatic target, and updates its parameters. Fourth, the result is a model with learned representations that can later be adapted for tasks like classification or search, often using fewer manual labels.",
+    "reducedMotionDescription": "A static four-box flow replaces all animation. Arrows connect raw data, automatic target creation, model training with feedback, and later reuse for downstream tasks."
+  },
+  "workedExample": {
+    "scenario": "Training a language model on short public transport updates",
+    "input": "Original sentence: “Bus 42 delayed by 15 minutes due to heavy rain near the central station.”",
+    "process": [
+      "Mask one word to create the input: “Bus 42 delayed by 15 minutes due to heavy rain near the [MASK].”",
+      "Use the hidden original word, “central station”, as the target the model should predict from context.",
+      "Run many examples like this and update the model each time its predicted words differ from the hidden original words.",
+      "After training, test the learned representation on a new task such as classifying whether an update is about delay, cancellation or route change."
+    ],
+    "result": "Even though no person labelled the original sentences by topic, the model has learned language patterns that help the later classification task."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team reviews approved programme monitoring reports from several country offices and wants a model that can group similar narrative updates before analysts examine them.",
+    "relevance": "Self-supervised pretraining on a large collection of approved, non-sensitive text can help the system learn patterns in reporting language, so later grouping or retrieval may need fewer manually tagged examples.",
+    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive monitoring data to an unapproved public AI service; use only approved systems, minimise data exposure, and keep human review in the loop."
+  },
+  "whyItMatters": "For decision-makers, self-supervised learning matters because labelled data is expensive, slow and sometimes impossible to obtain at scale. This approach can use large amounts of existing raw data to learn useful patterns first, then reduce how much manual labelling is needed for a later task. It can improve performance in settings where organisations have many documents, images or signals but limited expert time. It also changes procurement and governance questions: you may need to ask not only about labels, but about the source data, the automatic training task, privacy controls, and whether the learned representations transfer well to the real task.",
+  "whereYouMayHearIt": [
+    "foundation model pretraining",
+    "language model training",
+    "computer vision research",
+    "representation learning",
+    "low-label workflow design"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Self-supervised learning means the model learns with no targets at all.",
+      "correction": "It usually does have targets, but they are created from the data itself. For example, a hidden word in a sentence can be the target. That is different from having no prediction objective."
+    },
+    {
+      "misconception": "It is just another name for unsupervised learning.",
+      "correction": "The terms overlap in casual speech, but they are not the same. Unsupervised learning often focuses on finding structure such as clusters without explicit target prediction. Self-supervised learning typically defines a prediction task with automatically generated targets."
+    },
+    {
+      "misconception": "If a model is trained this way, it no longer needs labelled data.",
+      "correction": "Sometimes self-supervised pretraining is enough for useful representations, but many practical applications still benefit from supervised fine-tuning or evaluation on labelled data. The method often reduces label needs rather than removing them entirely."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Instead of asking people to label every example, this method hides or rearranges part of the data and trains the model to predict the missing or related part.",
+    "technical": "Self-supervised learning trains on unlabelled data by deriving supervisory signals from each example itself. A transformation defines an input-target pair, such as masked-token prediction in text, contrastive pairing of two augmented views of the same image, next-step prediction in sequences, or reconstruction of corrupted inputs. The optimisation objective updates model parameters so internal representations capture statistical structure that is useful beyond the pretext task. Those representations can then be transferred, fine-tuned, or used directly for downstream tasks. The key distinction from standard supervised learning is that the target is not an external human-provided label, while the distinction from generic unsupervised learning is that training commonly still uses an explicit predictive loss."
+  },
+  "keyTakeaway": "Self-supervised learning uses the data to manufacture its own training task, so models can learn useful representations before humans add labels.",
+  "quickCheck": {
+    "question": "Which statement best describes self-supervised learning?",
+    "options": [
+      "It trains only on fully human-labelled examples with known ground truth for every task.",
+      "It finds patterns in data by clustering and never uses a prediction target.",
+      "It creates a prediction target from the input itself, such as a hidden part to recover.",
+      "It learns by trial and error through rewards from an environment."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Self-supervised learning usually sets up a prediction problem where the target comes from the same raw example, such as a masked word or missing image patch. That differs from supervised learning with human labels, from clustering-only approaches, and from reinforcement learning with rewards."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Self-supervised learning",
+      "url": "https://en.wikipedia.org/wiki/Self-supervised_learning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of the term, its history and related methods, and suits readers who want a general reference before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course link suits readers who want practical machine learning foundations that help place self-supervised learning in the wider training workflow.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "difficulty": "starter",
+      "description": "This video source suits readers who prefer step-by-step spoken explanations and intuition before reading more technical material.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Self-supervised learning",
+      "url": "https://www.youtube.com/results?search_query=Self-supervised%20learning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers compare several video explanations of self-supervised learning, and suits people choosing a format or level that fits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Self-supervised learning",
+      "url": "https://www.reddit.com/search/?q=Self-supervised%20learning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page lets readers see how practitioners and learners discuss the term informally, and suits readers who want common questions, examples and debates rather than a single curated explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "self-supervised learning meaning",
+    "self supervised vs unsupervised",
+    "what is self supervised learning",
+    "masked prediction learning",
+    "pretext task explained",
+    "representation learning self supervised",
+    "ssl machine learning",
+    "self suprvised learning",
+    "self-supervised learning"
+  ],
+  "contested": "The boundary between self-supervised learning and unsupervised learning is described differently by different authors. Many treat self-supervised learning as a subset of unsupervised learning, while others present it as a distinct category because it uses explicit automatically generated targets.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:14.357Z",
+    "contentHash": "986588ee564fd996",
+    "attempts": 1,
+    "promptTokens": 2260,
+    "completionTokens": 2435
+  }
+}

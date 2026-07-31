@@ -1,0 +1,231 @@
+{
+  "id": "computer-use",
+  "slug": "computer-use",
+  "term": "Computer use",
+  "aliases": [
+    "browser use",
+    "screen control"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy",
+    "leadership"
+  ],
+  "prerequisiteTermIds": [
+    "ai-agent"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "observation-and-action",
+    "planning",
+    "human-in-the-loop",
+    "tool-use",
+    "automation"
+  ],
+  "oftenConfusedWith": [
+    "tool-use",
+    "automation",
+    "function-calling"
+  ],
+  "oneSentence": "A system capability that lets software observe what appears on a screen and operate apps by clicking, typing, scrolling and selecting items.",
+  "plainExplanation": "Computer use means an AI system can work through a graphical interface, such as a website or desktop app, instead of only replying with text or calling a fixed API. The input is usually a goal from a person, plus what the system can currently see on the screen. That screen view may be an image, a structured accessibility tree, or both.\n\nThe system then follows a loop: observe, choose an action, act, and check the result. An action might be moving a pointer, clicking a button, typing into a field, scrolling, or pressing keys. After each action, it looks again to see what changed and whether it is closer to the goal.\n\nThe output is not just an answer. It can be a completed task, such as filling a form, downloading a file, or copying information from one system to another. It may also produce a log of steps, screenshots, or a note asking a human to confirm a risky action.\n\nThis is often confused with tool use. Tool use usually means calling a defined function or API with clear inputs and outputs. Computer use works through the same interface a person sees, which is more flexible but usually slower, more fragile and harder to supervise safely.\n\nBecause it can take actions in real systems, it needs strong limits, monitoring and human oversight. Small screen changes, pop-ups, language differences or missing permissions can cause errors, so people should not treat it as reliable simply because it can click through many steps.",
+  "everydayAnalogy": {
+    "title": "Checking a delivery against a shipping manifest",
+    "story": "A warehouse supervisor hands a clerk a paper manifest and asks, \"Check whether these 24 cartons arrived.\" The clerk looks at the labels on each box, marks matches on the list, walks to the next pallet, and asks the supervisor when a label is torn or a carton count does not match. If the loading area changes or boxes are stacked differently, the clerk must look again before making the next mark. At the end, the result is not a speech about the shipment but an updated checklist and a note of any exceptions.",
+    "mapping": [
+      {
+        "analogyElement": "the manifest with a goal",
+        "aiElement": "the user instruction describing the task"
+      },
+      {
+        "analogyElement": "looking at labels on each pallet",
+        "aiElement": "observing the screen after each step"
+      },
+      {
+        "analogyElement": "marking the list and moving to the next pallet",
+        "aiElement": "taking interface actions such as click, type or scroll"
+      },
+      {
+        "analogyElement": "asking the supervisor about damaged or unclear labels",
+        "aiElement": "handing uncertain or risky cases back to a human"
+      }
+    ],
+    "limitation": "A human clerk brings broad background knowledge, stable judgement and physical awareness. Computer use systems do not inspect a real warehouse and may rely only on pixels or interface metadata from a screen session. Also, software actions can happen much faster and can repeat mistakes at scale, which makes supervision and permission controls far more important than in the paper-checking story."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How computer use completes a task through a screen",
+    "learningObjective": "After viewing this, a reader should be able to describe computer use as a repeated observe-act-check loop over a graphical interface, and explain why it needs supervision.",
+    "description": "A left-to-right step diagram with five boxes linked by arrows. Read from the user goal on the left to the final result on the right. Each middle box shows one cycle stage: seeing the screen, choosing an action, doing it, then checking what changed. A small warning badge appears near the last two steps to show where human review may be needed.",
+    "steps": [
+      {
+        "label": "1. Goal enters",
+        "explanation": "A person gives a task, such as \"download the latest public logistics report and copy the total tonnage into this spreadsheet.\"",
+        "visualInstruction": "Draw a rounded box with a document icon and short instruction text. Add a smaller note below: \"rules, permissions, limits\"."
+      },
+      {
+        "label": "2. Screen is observed",
+        "explanation": "The system receives the current page or application state, for example a screenshot or accessibility data describing buttons, fields and labels.",
+        "visualInstruction": "Draw a monitor icon inside the box. Show callouts to visible items such as button, menu and text field."
+      },
+      {
+        "label": "3. Action is chosen",
+        "explanation": "Based on the goal and the current screen, the system selects the next low-level step, such as click, type, scroll or key press.",
+        "visualInstruction": "Use a pointer icon and a short action list: click, type, scroll, tab. Keep one item highlighted."
+      },
+      {
+        "label": "4. Action happens",
+        "explanation": "The chosen step is sent to the browser or desktop session. The interface changes, or sometimes fails to change.",
+        "visualInstruction": "Show a cursor clicking a button and a subtle state change, such as a dialog opening. Add a small branch note: \"if blocked or unclear, ask human\"."
+      },
+      {
+        "label": "5. Result is checked",
+        "explanation": "The system compares the new screen with the goal. It either loops for another step, finishes the task, or stops for review.",
+        "visualInstruction": "Show a decision-style box with three small outcomes beneath it: continue, done, escalate."
+      }
+    ],
+    "interaction": "Clicking a step reveals one example action and one possible failure, such as a pop-up covering the target button.",
+    "accessibilityDescription": "The diagram shows computer use as a five-step sequence. First, a human provides a task and any rules or limits. Second, the system observes the current screen, using a screenshot, accessibility information, or both. Third, it selects one interface action, such as clicking, typing or scrolling. Fourth, that action is executed in the browser or desktop session. Fifth, it checks the new screen state against the goal. If the task is incomplete, it repeats the cycle. If the task is complete, it stops. If the situation is risky or unclear, it asks for human review. The main idea is that computer use is not one command but a loop of observation and action through a user interface.",
+    "reducedMotionDescription": "Show the same five boxes as a static horizontal sequence with arrows. Replace any animation with numbered labels and a dashed loop-back arrow from the final checking step to the observation step."
+  },
+  "workedExample": {
+    "scenario": "A browser-based assistant is asked to copy the total number of delivered cartons from a supplier portal into a public tracking sheet.",
+    "input": "Goal: \"Open today's delivery page, find the delivered carton total for shipment LM-4821, and enter that number in cell C12 of the tracking sheet.\"",
+    "process": [
+      "It opens the portal page, reads the visible table, and cannot yet see shipment LM-4821, so it scrolls.",
+      "It finds row LM-4821 and reads \"Delivered cartons: 24\" from the row details.",
+      "It switches to the spreadsheet tab, selects cell C12, and types 24.",
+      "It rereads the sheet area to confirm that C12 now shows 24 and then reports completion with a short action log."
+    ],
+    "result": "The task output is the updated spreadsheet cell, plus a record that the system found shipment LM-4821 and entered 24 in C12."
+  },
+  "unWorkplaceExample": {
+    "scenario": "In humanitarian coordination, an approved internal assistant helps staff copy non-sensitive totals from several public relief logistics dashboards into a shared situation-update template.",
+    "relevance": "This can reduce repetitive screen work when no stable API or connector exists, but staff still need to review the copied figures and watch for changed page layouts or outdated dashboards.",
+    "caution": "Do not use an unapproved public AI service to access internal platforms or enter confidential, personal, protection-sensitive, security-sensitive or operational information; risky actions and external publishing should require human confirmation."
+  },
+  "whyItMatters": "For non-specialists, computer use matters because it changes what an AI-enabled system can do. A chatbot mainly produces text. A system with computer use can operate websites and software directly, which means it can save time on repetitive digital tasks but can also create new operational risks. It may click the wrong control, submit incomplete information, or act in the wrong account if supervision is weak. Leaders and policy teams should therefore ask different questions: What systems may it access? What actions are allowed? What evidence and logs are kept? When must a human approve a step? Where no API exists, computer use may be useful, but convenience should not be mistaken for reliability or safety.",
+  "whereYouMayHearIt": [
+    "agent demos",
+    "browser automation discussions",
+    "enterprise assistant pilots",
+    "human-in-the-loop workflows",
+    "desktop task automation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Computer use is just another name for automation.",
+      "correction": "Automation is the broader category. A scripted automation may follow fixed rules in one stable system. Computer use is a specific way of acting through a screen interface, often step by step, using observations of what appears on the screen. It is usually more flexible than a hard-coded script, but also more fragile because layout changes, pop-ups or ambiguous labels can break the task."
+    },
+    {
+      "misconception": "If a system can use a browser like a person, it will be good at any office task.",
+      "correction": "Using the same interface as a person does not guarantee reliable performance. Real tasks often involve missing context, ambiguous instructions, permissions, multilingual screens, hidden fields, timing issues and judgement calls. A system may complete simple repetitive steps yet still fail on exceptions or risky actions that need human review."
+    },
+    {
+      "misconception": "Computer use and tool use are the same thing.",
+      "correction": "They overlap but are not identical. Tool use usually means the model calls a defined tool, function or API with known parameters, such as get_weather(city). Computer use acts through visible controls on a screen, like clicking a calendar menu or typing in a search box. APIs are usually cleaner and more reliable; computer use is often chosen when no suitable API or connector exists."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It lets an AI-enabled system operate software the way a person would: by looking at the screen and taking small actions such as clicking, typing and scrolling until the task is done or a human needs to step in.",
+    "technical": "Computer use is an agent capability for interacting with graphical user interfaces through an observation-action loop. The observations may be screenshots, DOM elements, accessibility trees or other interface state representations. The action space typically includes pointer movement, clicks, keyboard input, scrolling, focus changes and window or tab switching. A controller or model uses the current goal, recent history and the latest observation to choose the next action, then evaluates the resulting state and repeats. Compared with direct API or function access, this approach is interface-dependent, higher-latency and more error-prone, but it can work across systems that expose no stable programmatic interface. In practice it is often combined with planning, short-term memory, guardrails, logging and human approval checkpoints for high-impact actions."
+  },
+  "keyTakeaway": "Computer use lets a system act through the same screens people use, which is powerful for awkward tasks but usually less reliable than a well-defined API.",
+  "quickCheck": {
+    "question": "What most clearly distinguishes computer use from ordinary text generation?",
+    "options": [
+      "It can observe a screen and take interface actions such as clicking and typing.",
+      "It always produces more accurate answers than a chatbot.",
+      "It can only work inside a web browser and not desktop apps.",
+      "It does not need human oversight because the interface is visible."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Computer use adds the ability to interact with software through a user interface. That is different from only generating text. It does not guarantee accuracy, it may be used with browsers or desktop applications, and visible actions still require limits and human oversight."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Computer use",
+      "url": "https://en.wikipedia.org/w/index.php?search=Computer%20use",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers explore different Wikipedia articles related to the phrase and suits readers who want broad starting points rather than one definitive entry.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This article gives a vendor explanation of agents and is useful for readers who want a practical overview of how systems can take multi-step actions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This official resource explains the Model Context Protocol and suits technical readers who want to understand one approach for connecting systems and tools.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Computer use",
+      "url": "https://www.youtube.com/results?search_query=Computer%20use%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers compare multiple video explanations of computer use and suits people who learn better by watching demonstrations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Computer use",
+      "url": "https://www.reddit.com/search/?q=Computer%20use",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and examples, which can help readers see common questions and concerns, but it suits readers who can critically assess mixed-quality commentary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "computer use ai",
+    "browser use ai",
+    "screen control ai",
+    "ai clicks buttons on screen",
+    "computer-use agent",
+    "gui automation ai",
+    "ai operate browser",
+    "anthropic computer use",
+    "screen control agent",
+    "computer use vs tool use",
+    "browser automation with ai",
+    "computer use meaning",
+    "computer use",
+    "browser use",
+    "screen control"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:54.240Z",
+    "contentHash": "b2357d0eaa36478e",
+    "attempts": 1,
+    "promptTokens": 2305,
+    "completionTokens": 2661
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "id": "scaling-laws",
+  "slug": "scaling-laws",
+  "term": "Scaling laws",
+  "aliases": [
+    "scaling hypothesis"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "deeper",
+  "audiences": [
+    "policy",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "compute",
+    "parameter"
+  ],
+  "relatedTermIds": [
+    "compute",
+    "parameter",
+    "data-distribution",
+    "gpu-cpu-tpu",
+    "cost-per-token",
+    "energy-and-water-use"
+  ],
+  "oftenConfusedWith": [
+    "scalability",
+    "compute",
+    "parameter"
+  ],
+  "oneSentence": "Scaling laws describe the regular pattern that model performance often improves as data, parameters and compute increase, though gains usually slow and practical limits remain.",
+  "plainExplanation": "Scaling laws are observed patterns about size and performance in machine learning. They ask a practical question: if you make a model bigger, train it on more data, or use more compute, how much better does it usually get? Here, parameters are the adjustable numerical values inside a model, and compute means the processing work needed for training or running it.\n\nWhat goes in are changes in scale: more training data, more parameters, and more compute. What happens is researchers train many model versions at different sizes and measure their error or accuracy on a test set. When they plot the results, they often find a fairly smooth trend: larger systems tend to perform better in predictable ways over a range.\n\nWhat comes out is not a guarantee, but an estimate. The estimate can help teams forecast whether spending 10 times more on training might bring a large improvement, a small one, or almost none. In many cases, the gains follow a pattern of diminishing returns, meaning each extra increase in size helps less than the previous one.\n\nThis term is often confused with scalability. Scalability asks whether a system can handle more users or work in operation. Scaling laws ask how model quality changes as training resources increase. They are also not the same as a law of nature: they are empirical patterns, which means they are measured from experiments and can break when data quality, model design, or task conditions change.",
+  "everydayAnalogy": {
+    "title": "Practising for an examination",
+    "story": "Amina is preparing for a mathematics examination with three things she can change: the number of practice questions, the time she studies, and the size of her notebook of worked examples. After each week, she takes the same kind of mock test and records her score. At first, extra practice lifts her score quickly. Later, doubling her effort still helps, but by a smaller amount than before, so she can estimate whether another week of intense study is worth it.",
+    "mapping": [
+      {
+        "analogyElement": "more practice questions and worked examples",
+        "aiElement": "more training data"
+      },
+      {
+        "analogyElement": "more study time",
+        "aiElement": "more compute used for training"
+      },
+      {
+        "analogyElement": "larger notebook of methods",
+        "aiElement": "more model parameters or capacity"
+      },
+      {
+        "analogyElement": "mock test scores over several weeks",
+        "aiElement": "measured performance across different model scales"
+      }
+    ],
+    "limitation": "A person can consciously change study strategy, rest, or ask a teacher for help. A model does not improve through human-style understanding or intention. Also, examination practice usually involves one learner over time, while scaling laws are measured across many trained model sizes and depend heavily on data quality, architecture and evaluation method."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How scaling laws are estimated",
+    "learningObjective": "After viewing this, a reader should be able to explain that scaling laws come from comparing many training runs at different sizes and looking for a predictable performance trend.",
+    "description": "Show three input sliders or labelled blocks for data size, parameter count and compute feeding into repeated training runs. These runs produce test scores or error rates, which feed into a chart with a smooth improving curve that flattens. Read left to right: increase resources, train several versions, measure results, then estimate expected gains and limits.",
+    "steps": [
+      {
+        "label": "Choose a scale factor",
+        "explanation": "Pick different amounts of training data, parameter count and compute to test.",
+        "visualInstruction": "Display three left-side input blocks labelled Data, Parameters and Compute, each with small, medium and large markers."
+      },
+      {
+        "label": "Train several model versions",
+        "explanation": "Run multiple training jobs so each version uses a different combination of resources.",
+        "visualInstruction": "Connect the three inputs to a middle row of 4–5 model boxes of increasing size."
+      },
+      {
+        "label": "Measure on the same benchmark",
+        "explanation": "Evaluate each trained version on the same test so the comparison is fair.",
+        "visualInstruction": "Send arrows from all model boxes to one shared evaluation box labelled Same test set."
+      },
+      {
+        "label": "Plot the trend",
+        "explanation": "Place each result on a chart. Performance usually improves as scale increases, but often with slowing gains.",
+        "visualInstruction": "Show a right-side chart with points forming a curve that rises and then gradually flattens, or error falling and then flattening."
+      },
+      {
+        "label": "Use the estimate carefully",
+        "explanation": "Use the trend to forecast likely benefit, cost and limits, while checking data quality and task fit.",
+        "visualInstruction": "Add a final decision box under the chart with three icons: budget, energy, and task suitability."
+      }
+    ],
+    "interaction": "Hovering or tapping each model box highlights its point on the chart and reveals a short note such as '10x more compute, modest gain'.",
+    "accessibilityDescription": "The diagram is a left-to-right flow with five stages. First are three inputs: data size, parameter count and compute, each shown at several levels from small to large. Second, these feed into several model training runs of increasing size. Third, all runs go to one shared evaluation step using the same test set. Fourth, the measured results are plotted on a chart where performance improves with scale but the curve gradually flattens, showing diminishing returns. Fifth, a decision box reminds the reader to use the trend for planning cost, energy use and likely benefit, not as a guarantee.",
+    "reducedMotionDescription": "A static flow diagram shows the same five stages in one view, with highlighted arrows and fixed labels instead of hover effects or animation."
+  },
+  "workedExample": {
+    "scenario": "A research team is testing whether a multilingual text model should be scaled up for a customer-support summarisation task.",
+    "input": "Run A: 20 billion tokens, 1 billion parameters, 2,000 GPU-hours. Run B: 100 billion tokens, 3 billion parameters, 10,000 GPU-hours. Run C: 300 billion tokens, 10 billion parameters, 40,000 GPU-hours.",
+    "process": [
+      "The team trains three versions with larger amounts of data, parameters and compute.",
+      "They evaluate all three on the same held-out summarisation benchmark and measure error rate.",
+      "Run A gets 18% error, Run B gets 12% error, and Run C gets 10.5% error.",
+      "The plotted curve shows improvement with scale, but the jump from B to C is much smaller than the jump from A to B.",
+      "The team estimates that another large increase in compute may produce only a modest gain, so they compare that likely gain with cost and energy use before proceeding."
+    ],
+    "result": "The scaling trend helps the team forecast diminishing returns: scaling up still helps, but the added benefit may no longer justify the extra training cost."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is exploring whether a language model can help summarise thousands of free-text responses from a household assessment collected across several regions and languages.",
+    "relevance": "Scaling laws can help the team judge whether more training data, a larger model, or more compute would likely improve summary quality enough to justify extra cost, time and infrastructure.",
+    "caution": "Do not place personal, confidential, protection-sensitive or security-sensitive survey responses into an unapproved public AI service. Use approved systems, minimise data, and keep human review in the loop because larger models do not remove risks of bias, hallucinated details or privacy harm."
+  },
+  "whyItMatters": "Scaling laws matter because they help organisations estimate trade-offs before spending heavily on larger models. They can inform budgeting, infrastructure planning, procurement, energy use, timelines and risk review. For policy and management audiences, the key point is simple: bigger often helps, but not endlessly, not equally for every task, and not without costs. For technical teams, they provide a way to forecast whether extra data or compute is likely to be worthwhile.",
+  "whereYouMayHearIt": [
+    "model training plans",
+    "AI infrastructure budgeting",
+    "research papers on large models",
+    "procurement and capacity discussions",
+    "energy and cost reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model follows scaling laws, making it bigger will always solve its weaknesses.",
+      "correction": "Scaling laws describe average performance trends over a tested range. They do not guarantee that a bigger model will fix poor data quality, unsafe outputs, weak evaluation design, or a mismatch between the model and the task."
+    },
+    {
+      "misconception": "Scaling laws mean there is one magic size where intelligence appears suddenly.",
+      "correction": "In many studies, the trend is gradual rather than magical: performance changes smoothly as resources increase. Some abilities may seem to appear abruptly because of how tasks are measured, but that does not mean there is a universal sharp threshold."
+    },
+    {
+      "misconception": "Scaling laws and scalability mean the same thing.",
+      "correction": "They address different questions. Scaling laws are about how model quality changes as training resources increase. Scalability is about whether a deployed system can handle more users, traffic or workload reliably."
+    },
+    {
+      "misconception": "A smooth scaling curve proves the outputs are reliable or fair.",
+      "correction": "A model can improve on a benchmark while still producing biased, misleading or unsafe outputs in real use. Reliability, fairness and suitability require separate testing, governance and human oversight."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "When teams make a model larger, give it more training data, or spend more processing power on training, its results often improve in a somewhat predictable way. Scaling laws are the observed patterns that help estimate how much improvement to expect and when the gains may start to level off.",
+    "technical": "In machine learning, scaling laws are empirical relationships between model loss or benchmark performance and resource variables such as parameter count, training data size and compute budget. Researchers estimate them by training families of models across multiple scales and fitting curves, often in log-log space, to observed outcomes. These relationships can be used to forecast expected returns from increasing one or more resources and to identify regimes where a model is under-trained, data-limited or compute-limited. However, the fitted trend depends on the architecture, optimiser, data distribution, objective function and evaluation setup. It is therefore a planning tool, not a universal guarantee."
+  },
+  "keyTakeaway": "Scaling laws help predict whether spending more on data, parameters and compute is likely to improve a model enough to justify the extra cost.",
+  "quickCheck": {
+    "question": "What do scaling laws mainly help a team do?",
+    "options": [
+      "Predict how model performance may change as data, parameters or compute increase",
+      "Guarantee that a larger model will be accurate and safe in every real-world use",
+      "Measure how many users a deployed application can serve at the same time",
+      "Replace evaluation because the trend line already proves quality"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Scaling laws are mainly used for forecasting likely performance changes as training scale increases. They do not guarantee safety or real-world reliability, and they are different from operational scalability, which is about serving workload."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Quantum computing scaling laws",
+      "url": "https://en.wikipedia.org/wiki/Quantum_computing_scaling_laws",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives broad background on scaling laws in a different technical field, which may suit readers who want the general idea of how performance can change with size but should not treat it as an AI-specific source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This NIST framework helps policy and technical readers connect model growth decisions with risk management, governance and evaluation duties in organisational practice.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "difficulty": "intermediate",
+      "description": "These OECD principles help public-sector and management readers place scale-related choices within wider ideas of accountability, robustness and human-centred governance.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Scaling laws",
+      "url": "https://www.youtube.com/results?search_query=Scaling%20laws%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers who prefer video explanations compare multiple presentations of scaling laws, but it is a search page rather than one vetted lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Scaling laws",
+      "url": "https://www.reddit.com/search/?q=Scaling%20laws",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page lets readers see community questions, debates and informal explanations about scaling laws, but it is a search page and discussion quality will vary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "scaling laws ai",
+    "scaling hypothesis machine learning",
+    "what are scaling laws in llms",
+    "model gets better with more data compute",
+    "diminishing returns ai training",
+    "scaling laws vs scalability",
+    "llm scaling curve",
+    "ai scaling law explained",
+    "scailing laws ai",
+    "scaling laws",
+    "scaling hypothesis"
+  ],
+  "contested": "The broad idea is widely used, but details are not fully settled. Researchers disagree about how far observed scaling trends generalise across model architectures, tasks, data quality conditions and future systems.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:50:16.915Z",
+    "contentHash": "5b70f62c3e1d3cc6",
+    "attempts": 2,
+    "promptTokens": 2397,
+    "completionTokens": 2526
+  }
+}

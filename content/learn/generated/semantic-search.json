@@ -1,0 +1,232 @@
+{
+  "id": "semantic-search",
+  "slug": "semantic-search",
+  "term": "Semantic search",
+  "aliases": [
+    "vector search",
+    "meaning-based search"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "programme",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "embedding",
+    "semantic-similarity"
+  ],
+  "relatedTermIds": [
+    "embedding",
+    "semantic-similarity",
+    "retrieval",
+    "vector-database",
+    "ranking-and-reranking",
+    "nearest-neighbour-search"
+  ],
+  "oftenConfusedWith": [
+    "keyword-search",
+    "retrieval-augmented-generation",
+    "indexing"
+  ],
+  "oneSentence": "A search method that finds material by similar meaning, not just shared words, and returns the most relevant passages for review or further AI use.",
+  "plainExplanation": "Ordinary search often looks for exact words or close matches. Semantic search tries to find text with a similar meaning even when the wording is different. For example, a search for “flood damage to roads” may also find a passage about “washed-out transport routes after heavy rain”.\n\nWhat goes in? Usually a user question and a collection of documents. The system turns the question and document passages into numerical representations called embeddings. An embedding is a list of numbers designed so that items with similar meaning end up closer together.\n\nWhat happens next? The system compares the question’s embedding with the embeddings of many stored passages and retrieves the nearest ones. “Nearest” here does not mean physically nearby. It means most similar in that numerical space. The results may then be reordered by another ranking step.\n\nWhat comes out? A list of passages, documents or records that are likely to match the user’s intent. This is different from retrieval-augmented generation: semantic search finds the source material, while retrieval-augmented generation uses retrieved material to help a model produce an answer. Semantic search can help when people use different languages, phrasing or terminology, but it still needs testing because it can miss important exact terms or return items that only seem related.",
+  "everydayAnalogy": {
+    "title": "Asking a skilled librarian for the right shelf",
+    "story": "In a public library in Nairobi, a student asks for books about roads made unsafe after storms. The student does not know the official transport engineering terms. The librarian does not search only for the exact words the student said. Instead, the librarian thinks about the meaning, then walks to sections with books on flood damage, road washouts and emergency road repair, and brings back the most relevant ones.",
+    "mapping": [
+      {
+        "analogyElement": "The student’s question in everyday language",
+        "aiElement": "The user query"
+      },
+      {
+        "analogyElement": "The librarian focusing on meaning rather than exact wording",
+        "aiElement": "Semantic matching using embeddings"
+      },
+      {
+        "analogyElement": "Nearby shelves on related topics",
+        "aiElement": "Items close together in embedding space"
+      },
+      {
+        "analogyElement": "The books brought back first",
+        "aiElement": "Top retrieved search results"
+      }
+    ],
+    "limitation": "A librarian uses broad world knowledge, judgement and context in ways a search system does not fully replicate. Semantic search relies on numerical representations learned from data, so it can miss rare terms, legal wording, names or codes that a human librarian might notice immediately. It also does not by itself verify whether a retrieved passage is correct or appropriate for the task."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How semantic search finds passages by meaning",
+    "learningObjective": "After viewing this, a reader should be able to describe how a query and stored passages are turned into vectors, compared for similarity, and returned as ranked results.",
+    "description": "A left-to-right flow with two inputs: a user query and a document collection split into passages. Both are converted into vectors, compared in a similarity step, then the closest passages are returned as ranked results. Read from left to right to follow the process from input to output.",
+    "steps": [
+      {
+        "label": "1. User asks a question",
+        "explanation": "The search starts with a short query, such as “guidance on drought-related crop loss”.",
+        "visualInstruction": "Draw a query box on the left with sample text inside and an arrow pointing right."
+      },
+      {
+        "label": "2. Documents are prepared",
+        "explanation": "Documents are split into smaller passages so the system can return the specific part that matches.",
+        "visualInstruction": "Above or below the query path, show a stack of documents breaking into several smaller passage cards."
+      },
+      {
+        "label": "3. Text becomes vectors",
+        "explanation": "The query and each passage are converted into embeddings, which are number patterns intended to place similar meanings near each other.",
+        "visualInstruction": "Show both query and passage cards passing into matching encoder boxes, then into small dot clusters or compact number bars labelled vectors."
+      },
+      {
+        "label": "4. Similarity is measured",
+        "explanation": "The system compares the query vector with stored passage vectors and looks for the nearest matches in meaning.",
+        "visualInstruction": "Show the query vector entering a comparison area with several passage vectors; highlight three nearest ones with stronger colour or outline."
+      },
+      {
+        "label": "5. Best passages are returned",
+        "explanation": "The search outputs a ranked list of the most relevant passages, which a person or another system can inspect.",
+        "visualInstruction": "On the right, show a ranked list labelled 1, 2, 3 with short passage snippets and source document labels."
+      }
+    ],
+    "interaction": "Hovering or tapping a step highlights the matching objects and arrows for that step; a toggle switches the example query text to another wording to show that similar-meaning results can still appear.",
+    "accessibilityDescription": "The diagram explains semantic search as a five-step flow. First, a user enters a question. Second, documents are split into smaller passages. Third, both the question and the passages are converted into embeddings, which are numerical vectors intended to place similar meanings close together. Fourth, the system compares the question vector with the stored passage vectors and identifies the nearest ones by similarity. Fifth, it returns a ranked list of passages. The main lesson is that matching is based on similar meaning, not only shared words.",
+    "reducedMotionDescription": "A static left-to-right diagram shows the same five stages with numbered boxes and arrows. The three best-matching passages are highlighted without animation, and the alternate-query example appears as a small side note instead of a transition."
+  },
+  "workedExample": {
+    "scenario": "A small knowledge base contains three passages: A: “Heavy rainfall caused bridge closures and road washouts in the northern district.” B: “A workshop covered long-term transport budgeting.” C: “Satellite images can help identify damaged road segments after storms.” A user searches for “find roads harmed by flooding from satellite pictures”.",
+    "input": "Query: “find roads harmed by flooding from satellite pictures”",
+    "process": [
+      "The system splits documents into passages and stores an embedding for each one.",
+      "It creates an embedding for the query.",
+      "It compares the query embedding with the stored passage embeddings.",
+      "Suppose the similarity scores are C = 0.88, A = 0.81, B = 0.22.",
+      "It returns C first, then A, because both are close in meaning to the query even though the wording is different."
+    ],
+    "result": "Top results: passage C about satellite images and damaged road segments, then passage A about road washouts after heavy rainfall. Passage B is ranked low because it is about budgeting, not damage detection."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office builds an internal search tool over approved guidance documents so staff can find relevant paragraphs even when they use different wording from the original documents.",
+    "relevance": "This can reduce time spent hunting through long document sets and can improve consistency by surfacing the most relevant source passages for human review.",
+    "caution": "Only use approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into a public AI search service."
+  },
+  "whyItMatters": "People rarely search using the exact words found in a document. That matters in policy, programme and public information work, where the right source may use different terminology, abbreviations or phrasing. Semantic search can help users find the relevant passage faster, which supports better decisions and more transparent answers. It is also useful before an AI system drafts a response, because retrieving relevant source text can reduce unsupported output. But it is not magic: if the index is poor, the passages are badly split, or the topic needs exact legal wording, results can still be wrong or incomplete. Non-specialists should care because search quality shapes what evidence is seen first.",
+  "whereYouMayHearIt": [
+    "enterprise search tools",
+    "RAG system design",
+    "knowledge management projects",
+    "chat over documents",
+    "vector database demos"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Semantic search replaces keyword search completely.",
+      "correction": "Not always. Meaning-based matching is helpful when wording varies, but exact keywords still matter for names, article numbers, codes, legal clauses and rare technical terms. Many practical systems combine both approaches."
+    },
+    {
+      "misconception": "If two texts are close in semantic search, they must say the same thing.",
+      "correction": "Close vectors usually suggest related meaning, not identical meaning. Two passages can be topically similar but differ in details, time period, scope or factual accuracy, so results still need checking."
+    },
+    {
+      "misconception": "Semantic search produces final answers.",
+      "correction": "By itself, it usually retrieves relevant passages or documents. Another step is needed if a system will summarise or generate an answer, and that later step can still make mistakes."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a way to search by meaning. Instead of looking only for the same words, it tries to find text that talks about the same idea.",
+    "technical": "In a typical setup, the query and document passages are encoded into embeddings: dense numerical vectors trained so semantically similar text tends to lie closer together in vector space. At search time, the system computes the query embedding, compares it against stored passage embeddings using a similarity measure such as cosine similarity, and retrieves the nearest neighbours. Results may then be filtered, reranked or combined with keyword methods. This is different from indexing in general, from the vector database that may store the vectors, and from retrieval-augmented generation, which uses retrieved passages to condition a model’s output."
+  },
+  "keyTakeaway": "Semantic search helps you find the right passage by similar meaning, even when the useful document does not use the same words as the question.",
+  "quickCheck": {
+    "question": "Which statement best describes semantic search?",
+    "options": [
+      "It finds documents only when they contain the exact search words in the right order.",
+      "It retrieves text that is close in meaning to the query, even if the wording is different.",
+      "It always generates a complete answer instead of returning source passages.",
+      "It sorts documents by date and popularity rather than meaning."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Semantic search is about meaning-based retrieval. It often uses embeddings to find passages that are semantically similar to the query. It does not require exact wording, and it does not automatically generate final answers."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Semantic search",
+      "url": "https://en.wikipedia.org/wiki/Semantic_search",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of the term, its history and related ideas, and suits readers who want a general reference starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link explains embeddings, which are a core building block of semantic search, and suits beginners who want a guided course-style introduction.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers explore how embeddings can be positioned and compared, and suits visual learners who want hands-on intuition.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Semantic search",
+      "url": "https://www.youtube.com/results?search_query=Semantic%20search%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page for video explanations of semantic search, and it suits readers who prefer to compare several video styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Semantic search",
+      "url": "https://www.reddit.com/search/?q=Semantic%20search",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page for community discussion about semantic search, and it suits readers who want to see common questions, practical experiences and differing viewpoints.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "semantic search meaning",
+    "vector search explained",
+    "meaning based search",
+    "search by meaning not keywords",
+    "semantic vs keyword search",
+    "how does vector search work",
+    "embedding search",
+    "nearest neighbour search text",
+    "sematic search",
+    "rag retrieval search",
+    "semantic search",
+    "vector search",
+    "meaning-based search"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:38:12.788Z",
+    "contentHash": "594e85eee50233a2",
+    "attempts": 1,
+    "promptTokens": 2271,
+    "completionTokens": 2358
+  }
+}

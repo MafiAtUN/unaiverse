@@ -1,0 +1,232 @@
+{
+  "id": "parameter-efficient-fine-tuning",
+  "slug": "parameter-efficient-fine-tuning",
+  "term": "Parameter-efficient fine-tuning",
+  "acronym": "PEFT",
+  "aliases": [
+    "PEFT"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "fine-tuning"
+  ],
+  "relatedTermIds": [
+    "fine-tuning",
+    "lora",
+    "supervised-fine-tuning",
+    "instruction-tuning",
+    "checkpoint",
+    "in-context-learning"
+  ],
+  "oftenConfusedWith": [
+    "fine-tuning",
+    "lora",
+    "in-context-learning",
+    "quantisation"
+  ],
+  "oneSentence": "A way to adapt a large model to a new task by training only a small set of added or selected weights instead of updating the whole model.",
+  "plainExplanation": "Large language models contain many weights, which are the numeric settings that shape their outputs. Traditional fine-tuning changes many or all of those weights for a new task. Parameter-efficient fine-tuning changes only a small fraction of them, often by adding small trainable components while keeping the original model mostly frozen, meaning not updated.\n\nWhat goes in is a pre-existing model, a target task, and training examples. During training, the model processes the examples as usual, but the learning step updates only the small PEFT components or a selected subset of weights. The main model weights stay fixed or nearly fixed.\n\nWhat comes out is an adapted model behaviour without storing or retraining a full new copy of the entire model. In practice, teams often keep the original checkpoint and save only the small PEFT package. That package can later be attached to the base model to produce the specialised version.\n\nThis matters because full fine-tuning can be expensive in memory, storage, time and energy. PEFT often makes adaptation practical on smaller budgets and lets one organisation maintain several task-specific variants of the same base model. It is commonly used for domain adaptation, style control, instruction following, or task-specific performance improvements.\n\nPEFT is a family of methods, not one single method. LoRA is one well-known example, but there are others. It is also different from in-context learning, where you steer behaviour by prompt examples without updating any weights at all.",
+  "everydayAnalogy": {
+    "title": "Adding a thin overlay to a standard keyboard",
+    "story": "A newsroom in Nairobi, Bangkok and Bogotá all use the same standard keyboard model. For one project, each desk adds a thin removable overlay that changes only a few key labels and shortcuts for local workflows, while the keyboard hardware underneath stays the same. Staff can switch projects by swapping overlays instead of replacing the whole keyboard. The newsroom stores many small overlays, not many full keyboards.",
+    "mapping": [
+      {
+        "analogyElement": "standard keyboard hardware",
+        "aiElement": "base model with its original weights"
+      },
+      {
+        "analogyElement": "thin removable overlay",
+        "aiElement": "small trainable PEFT components"
+      },
+      {
+        "analogyElement": "swapping overlays for different desks or projects",
+        "aiElement": "loading different task-specific adapters onto the same base model"
+      },
+      {
+        "analogyElement": "storing overlays instead of whole keyboards",
+        "aiElement": "saving far fewer trained parameters and less storage"
+      }
+    ],
+    "limitation": "A keyboard overlay changes fixed shortcuts in a simple, visible way. PEFT changes numerical weights inside a model through optimisation on data, so its effects are distributed and less predictable. Also, some PEFT methods do not literally sit on top of the model as a separate visible layer; that is just a helpful picture."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Full fine-tuning versus PEFT",
+    "learningObjective": "Show why PEFT adapts a model by changing a small set of parameters while leaving most base weights unchanged.",
+    "description": "A side-by-side diagram compares two adaptation paths starting from the same base model. Read left to right. The left path shows many weights updated and a full new model copy saved. The right path shows the base model frozen, a small trainable module updated, and a compact adapter saved for later attachment to the same base model.",
+    "steps": [
+      {
+        "label": "Same starting point",
+        "explanation": "Both approaches begin with one pretrained base model and a task dataset.",
+        "visualInstruction": "Draw one large rectangle labelled 'Base model checkpoint' above both columns, with arrows down into the left and right paths."
+      },
+      {
+        "label": "Full fine-tuning path",
+        "explanation": "In full fine-tuning, training updates many or all model weights.",
+        "visualInstruction": "Left column: show a large model block filled with many small highlighted dots across the whole block; label 'many weights updated'."
+      },
+      {
+        "label": "PEFT path",
+        "explanation": "In PEFT, the base model stays frozen and only a small added or selected set of parameters is trained.",
+        "visualInstruction": "Right column: show a large pale model block labelled 'frozen base weights' plus a small bright side block labelled 'trainable adapter' or 'small parameter set'."
+      },
+      {
+        "label": "What gets saved",
+        "explanation": "Full fine-tuning often saves a full specialised model, while PEFT often saves only the compact adapter package.",
+        "visualInstruction": "Under left column, draw a large storage icon labelled 'full specialised checkpoint'. Under right column, draw a small storage icon labelled 'adapter files only'."
+      },
+      {
+        "label": "Using the result",
+        "explanation": "At inference time, the PEFT adapter is attached to the same base model to produce task-specific behaviour.",
+        "visualInstruction": "Show on the right a final combined box made from the base model plus the small adapter, with an arrow to 'task output'."
+      }
+    ],
+    "interaction": "Hover or tap each column to highlight which weights change and to display approximate relative storage sizes, such as 'large' versus 'small', without claiming a fixed ratio.",
+    "accessibilityDescription": "The diagram compares two ways to adapt the same pretrained model. Both start from one base model and a task dataset. In the full fine-tuning column, training changes many or all weights in the whole model, and the result is typically saved as a full specialised checkpoint. In the PEFT column, the base model remains frozen, shown in a muted colour, while only a small adapter or selected parameter set is trainable, shown in a bright colour. The saved result is a much smaller adapter file. To use it, the adapter is attached back to the base model, producing task-specific output without storing a full separate model copy.",
+    "reducedMotionDescription": "A static two-column comparison remains visible at all times, with coloured labels marking updated weights in the full fine-tuning path and the small trainable adapter in the PEFT path."
+  },
+  "workedExample": {
+    "scenario": "A team wants a base language model to draft short technical support replies for a solar equipment company in English and French.",
+    "input": "Base model with 7 billion parameters; 12,000 approved support examples; PEFT method using small adapters with about 8 million trainable parameters.",
+    "process": [
+      "The team starts with the existing 7B-parameter checkpoint and prepares cleaned training pairs such as customer question to approved reply.",
+      "Instead of updating all 7 billion parameters, training keeps the base model frozen and updates only the 8 million adapter parameters.",
+      "After training, the team saves the adapter files, which are far smaller than a full extra copy of the model.",
+      "At use time, the service loads the original base model plus the new adapter to generate support-style replies."
+    ],
+    "result": "The adapted system follows the company reply style more closely and handles solar-support phrasing better, while the team stores and deploys a small adapter package rather than a second full model."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office wants a model to help draft routine situation report summaries in a consistent internal format from already approved, non-sensitive source text.",
+    "relevance": "PEFT can let the office adapt one approved base model to the report style of different teams by storing small task-specific adapters rather than many full model copies.",
+    "caution": "Do not place confidential, protection-sensitive, security-sensitive or personally identifiable information into an unapproved public AI service. Use only approved environments, approved data and human review before any report is shared."
+  },
+  "whyItMatters": "For a non-specialist, PEFT matters because it changes the cost and governance of model adaptation. It can reduce hardware needs, shorten training time and lower storage demands. That makes it easier to test a specialised model for a narrow task without committing to a full retraining project. It also supports cleaner version management: one base model can serve many use cases through separate small adapters. But PEFT is not automatically safer or better. You still need good data, evaluation, access control, documentation and human oversight. In procurement or project planning, the key question is often not only 'can we fine-tune?' but 'do we need full fine-tuning, or will PEFT achieve the goal at lower cost and lower operational burden?'",
+  "whereYouMayHearIt": [
+    "adapting an LLM for a domain",
+    "LoRA or adapter training discussions",
+    "model deployment and storage planning",
+    "GPU memory constraint conversations"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "PEFT means no training happens.",
+      "correction": "Training still happens. The difference is that only a small subset of parameters is updated, rather than the entire model. You still need data, optimisation, validation and testing."
+    },
+    {
+      "misconception": "PEFT and LoRA are the same thing.",
+      "correction": "LoRA is one popular PEFT method, not the whole category. PEFT includes several approaches that reduce how many parameters are trained or stored."
+    },
+    {
+      "misconception": "Because fewer parameters change, PEFT always matches full fine-tuning.",
+      "correction": "Sometimes it comes close, but not always. Performance depends on the task, data quality, base model and PEFT method. For some tasks, updating the whole model may still work better."
+    },
+    {
+      "misconception": "PEFT makes a model smaller in all respects.",
+      "correction": "Usually it reduces the number of trainable and stored task-specific parameters, not necessarily the size of the base model used at inference time. You often still need the original base model loaded."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a cheaper way to customise a big model. Instead of rewriting the whole model, you change only a small add-on or a small part of it.",
+    "technical": "PEFT refers to adaptation methods that restrict training to a small number of parameters relative to the full model. A common pattern is to freeze the pretrained backbone and optimise lightweight task-specific modules, such as low-rank update matrices, adapters inserted into layers, soft prompts, or other selective parameter subsets. During backpropagation, gradients may be computed through the network, but only the designated trainable parameters are updated. This cuts optimiser state, memory and checkpoint size for task adaptation. The resulting artefact is often an adapter that must be combined with the original checkpoint at inference time. PEFT is therefore about adaptation efficiency, not a single architecture, and it is distinct from prompt-only steering because weights do change."
+  },
+  "keyTakeaway": "PEFT adapts a large model by training a small extra or selected parameter set, giving many benefits of fine-tuning without updating the whole model.",
+  "quickCheck": {
+    "question": "Which statement best captures parameter-efficient fine-tuning?",
+    "options": [
+      "It adapts a model to a task by updating only a small subset of parameters or added modules while keeping most base weights fixed.",
+      "It improves a model only by giving better prompts, with no weight updates at all.",
+      "It always compresses the entire base model so it uses less memory at inference time.",
+      "It trains a brand-new model from scratch on a smaller dataset."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "PEFT still involves training, but it limits which parameters are updated. That is why it is different from prompt-only methods, model compression in general, or training from scratch."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Parameter-efficient fine-tuning",
+      "url": "https://en.wikipedia.org/w/index.php?search=Parameter-efficient%20fine-tuning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A Wikipedia search results page that helps readers find overview articles or related entries on the topic, best for quick orientation and terminology checking.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "A structured Hugging Face course that suits readers who want hands-on technical context for model adaptation methods, including practical workflows.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "description": "A set of short DeepLearning.AI courses that suits learners who prefer guided lessons and applied intuition before reading deeper technical material.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Parameter-efficient fine-tuning",
+      "url": "https://www.youtube.com/results?search_query=Parameter-efficient%20fine-tuning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps visual learners compare different video explanations and teaching styles on the topic.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Parameter-efficient fine-tuning",
+      "url": "https://www.reddit.com/search/?q=Parameter-efficient%20fine-tuning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that lets readers see community questions, practical issues and informal explanations, which is most useful after learning the basics.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "parameter efficient fine tuning",
+    "peft meaning llm",
+    "peft vs fine tuning",
+    "peft vs lora",
+    "adapter tuning explanation",
+    "low rank adaptation peft",
+    "what does peft do",
+    "paramter efficient fine tuning",
+    "freeze base model adapter training",
+    "parameter-efficient fine-tuning",
+    "peft"
+  ],
+  "contested": "The broad idea is stable, but the boundary of what counts as PEFT is not perfectly fixed. Some authors use the term narrowly for adapter-style methods, while others include prompt tuning, selective unfreezing or other low-parameter adaptation strategies.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:41.497Z",
+    "contentHash": "554296f14a1956d9",
+    "attempts": 1,
+    "promptTokens": 2305,
+    "completionTokens": 2567
+  }
+}

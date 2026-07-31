@@ -1,0 +1,224 @@
+{
+  "id": "rate-limit",
+  "slug": "rate-limit",
+  "term": "Rate limit",
+  "aliases": [
+    "quota",
+    "throttling"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "api"
+  ],
+  "relatedTermIds": [
+    "api",
+    "endpoint",
+    "throughput",
+    "compute",
+    "scalability",
+    "cost-per-token"
+  ],
+  "oftenConfusedWith": [
+    "throughput",
+    "compute",
+    "scalability"
+  ],
+  "oneSentence": "A control that caps how many requests or how much use a service accepts within a set time, to keep systems available, fair and affordable.",
+  "plainExplanation": "A rate limit sets a pace. It tells a service how many requests, messages or tokens it will accept from one user, app or organisation in a given time period, such as 60 requests per minute.\n\nWhat goes in is incoming use: for example, people clicking a website, an app calling an AI service, or a script sending many API requests. The service counts this activity against a rule. The rule might be based on time, account type, Internet address, or a specific endpoint, which means a specific service address for one function.\n\nWhat happens next depends on the count. If use stays under the limit, requests are processed normally. If use goes over the limit, extra requests may be delayed, slowed or rejected with a message such as “too many requests”. This is why rate limiting is also called throttling.\n\nWhat comes out is not better answers. It is controlled access. The goal is to protect capacity, prevent one user from crowding out others, reduce abuse, and help manage cost. This is different from throughput, which is the total amount a system can process overall. A system can have high throughput and still impose a low rate limit per user.",
+  "everydayAnalogy": {
+    "title": "Security gate at a busy conference",
+    "story": "At an international conference centre, visitors enter through a security gate. The organisers allow only 30 people every 10 minutes through one entrance so the screening team does not get overwhelmed. If 50 people arrive at once, some pass through and the rest wait in a marked queue until the next time window. The rule is not about judging who is important; it is about keeping the entrance safe and orderly for everyone.",
+    "mapping": [
+      {
+        "analogyElement": "security gate",
+        "aiElement": "service or endpoint receiving requests"
+      },
+      {
+        "analogyElement": "30 people every 10 minutes",
+        "aiElement": "maximum allowed requests in a time window"
+      },
+      {
+        "analogyElement": "queue or waiting line",
+        "aiElement": "delayed or throttled requests"
+      },
+      {
+        "analogyElement": "screening team capacity",
+        "aiElement": "available compute and system resources"
+      }
+    ],
+    "limitation": "A real rate limit is usually enforced automatically by software, not by staff watching a door. It may count tokens, bytes or requests separately, and different users may have different limits at the same time. Also, some services reject excess requests immediately instead of making them wait in a queue."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How a rate limit handles incoming requests",
+    "learningObjective": "Show what happens when requests arrive below, near and above a service limit, and distinguish normal processing from delay or rejection.",
+    "description": "A left-to-right step diagram shows requests arriving, being counted within a time window, compared with a limit, and then either processed or blocked/delayed. Read from step 1 to step 4 to see the cause-and-effect chain.",
+    "steps": [
+      {
+        "label": "1. Requests arrive",
+        "explanation": "Users or apps send requests to a service during a set period, such as one minute.",
+        "visualInstruction": "Draw several small request icons moving toward a service box, with a clock icon labelled '1 minute' above them."
+      },
+      {
+        "label": "2. Usage is counted",
+        "explanation": "The service tracks how many requests came from the same account, app or address in that period.",
+        "visualInstruction": "Show a counter beside the service box increasing from 1 up to a visible number, such as 60."
+      },
+      {
+        "label": "3. Rule is checked",
+        "explanation": "The counter is compared with the allowed maximum, for example 'limit: 60 per minute'.",
+        "visualInstruction": "Place a decision diamond or comparison panel showing 'count' versus 'limit 60/min'."
+      },
+      {
+        "label": "4. Outcome",
+        "explanation": "If the count is within the limit, requests are processed. If it is over the limit, extra requests are delayed or returned with a 'too many requests' response.",
+        "visualInstruction": "Split into two paths: a green path to 'processed' and an amber/red path to 'wait' or '429 too many requests'."
+      }
+    ],
+    "interaction": "Hover or tap each step to highlight the matching part of the request path and reveal one short example, such as '58 of 60: processed' and '61 of 60: delayed or rejected'.",
+    "accessibilityDescription": "This diagram explains rate limiting as a four-step process. First, requests from users or apps reach a service during a defined time period, shown as one minute. Second, the service counts requests from the same source, such as an account or app. Third, it compares that count with a rule like 60 requests per minute. Fourth, if the count is at or below the rule, the requests are processed. If the count is above the rule, the extra requests are delayed or rejected with a message such as 'too many requests'. The main idea is that the system measures usage over time and then controls access to protect capacity.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same process without animation: requests arrive, the system counts them within a time window, compares the count with a fixed limit, and then sends them either to normal processing or to delay/rejection."
+  },
+  "workedExample": {
+    "scenario": "A small translation app uses an AI service with a limit of 120 requests per minute for its account.",
+    "input": "At 10:00 to 10:01, the app sends 135 requests because many users submit short text at once.",
+    "process": [
+      "The service counts requests from that account during the one-minute window.",
+      "The first 120 requests stay within the rule and are accepted.",
+      "Requests 121 to 135 go over the limit.",
+      "The service returns 'too many requests' for the extra 15, and the app waits a few seconds before retrying them."
+    ],
+    "result": "Most users get responses immediately, 15 requests are briefly delayed, and the service avoids overload."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team member searches a repository of public UN resolutions through an approved internal tool that uses an AI service to suggest similar prior language.",
+    "relevance": "If many staff search at once before a negotiation session, rate limits help keep the tool available and predictable instead of slowing down for everyone.",
+    "caution": "Use only approved systems and public or cleared material; do not paste confidential draft text, personal data or security-sensitive information into an unapproved public AI service, even when retrying after a limit is reached."
+  },
+  "whyItMatters": "For non-specialists, rate limits affect reliability, speed, fairness and cost. If you use AI tools at work, a limit can explain why a tool suddenly slows down or says 'too many requests' even though it was working a moment ago. If you buy or manage a service, limits shape user experience, budgeting and planning. They also help reduce misuse, such as automated scraping or denial-of-service behaviour. Knowing about rate limits helps you ask practical questions: What exactly is limited, per user or per organisation? Per minute or per day? Are excess requests queued, slowed or rejected? What is the fallback plan?",
+  "whereYouMayHearIt": [
+    "API documentation",
+    "cloud service pricing pages",
+    "developer error messages",
+    "IT capacity planning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A rate limit means the whole system is slow.",
+      "correction": "Not necessarily. A service may have strong overall capacity but still set per-user or per-app limits so one client does not consume too much at once. That is why rate limit and throughput are related but not the same."
+    },
+    {
+      "misconception": "If I pay more, there is no rate limit at all.",
+      "correction": "Higher-priced plans often raise limits, but many services still keep some cap to protect stability, fairness and cost control. The limit may be large enough that most users rarely notice it."
+    },
+    {
+      "misconception": "Rate limiting is only for security attacks.",
+      "correction": "It is also a normal operations tool. Organisations use it for predictable performance, fair sharing of compute, and budget control, even when traffic is legitimate."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a speed cap for using a digital service: only so much can be sent in a certain time.",
+    "technical": "A rate limit is a policy that measures incoming usage over a defined interval and enforces a maximum, such as requests per second, tokens per minute, or bytes per hour. The system identifies a subject to limit, such as an API key, user account, IP address, organisation or endpoint, then keeps a running count using a method like fixed windows, sliding windows or token buckets. When usage exceeds the threshold, the service may reject the request, delay it, or ask the client to retry later. This differs from throughput, which describes the total processing capacity of the system, not the policy cap applied to a particular caller."
+  },
+  "keyTakeaway": "A rate limit does not improve answers; it controls how fast a service can be used so capacity is shared safely, fairly and affordably.",
+  "quickCheck": {
+    "question": "Which statement best describes a rate limit?",
+    "options": [
+      "A rule that caps how much one user or app can use a service in a set time period",
+      "A guarantee that the service will always respond quickly",
+      "A method for improving model accuracy by filtering bad data",
+      "The total maximum capacity of the entire system at all times"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "A rate limit is a usage rule over time, such as requests per minute. It is not a promise about response speed, not a data quality method, and not the same as overall system throughput."
+  },
+  "resources": [
+    {
+      "title": "Rate limiting",
+      "url": "https://en.wikipedia.org/wiki/Rate_limiting",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia link gives a broad overview of rate limiting concepts and common methods, and suits readers who want a quick general introduction.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This NIST AI Risk Management Framework link helps readers place controls such as rate limits within wider risk management and governance, and suits policy, assurance and technical teams.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "description": "This OECD AI Principles link gives high-level principles for trustworthy AI that provide governance context for operational controls, and suits general readers and decision-makers.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Rate limit",
+      "url": "https://www.youtube.com/results?search_query=Rate%20limit%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find different video explanations of rate limits, and suits people who prefer visual or spoken introductions.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Rate limit",
+      "url": "https://www.reddit.com/search/?q=Rate%20limit",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see community questions and practical experiences about rate limits, and suits readers looking for informal discussion and troubleshooting examples.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "rate limit meaning",
+    "what is rate limiting",
+    "api too many requests",
+    "429 error explanation",
+    "quota vs rate limit",
+    "throttling meaning",
+    "requests per minute limit",
+    "rate limt typo",
+    "why am i being rate limited",
+    "rate limit",
+    "quota",
+    "throttling"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:49:45.364Z",
+    "contentHash": "5171834f70d09bfe",
+    "attempts": 1,
+    "promptTokens": 2340,
+    "completionTokens": 2216
+  }
+}

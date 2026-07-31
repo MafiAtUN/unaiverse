@@ -1,0 +1,223 @@
+{
+  "id": "learning-rate",
+  "slug": "learning-rate",
+  "term": "Learning rate",
+  "aliases": [
+    "step size"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "gradient-descent"
+  ],
+  "relatedTermIds": [
+    "gradient-descent",
+    "gradient",
+    "optimisation",
+    "convergence",
+    "loss-function",
+    "adam-optimiser"
+  ],
+  "oftenConfusedWith": [
+    "momentum",
+    "hyperparameter"
+  ],
+  "oneSentence": "A training setting that controls how far model parameters move after each error-based update.",
+  "plainExplanation": "When a model is trained, it first makes a prediction and then compares that prediction with the correct answer. The gap between them is measured by a loss function, which turns error into a number the training process can reduce.\n\nNext, the training method calculates a gradient. A gradient is a set of signals showing which direction each parameter should move to reduce the loss. The learning rate tells the optimiser how large that movement should be.\n\nIf the learning rate is too small, training can be very slow. The model may improve, but only after many updates. If it is too large, the updates can overshoot the better region and make loss bounce around or even grow.\n\nSo the input is the gradient and the current parameter values, the learning rate scales the update, and the output is a new set of parameter values. The aim is steady progress towards lower loss, not the biggest jump on any single step.",
+  "everydayAnalogy": {
+    "title": "Adjusting labels in a feedback-sorting office",
+    "story": "A team is sorting public feedback letters into themes such as transport, health and education. After checking a batch, they notice many letters were put in the wrong pile, so they decide to adjust their sorting guide. One manager says to change the guide only a little each time, while another suggests rewriting large parts at once. Small edits make progress slow; huge edits make the guide swing from one mistake pattern to another.",
+    "mapping": [
+      {
+        "analogyElement": "the sorting guide being edited",
+        "aiElement": "model parameters being updated"
+      },
+      {
+        "analogyElement": "checking the wrongly sorted letters",
+        "aiElement": "measuring loss from prediction errors"
+      },
+      {
+        "analogyElement": "how much the guide is changed after each review",
+        "aiElement": "learning rate scaling each update"
+      },
+      {
+        "analogyElement": "swinging from one mistake pattern to another",
+        "aiElement": "overshooting and unstable training"
+      }
+    ],
+    "limitation": "A human team can reason about why a guide should change, while a model update usually follows numerical gradients without human-style judgement. Also, real training often changes thousands or millions of parameters at once, not one guide document."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Small, balanced and oversized updates",
+    "learningObjective": "Show how the same gradient leads to slow, stable or unstable training depending on update size.",
+    "description": "Three side-by-side panels show a ball moving down the same loss curve. Left: tiny steps inch towards the bottom. Middle: moderate steps reach the bottom efficiently. Right: oversized steps jump past the bottom and bounce between sides. Each jump is labelled as gradient multiplied by learning rate.",
+    "steps": [
+      {
+        "label": "Same starting point",
+        "explanation": "All three panels begin at the same position on the same loss curve, so only the update size changes.",
+        "visualInstruction": "Draw three identical U-shaped curves with a dot near the upper left in each panel."
+      },
+      {
+        "label": "Small learning rate",
+        "explanation": "Tiny updates follow the downhill direction but need many steps to get close to the minimum.",
+        "visualInstruction": "In the left panel, show 5 to 6 short arrows moving gradually towards the bottom."
+      },
+      {
+        "label": "Balanced learning rate",
+        "explanation": "Medium updates still go downhill but reach a low-loss region in fewer steps.",
+        "visualInstruction": "In the middle panel, show 3 to 4 medium arrows landing near the bottom without crossing it wildly."
+      },
+      {
+        "label": "Too-large learning rate",
+        "explanation": "Oversized updates overshoot the low point, so loss can oscillate or diverge instead of settling.",
+        "visualInstruction": "In the right panel, show long arrows crossing the bottom repeatedly from left to right."
+      }
+    ],
+    "interaction": "On hover or tap, each panel reveals a short caption: slow progress, efficient progress, or overshooting. An optional slider can increase step size and update the arrow lengths in all panels.",
+    "accessibilityDescription": "The diagram compares three training runs on the same bowl-shaped loss curve. In all cases, the optimiser starts from the same point and follows the same downhill direction. With a small learning rate, the parameter updates are very short, so the model approaches lower loss slowly. With a moderate learning rate, the updates are large enough to make good progress and reach a low-loss region efficiently. With a too-large learning rate, the updates jump past the low point and keep crossing it, which can make training unstable.",
+    "reducedMotionDescription": "A static three-panel comparison replaces animation. Each panel shows the full path as fixed arrows: many short arrows for a small learning rate, a few medium arrows for a balanced learning rate, and long crossing arrows for a too-large learning rate."
+  },
+  "workedExample": {
+    "scenario": "Training a simple text classifier to label consultation comments as transport or health.",
+    "input": "Current parameter weight = 0.80, gradient for that weight = 0.50, using the update rule new weight = old weight minus learning rate times gradient.",
+    "process": [
+      "With a learning rate of 0.01, the update is 0.01 × 0.50 = 0.005, so the new weight becomes 0.795.",
+      "With a learning rate of 0.1, the update is 0.1 × 0.50 = 0.05, so the new weight becomes 0.75.",
+      "With a learning rate of 1.2, the update is 1.2 × 0.50 = 0.60, so the new weight becomes 0.20, a much bigger jump.",
+      "If that large jump moves the model past a better region, the next gradient may reverse direction and cause oscillation rather than steady improvement."
+    ],
+    "result": "The same gradient can produce slow learning, useful progress or unstable behaviour depending on the chosen learning rate."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is training an internal classifier to route incoming feedback into broad topics for staff review, using an approved secure environment and non-sensitive training data or properly governed de-identified data.",
+    "relevance": "The learning rate affects whether retraining finishes efficiently and whether quality improves steadily enough for safe human-reviewed deployment.",
+    "caution": "Do not upload confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service to test learning-rate settings."
+  },
+  "whyItMatters": "Learning rate strongly affects cost, speed and reliability. If it is poorly chosen, a project may waste compute, miss deadlines or produce a model that appears to train but never becomes stable enough for trustworthy use.",
+  "whereYouMayHearIt": [
+    "model training settings",
+    "optimiser configuration",
+    "hyperparameter tuning",
+    "deep learning tutorials"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A higher learning rate always means faster and better training.",
+      "correction": "A larger value can reduce loss quickly at first, but if it is too large it can overshoot good regions and make training unstable or worse overall."
+    },
+    {
+      "misconception": "The learning rate tells the model how much data to learn from.",
+      "correction": "It does not control dataset size or model capacity. It only scales the size of each parameter update during optimisation."
+    },
+    {
+      "misconception": "If loss is going down, the learning rate must be correct.",
+      "correction": "Loss can decrease while training is still inefficient. A very small value may work but take far longer than necessary, and a slightly too-large value may look fine before later instability appears."
+    },
+    {
+      "misconception": "Learning rate and momentum are the same setting.",
+      "correction": "Learning rate controls update size. Momentum changes how past gradients influence the current update direction and can smooth noisy steps."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the dial that controls how big each training adjustment should be after the model makes mistakes.",
+    "technical": "In iterative optimisation, the learning rate is a hyperparameter that scales the gradient-based parameter update, such as θ_new = θ_old − η∇L, where η sets the step size and strongly affects convergence behaviour."
+  },
+  "keyTakeaway": "A useful learning rate is not the biggest one; it is the one that lowers loss steadily without wild overshooting.",
+  "quickCheck": {
+    "question": "What is the main role of the learning rate during training?",
+    "options": [
+      "It chooses how many training examples are in the dataset.",
+      "It sets how large each parameter update is after the gradient is computed.",
+      "It decides which loss function the model uses.",
+      "It measures how accurate the model already is."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The learning rate scales the update applied after computing the gradient. Dataset size, loss-function choice and accuracy measurement are separate parts of training."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Learning rate",
+      "url": "https://en.wikipedia.org/wiki/Learning_rate",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This page gives a broad reference-style overview of the concept and related terms, which suits readers who want definitions and background.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives an intuitive visual sense of gradient-based training, which suits readers who learn best from geometric explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course material focuses on reducing loss during training, which suits readers who want a practical introduction to how tuning affects improvement.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Learning rate",
+      "url": "https://www.youtube.com/results?search_query=Learning%20rate%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find multiple video explanations of learning rate from different teachers, which suits people comparing presentation styles rather than seeking one authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Learning rate",
+      "url": "https://www.reddit.com/search/?q=Learning%20rate",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and troubleshooting examples about learning rate, which suits readers looking for practical questions and informal experiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "learning rate meaning",
+    "step size in gradient descent",
+    "learning rate too high",
+    "learning rate too low",
+    "how to choose learning rate",
+    "what does learning rate do",
+    "learning rate vs momentum",
+    "learning rate vs hyperparameter",
+    "learn rate",
+    "lern rate",
+    "learning rate",
+    "step size"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:37.777Z",
+    "contentHash": "3a8a8a49c8dc6a8b",
+    "attempts": 2,
+    "promptTokens": 2187,
+    "completionTokens": 1975
+  }
+}

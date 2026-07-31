@@ -1,0 +1,222 @@
+{
+  "id": "noisy-data",
+  "slug": "noisy-data",
+  "term": "Noisy data",
+  "aliases": [
+    "noise"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "starter",
+  "audiences": [
+    "programme",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "data-cleaning"
+  ],
+  "relatedTermIds": [
+    "data-cleaning",
+    "missing-data",
+    "annotation",
+    "data-distribution",
+    "distribution-shift"
+  ],
+  "oftenConfusedWith": [
+    "missing-data",
+    "data-cleaning",
+    "distribution-shift"
+  ],
+  "oneSentence": "Data that contains errors, irrelevant variation or unclear signals, making patterns harder for people or models to detect reliably.",
+  "plainExplanation": "Noisy data means the information going into an analysis or model contains extra mess that does not represent the real pattern you care about. That mess can come from typing mistakes, bad measurements, inconsistent labels, background sounds, blurry images or ambiguous wording.\n\nWhat goes in can be numbers, text, images, audio or records in a table. What happens next is that the useful signal competes with unwanted variation. A signal is the part that actually helps answer the question. Noise is the part that distracts from it.\n\nThe output can then be less reliable. A model may learn the wrong pattern, miss a real one, or give unstable results. A person reviewing the same data may also struggle, because the problem is in the data, not only in the model.\n\nNoisy data is not the same as missing data. Missing data means something is absent. Noisy data means something is present but distorted, inconsistent or irrelevant. It is also not the same as data drift, where the real-world pattern changes over time.\n\nSome noise is unavoidable, especially in messy real settings. The goal is usually not perfect data. The goal is to recognise noise, reduce avoidable parts, and design checks so weak or noisy inputs do not lead to confident but misleading outputs.",
+  "everydayAnalogy": {
+    "title": "Trying to work out who “they” refers to",
+    "story": "Amina reads a group message: “Jordan met Sam after the meeting, and they said the report was late.” She tries to work out who “they” refers to, but the sentence is ambiguous. A second message has typing mistakes and missing punctuation, which makes the meaning even less clear. If Amina has to summarise the conversation, she may guess the wrong person because the wording contains extra confusion around the real message.",
+    "mapping": [
+      {
+        "analogyElement": "The ambiguous word “they”",
+        "aiElement": "An unclear signal in the data"
+      },
+      {
+        "analogyElement": "Typing mistakes and missing punctuation",
+        "aiElement": "Errors or distortions added to the data"
+      },
+      {
+        "analogyElement": "Amina trying to summarise the conversation",
+        "aiElement": "A person or model trying to detect the real pattern"
+      },
+      {
+        "analogyElement": "Guessing the wrong person",
+        "aiElement": "An incorrect output caused by noisy inputs"
+      }
+    ],
+    "limitation": "This analogy is about language ambiguity, but noisy data also appears in numbers, images, sensor readings and labels. In real datasets, noise is often spread across thousands or millions of records, not just one confusing sentence. Also, some ambiguity in language can be meaningful context, while in machine learning the same variation may reduce performance depending on the task."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How noise interferes with useful signal",
+    "learningObjective": "Show that the same data source can contain both useful signal and noise, and that more noise can reduce the reliability of the final output.",
+    "description": "A left-to-right flow diagram with four stages: raw data, signal plus noise, checking or cleaning, and output. Read it as a process. Each stage uses simple icons and short labels to show where noise enters and how it affects results if left untreated.",
+    "steps": [
+      {
+        "label": "1. Raw data enters",
+        "explanation": "Start with incoming data such as forms, messages, photos or sensor readings. The source may already include mistakes or inconsistencies.",
+        "visualInstruction": "Draw a stack of mixed items on the left: a table row, a text bubble, an image frame and a sensor dial. Add a label: Raw data."
+      },
+      {
+        "label": "2. Signal and noise are mixed",
+        "explanation": "Some parts help answer the question, while other parts are irrelevant, wrong or unclear.",
+        "visualInstruction": "Split the stream into two coloured overlays inside one box: green marks for useful signal and grey speckles or crossed marks for noise. Label both clearly."
+      },
+      {
+        "label": "3. Review or cleaning step",
+        "explanation": "Checks can remove some avoidable noise, such as duplicate records, impossible values or inconsistent labels. Not all noise can be removed.",
+        "visualInstruction": "Show a filter or checklist icon in the next box. Add small examples underneath: fix typo, remove duplicate, standardise label."
+      },
+      {
+        "label": "4. Output quality changes",
+        "explanation": "With too much noise, analysis or model outputs become less stable or less accurate. With less noise, results are usually more dependable.",
+        "visualInstruction": "End with two small side-by-side result cards: one labelled High noise with a warning icon, one labelled Reduced noise with a check icon."
+      }
+    ],
+    "interaction": "Hovering or tapping each stage reveals one example of noise for text, numbers, images and audio.",
+    "accessibilityDescription": "This diagram explains noisy data as a four-step flow. First, raw data enters from sources such as tables, text, images or sensors. Second, each source contains a mix of useful signal and noise, meaning unwanted errors, irrelevant variation or unclear information. Third, a review or cleaning stage can remove some avoidable noise, for example duplicates, typos or inconsistent labels, though not all noise can be removed. Fourth, the output quality depends on how much noise remains: more noise tends to make analysis or model predictions less reliable, while reduced noise usually improves dependability.",
+    "reducedMotionDescription": "A static four-box flow from left to right shows raw data, mixed signal and noise, review or cleaning, and output quality, with side-by-side examples of higher-noise and reduced-noise results."
+  },
+  "workedExample": {
+    "scenario": "A team trains a simple classifier to sort 1,000 customer emails into billing, technical support or other.",
+    "input": "Training data: 1,000 emails labelled by staff. Later review finds 120 labels are wrong, 60 emails are duplicates, and many messages use mixed spelling and abbreviations.",
+    "process": [
+      "The team first trains the classifier on the original dataset and gets uneven results, especially between billing and technical support.",
+      "They audit a sample and discover noisy data: wrong labels, duplicate messages and inconsistent wording.",
+      "They correct the 120 wrong labels, remove the 60 duplicates and standardise common abbreviations where appropriate.",
+      "They retrain the classifier on the revised dataset and compare the new results with the earlier run."
+    ],
+    "result": "After reducing the noise, the categories become more consistent and the model makes fewer obvious misclassifications. The improvement comes from better data quality, not from changing the model architecture."
+  },
+  "unWorkplaceExample": {
+    "scenario": "In a UN country office, staff want to triage a shared inbox into topics such as procurement, travel, partnerships and general enquiries using past email subjects and labels.",
+    "relevance": "If past labels are inconsistent, if the same email thread appears many times, or if subject lines are vague, the training data is noisy. Recognising that early helps the office avoid building a triage tool that appears efficient but routes messages unreliably.",
+    "caution": "Do not place confidential, personal, protection-sensitive or security-sensitive email content into an unapproved public AI service. Use approved systems, minimise personal data, and keep human review in the loop for routing decisions."
+  },
+  "whyItMatters": "Non-specialists often see a weak result and assume the model is the problem. Sometimes the bigger issue is the data. If inputs are noisy, the output may look precise while resting on a shaky foundation. That affects procurement choices, quality checks, staffing expectations, risk assessments and whether a system should be used at all. Asking about noisy data helps you judge whether poor performance could be improved through better collection, labelling or cleaning rather than buying more compute or a larger model. It also supports accountability: if a dataset contains avoidable errors or inconsistent labels, the responsible action may be to fix the process before relying on the results.",
+  "whereYouMayHearIt": [
+    "data preparation meetings",
+    "machine learning troubleshooting",
+    "survey and sensor projects",
+    "speech or image recognition work",
+    "dashboard quality reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Noisy data only means random mistakes.",
+      "correction": "Noise can be random, but it can also be systematic, such as one team labelling cases differently from another, a sensor that always reads too high, or background features that distract a model. Systematic noise can be especially harmful because it may look like a real pattern."
+    },
+    {
+      "misconception": "If we use a stronger model, noisy data stops mattering.",
+      "correction": "A more capable model may cope with some mess, but it can also learn the wrong pattern more effectively if the training data is misleading. Better modelling does not remove the need to check data quality."
+    },
+    {
+      "misconception": "Noisy data and missing data are basically the same thing.",
+      "correction": "They are different problems. Missing data means values or records are absent. Noisy data means the values are present but inaccurate, inconsistent, irrelevant or hard to interpret. A dataset can have one problem, both, or neither."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Noisy data is messy information that makes the real pattern harder to spot.",
+    "technical": "In data analysis and machine learning, noise is variation in the observed data that does not represent the target relationship or signal relevant to the task. It can enter through measurement error, transmission error, ambiguous text, low-quality annotation, duplicates, irrelevant features, compression artefacts or inconsistent preprocessing. High noise can lower signal-to-noise ratio, reduce separability between classes, increase variance in estimates and encourage overfitting to accidental patterns. Noise can affect inputs, labels or both, and the mitigation strategy depends on the source: auditing collection methods, improving labelling guidelines, filtering records, standardising formats, using robust training methods or setting decision thresholds that reflect uncertainty."
+  },
+  "keyTakeaway": "When the input is cluttered with errors or irrelevant variation, even a good model can produce unreliable results.",
+  "quickCheck": {
+    "question": "Which example best shows noisy data rather than missing data?",
+    "options": [
+      "A survey file has no age column for 300 respondents.",
+      "A speech dataset includes recordings with loud street traffic over the speaker’s voice.",
+      "A registration table is missing all entries from one district.",
+      "An image folder has not been uploaded yet."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The recordings are present, but unwanted background sound interferes with the useful signal, so this is noise. The other options describe absent data rather than distorted or unclear data."
+  },
+  "resources": [
+    {
+      "title": "Noisy data",
+      "url": "https://en.wikipedia.org/wiki/Noisy_data",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad introductory overview of noisy data and suits readers who want a quick starting definition with related concepts.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This link explains risk management practices relevant to data quality and suits programme and technical readers thinking about how noise can affect trustworthy AI use.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "description": "This link sets out high-level principles for responsible AI and suits readers who want governance context for why data quality problems matter.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Noisy data",
+      "url": "https://www.youtube.com/results?search_query=Noisy%20data%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page for video explanations of noisy data, which suits readers who prefer to compare several short visual explanations rather than read one text source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Noisy data",
+      "url": "https://www.reddit.com/search/?q=Noisy%20data",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page for community discussions about noisy data, which suits readers who want informal examples, practical questions and different viewpoints with caution about accuracy.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "noisy data meaning",
+    "what is noise in data",
+    "noisy data vs missing data",
+    "messy training data",
+    "label noise meaning",
+    "signal vs noise data",
+    "data noise examples",
+    "noisey data",
+    "bad labels machine learning",
+    "noisy data",
+    "noise"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:48.599Z",
+    "contentHash": "e5871d44d4c5f3d8",
+    "attempts": 1,
+    "promptTokens": 2333,
+    "completionTokens": 2360
+  }
+}

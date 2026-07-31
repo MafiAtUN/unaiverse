@@ -1,0 +1,214 @@
+{
+  "id": "softmax",
+  "slug": "softmax",
+  "term": "Softmax",
+  "aliases": [],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "activation-function"
+  ],
+  "relatedTermIds": [
+    "neural-network",
+    "network-layers",
+    "activation-function",
+    "forward-pass",
+    "probability",
+    "weight"
+  ],
+  "oftenConfusedWith": [
+    "activation-function",
+    "probability"
+  ],
+  "oneSentence": "A numerical function that turns a list of model scores into positive values that sum to 1, highlighting which outputs are larger relative to the others.",
+  "plainExplanation": "Softmax usually appears at the output end of a neural network when the model must choose among several classes, such as languages, document types or object labels. The input to softmax is a list of scores, often called logits. These scores are not yet probabilities, and they can be any real numbers, including negatives.\n\nSoftmax transforms those scores in two main steps. First, it applies the exponential function to each score, which makes larger scores grow much faster than smaller ones. Then it divides each exponentiated value by the sum of all of them. The result is a set of positive numbers that add up to 1.\n\nThis means softmax does not judge each class independently. Every output depends on all the scores in the list. If one class score rises, the shares available to the others fall. That is why softmax is commonly used for mutually exclusive classes, where the model is expected to pick one main answer.\n\nPeople often confuse softmax with probability itself. Softmax outputs are often treated like probabilities, but that interpretation can be misleading if the model is poorly calibrated. In practice, softmax gives a convenient relative distribution over classes, not a guarantee that the top class is correct at that exact rate.",
+  "everydayAnalogy": {
+    "title": "Sharing attention across a list of messages",
+    "story": "A team lead opens five incoming messages and gives each one an urgency score based on quick signals such as sender, subject line and timing. Those raw scores are hard to compare because they do not form a neat scale. So the team’s triage tool converts them into attention shares that must add up to 100 percent, giving the most urgent-looking message the biggest share. If one message suddenly looks much more urgent, the shares for the others shrink even if their own raw scores did not change.",
+    "mapping": [
+      {
+        "analogyElement": "raw urgency scores for each message",
+        "aiElement": "logits or unnormalised output scores"
+      },
+      {
+        "analogyElement": "attention shares that add up to 100 percent",
+        "aiElement": "softmax outputs that sum to 1"
+      },
+      {
+        "analogyElement": "one message getting a bigger share reduces the others",
+        "aiElement": "outputs are coupled across classes, not independent"
+      }
+    ],
+    "limitation": "A human triage tool may use rules, context and judgement, while softmax is only a fixed mathematical transformation. Also, message urgency can involve several messages being genuinely urgent at once, but softmax is mainly suited to cases where outputs compete for one total share. For tasks where multiple labels can all be true independently, a different output function is usually more appropriate."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How softmax turns scores into a distribution",
+    "learningObjective": "After reading the diagram, the reader should be able to explain that softmax takes raw class scores, amplifies relative differences, and normalises them so the outputs sum to 1.",
+    "description": "A left-to-right flow diagram with one example vector moving through three stages: raw scores, exponentiation, and normalisation. Each stage shows the same three classes in aligned rows. Read from left to right to see how relative size becomes a distribution over classes.",
+    "steps": [
+      {
+        "label": "1. Raw scores in",
+        "explanation": "Start with three class scores, such as topic A = 2.0, topic B = 1.0, topic C = 0.1. These are model outputs before normalisation.",
+        "visualInstruction": "Show three horizontal bars labelled A, B and C with values 2.0, 1.0 and 0.1. Bars can extend left or right from a zero line if needed, but this example stays positive."
+      },
+      {
+        "label": "2. Exponentiate each score",
+        "explanation": "Apply the exponential function to each score. Larger scores grow more quickly, which increases separation between classes.",
+        "visualInstruction": "Show the transformed values beside each class: exp(2.0), exp(1.0), exp(0.1). Under each, show approximate numbers 7.39, 2.72 and 1.11, with noticeably longer bars than before."
+      },
+      {
+        "label": "3. Sum the transformed values",
+        "explanation": "Add the exponentiated values to get the total used for normalisation.",
+        "visualInstruction": "Display a sum box below the three transformed bars: 7.39 + 2.72 + 1.11 = 11.22. Draw connector lines from each transformed bar to the sum box."
+      },
+      {
+        "label": "4. Divide by the total",
+        "explanation": "Each class gets its exponentiated value divided by the total. The outputs are positive and add up to 1.",
+        "visualInstruction": "Show final values for A, B and C as 0.66, 0.24 and 0.10 with percentage-style bars. Include a small note: 0.66 + 0.24 + 0.10 = 1.00."
+      }
+    ],
+    "interaction": "Hovering or tapping a class highlights that class across all stages, so the reader can track one value from raw score to final share.",
+    "accessibilityDescription": "The diagram explains softmax as a four-step process using three example classes. Step 1 shows raw scores: A has 2.0, B has 1.0, and C has 0.1. Step 2 applies the exponential function, producing about 7.39, 2.72 and 1.11. Step 3 adds these values to get 11.22. Step 4 divides each transformed value by 11.22, giving final outputs of about 0.66, 0.24 and 0.10. The key point is that larger raw scores become disproportionately larger after exponentiation, then all values are scaled to sum to 1.",
+    "reducedMotionDescription": "A static four-column diagram shows the same example without animation: raw scores, exponentiated values, the total sum, and final normalised outputs. Matching colours connect each class across the columns."
+  },
+  "workedExample": {
+    "scenario": "A document classifier must choose one label for a short paragraph: climate, health, or trade.",
+    "input": "Logits from the model: climate = 1.8, health = 0.7, trade = -0.2",
+    "process": [
+      "Exponentiate the scores: exp(1.8) is about 6.05, exp(0.7) is about 2.01, and exp(-0.2) is about 0.82.",
+      "Add them: 6.05 + 2.01 + 0.82 = 8.88.",
+      "Divide each value by 8.88 to normalise: climate 0.68, health 0.23, trade 0.09.",
+      "Pick the largest output if the task requires one label: climate."
+    ],
+    "result": "Softmax produces a distribution over the three labels, with climate highest at about 68 percent of the total share."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team uses an internal classifier to suggest which existing resolution themes are most similar to a newly drafted public text, helping staff search for prior language more quickly.",
+    "relevance": "Softmax can turn the model’s output scores for themes such as disarmament, health or development into a comparable distribution, so staff can see the top suggestions and how strongly they dominate the alternatives.",
+    "caution": "Use only approved internal systems and suitable document sets. Staff should not treat the top softmax score as proof that the suggestion is correct, and should not upload confidential or negotiation-sensitive text to a public AI service."
+  },
+  "whyItMatters": "Softmax affects how a model presents confidence at the point where people often make decisions. If you read classifier outputs, compare model options or set thresholds, you need to know that softmax shows relative competition among classes, not certainty. This helps you avoid over-trusting a high score, choose better review rules and spot when a task may need a different output design, especially when several labels could all be true at once.",
+  "whereYouMayHearIt": [
+    "image classification outputs",
+    "language or topic classifiers",
+    "deep learning lectures",
+    "model evaluation discussions",
+    "machine learning libraries"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Softmax outputs are always true probabilities.",
+      "correction": "They have the mathematical form of a probability distribution because they are positive and sum to 1, but that does not guarantee calibration. A model can assign 0.99 to a wrong class. Whether the numbers match real-world frequencies depends on the model, the data and any calibration method used afterwards."
+    },
+    {
+      "misconception": "Softmax decides the class by itself.",
+      "correction": "Softmax only transforms scores into a normalised distribution. The highest class after softmax is the same as the highest class before softmax, because the transformation preserves the ranking of the logits. The choice rule, such as taking the maximum or applying a threshold, is a separate step."
+    },
+    {
+      "misconception": "Each softmax output is computed independently.",
+      "correction": "In softmax, every output depends on all class scores because each one is divided by the same total sum. If one score increases, the others usually decrease in relative share even when their own logits stay unchanged. This is different from functions used in multi-label tasks, where outputs can be treated more independently."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Softmax takes a model’s raw output scores and turns them into a set of shares that add up to 1, so you can see which option stands out most relative to the others.",
+    "technical": "Given logits z_i for classes i, softmax computes exp(z_i) divided by the sum of exp(z_j) over all classes j. The exponential emphasises differences in larger logits, and the normalisation couples all outputs so they form a categorical distribution over classes. Adding the same constant to every logit does not change the result, which is why implementations often subtract the maximum logit first for numerical stability. Softmax is typically used for single-label multi-class prediction and is often paired with cross-entropy loss during training. It should be distinguished from sigmoid outputs used for multi-label settings, where classes do not have to compete for one total mass. Although softmax outputs are often read as probabilities, they may be poorly calibrated and should not automatically be interpreted as reliable confidence estimates."
+  },
+  "keyTakeaway": "Softmax does not create certainty; it turns competing class scores into a single distribution where bigger scores take a larger share of the total.",
+  "quickCheck": {
+    "question": "Which statement best describes what softmax does in a multi-class classifier?",
+    "options": [
+      "It converts raw class scores into positive values that sum to 1 across classes.",
+      "It guarantees that the highest output is the correct class.",
+      "It makes each class output independent of the others.",
+      "It removes the need for human review when one score is high."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Softmax normalises a set of class scores into a distribution over the listed classes. Because the outputs must share a total of 1, they are linked to one another. A high value can still be wrong, so softmax does not guarantee correctness or remove the need for judgement."
+  },
+  "resources": [
+    {
+      "title": "Softmax function",
+      "url": "https://en.wikipedia.org/wiki/Softmax_function",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad reference-style overview of the softmax function, including definition and mathematical form, and suits readers who want a general starting point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives a visual explanation of neural networks and helps readers who learn best from intuition and animated structure rather than formal notation.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "description": "This interactive tool lets readers experiment with neural-network behaviour in the browser and suits hands-on learners who want to see output changes directly.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Softmax",
+      "url": "https://www.youtube.com/results?search_query=Softmax%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find different video explanations of softmax and suits people who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Softmax",
+      "url": "https://www.reddit.com/search/?q=Softmax",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers find community discussions and common points of confusion about softmax, and suits readers who want informal explanations and debate.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "softmax explained",
+    "what does softmax do",
+    "softmax vs probability",
+    "softmax logits",
+    "softmax output interpretation",
+    "softmax multiclass",
+    "softmax formula meaning",
+    "sofmax typo",
+    "softmax confidence not probability",
+    "softmax"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:27.908Z",
+    "contentHash": "f2f1ead73f1458b7",
+    "attempts": 2,
+    "promptTokens": 2278,
+    "completionTokens": 2539
+  }
+}

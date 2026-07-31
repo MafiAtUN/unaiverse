@@ -1,0 +1,239 @@
+{
+  "id": "self-attention",
+  "slug": "self-attention",
+  "term": "Self-attention",
+  "aliases": [],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "attention"
+  ],
+  "relatedTermIds": [
+    "transformer",
+    "query-key-value",
+    "attention-score",
+    "positional-encoding",
+    "embedding",
+    "vector"
+  ],
+  "oftenConfusedWith": [
+    "attention",
+    "multi-head-attention",
+    "encoder-and-decoder"
+  ],
+  "oneSentence": "A mechanism that lets each token in a sequence reweight information from other tokens in the same sequence before the next layer processes it.",
+  "plainExplanation": "Self-attention is a way for a model to look across one sequence and decide which parts of that same sequence matter most for each position. A sequence can be a sentence, code tokens, image patches, or other ordered pieces of input. For every token, the model produces a new representation: a numeric description that mixes information from that token and from other relevant tokens.\n\nThe input is a set of token representations, often called embeddings. For each token, the model creates three derived vectors: a query, a key and a value. A vector is an ordered list of numbers. The query from one token is compared with the keys of all tokens to get attention scores. Higher scores mean that, for this step, information from those tokens should count more.\n\nThose scores are turned into weights, usually so they add up to 1 across the sequence. The model then builds a weighted sum of the value vectors. That weighted sum becomes the updated representation for the token being processed. This happens for every token, so each token gets context from the full sequence rather than only from nearby words.\n\nThis is called self-attention because the source of attention is the same sequence that is being updated. That differs from cross-attention, where one sequence attends to a different sequence, such as a decoder looking at an encoder output. It is also not the same as attention in the broad sense: self-attention is one specific attention pattern used inside transformers.",
+  "everydayAnalogy": {
+    "title": "Matching a photographed form to the right template",
+    "story": "A clerk in Nairobi receives a phone photo of a paper form. To identify each blurred field, the clerk compares one field at a time with every field on the standard template: the position of the date, the shape of the ID box, the nearby label and the spacing around it. For the field that looks like a date, the clerk gives more weight to template regions that match those clues and less weight to unrelated regions such as the signature line. The clerk then combines those stronger matches to decide how to label that field in context, not just by its isolated appearance.",
+    "mapping": [
+      {
+        "analogyElement": "one field in the photographed form being checked",
+        "aiElement": "one token whose representation is being updated"
+      },
+      {
+        "analogyElement": "comparing that field with all template fields",
+        "aiElement": "comparing one query with all keys in the sequence"
+      },
+      {
+        "analogyElement": "stronger and weaker matches across template regions",
+        "aiElement": "attention scores turned into weights"
+      },
+      {
+        "analogyElement": "combining the best-matching template clues",
+        "aiElement": "weighted sum of value vectors to form a new representation"
+      }
+    ],
+    "limitation": "The analogy compares an image to a separate template, but self-attention usually works within one sequence attending to itself, not to an external reference. A clerk may use explicit rules such as 'dates look like this', while self-attention uses learned numeric projections. Also, real self-attention updates all positions in parallel and produces continuous vectors, not human-readable labels at each step."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "How one token gathers context from the whole sequence",
+    "learningObjective": "After using this explainer, a reader should be able to say how one token compares itself with all tokens, turns match strengths into weights, and combines their information into a new representation.",
+    "description": "An interactive sequence of tokens is shown in a row. Selecting a focus token highlights lines from its query to every token's key, with line thickness showing score strength. A second panel shows the normalised weights and the resulting weighted mix of value vectors. The reader can switch examples, move the focus token, and compare before and after representations.",
+    "steps": [
+      {
+        "label": "Choose a focus token",
+        "explanation": "Select one token in the sequence. The explainer treats that token's query as the current question: which other tokens are relevant to updating this position?",
+        "visualInstruction": "Render tokens as clickable pills in a horizontal row. When selected, outline the focus token and label its vector as Q. Show each token's K and V labels beneath or in a tooltip."
+      },
+      {
+        "label": "Compare with every token",
+        "explanation": "The focus token's query is compared with every token's key, including its own. The result is a score for each possible source of information.",
+        "visualInstruction": "Draw SVG connectors from the focus token to all tokens. Encode larger scores with thicker, darker lines and show numeric score badges above each destination token."
+      },
+      {
+        "label": "Turn scores into weights",
+        "explanation": "The scores are converted into weights so they can be used as proportions. Larger scores become larger weights, but all weights together sum to 1.",
+        "visualInstruction": "Show a bar chart aligned to the tokens. Animate or update bars from raw scores to normalised weights, with a total indicator reading 1.00."
+      },
+      {
+        "label": "Mix value vectors",
+        "explanation": "Each token's value vector contributes according to its weight. The weighted combination becomes the updated representation for the focus token.",
+        "visualInstruction": "Display small stacked segments or numeric multipliers beside each value vector, then show them combining into one output vector for the focus token."
+      },
+      {
+        "label": "Compare before and after",
+        "explanation": "The updated representation now carries information from other relevant tokens. The token stays in the same position, but its numeric description has changed.",
+        "visualInstruction": "Place the original embedding and the new contextual representation side by side, with changed dimensions highlighted."
+      }
+    ],
+    "interaction": "The reader can choose among short example sequences, click any token to make it the focus, and toggle views for scores, normalised weights and the final weighted sum. A reset button returns to the default example.",
+    "accessibilityDescription": "Screen-reader version: You hear a sequence of tokens, then choose one as the focus. For that token, the interface reads a list of comparison scores against every token in order, followed by the normalised weights that sum to 1. It then states that the output for the focus token is formed by multiplying each token's value vector by its weight and adding the results. A final summary compares the original token representation with the new context-aware representation and explains which tokens influenced it most.",
+    "reducedMotionDescription": "Reduced-motion version: no animated lines or transitions. The same example appears as a static table with columns for token, score, weight and weighted value contribution, plus a fixed side-by-side view of the original and updated representation for the selected token.",
+    "component": "attention"
+  },
+  "workedExample": {
+    "scenario": "Sentence fragment: \"The animal did not cross the road because it was tired.\" We examine the token \"it\".",
+    "input": "Tokens: [The, animal, did, not, cross, the, road, because, it, was, tired]",
+    "process": [
+      "The model forms a query for \"it\" and keys and values for every token.",
+      "Suppose the comparison scores from \"it\" to selected tokens are: animal 3.2, road 1.1, because 0.8, tired 2.7, it 1.5, others near 0.",
+      "After normalisation, the weights might be: animal 0.38, tired 0.23, it 0.07, road 0.05, because 0.04, remaining tokens sharing the rest.",
+      "The output vector for \"it\" is the weighted sum of all value vectors, so information linked to \"animal\" and \"tired\" contributes more than information linked to \"road\".",
+      "The next layer can use that updated vector to represent \"it\" in context, helping the model treat it as referring more to the animal than to the road."
+    ],
+    "result": "The token \"it\" keeps its position, but its new representation carries contextual information from the whole sentence, especially tokens that looked most relevant."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team drafts a situation report from approved, non-sensitive text notes. In a transformer-based drafting tool, self-attention helps each word in a sentence use nearby and distant words, such as dates, locations and reported actions, so the sentence stays coherent.",
+    "relevance": "This helps staff understand why transformer outputs can reflect long-range context within the same paragraph rather than only the last few words.",
+    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Use only approved tools and maintain human review before any report is shared."
+  },
+  "whyItMatters": "Self-attention helps explain why transformers work well on language, code and other sequences. For a non-specialist, this matters because it shows what the model is actually doing: not retrieving one exact rule, but repeatedly reweighting parts of the input to build context-aware representations. That helps you judge strengths and limits. A system using self-attention may capture long-range relationships better than older sequence models, but it can still miss meaning, rely on weak patterns or spread errors through the representation. Knowing this supports better choices about procurement, evaluation, safety checks and when human review is needed.",
+  "whereYouMayHearIt": [
+    "transformer architecture discussions",
+    "large language model explainers",
+    "machine learning lectures",
+    "research papers on NLP and vision"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Self-attention means the model looks only at the most important word.",
+      "correction": "Not usually. Each output token is built from a weighted mixture of all tokens, not a single winner. Some weights may be large and many small, but the mechanism is generally a soft combination across the sequence."
+    },
+    {
+      "misconception": "Self-attention and attention are the same term.",
+      "correction": "Self-attention is one specific kind of attention. The general term attention covers several patterns. In self-attention, queries, keys and values all come from the same sequence. In cross-attention, they do not."
+    },
+    {
+      "misconception": "Self-attention automatically understands word order.",
+      "correction": "By itself, self-attention compares token representations without an inherent notion of sequence order. Transformer systems therefore add position information, often through positional encodings or related methods, so the model can distinguish 'A before B' from 'B before A'."
+    },
+    {
+      "misconception": "A high attention weight proves a model's reasoning or explanation.",
+      "correction": "Attention weights show how information is mixed at one step of computation. They can be useful clues, but they are not a complete or universally accepted explanation of why the full model produced a final output."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Each word or token looks at the other words in the same input and borrows more information from the ones that seem most relevant.",
+    "technical": "Given input token representations X, the layer learns projections that produce Q, K and V. For each position i, it computes similarity scores between q_i and every k_j, scales and normalises them into weights, and uses those weights to form a weighted sum of all v_j. The result is a contextualised representation for position i. Doing this for every position in parallel gives a full set of updated token representations. In transformers, this is typically wrapped with residual connections, layer normalisation and feed-forward sublayers. Self-attention differs from general attention by using a single sequence as the source for queries, keys and values, and differs from multi-head attention because multi-head attention runs several self-attention projections in parallel and then combines them."
+  },
+  "keyTakeaway": "Self-attention lets each token rebuild its representation by drawing weighted information from every token in the same sequence.",
+  "quickCheck": {
+    "question": "Which statement best describes self-attention in a transformer?",
+    "options": [
+      "Each token creates a new representation by weighting information from all tokens in the same sequence.",
+      "The model chooses one earlier token and copies its value into the current position.",
+      "The mechanism sorts tokens by importance once for the whole sentence and keeps that order fixed.",
+      "It is the same as multi-head attention, except used only during training."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "In self-attention, each position compares itself with all positions, gets weights, and forms a weighted mixture of value vectors. It is not limited to one copied token, the weighting can differ by position, and multi-head attention is a larger structure that uses several attention heads in parallel."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Attention in transformers, step by step",
+      "url": "https://www.3blue1brown.com/lessons/attention",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "deeper",
+      "description": "A step-by-step visual explanation of how attention works in transformers, well suited to readers who learn best from intuition and animation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Self-attention",
+      "url": "https://en.wikipedia.org/wiki/Self-attention",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "A broad reference overview of the term, useful for readers who want a general summary and links to related concepts.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "difficulty": "deeper",
+      "description": "The original transformer paper, best for readers who want the canonical technical source and are comfortable with research writing.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "difficulty": "intermediate",
+      "description": "An illustrated walkthrough of the transformer architecture, suitable for readers who want an intuitive but still technical explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Self-attention",
+      "url": "https://www.youtube.com/results?search_query=Self-attention%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps readers find multiple video explanations and compare teaching styles; useful if one explanation has not clicked yet.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Self-attention",
+      "url": "https://www.reddit.com/search/?q=Self-attention",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that helps readers see recurring questions, confusions and community explanations; useful for informal discussion, not as an authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "self attention meaning",
+    "self-attention explained",
+    "what is self attention in transformers",
+    "self attention vs attention",
+    "query key value self attention",
+    "self attention example sentence",
+    "how self attention works",
+    "self attention vs multi head attention",
+    "self attenton typo",
+    "transformer self attention simple",
+    "self-attention"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:41.701Z",
+    "contentHash": "2bd3fb47f5f35c64",
+    "attempts": 1,
+    "promptTokens": 2225,
+    "completionTokens": 2756
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "id": "encoder-and-decoder",
+  "slug": "encoder-and-decoder",
+  "term": "Encoder and decoder",
+  "aliases": [
+    "encoder",
+    "decoder",
+    "encoder-decoder model",
+    "seq2seq"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "transformer"
+  ],
+  "relatedTermIds": [
+    "transformer",
+    "attention",
+    "self-attention",
+    "query-key-value",
+    "multi-head-attention",
+    "embedding"
+  ],
+  "oftenConfusedWith": [
+    "autoregressive-model",
+    "transformer",
+    "self-attention"
+  ],
+  "oneSentence": "An encoder turns input into useful internal representations, while a decoder uses those representations to generate output, often one token at a time.",
+  "plainExplanation": "These words name related parts, not one single thing. An encoder reads the input and builds internal representations: numerical patterns that highlight what may matter in each part of the input. A decoder produces the output, usually step by step, while looking at what it has generated so far and, in many systems, also looking back at the encoder’s representations.\n\nAn encoder-decoder model contains both parts. It is common in tasks where the output depends on the whole input but is not just a continuation of it, such as translation, summarisation, speech recognition and some information extraction. The older label seq2seq means “sequence to sequence”: one sequence goes in, another sequence comes out. Not every seq2seq system uses transformers, but many modern ones do.\n\nWhat goes in depends on the task: words, subword pieces, audio frames or other tokens. Inside the model, each token is turned into a vector, meaning a list of numbers. The encoder uses attention to compare tokens with one another and build context-rich vectors. The decoder then uses those vectors plus the already generated output tokens to predict the next token.\n\nThis is different from a decoder-only, or autoregressive, model. A decoder-only model usually treats the input as part of one long prompt and then continues it. An encoder-decoder model separates reading the source from generating the target. That structure often helps when the source and target play different roles, but the boundary is not absolute because real systems vary.",
+  "everydayAnalogy": {
+    "title": "Checking and rewriting application forms",
+    "story": "At a scholarship office, one staff member reviews each incoming application and marks the important details: missing documents, language used, deadlines and special instructions. A second staff member uses those notes to draft a standard response letter, adding one sentence at a time depending on what has already been written. If the notes say the passport copy is missing, the letter asks for it; if everything is complete, the letter confirms receipt. The first person organises the incoming material, and the second turns that organised view into outgoing text.",
+    "mapping": [
+      {
+        "analogyElement": "Reviewer marking important details in each application",
+        "aiElement": "Encoder building context-rich representations of the input"
+      },
+      {
+        "analogyElement": "Notes passed to the letter drafter",
+        "aiElement": "Encoder outputs made available to the decoder"
+      },
+      {
+        "analogyElement": "Drafter writing the response sentence by sentence",
+        "aiElement": "Decoder generating output token by token"
+      },
+      {
+        "analogyElement": "Using both the notes and the partial letter",
+        "aiElement": "Decoder attending to the encoded input and previous output"
+      }
+    ],
+    "limitation": "In the analogy, two people make explicit notes that a human can read. In a model, the intermediate representations are vectors, not neat written summaries. Also, the encoder and decoder are usually trained together from data rather than following office rules written in advance. Finally, some real systems have only a decoder, so the two-person office setup does not fit every language model."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How encoder and decoder work together",
+    "learningObjective": "After viewing this, a reader should be able to explain that the encoder reads the source into internal representations and the decoder uses those representations plus previous output to generate the target step by step.",
+    "description": "A left-to-right flow diagram with three main blocks: input tokens, encoder, and decoder leading to output tokens. Arrows show the whole input entering the encoder once, encoded representations passing to the decoder, and a feedback arrow from generated output back into the decoder for the next step.",
+    "steps": [
+      {
+        "label": "1. Source enters",
+        "explanation": "The model receives a source sequence such as a sentence, audio tokens or other ordered input pieces.",
+        "visualInstruction": "Draw a horizontal row of 5 to 8 rounded token boxes on the left, labelled with example source tokens. Connect them with a single arrow into the encoder block."
+      },
+      {
+        "label": "2. Encoder builds context",
+        "explanation": "The encoder compares parts of the source with one another and turns them into context-rich vectors.",
+        "visualInstruction": "Show a large middle block labelled Encoder. Inside it, stack 2 or 3 simplified layers. Above the block, place a caption: 'reads whole source'. Output a row of coloured vector bars or token boxes labelled 'encoded representations'."
+      },
+      {
+        "label": "3. Decoder starts output",
+        "explanation": "The decoder receives a start token or first prompt token and the encoder’s representations.",
+        "visualInstruction": "Place a decoder block to the right. Feed the encoded representations into it with arrows from the encoder output row. Also show a small start token entering the decoder from below."
+      },
+      {
+        "label": "4. Decoder generates step by step",
+        "explanation": "At each step, the decoder uses the source representations and the output produced so far to predict the next token.",
+        "visualInstruction": "Draw 3 output token boxes emerging one by one on the far right. Add a curved feedback arrow from the generated output tokens back into the decoder, labelled 'previous output so far'."
+      }
+    ],
+    "interaction": "Hovering or tapping each block highlights its incoming and outgoing arrows; stepping through reveals the feedback loop only after the first output token appears.",
+    "accessibilityDescription": "The diagram is a left-to-right process. First, a row of source tokens enters an encoder. The encoder reads the full source and produces encoded representations, shown as a transformed row. Those representations are sent into a decoder. The decoder also receives the output generated so far, starting with a start token. On each step, the decoder uses both the encoded source and the previous output to produce the next output token. The key point is that the encoder prepares the source, while the decoder generates the target step by step using that prepared source plus its own earlier output.",
+    "reducedMotionDescription": "A static flow chart shows source tokens feeding into an encoder, encoded representations feeding into a decoder, and a fixed curved arrow from partial output back to the decoder to indicate repeated next-token generation."
+  },
+  "workedExample": {
+    "scenario": "A small translation system converts a short Spanish sentence into English.",
+    "input": "Source text: \"La reunión empieza mañana\"",
+    "process": [
+      "The input is split into tokens such as \"La\", \"reunión\", \"empieza\", \"mañana\" and turned into vectors.",
+      "The encoder processes all four source tokens together and produces context-rich representations for each one.",
+      "The decoder starts with a start token and predicts the first English token, for example \"The\".",
+      "Using \"The\" plus the encoder output, the decoder predicts the next tokens, such as \"meeting\", then \"starts\", then \"tomorrow\".",
+      "When it predicts an end token, generation stops."
+    ],
+    "result": "Output text: \"The meeting starts tomorrow.\""
+  },
+  "unWorkplaceExample": {
+    "scenario": "A translation support tool helps convert short, non-sensitive field update summaries into a working language for internal drafting.",
+    "relevance": "This is a typical encoder-decoder use case because the system first reads the source text as one sequence and then generates a new sequence in another language.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operationally sensitive field information into an unapproved public AI service; use only approved tools with human review."
+  },
+  "whyItMatters": "If you procure, evaluate or use AI tools, this term helps you tell different system designs apart. An encoder-decoder model is often a good fit when the task transforms one input into a different output, such as translation or summarisation. A decoder-only model may behave differently because it treats the prompt and response as one running sequence. This affects quality, latency, cost, context handling and failure modes. Knowing the distinction helps you ask better questions about what data the system uses, how outputs are produced, what kind of errors to expect and whether human review is needed.",
+  "whereYouMayHearIt": [
+    "machine translation systems",
+    "summarisation tools",
+    "speech-to-text model discussions",
+    "transformer architecture diagrams",
+    "seq2seq research papers"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Encoder-decoder simply means any transformer.",
+      "correction": "Not all transformers use both parts. Some systems have only an encoder, often for classification or retrieval, and some have only a decoder, often for next-token generation. Encoder-decoder names a specific arrangement of components, not the whole transformer family."
+    },
+    {
+      "misconception": "Seq2seq and encoder-decoder are always exactly the same thing.",
+      "correction": "They are closely related, but not identical in every context. Seq2seq is a broader task or model family label: one sequence mapped to another. Many seq2seq systems use an encoder and a decoder, but older or alternative designs may implement sequence-to-sequence behaviour differently."
+    },
+    {
+      "misconception": "The encoder creates a final summary and the decoder only reads that one summary vector.",
+      "correction": "That description fits some older architectures better than many modern transformer systems. In a transformer encoder-decoder, the decoder usually has access to a set of encoded representations across the whole source, not just one compressed vector. That helps preserve detail from different input positions."
+    },
+    {
+      "misconception": "Because the decoder writes the output, the encoder is just a pre-processing step and not very important.",
+      "correction": "The quality of the output depends heavily on what the encoder passes forward. If the encoded representations miss relationships in the source, the decoder has less useful information to work with. In many tasks, a strong encoder is central to good performance."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of it as a two-part system. One part reads and organises the input. The other part uses that organised view to produce the output step by step.",
+    "technical": "In a transformer encoder-decoder architecture, source tokens are embedded and processed by encoder layers, typically using self-attention to produce contextualised hidden states for all source positions. The decoder generates the target autoregressively: at each step it uses masked self-attention over previously generated target tokens and cross-attention over the encoder’s hidden states to predict the next target token. “Encoder” and “decoder” can also refer to the individual halves by themselves. “Encoder-decoder model” names the full architecture containing both halves. “Seq2seq” is the broader idea of mapping an input sequence to an output sequence; many seq2seq systems are encoder-decoder models, but the terms are not perfectly interchangeable across all literature."
+  },
+  "keyTakeaway": "Encoder and decoder are partner components: one prepares the source, the other generates the target from that prepared source plus what it has already produced.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes an encoder-decoder model from a decoder-only autoregressive model?",
+    "options": [
+      "An encoder-decoder model separates reading the source from generating the target, while a decoder-only model usually continues one combined prompt sequence.",
+      "An encoder-decoder model cannot generate text token by token, but a decoder-only model can.",
+      "A decoder-only model uses attention, but an encoder-decoder model does not.",
+      "Encoder-decoder models are only for translation, while decoder-only models are for every other task."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The main distinction is structural. In an encoder-decoder model, the source is first encoded into internal representations, and the decoder generates output while referring to them. In a decoder-only model, the input is usually included in one running context that the model continues autoregressively. Both can generate token by token, and both can use attention."
+  },
+  "resources": [
+    {
+      "title": "Incremental encoder",
+      "url": "https://en.wikipedia.org/wiki/Incremental_encoder",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a reference-style overview of incremental encoder ideas and suits readers who want terminology and related concepts in a concise format.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "description": "This paper introduces the transformer architecture and suits readers who want the original technical framing of encoder and decoder layers.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "description": "This article gives an intuitive visual walkthrough of transformer components and suits readers who learn best from diagrams and plain-language explanations.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Encoder and decoder",
+      "url": "https://www.youtube.com/results?search_query=Encoder%20and%20decoder%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for videos on the topic, so it suits readers who want to compare several teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Encoder and decoder",
+      "url": "https://www.reddit.com/search/?q=Encoder%20and%20decoder",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussion, so it suits readers who want to see common questions, confusions and informal explanations from many users.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "encoder vs decoder ai",
+    "encoder decoder model explained",
+    "seq2seq meaning",
+    "transformer encoder decoder difference",
+    "decoder only vs encoder decoder",
+    "what does seq2seq mean",
+    "cross attention encoder decoder",
+    "encoder decoder translation model",
+    "seq to seq transformer",
+    "encorder decoder",
+    "encoder and decoder",
+    "encoder",
+    "decoder",
+    "encoder-decoder model",
+    "seq2seq"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:01.178Z",
+    "contentHash": "ff090ecb72994973",
+    "attempts": 1,
+    "promptTokens": 2263,
+    "completionTokens": 2586
+  }
+}

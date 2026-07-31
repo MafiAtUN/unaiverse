@@ -1,0 +1,236 @@
+{
+  "id": "distillation",
+  "slug": "distillation",
+  "term": "Distillation",
+  "aliases": [
+    "knowledge distillation",
+    "distilled model"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "pretraining",
+    "fine-tuning",
+    "quantisation",
+    "pruning",
+    "checkpoint"
+  ],
+  "oftenConfusedWith": [
+    "quantisation",
+    "pruning",
+    "fine-tuning"
+  ],
+  "oneSentence": "Distillation transfers a larger model’s behaviour into a smaller model by training the smaller one to imitate the larger model’s outputs.",
+  "plainExplanation": "Distillation is a way to make a model smaller, faster or cheaper to run without starting from zero. A large model, often called a teacher model, produces outputs for many inputs. A smaller model, often called a student model, is then trained to match those outputs as closely as possible.\n\nWhat goes in? Usually three things: a trained teacher model, a set of input examples, and a student model architecture. The examples may be labelled data, unlabelled data, or prompts generated for the task. The teacher produces target outputs, which can be final answers, probabilities across options, or intermediate signals depending on the method.\n\nWhat happens? The student model adjusts its parameters so its outputs become similar to the teacher’s outputs. This can preserve much of the teacher’s performance while reducing size or latency, meaning how long one response takes. In practice, distillation is often used after pretraining or fine-tuning, not instead of them.\n\nWhat comes out? A distilled model: usually smaller, faster and cheaper to deploy, but often not as capable as the teacher on difficult cases. Distillation is about transferring behaviour from one model to another. It is commonly confused with quantisation and pruning, which also make models lighter, but those methods compress a model in different ways rather than teaching a new smaller model to imitate an existing one.",
+  "everydayAnalogy": {
+    "title": "A senior planner coaching a quick field briefing team",
+    "story": "At a distribution point, a senior planner has a thick notebook with years of experience and can estimate food needs for many different family sizes, weather conditions and delivery delays. A smaller field team cannot carry the whole notebook or spend as long on each estimate, so they practise by reviewing many situations and copying the senior planner’s estimates and explanations. After enough practice, the field team can give fast estimates on most common cases using a much lighter checklist. The team is useful in the field, but in unusual situations it may still miss details the senior planner would catch.",
+    "mapping": [
+      {
+        "analogyElement": "senior planner with a thick notebook",
+        "aiElement": "large teacher model"
+      },
+      {
+        "analogyElement": "smaller field team",
+        "aiElement": "student model"
+      },
+      {
+        "analogyElement": "many practice situations",
+        "aiElement": "training inputs used for distillation"
+      },
+      {
+        "analogyElement": "copying the senior planner’s estimates",
+        "aiElement": "training the student to match teacher outputs"
+      }
+    ],
+    "limitation": "A human team can ask questions, use judgement and deliberately simplify rules. A distilled model does not literally receive understanding or experience from a teacher. It only adjusts numeric parameters to better reproduce patterns in the teacher’s outputs. Also, real distillation may use probability distributions or hidden representations, not just final answers, so the analogy is simpler than the actual mechanism."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How distillation turns a large model into a smaller deployable model",
+    "learningObjective": "After viewing this, the reader should be able to explain that distillation uses a teacher model’s outputs to train a smaller student model, and why this differs from simply shrinking one model file.",
+    "description": "A left-to-right flow diagram with two parallel paths. Inputs go to a large teacher model and produce target outputs. The same inputs go to a smaller student model. A comparison stage measures the difference between teacher and student outputs, and a training loop updates the student. The final box shows a smaller deployed model. Read from left to right, then follow the loop back to the student until the outputs are close enough.",
+    "steps": [
+      {
+        "label": "1. Prepare inputs",
+        "explanation": "A dataset of prompts, examples or task inputs is collected. It may be labelled or unlabelled, depending on the use case.",
+        "visualInstruction": "Show a stack of input cards on the far left labelled 'same inputs' with arrows splitting to two model boxes."
+      },
+      {
+        "label": "2. Run the teacher",
+        "explanation": "The larger teacher model produces outputs for those inputs. These outputs act as training targets for the student.",
+        "visualInstruction": "Place a large box above labelled 'teacher model (larger, slower)' with arrows to output bubbles such as scores, tokens or probabilities."
+      },
+      {
+        "label": "3. Run the student",
+        "explanation": "The smaller student model processes the same inputs and produces its own outputs.",
+        "visualInstruction": "Place a smaller box below labelled 'student model (smaller, faster)' with arrows to its own output bubbles aligned with the teacher’s outputs."
+      },
+      {
+        "label": "4. Compare outputs",
+        "explanation": "A loss function, meaning a numeric measure of mismatch, compares teacher and student outputs.",
+        "visualInstruction": "Add a comparison box to the right receiving both output streams, with a gauge icon labelled 'difference'."
+      },
+      {
+        "label": "5. Update the student",
+        "explanation": "Training changes the student’s parameters to reduce the mismatch. This loop repeats many times.",
+        "visualInstruction": "Draw a bold arrow from the comparison box back to the student model with a circular loop marker and label 'update student only'."
+      },
+      {
+        "label": "6. Deploy the distilled model",
+        "explanation": "Once the student is good enough, it is saved and used in place of the larger teacher for suitable tasks.",
+        "visualInstruction": "Show a final compact model box on the far right labelled 'distilled model for deployment' with tags 'smaller', 'faster', 'cheaper'."
+      }
+    ],
+    "interaction": "Hovering or tapping each stage highlights which artefacts are fixed and which change: inputs fixed, teacher fixed, student updated. A toggle can switch labels between 'plain language' and 'technical terms'.",
+    "accessibilityDescription": "This diagram explains distillation as a five-part flow with a training loop. First, the same input examples are sent to two models: a large teacher and a smaller student. Second, the teacher produces target outputs such as scores or text. Third, the student produces its own outputs for the same inputs. Fourth, a comparison step measures the difference between the two sets of outputs. Fifth, only the student is updated to reduce that difference, and this repeats many times. The end result is a smaller deployable model that imitates much of the teacher’s behaviour. The key point is that a new smaller model is trained from the teacher’s behaviour, rather than merely compressing the teacher’s file.",
+    "reducedMotionDescription": "A static left-to-right flow chart shows the teacher path, the student path, a comparison box and a return arrow from comparison to student labelled 'repeat during training'. The final distilled model is shown as the output of the completed loop."
+  },
+  "workedExample": {
+    "scenario": "A team has a 20 billion parameter multilingual support model that gives strong results on classifying incoming helpdesk messages into 12 categories, but it is too slow for mobile deployment. They want a smaller model for common cases.",
+    "input": "50,000 previously approved helpdesk messages in Arabic, English, French and Spanish, with the teacher model’s probability scores over the 12 categories for each message.",
+    "process": [
+      "The large teacher model is run on all 50,000 messages and outputs a probability distribution for each category, not only the top label.",
+      "A 1.3 billion parameter student model reads the same messages and starts with less accurate category scores.",
+      "Training compares the student’s scores with the teacher’s scores and updates only the student to reduce the gap.",
+      "After several training rounds, the student is tested on a held-out set of 5,000 messages to check speed and classification quality."
+    ],
+    "result": "The student keeps most of the teacher’s performance on frequent message types while running much faster on phones. However, it is weaker on rare mixed-language messages, so the larger teacher is still kept for difficult or high-risk cases."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN communications unit uses an approved internal language model to check whether a draft speech follows previously agreed language on a recurring topic. A large internal model performs well but is costly to run at scale, so an internal data science team distils it into a smaller model for routine first-pass checks.",
+    "relevance": "This shows why distillation matters in public-sector settings: it can reduce cost and delay while keeping a human reviewer and the authoritative agreed language process in place.",
+    "caution": "Do not place confidential draft text, negotiation-sensitive language, personal data or unpublished internal material into an unapproved public AI service for distillation or testing. Use approved environments, minimise sensitive data, and keep human review over any suggested edits."
+  },
+  "whyItMatters": "For non-specialists, distillation matters because it affects what organisations can actually deploy. A system may work well in a lab with a very large model but be too slow, too expensive or too energy-intensive for real use. Distillation can make deployment practical on ordinary servers, phones or low-bandwidth settings. It also matters for procurement and governance: a distilled model may behave differently from its teacher, especially on edge cases, so claims such as 'same quality, just smaller' need testing rather than assumption. In policy and operational settings, this affects cost, access, audit plans, safety review and decisions about when a smaller model is acceptable and when the larger model or human handling is still needed.",
+  "whereYouMayHearIt": [
+    "model compression discussions",
+    "mobile or edge deployment planning",
+    "LLM optimisation engineering",
+    "AI procurement and cost review",
+    "serving latency conversations"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Distillation simply copies part of a large model into a smaller file.",
+      "correction": "Not usually. In standard distillation, a separate student model is trained to imitate the teacher’s outputs. That means the smaller model learns a new set of parameters. This is different from merely saving fewer bits or deleting weights from the original model."
+    },
+    {
+      "misconception": "A distilled model is always just as good as the original.",
+      "correction": "It can retain much of the teacher’s performance, but there is usually some trade-off. The student often does well on common patterns it saw during distillation, yet loses accuracy or robustness on rare, complex or out-of-domain cases. The result depends on the teacher, the student size, the data and the task."
+    },
+    {
+      "misconception": "Distillation and quantisation are the same thing because both make models smaller.",
+      "correction": "They have a similar goal but a different mechanism. Distillation trains a student model to imitate a teacher. Quantisation changes how model numbers are stored or computed, often using fewer bits. A model can be distilled, quantised, both, or neither."
+    },
+    {
+      "misconception": "If the teacher model is safe or aligned, the student automatically keeps that behaviour.",
+      "correction": "Some behaviour can transfer, but not perfectly or automatically. Safety-related behaviour depends on what signals were used during distillation, what data was included and how the student was evaluated. Important safeguards still need dedicated testing, especially in higher-risk uses."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A big model shows a smaller model how to answer many examples. The smaller model learns to produce similar outputs, so it can often do a similar job faster and more cheaply.",
+    "technical": "Distillation is a training procedure in which a student model is optimised to match a teacher model’s behaviour on a set of inputs. The targets may be hard labels, soft labels such as probability distributions over classes, generated token distributions, hidden-state representations or combinations of these. The loss function typically measures the mismatch between teacher and student outputs and updates only the student parameters. In language models, distillation may occur after pretraining or task-specific fine-tuning, and can be used to compress capability into a smaller architecture for lower inference cost. It differs from parameter-efficient adaptation methods such as LoRA, which modify how a model is adapted, and from compression methods such as quantisation or pruning, which reduce storage or computation without necessarily training a separate student to imitate a teacher."
+  },
+  "keyTakeaway": "Distillation does not just shrink a model; it trains a smaller one to imitate a larger one, trading some performance for speed and lower cost.",
+  "quickCheck": {
+    "question": "Which statement best describes distillation?",
+    "options": [
+      "Changing a model’s weights to lower-precision numbers so it uses less memory",
+      "Training a smaller student model to match a larger teacher model’s outputs",
+      "Removing parts of a model that seem unimportant after training",
+      "Giving a model a few examples inside the prompt instead of retraining it"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Distillation is about behaviour transfer from teacher to student through training. Option 1 describes quantisation, option 3 describes pruning, and option 4 describes in-context learning or few-shot prompting. These are related ideas but not the same mechanism."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Knowledge distillation",
+      "url": "https://en.wikipedia.org/wiki/Knowledge_distillation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference-style overview of knowledge distillation, useful for readers who want the standard terminology and a starting point for further reading.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course link suits readers who want practical model-training context and may help place distillation among other adaptation and optimisation methods.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "This course link suits readers who prefer short guided lessons and want a more applied introduction before reading technical papers.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Distillation",
+      "url": "https://www.youtube.com/results?search_query=Distillation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers find different video explainers and compare teaching styles rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Distillation",
+      "url": "https://www.reddit.com/search/?q=Distillation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it is useful for seeing community questions and practitioner discussions, but claims there should be checked against stronger sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "distillation ai meaning",
+    "knowledge distillation explained",
+    "distilled model vs quantisation",
+    "teacher student model ai",
+    "what is model distillation",
+    "llm distillation",
+    "knowledge distilation typo",
+    "distilled model smaller faster",
+    "distillation",
+    "knowledge distillation",
+    "distilled model"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:16.387Z",
+    "contentHash": "bbd71a2674f4c926",
+    "attempts": 1,
+    "promptTokens": 2295,
+    "completionTokens": 2822
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "id": "benchmark",
+  "slug": "benchmark",
+  "term": "Benchmark",
+  "aliases": [
+    "benchmarks",
+    "leaderboard"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "leadership",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "evaluation-metric"
+  ],
+  "relatedTermIds": [
+    "evaluation-metric",
+    "baseline",
+    "accuracy",
+    "generalisation",
+    "data-leakage",
+    "robustness"
+  ],
+  "oftenConfusedWith": [
+    "evaluation-metric",
+    "baseline",
+    "accuracy"
+  ],
+  "oneSentence": "A benchmark is a standard test set-up used to compare how well systems perform on a defined task under stated conditions.",
+  "plainExplanation": "A benchmark is a way to test a system against a fixed task so people can compare results. It usually includes the task itself, the data or questions used for testing, the rules for running the test, and one or more scoring methods. The score is the output, but the benchmark is the whole test arrangement, not just the number.\n\nWhat goes in? A model or other system, plus a benchmark package: for example, a set of sentences, the correct answers, and instructions about how predictions must be submitted. What happens? The system processes the test items, its outputs are compared with the correct answers, and the chosen measures are calculated. What comes out? Usually a score, sometimes several scores, and often a ranking on a leaderboard.\n\nBenchmarks are useful because they make comparison more consistent. If two teams use the same test conditions, their results are easier to compare than if each team uses different data and rules. But a benchmark can still mislead. A high score may reflect memorisation, data leakage, a narrow task, or a test set that does not match real use.\n\nThis term is often confused with an evaluation metric. A metric is the measuring rule, such as accuracy or recall. A benchmark is the broader test set-up that uses one or more metrics. It is also often confused with a baseline, which is a simpler reference system or starting score used for comparison.",
+  "everydayAnalogy": {
+    "title": "A school language challenge with the same worksheet for everyone",
+    "story": "A teacher gives every student the same worksheet with 50 sentences and asks them to mark who an ambiguous pronoun refers to. The teacher also gives the same instructions to all students and uses the same answer sheet to mark them. After marking, the teacher can compare scores fairly because the task, questions and marking method were shared. If one student had seen the worksheet in advance, or if the worksheet only used one writing style, the comparison would look fair but would not tell the whole story.",
+    "mapping": [
+      {
+        "analogyElement": "The shared worksheet of 50 sentences",
+        "aiElement": "The benchmark test data"
+      },
+      {
+        "analogyElement": "The teacher's instructions",
+        "aiElement": "The benchmark rules and test conditions"
+      },
+      {
+        "analogyElement": "The answer sheet used for marking",
+        "aiElement": "The reference labels or ground truth"
+      },
+      {
+        "analogyElement": "Each student's final mark",
+        "aiElement": "The benchmark score or scores"
+      }
+    ],
+    "limitation": "A school worksheet is usually small, fixed and easy to supervise, while AI benchmarks can involve very large datasets, multiple metrics, and complex run rules. Also, students and AI systems fail for different reasons. An AI system may score well because of memorisation from training data or hidden data leakage, which has no close equivalent in ordinary classroom marking."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a benchmark produces a score",
+    "learningObjective": "Show that a benchmark includes the test data, rules and scoring method, and that a leaderboard rank depends on all of those choices.",
+    "description": "A left-to-right flow with four boxes: benchmark package, system under test, scoring, and reported result. Read from input conditions to output score. A note under the final box warns that ranking depends on the chosen benchmark and may not reflect real-world performance.",
+    "steps": [
+      {
+        "label": "1. Benchmark package",
+        "explanation": "Start with a defined task, test items, correct answers, and run rules.",
+        "visualInstruction": "Draw a rectangular box labelled 'Benchmark package' containing four bullet labels: task, test data, reference answers, rules."
+      },
+      {
+        "label": "2. System under test",
+        "explanation": "The model or tool processes the same test items under those rules.",
+        "visualInstruction": "Draw a second box to the right labelled 'System under test'. Connect box 1 to box 2 with a right-pointing arrow."
+      },
+      {
+        "label": "3. Scoring",
+        "explanation": "The system outputs are compared with the reference answers using one or more metrics.",
+        "visualInstruction": "Draw a third box labelled 'Scoring'. Inside, show 'compare outputs to references' and small tags such as 'accuracy' and 'recall'. Connect box 2 to box 3."
+      },
+      {
+        "label": "4. Reported result",
+        "explanation": "The output is a score, sometimes several scores, and possibly a leaderboard position.",
+        "visualInstruction": "Draw a fourth box labelled 'Reported result' with 'score(s)' and 'rank'. Add a caution icon below saying 'Useful for comparison, not a full guarantee of real-world performance'."
+      }
+    ],
+    "interaction": "Hovering or tapping each box reveals one short caution: test mismatch, leakage, narrow metric, or leaderboard over-interpretation.",
+    "accessibilityDescription": "The diagram is a four-step flow from left to right. Step 1 is 'Benchmark package', which contains a defined task, test data, reference answers and run rules. Step 2 is 'System under test', which receives the benchmark inputs and produces outputs. Step 3 is 'Scoring', where outputs are compared with the reference answers using one or more metrics such as accuracy or recall. Step 4 is 'Reported result', which shows score values and sometimes a leaderboard rank. The key message is that a benchmark is the whole testing set-up, not just the final number, and that a good benchmark score does not automatically prove strong real-world performance.",
+    "reducedMotionDescription": "A static four-box flow replaces any animation. Small text notes under each box list the main caution: benchmark choice matters, systems must follow the same rules, metrics highlight different strengths, and rankings can mislead if treated as the whole story."
+  },
+  "workedExample": {
+    "scenario": "A team wants to compare two language models on pronoun resolution in English news text.",
+    "input": "Benchmark: 1,000 sentences with ambiguous pronouns, one correct answer per sentence, and accuracy as the main score.",
+    "process": [
+      "Model A and Model B both receive the same 1,000 sentences under the same run rules.",
+      "Their answers are compared with the reference answers sentence by sentence.",
+      "Model A gets 910 correct and Model B gets 880 correct.",
+      "The benchmark reports 91% accuracy for Model A and 88% for Model B, so Model A ranks higher on this benchmark."
+    ],
+    "result": "Model A performs better on this specific benchmark, but that does not yet show whether it will work as well on legal text, multilingual documents, or messy real-world writing."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is considering an internal search tool for guidance documents and wants to compare two vendors.",
+    "relevance": "A benchmark can define a shared test: a fixed set of example queries, a reference list of relevant documents, and agreed scoring rules such as how often the right guidance appears in the top results. This helps leadership compare tools on the same basis rather than relying on demonstrations alone.",
+    "caution": "Do not place confidential, personal, protection-sensitive or security-sensitive documents or queries into an unapproved public AI service for benchmarking. Use approved environments, redacted test materials and human review."
+  },
+  "whyItMatters": "Non-specialists often see a single score or a leaderboard and assume it proves quality. A benchmark helps comparison, but only within the task, data and rules it defines. If you are choosing a product, approving a pilot, or reading a public claim, you need to ask: benchmark on what task, with which data, using which metric, and under what conditions? Those choices affect who looks best. Good decisions depend on whether the benchmark matches the real job, whether the test was fair, and whether the score hides important failures for certain groups, languages or edge cases.",
+  "whereYouMayHearIt": [
+    "product comparisons",
+    "research papers",
+    "procurement discussions",
+    "model cards and evaluations",
+    "leaderboards"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A benchmark score tells you whether a system is good overall.",
+      "correction": "A benchmark only tests the task and conditions it includes. A system can do very well on one benchmark and still perform poorly in a different setting, language, domain or user group. The closer the benchmark is to the real task, the more useful the result becomes."
+    },
+    {
+      "misconception": "A leaderboard rank means the top system is the best choice.",
+      "correction": "Rank depends on the selected benchmark, metric and rules. The top-ranked system may be slower, less robust, harder to audit, or weaker on the cases that matter most in your context. Procurement and policy choices usually need more than one score."
+    },
+    {
+      "misconception": "Benchmark and metric mean the same thing.",
+      "correction": "A metric is the measuring rule, such as accuracy, precision or recall. A benchmark is the full test set-up that may use one or more metrics. Confusing them can hide how much the dataset and test rules shape the result."
+    },
+    {
+      "misconception": "If the test set is public, a strong score still proves real ability.",
+      "correction": "Public benchmarks are useful, but they can encourage tuning to the test. Systems may partly memorise patterns, exploit quirks, or benefit from data leakage. That can raise scores without producing equally strong performance on new, unseen data."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A benchmark is a standard exam for AI systems. It gives everyone the same test and scoring rules so results can be compared more fairly.",
+    "technical": "A benchmark is a standardised evaluation set-up for a specified task. It normally combines a dataset or task suite, reference labels or target outputs, protocol rules for running the system, and one or more evaluation metrics. The benchmark output may be a single score, multiple scores, confidence intervals, or a leaderboard position. Benchmark validity depends on factors such as dataset representativeness, independence from training data, control of data leakage, robustness to distribution shift, and whether the chosen metrics capture the errors that matter. In practice, benchmark performance is evidence about behaviour on that benchmark distribution, not a complete measure of generalisation, reliability or fitness for deployment."
+  },
+  "keyTakeaway": "A benchmark is a shared test set-up, not just a score, and its value depends on how well its task, data and rules match the real job.",
+  "quickCheck": {
+    "question": "Which statement best describes a benchmark?",
+    "options": [
+      "A single metric such as accuracy used to score outputs",
+      "A standard test set-up with data, rules and scoring used to compare systems",
+      "Any public leaderboard that ranks AI tools",
+      "A simple starter model used as a point of comparison"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A benchmark is the overall test arrangement: task, test data, reference answers, run rules and scoring. A metric is only one part of it. A leaderboard may display benchmark results, and a baseline is a simpler comparison system, but neither is the same thing as the benchmark itself."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Benchmark (computing)",
+      "url": "https://en.wikipedia.org/wiki/Benchmark_(computing)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad, general introduction to benchmarks in computing and suits readers who want a quick orientation before looking at AI-specific details.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link helps readers see how benchmark results depend on the scoring method and suits people who need a practical refresher on common classification measures.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This link gives a risk-management perspective on evaluation and suits policy, leadership and governance readers who need to place benchmark scores in a wider assurance process.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Benchmark",
+      "url": "https://www.youtube.com/results?search_query=Benchmark%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search-results page helps readers find different video explanations of benchmarks and suits those who prefer to compare several teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Benchmark",
+      "url": "https://www.reddit.com/search/?q=Benchmark",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search-results page helps readers see common questions, confusions and practitioner viewpoints about benchmarks and suits readers who want informal discussion alongside formal sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "benchmark ai meaning",
+    "what is a benchmark in machine learning",
+    "benchmark vs metric",
+    "benchmark vs baseline",
+    "leaderboard ai score meaning",
+    "how to compare ai models fairly",
+    "benchmarks definition computing",
+    "benchamrk ai",
+    "benchmark",
+    "benchmarks",
+    "leaderboard"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:57.890Z",
+    "contentHash": "a686642e73b4c603",
+    "attempts": 1,
+    "promptTokens": 2291,
+    "completionTokens": 2449
+  }
+}

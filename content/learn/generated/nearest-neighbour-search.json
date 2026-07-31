@@ -1,0 +1,228 @@
+{
+  "id": "nearest-neighbour-search",
+  "slug": "nearest-neighbour-search",
+  "term": "Nearest-neighbour search",
+  "aliases": [
+    "ANN",
+    "k-NN",
+    "approximate nearest neighbour"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "vector",
+    "cosine-similarity"
+  ],
+  "relatedTermIds": [
+    "semantic-similarity",
+    "cosine-similarity",
+    "semantic-search",
+    "vector-database",
+    "retrieval",
+    "ranking-and-reranking"
+  ],
+  "oftenConfusedWith": [
+    "keyword-search",
+    "clustering",
+    "indexing",
+    "retrieval-augmented-generation"
+  ],
+  "oneSentence": "A method for quickly finding the items most similar to a query in a vector space, often trading a little accuracy for much faster search at scale.",
+  "plainExplanation": "Nearest-neighbour search starts with a query represented as numbers, often called a vector or embedding. It compares that query with many stored vectors and returns the closest ones according to a distance or similarity measure such as cosine similarity. The output is usually a short ranked list: the top 1, top 5, or top k most similar items.\n\nSeveral related terms are often mixed together. k-NN usually means “return the k closest items”. Nearest-neighbour search can mean the general task of finding the closest items, whether one or many. ANN usually means approximate nearest neighbour: a faster method that may miss the exact best match sometimes, but is much more practical for large collections.\n\nWhat happens in practice depends on scale. With a small collection, a system can compare the query against every stored vector. With millions of items, that is often too slow, so the system builds an index: a data structure that helps narrow the search to promising regions first. The index does not change the meaning of similarity; it changes how the system finds similar items efficiently.\n\nThis is commonly used in semantic search and retrieval-augmented generation. A user asks a question, the system turns it into a vector, nearest-neighbour search retrieves passages with similar meaning, and those passages may then be reranked or shown to a language model. This is different from keyword search, which matches words directly rather than closeness in vector space.",
+  "everydayAnalogy": {
+    "title": "Finding the right book by shelf neighbours",
+    "story": "A librarian in Nairobi receives a request: “I need a book about preparing cities for extreme heat, not just climate in general.” Instead of checking every title in a huge library one by one, she goes to the section where books on urban climate adaptation tend to sit near each other. She pulls the few books from the nearest shelves, then keeps the five that best match the request. If the library is enormous and time is short, she may use a floor map and shelf guide to get close quickly, even if she does not inspect every possible book.",
+    "mapping": [
+      {
+        "analogyElement": "the request from the reader",
+        "aiElement": "the query vector or embedding"
+      },
+      {
+        "analogyElement": "books stored near related topics",
+        "aiElement": "items positioned close in vector space"
+      },
+      {
+        "analogyElement": "keeping the five best matches",
+        "aiElement": "k-nearest neighbours"
+      },
+      {
+        "analogyElement": "using a floor map and shelf guide to search faster",
+        "aiElement": "an approximate nearest-neighbour index"
+      }
+    ],
+    "limitation": "Real libraries place books by human classification rules, while vector spaces are learned from data and may capture many mixed patterns at once. In a library, nearby books are physically close on shelves; in nearest-neighbour search, “near” means mathematically similar, not geographically close. Also, an ANN index does not simply point to one shelf; it uses search structures and heuristics that can behave very differently from human browsing."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How nearest-neighbour search retrieves similar items",
+    "learningObjective": "Show how a query vector moves through an exact or approximate index to produce the top k similar items, and why approximate search is faster at large scale.",
+    "description": "A left-to-right flow with four stages: query text becomes a vector; the vector enters a search index over many stored vectors; the system checks candidate neighbours; then it outputs the top k results. A branch note contrasts exact search with approximate search: exact checks all items, approximate checks fewer candidates for speed.",
+    "steps": [
+      {
+        "label": "1. Encode the query",
+        "explanation": "The user’s text, image or other input is converted into a vector so it can be compared mathematically with stored vectors.",
+        "visualInstruction": "Draw an input box labelled 'Query' feeding into a box labelled 'Encoder', then a small numeric vector icon such as [0.12, -0.44, ...]."
+      },
+      {
+        "label": "2. Search the index",
+        "explanation": "The system uses an index over stored vectors to find promising candidates. In exact search, it may compare against all stored vectors. In approximate search, it visits only selected parts of the index.",
+        "visualInstruction": "Show a large container labelled 'Stored vectors + index'. Add two subtle paths: 'exact: scan all' and 'approximate: scan likely regions'."
+      },
+      {
+        "label": "3. Score candidates by closeness",
+        "explanation": "Candidate vectors are compared with the query using a similarity or distance measure, such as cosine similarity. The system computes which candidates are closest.",
+        "visualInstruction": "Display 6–8 candidate dots with score labels, with some dots highlighted as more similar to the query vector."
+      },
+      {
+        "label": "4. Return top k items",
+        "explanation": "The closest items are returned as a ranked list, often followed by reranking or use in retrieval-augmented generation.",
+        "visualInstruction": "Show a ranked panel labelled 'Top k results' with entries 1 to k and optional arrows to 'reranker' and 'answer generation'."
+      }
+    ],
+    "interaction": "Hover or tap the exact/approximate branch to highlight the trade-off: more comparisons and higher recall versus fewer comparisons and faster response.",
+    "accessibilityDescription": "The diagram explains nearest-neighbour search as a four-stage flow. First, a user query is encoded into a vector, a list of numbers that represents the input. Second, that vector is sent to a collection of stored vectors organised by an index. The diagram shows two possible search styles: exact search, which compares the query to all stored vectors, and approximate search, which checks only likely regions of the index to save time. Third, the system scores candidate items by mathematical closeness, for example with cosine similarity. Fourth, it returns the top k closest items as a ranked list. A note says approximate search is usually much faster on large collections but may occasionally miss the true best match.",
+    "reducedMotionDescription": "A static four-panel flowchart replaces animation. Panel 1 shows query to vector. Panel 2 shows stored vectors with two labelled routes: exact scans all items; approximate scans selected regions. Panel 3 shows candidate scoring. Panel 4 shows the top k ranked results, with optional next steps for reranking or answer generation."
+  },
+  "workedExample": {
+    "scenario": "A policy team has 100,000 short documents. Each document has an embedding with 768 numbers. A user searches for 'flood early warning systems for coastal schools'. The system needs the five most similar passages.",
+    "input": "Query text: 'flood early warning systems for coastal schools'",
+    "process": [
+      "The query is converted into a 768-number embedding.",
+      "The vector index retrieves 40 likely candidate passages instead of comparing with all 100,000 documents.",
+      "The system computes cosine similarity between the query and those candidates.",
+      "It returns the top 5 passages with scores such as 0.89, 0.86, 0.82, 0.81 and 0.79."
+    ],
+    "result": "The top results include passages about school evacuation alerts, coastal hazard communication and flood preparedness guidance; an unrelated passage about general weather education is excluded because its similarity score is lower."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team preparing procurement requirements for a knowledge search tool asks vendors how their system retrieves semantically similar passages from a large multilingual document set.",
+    "relevance": "Understanding nearest-neighbour search helps the team ask concrete questions about recall, speed, indexing method, multilingual support, reranking and how retrieval quality will be evaluated before purchase.",
+    "caution": "Do not place confidential procurement material, internal evaluations, personal data or security-sensitive documents into an unapproved public AI service for testing; use approved environments and human review."
+  },
+  "whyItMatters": "Many modern AI systems do not search by exact words alone. They retrieve by meaning using embeddings, and nearest-neighbour search is the mechanism that makes that practical. For a non-specialist, this matters because speed, quality and cost depend on it. If retrieval is poor, a chatbot may cite the wrong passage or miss the right one. If approximate search is tuned badly, results may be fast but incomplete. If it is tuned well, large knowledge bases become usable in real time. This affects procurement, evaluation, safety checks, multilingual access and whether a system can be trusted to ground its answers in the right source material.",
+  "whereYouMayHearIt": [
+    "vector database documentation",
+    "RAG system design discussions",
+    "search quality evaluations",
+    "embedding and retrieval tutorials"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "ANN, k-NN and nearest-neighbour search are all the same thing.",
+      "correction": "They are related but not identical. Nearest-neighbour search is the general task. k-NN usually means returning the k closest items, and in some contexts it also refers to a simple supervised classification method that uses neighbours. ANN usually means approximate nearest-neighbour search, where the system accepts a possible loss in exactness to gain speed at large scale."
+    },
+    {
+      "misconception": "Approximate search is low quality and should be avoided.",
+      "correction": "Approximate methods are standard because exact comparison against every item can be too slow or expensive on large collections. Good ANN systems often recover almost all of the true nearest items while responding much faster. The right question is not 'approximate or not' in the abstract, but what recall, latency and cost are acceptable for the task."
+    },
+    {
+      "misconception": "Nearest means the result is definitely relevant or correct.",
+      "correction": "Nearest only means closest under a chosen mathematical representation and similarity measure. If the embedding is poor, the chunking is weak, or the similarity metric is unsuitable, the nearest items may still be unhelpful. Retrieval quality depends on the full pipeline, not just the search step."
+    },
+    {
+      "misconception": "This is just clustering with a different name.",
+      "correction": "Clustering groups items into sets based on overall structure in the data. Nearest-neighbour search answers a query by finding the closest stored items to that query. A system may use clusters to speed up search, but the tasks are different: grouping the collection versus retrieving neighbours for one input."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Turn the query and the stored items into numbers, find which stored items are closest, and return the best few. If the collection is huge, use a shortcut index so the search is fast enough.",
+    "technical": "Given a query vector q and a set of stored vectors, nearest-neighbour search returns the item with minimum distance to q or the top k items by a similarity metric such as cosine similarity, inner product or Euclidean distance. A brute-force method computes scores against every vector. At scale, systems build an index to reduce the search space, for example by partitioning vectors, building graph-based neighbourhood links or using quantisation to compress representations. These are often called approximate nearest-neighbour methods because they optimise latency, memory and throughput while aiming to preserve high recall of the true nearest items. In retrieval pipelines, ANN typically provides a candidate set that may then be reranked with a more expensive model."
+  },
+  "keyTakeaway": "Nearest-neighbour search is the engine that turns embeddings into useful retrieval, and ANN is the speed-up that makes it practical on large collections.",
+  "quickCheck": {
+    "question": "Which statement best captures the relationship among nearest-neighbour search, k-NN and ANN?",
+    "options": [
+      "They are exact synonyms for one algorithm used only in classification.",
+      "Nearest-neighbour search is the general task, k-NN usually means returning the top k neighbours, and ANN means using an approximate method to do that faster at scale.",
+      "ANN always gives better results than exact search because it uses a smarter index.",
+      "k-NN refers only to keyword matching over the k most frequent words."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Nearest-neighbour search is the broad idea of finding the closest items in a vector space. k-NN commonly asks for the top k such items, while ANN focuses on efficient approximate methods that reduce computation on large datasets. They are related terms, not one undifferentiated concept."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Nearest-neighbour search",
+      "url": "https://en.wikipedia.org/w/index.php?search=Nearest-neighbour%20search",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers scan multiple Wikipedia entries and related topics on nearest-neighbour search, and it suits readers who want a broad starting point rather than one fixed article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course material explains embeddings, which are the inputs that nearest-neighbour search compares, and it suits readers who want structured background before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers explore points in an embedding space and inspect nearby items, and it suits visual learners who want intuition about closeness and neighbourhoods.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Nearest-neighbour search",
+      "url": "https://www.youtube.com/results?search_query=Nearest-neighbour%20search%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page gathers video explanations from different creators, and it suits readers who prefer to compare teaching styles rather than rely on one video.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Nearest-neighbour search",
+      "url": "https://www.reddit.com/search/?q=Nearest-neighbour%20search",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and practical questions about nearest-neighbour search, and it suits readers who want informal troubleshooting perspectives with caution about variable quality.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "nearest neighbour search",
+    "nearest-neighbor search",
+    "approximate nearest neighbour",
+    "ann search meaning",
+    "knn vs ann",
+    "top k nearest vectors",
+    "vector similarity search",
+    "embedding nearest neighbors",
+    "semantic search nearest neighbour",
+    "how vector db finds similar items",
+    "nearest-neighbour search",
+    "ann",
+    "k-nn"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:43.951Z",
+    "contentHash": "06bcbcf7516743f6",
+    "attempts": 1,
+    "promptTokens": 2337,
+    "completionTokens": 2747
+  }
+}

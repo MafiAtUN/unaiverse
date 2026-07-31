@@ -1,0 +1,228 @@
+{
+  "id": "system-prompt",
+  "slug": "system-prompt",
+  "term": "System prompt",
+  "aliases": [
+    "system message",
+    "system instruction"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "prompt"
+  ],
+  "relatedTermIds": [
+    "prompt",
+    "user-prompt",
+    "context",
+    "large-language-model",
+    "guardrail",
+    "prompt-injection"
+  ],
+  "oftenConfusedWith": [
+    "user-prompt",
+    "guardrail",
+    "fine-tuning"
+  ],
+  "oneSentence": "A high-priority instruction that sets the assistant’s role, rules and priorities before it responds to later messages.",
+  "plainExplanation": "In many chat systems, messages are not all treated the same way. A system prompt is a special instruction placed before the user’s message. It usually tells the model what role to take, what style to use, what safety limits apply, and which tasks matter most.\n\nWhat goes in? Usually the application sends a hidden or partly hidden instruction such as “answer briefly”, “do not reveal private data”, or “ask for clarification if the request is ambiguous”. Then the user’s message is added after that. Both become part of the model’s context, meaning the text available for generating the next output.\n\nWhat happens? The model processes the whole sequence of text and predicts likely next tokens, meaning small pieces of text such as words or parts of words. The system prompt does not physically control the model like a switch. It influences the output because it is part of the input text the model is conditioned on, often with higher priority in the application’s rules.\n\nWhat comes out is a response shaped by those earlier instructions. If the system prompt says “reply in Spanish” and the user asks a simple question in English, the output may still be in Spanish. But this is not a guarantee. The model can still produce poor answers, ignore instructions, or be manipulated by later text if protections are weak.\n\nA system prompt is often confused with a guardrail or fine-tuning. A guardrail is a broader control mechanism around the model, such as filtering or policy checks. Fine-tuning changes model behaviour by further training on data. A system prompt does not retrain the model; it gives instructions for one interaction or session.",
+  "everydayAnalogy": {
+    "title": "The briefing note before a public event",
+    "story": "A moderator is about to introduce speakers at an international youth forum. Before the audience sends written questions, the organiser hands the moderator a briefing note: keep introductions under one minute, use respectful language, avoid naming private individuals, and redirect off-topic questions. Then audience questions arrive, one after another. The moderator answers in a way shaped by the briefing note, even though the audience cannot see all of it.",
+    "mapping": [
+      {
+        "analogyElement": "briefing note from the organiser",
+        "aiElement": "system prompt sent before the user message"
+      },
+      {
+        "analogyElement": "audience questions",
+        "aiElement": "user prompts or later messages"
+      },
+      {
+        "analogyElement": "moderator’s replies shaped by the note",
+        "aiElement": "model output influenced by earlier instructions"
+      },
+      {
+        "analogyElement": "rule to avoid naming private individuals",
+        "aiElement": "safety or policy instruction in the system prompt"
+      }
+    ],
+    "limitation": "A human moderator can deliberately interpret, question or refuse the organiser’s note with clear judgement. A language model does not follow instructions through human understanding; it generates text based on patterns in the full input. Also, real systems may add other controls beyond the system prompt, such as filters or tool restrictions, so the briefing note is only part of the picture."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a system prompt shapes a reply",
+    "learningObjective": "Show that the system prompt is earlier input that guides the model’s reply, but does not guarantee obedience.",
+    "description": "A left-to-right flow diagram with three input boxes feeding one model box, then one output box. Read from top to bottom on the input side: system prompt first, then conversation history, then user message. Arrows merge into the model, then continue to the reply. Small priority labels show that system instructions usually outrank user instructions in the application logic.",
+    "steps": [
+      {
+        "label": "1. System instruction added",
+        "explanation": "The application places a high-priority instruction before the conversation, such as role, style, task limits or safety rules.",
+        "visualInstruction": "Draw a top input box labelled 'System prompt' with example chips: 'be concise', 'protect privacy', 'ask clarifying questions'."
+      },
+      {
+        "label": "2. Earlier messages included",
+        "explanation": "Previous turns may also be included so the model can continue the exchange consistently.",
+        "visualInstruction": "Draw a second input box labelled 'Conversation history' beneath the first, with stacked message lines."
+      },
+      {
+        "label": "3. User message arrives",
+        "explanation": "The user adds a request or question. It is part of the same context, but not usually the highest-priority instruction.",
+        "visualInstruction": "Draw a third input box labelled 'User message' with one sample line such as 'Summarise this in 3 bullets'."
+      },
+      {
+        "label": "4. Model generates text",
+        "explanation": "The model processes all provided text together and predicts the next tokens for the reply.",
+        "visualInstruction": "Merge arrows from the three input boxes into one central box labelled 'LLM generates next tokens from full context'."
+      },
+      {
+        "label": "5. Reply reflects the instruction mix",
+        "explanation": "The response is influenced by the system prompt, the prior messages and the user request. If they conflict, the application often expects the system instruction to take priority, but failures can happen.",
+        "visualInstruction": "Draw an output box labelled 'Assistant reply' with badges such as 'brief', 'safe', 'asked for clarification'."
+      }
+    ],
+    "interaction": "Hovering or tapping each input box highlights the phrases in the output it most plausibly influenced; a toggle shows a second case where a conflicting user request tries to override the system instruction.",
+    "accessibilityDescription": "The diagram explains a chat system as a flow of text into a language model. First comes a system prompt containing high-priority instructions like role, style and safety limits. Second comes any earlier conversation history. Third comes the user’s latest message. These three text sources flow into the model together. The model then generates a reply token by token from the whole context. The final reply often reflects the system prompt strongly, for example by staying brief or asking for clarification, but the diagram also notes that following the system prompt is not guaranteed.",
+    "reducedMotionDescription": "A static flow chart shows three stacked inputs on the left: system prompt, conversation history and user message. Arrows merge into one model box in the centre, then point to one assistant reply box on the right. A note states: 'Earlier system instructions usually have higher priority in the application, but the model may still fail or be influenced by conflicting text.'"
+  },
+  "workedExample": {
+    "scenario": "A writing assistant inside an organisation is configured to produce short summaries.",
+    "input": "System prompt: 'You are an assistant for busy staff. Reply in exactly 3 bullet points. If the source text is unclear, say what is missing.' User message: 'Summarise: The workshop covered flood warnings, volunteer training, and radio backup plans. Budget figures were not final.'",
+    "process": [
+      "The application sends the system prompt before the user message.",
+      "Both texts are included in the model’s context for generating the reply.",
+      "The model predicts output tokens that fit both the request to summarise and the instruction to use exactly 3 bullet points.",
+      "Because the system prompt mentions unclear source material, the reply may note that budget figures are still provisional."
+    ],
+    "result": "• Workshop topics: flood warnings, volunteer training, and radio backup planning.\n• A budget was discussed, but the figures were not final.\n• Missing detail: no final cost breakdown or implementation timeline was provided."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team uses an approved internal assistant to draft a neutral, short summary of non-sensitive, already-cleared incident trend notes for a meeting.",
+    "relevance": "The system prompt can require neutral tone, short bullets, and a reminder to flag uncertainty instead of presenting weak evidence as fact.",
+    "caution": "Do not place confidential incident reports, personal data, survivor information, witness details, security-sensitive content or operationally sensitive text into an unapproved public AI service; use only approved tools and human review."
+  },
+  "whyItMatters": "If you use or buy AI tools, the system prompt affects what the assistant tends to do, what it refuses, how it speaks and what risks remain. That matters for quality, safety, privacy and accountability. A well-designed system prompt can reduce confusion, set boundaries and make outputs more useful. A weak one can lead to off-task answers, policy breaches or overconfident text. For non-specialists, the key decision point is simple: do not assume the visible user message is the whole instruction set, and do not assume a system prompt alone makes an application safe or reliable.",
+  "whereYouMayHearIt": [
+    "chat assistant configuration",
+    "developer documentation",
+    "prompt engineering discussions",
+    "AI safety and policy reviews",
+    "enterprise AI product demos"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "The system prompt is the same thing as the user prompt, just written first.",
+      "correction": "Both are text instructions, but they play different roles. The system prompt is usually inserted by the application and is meant to set the assistant’s role, limits and priorities across the interaction. The user prompt is the person’s request. Many systems treat conflicts in favour of the system prompt, though not perfectly."
+    },
+    {
+      "misconception": "If the system prompt says something clearly, the model will always obey it.",
+      "correction": "A system prompt strongly influences output, but it is not a hard guarantee. Models can still fail, drift, follow conflicting text, or produce unsafe or incorrect content. Real reliability usually needs extra controls such as filtering, tool permissions, testing and human oversight."
+    },
+    {
+      "misconception": "A good system prompt changes the model itself.",
+      "correction": "It does not retrain or alter the model’s stored weights. It changes the current interaction by adding instructions into the context. Once that session ends, the underlying model is the same unless separate training or fine-tuning has been done."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the behind-the-scenes instruction that tells a chat assistant how to behave before it answers you.",
+    "technical": "In a chat-formatted LLM application, a system prompt is a high-priority text segment prepended or otherwise supplied as part of the model’s context before generation. It typically encodes role, behavioural constraints, output format, tool-use policy and safety instructions. The model then generates a completion by conditioning on the entire token sequence, which may include system, developer, tool and user messages depending on the platform. The system prompt is not the same as fine-tuning, because it does not modify parameters or model weights. It is also not identical to a guardrail, because a guardrail may involve external policy classifiers, retrieval constraints, moderation layers or execution limits outside the prompt itself. In practice, instruction priority is partly a product design choice of the application and partly an empirical behaviour of the model, which means compliance can be strong but not absolute. This is why system prompts are useful but insufficient as a sole safety mechanism, and why they are relevant to prompt injection risks: hostile text later in the context may try to override or manipulate earlier instructions."
+  },
+  "keyTakeaway": "A system prompt guides an assistant from the start, but it is an input to the model, not a magic control button.",
+  "quickCheck": {
+    "question": "Which statement best describes a system prompt?",
+    "options": [
+      "A hidden or pre-set instruction that helps shape the assistant’s behaviour before user messages are answered",
+      "A training method that permanently changes the model’s weights for all future uses",
+      "The random process that picks the next token during text generation",
+      "A safety filter outside the model that blocks forbidden outputs after they are written"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "A system prompt is an instruction added to the model’s input context, usually before the user’s message. It can guide role, style and limits, but it does not permanently retrain the model, and it is not the same as sampling or an external guardrail."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: System prompt",
+      "url": "https://en.wikipedia.org/w/index.php?search=System%20prompt",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search results page helps readers find a range of Wikipedia entries related to system prompts, and suits people who want a broad starting point rather than one fixed article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course gives structured teaching on how large language model systems work, and suits learners who want a more technical but guided explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video offers a visual explanation of large language models, and suits readers who learn best from intuition and diagrams before formal details.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: System prompt",
+      "url": "https://www.youtube.com/results?search_query=System%20prompt%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers compare different video explanations of system prompts, and suits people looking for multiple teaching styles rather than one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: System prompt",
+      "url": "https://www.reddit.com/search/?q=System%20prompt",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page surfaces community discussions and practical questions about system prompts, and suits readers who want to see common confusions and practitioner experiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "system prompt meaning",
+    "system message llm",
+    "system instruction vs user prompt",
+    "what is a system prompt",
+    "chatgpt system prompt",
+    "system promt misspelling",
+    "hidden prompt assistant",
+    "system prompt vs guardrail",
+    "system prompt vs fine tuning",
+    "prompt injection system prompt",
+    "system prompt",
+    "system message",
+    "system instruction"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:05.953Z",
+    "contentHash": "f434a762b036b880",
+    "attempts": 1,
+    "promptTokens": 2381,
+    "completionTokens": 5688
+  }
+}

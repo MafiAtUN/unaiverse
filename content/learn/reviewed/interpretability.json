@@ -1,0 +1,229 @@
+{
+  "id": "interpretability",
+  "slug": "interpretability",
+  "term": "Interpretability",
+  "aliases": [
+    "mechanistic interpretability"
+  ],
+  "categoryId": "responsible-ai",
+  "subcategory": "Responsible AI, Human Rights and Safety",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "explainability"
+  ],
+  "relatedTermIds": [
+    "responsible-ai",
+    "ai-safety",
+    "transparency",
+    "accountability",
+    "human-oversight",
+    "red-teaming"
+  ],
+  "oftenConfusedWith": [
+    "explainability",
+    "transparency"
+  ],
+  "oneSentence": "Interpretability is the effort to inspect how a model’s internal parts contribute to its outputs, not just describe the output afterwards.",
+  "plainExplanation": "Many AI systems take an input, transform it through many internal steps, and produce an output such as a score, label or generated text. Interpretability tries to look inside those internal steps. The goal is to find patterns such as which features, components or pathways were active and how they affected the result.\n\nThis is often confused with explainability. Explainability usually focuses on giving a human-usable reason for an output, even if that reason is only an approximation. Interpretability aims more directly at the model’s internal mechanism. In other words, it asks not only \"What explanation can we give?\" but also \"What seems to be happening inside the system?\"\n\nIn practice, a researcher might inspect neurons, attention patterns, feature activations or decision paths. A neuron is a small computational unit inside some models. An activation is how strongly that unit responds to a given input. By tracing which units activate together, researchers try to identify whether a model appears to rely on useful signals, irrelevant shortcuts or unsafe patterns.\n\nWhat goes in can be text, images or other data. What happens is analysis of the model’s internal representations and interactions. What comes out is evidence, not certainty: possible maps of circuits, features or behaviours inside the model. This can help with safety testing, bias investigation and human oversight, but it does not guarantee full transparency or full control.",
+  "everydayAnalogy": {
+    "title": "Checking how application sorting actually works",
+    "story": "A team receives 1,000 applications and uses a software tool to sort them by completeness. At first, staff only see the final labels: complete, missing document, or unclear. Then an auditor opens the tool’s rule panels and event logs to see what happened inside. They discover that one rule gives too much weight to file naming style, so applications from different organisations are flagged as incomplete more often even when the right documents are present.",
+    "mapping": [
+      {
+        "analogyElement": "final labels on applications",
+        "aiElement": "model outputs"
+      },
+      {
+        "analogyElement": "rule panels and event logs",
+        "aiElement": "internal signals or mechanisms being inspected"
+      },
+      {
+        "analogyElement": "file naming style affecting results",
+        "aiElement": "spurious feature or shortcut the model may rely on"
+      },
+      {
+        "analogyElement": "auditor tracing the problem",
+        "aiElement": "interpretability analysis"
+      }
+    ],
+    "limitation": "This analogy uses visible rules and logs, while many modern AI models do not contain neat human-written rules. Their internal structure is distributed across many numerical parameters, so the mechanism is much harder to inspect. Also, interpretability often produces partial evidence rather than a clear fault report."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From input to output, with an extra layer of inspection inside",
+    "learningObjective": "After viewing this, the reader should be able to say that interpretability examines internal model behaviour, not only the final answer.",
+    "description": "Show a left-to-right flow with one main lane and one inspection lane. Main lane: input enters the model, passes through internal components, and produces an output. Inspection lane: probes attach to internal components, collect signals, and produce an interpretability report. Read from left to right, then compare output-only information with inside-the-model evidence.",
+    "steps": [
+      {
+        "label": "1. Input enters",
+        "explanation": "A text, image or other data item is given to the model.",
+        "visualInstruction": "Draw an input card on the left with example text such as 'application form + attachments' feeding into a large model box."
+      },
+      {
+        "label": "2. Internal processing",
+        "explanation": "The model transforms the input through many internal components. These components may respond to different patterns.",
+        "visualInstruction": "Inside the model box, draw three to five smaller nodes connected in layers. Label them 'internal components' rather than using unexplained jargon."
+      },
+      {
+        "label": "3. Output appears",
+        "explanation": "The model produces a label, score or generated text. By itself, this only shows the end result.",
+        "visualInstruction": "Draw an output card on the right labelled 'complete / incomplete / unclear' connected from the model box."
+      },
+      {
+        "label": "4. Inspection probes",
+        "explanation": "Interpretability methods sample activations, pathways or feature patterns inside the model while it processes the input.",
+        "visualInstruction": "Add a second lane below the model with small probe icons attached to internal nodes, sending lines to a report panel."
+      },
+      {
+        "label": "5. Evidence report",
+        "explanation": "The analysis suggests which internal parts mattered and whether the model may be using a sensible signal or a misleading shortcut.",
+        "visualInstruction": "Draw a report panel with two lists: 'likely relied on required document count' and 'possible shortcut: file naming pattern'."
+      }
+    ],
+    "interaction": "Hovering or tapping an internal node highlights its probe connection and the matching line in the evidence report.",
+    "accessibilityDescription": "The diagram is a left-to-right flow. First, an input such as an application form enters a model. Inside the model are several connected internal components. The model then produces an output, for example a completeness label. A second inspection lane attaches probes to the internal components and sends their signals to a report. The report identifies possible internal reasons for the output, such as reliance on a relevant feature or on a misleading shortcut. The point is that interpretability adds evidence about what happened inside the model, not only a description of the final result.",
+    "reducedMotionDescription": "A static flow diagram shows the same five stages without highlighting. Lines from internal components to the report remain visible at all times, so the reader can compare output-only information with internal inspection evidence."
+  },
+  "workedExample": {
+    "scenario": "A small classifier sorts incoming grant applications into 'complete' or 'needs review'. An analyst tests 200 applications: 120 truly complete and 80 incomplete.",
+    "input": "Application A includes all required files, but the filenames use an unusual local format and one PDF has scanned text rather than selectable text.",
+    "process": [
+      "The model marks Application A as 'needs review' with a score of 0.78.",
+      "An interpretability tool shows high activation for features linked to document count, but also unexpectedly high activation for filename pattern and text extractability.",
+      "Across 50 similar cases, the analyst finds that unusual filenames raise the review score by about 0.20 even when required documents are present.",
+      "The team revises preprocessing so the model checks actual document presence more directly and reduces dependence on filename style."
+    ],
+    "result": "After the change, false flags for complete applications with unusual filenames drop from 18 out of 50 to 5 out of 50 in the test set. The analysis does not prove the model is fully fair, but it reveals one harmful shortcut and supports a concrete fix."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is building an internal search tool over approved guidance documents so staff can find the right procedural note more quickly. Interpretability methods can help the technical team inspect whether the ranking model is surfacing documents because of meaningful policy terms or because of superficial cues such as repeated formatting phrases.",
+    "relevance": "This matters because staff may rely on search rankings during time-sensitive work. Looking inside the ranking behaviour can support accountability, safer deployment and better human oversight before staff use the tool widely.",
+    "caution": "Do not upload confidential, security-sensitive, personal or protection-sensitive internal documents to an unapproved public AI service for interpretability testing or debugging. Use approved environments, minimise sensitive content, and keep human review over any high-stakes use."
+  },
+  "whyItMatters": "For non-specialists, interpretability matters because an AI system can appear accurate while relying on the wrong reasons. A model may pick up shortcuts, hidden bias or brittle patterns that only become visible when conditions change. If a system affects access, safety, rights or important work, decision-makers need more than a polished answer. They need evidence about whether the system’s behaviour is trustworthy enough for the task, what risks remain, and where human review must stay in place. Interpretability does not solve these problems on its own, but it can make risk assessment, red-teaming, accountability and safer system design more concrete.",
+  "whereYouMayHearIt": [
+    "AI safety research",
+    "model auditing",
+    "high-stakes procurement reviews",
+    "bias investigations",
+    "technical governance discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model is interpretable, it is automatically safe and fair.",
+      "correction": "Interpretability can reveal useful clues about internal behaviour, but it does not prove the system is safe, fair or rights-respecting. A model can be partly interpretable and still produce harmful outputs, and some harmful patterns may remain hidden or be misread. It should support, not replace, testing, impact assessment and human oversight."
+    },
+    {
+      "misconception": "Interpretability and explainability mean the same thing.",
+      "correction": "They overlap, but they are not identical. Explainability often aims to give people an understandable account of an output. Interpretability tries to inspect the internal mechanism more directly. An explanation can be simple and useful without faithfully describing what happened inside, while interpretability seeks evidence about the inside of the model."
+    },
+    {
+      "misconception": "Looking at a few neurons tells you exactly what the model is doing.",
+      "correction": "Modern models often represent information across many interacting components, not one neat unit per concept. A neuron or attention pattern may correlate with a feature, but that does not always mean it alone causes the behaviour. Good interpretability work usually combines several methods and checks whether findings hold across many examples."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a way of opening the black box a little to see what parts of an AI system seem to drive its answers.",
+    "technical": "Interpretability studies the relationship between a model’s internal representations and its outputs. In mechanistic interpretability, the aim is to identify circuits, features, activations or pathways that appear to implement parts of the model’s behaviour. Methods may inspect neurons, attention heads, embeddings, saliency patterns or causal interventions on internal states. The core question is whether we can build evidence-based accounts of the model’s internal mechanism, rather than only observing input-output behaviour. In large models, this is difficult because representations are distributed, context-dependent and sometimes only partly recoverable. Findings are therefore often provisional and should be validated against multiple prompts, datasets and interventions."
+  },
+  "keyTakeaway": "Interpretability looks inside a model for evidence about how it produced an output, which helps people judge risk but does not guarantee certainty or safety.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes interpretability from explainability?",
+    "options": [
+      "Interpretability inspects internal model behaviour, while explainability may describe an output without fully revealing the internal mechanism.",
+      "Interpretability means the model uses only human-written rules, while explainability means it uses machine learning.",
+      "Interpretability guarantees that a model is unbiased, while explainability only improves user trust.",
+      "Interpretability is only about visualising data, while explainability is only about writing policy documents."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The key distinction is inside-versus-outside. Explainability often focuses on giving a human-usable account of an output. Interpretability aims to inspect what seems to be happening inside the model. Neither term guarantees fairness or safety, and neither is limited to one model type."
+  },
+  "resources": [
+    {
+      "title": "Mechanistic interpretability",
+      "url": "https://en.wikipedia.org/wiki/Mechanistic_interpretability",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad overview of mechanistic interpretability concepts and terminology, and suits readers who want a quick starting point before deeper technical reading.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Recommendation on the Ethics of Artificial Intelligence",
+      "url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics",
+      "type": "official",
+      "publisher": "UNESCO",
+      "description": "This link gives a policy-oriented international framework for AI ethics, and suits readers who want to place interpretability within wider governance, risk and human rights responsibilities.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "B-Tech Project",
+      "url": "https://www.ohchr.org/en/business-and-human-rights/b-tech-project",
+      "type": "official",
+      "publisher": "UN Human Rights Office (OHCHR)",
+      "description": "This link gives business and human rights guidance relevant to accountability and due diligence, and suits policy or implementation readers considering how technical opacity can affect rights-holders.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Interpretability",
+      "url": "https://www.youtube.com/results?search_query=Interpretability%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search page gives a range of video explanations with different levels of depth, and suits readers who learn better from spoken and visual teaching than from text alone.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Interpretability",
+      "url": "https://www.reddit.com/search/?q=Interpretability",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search page gives a range of community discussions and differing viewpoints, and suits readers who want informal debate, practical questions and examples but should read critically because search results vary over time.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "interpretability ai meaning",
+    "mechanistic interpretability simple explanation",
+    "interpretability vs explainability",
+    "how to inspect inside a model",
+    "black box ai internal workings",
+    "mechanistic interp",
+    "ai model neurons features",
+    "what is mechanistic interpretability",
+    "interpretability in ai safety",
+    "why interpretability matters",
+    "interpretability",
+    "mechanistic interpretability"
+  ],
+  "contested": "The broad idea is widely used, but the boundaries of 'interpretability', especially compared with explainability and transparency, are not fully settled. 'Mechanistic interpretability' is also used more narrowly by some researchers to mean analysis of internal circuits and representations, rather than interpretability in the broadest sense.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:50:22.240Z",
+    "contentHash": "7d29c9ff3ec60e85",
+    "attempts": 1,
+    "promptTokens": 2343,
+    "completionTokens": 2626
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "id": "reinforcement-learning-from-human-feedback",
+  "slug": "reinforcement-learning-from-human-feedback",
+  "term": "Reinforcement learning from human feedback",
+  "acronym": "RLHF",
+  "aliases": [
+    "RLHF"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "reinforcement-learning",
+    "fine-tuning"
+  ],
+  "relatedTermIds": [
+    "reinforcement-learning",
+    "fine-tuning",
+    "supervised-fine-tuning",
+    "instruction-tuning",
+    "preference-learning",
+    "checkpoint"
+  ],
+  "oftenConfusedWith": [
+    "preference-learning",
+    "alignment",
+    "supervised-fine-tuning"
+  ],
+  "oneSentence": "A method for adjusting a model so its outputs better match human preferences by learning from ranked examples and reward signals.",
+  "plainExplanation": "After a model has already learned general patterns from large amounts of text, developers often want it to behave in more useful ways. They may want it to follow instructions better, avoid unsafe wording, or give answers people prefer. Reinforcement learning from human feedback is one way to do that.\n\nThe input is usually a set of model answers to the same prompt, plus human judgements about which answer is better. Those judgements can come from rankings, ratings, or comparisons. A separate reward model is then trained to predict those human preferences. A reward model is a system that scores outputs based on patterns in the feedback.\n\nNext, the main model is updated so it tends to produce outputs that get higher reward scores. This part uses reinforcement learning, a training method where a system is adjusted using signals about better and worse outcomes rather than only exact correct answers. In practice, many descriptions of RLHF bundle together several stages: collecting comparisons, training the reward model, and then optimising the main model.\n\nWhat comes out is a new model version that often feels more helpful, more polite, or more on-task to users. But it does not become inherently truthful or reliable. It has learned to match the kinds of responses the feedback process rewarded, and that can reflect both good judgement and the limits or biases of the people, prompts, and scoring rules used.",
+  "everydayAnalogy": {
+    "title": "Ranking search results for policy documents",
+    "story": "A team in Nairobi is improving an internal search tool for policy documents. For each search, the tool shows three possible result lists, and staff members rank which list is most useful for their task. The team then builds a scoring rule that can predict those preferences from many past rankings. After that, they tune the search tool so it produces result lists that the scoring rule rates more highly.",
+    "mapping": [
+      {
+        "analogyElement": "staff ranking several result lists",
+        "aiElement": "humans comparing multiple model outputs"
+      },
+      {
+        "analogyElement": "scoring rule learned from past rankings",
+        "aiElement": "reward model trained on human feedback"
+      },
+      {
+        "analogyElement": "tuning the search tool to get higher scores",
+        "aiElement": "optimising the model with reinforcement learning"
+      },
+      {
+        "analogyElement": "more useful ranked results",
+        "aiElement": "outputs that better match preferred behaviour"
+      }
+    ],
+    "limitation": "A search tool returns documents that already exist, while a language model generates new text token by token. Also, in RLHF the reward signal is only an approximation of human preference, not a direct measure of truth, legality, or policy compliance. The analogy also hides technical issues such as instability during optimisation and the risk of rewarding style over substance."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How RLHF changes a model after initial training",
+    "learningObjective": "Show the ordered stages of RLHF and explain that human preferences are converted into a reward signal, then used to update the model.",
+    "description": "A left-to-right step diagram with four boxes connected by arrows. Read from raw prompt handling to human comparisons, then reward modelling, then model optimisation, ending with a revised model version. Each box names the input and output of that stage.",
+    "steps": [
+      {
+        "label": "1. Generate candidate answers",
+        "explanation": "A partly trained model receives prompts and produces several possible answers for each one.",
+        "visualInstruction": "Draw a prompt card feeding into a model box, with three short answer cards coming out side by side."
+      },
+      {
+        "label": "2. Collect human preferences",
+        "explanation": "People compare the answers and mark which one is better for the task, based on guidance.",
+        "visualInstruction": "Show the three answer cards under a bracket, with a human reviewer icon selecting or ranking them."
+      },
+      {
+        "label": "3. Train a reward model",
+        "explanation": "A separate model learns to predict those human preferences and outputs a score for new answers.",
+        "visualInstruction": "Convert the ranked answers into a smaller scoring box labelled reward model, with output scores such as low, medium, high."
+      },
+      {
+        "label": "4. Optimise the main model",
+        "explanation": "The main model is updated so it tends to produce answers that the reward model scores more highly, within training constraints.",
+        "visualInstruction": "Show the reward scores feeding back into the main model, ending in a new box labelled updated model version."
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal one sentence on what goes in and what comes out; arrows highlight in sequence from step 1 to step 4.",
+    "accessibilityDescription": "The diagram presents RLHF as a four-step process. First, a model takes a prompt and generates several candidate answers. Second, human reviewers compare those answers and indicate which is better. Third, those comparisons are used to train a reward model, which is a scoring system that predicts which answers humans would prefer. Fourth, the main model is updated using reinforcement learning so it is more likely to produce answers that receive higher reward scores. The final output is an updated model version, not a guarantee of truth or safety.",
+    "reducedMotionDescription": "A static four-box diagram is shown with numbered arrows from left to right: candidate answers, human comparisons, reward model, updated model version."
+  },
+  "workedExample": {
+    "scenario": "Improving a question-answering assistant for public information requests",
+    "input": "Prompt: \"Explain in plain language what a ceasefire monitoring mission does.\" Three candidate answers are generated.",
+    "process": [
+      "Human reviewers compare Answer A, B and C. Out of 200 comparisons, B is preferred 140 times because it is clearer and less speculative.",
+      "A reward model is trained on many such comparisons so it can score new answers according to likely human preference.",
+      "The main model is then updated to produce answers that the reward model scores more highly, while keeping changes within set limits.",
+      "After training, on a fresh test set of 100 prompts, preferred-answer rate rises from 52% to 68% in side-by-side human evaluation."
+    ],
+    "result": "The updated assistant more often gives clear, on-task answers, but reviewers still need to check factual accuracy and sensitive wording."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is improving a drafting assistant that helps staff check whether a draft speech is consistent with previously agreed language for public statements.",
+    "relevance": "RLHF could be used to rank alternative phrasings so the assistant more often proposes wording that is clearer, more neutral and closer to approved style.",
+    "caution": "Do not place confidential drafts, negotiation positions, personal data, or security-sensitive material into an unapproved public AI service. Human review remains necessary because preference matching does not guarantee political accuracy, legal correctness, or institutional approval."
+  },
+  "whyItMatters": "For non-specialists, RLHF matters because it helps explain why a model can feel more helpful after development without becoming fully reliable. If you procure, govern, evaluate or use AI systems, this term tells you what kind of improvement was made: the model was shaped to match human preferences under a chosen feedback process. That affects quality, safety, tone, bias, labour needs, auditability and cost. It also helps you ask better questions, such as whose preferences were collected, what instructions reviewers used, whether truthfulness was measured separately, and how the updated model was tested before deployment.",
+  "whereYouMayHearIt": [
+    "chatbot development discussions",
+    "model cards and technical reports",
+    "AI governance and procurement reviews",
+    "safety and evaluation briefings"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "RLHF means the model learned directly from users chatting with it.",
+      "correction": "Not necessarily. The feedback is often collected in structured annotation tasks where reviewers compare prepared outputs. Some systems may later use user signals, but RLHF usually refers to a specific training pipeline rather than any informal feedback from use."
+    },
+    {
+      "misconception": "If a model used RLHF, its answers are therefore truthful and safe.",
+      "correction": "RLHF trains a model to match rewarded preferences, not to guarantee facts or compliance. If reviewers reward answers that sound confident or polite, the model may learn those traits more strongly than accuracy unless truthfulness and safety are separately measured and reinforced."
+    },
+    {
+      "misconception": "RLHF is the same as fine-tuning on correct answers.",
+      "correction": "Supervised fine-tuning learns from target examples, such as prompt-answer pairs. RLHF usually adds a later stage where humans compare outputs, a reward model predicts those preferences, and reinforcement learning updates the model using that score signal."
+    },
+    {
+      "misconception": "RLHF is the same as alignment.",
+      "correction": "Alignment is a broader and contested term about making AI systems behave in intended or acceptable ways. RLHF is one concrete method within that wider area. A model can use RLHF and still have important alignment problems."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "People look at several answers from a model, say which ones they prefer, and those preferences are used to train the model to answer in more preferred ways.",
+    "technical": "RLHF typically follows earlier training stages. A base or instruction-tuned model is sampled on prompts to produce candidate completions. Human annotators then provide preference data, often pairwise rankings between completions under written guidelines. That dataset is used to train a reward model that estimates the relative desirability of outputs for a prompt. The main policy model is then optimised with a reinforcement-learning objective to increase expected reward while usually constraining it not to drift too far from the starting model. In large language model practice, this optimisation has often used methods such as PPO, though newer variants and related preference-optimisation methods also exist. The result is a new checkpoint that better matches the measured preference signal, but the reward model can be imperfect, vulnerable to shortcut learning, and sensitive to annotator bias, prompt distribution and reward hacking."
+  },
+  "keyTakeaway": "RLHF does not teach a model what is true; it teaches the model what kinds of answers human reviewers tended to prefer.",
+  "quickCheck": {
+    "question": "Which description best captures what RLHF adds after a model already produces text?",
+    "options": [
+      "It replaces all earlier training with human-written correct answers only.",
+      "It uses human preference judgements to build a reward signal and then updates the model to produce more preferred outputs.",
+      "It compresses the model so it runs faster on smaller devices.",
+      "It lets the model learn new facts automatically from live internet access."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "RLHF adds a preference-based training stage. Humans compare outputs, a reward model learns from those comparisons, and the main model is optimised to get higher reward. That is different from supervised fine-tuning, compression, or web access."
+  },
+  "resources": [
+    {
+      "title": "Reinforcement learning from human feedback",
+      "url": "https://en.wikipedia.org/wiki/Reinforcement_learning_from_human_feedback",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives a broad overview of the term, its main stages and related ideas, and suits readers who want a quick orientation.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This Hugging Face course material is useful for readers who want a structured technical introduction to how large language model training stages fit together.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "description": "These DeepLearning.AI short courses suit learners who prefer guided lessons with practical intuition and applied examples.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Reinforcement learning from human feedback",
+      "url": "https://www.youtube.com/results?search_query=Reinforcement%20learning%20from%20human%20feedback%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations from different presenters and suits those who learn best by watching, but it is a search page rather than one vetted source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Reinforcement learning from human feedback",
+      "url": "https://www.reddit.com/search/?q=Reinforcement%20learning%20from%20human%20feedback",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page lets readers see community questions, debates and informal explanations, which may help with common confusions, but it is a search page and quality varies.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "rlhf meaning",
+    "reinforcement learning human feedback",
+    "rlhf vs fine tuning",
+    "rlhf vs preference learning",
+    "how rlhf works",
+    "rlhf explained simply",
+    "rlhf reward model",
+    "rlhf llm",
+    "rlhf misspelling rlghf",
+    "reinforcement learning from human feedback",
+    "rlhf"
+  ],
+  "contested": "The term is widely used, but people do not always mean exactly the same pipeline by it. Some use RLHF narrowly for the reinforcement-learning stage after a reward model is trained, while others use it more broadly for the whole process of collecting human preferences, training the reward model and optimising the model.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:43.882Z",
+    "contentHash": "e2061adf6b96db9b",
+    "attempts": 2,
+    "promptTokens": 2373,
+    "completionTokens": 2477
+  }
+}

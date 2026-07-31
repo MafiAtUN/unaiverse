@@ -1,0 +1,224 @@
+{
+  "id": "sampling",
+  "slug": "sampling",
+  "term": "Sampling (choosing the next token)",
+  "aliases": [
+    "decoding",
+    "greedy decoding"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "next-token-prediction",
+    "probability"
+  ],
+  "relatedTermIds": [
+    "next-token-prediction",
+    "probability",
+    "token",
+    "completion",
+    "temperature",
+    "top-p"
+  ],
+  "oftenConfusedWith": [
+    "data-sampling",
+    "temperature",
+    "deterministic-output"
+  ],
+  "oneSentence": "The procedure that selects one token from the model’s predicted probabilities and appends it to the output, then repeats until the text is complete.",
+  "plainExplanation": "A language model does not write a whole reply in one step. At each step, it produces a list of possible next tokens and a probability for each one. A token is a small unit of text, such as a word, part of a word, punctuation, or a space pattern.\n\nSampling is the rule used to choose from that list. The simplest rule is greedy decoding: pick the single highest-probability token every time. Other rules add controlled randomness, for example by limiting the candidate set and then drawing one token from it.\n\nWhat goes in is the current context: the prompt plus all tokens already generated. What happens is that the model scores many possible next tokens, the decoding rule filters or reshapes those scores, and one token is chosen. What comes out is one new token, which is added to the context before the next step.\n\nThis matters because different decoding choices can make outputs more stable, more varied, more concise, or more risky. Sampling does not change the model’s weights. It changes how the model’s probability distribution is turned into actual text.",
+  "everydayAnalogy": {
+    "title": "Picking the next form template",
+    "story": "An office worker receives a photograph of a paper form and must match it to one template in a cabinet. A screen shows likely matches in order: travel claim, vendor registration, incident report, and equipment request. If the worker always picks the top suggestion, the process is fast and repeatable. If the worker instead chooses from the top few plausible matches, the result can vary, which may help in borderline cases but can also introduce a wrong choice.",
+    "mapping": [
+      {
+        "analogyElement": "list of likely templates on the screen",
+        "aiElement": "probability distribution over possible next tokens"
+      },
+      {
+        "analogyElement": "always choosing the top template",
+        "aiElement": "greedy decoding"
+      },
+      {
+        "analogyElement": "choosing from the top few plausible templates",
+        "aiElement": "sampling from a restricted set such as top-p or top-k"
+      },
+      {
+        "analogyElement": "repeating the match for each new page in a packet",
+        "aiElement": "selecting one token at a time through the whole completion"
+      }
+    ],
+    "limitation": "A worker can inspect the full form and apply explicit judgement, while a language model produces token probabilities from learned patterns in text. Also, template matching is a classification task with a fixed target, whereas token sampling is a repeated generation process in which each chosen token changes the next step."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How next-token sampling turns probabilities into text",
+    "learningObjective": "After viewing this, a reader should be able to explain that generation happens one token at a time and that decoding rules change which token is selected from the model’s predicted probabilities.",
+    "description": "A left-to-right sequence shows one generation cycle repeated: context enters, candidate tokens receive probabilities, a decoding rule chooses one token, and that token is appended before the next cycle. Read the arrows from step 1 to step 4, then note that step 4 loops back to step 1.",
+    "steps": [
+      {
+        "label": "1. Current context",
+        "explanation": "Start with the prompt and any tokens already generated.",
+        "visualInstruction": "Draw a text box labelled 'Context' containing a short prompt and partial reply, for example 'Summarise: Climate talks... The meeting'."
+      },
+      {
+        "label": "2. Candidate tokens scored",
+        "explanation": "The model assigns probabilities to many possible next tokens.",
+        "visualInstruction": "Show a vertical list of candidate tokens with bars and percentages, such as 'continued 40%', 'ended 25%', 'focused 15%', 'was 10%', 'on 10%'."
+      },
+      {
+        "label": "3. Decoding rule applied",
+        "explanation": "A rule such as greedy, temperature-adjusted, or top-p determines how the final choice is made from the scored list.",
+        "visualInstruction": "Place a filter/selector panel over the list with toggles labelled 'greedy', 'temperature', and 'top-p'; highlight one active rule."
+      },
+      {
+        "label": "4. One token chosen and appended",
+        "explanation": "The chosen token is added to the text, and the process repeats until a stop condition is reached.",
+        "visualInstruction": "Animate or indicate the selected token moving into the context box, updating the partial reply; add a loop arrow back to step 1 and a small stop icon labelled 'end token / limit'."
+      }
+    ],
+    "interaction": "Hovering or tapping each decoding rule updates the highlighted candidate and shows a short note on likely effects: more deterministic, more varied, or more constrained.",
+    "accessibilityDescription": "The diagram explains text generation as a four-step loop. First, the current context contains the prompt and tokens already produced. Second, the model scores many possible next tokens and shows them as a probability list. Third, a decoding rule, such as greedy selection, temperature adjustment, or top-p filtering, is applied to that list. Fourth, one token is chosen and appended to the text. The updated text becomes the new context, and the loop repeats until a stopping condition such as an end token or length limit is reached. The key message is that the model predicts probabilities, while decoding turns those probabilities into one actual next token.",
+    "reducedMotionDescription": "A static four-panel diagram replaces animation. Panel 1 shows the current context. Panel 2 shows candidate next tokens with probabilities. Panel 3 shows a highlighted decoding rule selecting from those candidates. Panel 4 shows the chosen token appended to the text, with a visible loop arrow back to panel 1 and a stop condition note."
+  },
+  "workedExample": {
+    "scenario": "Generating the next word in a meeting summary",
+    "input": "Prompt: 'Write one short sentence: The committee'",
+    "process": [
+      "The model scores possible next tokens after 'The committee'. Suppose the top options are 'met' 0.42, 'agreed' 0.27, 'noted' 0.12, 'will' 0.08, others 0.11.",
+      "With greedy decoding, the system chooses 'met' because it has the highest probability.",
+      "The text becomes 'The committee met'. The model then scores the next token from this new context.",
+      "If a top-p rule with moderate randomness had been used, 'agreed' might sometimes be chosen instead, leading to a different sentence path."
+    ],
+    "result": "Greedy output might continue as 'The committee met today.' A different sampling rule could produce 'The committee agreed on priorities.'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN procurement team tests a draft assistant that helps rewrite public, non-sensitive software requirements into clearer plain-language text for a market research exercise.",
+    "relevance": "Sampling settings affect whether the assistant gives stable wording for repeatable procurement drafts or more varied phrasings that may help brainstorming. Teams need to know that the decoding rule influences style and consistency, not just the model itself.",
+    "caution": "Use only approved systems and only non-confidential text. Do not paste vendor-sensitive information, unpublished bid details, personal data, or security-related requirements into an unapproved public AI service."
+  },
+  "whyItMatters": "If you use or procure language-model systems, sampling helps explain why the same prompt can produce different outputs, why some settings make answers more predictable, and why others increase variety. This affects quality control, auditability, reproducibility, safety review, latency, and user trust. A team choosing settings for drafting, coding help, translation support, or brainstorming should know that decoding is a controllable part of the system. It is separate from training, and it can make a model seem more careful or more creative without changing what the model has learned.",
+  "whereYouMayHearIt": [
+    "model inference settings",
+    "API documentation",
+    "chat assistant controls",
+    "ML engineering discussions",
+    "benchmark reproducibility"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Sampling means the model is pulling examples directly from its training data.",
+      "correction": "Here, sampling means choosing one next token from the model’s predicted distribution during generation. It is different from sampling data for training or evaluation. Confusing the two can hide the fact that output variation often comes from decoding settings, not from retrieving stored examples."
+    },
+    {
+      "misconception": "Greedy decoding is always best because it picks the most likely token.",
+      "correction": "Picking the top token at each step can produce stable output, but local best choices do not always give the best full sentence or paragraph. Greedy decoding can become repetitive, bland, or trapped in a poor path because each token choice changes the next probabilities."
+    },
+    {
+      "misconception": "Temperature is the same thing as sampling.",
+      "correction": "Temperature is one control that reshapes the probability distribution before selection. Sampling or decoding is the broader process of turning probabilities into an actual token. You can sample with different temperatures, or use deterministic greedy decoding with no random draw at all."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "The model suggests many possible next pieces of text, and sampling is the rule for picking one of them.",
+    "technical": "At each generation step, the model outputs logits or probabilities over the vocabulary for the next token, conditioned on the current context. Decoding applies a selection procedure to that distribution. In greedy decoding, the argmax token is chosen deterministically. In stochastic methods, the distribution may first be transformed, for example by temperature scaling, and then truncated, for example by top-p, before drawing a token. The selected token is appended to the sequence, which updates the context for the next forward pass. This repeats until an end token, stop sequence, or length limit is reached. Sampling therefore belongs to inference-time generation, not training, and it affects variability, coherence trade-offs, and reproducibility."
+  },
+  "keyTakeaway": "A language model predicts probabilities, but decoding decides which token actually appears next.",
+  "quickCheck": {
+    "question": "What does greedy decoding do during text generation?",
+    "options": [
+      "It chooses the highest-probability next token at each step.",
+      "It retrains the model on the current prompt before answering.",
+      "It searches the training data for the closest matching sentence.",
+      "It keeps all likely tokens and outputs them together."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Greedy decoding is the simplest decoding rule: at each step, select the single most probable next token. It is usually deterministic for a fixed model and context, but it can miss better longer sequences because it only takes the local top choice."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Top-p sampling",
+      "url": "https://en.wikipedia.org/wiki/Top-p_sampling",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad reference-style overview of top-p sampling and suits readers who want a quick conceptual summary with standard terminology.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course link is useful for learners who want practical explanations of generation and decoding in the wider context of working with language models.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video helps visual learners build intuition for how language models produce text step by step, including where token choice fits in.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Sampling (choosing the next token)",
+      "url": "https://www.youtube.com/results?search_query=Sampling%20(choosing%20the%20next%20token)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers browse multiple video explanations of sampling and choose a level of detail that suits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Sampling (choosing the next token)",
+      "url": "https://www.reddit.com/search/?q=Sampling%20(choosing%20the%20next%20token)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it helps readers see common questions, confusions and practitioner discussion about sampling, with variable reliability that should be checked carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "sampling next token",
+    "decoding llm",
+    "greedy decoding meaning",
+    "how llm chooses next word",
+    "top p vs sampling",
+    "temperature vs decoding",
+    "next token selection",
+    "llm output randomness",
+    "decoder sampling",
+    "sampleing next token",
+    "sampling (choosing the next token)",
+    "decoding",
+    "greedy decoding"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:13.718Z",
+    "contentHash": "7cff69dd531a07cd",
+    "attempts": 1,
+    "promptTokens": 2383,
+    "completionTokens": 2367
+  }
+}

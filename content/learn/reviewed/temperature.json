@@ -1,0 +1,221 @@
+{
+  "id": "temperature",
+  "slug": "temperature",
+  "term": "Temperature",
+  "aliases": [],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "sampling"
+  ],
+  "relatedTermIds": [
+    "sampling",
+    "next-token-prediction",
+    "deterministic-output",
+    "top-p",
+    "completion",
+    "prompt"
+  ],
+  "oftenConfusedWith": [
+    "top-p",
+    "deterministic-output",
+    "understanding"
+  ],
+  "oneSentence": "A setting that controls how predictable or varied a language model’s next chosen words are during generation.",
+  "plainExplanation": "When a language model produces text, it does not pull one fixed answer from storage. At each step, it considers many possible next tokens, where a token is a small unit of text such as a word, part of a word or punctuation. Temperature changes how sharply the model prefers the most likely options over the less likely ones.\n\nLow temperature makes the output more predictable. The model stays close to its highest-probability next tokens, so answers are usually more consistent and repetitive. High temperature makes the output more varied. Lower-probability tokens get more chance, so the text may become more creative, surprising or unusual.\n\nWhat goes in is the model’s scored list of possible next tokens plus the temperature setting. What happens is that the scores are adjusted before one token is sampled, meaning chosen from the adjusted probabilities. What comes out is one next token, then the process repeats until the response is complete.\n\nTemperature does not add knowledge, truth or reasoning ability. It only changes the randomness of token selection. It is often confused with top-p, which limits how much of the probability list is considered, while temperature changes the shape of that list.",
+  "everydayAnalogy": {
+    "title": "Choosing a route across a city",
+    "story": "Two colleagues in Nairobi need to cross the city for a meeting. Their map app shows several routes, with one route clearly fastest, two slightly slower and a few unusual detours. If they set the app to “play it safe”, it almost always picks the fastest route. If they set it to “explore more”, it sometimes chooses one of the less usual routes instead.",
+    "mapping": [
+      {
+        "analogyElement": "list of possible routes",
+        "aiElement": "list of possible next tokens"
+      },
+      {
+        "analogyElement": "fastest route ranked highest",
+        "aiElement": "most likely token ranked highest"
+      },
+      {
+        "analogyElement": "play it safe versus explore more",
+        "aiElement": "lower versus higher temperature"
+      },
+      {
+        "analogyElement": "route chosen each time",
+        "aiElement": "token sampled at each generation step"
+      }
+    ],
+    "limitation": "A map app may use real traffic rules and destination goals, while a language model is not planning a journey or checking road conditions. It is repeatedly sampling tokens from a probability distribution. Also, one route choice happens once, but model generation makes a new choice at every token, so small differences can grow across a whole response."
+  },
+  "visual": {
+    "type": "slider",
+    "title": "How temperature changes token choice",
+    "learningObjective": "After using this explainer, a reader should be able to say that temperature changes how strongly a model favours high-probability next tokens, affecting consistency versus variety.",
+    "description": "A slider changes temperature from low to high. The screen shows the same prompt and the same candidate next tokens with bars for their probabilities. As the slider moves, the bars flatten or sharpen, and example continuations update to show more predictable or more varied outputs. Read it left to right: prompt, candidate tokens, adjusted probabilities, sampled continuation.",
+    "steps": [
+      {
+        "label": "Start with one prompt",
+        "explanation": "The explainer begins with a short prompt and a fixed set of possible next tokens. Their base probabilities show what the model prefers before temperature is applied.",
+        "visualInstruction": "Display a prompt card at left and, beside it, 5 to 7 candidate tokens as labelled horizontal bars with percentages."
+      },
+      {
+        "label": "Lower the temperature",
+        "explanation": "At low settings, the highest-probability tokens become even more dominant. The output becomes more repeatable and usually less surprising.",
+        "visualInstruction": "When the slider moves left, animate the top bars growing relatively taller and dim lower-ranked bars; show two near-identical sample continuations below."
+      },
+      {
+        "label": "Raise the temperature",
+        "explanation": "At higher settings, lower-probability tokens get more chance. The output becomes more varied, but also less stable and sometimes less useful.",
+        "visualInstruction": "When the slider moves right, flatten the bar heights, brighten more tokens as plausible choices, and rotate among more diverse sample continuations."
+      },
+      {
+        "label": "Notice what does not change",
+        "explanation": "The prompt and the model stay the same. Only the token-selection behaviour changes. Temperature does not insert new facts or check accuracy.",
+        "visualInstruction": "Keep the prompt card fixed across all slider positions and add a small note under the chart: 'same model, same prompt, different selection randomness'."
+      }
+    ],
+    "interaction": "The reader drags a single temperature slider and can press a replay button to sample several continuations at the current setting for comparison.",
+    "accessibilityDescription": "Screen-reader version: You hear one prompt, then a list of candidate next tokens with their relative probabilities. The control lets you choose low, medium or high temperature. At low temperature, the top token becomes much more likely than the others, so repeated samples are similar. At high temperature, the probabilities become more even, so repeated samples vary more. The prompt does not change. The lesson is that temperature changes randomness in selection, not the model’s underlying knowledge.",
+    "reducedMotionDescription": "Reduced-motion version: no animated bar movement. The page shows three static states side by side or switchable by tabs: low, medium and high temperature. Each state lists the same tokens with fixed bar charts and one or two example continuations.",
+    "component": "temperature"
+  },
+  "workedExample": {
+    "scenario": "A prompt asks for a short slogan for a community clean-up day.",
+    "input": "Prompt: \"Write a 6-word slogan for a community clean-up day:\"",
+    "process": [
+      "The model assigns rough next-token probabilities for the first key word: \"Clean\" 0.40, \"Together\" 0.25, \"Join\" 0.20, \"Brighten\" 0.10, \"Transform\" 0.05.",
+      "With temperature 0.2, the distribution becomes sharper, so \"Clean\" is very likely to be chosen first.",
+      "With temperature 1.0, the probabilities stay close to the original ranking, so several starts are plausible.",
+      "With temperature 1.8, the distribution flattens, so lower-ranked options such as \"Brighten\" or \"Transform\" appear more often.",
+      "The model keeps repeating this token-by-token process until it has a full six-word slogan."
+    ],
+    "result": "Low temperature might produce: \"Clean together, protect our shared streets.\" Higher temperature might produce: \"Brighten the block, begin with us.\""
+  },
+  "unWorkplaceExample": {
+    "scenario": "A communications officer is using an approved internal tool to suggest alternative wording for a draft speech and wants the text to stay close to previously agreed language.",
+    "relevance": "A lower temperature can help produce more consistent, less adventurous wording, which is useful when checking phrasing against agreed formulations. A slightly higher setting may help generate a few alternative phrasings for internal review.",
+    "caution": "Do not paste confidential negotiations, protection-sensitive information or unpublished personal data into an unapproved public AI service. Human review is still needed because lower temperature does not guarantee accuracy or policy compliance."
+  },
+  "whyItMatters": "Temperature is a practical control. It helps you choose between steadier output and more variety. That matters when you compare drafts, test prompts, build services or evaluate risk. For tasks like structured extraction or standard wording, a lower setting often makes behaviour easier to reproduce. For brainstorming, a higher setting may produce more diverse options. But neither setting guarantees factual accuracy, safety or usefulness, so people should not treat temperature as a truth control.",
+  "whereYouMayHearIt": [
+    "chatbot settings",
+    "API documentation",
+    "prompt testing",
+    "model evaluation",
+    "developer discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Higher temperature makes the model more intelligent or more knowledgeable.",
+      "correction": "It does not improve the model’s stored patterns or add new evidence. It only changes how boldly the system samples from less likely tokens, which can increase novelty but also increase mistakes or odd wording."
+    },
+    {
+      "misconception": "Temperature controls factual accuracy.",
+      "correction": "Not directly. Lower temperature can make answers more consistent because the model repeats its most likely patterns, but a confident repeated mistake is still a mistake. Accuracy depends on the model, prompt, data sources and checking process."
+    },
+    {
+      "misconception": "Temperature and top-p are the same thing.",
+      "correction": "They are related but different. Temperature reshapes the probability distribution across candidate tokens. Top-p keeps only the smallest set of tokens whose probabilities add up to a chosen threshold, then samples within that set."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of temperature as a creativity dial for word choice. Lower settings stick closer to the most expected wording. Higher settings allow more unusual wording.",
+    "technical": "In autoregressive text generation, the model produces logits or scores for candidate next tokens. Temperature rescales these scores before the softmax step that turns them into probabilities, commonly by dividing logits by the temperature value. When temperature is below 1, probability mass concentrates more strongly on the highest-scoring tokens. When temperature is above 1, the distribution becomes flatter, so lower-scoring tokens receive relatively more probability. Sampling then draws the next token from this adjusted distribution. At or near zero, systems often switch to greedy or otherwise near-deterministic selection, though exact implementation details vary by provider. Temperature is therefore a decoding parameter, not a training parameter. It affects generation behaviour at inference time, not what the model weights contain."
+  },
+  "keyTakeaway": "Temperature changes how adventurous token selection is, not how true, informed or capable the model becomes.",
+  "quickCheck": {
+    "question": "What does lowering temperature usually do in a language model?",
+    "options": [
+      "It makes the model use its highest-probability next tokens more often, so outputs are usually more consistent.",
+      "It gives the model access to newer facts that were not in its training data.",
+      "It increases the size of the context window so longer prompts fit.",
+      "It removes the need for human checking because answers become factual."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Lower temperature sharpens preference for the most likely next tokens. That often makes outputs steadier and easier to reproduce. It does not add knowledge, increase context length or guarantee truth."
+  },
+  "resources": [
+    {
+      "title": "Temperature",
+      "url": "https://en.wikipedia.org/wiki/Temperature",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a general reference-style overview of temperature in machine learning and suits readers who want a broad starting point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This course link is useful for learners who want a practical explanation of generation settings in the wider context of how language models work.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives an intuitive visual explanation of language model generation and suits readers who learn best from animated concepts.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Temperature",
+      "url": "https://www.youtube.com/results?search_query=Temperature%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find multiple video explanations of temperature and suits people who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Temperature",
+      "url": "https://www.reddit.com/search/?q=Temperature",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see common questions, examples and debates about temperature and suits readers who want informal community discussion with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "llm temperature meaning",
+    "what does temperature do in ai",
+    "model temperature low vs high",
+    "temperature vs top-p",
+    "chatgpt temperature setting",
+    "sampling temperature explained",
+    "llm tempterature typo",
+    "why lower temperature more consistent",
+    "temperature"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:07.139Z",
+    "contentHash": "fe36208d0a360fa6",
+    "attempts": 1,
+    "promptTokens": 2318,
+    "completionTokens": 2296
+  }
+}

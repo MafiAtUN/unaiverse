@@ -1,0 +1,224 @@
+{
+  "id": "probability",
+  "slug": "probability",
+  "term": "Probability (in model outputs)",
+  "aliases": [
+    "confidence score",
+    "model confidence"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "programme",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "prediction"
+  ],
+  "relatedTermIds": [
+    "prediction",
+    "softmax",
+    "forward-pass",
+    "neural-network",
+    "sampling",
+    "weight"
+  ],
+  "oftenConfusedWith": [
+    "calibration",
+    "accuracy",
+    "sampling"
+  ],
+  "oneSentence": "A number attached to a model’s possible outputs that shows how much of its total estimated likelihood the model assigns to each option.",
+  "plainExplanation": "When a model produces several possible outputs, it often also produces numbers for those options. These numbers are usually turned into probabilities: values between 0 and 1, or 0% and 100%, that add up to 1 across the listed choices. The model is not reporting a fact about the world. It is reporting how strongly its internal calculations favour one option over the others.\n\nWhat goes in is an input such as text, an image, or sensor data. Inside the model, many numerical steps combine patterns learned from training data. At the end, the model gives raw scores for possible outputs. A method called softmax often converts those scores into probabilities so they can be compared more easily.\n\nWhat comes out depends on the task. In image classification, the output may be probabilities for labels such as road, tree, or building. In next-word text generation, the output may be probabilities for many possible next tokens, meaning pieces of text. The highest probability often becomes the top suggestion, but systems can also sample from the distribution instead of always picking the top one.\n\nA high probability does not automatically mean the model is correct, safe, or well calibrated. Calibration means whether probabilities match real-world frequencies over many cases. For example, among outputs given 80% probability, about 80% should be right if the system is well calibrated. Probability in model outputs is therefore best treated as a clue about the model’s ranking of options, not as proof.",
+  "everydayAnalogy": {
+    "title": "Finding a book in a large library",
+    "story": "A librarian receives a note that says, \"history of river trade in East Africa, blue cover, maybe published in the 1990s\". After checking the catalogue and the shelves, the librarian says, \"I’d first look in African history, about 60%; second, transport economics, about 25%; third, local geography, about 15%.\" Those numbers do not guarantee where the book is. They only show which shelves seem more likely to the librarian based on the clues. If the note was vague or misleading, the highest number could still point to the wrong place.",
+    "mapping": [
+      {
+        "analogyElement": "The note with partial clues about the book",
+        "aiElement": "The input given to the model"
+      },
+      {
+        "analogyElement": "The librarian’s ranked shelf guesses",
+        "aiElement": "The model’s ranked possible outputs"
+      },
+      {
+        "analogyElement": "The 60%, 25%, and 15% split",
+        "aiElement": "Probabilities assigned across options"
+      },
+      {
+        "analogyElement": "Checking the shelf to confirm",
+        "aiElement": "Human or external verification of the output"
+      }
+    ],
+    "limitation": "A librarian can explain a deliberate search strategy and may use outside knowledge during the search. A model usually produces these numbers through learned numerical patterns, not through a human-style search of shelves. Also, many models assign probabilities over thousands of options at once, not just three neat choices, and the numbers may be poorly calibrated even when the ranking is useful."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From input to output probabilities",
+    "learningObjective": "After viewing this, a reader should be able to say that a model first produces raw scores for options, then converts them into probabilities that rank outputs but do not guarantee correctness.",
+    "description": "A left-to-right flow diagram. An input enters a model, the model produces raw scores for several candidate outputs, and a final stage converts those scores into probabilities that sum to 100%. The reader follows the arrows to see what goes in, what happens inside, and what comes out.",
+    "steps": [
+      {
+        "label": "1. Input arrives",
+        "explanation": "The process starts with one input, such as a sentence or an image.",
+        "visualInstruction": "Draw a box on the left labelled 'Input' with an example beneath it, such as 'Photo of a street scene' or 'Text prompt'."
+      },
+      {
+        "label": "2. Model calculates scores",
+        "explanation": "The network processes the input and assigns each possible output a raw score. These scores are not yet probabilities.",
+        "visualInstruction": "Draw a middle box labelled 'Model calculations'. Inside, show three output labels with raw scores, for example 'road: 4.2', 'river: 1.1', 'building: 3.0'."
+      },
+      {
+        "label": "3. Scores become probabilities",
+        "explanation": "A conversion step, often softmax, turns raw scores into comparable probabilities that add up to 100% across the shown options.",
+        "visualInstruction": "Draw a small box after the model labelled 'Convert to probabilities'. Show the same labels becoming 'road: 73%', 'river: 3%', 'building: 24%'. Add a note 'totals 100%'."
+      },
+      {
+        "label": "4. System uses the distribution",
+        "explanation": "The system may choose the top option or may sample from the full distribution. In either case, the numbers express the model’s relative preference among options.",
+        "visualInstruction": "Draw a final box on the right with two branches: 'Top choice: road' and 'Sampling may choose another option'. Add a caution note below: 'High probability does not equal certainty'."
+      }
+    ],
+    "interaction": "On hover or tap, each stage reveals a one-line note: 'input', 'raw scores', 'probabilities', and 'use in selection'.",
+    "accessibilityDescription": "The diagram shows a four-stage flow from left to right. First, an input such as a photo or text prompt enters the system. Second, the model produces raw scores for several possible outputs, for example road 4.2, river 1.1, building 3.0. Third, a conversion step turns those scores into probabilities, for example road 73%, river 3%, building 24%, with a note that they add up to 100% across the shown options. Fourth, the system either takes the highest-probability option or samples from the distribution. A warning states that high probability does not guarantee the output is correct.",
+    "reducedMotionDescription": "A static left-to-right diagram with four labelled boxes and arrows. The same example scores and probabilities are shown without animation or hover effects."
+  },
+  "workedExample": {
+    "scenario": "A text model is asked to continue the sentence: 'The meeting will start at'.",
+    "input": "The meeting will start at",
+    "process": [
+      "The model analyses the text so far and considers many possible next tokens.",
+      "It gives raw scores to options such as '9', '10', 'noon', and 'the'.",
+      "A conversion step turns those scores into probabilities, for example '9' 55%, '10' 25%, 'noon' 12%, 'the' 1%, with the remaining 7% spread across many other tokens.",
+      "If the system always picks the highest probability, it outputs '9'. If it samples, it could still output '10' or 'noon' occasionally."
+    ],
+    "result": "The probabilities show which next token the model currently favours, not whether the actual meeting time in the real world is 9."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team uses an approved internal drafting tool to suggest alternative wording for a public, non-confidential briefing note. The tool shows several next-phrase options with different probabilities, and the drafter reviews them before choosing or rewriting.",
+    "relevance": "This helps staff see that the system is ranking likely continuations, not confirming facts or policy wording. A lower-probability option may still be the better one for accuracy, neutrality or tone.",
+    "caution": "Do not enter confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and do not treat high-probability wording as approved, factual or rights-compliant without human review."
+  },
+  "whyItMatters": "Non-specialists often see a percentage and assume certainty. That can lead to over-trusting a system, especially when the number only reflects how the model ranks options. Understanding output probability helps you ask better questions: Is this the top guess or just one option among many? Was the model well calibrated? Should a human verify this before it is used in communication, analysis or service delivery? This matters in practice because the same probability can support different actions depending on risk. A spelling suggestion at 70% may be acceptable. A medical, legal, protection or human-rights-related claim at 70% should trigger caution and checking.",
+  "whereYouMayHearIt": [
+    "image classification dashboards",
+    "text generation settings",
+    "machine learning evaluation reports",
+    "product demos about AI confidence"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model gives 90%, that means there is a 90% chance the statement is true in the real world.",
+      "correction": "Usually it means the model assigned more relative likelihood to that output than to the alternatives it considered. Whether 90% corresponds to real-world correctness depends on calibration, the task, the data, and how the options were defined."
+    },
+    {
+      "misconception": "Low probability outputs are always useless and should never be chosen.",
+      "correction": "Low probability only means the model favoured them less. In some systems, exploring lower-probability options can increase variety or surface alternatives. A human may also judge a lower-probability option to be more accurate, fair or context-appropriate."
+    },
+    {
+      "misconception": "Probability and accuracy are the same thing.",
+      "correction": "Probability is a per-output score about the model’s current preference among options. Accuracy is a broader performance measure comparing outputs with correct answers across many examples. A model can assign high probabilities and still be inaccurate if it is overconfident."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "These numbers show which answers the model leans toward most strongly. They are not guarantees that the top answer is correct.",
+    "technical": "For many models, the final layer produces raw values often called logits or scores for candidate outputs. A transformation such as softmax converts these values into a probability distribution over the options, where each probability is between 0 and 1 and the probabilities sum to 1. In classification, this distribution ranks labels. In language models, it ranks possible next tokens at each step. The argmax gives the highest-probability option, while sampling draws from the full distribution. These probabilities are model-based estimates conditioned on the input and the model parameters; they are not automatically calibrated estimates of empirical correctness."
+  },
+  "keyTakeaway": "A model’s output probability is best read as a ranking signal about its options, not as a guarantee that the top answer is true.",
+  "quickCheck": {
+    "question": "Which statement best describes a 78% probability attached to one model output?",
+    "options": [
+      "The output is definitely correct in 78 out of 100 future real-world cases.",
+      "The model currently favours that output over the listed alternatives, but it may still be wrong.",
+      "The model has checked external evidence and confirmed the answer with 78% certainty.",
+      "The system’s overall accuracy on all tasks is 78%."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "In most cases, the percentage expresses how the model distributes likelihood across candidate outputs for this input. It is not the same as verified truth, external confirmation, or overall system accuracy. To interpret it well, you also need to know whether the model is calibrated and what task it is performing."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Probability",
+      "url": "https://en.wikipedia.org/wiki/Probability",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad introduction to probability as a general concept and suits readers who want background before applying it to AI outputs.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives an intuitive visual explanation of how neural networks produce numerical outputs and suits visual learners who want mechanism without heavy maths.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers change a simple neural network and watch output behaviour change, which suits hands-on learners exploring scores and decision boundaries.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Probability (in model outputs)",
+      "url": "https://www.youtube.com/results?search_query=Probability%20(in%20model%20outputs)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page gathers many video explanations of probability in model outputs and suits readers who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Probability (in model outputs)",
+      "url": "https://www.reddit.com/search/?q=Probability%20(in%20model%20outputs)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page gathers community discussions about probability in model outputs and suits readers who want common questions, practical interpretations and points of confusion.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "model output probability",
+    "ai confidence score meaning",
+    "model confidence vs accuracy",
+    "softmax probability explanation",
+    "what does 90% confidence mean in ai",
+    "llm token probabilities",
+    "probability in neural network output",
+    "ai confidence not certainty",
+    "calibrated probabilities machine learning",
+    "model confidense meaning",
+    "probability (in model outputs)",
+    "confidence score",
+    "model confidence"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:52.610Z",
+    "contentHash": "de5881fad50e0617",
+    "attempts": 1,
+    "promptTokens": 2272,
+    "completionTokens": 2559
+  }
+}

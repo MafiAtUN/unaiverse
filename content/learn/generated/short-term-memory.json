@@ -1,0 +1,228 @@
+{
+  "id": "short-term-memory",
+  "slug": "short-term-memory",
+  "term": "Short-term memory (in AI systems)",
+  "aliases": [
+    "working memory",
+    "session memory"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "context-window"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "tool-use",
+    "planning",
+    "observation-and-action",
+    "human-in-the-loop",
+    "orchestration"
+  ],
+  "oftenConfusedWith": [
+    "long-term-memory",
+    "context-window"
+  ],
+  "oneSentence": "Temporary information kept available during a current interaction so an AI system can use recent instructions, results and observations in its next step.",
+  "plainExplanation": "Short-term memory in an AI system is the temporary working information kept during one ongoing task or session. It can include the user’s recent instructions, earlier messages, tool results, notes created by the system, and the current plan. This helps the system continue from one step to the next instead of starting fresh each time.\n\nWhat goes in depends on the system design. Inputs can include the latest user message, selected parts of the conversation so far, outputs from tools such as a calendar or database, and reminders like “use British spelling” or “check totals before replying”. A tool is a connected external service or function the system can call.\n\nWhat happens next is usually simple but important: the system stores, updates, trims, or rewrites the temporary information so the next model call has the right context. “Context” here means the information provided to the model for the current step. Some systems keep a running scratchpad or state object; others rebuild the temporary memory each turn from recent events.\n\nWhat comes out is not the memory itself but a better next action or reply. For example, the system may ask a clearer follow-up question, call the right tool, avoid repeating a step, or carry forward a constraint from earlier in the session. This is different from long-term memory, which is meant to persist across sessions, and different from the context window, which is the model’s size limit for how much information can be included at once.",
+  "everydayAnalogy": {
+    "title": "Checking a shipping manifest at a loading bay",
+    "story": "A warehouse clerk in Nairobi is checking whether a delivery matches the shipping manifest. On a small table, the clerk keeps only the papers needed for this one truck: the manifest, a note about two damaged boxes, the pallet count, and the latest message from the driver. As each pallet is unloaded, the clerk updates the note, crosses off completed checks, and keeps the most relevant papers visible. When the truck leaves, those working papers are cleared from the table unless someone files them elsewhere.",
+    "mapping": [
+      {
+        "analogyElement": "Papers kept on the table for one truck",
+        "aiElement": "Temporary information kept for one task or session"
+      },
+      {
+        "analogyElement": "Latest driver message and damage note",
+        "aiElement": "Recent user instructions and fresh observations"
+      },
+      {
+        "analogyElement": "Crossing off checks as pallets are verified",
+        "aiElement": "Updating working state after each step or tool result"
+      },
+      {
+        "analogyElement": "Clearing the table after the truck leaves",
+        "aiElement": "Short-term memory ending when the session or task ends"
+      }
+    ],
+    "limitation": "A clerk can deliberately understand the meaning of each paper and choose what matters in a rich human way. An AI system does not have that kind of human understanding; it processes text and structured data according to its design. Also, a real table has a fixed visible space, but AI short-term memory may be rebuilt, summarised, or selectively retrieved in ways the table image does not show."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How short-term memory supports the next step",
+    "learningObjective": "Show how temporary session information is collected, updated and reused to guide the next action in an AI system.",
+    "description": "A left-to-right step diagram with five boxes. Read from the user request to temporary memory, then to a tool call, then a memory update, then the next reply or action. Small side labels show examples of what is kept, such as recent instructions, tool results and pending tasks.",
+    "steps": [
+      {
+        "label": "1. New input arrives",
+        "explanation": "The system receives a user message or a new event in a task.",
+        "visualInstruction": "Draw a message card entering the first box labelled 'new input'. Add example text: 'Check whether 120 cartons match the manifest'."
+      },
+      {
+        "label": "2. Temporary state is assembled",
+        "explanation": "The system gathers the recent conversation, current task notes, constraints and any useful recent observations for this session.",
+        "visualInstruction": "Second box labelled 'short-term memory'. Show stacked cards: 'recent messages', 'current plan', 'tool results', 'rules for this task'."
+      },
+      {
+        "label": "3. Next step is chosen",
+        "explanation": "Using that temporary state, the system prepares the next model call or action, such as asking a question or calling a tool.",
+        "visualInstruction": "Third box labelled 'next step'. Split icon options: speech bubble for a question, wrench for a tool call."
+      },
+      {
+        "label": "4. Results update the state",
+        "explanation": "If a tool returns data, or the user answers, the temporary state is updated so the task can continue coherently.",
+        "visualInstruction": "Fourth box labelled 'update memory'. Show an arrow from a small tool result card into the memory stack; one old note fades or is summarised."
+      },
+      {
+        "label": "5. Output for this turn",
+        "explanation": "The system produces a reply or action based on the updated temporary state. When the session ends, this working state may be discarded unless separately saved.",
+        "visualInstruction": "Fifth box labelled 'reply or action'. Add a small footer note: 'may end here or continue to another turn'."
+      }
+    ],
+    "interaction": "On hover or tap, each example card reveals a short sample such as a user instruction, a tool response, or a pending subtask. A replay button highlights the cycle from step 2 to step 4 for multi-step tasks.",
+    "accessibilityDescription": "The diagram explains short-term memory as a five-step process. First, a new message or event arrives. Second, the system gathers temporary session information such as recent messages, current task notes, constraints and recent tool results. Third, that temporary information is used to choose the next step, such as replying or calling a tool. Fourth, any new result updates the temporary information, sometimes replacing or summarising older details. Fifth, the system produces the current reply or action. The key point is that this memory is actively updated during a task and may be discarded when the task ends unless saved elsewhere.",
+    "reducedMotionDescription": "A static five-box diagram shows the same sequence without animation: new input, short-term memory, next step, update memory, reply or action. Dashed arrows indicate that after an update, the system can loop back and continue the task."
+  },
+  "workedExample": {
+    "scenario": "A delivery-checking assistant helps compare a shipment with a manifest during one chat session.",
+    "input": "User: 'Please help me verify this delivery. Manifest says 120 cartons of soap, batch SX-44, for Clinic A. Driver says 118 arrived and 2 are damaged.'",
+    "process": [
+      "The system stores the key details for this session: 120 expected, 118 arrived, 2 damaged, batch SX-44, destination Clinic A.",
+      "It asks a follow-up question: 'Should damaged cartons count as arrived but not accepted, or as missing for your report?'",
+      "The user answers: 'Count them as arrived but damaged.' The system updates the temporary state with that rule.",
+      "It prepares the next step using the updated state and drafts: 'Delivery matches quantity received: 118 intact, 2 damaged, total 120 arrived; acceptance pending damage review.'"
+    ],
+    "result": "The reply stays consistent with the earlier numbers and the user’s chosen reporting rule because those details were kept in short-term memory during the session."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A staff member uses an approved internal drafting assistant to prepare a short briefing note from non-sensitive meeting notes, and the assistant keeps the current outline, style instructions and the latest edits during that drafting session.",
+    "relevance": "This shows why temporary session memory matters: it helps the system keep the requested structure and avoid losing track of edits across several turns.",
+    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Human review remains necessary before any text is shared."
+  },
+  "whyItMatters": "For non-specialists, this term matters because it affects whether an AI system stays consistent during a task. Good short-term memory can help a system remember the latest instruction, use a tool result correctly, and avoid repeating or skipping steps. Weak short-term memory can lead to contradictions, lost constraints, duplicate actions or answers that ignore recent corrections. If you are choosing, supervising or auditing an AI system, this helps you ask practical questions: What does it keep during a session? For how long? Can it be updated, summarised or cleared? Does a human review important steps? Those questions matter for quality, safety and accountability.",
+  "whereYouMayHearIt": [
+    "agent design discussions",
+    "product demos for copilots",
+    "tool-using chat systems",
+    "multi-step automation workflows",
+    "prompt engineering conversations"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Short-term memory means the model permanently remembers me or my organisation.",
+      "correction": "Usually it refers to temporary information kept for the current task or session. It may be cleared when the session ends unless the system has a separate long-term memory feature or another storage system. Whether anything persists depends on the product design, not the phrase alone."
+    },
+    {
+      "misconception": "Short-term memory and context window are the same thing.",
+      "correction": "They are related but not identical. The context window is the model’s capacity limit for the information provided at one time. Short-term memory is the working information a system tries to keep available during a task. A system may manage that memory by selecting, summarising or rotating what fits into the context window."
+    },
+    {
+      "misconception": "If a system has short-term memory, it will reliably follow every earlier instruction.",
+      "correction": "Not necessarily. The temporary memory may be incomplete, badly selected, overwritten by later instructions, or too large to include fully in the next model call. The system can still miss details or use them poorly, so testing and human oversight are still needed."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the temporary notepad an AI system uses during one conversation or task so it can keep track of the latest instructions and results.",
+    "technical": "In many AI agents, short-term memory is a session-scoped working state used across successive model calls. It may contain recent dialogue turns, system instructions, intermediate reasoning notes if the design exposes them, tool outputs, pending subtasks, execution state and user-specific constraints for the current task. This state is often stored outside the model itself, then injected, summarised or transformed before each call. The mechanism can be as simple as passing the latest messages, or more structured, such as maintaining a state object with fields for observations, actions taken, plan status and tool responses. It is distinct from long-term memory because it is not primarily designed for persistence across sessions, and distinct from the context window because the working state may be larger than what is sent at once and therefore needs selection or compression."
+  },
+  "keyTakeaway": "Short-term memory helps an AI system stay on track during the current task, but it is temporary and should not be confused with permanent memory or guaranteed reliability.",
+  "quickCheck": {
+    "question": "Which statement best describes short-term memory in an AI system?",
+    "options": [
+      "A permanent profile that always remembers the user across all future sessions",
+      "The temporary working information kept during a current task so the next step can use recent instructions and results",
+      "The maximum number of users an AI service can handle at once",
+      "A guarantee that the system will follow every earlier instruction correctly"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Short-term memory is the temporary working state for the current task or session. It may include recent messages, tool outputs and notes. It is not the same as permanent storage, system capacity, or a promise of perfect behaviour."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Short-term memory",
+      "url": "https://en.wikipedia.org/wiki/Short-term_memory",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad introductory overview of the term and suits readers who want a quick general orientation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This Anthropic article explains agents in practical terms and suits readers who want to see how temporary working state fits into agent behaviour.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This official Model Context Protocol material helps readers understand how tools and context can be connected in structured ways, and suits technical readers.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Short-term memory (in AI systems)",
+      "url": "https://www.youtube.com/results?search_query=Short-term%20memory%20(in%20AI%20systems)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find different video explanations of the term and suits people who prefer audiovisual learning; it is a search page, not a single lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Short-term memory (in AI systems)",
+      "url": "https://www.reddit.com/search/?q=Short-term%20memory%20(in%20AI%20systems)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see community questions and informal explanations, and suits readers who want plain-language discussion; it is a search page, not one authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "short term memory ai",
+    "working memory ai agent",
+    "session memory ai",
+    "ai temporary memory",
+    "short-term vs long-term memory ai",
+    "short term memory vs context window",
+    "agent memory during session",
+    "how ai remembers previous messages",
+    "short term memroy ai",
+    "ai session state",
+    "short-term memory (in ai systems)",
+    "working memory",
+    "session memory"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:24.015Z",
+    "contentHash": "9aaa1c84ffd07bb6",
+    "attempts": 1,
+    "promptTokens": 2302,
+    "completionTokens": 2638
+  }
+}

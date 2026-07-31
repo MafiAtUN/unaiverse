@@ -1,0 +1,220 @@
+{
+  "id": "next-token-prediction",
+  "slug": "next-token-prediction",
+  "term": "Next-token prediction",
+  "aliases": [
+    "next word prediction",
+    "autocomplete"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "communications"
+  ],
+  "prerequisiteTermIds": [
+    "token"
+  ],
+  "relatedTermIds": [
+    "token",
+    "language-model",
+    "large-language-model",
+    "completion",
+    "sampling",
+    "autoregressive-model"
+  ],
+  "oftenConfusedWith": [
+    "understanding",
+    "reasoning-model",
+    "temperature"
+  ],
+  "oneSentence": "A language model produces text by repeatedly estimating which small piece of text is most likely to come next in the current sequence.",
+  "plainExplanation": "A chat assistant does not write a whole answer in one step. It reads the text it has been given so far and predicts the next token, meaning a small piece of text such as a word, part of a word, punctuation mark, or number fragment.\n\nWhat goes in is the current text sequence, often called the context. That includes your prompt and any earlier words already generated in the reply. The model then calculates scores for many possible next tokens in its vocabulary, which is the set of tokens it can output.\n\nWhat happens next depends on the generation settings. The system may choose the highest-scoring token, or it may sample from several likely options to make the output less repetitive. After one token is chosen, it is added to the text, and the same process repeats again and again.\n\nWhat comes out is a completion built one token at a time. This often produces fluent language, but fluency is not proof of factual accuracy, reasoning quality, or reliable intent. Next-token prediction explains how text is produced, not whether the content is correct or wise.",
+  "everydayAnalogy": {
+    "title": "Practising exam sentence completions",
+    "story": "A student in Nairobi practises for a language exam using old papers. She reads the start of a sentence, looks at the words already there, and writes the word she thinks most likely fits next. After adding one word, she looks again at the now longer sentence and predicts the next word, repeating this until the line is complete. Her answer can sound smooth because she has seen many similar patterns before, even if she sometimes completes a sentence in a way that sounds right but is factually wrong.",
+    "mapping": [
+      {
+        "analogyElement": "the words already on the exam line",
+        "aiElement": "the current context the model reads"
+      },
+      {
+        "analogyElement": "the student's guess for the next word",
+        "aiElement": "the predicted next token"
+      },
+      {
+        "analogyElement": "repeating one word at a time",
+        "aiElement": "autoregressive text generation step by step"
+      },
+      {
+        "analogyElement": "old papers the student practised on",
+        "aiElement": "training data used to learn patterns"
+      }
+    ],
+    "limitation": "A student may consciously use rules, background knowledge, and test strategy. A language model does not work like a human exam taker. It computes patterns over tokens and outputs one token at a time. Also, real models often predict subword pieces rather than full words, so the exam analogy is simpler than the actual mechanism."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How a reply is built one token at a time",
+    "learningObjective": "After viewing this, a reader should be able to say that a language model generates text by repeatedly choosing the next token from the current context.",
+    "description": "Show an ordered sequence of panels. Each panel adds one new token to the growing text. Above the text, show a short list of candidate next tokens with different scores, then highlight the chosen one. Read left to right to see that the output is built through repetition of the same step.",
+    "steps": [
+      {
+        "label": "1. Start with context",
+        "explanation": "The model receives the text so far, such as the user's prompt or a partly written reply.",
+        "visualInstruction": "Draw a text box labelled 'Current text' containing: 'The meeting starts at'. Use a muted background."
+      },
+      {
+        "label": "2. Score candidates",
+        "explanation": "The model assigns a score to many possible next tokens from its vocabulary.",
+        "visualInstruction": "To the right, show a small ranked list: '9', 'noon', 'the', '.' with horizontal bars of different lengths. Label it 'Possible next tokens'."
+      },
+      {
+        "label": "3. Choose one token",
+        "explanation": "A rule selects the next token, either the top option or one sampled from likely options.",
+        "visualInstruction": "Highlight '9' in a strong colour. Add a small note: 'selection rule chooses one'."
+      },
+      {
+        "label": "4. Append and repeat",
+        "explanation": "The chosen token is added to the text, creating a new context for the next step.",
+        "visualInstruction": "Show the text box updated to 'The meeting starts at 9'. Add a loop arrow to another candidate list for the next token, such as 'a.m.', 'today', '.'."
+      }
+    ],
+    "interaction": "Clicking each step reveals the updated text and a new candidate list; a replay control restarts the sequence from the original prompt.",
+    "accessibilityDescription": "This diagram explains that text generation happens in repeated small steps. Step 1 shows the current text: 'The meeting starts at'. Step 2 shows several possible next tokens with different scores, such as '9', 'noon', 'the', and '.'. Step 3 highlights one chosen token, here '9'. Step 4 adds that token to the text, making 'The meeting starts at 9', then repeats the same process for the following token. The key idea is that the model does not produce the whole sentence at once. It extends the text one token at a time based on the text already present.",
+    "reducedMotionDescription": "A static four-panel sequence shows the same process without animation: current text, candidate token scores, selected token, and updated text with a note that the loop repeats."
+  },
+  "workedExample": {
+    "scenario": "Generating a short reply to a scheduling question",
+    "input": "Prompt: 'Please finish this sentence: The workshop begins at'",
+    "process": [
+      "The model reads the prompt as the current context.",
+      "It scores possible next tokens, for example ' 9', ' noon', ' the', and '.'.",
+      "Suppose the selection step chooses ' 9', so the text becomes 'The workshop begins at 9'.",
+      "It runs again on the new context and may choose ':', then '30', then ' a.m.', then '.'."
+    ],
+    "result": "Completion: 'The workshop begins at 9:30 a.m.' The sentence appears in several small prediction steps, not in one single act."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A communications officer searches past General Assembly and Security Council documents for common drafting language, then uses an approved internal tool to suggest a neutral opening sentence for a public, non-sensitive briefing note.",
+    "relevance": "This helps explain why the tool can produce familiar, well-formed wording: it predicts likely next tokens from the prompt and surrounding text, drawing on patterns learned from many examples.",
+    "caution": "Do not paste confidential negotiations, unpublished drafts, personal data, protection-sensitive material, or security-sensitive operational details into an unapproved public AI service."
+  },
+  "whyItMatters": "If you know that a system writes by next-token prediction, you are less likely to mistake smooth wording for verified truth. This helps with practical decisions: when to trust style but check facts, why small prompt changes can shift the answer, why randomness settings affect wording, and why a model may continue a pattern even when the pattern is misleading. For communications work, it explains both the usefulness and the limits of AI drafting tools: they can help with phrasing, summaries, and reformulation, but they still need human review for accuracy, tone, risk, and context.",
+  "whereYouMayHearIt": [
+    "AI explainer videos",
+    "product demos for chat assistants",
+    "prompt writing discussions",
+    "technical notes on language models"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Next-token prediction means the system only predicts the next word, so it cannot produce long or structured answers.",
+      "correction": "The mechanism predicts one token at a time, but it repeats that step many times. Because each new token becomes part of the context, the model can generate paragraphs, tables, code, or other long outputs. The limit is not that it only does one word, but that it builds the sequence incrementally."
+    },
+    {
+      "misconception": "If the model predicts likely next tokens well, the content must be true.",
+      "correction": "Likelihood and truth are different things. A token sequence can be statistically plausible because it resembles patterns in training data, yet still be outdated, invented, biased, or wrong for the specific situation. Fluency is evidence of pattern matching, not proof of factual reliability."
+    },
+    {
+      "misconception": "Next-token prediction is just the same as autocomplete on a phone keyboard.",
+      "correction": "They are related, because both suggest continuations from earlier text. But large language models usually use much larger training sets, larger vocabularies, longer context, and more complex selection methods. Phone autocomplete is a useful comparison, not the full mechanism."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "The system looks at the text so far and keeps adding the next most suitable small piece of text, one step at a time.",
+    "technical": "In an autoregressive language model, generation is factorised over a sequence: the model estimates a probability distribution for the next token conditioned on the prior tokens in the context window. At each step it scores tokens in its vocabulary, then a decoding method selects one token, for example greedy choice or stochastic sampling. That chosen token is appended to the sequence and fed back as part of the input for the next step. Repeating this loop produces a completion. The mechanism explains local fluency and sensitivity to context, but it does not by itself guarantee factual accuracy, groundedness, or robust multi-step reasoning."
+  },
+  "keyTakeaway": "A chat assistant writes by extending text one token at a time, so polished wording can emerge even when the content still needs checking.",
+  "quickCheck": {
+    "question": "What does next-token prediction describe most directly?",
+    "options": [
+      "How a language model generates text step by step from the current context",
+      "How a model checks whether every sentence is factually correct before answering",
+      "How a chatbot chooses which website to search before replying",
+      "How a model stores all its training documents word for word"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Next-token prediction is the text-generation mechanism: the model reads the current context, scores possible next tokens, selects one, appends it, and repeats. Fact-checking, web search, and memorising documents are different issues."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Next-token prediction",
+      "url": "https://en.wikipedia.org/w/index.php?search=Next-token%20prediction",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A Wikipedia search results page that helps a general reader find related articles and alternative names for the term, but it is not a single curated explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "A structured course suited to learners who want a guided introduction to how language models generate text and where next-token prediction fits.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "A visual video explanation suited to people who learn best through diagrams and intuition before formal detail.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Next-token prediction",
+      "url": "https://www.youtube.com/results?search_query=Next-token%20prediction%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps readers compare different video explanations of the term, useful for mixed learning styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Next-token prediction",
+      "url": "https://www.reddit.com/search/?q=Next-token%20prediction",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that shows community discussions and examples of how people talk about the term, best for readers who want informal questions and debates.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "next token prediction",
+    "next word prediction ai",
+    "autocomplete llm",
+    "how llms generate text",
+    "predicting next token",
+    "what is next-token prediction",
+    "next token predction",
+    "llm one token at a time",
+    "next-token prediction",
+    "next word prediction",
+    "autocomplete"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:00.711Z",
+    "contentHash": "348af00794aadce0",
+    "attempts": 1,
+    "promptTokens": 2362,
+    "completionTokens": 2277
+  }
+}

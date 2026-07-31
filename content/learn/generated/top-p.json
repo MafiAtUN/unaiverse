@@ -1,0 +1,233 @@
+{
+  "id": "top-p",
+  "slug": "top-p",
+  "term": "Top-p",
+  "aliases": [
+    "nucleus sampling",
+    "top-k"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "sampling"
+  ],
+  "relatedTermIds": [
+    "sampling",
+    "next-token-prediction",
+    "temperature",
+    "completion",
+    "token",
+    "large-language-model"
+  ],
+  "oftenConfusedWith": [
+    "temperature",
+    "sampling",
+    "deterministic-output",
+    "next-token-prediction"
+  ],
+  "oneSentence": "A decoding setting that limits each next-token choice to the smallest group whose combined probability reaches a chosen threshold, such as 0.9.",
+  "plainExplanation": "When a language model generates text, it first assigns a probability to many possible next tokens. A token is a small unit of text, such as a word, part of a word, or punctuation. Top-p controls which of those candidate tokens are allowed to be sampled.\n\nThe model sorts candidate tokens from most likely to least likely, then keeps adding them until their probabilities add up to the chosen threshold p. If p is 0.9, it keeps the smallest set whose total probability is at least 0.9. The next token is then sampled only from that set, not from the full vocabulary.\n\nThis means the size of the allowed set changes from step to step. If the model is very confident, only a few tokens may be included. If it is uncertain, many more tokens may be included. That is the main difference from top-k, which always keeps a fixed number k of tokens.\n\nWhat comes out is not a new score but a filtered token choice process. Lower top-p usually makes output safer and more predictable, but it can also make it repetitive or narrow. Higher top-p allows more variety, but it can also admit weaker options and increase errors. Top-p is often adjusted together with temperature, but they are different controls.",
+  "everydayAnalogy": {
+    "title": "Choosing wording for meeting notes",
+    "story": "A team in Nairobi is drafting a short summary after an online meeting with colleagues in Bangkok and Lima. For one sentence, the facilitator writes five possible phrases on a board and ranks them by how likely they are to match the discussion. The team agrees to consider only the smallest group of phrases that together cover most of the likely choices, such as 90 percent. If the top two phrases already cover that amount, they choose between those two; if the discussion was unclear, they may need four phrases before reaching the same coverage.",
+    "mapping": [
+      {
+        "analogyElement": "ranked phrases on the board",
+        "aiElement": "candidate next tokens with probabilities"
+      },
+      {
+        "analogyElement": "smallest group covering 90 percent of likely choices",
+        "aiElement": "nucleus set selected by top-p"
+      },
+      {
+        "analogyElement": "sometimes two phrases, sometimes four",
+        "aiElement": "variable number of allowed tokens at each step"
+      },
+      {
+        "analogyElement": "choosing only within that group",
+        "aiElement": "sampling after lower-probability tokens are removed"
+      }
+    ],
+    "limitation": "People in a meeting can explain their reasons and may look back at the full discussion. A language model does not do that in the same way here. It is applying probabilities token by token. Also, in real note-taking, whole phrases are chosen at once, while top-p usually operates on one token at a time, so the analogy hides the very small step size."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How top-p keeps a changing set of next-token options",
+    "learningObjective": "Show why top-p does not keep a fixed number of tokens, but a fixed probability mass that can produce a small or large candidate set.",
+    "description": "A left-to-right step diagram. Start with ranked next-token candidates and their probabilities. Then accumulate probability from highest to lowest until the chosen threshold is reached. Highlight the kept nucleus set and grey out the rest. End by showing sampling from only the kept set. Include one case where the set is small and one where it is larger.",
+    "steps": [
+      {
+        "label": "Rank candidates",
+        "explanation": "List possible next tokens from most likely to least likely, each with a probability from the model.",
+        "visualInstruction": "Show a vertical list of 6 to 8 tokens with horizontal probability bars, sorted descending. Use clear labels such as token A 0.50, token B 0.25, token C 0.10, and so on."
+      },
+      {
+        "label": "Accumulate probability",
+        "explanation": "Add probabilities from the top down until the running total reaches the chosen threshold p, such as 0.90.",
+        "visualInstruction": "Place a running-total column beside the bars. Animate or indicate cumulative sums: 0.50, 0.75, 0.85, 0.91. Draw a threshold line at p = 0.90."
+      },
+      {
+        "label": "Form the nucleus",
+        "explanation": "Keep only the smallest set that reaches the threshold. Remove lower-probability tokens from consideration for this step.",
+        "visualInstruction": "Highlight the included rows up to the first row that crosses the threshold. Grey out all remaining rows and label them excluded this step."
+      },
+      {
+        "label": "Sample within the nucleus",
+        "explanation": "Choose the next token only from the kept set, with more likely tokens still favoured inside that set.",
+        "visualInstruction": "Show arrows only from highlighted tokens to an output token slot. Use thicker arrows for higher probabilities. Keep excluded rows disconnected."
+      },
+      {
+        "label": "Repeat with a new distribution",
+        "explanation": "At the next position in the text, probabilities change, so the nucleus may contain fewer or more tokens than before.",
+        "visualInstruction": "Show a second small panel with a flatter distribution where more rows are needed to reach p = 0.90. Add a note: top-p set size changes step by step."
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal the running total and see which tokens enter the nucleus at different probability shapes; a toggle switches between a sharp distribution and a flat one.",
+    "accessibilityDescription": "This diagram explains top-p in five steps. First, it shows possible next tokens ranked by probability. Second, it adds those probabilities from the top downward until the total reaches a threshold such as 0.90. Third, it keeps only the smallest group of tokens needed to reach that total and excludes the rest. Fourth, it shows that the model samples only from the kept group, still favouring higher-probability tokens. Fifth, it compares two cases: when the distribution is sharp, only a few tokens are kept; when it is flatter, more tokens are needed. The main point is that top-p keeps a changing number of tokens based on total probability, unlike top-k, which keeps a fixed count.",
+    "reducedMotionDescription": "A static five-panel diagram with highlighted cumulative totals and shaded excluded tokens. Two side examples show that a peaked distribution leads to a small nucleus, while a flatter distribution leads to a larger nucleus."
+  },
+  "workedExample": {
+    "scenario": "Generating the next token after the text: \"The report was submitted on\"",
+    "input": "Candidate next tokens with model probabilities: \" Monday\" 0.42, \" Tuesday\" 0.24, \" time\" 0.11, \" 12\" 0.08, \" Friday\" 0.06, \".\" 0.03, others 0.06. Use top-p = 0.80.",
+    "process": [
+      "Sort tokens by probability from highest to lowest.",
+      "Add probabilities downward: 0.42, then 0.66, then 0.77, then 0.85.",
+      "Stop when the running total first reaches or passes 0.80, so keep \" Monday\", \" Tuesday\", \" time\", and \" 12\".",
+      "Exclude lower-probability options such as \" Friday\" and \".\" for this step.",
+      "Sample one token from the kept set, still weighted by their probabilities within that set."
+    ],
+    "result": "The next token might be \" Monday\" or \" Tuesday\" most often, but \" time\" or \" 12\" are still possible because they fell inside the 0.80 nucleus."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team is testing an internal search-and-answer tool over approved guidance documents and wants concise but not overly rigid draft answers for staff queries.",
+    "relevance": "Top-p helps tune how broad the wording choices are during answer generation. A lower setting can make replies steadier and easier to review, while a higher setting may produce more varied phrasing. This matters when balancing consistency, readability and review workload.",
+    "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service."
+  },
+  "whyItMatters": "Top-p affects how risky, varied and review-heavy generated text may be. If you set it too low, outputs can become narrow, repetitive or brittle. If you set it too high, outputs may wander into weaker wording or unsupported details. For anyone choosing model settings, evaluating assistants or comparing vendors, top-p is one of the controls that changes behaviour without changing the underlying model weights. It is especially important in tasks where consistency matters, such as drafting summaries, and in tasks where some variation is useful, such as brainstorming alternative phrasing. Knowing top-p also helps you separate two questions that are often mixed together: how the model scores options, and how a system chooses among them.",
+  "whereYouMayHearIt": [
+    "model inference settings",
+    "LLM API documentation",
+    "generation parameter tuning",
+    "prompting workshops",
+    "evaluation dashboards"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Top-p and top-k are the same setting with different names.",
+      "correction": "They are related but not the same. Top-k keeps exactly k highest-probability tokens every time. Top-p keeps as many tokens as needed to reach a probability threshold, so the number kept changes from step to step. Some tools list both because they can be combined."
+    },
+    {
+      "misconception": "A top-p value of 0.9 means the chosen token has a 90 percent chance of being correct.",
+      "correction": "It does not measure correctness. It only defines the pool of allowed tokens by cumulative probability. The selected token can still be wrong, awkward or misleading, because the model may assign high probability to poor continuations in some contexts."
+    },
+    {
+      "misconception": "Lowering top-p always improves factual accuracy.",
+      "correction": "Lower top-p usually reduces randomness, but it does not make the model reliable by itself. If the highest-probability continuation is inaccurate, a lower top-p can make that inaccurate continuation more likely to appear again. Accuracy depends on the model, the prompt, the context and any retrieval or verification steps."
+    },
+    {
+      "misconception": "Top-p changes what the model has learned.",
+      "correction": "Top-p does not retrain the model or alter its weights. It only changes the decoding stage, which is the procedure used to pick the next token from the probabilities the model already produced."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Top-p tells the system to choose the next piece of text only from the most likely options whose probabilities add up to a chosen amount, such as 90 percent.",
+    "technical": "At each decoding step, the model outputs a probability distribution over the vocabulary for the next token. Under nucleus sampling, tokens are sorted by probability in descending order, and the smallest prefix whose cumulative probability is at least p is retained. The distribution is then renormalised over that retained set, and one token is sampled from it. Because the retained prefix depends on the shape of the distribution, the effective candidate count varies by step. In a peaked distribution, the nucleus may contain only a few tokens; in a flatter distribution, it may contain many. This distinguishes top-p from top-k, which clips by rank rather than cumulative mass. In practice, top-p also interacts with temperature, because temperature reshapes the distribution before or during sampling, which changes how many tokens are needed to reach the threshold."
+  },
+  "keyTakeaway": "Top-p controls variety by keeping enough likely tokens to reach a probability threshold, so the number of options changes with the model’s confidence.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes top-p from top-k during text generation?",
+    "options": [
+      "Top-p keeps a fixed number of highest-probability tokens, while top-k keeps a fixed probability mass.",
+      "Top-p keeps the smallest set of tokens whose probabilities reach a threshold, while top-k keeps a fixed number of tokens.",
+      "Top-p changes the model weights during generation, while top-k changes only the prompt.",
+      "Top-p guarantees fewer hallucinations than top-k because it removes all unlikely tokens."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Top-p clips by cumulative probability, so the kept set can grow or shrink depending on the distribution. Top-k clips by rank, so it always keeps exactly k tokens. Neither setting retrains the model, and neither guarantees factual accuracy."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Top-p sampling",
+      "url": "https://en.wikipedia.org/wiki/Top-p_sampling",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad overview of top-p sampling and suits readers who want a quick orientation before deeper study.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This Hugging Face course material places top-p among other generation settings and suits readers who want practical context for model use.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This 3Blue1Brown video gives a visual explanation of how language models generate text and suits readers who learn best from intuition and diagrams.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Top-p",
+      "url": "https://www.youtube.com/results?search_query=Top-p%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of top-p and suits people who want to compare teaching styles, but it is not a single vetted source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Top-p",
+      "url": "https://www.reddit.com/search/?q=Top-p",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see community questions and examples about top-p and suits readers looking for informal discussion, but it is a search page rather than one authoritative explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "top-p meaning",
+    "nucleus sampling explained",
+    "top p vs top k",
+    "what does top-p do",
+    "llm decoding top-p",
+    "top p sampling example",
+    "top-p temperature difference",
+    "top p misspelt topp",
+    "nucleus sampling vs temperature",
+    "top-p",
+    "nucleus sampling",
+    "top-k"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:15.961Z",
+    "contentHash": "e455130c6f756991",
+    "attempts": 1,
+    "promptTokens": 2330,
+    "completionTokens": 2779
+  }
+}

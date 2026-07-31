@@ -1,0 +1,242 @@
+{
+  "id": "transformer",
+  "slug": "transformer",
+  "term": "Transformer",
+  "aliases": [
+    "transformer architecture"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "neural-network",
+    "attention"
+  ],
+  "relatedTermIds": [
+    "attention",
+    "self-attention",
+    "query-key-value",
+    "multi-head-attention",
+    "positional-encoding",
+    "encoder-and-decoder"
+  ],
+  "oftenConfusedWith": [
+    "large-language-model",
+    "recurrent-neural-network"
+  ],
+  "oneSentence": "A neural network design that processes many parts of a sequence in parallel by weighting which parts matter most to each other.",
+  "plainExplanation": "A transformer takes a sequence as input, such as words in a sentence or small patches from an image. Each part is first turned into numbers called vectors, which let the system compare patterns. Because order matters, the model also adds position information so it can tell the start from the end.\n\nInside the model, each part looks at other parts and gives them different weights based on relevance. This mechanism is called attention. In self-attention, the sequence compares with itself, so one word can focus on earlier or later words that help clarify its meaning.\n\nThe transformer repeats this process across several layers. Each layer mixes information, refines it, and passes it on. Many transformers use multi-head attention, which means several attention patterns run at once so the model can track different kinds of relationships, such as grammar, topic, or long-range links.\n\nWhat comes out depends on the task. The output might be a translated sentence, a prediction of the next word, or a category label for an image. A transformer is the architecture, not the final product: a large language model is one kind of system built with this architecture.",
+  "everydayAnalogy": {
+    "title": "A road-damage review table",
+    "story": "A city office receives a large printed satellite image divided into many square tiles. Four staff members sit around a table and inspect all the tiles at the same time, but each person looks for a different clue, such as cracks, flooding patterns, shadows, or nearby traffic lines. When they judge one tile, they keep glancing at other tiles to see what gives context, such as whether a dark patch is a pothole or just a tree shadow. At the end, the team combines all those notes into one clearer judgement for each tile and then prepares a summary map.",
+    "mapping": [
+      {
+        "analogyElement": "image tiles on the table",
+        "aiElement": "input pieces in a sequence, such as tokens or image patches"
+      },
+      {
+        "analogyElement": "staff glancing at other tiles for context",
+        "aiElement": "self-attention weighting other input parts by relevance"
+      },
+      {
+        "analogyElement": "different staff looking for different clues",
+        "aiElement": "multi-head attention capturing different relationships"
+      },
+      {
+        "analogyElement": "combined notes after each review round",
+        "aiElement": "layer outputs that refine representations step by step"
+      }
+    ],
+    "limitation": "People inspect tiles consciously and may use outside knowledge about roads and weather. A transformer does not inspect images like a person and does not literally look around a table; it computes numerical weights from training patterns, often across many more layers and dimensions than the analogy suggests."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a transformer processes a sequence",
+    "learningObjective": "After viewing this, a reader should be able to say that a transformer turns inputs into vectors, adds order, uses self-attention across all parts, repeats this in layers, and produces task-specific outputs.",
+    "description": "Show one horizontal flow from input tokens to output. Each stage is a labelled box with arrows: input parts, embeddings plus positions, self-attention, repeated layers, output head. Include faint cross-links inside the self-attention box to show each part can connect to every other part.",
+    "steps": [
+      {
+        "label": "1. Input parts",
+        "explanation": "Start with a sequence, such as words in a sentence or image patches.",
+        "visualInstruction": "Draw 5 small rounded rectangles in a row labelled Token 1 to Token 5 or Patch 1 to Patch 5."
+      },
+      {
+        "label": "2. Turn into vectors with order",
+        "explanation": "Each part becomes a numeric representation, and position information is added so order is not lost.",
+        "visualInstruction": "Draw an arrow to a second row of 5 circles or bars labelled vector plus position."
+      },
+      {
+        "label": "3. Self-attention",
+        "explanation": "Each part compares itself with all the others and gives different weights to the most relevant ones.",
+        "visualInstruction": "Inside a large box, place the 5 vectors in a row and draw thin lines connecting every item to every other item, with 2 or 3 darker lines to suggest stronger weights."
+      },
+      {
+        "label": "4. Repeat in layers",
+        "explanation": "Several layers repeat attention and further transformation, gradually refining the representation.",
+        "visualInstruction": "Draw 3 stacked boxes labelled Layer 1, Layer 2, Layer 3, with arrows upward through them."
+      },
+      {
+        "label": "5. Task output",
+        "explanation": "A final component turns the refined representation into a result such as next-word probabilities, a translation, or a class label.",
+        "visualInstruction": "Draw an output box branching to three small example labels: next word, translated text, class label."
+      }
+    ],
+    "interaction": "On hover or tap, highlight one input part and emphasise the links it gives high weight to in the self-attention stage; include a toggle to switch labels between text tokens and image patches.",
+    "accessibilityDescription": "The diagram is a left-to-right flow with five stages. First, a sequence is split into parts such as words or image patches. Second, each part is converted into a numeric vector and given position information. Third, in self-attention, every part can connect to every other part, and some connections are stronger because they are more relevant. Fourth, this attention-and-transformation process is repeated through several layers to refine the representation. Fifth, a task-specific output head produces a result such as the next word, a translation, or a class label. The main lesson is that the transformer processes all parts together and lets each part use context from the whole sequence.",
+    "reducedMotionDescription": "Show the same five stages as a static left-to-right diagram. Use darker fixed lines in the self-attention box to indicate stronger connections instead of animated highlighting."
+  },
+  "workedExample": {
+    "scenario": "Predicting the next word in the sentence: 'The delegates reached an agreement after long ___'.",
+    "input": "The model receives the tokens: The | delegates | reached | an | agreement | after | long",
+    "process": [
+      "Each token is converted into a vector, and its position in the sentence is added.",
+      "In self-attention, the token 'long' gives high weight to 'after' and 'agreement' because they help narrow what kind of word should follow.",
+      "Several layers refine the pattern, combining local grammar with longer-range context from the whole sentence.",
+      "The output layer assigns probabilities to possible next tokens, for example 'talks' 0.41, 'negotiations' 0.33, 'delays' 0.07, others lower."
+    ],
+    "result": "The highest-probability next word is 'talks', so the generated continuation may be 'The delegates reached an agreement after long talks'."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A country office uses an approved internal tool built on a transformer-based model to help sort a shared inbox into categories such as procurement, meeting requests, media enquiries, and general administration.",
+    "relevance": "This matters because transformers are the architecture behind many modern text tools that can classify, summarise, and draft responses quickly when used with human review.",
+    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive, or operational information into an unapproved public AI service; triage suggestions should remain under staff oversight and within approved systems."
+  },
+  "whyItMatters": "If you choose, buy, govern, or use AI systems, this term helps you judge what current tools are good at, why they scale well, and where they may still fail without human checking.",
+  "whereYouMayHearIt": [
+    "language model discussions",
+    "machine translation tools",
+    "image analysis systems",
+    "AI procurement briefings",
+    "research papers on modern NLP"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A transformer is the same thing as a large language model.",
+      "correction": "A transformer is an architecture, or design pattern. A large language model is a specific system trained on large amounts of text, often using that architecture."
+    },
+    {
+      "misconception": "It reads one word at a time like older sequence models.",
+      "correction": "Transformers were notable because they can process many input parts in parallel during training, while still linking them through attention."
+    },
+    {
+      "misconception": "Attention means the system truly understands which words matter.",
+      "correction": "Attention is a computed weighting mechanism inside the model. It can be useful for context, but it is not the same as human understanding or a full explanation of model behaviour."
+    },
+    {
+      "misconception": "Transformers are only for text.",
+      "correction": "They became famous in language tasks, but related designs are also used for images, audio, and multimodal systems because the core idea works on many kinds of sequences."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A transformer is a model design that lets each part of an input use clues from all the other parts, instead of only the nearby ones.",
+    "technical": "A transformer maps input tokens or patches to embeddings with positional information, then applies stacked layers of self-attention and feed-forward transformations. This lets each position build a context-aware representation from the full sequence, often with multi-head attention and parallel computation."
+  },
+  "keyTakeaway": "The key idea of a transformer is that every part of the input can be compared with every other part to build context efficiently.",
+  "quickCheck": {
+    "question": "Which statement best describes why transformers became so important?",
+    "options": [
+      "They replaced all neural networks with symbolic rules.",
+      "They let models link each input part to other relevant parts and train efficiently in parallel.",
+      "They guarantee factual outputs because attention checks every statement.",
+      "They work only for English text and not for images or audio."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Transformers became important because self-attention lets each part of the input use context from the whole sequence, and the architecture supports efficient parallel training. They do not guarantee truthfulness, and they are not limited to English or even to text."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Transformers, the tech behind LLMs",
+      "url": "https://www.3blue1brown.com/lessons/gpt",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives an intuitive visual explanation of how transformers work and suits visual learners who want the big picture before technical details.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Transformer",
+      "url": "https://en.wikipedia.org/wiki/Transformer",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia page gives a broad reference overview of the architecture, terminology, and history, and suits readers who want a general starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "difficulty": "deeper",
+      "description": "This paper presents the original transformer proposal and suits readers who want the source text and are comfortable with formal research writing.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "difficulty": "intermediate",
+      "description": "This article explains the components with diagrams and plain language, and suits readers who want a step-by-step walkthrough.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Transformer",
+      "url": "https://www.youtube.com/results?search_query=Transformer%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for many video explanations, not one single source, and it suits readers who want to compare teaching styles and difficulty levels.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Transformer",
+      "url": "https://www.reddit.com/search/?q=Transformer",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussions, not one single source, and it suits readers who want informal questions, answers, and practical confusion points.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "what is a transformer in ai",
+    "transformer architecture simple explanation",
+    "how transformers work",
+    "self attention transformer",
+    "transformer vs llm",
+    "transformer vs rnn",
+    "attention is all you need summary",
+    "transformer architechture",
+    "why are transformers important",
+    "llm transformer meaning",
+    "transformer",
+    "transformer architecture"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:36:08.183Z",
+    "contentHash": "4abaa32eaf0e3b1e",
+    "attempts": 2,
+    "promptTokens": 2205,
+    "completionTokens": 2283
+  }
+}

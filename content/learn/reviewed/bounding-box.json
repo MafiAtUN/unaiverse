@@ -1,0 +1,218 @@
+{
+  "id": "bounding-box",
+  "slug": "bounding-box",
+  "term": "Bounding box",
+  "aliases": [],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "starter",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "object-detection"
+  ],
+  "relatedTermIds": [
+    "object-detection",
+    "computer-vision",
+    "image-segmentation",
+    "optical-character-recognition",
+    "pixel"
+  ],
+  "oftenConfusedWith": [
+    "image-segmentation",
+    "image-classification",
+    "pose-estimation",
+    "facial-recognition"
+  ],
+  "oneSentence": "A rectangular marker that shows where an object or text region appears in an image, usually by its position, width and height.",
+  "plainExplanation": "A bounding box is a simple way to mark a region in an image. It is usually drawn as a rectangle around something important, such as a person, a vehicle, a building, or a line of printed text. The input is an image. The output is the rectangle's location, often written as coordinates.\n\nA computer vision system may produce a bounding box after scanning the image for patterns. Coordinates are numbers that describe position. For example, a system might return the top-left corner of the rectangle plus its width and height, or it might return the left, top, right and bottom edges.\n\nThe box does not describe every pixel that belongs to the object. It only gives a rough enclosure. That is why it is often used for object detection, where the goal is to say what is present and where it is, quickly and in a standard format.\n\nPeople often confuse a bounding box with image segmentation. Segmentation tries to mark the exact shape of the object, pixel by pixel. A bounding box is simpler and faster, but less precise, especially when the object has an irregular shape or overlaps with other things.",
+  "everydayAnalogy": {
+    "title": "Drawing quick rectangles around supply items",
+    "story": "At a distribution point, a supervisor reviews a photo of the storage area to estimate how many pallets of rice, water containers and medical kits are present. Instead of tracing the exact outline of each item stack, the supervisor draws a quick rectangle around each one on a printed copy. The rectangles make it easier to count, compare locations and discuss what needs moving. A very tall or oddly shaped stack may leave empty space inside the rectangle, but the marked area still shows roughly where that stack is.",
+    "mapping": [
+      {
+        "analogyElement": "quick rectangles around item stacks",
+        "aiElement": "bounding boxes around detected objects"
+      },
+      {
+        "analogyElement": "photo of the storage area",
+        "aiElement": "input image"
+      },
+      {
+        "analogyElement": "counting and locating stacks",
+        "aiElement": "using box coordinates for detection results"
+      },
+      {
+        "analogyElement": "empty space inside a rectangle around an odd shape",
+        "aiElement": "the box encloses the object roughly rather than exactly"
+      }
+    ],
+    "limitation": "A person drawing boxes on paper already knows what the items are and can use context that a model may miss. In real computer vision, the system must estimate both the object category and the rectangle from pixel patterns, and the box is stored as numbers, not hand-drawn marks. Also, some systems output many candidate boxes with confidence scores, which the paper example does not show."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "From image to bounding box",
+    "learningObjective": "Show how a system turns an image into rectangular location data, and why that result is useful but approximate.",
+    "description": "A four-step diagram reads left to right. It starts with an image, then highlights a target object, then overlays a rectangle, then shows the rectangle converted into coordinates and a label. The reader should see that the box is a practical summary of location, not an exact outline.",
+    "steps": [
+      {
+        "label": "1. Input image",
+        "explanation": "Start with a full image that may contain several objects or text regions.",
+        "visualInstruction": "Draw a simple scene in an SVG frame, such as a road with a bus, two people and a sign, with no markings yet."
+      },
+      {
+        "label": "2. Find a target",
+        "explanation": "The system looks for patterns linked to a category, such as a bus or a text block.",
+        "visualInstruction": "Fade the background slightly and highlight one target object with a soft tint, without drawing a box yet."
+      },
+      {
+        "label": "3. Draw the rectangle",
+        "explanation": "A rectangle is placed around the outer area of the target so its position and size can be recorded.",
+        "visualInstruction": "Overlay a clear rectangular stroke around the highlighted object; leave some empty space where the object's shape is irregular."
+      },
+      {
+        "label": "4. Output the result",
+        "explanation": "The result is usually a label plus coordinates, such as left, top, width and height, sometimes with a confidence score.",
+        "visualInstruction": "Show a small side panel with example text like 'bus; x=120, y=60, w=180, h=90; confidence 0.93' linked by a line to the box."
+      }
+    ],
+    "interaction": "On hover or tap, each step highlights one added element while keeping earlier elements visible, so the viewer can see what changes from step to step.",
+    "accessibilityDescription": "The diagram explains bounding boxes in four stages. First, there is an unmarked image containing several visible items. Second, one item is singled out as the target. Third, a rectangle appears around that item, showing that the system marks a rough outer area rather than the exact shape. Fourth, the rectangle is paired with output data: a class label, coordinates and possibly a confidence score. The main lesson is that a bounding box converts a visual location into a simple rectangular record that computers and people can use.",
+    "reducedMotionDescription": "Show the same four stages as static panels in one row. Each panel adds one element: the original image, the highlighted target, the rectangle, and the text output with coordinates."
+  },
+  "workedExample": {
+    "scenario": "A warehouse camera image is analysed to find cartons ready for loading.",
+    "input": "One image, 1280 by 720 pixels, containing three visible cartons on the floor.",
+    "process": [
+      "The system scans the image and identifies three regions that match the learned pattern for cartons.",
+      "For one carton, it places a rectangle with top-left corner at x=340, y=210.",
+      "It measures the rectangle as 160 pixels wide and 120 pixels high.",
+      "It returns the label 'carton' with those coordinates and a confidence score of 0.88."
+    ],
+    "result": "One detection result could be recorded as carton, x=340, y=210, width=160, height=120, confidence=0.88; similar records are returned for the other two cartons."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team preparing procurement requirements for an object-detection tool compares vendors by asking how their software outputs locations for vehicles, containers and printed labels in logistics images.",
+    "relevance": "Understanding bounding boxes helps staff write precise requirements, compare products fairly and recognise whether a tool gives simple location rectangles or more detailed outputs such as segmentation.",
+    "caution": "If evaluation images contain personal, security-sensitive or operationally sensitive content, they should not be uploaded to an unapproved public AI service; use approved systems, minimise data and keep human oversight."
+  },
+  "whyItMatters": "If you buy, assess or use vision software, you need to know what kind of location information it actually returns. A system that gives bounding boxes can support counting, tracking, routing, inventory checks, OCR pre-processing and quality control. But it may be too rough for tasks needing exact boundaries, such as measuring flood extent on the ground, isolating damaged building edges or separating overlapping objects. Knowing this term helps you ask better questions: How accurate are the boxes? What format are the coordinates in? How are overlapping boxes handled? Is a rectangle enough for the decision you need to make?",
+  "whereYouMayHearIt": [
+    "object detection demos",
+    "OCR pipeline discussions",
+    "annotation tool instructions",
+    "computer vision procurement documents"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A bounding box shows the exact shape of an object.",
+      "correction": "It usually does not. It encloses the object in a rectangle, which often includes background pixels and empty space. For exact shapes, segmentation is the more relevant term."
+    },
+    {
+      "misconception": "If a box appears, the system must have identified the object correctly.",
+      "correction": "Not necessarily. The rectangle can be well placed but attached to the wrong label, or the label can be right while the box is poorly sized. Location and classification quality both need checking."
+    },
+    {
+      "misconception": "Bounding boxes are only for photographs of physical objects.",
+      "correction": "They are also used for text regions in scanned documents, video frames, medical images and other visual data. The rectangle marks location, regardless of whether the target is a person, a paragraph or a parcel."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a quick rectangle around something important in an image so the system can say where it is.",
+    "technical": "In computer vision, a bounding box is a rectangular localisation output that encloses a target instance or region of interest. It is commonly parameterised as x and y coordinates plus width and height, or as xmin, ymin, xmax and ymax, in either pixel units or normalised image coordinates. Detection systems predict these values, often together with a class label and a confidence score. Because the representation is axis-aligned in many systems, it is efficient and standardised, but it does not capture precise contours. Some applications use rotated rectangles or minimum bounding boxes, but those are variants rather than the default meaning in most deployed detection pipelines."
+  },
+  "keyTakeaway": "A bounding box tells you roughly where something is in an image by drawing a rectangle around it, not by tracing its exact shape.",
+  "quickCheck": {
+    "question": "Which statement best describes a bounding box?",
+    "options": [
+      "A rectangle that marks the approximate location and size of an object or text region in an image",
+      "A pixel-by-pixel mask that captures the exact outline of an object",
+      "A sentence that describes the whole image in natural language",
+      "A method for translating text from one language to another"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "A bounding box is a rectangular location marker. A pixel-by-pixel mask refers to segmentation, while image captions and translation are different tasks."
+  },
+  "resources": [
+    {
+      "title": "Minimum bounding box algorithms",
+      "url": "https://en.wikipedia.org/wiki/Minimum_bounding_box_algorithms",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives background on minimum bounding box algorithms and suits readers who want mathematical or geometric context beyond everyday detection use.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course gives broader machine learning foundations and suits beginners who need surrounding concepts before applying terms used in vision systems.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "description": "This glossary gives short plain-language definitions and suits readers who want a quick reference for related machine learning vocabulary.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Bounding box",
+      "url": "https://www.youtube.com/results?search_query=Bounding%20box%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find different video explanations of bounding boxes and suits people who learn well by watching, but results will vary.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Bounding box",
+      "url": "https://www.reddit.com/search/?q=Bounding%20box",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see community questions and practical confusion points about bounding boxes and suits readers who want informal discussion, but quality varies.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "bounding box meaning",
+    "what is a bounding box in computer vision",
+    "bbox explained",
+    "bounding box vs segmentation",
+    "object detection rectangle",
+    "bbox coordinates x y width height",
+    "bounding box around text",
+    "bouding box",
+    "bounding box"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:47:56.985Z",
+    "contentHash": "e249b775798cf397",
+    "attempts": 1,
+    "promptTokens": 2273,
+    "completionTokens": 2208
+  }
+}

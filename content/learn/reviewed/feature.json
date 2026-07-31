@@ -1,0 +1,237 @@
+{
+  "id": "feature",
+  "slug": "feature",
+  "term": "Feature",
+  "aliases": [
+    "input variable",
+    "attribute",
+    "features"
+  ],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "starter",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "training-example"
+  ],
+  "relatedTermIds": [
+    "training-example",
+    "training",
+    "inference",
+    "label",
+    "supervised-learning",
+    "parameter"
+  ],
+  "oftenConfusedWith": [
+    "label",
+    "parameter",
+    "prediction"
+  ],
+  "oneSentence": "A feature is a piece of input information a model uses to help produce an output, such as a prediction, score or grouping.",
+  "plainExplanation": "In machine learning, features are the pieces of information that go into a model. If a system is trying to flag an unusual water pump reading, features might include pressure, temperature, vibration level and time of day. The model uses these inputs to produce an output, such as “normal” or “check this pump”.\n\nSeveral related words are used here. “Feature” is the most common machine learning term. “Input variable” usually means the same thing, especially when people want to stress that it is one column or field going into a model. “Attribute” is also close, but it is more common in some older materials, in database discussions, and in some forms of unsupervised learning. The words overlap, but they are not always used in exactly the same community.\n\nA feature is not the same as a label. A label is the target output a model is trained to predict, such as “fraud” or “not fraud”. A feature is evidence the model can use, such as transaction amount or country code. A feature is also not the same as a parameter. Parameters are internal numerical settings learned by the model during training; features come from the data.\n\nFeatures can be directly observed, like age or rainfall, or derived from other data, like average spending in the last 30 days. During training, the model looks for patterns connecting features to labels or to structure in the data. During inference, it receives feature values for a new case and produces an output. Good features often matter as much as model choice, because the model can only work with the information it is given.",
+  "everydayAnalogy": {
+    "title": "Checking a water pump with a clipboard",
+    "story": "A technician at a water station in Nairobi checks a pump each morning using a clipboard. She writes down pressure, motor temperature, vibration level and whether the sound is steady or irregular. If several readings look unusual together, she marks the pump for inspection. Each reading on the clipboard gives part of the picture; no single reading always tells the full story.",
+    "mapping": [
+      {
+        "analogyElement": "Pressure, temperature, vibration and sound notes on the clipboard",
+        "aiElement": "Features or input variables"
+      },
+      {
+        "analogyElement": "The technician’s inspection mark",
+        "aiElement": "The model’s output, such as a prediction or flag"
+      },
+      {
+        "analogyElement": "The pattern across several readings together",
+        "aiElement": "How a model uses multiple features jointly"
+      },
+      {
+        "analogyElement": "A single morning check for one pump",
+        "aiElement": "One example given to the model"
+      }
+    ],
+    "limitation": "A human technician can use wider context, judgement and physical knowledge that a machine learning model may not have. Also, the clipboard analogy makes features look hand-chosen and simple, but in practice features can be automatically derived, transformed or encoded from complex data such as text, images or time series."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From raw case details to features to output",
+    "learningObjective": "Show that features are the input pieces of information for a model, and distinguish them from labels and internal parameters.",
+    "description": "A left-to-right flow diagram. On the left is one case with several raw details. In the centre, those details are shown as named feature boxes entering a model. On the right is the output. A separate note below shows that, during training only, a label sits beside the example and is used to compare with the output, while parameters stay inside the model.",
+    "steps": [
+      {
+        "label": "One case",
+        "explanation": "Start with one example, such as one pump reading or one survey response record.",
+        "visualInstruction": "Draw one card on the left labelled 'Example'. Inside, list 4 short fields such as pressure 82, temperature 67, vibration 0.4, hour 03:00."
+      },
+      {
+        "label": "Features extracted",
+        "explanation": "Each usable input field becomes a feature. Some are direct measurements; some may be transformed versions.",
+        "visualInstruction": "From the example card, draw arrows to 4 small boxes labelled 'pressure', 'temperature', 'vibration', 'hour'. Use a note saying 'features = input variables'."
+      },
+      {
+        "label": "Model uses features",
+        "explanation": "The model receives the feature values together, not one by one in isolation.",
+        "visualInstruction": "Place a central rounded rectangle labelled 'model'. Draw all feature boxes into it as parallel arrows."
+      },
+      {
+        "label": "Output produced",
+        "explanation": "The model returns an output such as a class, score or estimated number.",
+        "visualInstruction": "Draw one arrow from the model to a right-side box labelled 'output: unusual reading risk 0.86'."
+      },
+      {
+        "label": "What features are not",
+        "explanation": "A label is the target used in training, and parameters are internal learned settings, not input features.",
+        "visualInstruction": "Below the main flow, add a dashed training-only lane: 'known label: inspected fault / no fault' beside the example, with a comparison arrow to the output. Inside the model, show faint small dots labelled 'parameters learned during training'."
+      }
+    ],
+    "interaction": "Hover or tap each box to reveal a short note: feature, label, output or parameter. A toggle switches between training view and inference view by showing or hiding the dashed label lane.",
+    "accessibilityDescription": "The diagram reads from left to right. First, there is one example card containing raw details: pressure 82, temperature 67, vibration 0.4 and hour 03:00. Next, each detail becomes a feature box labelled pressure, temperature, vibration and hour. These four feature boxes all point into a central box labelled model. From the model, one arrow points to an output box labelled unusual reading risk 0.86. Below this main path, a separate dashed lane appears only for training. It shows a known label, such as inspected fault or no fault, placed beside the example and compared with the model output. Inside the model, small faint dots are labelled parameters learned during training. The message is that features are inputs from the data, labels are target answers used during training, and parameters are internal settings inside the model.",
+    "reducedMotionDescription": "A static left-to-right diagram with five labelled stages: example, feature boxes, model, output, and a dashed training-only label lane below. No animation is used; the training and inference difference is shown with visible labels and line styles."
+  },
+  "workedExample": {
+    "scenario": "A simple model helps a maintenance team spot unusual pump behaviour.",
+    "input": "Pump A at 03:00 has pressure 82, temperature 67°C, vibration 0.4 mm/s and flow rate 110 L/min.",
+    "process": [
+      "The system takes the four measured values as features for this pump reading.",
+      "The model combines these feature values using patterns learned from past labelled examples.",
+      "It gives extra weight to the combination of high temperature and lower-than-usual pressure at that hour.",
+      "The output is an unusual-reading score of 0.86 on a 0 to 1 scale."
+    ],
+    "result": "Because the score is above the team’s review threshold of 0.80, the reading is flagged for a technician to check."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team analyses household assessment responses to estimate which households may need follow-up support. Features might include household size, reported access to water, shelter condition and travel time to the nearest clinic.",
+    "relevance": "This helps staff understand that each survey field used by the model is a feature, while the follow-up category or score is the output. It also clarifies that thoughtful feature choice affects fairness, usefulness and interpretability.",
+    "caution": "Do not put personal, confidential or protection-sensitive household data into an unapproved public AI service. Use approved systems, minimise personal data, and keep human review over any decision that could affect people’s access to assistance or services."
+  },
+  "whyItMatters": "If you hear that a model used certain features, you can ask practical questions: What information went in? Was anything important missing? Were some inputs poor quality, biased or out of date? Did the system use a proxy variable that may unfairly stand in for something sensitive? These questions affect accuracy, fairness, privacy, explainability and whether the output is suitable for real decisions. For non-specialists, understanding features helps you scrutinise a system without needing to build one yourself.",
+  "whereYouMayHearIt": [
+    "model documentation",
+    "data preparation meetings",
+    "survey and sensor analysis",
+    "classification or regression tutorials",
+    "procurement and risk reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A feature is just any column in a spreadsheet.",
+      "correction": "Often a feature does come from a column, but not every column should be used. Some fields may be identifiers, notes, duplicates, or protected information that should not feed the model. Also, one feature can be created from several columns, such as a 30-day average."
+    },
+    {
+      "misconception": "Features and labels are basically the same because both are data fields.",
+      "correction": "They play different roles. Features are the inputs used to make an output. A label is the target answer used during training in supervised learning. Mixing them up can cause major errors, including leakage, where the model gets access to information it would not have in real use."
+    },
+    {
+      "misconception": "If you have more features, the model will always perform better.",
+      "correction": "More inputs can help, but they can also add noise, cost, bias and instability. Irrelevant or low-quality features may reduce performance, make the system harder to explain, or create unfair proxies for sensitive traits."
+    },
+    {
+      "misconception": "A feature is the same as a parameter.",
+      "correction": "A feature comes from the data for each case, such as age or temperature. A parameter is an internal numerical setting the model learns during training. Features change from case to case; learned parameters usually stay fixed during inference unless the model is retrained."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A feature is one piece of information you give a model so it can produce an output.",
+    "technical": "In machine learning, a feature is an input variable representing one measurable or derived property of an example. Features may be numeric, categorical, binary, text-derived, image-derived or time-based, though many models require them to be encoded into numerical form before use. In supervised learning, the model is trained to map feature vectors to labels or target values. In unsupervised learning, it uses features to find structure such as clusters or lower-dimensional representations without target labels. The term overlaps with input variable and, in some contexts, attribute, but usage varies by field. Features should be distinguished from labels, which are target outputs, and from parameters, which are internal learned values of the model."
+  },
+  "keyTakeaway": "Features are the pieces of information a model receives from the data; they are inputs, not the target answer and not the model’s internal settings.",
+  "quickCheck": {
+    "question": "Which option describes a feature most accurately?",
+    "options": [
+      "The correct answer a model is trained to predict",
+      "A piece of input information used by the model for one case",
+      "An internal weight the model learned during training",
+      "A final decision that should be accepted without review"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A feature is an input used by the model, such as temperature or household size. The correct answer in supervised learning is the label, internal learned weights are parameters, and model outputs still need context and appropriate human oversight."
+  },
+  "resources": [
+    {
+      "title": "Feature (machine learning)",
+      "url": "https://en.wikipedia.org/wiki/Feature_(machine_learning)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives a broad overview of the term and related language, which suits readers who want a quick reference and are comfortable checking details critically.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course resource is useful for beginners who want practical explanations of machine learning inputs and model building in a structured format.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "description": "This video source is helpful for learners who prefer step-by-step spoken explanations and visual teaching of core machine learning ideas.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Feature",
+      "url": "https://www.youtube.com/results?search_query=Feature%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of features, which suits people comparing teaching styles rather than looking for one verified source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Feature",
+      "url": "https://www.reddit.com/search/?q=Feature",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page lets readers see how practitioners informally discuss features and common confusions, which may help curious readers but should not be treated as authoritative.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "feature machine learning meaning",
+    "what is a feature in ml",
+    "input variable vs feature",
+    "attribute vs feature machine learning",
+    "feature vs label",
+    "feature vs parameter",
+    "ml features examples",
+    "what counts as a feature",
+    "feature engineering basic",
+    "feauture machine learning",
+    "feature",
+    "input variable",
+    "attribute",
+    "features"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:39:48.465Z",
+    "contentHash": "663215bde37e2534",
+    "attempts": 1,
+    "promptTokens": 2318,
+    "completionTokens": 2582
+  }
+}

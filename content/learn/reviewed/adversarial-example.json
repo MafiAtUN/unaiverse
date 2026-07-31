@@ -1,0 +1,226 @@
+{
+  "id": "adversarial-example",
+  "slug": "adversarial-example",
+  "term": "Adversarial example",
+  "aliases": [
+    "perturbation"
+  ],
+  "categoryId": "ai-security",
+  "subcategory": "AI Security",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "adversarial-attack"
+  ],
+  "relatedTermIds": [
+    "ai-security",
+    "adversarial-attack",
+    "prompt-injection",
+    "jailbreak",
+    "robustness",
+    "sandboxing"
+  ],
+  "oftenConfusedWith": [
+    "adversarial-attack",
+    "prompt-injection",
+    "jailbreak",
+    "robustness"
+  ],
+  "oneSentence": "A small, carefully chosen change to an input can push a model towards a wrong output while looking almost unchanged to a person.",
+  "plainExplanation": "An adversarial example is an input that has been intentionally altered so a machine-learning model gives the wrong result. The change may be tiny: a few pixels in an image, a few words in a prompt, or a small pattern in audio. To a person, the input may look normal or nearly normal.\n\nWhat goes in is usually a normal input plus a targeted modification. What happens is that the modification exploits the model’s sensitivity to particular patterns in its data representation. A representation is the internal numerical form the model uses. The model then produces an output that is wrong, misleading, or chosen by the attacker.\n\nWhat comes out depends on the system. In image classification, a stop sign might be labelled incorrectly. In speech recognition, background noise might shift a transcription. In language models, the closest equivalent is often not a tiny pixel-like change but a crafted string of text that steers behaviour. That is why this term overlaps with, but is not the same as, prompt injection or jailbreak.\n\nThe term is often confused with adversarial attack. An adversarial example is the manipulated input itself. An adversarial attack is the broader method or campaign used to create or deliver such inputs. It is also different from poor general performance: a model can seem accurate on normal tests but still fail badly on specially designed inputs.",
+  "everydayAnalogy": {
+    "title": "A shipping label altered by one subtle mark",
+    "story": "At a port warehouse, a worker checks whether a shipping manifest matches the delivery. Most labels are easy to read, but one crate has a small extra pen mark placed next to a printed code. To the worker, it still looks like the same destination code at a glance, yet the scanning system reads it as a different warehouse and routes the crate incorrectly. The crate, the goods and most of the label stay the same; the mistake comes from a tiny change positioned to exploit how the scanner reads characters.",
+    "mapping": [
+      {
+        "analogyElement": "small extra pen mark on the label",
+        "aiElement": "carefully chosen perturbation added to the input"
+      },
+      {
+        "analogyElement": "scanner reading the altered code wrongly",
+        "aiElement": "model producing a wrong prediction from the changed input"
+      },
+      {
+        "analogyElement": "crate still appearing normal to the worker",
+        "aiElement": "input looking unchanged or harmless to a human"
+      },
+      {
+        "analogyElement": "rerouting to the wrong warehouse",
+        "aiElement": "incorrect or attacker-chosen output"
+      }
+    ],
+    "limitation": "A scanner usually follows fixed character-reading rules, while many AI models respond to complex numerical patterns learned from data. In real adversarial examples, the change is often optimised mathematically, not added by eye. Also, some attacks on language models rely on meaningful text instructions, not subtle marks that humans would miss."
+  },
+  "visual": {
+    "type": "before-after",
+    "title": "Normal input and adversarial input through the same model",
+    "learningObjective": "Show how a very small, intentional input change can produce a very different model output without changing the model itself.",
+    "description": "A two-column diagram compares the same model receiving two nearly identical inputs. Read left to right: original input to model to expected output, then slightly altered input to the same model to wrong output. A highlight overlay marks the tiny changed region or token.",
+    "steps": [
+      {
+        "label": "Original input",
+        "explanation": "Show a normal input, such as an image of a road sign or a short text prompt, with no highlighted changes.",
+        "visualInstruction": "Render a card on the left labelled 'original input'. Include a simple image or text block. Use neutral colours and no warning icons."
+      },
+      {
+        "label": "Same model",
+        "explanation": "The model itself does not change between the two cases.",
+        "visualInstruction": "Place one central model box used by both paths, or two identical model boxes with the same label and styling: 'same trained model'."
+      },
+      {
+        "label": "Expected output",
+        "explanation": "With the original input, the model gives the correct or expected result.",
+        "visualInstruction": "Connect the original input to the model and then to a green output card labelled with a correct classification or safe behaviour."
+      },
+      {
+        "label": "Tiny intentional change",
+        "explanation": "A small, targeted alteration is added to the input. It may be visually minor but strategically chosen.",
+        "visualInstruction": "Show a second input card below or to the right of the first. Highlight only the changed pixels, patch, or inserted text span with a thin outline or accent colour."
+      },
+      {
+        "label": "Wrong output",
+        "explanation": "The altered input passes through the same model but now triggers a wrong result.",
+        "visualInstruction": "Connect the altered input to the identical model and then to a red or amber output card labelled with the incorrect prediction or steered response."
+      }
+    ],
+    "interaction": "Hover or tap the changed region to toggle a magnified inset and a short note saying 'small change to input, large change to output'.",
+    "accessibilityDescription": "The diagram compares two cases using the same trained model. In the first case, an original input goes into the model and produces the expected output. In the second case, a nearly identical input with one small highlighted change goes into the same model and produces a wrong output. The point is that the model need not be altered or hacked internally; changing the input alone can be enough to change the result.",
+    "reducedMotionDescription": "A static side-by-side comparison replaces any hover or animation. The changed part of the second input remains outlined, and both input-to-output paths are visible at once."
+  },
+  "workedExample": {
+    "scenario": "An image classifier used in a warehouse sorts parcels by hazard label.",
+    "input": "Original image: a parcel with a clearly visible 'flammable' diamond. Altered image: the same parcel photo with a faint printed sticker pattern added over one corner.",
+    "process": [
+      "The original photo is sent to the classifier, which outputs 'flammable' with 0.94 confidence.",
+      "An attacker tests small overlay patterns and finds one that changes the model’s internal representation.",
+      "The altered photo looks almost the same to staff viewing a thumbnail.",
+      "The same classifier processes the altered photo and outputs 'general goods' with 0.71 confidence."
+    ],
+    "result": "A tiny, deliberate visual change to the input causes a materially different label, even though the object in the scene has not changed."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team uses an approved internal tool to help triage incoming public social media images for a situation report, separating damaged infrastructure photos from unrelated content.",
+    "relevance": "If someone deliberately edits images or text snippets to fool the model, the triage queue may misclassify important material or elevate misleading content. Staff need to recognise that model error can be induced, not only accidental.",
+    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive material to an unapproved public AI service for testing. Any review of suspected adversarial inputs should stay within approved systems and human oversight."
+  },
+  "whyItMatters": "For non-specialists, this matters because a system that performs well in routine testing may still be fragile in practice. If a model can be pushed off course by small, crafted changes, then safety, quality control, procurement and risk assessments need to ask different questions: not only 'How accurate is it on average?' but also 'How does it fail under manipulation?' This affects decisions about whether a model can be trusted for screening, routing, monitoring or support tasks, what human review is needed, and what safeguards such as input filtering, rate limits, sandboxing and fallback procedures should be in place.",
+  "whereYouMayHearIt": [
+    "computer vision security",
+    "red-team testing",
+    "robustness evaluation",
+    "llm safety discussions",
+    "machine-learning research"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "An adversarial example means the system was hacked in the usual network-security sense.",
+      "correction": "Not necessarily. The attacker may never break into the server or steal credentials. They may only supply a specially crafted input that the model processes exactly as designed, but in a way that exposes a weakness in the model’s learned patterns."
+    },
+    {
+      "misconception": "If humans can still read or see the input, the model should also handle it.",
+      "correction": "Humans and models rely on different cues. A small change that seems irrelevant to a person can shift the numerical features the model uses a great deal. That mismatch is why human inspection alone does not guarantee model robustness."
+    },
+    {
+      "misconception": "This only applies to images.",
+      "correction": "Images are the classic example, but the idea extends to audio, text and other data types. In language models, however, many practical attacks are better described as prompt injection or jailbreaks, because they use meaningful instructions rather than imperceptible perturbations."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A model can be tricked by an input that looks almost normal to a person but has been altered on purpose to cause a wrong answer.",
+    "technical": "An adversarial example is a test-time input modified by an adversary to induce model error or a target output. The perturbation may be constrained to remain small under some distance measure or perceptual bound, but it is optimised to move the input across a decision boundary or otherwise change the model’s output distribution. In practice, attacks may be white-box, using gradients or other model knowledge, or black-box, using queries and transferability. The exact mechanism differs by modality: in vision, it often involves pixel-space or patch perturbations; in speech, waveform changes; in text, token substitutions, insertions or control strings, though for language models many real incidents are more precisely classified under prompt injection or jailbreak. The key distinction is between the crafted input instance and the broader adversarial attack process used to generate or deploy it."
+  },
+  "keyTakeaway": "A tiny, deliberate change to the input can be enough to make a model fail, even when nothing visible about the real-world situation has changed.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes an adversarial example from an adversarial attack?",
+    "options": [
+      "An adversarial example is the crafted input; an adversarial attack is the broader method used to create or deliver it.",
+      "An adversarial example only applies to images, while an adversarial attack only applies to language models.",
+      "An adversarial example changes the model weights directly, while an adversarial attack changes only the user interface.",
+      "They are identical terms and can always be used interchangeably."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The example is the manipulated input instance itself. The attack is the wider process, strategy or technique that creates, selects or sends that input. People often use the terms loosely, but the distinction matters when analysing defences and incidents."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Adversarial example",
+      "url": "https://en.wikipedia.org/w/index.php?search=Adversarial%20example",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers find overview articles and related terms, and it suits readers who want a broad starting point rather than a single curated source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "OWASP Top 10 for LLM Applications",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "type": "official",
+      "publisher": "OWASP",
+      "description": "This OWASP resource gives practical security context for language-model applications, and it suits practitioners looking for common risk patterns and controls.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Adversarial Machine Learning: A Taxonomy and Terminology",
+      "url": "https://csrc.nist.gov/pubs/ai/100/2/e2025/final",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This NIST document provides formal taxonomy and terminology for adversarial machine learning, and it suits technical readers who want precise definitions.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Adversarial example",
+      "url": "https://www.youtube.com/results?search_query=Adversarial%20example%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations from different presenters, and it suits people who learn better by watching than by reading.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Adversarial example",
+      "url": "https://www.reddit.com/search/?q=Adversarial%20example",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community questions and discussions about the term, and it suits readers who want informal examples and debate but will verify claims carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "adversarial example meaning",
+    "what is perturbation in ai",
+    "adversarial input example",
+    "adversarial attack vs example",
+    "llm adversarial prompt",
+    "image perturbation attack",
+    "adverserial example misspelling",
+    "small input change fools model",
+    "adversarial example",
+    "perturbation"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:52:49.333Z",
+    "contentHash": "bf983b7d3774fe4c",
+    "attempts": 3,
+    "promptTokens": 2344,
+    "completionTokens": 2434
+  }
+}

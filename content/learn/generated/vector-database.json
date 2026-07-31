@@ -1,0 +1,234 @@
+{
+  "id": "vector-database",
+  "slug": "vector-database",
+  "term": "Vector database",
+  "aliases": [
+    "vector store",
+    "vector index"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "embedding"
+  ],
+  "relatedTermIds": [
+    "embedding",
+    "semantic-search",
+    "retrieval",
+    "retrieval-augmented-generation",
+    "nearest-neighbour-search",
+    "ranking-and-reranking"
+  ],
+  "oftenConfusedWith": [
+    "embedding",
+    "knowledge-base",
+    "keyword-search"
+  ],
+  "oneSentence": "A specialised system stores numerical meaning-representations of content and quickly finds the closest matches to a query by semantic similarity.",
+  "plainExplanation": "A vector database stores items such as document passages, images or support tickets in a form that computers can compare by meaning. Each item is converted into a vector: a list of numbers that represents patterns in the item. Similar items tend to have vectors that are close together in that numerical space.\n\nWhat goes in is usually the original content, some metadata such as source or date, and its vector. The database builds an index, which is a structure for fast lookup. When a user asks a question, the question is also turned into a vector.\n\nWhat happens next is nearest-neighbour search. The system compares the query vector with many stored vectors and returns the closest ones, often with filters such as language, document type or date. Some systems then rerank the results using another model or rule set.\n\nWhat comes out is usually a short list of passages or items most related in meaning to the query, not just the same words. This makes vector databases useful for semantic search and retrieval-augmented generation. They are not the same as embeddings, which are the number lists themselves, and they are not the same as a knowledge base, which is the underlying collection of source material.",
+  "everydayAnalogy": {
+    "title": "Finding the right policy note by topic shelf, not by exact title",
+    "story": "In a large office library, staff do not place policy notes only in alphabetical order. Instead, they arrange them so that documents about school feeding, child nutrition and food security sit near each other, even if the titles use different words. A colleague asks for guidance related to meals in schools during drought. The librarian goes to the area where similar topics are clustered, checks the nearby shelves, and pulls out the most relevant notes plus their source folders. The librarian can also avoid old material by looking only in the recent publications section.",
+    "mapping": [
+      {
+        "analogyElement": "Documents grouped by topic closeness on shelves",
+        "aiElement": "Vectors stored so similar items are near one another in vector space"
+      },
+      {
+        "analogyElement": "The librarian using the request to choose a shelf area",
+        "aiElement": "The query is converted into a vector and used to search for nearest neighbours"
+      },
+      {
+        "analogyElement": "Nearby shelves checked first",
+        "aiElement": "An index speeds up approximate nearest-neighbour search"
+      },
+      {
+        "analogyElement": "Recent publications section filter",
+        "aiElement": "Metadata filters such as date, language or source"
+      }
+    ],
+    "limitation": "A real vector database does not place documents on physical shelves, and closeness is not judged by a human librarian reading every page. It relies on numerical representations produced by a model, so matches can reflect model biases or miss important context. Also, unlike a library shelf, the same item can be filtered and searched in many ways at once."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a vector database retrieves relevant passages",
+    "learningObjective": "After viewing this, a reader should be able to describe what is stored, how a query is compared, and what the system returns.",
+    "description": "A left-to-right flow diagram with five boxes. It starts with source passages, shows conversion into vectors, storage with metadata and an index, then a query taking the same path into a vector, and finally nearest-match results returned with source details. Read it from left to right as a retrieval process.",
+    "steps": [
+      {
+        "label": "1. Prepare content",
+        "explanation": "Split source documents into passages and keep useful metadata such as title, date, language or source.",
+        "visualInstruction": "Show a stack of document cards on the left. Each card has a short text snippet and small metadata tags below it."
+      },
+      {
+        "label": "2. Convert to vectors",
+        "explanation": "An embedding model turns each passage into a list of numbers that captures semantic patterns.",
+        "visualInstruction": "Show arrows from document cards to compact number bars or dot clusters labelled 'vector'."
+      },
+      {
+        "label": "3. Store and index",
+        "explanation": "The system stores the original passage, its vector and metadata, then builds an index for fast similarity lookup.",
+        "visualInstruction": "Show a database cylinder containing paired text snippets and vectors, with a side label 'index' as a branching lookup structure."
+      },
+      {
+        "label": "4. Search with a query",
+        "explanation": "A user question is converted into a vector, then compared with stored vectors to find nearest neighbours, optionally with filters.",
+        "visualInstruction": "Show a search box above feeding into a query vector, then lines to a few highlighted nearby vectors in the database; add optional filter chips like date or language."
+      },
+      {
+        "label": "5. Return grounded results",
+        "explanation": "The system outputs the most similar passages and their source information, which can be shown directly or sent to a language model.",
+        "visualInstruction": "Show a results panel on the right with ranked passages, similarity scores and source labels."
+      }
+    ],
+    "interaction": "Hovering over each stage reveals the data present at that stage: text, vector, metadata, index, query, and ranked results.",
+    "accessibilityDescription": "This diagram explains a retrieval workflow. First, source documents are split into smaller passages and labelled with metadata such as title, date and language. Second, each passage is converted into a vector, meaning a list of numbers that captures semantic patterns. Third, the system stores the passage, its vector and metadata, and builds an index so it can search quickly. Fourth, a user question is also converted into a vector and compared with the stored vectors, with optional filters such as date or language. Fifth, the system returns the closest passages with their source details, which can then be displayed to a user or passed to a language model for a grounded answer.",
+    "reducedMotionDescription": "A static left-to-right five-step diagram with labelled boxes and arrows showing documents, vectors, indexed storage, query comparison and ranked results."
+  },
+  "workedExample": {
+    "scenario": "A programme officer searches a policy collection for guidance on school meals during drought conditions.",
+    "input": "Query: \"How can school feeding continue during drought?\"",
+    "process": [
+      "The collection contains 12,000 document passages. One passage says, \"Temporary take-home rations can support learners when school meal delivery is disrupted by climate shocks.\"",
+      "Each passage has already been converted into a vector and stored with metadata such as source, year and region.",
+      "The query is converted into a vector. The database compares it with stored vectors using similarity search and filters to English documents published after 2020.",
+      "The top three matches have similarity scores of 0.89, 0.86 and 0.84. A reranker moves the second item to first because it mentions both school feeding and drought response more directly.",
+      "The system returns the three passages with document titles and publication dates."
+    ],
+    "result": "The officer gets a short ranked list of relevant passages and sources, even though the best match used the phrase \"climate shocks\" instead of the exact word \"drought\"."
+  },
+  "unWorkplaceExample": {
+    "scenario": "An approved internal analytics tool helps protection analysts look for similar patterns across already authorised, sanitised incident-report summaries to find past cases with related indicators.",
+    "relevance": "A vector database can retrieve semantically similar summaries faster than keyword search alone, helping analysts review comparable cases and supporting material before drafting assessments.",
+    "caution": "Do not upload raw incident reports, personally identifiable information, survivor details, witness information or security-sensitive operational data into an unapproved public AI service. Use only approved systems, apply access controls, minimise data, and keep human review in the loop."
+  },
+  "whyItMatters": "For non-specialists, the main value is better retrieval. If a system can find passages by meaning rather than exact wording, staff spend less time hunting through documents and are more likely to see relevant evidence. This matters in decision-making because missed context can lead to weak briefings, incomplete answers or poor automation choices. It also matters for governance: a vector database is part of the retrieval layer, not a guarantee of truth. You still need source quality checks, permissions, filtering and human judgement about whether the returned material is appropriate, current and safe to use.",
+  "whereYouMayHearIt": [
+    "RAG system design",
+    "enterprise search projects",
+    "document question-answering tools",
+    "support ticket similarity search",
+    "multilingual knowledge retrieval"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A vector database is just a normal database with a new name.",
+      "correction": "Some systems build vector search on top of a general database, but the important difference is that vectors and similarity search need special indexing and nearest-neighbour retrieval methods. Traditional exact-match lookup alone is not enough when you want meaning-based search at scale."
+    },
+    {
+      "misconception": "If you use a vector database, the system will understand the documents correctly.",
+      "correction": "The database does not interpret documents on its own. It stores vectors produced by a model and retrieves nearby matches based on those representations. If the embedding model captures the topic poorly, or if the source text is weak, retrieval quality will also be weak."
+    },
+    {
+      "misconception": "A vector database replaces a knowledge base.",
+      "correction": "A knowledge base is the body of source material and related structure. A vector database is one way to index and search representations of that material. You can have a knowledge base without vector search, and you can use vector search over only part of a knowledge base."
+    },
+    {
+      "misconception": "The closest vector result is always the best answer.",
+      "correction": "Similarity score only measures closeness in the chosen representation. A highly similar passage may still be outdated, from the wrong source, or incomplete for the user's task. Metadata filters, reranking and human review still matter."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a system that helps computers find content that means something similar, even when the words are different.",
+    "technical": "A vector database stores embeddings together with source content and metadata, then uses an index to run efficient nearest-neighbour search in high-dimensional space. At query time, the input is embedded with the same or a compatible model, compared against stored vectors using a similarity measure such as cosine similarity or inner product, and the top candidates are returned. Many implementations support metadata filtering, hybrid search with keywords, and reranking. In retrieval-augmented generation, the retrieved passages are then passed to a language model so the answer can be grounded in specific sources."
+  },
+  "keyTakeaway": "A vector database helps a system find the most meaningfully similar content quickly, but good results still depend on the embeddings, source quality, filters and human oversight.",
+  "quickCheck": {
+    "question": "What does a vector database mainly add to a document system?",
+    "options": [
+      "Fast retrieval of content that is similar in meaning, using stored vectors and an index",
+      "A guarantee that any generated answer will be correct and up to date",
+      "Automatic writing of new source documents from old ones",
+      "A replacement for all metadata, permissions and keyword search"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Its core role is efficient similarity retrieval over vectors. It helps find relevant passages by meaning, but it does not guarantee factual accuracy, replace governance controls, or remove the value of metadata and keyword methods."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Vector database",
+      "url": "https://en.wikipedia.org/wiki/Vector_database",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This gives a general overview of the term and related concepts, and suits readers who want a quick orientation before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This explains embeddings, which helps readers understand what kind of data a vector database stores, and suits learners who need the prerequisite concept.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This lets readers explore how vectors cluster in space, and suits people who learn best by interactive visual inspection.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Vector database",
+      "url": "https://www.youtube.com/results?search_query=Vector%20database%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for multiple video explanations, not one authoritative source, and suits readers who prefer to compare several teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Vector database",
+      "url": "https://www.reddit.com/search/?q=Vector%20database",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussion, not one vetted explanation, and suits readers who want practical questions, opinions and examples from practitioners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "vector database meaning",
+    "vector db explained",
+    "vector store vs embedding",
+    "what is a vector index",
+    "semantic search database",
+    "nearest neighbour search documents",
+    "rag vector store",
+    "vector database example",
+    "vectordb policy search",
+    "vector databse misspelling",
+    "vector database",
+    "vector store",
+    "vector index"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:38:16.231Z",
+    "contentHash": "f13d6a38887639f2",
+    "attempts": 1,
+    "promptTokens": 2262,
+    "completionTokens": 2493
+  }
+}

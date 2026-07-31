@@ -1,0 +1,226 @@
+{
+  "id": "pruning",
+  "slug": "pruning",
+  "term": "Pruning",
+  "aliases": [
+    "model pruning",
+    "sparsity"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "weight"
+  ],
+  "relatedTermIds": [
+    "weight",
+    "fine-tuning",
+    "parameter-efficient-fine-tuning",
+    "checkpoint",
+    "model-version"
+  ],
+  "oftenConfusedWith": [
+    "distillation",
+    "quantisation",
+    "lora"
+  ],
+  "oneSentence": "Pruning removes less useful model connections or parameters so the model becomes smaller and faster while trying to keep nearly the same performance.",
+  "plainExplanation": "Pruning is a way to simplify a trained or partly trained model. The input is usually a model with many parameters, plus a rule for judging which parameters seem less important. A parameter is a numerical setting that affects the model’s output.\n\nWhat happens next is selective removal. Engineers may set some parameters to zero, remove whole neurons or channels, or remove larger blocks that hardware can skip efficiently. After that, they often test the model again and may fine-tune it so it recovers some of the lost performance.\n\nThe output is a sparser model. Sparse means many parameter values are zero or many connections are absent. In some cases this cuts memory use, speeds up inference, or lowers energy use. In other cases, especially if the hardware or software cannot take advantage of sparsity, the practical speed gain is small even though many parameters were removed.\n\nPruning is often confused with quantisation and distillation. Quantisation keeps the same structure but stores numbers with lower precision, such as fewer bits. Distillation trains a smaller model to imitate a larger one. Pruning usually starts from one existing model and removes parts of it.",
+  "everydayAnalogy": {
+    "title": "Cutting a practice revision sheet down to essentials",
+    "story": "A student in Nairobi makes a ten-page revision sheet before a practice examination. After marking past questions, she notices that some notes never help her answer anything, while other notes are used again and again. She crosses out the least useful lines and keeps the parts that matter most, then does another practice paper to check that her score stays nearly the same. The result is a shorter sheet that is quicker to review, but if she removes too much, her score drops.",
+    "mapping": [
+      {
+        "analogyElement": "ten-page revision sheet",
+        "aiElement": "large trained model with many parameters"
+      },
+      {
+        "analogyElement": "notes that never help on past questions",
+        "aiElement": "parameters or connections judged less important"
+      },
+      {
+        "analogyElement": "crossing out lines",
+        "aiElement": "setting parameters to zero or removing parts of the network"
+      },
+      {
+        "analogyElement": "doing another practice paper",
+        "aiElement": "evaluating and possibly fine-tuning after pruning"
+      }
+    ],
+    "limitation": "A revision sheet is a human-made summary, while a model’s parameters are not neat, separate facts. Removing one note from a sheet usually has a clear effect, but removing parameters can have indirect effects across many outputs because parameters interact. Also, a crossed-out line on paper always makes the sheet shorter, while a pruned model only becomes faster in practice if the software and hardware can use the sparsity."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How pruning changes a model",
+    "learningObjective": "After viewing this, a reader should be able to describe pruning as selecting less important parameters, removing or zeroing them, and then checking whether the model still performs acceptably.",
+    "description": "A left-to-right sequence of four panels shows a dense model, an importance scoring step, a pruned sparse model, and evaluation or fine-tuning. Read from left to right to see what goes in, what is removed, and what comes out.",
+    "steps": [
+      {
+        "label": "1. Start with a dense model",
+        "explanation": "The process begins with a model that has many active parameters or connections.",
+        "visualInstruction": "Draw a rectangle labelled 'trained model' containing a dense grid of dots connected by many grey lines."
+      },
+      {
+        "label": "2. Estimate importance",
+        "explanation": "Each parameter or group is scored using a rule such as magnitude, contribution to loss, or sensitivity to removal.",
+        "visualInstruction": "Overlay small score tags on some lines and dots; show low scores in light grey and high scores in dark blue."
+      },
+      {
+        "label": "3. Remove low-importance parts",
+        "explanation": "Low-scoring parameters are set to zero or removed. The model becomes sparse, meaning many positions are now empty or inactive.",
+        "visualInstruction": "Fade out or strike through selected low-score lines; in the next panel, show many gaps and several labels '0'."
+      },
+      {
+        "label": "4. Test and recover if needed",
+        "explanation": "The pruned model is evaluated. If quality fell too much, a short fine-tuning stage may recover some performance.",
+        "visualInstruction": "Show a small performance meter comparing 'before' and 'after', then a short arrow to a tuning wrench icon labelled 'optional fine-tuning'."
+      }
+    ],
+    "interaction": "Hover or tap each step to highlight the changed parts and reveal one sentence about trade-offs: smaller model, possible speed gain, possible accuracy loss.",
+    "accessibilityDescription": "The diagram is a four-step process. First, a dense trained model is shown with many active connections. Second, the model’s parameters are scored for importance; some are marked as low importance. Third, those low-importance parameters are removed or set to zero, leaving a sparse model with many inactive positions. Fourth, the sparse model is tested, and an optional fine-tuning step can restore some lost performance. The main message is that pruning simplifies a model by removing less useful parts, but the result must be checked because quality can drop.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: dense model, importance scores, sparse model after removals, and final evaluation with optional fine-tuning."
+  },
+  "workedExample": {
+    "scenario": "A team has a text classification model with 12 million parameters for sorting customer support messages into 8 categories.",
+    "input": "Original validation accuracy: 92.4%. The team prunes 40% of parameters using a magnitude-based rule, meaning parameters with very small absolute values are removed first.",
+    "process": [
+      "They rank parameters by absolute value and set the lowest 40% to zero.",
+      "They evaluate the pruned model and see validation accuracy fall from 92.4% to 90.8%.",
+      "They run two short fine-tuning epochs on the original training set.",
+      "After fine-tuning, accuracy rises to 91.9%, and the stored model size drops because many values are zero."
+    ],
+    "result": "The team accepts the pruned model for a mobile deployment where memory is tight, while noting that actual speed improvement depends on whether their runtime can exploit sparse weights."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN analytics team maintains a language model used inside an approved internal environment to classify and route non-sensitive programme monitoring comments into broad themes such as delays, supply issues and training needs.",
+    "relevance": "Pruning may help produce a lighter model that runs on more modest internal infrastructure or responds faster, which can matter for field-facing tools with limited computing resources.",
+    "caution": "Do not place confidential, personal or protection-sensitive programme data into an unapproved public AI service to test pruning or benchmarking; use approved environments, de-identify where required, and keep human review of consequential outputs."
+  },
+  "whyItMatters": "Pruning matters because model size affects cost, speed, memory use and where a model can be deployed. A smaller model may run on cheaper hardware, closer to where it is needed, or with lower latency. But pruning is a trade-off, not a free improvement. If too much is removed, performance can degrade in uneven ways, including on less common languages or edge cases. For managers and practitioners, the key question is not only 'How many parameters were removed?' but 'What happened to quality, reliability and fairness on the tasks we care about, and can our systems actually benefit from sparsity?'",
+  "whereYouMayHearIt": [
+    "model optimisation for deployment",
+    "edge or mobile inference",
+    "compression and sparsity research",
+    "ML engineering discussions on latency",
+    "post-training model adaptation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If 50% of parameters are pruned, the model will run about twice as fast.",
+      "correction": "Not necessarily. Unstructured pruning often creates many zeros scattered through the model, but ordinary hardware may still process the same shapes of tensors and gain little speed. Large real-world gains are more common when the runtime supports sparsity well, or when pruning removes whole structures such as channels, heads or blocks."
+    },
+    {
+      "misconception": "Pruning and quantisation are basically the same thing.",
+      "correction": "They target different parts of the problem. Pruning removes or deactivates parameters or structures. Quantisation keeps them but stores and computes them with lower numerical precision. They can be combined, but one does not automatically imply the other."
+    },
+    {
+      "misconception": "A pruned model has forgotten knowledge in a clean, interpretable way.",
+      "correction": "Usually not. Parameters interact across many behaviours, so removing some of them does not neatly erase one fact or one skill. Pruning changes the computation distributed across the network, and the effects may appear in unexpected places."
+    },
+    {
+      "misconception": "Pruning only happens after training is finished.",
+      "correction": "Many workflows prune after training, but not all. Some methods prune during training, gradually encourage sparsity, or alternate between pruning and recovery steps. The term covers several timings and methods, not one fixed procedure."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Pruning trims away parts of a model that seem to matter less, so the model may become smaller or cheaper to run without losing too much quality.",
+    "technical": "Pruning is a family of model compression methods that impose sparsity by removing parameters, activations or larger structures judged less important to the objective. Importance can be estimated by simple heuristics such as weight magnitude, or by criteria related to gradients, Hessian approximations, movement during training, or sensitivity of loss to masking. The pruning target may be unstructured individual weights, structured units such as neurons, channels, attention heads or blocks, or N:M patterns designed for hardware support. After masking or deleting the selected elements, practitioners often perform fine-tuning to recover performance. The practical effect depends on the sparsity pattern and system stack: parameter count may fall, but latency improves only if storage format, kernels and hardware exploit the resulting sparsity. Pruning differs from distillation, which trains a separate smaller student model, and from quantisation, which reduces numerical precision rather than connectivity."
+  },
+  "keyTakeaway": "Pruning can make a model lighter by removing less useful parts, but the real test is whether quality stays acceptable and the deployment system can use the sparsity.",
+  "quickCheck": {
+    "question": "Which statement best describes pruning?",
+    "options": [
+      "Training a new small model to copy a larger model’s outputs",
+      "Reducing the number of bits used to store each parameter",
+      "Removing or zeroing less important parameters or structures in an existing model",
+      "Adding extra layers so the model can specialise on a new task"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Pruning starts from an existing model and removes or deactivates parameters or structures judged less important. Training a small model to imitate a larger one is distillation. Reducing bit width is quantisation. Adding task-specific capacity is a different adaptation strategy."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Pruning",
+      "url": "https://en.wikipedia.org/wiki/Pruning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "Wikipedia gives a broad overview of pruning concepts and terminology, which suits readers who want a quick orientation before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "The Hugging Face LLM Course helps technically minded readers place pruning among other model optimisation methods used in practice.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "DeepLearning.AI short courses are useful for learners who prefer guided, application-focused explanations over reference-style reading.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Pruning",
+      "url": "https://www.youtube.com/results?search_query=Pruning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "The YouTube search results page offers multiple video explanations of pruning, which suits readers who learn well from visual teaching but need to judge quality across sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Pruning",
+      "url": "https://www.reddit.com/search/?q=Pruning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "The Reddit search results page shows community discussions and practical questions about pruning, which suits readers who want to see common confusions and practitioner experiences.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "pruning in machine learning",
+    "model pruning explained",
+    "what is sparsity in ai",
+    "pruned model meaning",
+    "weight pruning vs quantisation",
+    "structured vs unstructured pruning",
+    "llm pruning",
+    "why pruning not faster",
+    "prunning machine learning",
+    "sparse neural network",
+    "pruning",
+    "model pruning",
+    "sparsity"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:30.441Z",
+    "contentHash": "67f3e0c40e68d384",
+    "attempts": 1,
+    "promptTokens": 2289,
+    "completionTokens": 2469
+  }
+}

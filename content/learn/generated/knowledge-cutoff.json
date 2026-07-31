@@ -1,0 +1,227 @@
+{
+  "id": "knowledge-cutoff",
+  "slug": "knowledge-cutoff",
+  "term": "Knowledge cutoff",
+  "aliases": [
+    "training cutoff",
+    "cut-off date"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "communications",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "pretraining"
+  ],
+  "relatedTermIds": [
+    "pretraining",
+    "fine-tuning",
+    "model-version",
+    "retrieval-augmented-generation",
+    "checkpoint"
+  ],
+  "oftenConfusedWith": [
+    "context-window",
+    "retrieval-augmented-generation",
+    "model-version"
+  ],
+  "oneSentence": "The latest point in time covered by a model’s training data, after which newer events and facts are usually absent unless added by another method.",
+  "plainExplanation": "A model learns patterns from large collections of text and other data. That learning uses material available up to a certain date or period. That point is often called the knowledge cutoff, training cutoff, or cut-off date.\n\nWhat goes in is older training data: books, websites, articles, code, and other sources collected before the cutoff. What happens is that the model’s parameters, the internal numerical settings shaped during training, are adjusted using that data. What comes out is a model that can generate useful text, but whose built-in factual background may stop at that earlier point.\n\nThis does not mean the model cannot talk about later events at all. It may still produce guesses, repeat patterns, or use information supplied in the prompt. But without a connected external source, those later claims should not be treated as reliable.\n\nPeople often confuse knowledge cutoff with context window or retrieval-augmented generation. A context window is how much text the model can handle in one exchange. Retrieval-augmented generation adds current documents at use time. Knowledge cutoff is about what was available during training, not how much text fits now or whether live documents are being fetched.",
+  "everydayAnalogy": {
+    "title": "A school atlas printed last year",
+    "story": "A teacher in Nairobi gives students a printed world atlas published in 2024. In class, a student asks about a railway line opened in 2025. The atlas can still help with country names, borders shown at publication, and older transport routes, but it will not include the new line unless the teacher also brings a newer handout. If a student guesses the answer from older maps, the guess might sound sensible and still be wrong.",
+    "mapping": [
+      {
+        "analogyElement": "atlas published in 2024",
+        "aiElement": "training data collected up to a cutoff date"
+      },
+      {
+        "analogyElement": "new railway line opened in 2025",
+        "aiElement": "facts or events after the cutoff"
+      },
+      {
+        "analogyElement": "teacher adds a newer handout",
+        "aiElement": "current information supplied through retrieval or the prompt"
+      },
+      {
+        "analogyElement": "student guess based on older maps",
+        "aiElement": "model output that sounds plausible without being up to date"
+      }
+    ],
+    "limitation": "A printed atlas is fixed and visible, while a model stores patterns in numerical parameters rather than pages you can inspect directly. Also, an atlas does not generate new sentences, but a model does, so it can produce fluent guesses about post-cutoff events even when it has no dependable built-in record of them."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "What a knowledge cutoff does and does not mean",
+    "learningObjective": "After viewing, the reader should be able to explain that the cutoff limits built-in training knowledge, not the amount of text a model can read now, and not whether current documents can be added separately.",
+    "description": "A left-to-right flow diagram with four boxes: older data collected before a marked date, training, the model, and a user question about a later event. A side branch shows optional current documents added at use time. Read top row left to right, then compare the answer path without retrieval and with retrieval.",
+    "steps": [
+      {
+        "label": "1. Data before the date",
+        "explanation": "Show a calendar marker such as 'cutoff: June 2024'. Only source material from before that point goes into training.",
+        "visualInstruction": "Draw a stack of documents on the left with small date tags before the cutoff line; place a bold vertical date marker beside them."
+      },
+      {
+        "label": "2. Training shapes the model",
+        "explanation": "The model’s parameters are adjusted using those earlier sources. This forms its built-in background patterns.",
+        "visualInstruction": "Connect the document stack to a centre box labelled 'training', then to a box labelled 'model parameters'."
+      },
+      {
+        "label": "3. Ask about something newer",
+        "explanation": "A user asks about an event after the cutoff, such as 'What changed in 2025?' The built-in knowledge may be incomplete or outdated.",
+        "visualInstruction": "Place a question bubble to the right with a date after the cutoff; connect it to the model box."
+      },
+      {
+        "label": "4. Two answer paths",
+        "explanation": "Without added current sources, the reply may be uncertain or wrong. With approved current documents retrieved at use time, the answer can be grounded in newer material.",
+        "visualInstruction": "Split into two arrows: top arrow directly to an answer box marked 'may be outdated'; lower arrow passes through a box labelled 'current documents retrieved now' to an answer box marked 'uses newer sources'."
+      }
+    ],
+    "interaction": "Hover or tap each box to reveal a short note: 'training-time knowledge', 'user-time question', 'not the same as context window', and 'retrieval can add newer information'.",
+    "accessibilityDescription": "The diagram is a four-stage flow. First, documents dated before a clear cutoff line are collected. Second, those documents are used in training, which shapes the model’s parameters. Third, a user asks about an event dated after the cutoff. Fourth, the diagram splits into two paths: if no current documents are added, the answer may rely on older training patterns and may be outdated; if current documents are retrieved at use time, the answer can use newer information. The diagram also signals that this is different from the context window, which is not shown as a date limit.",
+    "reducedMotionDescription": "A static left-to-right flow with the same four stages and the two final branches visible at once, using labels and colour contrast instead of animation."
+  },
+  "workedExample": {
+    "scenario": "A user asks a general-purpose assistant on 10 March 2026: 'Who won the 2025 regional football championship in East Africa?'",
+    "input": "User prompt: 'Who won the 2025 regional football championship in East Africa? Please answer in one sentence.'",
+    "process": [
+      "The model has built-in training knowledge only up to a stated cutoff in mid-2024.",
+      "The question asks about an event in 2025, which is after that cutoff.",
+      "Without retrieval or a user-supplied source, the model may produce a guess, say it is unsure, or mix older facts with invented detail.",
+      "If the system is connected to an approved current source, it can use that source to answer and cite it, depending on system design."
+    ],
+    "result": "The safe conclusion is not 'the model knows' or 'does not know' in a human sense, but that its built-in training background does not reliably cover that 2025 result unless newer information is added another way."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A communications officer in a UN country office uses an approved internal AI tool to draft responses for a shared public inbox that asks about this month’s office opening hours and a newly announced event.",
+    "relevance": "Knowing the cutoff helps the officer recognise that a draft may contain outdated details if the model was trained before the latest office notice. The officer can then provide the current approved notice or use a connected internal knowledge source before sending anything.",
+    "caution": "Do not paste personal data, confidential correspondence, protection-sensitive case details, security information, or unpublished operational information into an unapproved public AI service."
+  },
+  "whyItMatters": "The cutoff affects whether an answer may be outdated. That matters when you judge risk, choose whether to trust a draft, and decide when you need current documents or human checking. It also helps you ask better questions of vendors: what date does built-in knowledge reach, and what approved method adds newer information? Without that clarity, people may assume a fluent answer is current when it is not.",
+  "whereYouMayHearIt": [
+    "model cards and product notes",
+    "AI procurement discussions",
+    "media interviews about chatbots",
+    "staff training on safe AI use"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If the cutoff is old, the model cannot say anything about newer events.",
+      "correction": "It can still generate text about newer events by guessing from older patterns or by using information supplied in the prompt or retrieved from another source. The issue is reliability, not silence."
+    },
+    {
+      "misconception": "Knowledge cutoff means the system stops reading after a certain date in the conversation.",
+      "correction": "That confuses cutoff with context window. The context window is the amount of text the system can process in one exchange. Knowledge cutoff is the latest date of the data used during training."
+    },
+    {
+      "misconception": "If a model mentions a cutoff date, every fact before that date is accurate.",
+      "correction": "No. Training data can contain errors, gaps, bias, or conflicting information. A cutoff only tells you the latest likely training period, not the quality of everything before it."
+    },
+    {
+      "misconception": "Connecting a model to the internet removes the cutoff.",
+      "correction": "It can reduce the problem for some questions by adding newer sources at use time, but the model’s built-in training background still comes from an earlier period. The quality then depends on the retrieved sources and system design."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the date up to which the model’s built-in background was learned. Newer facts may be missing unless you add current information another way.",
+    "technical": "During pretraining, a model is optimised on a corpus collected up to a particular time boundary. That boundary is commonly described as the knowledge cutoff. Information after that date is generally not represented through the model’s training-derived parameters unless the model is later updated through additional training, fine-tuning on newer data, or supplemented at inference time by retrieval or user-provided context. The term refers to temporal coverage of training data, not token capacity, not conversation memory, and not automatic access to live external sources. Because models generate outputs from learned statistical patterns rather than a dated fact table, post-cutoff answers may still appear confident even when they are unsupported by current evidence."
+  },
+  "keyTakeaway": "A knowledge cutoff tells you how recent the model’s built-in training background may be, not whether it can read long prompts or use fresh documents you provide.",
+  "quickCheck": {
+    "question": "Which statement best describes a knowledge cutoff?",
+    "options": [
+      "The latest date of information likely included in the model’s training data",
+      "The maximum number of words the model can read in one prompt",
+      "The date when the model account was created",
+      "A guarantee that all earlier facts are correct"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "A knowledge cutoff is about the time range of training data. It is not the context window, not an account setting, and not a guarantee of accuracy. Even before the cutoff, errors can remain; after the cutoff, newer facts may need retrieval or human checking."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Knowledge cutoff",
+      "url": "https://en.wikipedia.org/wiki/Knowledge_cutoff",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia link gives a broad introductory overview of the term and suits readers who want a quick general starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This Hugging Face course link helps readers place the term within how large language models are trained and used, and suits beginners who want structured learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "This DeepLearning.AI course link offers short practical lessons around modern AI systems, and suits readers who prefer guided video-based learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Knowledge cutoff",
+      "url": "https://www.youtube.com/results?search_query=Knowledge%20cutoff%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find a range of video explanations of the term, and suits people who learn best by comparing presenters; it is a search page, not a single vetted source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Knowledge cutoff",
+      "url": "https://www.reddit.com/search/?q=Knowledge%20cutoff",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common questions and confusions people have about the term, and suits readers who want informal discussion; it is a search page, not a single authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "knowledge cutoff meaning",
+    "training cutoff date ai",
+    "cut-off date model",
+    "what does knowledge cutoff mean",
+    "llm cutoff date",
+    "ai knows up to when",
+    "model out of date after training",
+    "knowledge cutoff vs context window",
+    "knowledge cutoff vs rag",
+    "trainning cutoff",
+    "knowledge cutoff",
+    "training cutoff",
+    "cut-off date"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:22.007Z",
+    "contentHash": "a84f5ec90a807432",
+    "attempts": 2,
+    "promptTokens": 2372,
+    "completionTokens": 2442
+  }
+}

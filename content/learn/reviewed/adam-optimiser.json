@@ -1,0 +1,225 @@
+{
+  "id": "adam-optimiser",
+  "slug": "adam-optimiser",
+  "term": "Adam optimiser",
+  "aliases": [
+    "Adam",
+    "Adam optimizer"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "optimisation",
+    "momentum"
+  ],
+  "relatedTermIds": [
+    "optimisation",
+    "gradient",
+    "gradient-descent",
+    "learning-rate",
+    "momentum",
+    "convergence"
+  ],
+  "oftenConfusedWith": [
+    "gradient-descent",
+    "momentum",
+    "learning-rate"
+  ],
+  "oneSentence": "A training method that adjusts each model setting using both recent gradient direction and the recent size of past gradients.",
+  "plainExplanation": "When a model is trained, it produces an error value called a loss. From that loss, training calculates gradients: numbers that show which way each setting, or parameter, should move to reduce the loss. An optimiser is the rule for turning those gradients into actual parameter updates.\n\nAdam combines two ideas. First, it keeps a running average of past gradients, which acts a bit like momentum and helps updates keep moving in a useful direction instead of zig-zagging. Second, it keeps a running average of squared gradients, which tracks how large and noisy recent gradients have been for each parameter.\n\nUsing those two running averages, Adam gives each parameter its own effective step size. If a parameter has had large gradients, Adam tends to scale its update down. If a parameter has had smaller gradients, Adam may allow a relatively larger update. This often helps training move faster and more steadily, especially when different parameters behave very differently.\n\nWhat goes in are the current gradients, a base learning rate, and Adam's saved moving averages from earlier training steps. What happens is that Adam updates those averages, corrects for their early-step bias, and computes a new update for each parameter. What comes out is a new set of parameter values, hopefully giving lower loss on the next pass through the data.",
+  "everydayAnalogy": {
+    "title": "Editing meeting notes with memory of past corrections",
+    "story": "A team in Nairobi, Bangkok and Lima is refining a shared summary of a long meeting. After each review round, they mark phrases that seem too vague or too strong. The editor does not react only to the latest comments: she remembers the overall direction of recent feedback and also notices which sections keep attracting very large corrections. For sections with repeated large swings, she makes smaller edits; for sections with lighter, steadier feedback, she is willing to change more.",
+    "mapping": [
+      {
+        "analogyElement": "recent overall direction of feedback",
+        "aiElement": "running average of past gradients"
+      },
+      {
+        "analogyElement": "sections with repeated large corrections",
+        "aiElement": "parameters with large recent squared gradients"
+      },
+      {
+        "analogyElement": "smaller edits in unstable sections",
+        "aiElement": "scaling down updates for parameters with high gradient magnitude"
+      },
+      {
+        "analogyElement": "each section edited by a different amount",
+        "aiElement": "per-parameter adaptive step sizes"
+      }
+    ],
+    "limitation": "A human editor can understand the meaning of the notes and choose changes deliberately. Adam does not inspect meaning in that way. It only applies numerical update rules to parameters using gradients. Also, in the story the editor may choose to ignore some comments, while Adam follows a fixed mathematical procedure unless its hyperparameters are changed."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How Adam turns gradients into parameter updates",
+    "learningObjective": "Show why Adam uses two moving averages and how that leads to per-parameter update sizes rather than one identical step for all parameters.",
+    "description": "A left-to-right step diagram for one training iteration. Start with the current gradient for each parameter, then update two running averages, apply bias correction, and produce a scaled parameter update. Read from step 1 to step 4; a small note under each step explains the role of that stage.",
+    "steps": [
+      {
+        "label": "1. Read the gradient",
+        "explanation": "For each parameter, training computes a gradient from the current loss. The sign shows direction; the size shows how strongly the loss changes nearby.",
+        "visualInstruction": "Draw a column of three example parameters with gradient values such as +0.8, -0.1, +0.02. Use arrows to indicate positive and negative direction."
+      },
+      {
+        "label": "2. Update the direction memory",
+        "explanation": "Adam updates a moving average of recent gradients. This smooths noisy changes and carries information about consistent direction over time.",
+        "visualInstruction": "Show a small memory box labelled 'first moment' receiving the new gradient and a faded arrow from the previous step's memory value."
+      },
+      {
+        "label": "3. Update the size memory",
+        "explanation": "Adam also updates a moving average of squared gradients. This tracks how large recent gradients have been, without cancelling positive and negative values.",
+        "visualInstruction": "Show a second memory box labelled 'second moment' with squared example values, using larger circles for larger magnitudes."
+      },
+      {
+        "label": "4. Correct and scale the update",
+        "explanation": "Early in training, the moving averages are biased toward zero because they started at zero, so Adam corrects that. It then divides the direction estimate by the square root of the size estimate, giving each parameter its own effective step size before applying the learning rate.",
+        "visualInstruction": "Display a formula-like layout: corrected direction over square root of corrected size, then an arrow to updated parameter values. Show one parameter getting a smaller step than another."
+      }
+    ],
+    "interaction": "Hover or tap each parameter row to highlight how the same raw learning rate leads to different final step sizes because the second-moment estimate differs.",
+    "accessibilityDescription": "This diagram explains one Adam update in four steps. First, each parameter has a gradient from the current loss, which provides a direction and magnitude. Second, Adam updates a running average of recent gradients, called the first moment, to keep a smoothed sense of direction. Third, it updates a running average of squared gradients, called the second moment, to track recent gradient size for each parameter. Fourth, because both averages started at zero, Adam applies a correction early in training, then scales the update by dividing the corrected direction estimate by the square root of the corrected size estimate and multiplying by the learning rate. The result is that different parameters can move by different amounts in the same training step.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: gradients in panel one, first-moment memory in panel two, second-moment memory in panel three, and the corrected, scaled parameter update in panel four."
+  },
+  "workedExample": {
+    "scenario": "Training a small text classifier that labels short support emails as 'urgent' or 'not urgent'.",
+    "input": "Suppose one parameter currently equals 0.50. At this step its gradient is 0.80. The saved Adam values from the previous step are first-moment m = 0.10 and second-moment v = 0.04. Use beta1 = 0.9, beta2 = 0.999, learning rate = 0.001, and ignore epsilon for simplicity.",
+    "process": [
+      "Update the first moment: new m = 0.9×0.10 + 0.1×0.80 = 0.17.",
+      "Update the second moment: new v = 0.999×0.04 + 0.001×0.64 = 0.0406, because 0.80 squared is 0.64.",
+      "Apply bias correction if this is an early step; for illustration, assume the corrected values are close enough to 0.17 and 0.0406 to see the effect.",
+      "Compute the update size: 0.001 × 0.17 / sqrt(0.0406) is about 0.00084.",
+      "Subtract the update from the parameter: 0.50 becomes about 0.49916."
+    ],
+    "result": "The parameter changes only a little, and the step is smaller than plain gradient descent would give because Adam scales the move using recent gradient history."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is training an internal model to sort incoming, non-sensitive humanitarian coordination messages by topic so analysts can find logistics, shelter and health updates faster.",
+    "relevance": "Adam is a common optimiser for this kind of training because message features can have very uneven gradient behaviour, and Adam can adapt the step size for different parameters to make training more stable.",
+    "caution": "Do not place confidential, personal, protection-sensitive or operationally sensitive message content into an unapproved public AI service; use approved systems, minimise data, and keep human review over any workflow that could affect people or operations."
+  },
+  "whyItMatters": "If you train or commission models, the optimiser affects cost, speed and reliability. Adam often reaches a useful result quickly without as much manual tuning as simpler methods, so teams use it a lot in practice. But it is not automatically best for every task. The choice can change whether training is stable, whether progress stalls, and how well the final model performs on new data rather than just the training set. For non-specialists, this matters because a model that looks good in a demo may depend heavily on training choices such as the optimiser and its hyperparameters.",
+  "whereYouMayHearIt": [
+    "deep learning tutorials",
+    "training configuration files",
+    "machine learning research papers",
+    "framework defaults in PyTorch or TensorFlow"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Adam always gives better final results than basic gradient descent.",
+      "correction": "Adam often trains faster at the start and can be easier to tune, but 'better' depends on the task, model and data. In some settings another optimiser may generalise as well or better on unseen data, even if Adam reduces training loss quickly."
+    },
+    {
+      "misconception": "Adam chooses the perfect learning rate automatically, so tuning is unnecessary.",
+      "correction": "Adam adapts update sizes per parameter, but it still uses a base learning rate and other hyperparameters. Poor settings can still make training unstable, too slow, or lead to a disappointing result."
+    },
+    {
+      "misconception": "Adam is just momentum with a different name.",
+      "correction": "Adam includes a momentum-like moving average of gradients, but it also tracks a moving average of squared gradients and uses that to scale updates per parameter. That extra mechanism is a major difference."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Adam is a way to train a model that remembers recent update directions and also remembers which settings have been getting large or small gradients, so it can move each setting by a different amount.",
+    "technical": "At training step t, Adam receives the gradient g_t for each parameter. It updates two exponential moving averages: m_t = beta1 m_(t-1) + (1 - beta1) g_t and v_t = beta2 v_(t-1) + (1 - beta2) g_t^2, where the square is element-wise. Because these estimates start at zero, Adam applies bias correction, typically m_hat_t = m_t / (1 - beta1^t) and v_hat_t = v_t / (1 - beta2^t). The parameter update is then theta_t = theta_(t-1) - alpha m_hat_t / (sqrt(v_hat_t) + epsilon), with division, square root and epsilon applied element-wise. Intuitively, m_hat_t provides a smoothed direction and v_hat_t normalises by recent gradient magnitude, producing adaptive per-parameter step sizes."
+  },
+  "keyTakeaway": "Adam updates model parameters using both remembered direction and remembered gradient size, so different parameters can take differently scaled steps.",
+  "quickCheck": {
+    "question": "What makes Adam different from plain gradient descent?",
+    "options": [
+      "It uses the current gradient and also keeps moving averages of past gradients and squared gradients to scale each parameter's update.",
+      "It removes the need for a loss function because the optimiser can measure correctness directly.",
+      "It guarantees the model will reach the global minimum if training runs long enough.",
+      "It changes all parameters by exactly the same amount on every step to keep training fair."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Plain gradient descent uses the current gradient and a learning rate to set the step. Adam adds memory of past gradient direction and past gradient magnitude, which leads to adaptive per-parameter updates. It still needs a loss function, and it does not guarantee a global minimum."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Adam optimiser",
+      "url": "https://en.wikipedia.org/w/index.php?search=Adam%20optimiser",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A search results page on Wikipedia that helps readers find encyclopedia-style background on the term, suited to readers who want a starting point rather than one guaranteed article.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "A visual video explanation of neural networks that is useful for readers who want intuition about gradients and training before tackling optimiser details.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "description": "A course page about reducing loss that suits readers who want a structured introduction to how training updates improve model performance.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Adam optimiser",
+      "url": "https://www.youtube.com/results?search_query=Adam%20optimiser%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps readers compare different video explanations of Adam, suited to readers who prefer to choose a teaching style that fits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Adam optimiser",
+      "url": "https://www.reddit.com/search/?q=Adam%20optimiser",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that shows community discussions and practical questions about Adam, suited to readers who want informal troubleshooting and differing viewpoints.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "adam optimiser explained",
+    "adam optimizer vs gradient descent",
+    "what does adam do in machine learning",
+    "adam first and second moment",
+    "bias correction adam",
+    "adam learning rate meaning",
+    "adam optimiser formula",
+    "adam optimizer misspelt optimzer",
+    "why use adam for training",
+    "adam vs momentum",
+    "adam optimiser",
+    "adam",
+    "adam optimizer"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:31.951Z",
+    "contentHash": "1d7c59e30f536fd8",
+    "attempts": 1,
+    "promptTokens": 2262,
+    "completionTokens": 2634
+  }
+}

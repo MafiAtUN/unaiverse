@@ -1,0 +1,226 @@
+{
+  "id": "missing-data",
+  "slug": "missing-data",
+  "term": "Missing data",
+  "aliases": [
+    "missingness",
+    "gaps in data"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "starter",
+  "audiences": [
+    "programme",
+    "human-rights"
+  ],
+  "prerequisiteTermIds": [
+    "data-cleaning"
+  ],
+  "relatedTermIds": [
+    "data-cleaning",
+    "noisy-data",
+    "data-sampling",
+    "data-distribution",
+    "metadata",
+    "data-governance"
+  ],
+  "oftenConfusedWith": [
+    "noisy-data",
+    "class-imbalance",
+    "data-sampling"
+  ],
+  "oneSentence": "Some values that should be present in a dataset are absent, leaving blanks that can distort analysis and model behaviour.",
+  "plainExplanation": "A dataset is a collection of information organised so people or software can analyse it. Sometimes some entries are missing. A survey may have no age for one person. A clinic record may have no follow-up date. A spreadsheet may have blank cells because the information was never collected, was lost, or could not be matched.\n\nWhat goes in is incomplete data. What happens next depends on how those gaps are handled. People may remove incomplete rows, fill in a value based on other information, add a special marker such as “unknown”, or redesign the analysis so it can cope with blanks. Each choice changes the result in a different way.\n\nWhat comes out can be useful, misleading, or unfair. If the missing values are random, the damage may be small. If they are concentrated in one group, place, language, or time period, the output can become biased. For example, if rural areas have more missing health records, a summary may understate their needs.\n\nThis is different from noisy data. Noisy data contains values that are present but wrong, inconsistent, or hard to interpret. Missing data means the value is absent. It is also different from class imbalance, where some categories have far fewer examples than others even if the records are complete.",
+  "everydayAnalogy": {
+    "title": "Checking a shipping manifest against a delivery",
+    "story": "A warehouse worker in Mombasa checks a shipping manifest against the boxes that arrived. Some lines on the manifest have the item name and quantity, but the destination shelf is blank. On other lines, the quantity is blank because a label was torn off during transport. The supervisor can still process the delivery, but must decide whether to set those boxes aside, mark them as unknown, or infer the missing detail from other documents. If too many blanks affect one supplier, the stock report at the end of the day may give a distorted picture.",
+    "mapping": [
+      {
+        "analogyElement": "blank fields on the manifest",
+        "aiElement": "missing values in a dataset"
+      },
+      {
+        "analogyElement": "setting boxes aside or marking unknown",
+        "aiElement": "dropping incomplete records or encoding a missing marker"
+      },
+      {
+        "analogyElement": "inferring details from other documents",
+        "aiElement": "estimating missing values from other available data"
+      },
+      {
+        "analogyElement": "distorted stock report",
+        "aiElement": "biased analysis or model output"
+      }
+    ],
+    "limitation": "A manifest usually has a fixed set of boxes and fields, while real datasets can have many variables and more complex patterns of missingness. Also, in data work, filling a gap can change statistical relationships in subtle ways; a warehouse guess mainly affects one shipment record. The analogy helps with the idea of blanks and handling choices, but not with the mathematics of bias or uncertainty."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How missing data changes results",
+    "learningObjective": "Show how missing values enter a dataset, the main handling choices, and why different choices can change the final result.",
+    "description": "A left-to-right flow diagram with four boxes. It starts with a small table containing blank cells, then moves to a check for where gaps occur, then splits into handling choices, then ends with different possible outputs. Read from left to right to see that the same incomplete input can lead to different results depending on how the gaps are treated.",
+    "steps": [
+      {
+        "label": "1. Incomplete data enters",
+        "explanation": "The dataset includes records with one or more empty values, such as a missing age, location, or date.",
+        "visualInstruction": "Draw a simple table with 4 rows and 4 columns. Leave several cells blank and highlight them with a dashed outline. Add a caption: 'Some values are absent'."
+      },
+      {
+        "label": "2. Check the pattern",
+        "explanation": "Ask whether the gaps are scattered randomly or concentrated in one group, source, language, region, or time period.",
+        "visualInstruction": "Show the same table with coloured circles around blanks. Add small labels above groups of rows such as 'urban' and 'rural' to show blanks clustering more in one group."
+      },
+      {
+        "label": "3. Choose a handling method",
+        "explanation": "Common choices are to remove incomplete records, keep them with an 'unknown' marker, or estimate the missing value from other data.",
+        "visualInstruction": "Split the flow into three side-by-side boxes labelled 'drop rows', 'mark unknown', and 'estimate value'. Use arrows from the checked table to each box."
+      },
+      {
+        "label": "4. Compare outputs",
+        "explanation": "Each handling choice can change totals, averages, and model behaviour. The safest option depends on the purpose and the risks.",
+        "visualInstruction": "Merge to a final panel with three mini-results: different averages, different counts, and a note that one group may now be under-represented. Add a warning icon with text: 'Choice affects outcome'."
+      }
+    ],
+    "interaction": "Hover or tap each handling method to highlight one possible path from incomplete data to output and reveal a short note on the trade-off.",
+    "accessibilityDescription": "The diagram explains that missing data is not only about blank cells but about how those blanks are handled. First, a table contains several empty cells. Second, the viewer checks whether the blanks are random or clustered in a particular group, such as one region having more gaps. Third, the process branches into three handling methods: dropping incomplete rows, marking the value as unknown, or estimating a value from other available information. Fourth, the branches lead to different outputs, showing that totals, averages, and model behaviour can change depending on the choice. The core message is that the same incomplete dataset can produce different results because handling missing values is an analytical decision.",
+    "reducedMotionDescription": "Show the same four stages as a static left-to-right diagram with the three handling choices displayed side by side and a fixed note that different choices lead to different outputs."
+  },
+  "workedExample": {
+    "scenario": "A team analyses 10 household water-service records to estimate average daily supply hours.",
+    "input": "Supply hours recorded for 10 households: 24, 20, 18, blank, 12, 10, blank, 8, 6, 2",
+    "process": [
+      "The team sees that 2 of the 10 records are missing, so the dataset is incomplete.",
+      "If they drop the missing rows, they average the 8 known values and get 12.5 hours.",
+      "They then check the source notes and find both missing records come from a remote area with weaker service.",
+      "Because the gaps are not evenly spread, they report the average with a warning and ask for data collection follow-up instead of quietly treating the sample as complete."
+    ],
+    "result": "The headline number, 12.5 hours, may overstate service if the missing records are mostly from underserved households. The team keeps the estimate but flags uncertainty and possible bias."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN programme team compiles monitoring data from field partners to summarise training attendance by region and gender before drafting a short internal briefing with human review.",
+    "relevance": "If some partner reports are missing gender or region fields, the draft summary may give a false sense of who was reached. Recognising missing data helps the team pause, label uncertainty, and ask for corrections before using the summary in planning or reporting.",
+    "caution": "Do not upload personal, confidential, protection-sensitive, or partner-identifying records to an unapproved public AI service to fill gaps or generate summaries. Use approved systems, minimise data, and keep human oversight over any interpretation."
+  },
+  "whyItMatters": "Missing data can quietly change conclusions. A chart, average, risk score, or model may look precise even when important values are absent. For non-specialists, this matters because decisions about funding, staffing, outreach, protection, or evaluation may rest on those outputs.\n\nThe key question is not only how much data is missing, but who or what is missing. If gaps are concentrated in one population, language group, location, or period, the result can be systematically unfair or inaccurate. Good decisions require asking whether the blanks are harmless, informative, or a sign that the collection process itself needs attention.",
+  "whereYouMayHearIt": [
+    "survey analysis",
+    "monitoring and evaluation",
+    "machine learning data preparation",
+    "administrative records review",
+    "dashboard quality checks"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Blank cells are just a minor cleaning issue and can usually be ignored.",
+      "correction": "Sometimes they can be minor, but not always. If the missing values are concentrated in a particular group or type of case, ignoring them can shift averages, hide needs, or make a model perform worse for that group. The impact depends on the pattern, not only the number of blanks."
+    },
+    {
+      "misconception": "The best fix is always to delete any row with a missing value.",
+      "correction": "Deleting incomplete rows is simple, but it can remove a large share of data and can bias the result if the missingness is not random. In some cases, keeping an 'unknown' category or using a suitable estimation method is safer. The right choice depends on purpose, risk, and how the gaps arose."
+    },
+    {
+      "misconception": "Missing data and noisy data mean the same thing.",
+      "correction": "They are different problems. Missing data means a value is absent. Noisy data means a value is present but may be wrong, inconsistent, or imprecise. A blank age and an age typed as 250 both create problems, but they need different checks and remedies."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Some information that should be in the dataset is missing, and that can change what the analysis or model produces.",
+    "technical": "Missing data refers to absent values for variables that were intended to be observed. Handling it requires examining the mechanism and pattern of missingness, such as whether values are missing completely at random, related to observed variables, or related to unobserved factors. Common treatments include complete-case analysis, explicit missing indicators, single or multiple imputation, and models designed to accommodate missingness. The choice affects variance, bias, representativeness, and downstream model performance, especially when gaps are uneven across groups or sources."
+  },
+  "keyTakeaway": "A blank value is not neutral: how you handle it can change the story the data tells.",
+  "quickCheck": {
+    "question": "Why can missing data be more serious than it first appears?",
+    "options": [
+      "Because blank values always make a dataset unusable.",
+      "Because missing values may be concentrated in certain groups and change the result.",
+      "Because software automatically replaces blanks with correct values.",
+      "Because missing data only matters for very large AI models."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Missing data becomes especially risky when the gaps are systematic rather than random. If one group has more missing records, summaries and models can undercount or misrepresent that group. A dataset with blanks can still be usable, but only after checking the pattern and choosing a suitable handling method."
+  },
+  "resources": [
+    {
+      "title": "Missing data",
+      "url": "https://en.wikipedia.org/wiki/Missing_data",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "Wikipedia gives a broad introductory overview of missing data concepts and common handling approaches, which suits beginners who want a quick starting point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "The NIST AI Risk Management Framework helps readers connect data quality issues such as missing data to practical risk management, and suits professionals responsible for governance or assurance.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "description": "The OECD AI Principles provide high-level policy guidance on trustworthy AI, useful for readers who want the governance context rather than technical detail.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Missing data",
+      "url": "https://www.youtube.com/results?search_query=Missing%20data%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations of missing data in different teaching styles, and suits people who learn better by watching; it is a search page, not one definitive source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Missing data",
+      "url": "https://www.reddit.com/search/?q=Missing%20data",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common questions and informal discussions about missing data, and suits readers who want practical language and examples; it is a search page, not one definitive source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "missing data meaning",
+    "what is missingness",
+    "blank cells in dataset",
+    "how to handle missing values",
+    "missing data vs noisy data",
+    "missing data bias",
+    "why missing values matter",
+    "null values explained",
+    "missing datapoints",
+    "missng data",
+    "missing data",
+    "missingness",
+    "gaps in data"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:49.111Z",
+    "contentHash": "f5d2c5a271a6aece",
+    "attempts": 1,
+    "promptTokens": 2348,
+    "completionTokens": 2492
+  }
+}

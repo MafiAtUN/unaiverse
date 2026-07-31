@@ -1,0 +1,232 @@
+{
+  "id": "confusion-matrix",
+  "slug": "confusion-matrix",
+  "term": "Confusion matrix",
+  "aliases": [
+    "error matrix"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "classification"
+  ],
+  "relatedTermIds": [
+    "classification",
+    "accuracy",
+    "precision",
+    "recall",
+    "f1-score",
+    "evaluation-metric"
+  ],
+  "oftenConfusedWith": [
+    "false-positive-and-false-negative",
+    "accuracy",
+    "precision",
+    "recall"
+  ],
+  "oneSentence": "A table that compares a classifier’s predictions with the real outcomes, so you can see which kinds of mistakes it makes and how often.",
+  "plainExplanation": "A confusion matrix is a small table used to check a classification system. A classification system sorts items into labels, such as “relevant” or “not relevant”. The table compares two things for each item: the real label and the system’s predicted label.\n\nFor a simple two-class task, the table has four main counts. True positives are items correctly predicted as positive. True negatives are items correctly predicted as negative. False positives are items wrongly predicted as positive. False negatives are items wrongly predicted as negative.\n\nWhat goes in is a set of examples where the real answer is already known. What happens is that you run the system on those examples and count how many cases fall into each box. What comes out is not one single score, but a picture of the pattern of errors.\n\nThat matters because one overall score, such as accuracy, can hide important problems. A system may look good overall but still miss many important cases, or raise too many false alarms. The confusion matrix helps you calculate other measures such as precision and recall, and helps you judge whether the system fits the real use case.",
+  "everydayAnalogy": {
+    "title": "Sorting survey messages into “needs action” or “no action needed”",
+    "story": "A team receives 200 survey comments after a public service event in Nairobi, Lima and Bangkok. One staff member has already reviewed them and marked which comments truly need follow-up. A simple tool then sorts the same comments into “needs action” or “no action needed”. The team makes a four-box tally: comments both the reviewer and tool marked for action, comments both said needed no action, comments the tool flagged by mistake, and comments the tool missed.",
+    "mapping": [
+      {
+        "analogyElement": "survey comments with known follow-up labels",
+        "aiElement": "examples with true class labels"
+      },
+      {
+        "analogyElement": "tool sorts comments into two groups",
+        "aiElement": "classifier makes predicted labels"
+      },
+      {
+        "analogyElement": "four-box tally of matches and mismatches",
+        "aiElement": "confusion matrix counts"
+      },
+      {
+        "analogyElement": "mistaken flags and missed issues",
+        "aiElement": "false positives and false negatives"
+      }
+    ],
+    "limitation": "The story suggests one human review gives the unquestionable truth. In real evaluation, the “true” label may itself be uncertain, disputed or based on several reviewers. Also, real confusion matrices can cover more than two classes, not just a yes/no split."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From known answers to a four-box error table",
+    "learningObjective": "After viewing this, a reader should be able to explain how a confusion matrix is built and what each box says about correct and incorrect predictions.",
+    "description": "Show a left-to-right flow: labelled test items enter a classifier, then counts are placed into a 2×2 table with rows for real labels and columns for predicted labels. Read the table by asking, for each item, what the real label was and what the system predicted, then add one count to the matching box.",
+    "steps": [
+      {
+        "label": "Start with checked examples",
+        "explanation": "Use a test set where each item already has a trusted real label, such as positive or negative.",
+        "visualInstruction": "Draw a stack of cards on the left labelled 'test set'. Each card shows a short item and a small tag 'real label'."
+      },
+      {
+        "label": "Run the classifier",
+        "explanation": "The system predicts a label for each item in the test set.",
+        "visualInstruction": "Draw an arrow from the cards into a middle box labelled 'classifier'. Add output tags reading 'predicted label'."
+      },
+      {
+        "label": "Compare real and predicted labels",
+        "explanation": "For each item, look at the real label and the predicted label together.",
+        "visualInstruction": "Draw paired label chips under the classifier output, one chip marked 'real', one marked 'predicted', repeated for several sample items."
+      },
+      {
+        "label": "Add counts to the right box",
+        "explanation": "If both labels are positive, count a true positive. If both are negative, count a true negative. The two mismatch boxes are false positive and false negative.",
+        "visualInstruction": "On the right, draw a 2×2 grid. Rows: 'real positive', 'real negative'. Columns: 'predicted positive', 'predicted negative'. Fill cells with labels TP, FN, FP, TN and example counts."
+      },
+      {
+        "label": "Read the error pattern",
+        "explanation": "Use the table to see whether the system mainly misses real cases, creates false alarms, or performs well on both.",
+        "visualInstruction": "Add callout notes pointing to FN as 'missed cases' and FP as 'false alarms', with a small footer note 'used to calculate accuracy, precision, recall'."
+      }
+    ],
+    "interaction": "Hover or tap each cell to highlight the corresponding real/predicted combination and show a plain-language label such as 'missed positive case' or 'correctly rejected negative case'.",
+    "accessibilityDescription": "The diagram shows how a confusion matrix is made. First, begin with a test set of items that already have trusted real labels. Second, pass those items through a classifier that predicts labels. Third, compare each item’s real label with its predicted label. Fourth, place each item into one of four boxes in a two-by-two table: true positive for real positive and predicted positive, false negative for real positive and predicted negative, false positive for real negative and predicted positive, and true negative for real negative and predicted negative. The purpose is to reveal the pattern of correct results, missed cases and false alarms.",
+    "reducedMotionDescription": "A static left-to-right diagram shows test items with real labels, a classifier, and a 2×2 table with rows for real labels and columns for predicted labels. Arrows connect the stages, and each cell is labelled true positive, false negative, false positive or true negative."
+  },
+  "workedExample": {
+    "scenario": "A programme team tests a model that labels incoming feedback messages as 'urgent' or 'not urgent'. They evaluate it on 100 messages already reviewed by staff.",
+    "input": "Known reality: 20 messages were truly urgent and 80 were not. Model output: 15 of the urgent messages were predicted urgent, 5 urgent messages were missed, 10 non-urgent messages were incorrectly flagged urgent, and 70 non-urgent messages were correctly left as not urgent.",
+    "process": [
+      "Set up a 2×2 table with rows for real status and columns for predicted status.",
+      "Place 15 in true positive because those messages were truly urgent and predicted urgent.",
+      "Place 5 in false negative because they were truly urgent but predicted not urgent.",
+      "Place 10 in false positive and 70 in true negative for the non-urgent messages.",
+      "Read the table to see that the model catches many urgent messages but also creates some false alarms."
+    ],
+    "result": "The confusion matrix is: true positive 15, false negative 5, false positive 10, true negative 70. Accuracy is 85%, but the table shows more than that: recall for urgent messages is 15 out of 20, while precision for urgent predictions is 15 out of 25."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN language services team pilots a classifier that labels translated field updates as 'contains logistics issue' or 'does not contain logistics issue' so staff can triage messages faster.",
+    "relevance": "A confusion matrix helps the team see whether the tool mainly misses real logistics issues or mainly creates extra review work through false alarms, which is more useful than a single overall score.",
+    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or operational field updates into an unapproved public AI service for evaluation; use approved tools, minimised data and human oversight."
+  },
+  "whyItMatters": "A confusion matrix helps people ask a better question than “What is the score?” It shows what kinds of mistakes a system makes, not just how often it is right overall. That matters when different errors have different costs. In a screening task, missing a real case may be worse than raising an extra alert, or the opposite may be true. The table also helps spot class imbalance, where one category is much rarer than another and a high accuracy score can be misleading. For non-specialists making procurement, deployment or oversight decisions, it is a practical way to check whether a system’s behaviour matches the real operational need.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "machine learning training courses",
+    "procurement and vendor demos",
+    "quality assurance for classifiers"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A confusion matrix is just another name for accuracy.",
+      "correction": "Accuracy is only one number you can calculate from the table. The matrix itself keeps the four underlying counts separate, so you can see whether errors come from false alarms, missed cases, or both."
+    },
+    {
+      "misconception": "If the diagonal boxes are large, the model is good enough.",
+      "correction": "Large correct-count boxes can still hide a serious problem if one class is much more common than the other. For example, a model can look strong overall while missing many rare but important positive cases."
+    },
+    {
+      "misconception": "The confusion matrix only matters for technical specialists.",
+      "correction": "It is useful for anyone who must judge whether a system is safe and useful in practice. Non-technical decision-makers often need to know which error type matters more in the real workflow, and the matrix shows exactly that."
+    },
+    {
+      "misconception": "A confusion matrix and false positives/false negatives are the same thing.",
+      "correction": "False positives and false negatives are two boxes inside the matrix. The confusion matrix is the full table, including correct predictions as well as both kinds of mistakes."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a score table for a sorting system. It tells you how many items were sorted correctly, how many false alarms it raised, and how many real cases it missed.",
+    "technical": "For a classifier evaluated on labelled test data, a confusion matrix tabulates counts by actual class versus predicted class. In binary classification, the four cells are true positive, false positive, false negative and true negative. In multiclass classification, the matrix extends to one row and one column per class, and off-diagonal cells show which classes are being confused with which others. The matrix is not itself a single metric. Instead, it is the count structure from which metrics such as accuracy, precision, recall, specificity and F1 score can be derived. Its usefulness depends on sound evaluation design: representative test data, clear label definitions, separation from training data, and awareness of class imbalance and error costs."
+  },
+  "keyTakeaway": "Do not ask only how often a classifier is right; ask which mistakes it makes, and the confusion matrix is the fastest way to see that.",
+  "quickCheck": {
+    "question": "Why might a confusion matrix be more informative than accuracy alone?",
+    "options": [
+      "It shows which kinds of mistakes the system makes, such as missed cases versus false alarms.",
+      "It guarantees the test data are unbiased.",
+      "It removes the need for human review.",
+      "It works only when all classes are equally common."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Accuracy compresses performance into one number. A confusion matrix keeps the counts for correct positives, correct negatives, false positives and false negatives separate, so you can judge the real error pattern and whether it fits the use case."
+  },
+  "resources": [
+    {
+      "title": "Confusion matrix",
+      "url": "https://en.wikipedia.org/wiki/Confusion_matrix",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad reference-style overview of the concept, terminology and variants, and suits readers who want a general starting point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course link helps readers connect the table to accuracy, precision and recall, and suits beginners moving into practical evaluation.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This official framework link helps readers place model evaluation within wider AI risk management and oversight, and suits programme leads and governance-focused readers.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Confusion matrix",
+      "url": "https://www.youtube.com/results?search_query=Confusion%20matrix%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for video explanations on the topic, useful for readers who learn visually and want to compare several teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Confusion matrix",
+      "url": "https://www.reddit.com/search/?q=Confusion%20matrix",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussions about the topic, useful for readers who want informal explanations, questions and practical troubleshooting.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "confusion matrix meaning",
+    "error matrix machine learning",
+    "tp fp fn tn explained",
+    "confusion matrix vs accuracy",
+    "how to read confusion matrix",
+    "confustion matrix",
+    "false positive false negative table",
+    "multiclass confusion matrix",
+    "confusion matrix",
+    "error matrix"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:52.157Z",
+    "contentHash": "456c8bae0067801f",
+    "attempts": 1,
+    "promptTokens": 2287,
+    "completionTokens": 2555
+  }
+}

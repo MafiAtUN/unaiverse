@@ -1,0 +1,235 @@
+{
+  "id": "reasoning-model",
+  "slug": "reasoning-model",
+  "term": "Reasoning model",
+  "aliases": [
+    "chain of thought",
+    "thinking model",
+    "test-time compute"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "policy",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "large-language-model"
+  ],
+  "relatedTermIds": [
+    "large-language-model",
+    "prompt",
+    "context",
+    "token",
+    "latency",
+    "throughput"
+  ],
+  "oftenConfusedWith": [
+    "next-token-prediction",
+    "understanding",
+    "completion",
+    "hallucination"
+  ],
+  "oneSentence": "A model in this family uses extra computation during answering to produce intermediate steps, aiming to improve difficult tasks, though the visible steps and the real internal process are not always the same thing.",
+  "plainExplanation": "These related terms point to one idea, but they are not identical. A reasoning model is a language model tuned to do better on multi-step tasks such as maths, coding, planning or careful comparison. A thinking model usually means the same thing in product language. Test-time compute means giving the model more computation while it is answering, for example by letting it generate, check or refine intermediate text. Chain of thought usually means the intermediate written steps, whether shown to the user or kept hidden.\n\nWhat goes in is still a prompt: your question, instructions and any context. What happens next may differ from a basic chatbot reply. Instead of producing a short answer immediately, the system may spend more tokens on intermediate work. A token is a small unit of text, such as part of a word. The model may draft steps, evaluate alternatives, or call tools in sequence before returning a final answer.\n\nWhat comes out may be a better answer on tasks that need several steps, but there are trade-offs. More test-time compute often means higher latency, which means more waiting time, and sometimes higher cost. It also does not guarantee truth. A model can produce neat-looking steps and still make a mistake, or hide a weak guess behind confident wording.\n\nThese terms are often confused with next-token prediction. The base mechanism is still next-token prediction: the model generates text one token at a time. The difference is that a reasoning-oriented setup uses that same mechanism for longer or more structured intermediate work. It is also often confused with human understanding. The system may imitate step-by-step reasoning behaviour without having human-like awareness or reliable world knowledge.",
+  "everydayAnalogy": {
+    "title": "A student using rough paper before giving the final answer",
+    "story": "A student in Nairobi is solving a long maths problem during an exam. Instead of writing the final number straight away, she uses rough paper to break the task into smaller parts, checks one path against another, then copies a shorter final answer onto the answer sheet. If she gets more time, she can do more checking. But neat rough work does not guarantee the final answer is correct, and some of her actual mental process never appears on the page.",
+    "mapping": [
+      {
+        "analogyElement": "rough paper with intermediate steps",
+        "aiElement": "chain-of-thought-style intermediate text or hidden working"
+      },
+      {
+        "analogyElement": "extra time for checking",
+        "aiElement": "more test-time compute"
+      },
+      {
+        "analogyElement": "final answer sheet",
+        "aiElement": "the model's visible response"
+      },
+      {
+        "analogyElement": "long maths problem",
+        "aiElement": "a multi-step task such as planning, coding or comparison"
+      }
+    ],
+    "limitation": "A student has human goals, background knowledge and conscious experience; a language model does not need those to produce step-like text. Also, a person can reason in ways that are not written down, while a model's behaviour comes from generating tokens according to learned patterns. So the analogy helps with the idea of intermediate work, but it should not be taken to mean the system reasons like a person."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Short direct answer versus extra test-time compute",
+    "learningObjective": "Show how the same kind of language model can answer either directly or through extra intermediate steps, and why that can improve hard tasks but increase delay.",
+    "description": "A side-by-side diagram compares two answer paths from the same prompt. The left path shows a short direct completion. The right path shows extra intermediate token generation, optional checking, and then a final answer. Read left to right to see how additional steps can help on difficult tasks while increasing latency.",
+    "steps": [
+      {
+        "label": "Same input",
+        "explanation": "Both paths start with the same prompt and context.",
+        "visualInstruction": "At the top centre, draw one input box labelled 'Prompt + context'. Split it into two arrows, one to the left column and one to the right column."
+      },
+      {
+        "label": "Direct path",
+        "explanation": "A standard setup may generate an answer quickly with little or no deliberate intermediate work.",
+        "visualInstruction": "In the left column, draw two stacked boxes: 'Generate next tokens' then 'Final answer'. Add a small clock icon with label 'lower latency'."
+      },
+      {
+        "label": "Reasoning-oriented path",
+        "explanation": "A reasoning-oriented setup spends more tokens on intermediate work before the final answer.",
+        "visualInstruction": "In the right column, draw three stacked boxes: 'Generate intermediate steps', 'Check or revise', then 'Final answer'. Add a larger token meter and a clock icon labelled 'more tokens, more latency'."
+      },
+      {
+        "label": "Possible benefit and risk",
+        "explanation": "Extra work can improve performance on multi-step tasks, but the final answer can still be wrong.",
+        "visualInstruction": "At the bottom, draw a shared note box across both columns: 'Helpful for difficult tasks; not a guarantee of truth'. Use a green upward arrow near the right column labelled 'often better on hard tasks' and a warning icon near both columns labelled 'can still hallucinate or make logic errors'."
+      }
+    ],
+    "interaction": "Hovering or tapping each box reveals a short tooltip with examples: arithmetic, coding, planning, comparison. A toggle labelled 'show hidden steps as visible text' switches the right column's first box label between 'hidden intermediate work' and 'visible chain of thought'.",
+    "accessibilityDescription": "The diagram compares two ways a language model can answer the same prompt. On the left, the prompt goes to a short path: generate next tokens, then final answer. This is faster and uses fewer tokens. On the right, the prompt goes to a longer path: generate intermediate steps, check or revise, then final answer. This uses more tokens and usually takes longer. A note under both paths says extra intermediate work can help on difficult multi-step tasks, but neither path guarantees a correct answer. Another note explains that chain of thought refers to the intermediate written steps, while test-time compute refers more broadly to the extra computation used during answering.",
+    "reducedMotionDescription": "A static side-by-side comparison replaces animation. The left column shows the direct path with two boxes. The right column shows the reasoning-oriented path with three boxes and labels for higher token use and longer latency. Tooltips are replaced by small example captions under each box."
+  },
+  "workedExample": {
+    "scenario": "A user asks: 'A clinic has 18 boxes of masks with 24 masks in each box. It donates 95 masks. How many remain?'",
+    "input": "Please solve step by step and give the final number.",
+    "process": [
+      "Direct path might jump quickly to an answer after a few generated tokens.",
+      "A reasoning-oriented path may first calculate 18 × 24 = 432.",
+      "It may then subtract 95 and get 337, possibly checking the arithmetic once before answering.",
+      "The system returns a short final reply such as '337 masks remain.'"
+    ],
+    "result": "The extra intermediate work can reduce simple arithmetic mistakes, but the visible steps still need checking because the model can produce convincing but wrong calculations."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is summarising hundreds of public consultation submissions on urban transport and wants a draft that groups recurring themes, trade-offs and unanswered questions.",
+    "relevance": "A reasoning-oriented setup may produce a more structured draft because it can spend extra computation comparing submissions, organising themes and checking whether each summary point is supported by multiple texts.",
+    "caution": "Use only approved systems and approved data. Do not paste confidential, personal, protection-sensitive or operationally sensitive submissions into a public AI service, and keep human review over how viewpoints are characterised."
+  },
+  "whyItMatters": "If you procure, regulate, use or evaluate AI systems, these terms affect practical choices. A system marketed as a reasoning or thinking model may perform better on harder tasks, but it may also be slower, costlier and still unreliable. The phrase chain of thought can refer to visible written steps, while test-time compute refers to extra computation more broadly, so vendors may sound similar while describing different features. This matters for benchmarking, safety review, procurement language, user expectations and policy discussions about transparency. A model that shows steps is not automatically more truthful, and a model that hides steps is not automatically less capable.",
+  "whereYouMayHearIt": [
+    "AI product announcements",
+    "benchmark reports",
+    "procurement discussions",
+    "prompting tutorials",
+    "policy debates about transparency"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If a model shows a long chain of thought, it must have reasoned correctly.",
+      "correction": "Not necessarily. Intermediate steps can help on some tasks, but they can also contain errors, post-hoc justifications or copied patterns that only look logical. The quality of the final answer still needs evaluation against evidence or calculation."
+    },
+    {
+      "misconception": "Reasoning models use a completely different mechanism from ordinary language models.",
+      "correction": "Usually the core mechanism is still token-by-token generation in a language model. The difference is often in training, prompting, tool use or allowing more test-time compute for intermediate work, not a complete break from next-token prediction."
+    },
+    {
+      "misconception": "Test-time compute and chain of thought are the same term.",
+      "correction": "They overlap but are not identical. Chain of thought usually refers to intermediate written steps. Test-time compute is broader: it includes any extra computation during answering, whether the steps are shown, hidden, checked, branched or combined with tools."
+    },
+    {
+      "misconception": "A thinking model understands problems the way a person does.",
+      "correction": "The label is product shorthand, not proof of human-like understanding. Such systems can produce useful multi-step outputs, but that does not mean they have awareness, stable world models or human judgement."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Some chat systems try to answer hard questions by doing extra step-by-step work before they reply. People often call these reasoning or thinking models. This can help, but it can also make answers slower and it does not make them automatically correct.",
+    "technical": "In current usage, a reasoning model is usually an LLM configured or trained to allocate more computation at inference time to multi-step problem solving. The base model still generates tokens autoregressively, but the system may produce intermediate scratchpad text, sample multiple candidate continuations, verify sub-results, use tools, or run revise-and-rerank loops before emitting the final completion. Chain of thought refers most narrowly to the intermediate textual steps. Those steps may be exposed to the user, summarised, or kept hidden. Test-time compute is the broader resource concept: additional forward passes, longer token budgets, branching, self-consistency-style sampling, or tool-mediated loops used during answering. Thinking model is informal product language and can blur these distinctions. Performance gains are often strongest on tasks with decomposable structure, but they come with latency and throughput costs and do not remove risks such as hallucination, arithmetic error, brittle planning or misleading rationales."
+  },
+  "keyTakeaway": "These terms all point to extra intermediate work during answering, but visible step-by-step text, hidden internal processing and true reliability are not the same thing.",
+  "quickCheck": {
+    "question": "Which statement best captures the relationship among these terms?",
+    "options": [
+      "They all mean exactly the same thing and can be used interchangeably in any technical discussion.",
+      "Chain of thought usually means intermediate written steps, while test-time compute is the broader idea of using extra computation during answering.",
+      "A reasoning model no longer relies on next-token prediction at all.",
+      "If a model hides its intermediate steps, it cannot be using extra computation."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Option 2 is the best answer. In common use, reasoning model and thinking model often refer to systems designed for stronger multi-step performance. Chain of thought usually points to intermediate text, while test-time compute covers a wider set of extra-answering procedures, including hidden ones."
+  },
+  "resources": [
+    {
+      "title": "Reasoning model",
+      "url": "https://en.wikipedia.org/wiki/Reasoning_model",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad overview of the term and related ideas, suitable for readers who want a quick starting point.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This course offers practical explanations of how language models work and suits learners who want hands-on technical grounding.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives an intuitive visual explanation of large language models and suits visual learners new to the topic.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Reasoning model",
+      "url": "https://www.youtube.com/results?search_query=Reasoning%20model%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find multiple video explanations of reasoning models and suits people who want to compare teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Reasoning model",
+      "url": "https://www.reddit.com/search/?q=Reasoning%20model",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see community questions and disagreements about the term and suits readers who want informal discussion with caution about accuracy.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "reasoning model meaning",
+    "chain of thought ai",
+    "thinking model ai",
+    "test-time compute llm",
+    "what is chain of thought",
+    "reasoning model vs llm",
+    "does chain of thought mean reasoning",
+    "test time compute meaning",
+    "reasonning model",
+    "thinking model vs reasoning model",
+    "reasoning model",
+    "chain of thought",
+    "thinking model",
+    "test-time compute"
+  ],
+  "contested": "The terminology is unsettled. 'Reasoning model', 'thinking model', 'chain of thought' and 'test-time compute' overlap in practice, but different researchers and vendors use them with different scope and precision.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:28.911Z",
+    "contentHash": "f5f5a6993c9d2c02",
+    "attempts": 1,
+    "promptTokens": 2394,
+    "completionTokens": 2693
+  }
+}

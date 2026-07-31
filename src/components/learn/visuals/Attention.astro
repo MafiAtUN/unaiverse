@@ -1,0 +1,176 @@
+---
+/**
+ * Attention: pick a word, see which other words it leans on.
+ *
+ * The classic ambiguous-pronoun sentence pair, because it makes the mechanism
+ * visible in one reading: change one adjective and "it" has to refer to
+ * something else, and the weights move accordingly.
+ *
+ * Stated on the page, not buried: these weights are hand-authored to
+ * illustrate the idea. Displaying invented numbers as if they came from a
+ * model would be exactly the kind of thing this site tells readers to
+ * distrust.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-att data-term={termId}>
+  <div class="vx__row" role="group" aria-label="Choose a sentence">
+    <button type="button" class="vx__button" data-att-sentence="0" aria-pressed="true">
+      Sentence A
+    </button>
+    <button type="button" class="vx__button" data-att-sentence="1" aria-pressed="false">
+      Sentence B
+    </button>
+  </div>
+
+  <p class="vx__label">Select a word to see what it attends to</p>
+  <ul class="vx__tokens" data-att-words></ul>
+
+  <p class="visual__readout" role="status" aria-live="polite" data-att-readout></p>
+
+  <p class="visual__readout">
+    <strong>These weights are illustrative.</strong> They are hand-written to show the shape of the
+    mechanism. A real model computes them from its parameters, and its numbers would differ.
+  </p>
+</div>
+
+<style>
+  .att-word {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--hairline-strong);
+    background: var(--void-raised);
+    color: var(--ink);
+    cursor: pointer;
+    min-height: 2.25rem;
+    position: relative;
+  }
+
+  .att-word[aria-pressed='true'] {
+    border-color: var(--riso-pink);
+    background: rgb(255 95 168 / 0.2);
+  }
+
+  /* Weight is shown as a printed percentage as well as a background tint, so
+     nothing depends on distinguishing shades. */
+  .att-word__pct {
+    display: block;
+    font-size: 0.65em;
+    opacity: 0.85;
+  }
+</style>
+
+<script>
+  interface Sentence {
+    words: string[];
+    /** Index of the word being resolved, then weights over every word. */
+    focus: number;
+    weights: number[];
+    reading: string;
+  }
+
+  const SENTENCES: Sentence[] = [
+    {
+      words: ['The', 'delegate', 'could', 'not', 'read', 'the', 'report', 'because', 'it', 'was', 'too', 'long'],
+      focus: 8,
+      weights: [0.01, 0.06, 0.01, 0.01, 0.03, 0.02, 0.62, 0.04, 0, 0.05, 0.05, 0.1],
+      reading:
+        '“it” refers to the report: a report can be too long, and the delegate cannot. The heaviest weight lands on “report”.',
+    },
+    {
+      words: ['The', 'delegate', 'could', 'not', 'read', 'the', 'report', 'because', 'it', 'was', 'too', 'faint'],
+      focus: 8,
+      weights: [0.01, 0.05, 0.01, 0.01, 0.04, 0.02, 0.66, 0.03, 0, 0.05, 0.04, 0.08],
+      reading:
+        'One word changed and the sentence still resolves to “report” — but notice how much of the weight sits on the final adjective. The adjective is what decides which reading is possible.',
+    },
+  ];
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-att]')) {
+    const host = root.querySelector<HTMLUListElement>('[data-att-words]')!;
+    const readout = root.querySelector<HTMLElement>('[data-att-readout]')!;
+    const tabs = root.querySelectorAll<HTMLButtonElement>('[data-att-sentence]');
+
+    let sentenceIndex = 0;
+    let selected = SENTENCES[0]!.focus;
+
+    /**
+     * Weights for any word other than the authored focus word: a simple
+     * proximity falloff. Honest, because the caveat above says these are
+     * illustrative, and it keeps every word clickable rather than dead.
+     */
+    function weightsFor(s: Sentence, index: number): number[] {
+      if (index === s.focus) return s.weights;
+      const raw = s.words.map((_, i) => (i === index ? 0 : 1 / (1 + Math.abs(i - index)) ** 1.6));
+      const sum = raw.reduce((a, b) => a + b, 0);
+      return raw.map((r) => r / sum);
+    }
+
+    function render() {
+      const s = SENTENCES[sentenceIndex]!;
+      const weights = weightsFor(s, selected);
+      const max = Math.max(...weights);
+
+      host.replaceChildren(
+        ...s.words.map((word, i) => {
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'att-word';
+          button.setAttribute('aria-pressed', String(i === selected));
+          const pct = Math.round(weights[i]! * 100);
+          button.style.background =
+            i === selected ? 'rgb(255 95 168 / 0.2)' : `rgb(245 208 32 / ${(weights[i]! / max) * 0.55})`;
+          button.innerHTML = '';
+          button.append(document.createTextNode(word));
+          if (i !== selected) {
+            const span = document.createElement('span');
+            span.className = 'att-word__pct';
+            span.textContent = `${pct}%`;
+            button.append(span);
+          }
+          button.setAttribute(
+            'aria-label',
+            i === selected
+              ? `${word}, currently selected`
+              : `${word}, receives ${pct} per cent of the attention from “${s.words[selected]}”`,
+          );
+          button.addEventListener('click', () => {
+            selected = i;
+            render();
+          });
+          li.append(button);
+          return li;
+        }),
+      );
+
+      const ranked = weights
+        .map((w, i) => ({ w, word: s.words[i]!, i }))
+        .filter((x) => x.i !== selected)
+        .sort((a, b) => b.w - a.w);
+
+      readout.textContent =
+        `“${s.words[selected]}” attends most strongly to “${ranked[0]!.word}” (${Math.round(ranked[0]!.w * 100)}%), ` +
+        `then “${ranked[1]!.word}” (${Math.round(ranked[1]!.w * 100)}%). ` +
+        (selected === s.focus ? s.reading : 'Select the word “it” to see the case that matters.');
+
+      tabs.forEach((t, i) => t.setAttribute('aria-pressed', String(i === sentenceIndex)));
+    }
+
+    tabs.forEach((t, i) =>
+      t.addEventListener('click', () => {
+        sentenceIndex = i;
+        selected = SENTENCES[i]!.focus;
+        render();
+      }),
+    );
+
+    render();
+  }
+</script>

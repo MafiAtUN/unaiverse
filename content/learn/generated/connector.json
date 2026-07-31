@@ -1,0 +1,224 @@
+{
+  "id": "connector",
+  "slug": "connector",
+  "term": "Connector",
+  "aliases": [
+    "integration",
+    "plugin"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "api"
+  ],
+  "relatedTermIds": [
+    "tool-use",
+    "function-calling",
+    "workflow",
+    "orchestration",
+    "ai-agent",
+    "human-in-the-loop"
+  ],
+  "oftenConfusedWith": [
+    "api",
+    "model-context-protocol",
+    "function-calling",
+    "computer-use"
+  ],
+  "oneSentence": "A connector links an AI system or app to another digital service so it can send requests, receive results, and use them in a task.",
+  "plainExplanation": "A connector is a bridge between one system and another. In AI tools, it lets a chatbot, assistant, or automated workflow reach an outside service such as email, a calendar, a database, or a document store.\n\nWhat goes in? Usually a request from the AI system or the user, plus any needed settings such as which account to use or what action is allowed. What happens next? The connector turns that request into the format the other service expects, sends it, and brings the response back.\n\nWhat comes out? The result might be data, such as a list of meetings, or an action confirmation, such as \"draft saved\" or \"message sent\". The connector itself does not usually generate the answer text. It mainly handles the link and the data exchange.\n\nPeople often confuse a connector with an API. An API is the set of rules a service offers for software to interact with it. A connector is the specific piece that uses those rules in a product or workflow. People also confuse it with a plugin. In practice, \"plugin\" and \"connector\" are often used loosely, but a plugin may also add interface features or logic, not just a connection.",
+  "everydayAnalogy": {
+    "title": "A hotel receptionist calling nearby services for a traveller",
+    "story": "A traveller arrives at a hotel in Nairobi and asks the receptionist for three things: a taxi to the airport, tomorrow's weather, and a dinner booking. The receptionist does not drive the taxi, measure the weather, or cook the meal. Instead, they contact the taxi company, check a weather service, and call a restaurant, then bring the results back to the traveller in one place. If one service is closed, the receptionist reports that and may ask the traveller what to do next.",
+    "mapping": [
+      {
+        "analogyElement": "the traveller's requests",
+        "aiElement": "the user's prompt or the workflow's task"
+      },
+      {
+        "analogyElement": "the receptionist",
+        "aiElement": "the connector layer that passes requests and returns results"
+      },
+      {
+        "analogyElement": "taxi company, weather service, and restaurant",
+        "aiElement": "external services such as maps, weather, booking, or email systems"
+      },
+      {
+        "analogyElement": "the receptionist's update back to the traveller",
+        "aiElement": "the returned data or action status shown to the user or passed to the next step"
+      }
+    ],
+    "limitation": "A human receptionist can improvise, use judgement, and notice social context in ways software often cannot. Real connectors usually follow fixed rules, data formats, and permissions. Also, one connector does not normally handle every kind of service by personal judgement; each connection is built for a specific system or standard."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a connector moves a request to another service and back",
+    "learningObjective": "After viewing this, a reader should be able to explain that a connector passes a request from an AI system to an external service, translates formats if needed, and returns the result.",
+    "description": "Show a left-to-right flow with four boxes and arrows. Read it from the user's request through the AI system, into the connector, then to the external service, and back with a result. Use labels to show that the connector handles the handoff and translation, while the external service provides data or performs the action.",
+    "steps": [
+      {
+        "label": "1. Request starts",
+        "explanation": "A user or workflow asks for something, such as \"show tomorrow's meetings\" or \"draft an email using this file\".",
+        "visualInstruction": "Draw a box labelled 'User or workflow request' with a speech bubble icon and a short sample request under the label."
+      },
+      {
+        "label": "2. AI system chooses a tool path",
+        "explanation": "The assistant or workflow identifies that it needs information or an action from another system.",
+        "visualInstruction": "Draw a second box labelled 'AI system' with a branch note reading 'needs outside service' and an arrow from step 1."
+      },
+      {
+        "label": "3. Connector translates and sends",
+        "explanation": "The connector packages the request in the format the target service expects, using allowed credentials and settings.",
+        "visualInstruction": "Draw a third box labelled 'Connector' with small tags 'format', 'permissions', and 'send'. Add arrows both ways between this box and the next."
+      },
+      {
+        "label": "4. Service responds",
+        "explanation": "The external service returns data or confirms an action, and the result comes back through the connector to the AI system and user.",
+        "visualInstruction": "Draw a fourth box labelled 'External service' with two possible outputs underneath: 'data returned' and 'action confirmed'. Add a final arrow back toward the AI system and a small result badge near step 1."
+      }
+    ],
+    "interaction": "Hovering or tapping each box highlights what that component does and dims the others; arrows brighten to show the request path and the return path.",
+    "accessibilityDescription": "The diagram is a four-step flow read from left to right. Step 1 is the user or workflow request. Step 2 is the AI system, which recognises that it needs an outside service. Step 3 is the connector, which translates the request into the right format, applies allowed permissions, and sends it onward. Step 4 is the external service, which returns data or confirms an action. The return then travels back through the connector to the AI system and finally to the user. The main lesson is that the connector is the link and translator, not the original source of the data.",
+    "reducedMotionDescription": "A static four-box flow replaces animation. Solid arrows show the path from request to AI system to connector to external service, and dotted arrows show the result returning along the same route."
+  },
+  "workedExample": {
+    "scenario": "A team assistant helps a user prepare for a meeting.",
+    "input": "\"List my meetings tomorrow between 09:00 and 12:00 and draft a short reminder email for the first one.\"",
+    "process": [
+      "The assistant detects that calendar data is needed and calls the calendar connector for the user's approved account.",
+      "The connector sends a structured request for events on 14 May from 09:00 to 12:00.",
+      "The calendar service returns two events: 09:30 Project Check-in with Amina Rahman, and 11:00 Budget Review with Luis Ortega.",
+      "The assistant uses the first event details to draft a reminder email but does not send it unless the user confirms.",
+      "The user sees the meeting list and a draft message addressed to the first meeting participants."
+    ],
+    "result": "Output shown: two meetings found, plus a draft saying, \"Reminder: our Project Check-in starts at 09:30 tomorrow. Please see the attached agenda note before the call.\""
+  },
+  "unWorkplaceExample": {
+    "scenario": "After a disaster, an approved internal workflow uses a connector to pull newly cleared satellite imagery metadata from a secure geospatial platform into an analysis dashboard, so analysts can compare locations and time stamps more quickly.",
+    "relevance": "This helps staff move information between tools without manual copying, which can speed up analysis and reduce transcription errors.",
+    "caution": "Do not connect unapproved public AI services to operational, security-sensitive, or protection-sensitive systems, and do not send raw imagery or sensitive location data outside authorised platforms."
+  },
+  "whyItMatters": "For non-specialists, connectors matter because they change what an AI system can actually do. A tool without connectors may only generate text. A tool with connectors may retrieve current information, update records, create drafts from your files, or trigger actions in other systems. That can save time, but it also raises practical questions: Which systems are connected? What data can move? Who approved the connection? What happens if the outside service is wrong, unavailable, or too broadly authorised? Understanding connectors helps you ask better oversight, privacy, and reliability questions before relying on automated outputs or actions.",
+  "whereYouMayHearIt": [
+    "chatbot settings",
+    "enterprise software demos",
+    "automation workflows",
+    "IT security reviews",
+    "agent platform documentation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A connector is the same thing as the AI model.",
+      "correction": "The model generates or transforms content, while the connector links that system to another service. If a calendar entry appears in an assistant, the connector likely fetched it; the model did not create the event record from nowhere."
+    },
+    {
+      "misconception": "If a tool has a connector, it can safely do anything in that external system.",
+      "correction": "A connector only works within the permissions, fields, and actions it was configured to use. Some connectors are read-only, some can write, and some expose only a small part of a service. Safety still depends on access control, review, logging, and human oversight."
+    },
+    {
+      "misconception": "Connector, plugin, and API always mean exactly the same thing.",
+      "correction": "They are related but not identical. An API is an interface a service exposes for software use. A connector is a built link that uses such interfaces. A plugin may include a connector, but it can also add user-interface elements or extra logic inside an application."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A connector lets one digital tool reach another one so information or actions can pass between them.",
+    "technical": "A connector is an integration component that mediates between a host system and an external service. It typically handles authentication, request formatting, parameter mapping, error handling, and response normalisation so the host can call functions or retrieve data without implementing each service interaction from scratch. In AI systems, connectors often sit between the model-driven layer and tools such as email, calendars, search, databases, document stores, or business applications. This is related to tool use and function calling, but not identical: function calling is a method for producing structured tool requests, while the connector is the implementation that actually reaches the target service and returns structured results."
+  },
+  "keyTakeaway": "A connector does not give an AI system magic powers; it gives it a controlled way to reach another service.",
+  "quickCheck": {
+    "question": "Which description best matches a connector in an AI workflow?",
+    "options": [
+      "A built link that sends a request to another service and returns the result",
+      "The training data that taught the model to answer questions",
+      "A guarantee that the external service's information is correct",
+      "The same thing as an API specification"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "A connector is the practical link between systems. It uses rules such as an API, but it is not the API itself, and it does not guarantee that returned information is accurate or appropriate."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Connector",
+      "url": "https://en.wikipedia.org/w/index.php?search=Connector",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia link is a search results page, so it helps readers see the many non-AI meanings of \"connector\" and suits beginners who need context before narrowing the term.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This article gives a broader explanation of agents and tools, which helps readers place connectors inside agent workflows and suits readers who want a conceptual overview.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This official MCP resource explains one emerging standard for connecting models to tools and data, and it suits readers who want a more technical, standards-oriented view.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Connector",
+      "url": "https://www.youtube.com/results?search_query=Connector%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube link is a search results page, so it helps visual learners compare different video explanations of connectors and suits beginners who prefer demonstrations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Connector",
+      "url": "https://www.reddit.com/search/?q=Connector",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit link is a search results page, so it shows how practitioners discuss connectors in real use and suits readers who want practical questions, examples, and common points of confusion.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "what is a connector in ai",
+    "ai connector meaning",
+    "integration vs connector",
+    "plugin vs connector ai",
+    "connector api difference",
+    "how ai tools connect to apps",
+    "calendar connector ai",
+    "connecter ai misspelling",
+    "connector",
+    "integration",
+    "plugin"
+  ],
+  "contested": "The general idea is widely shared, but product teams use \"connector\", \"integration\", and \"plugin\" differently, so the boundary between them is not fully consistent across platforms.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:41.957Z",
+    "contentHash": "e829695194f83846",
+    "attempts": 1,
+    "promptTokens": 2293,
+    "completionTokens": 2441
+  }
+}

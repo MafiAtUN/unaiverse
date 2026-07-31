@@ -1,0 +1,230 @@
+{
+  "id": "forward-pass",
+  "slug": "forward-pass",
+  "term": "Forward pass",
+  "aliases": [
+    "feedforward"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "network-layers"
+  ],
+  "relatedTermIds": [
+    "neural-network",
+    "weight",
+    "bias-term",
+    "activation-function",
+    "softmax",
+    "probability"
+  ],
+  "oftenConfusedWith": [
+    "backpropagation",
+    "inference",
+    "network-layers"
+  ],
+  "oneSentence": "The calculation that carries input numbers through a neural network’s layers to produce an output such as a score, label or next-token distribution.",
+  "plainExplanation": "A forward pass is the part of a neural network that turns input into output. The input might be pixel values from an image, numbers from a sensor, or token representations from text. Those values enter the first layer, pass through one or more middle layers, and produce final output values.\n\nAt each layer, the network combines numbers using weights and a bias. A weight tells the model how strongly to amplify or reduce an input. A bias shifts the result up or down. The layer then usually applies an activation function, which is a rule that changes the numbers in a non-linear way so the network can represent more complex patterns.\n\nThis process repeats layer by layer. The output of one layer becomes the input to the next. In a classifier, the final numbers may be class scores, and a function such as softmax may convert them into values that can be interpreted as a probability distribution over classes. In other tasks, the final output could be a single number, a vector, or the next-token scores in a language model.\n\nA forward pass does not update the model’s parameters. It only uses the current weights and biases to compute outputs. That is why it is different from backpropagation, which computes how to adjust parameters during training, and from the broader term inference, which usually means using a trained model in practice and may involve one or many forward passes.",
+  "everydayAnalogy": {
+    "title": "Finding the right shelf in a large library",
+    "story": "A visitor enters a large library with a note that says, “history of rivers in East Africa”. At the first desk, the librarian routes the request to a broad subject area. At the next desk, another librarian narrows it to geography and history, and a third desk narrows it again to regional water studies. By the end of the chain, the visitor receives one shelf location that best matches the request.",
+    "mapping": [
+      {
+        "analogyElement": "the visitor’s note",
+        "aiElement": "the input values entering the network"
+      },
+      {
+        "analogyElement": "each desk applying its own routing rule",
+        "aiElement": "each layer combining inputs with weights, bias and an activation function"
+      },
+      {
+        "analogyElement": "the output from one desk becoming the input to the next desk",
+        "aiElement": "layer-by-layer propagation through the network"
+      },
+      {
+        "analogyElement": "the final shelf location",
+        "aiElement": "the network’s final output or prediction"
+      }
+    ],
+    "limitation": "A library routing process uses people applying explicit categories and may involve reasoning, clarification and external knowledge. A neural network forward pass is only a numerical computation with fixed parameters at that moment. It does not look up shelves or explain its route unless extra systems are added. Also, real networks process many values in parallel, not as a single request moving desk to desk."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How numbers move through a forward pass",
+    "learningObjective": "After viewing this diagram, a reader should be able to say that a forward pass takes input values, transforms them layer by layer using weights, bias and activation functions, and produces an output without changing the parameters.",
+    "description": "A left-to-right flow diagram with columns for input, hidden layer 1, hidden layer 2 and output. Arrows carry example numbers forward. Each middle column shows three mini-actions: weighted sum, add bias, apply activation. The final column shows output scores and an optional softmax step. Read from left to right.",
+    "steps": [
+      {
+        "label": "Input enters",
+        "explanation": "The process starts with input values such as features, pixels or token vectors.",
+        "visualInstruction": "Draw a left column of 3 to 5 circles labelled with example input values, such as x1=0.8, x2=0.1, x3=0.6. Use arrows pointing to the next column."
+      },
+      {
+        "label": "Weighted sums",
+        "explanation": "Each unit in the next layer multiplies incoming values by weights and adds them together.",
+        "visualInstruction": "In the second column, show 2 to 3 circles. On at least one incoming arrow, label a weight such as w=1.2 or w=-0.4. Next to one target circle, show a compact formula like (x1·w1 + x2·w2 + x3·w3)."
+      },
+      {
+        "label": "Bias and activation",
+        "explanation": "A bias shifts the sum, then an activation function transforms it so the network can model non-linear patterns.",
+        "visualInstruction": "Beside each circle in the hidden layer, add a small badge '+ b' followed by an activation label such as ReLU. Show a sample transition like 0.3 -> ReLU -> 0.3 and -0.2 -> ReLU -> 0."
+      },
+      {
+        "label": "Repeat through layers",
+        "explanation": "The output values from one layer become the input values for the next layer.",
+        "visualInstruction": "Add a third column with the same pattern and arrows from hidden layer 1 to hidden layer 2. Use consistent spacing and directional arrows to emphasise one-way flow."
+      },
+      {
+        "label": "Produce final output",
+        "explanation": "The last layer returns scores, a value, or a distribution over classes. A softmax step may convert scores into probabilities.",
+        "visualInstruction": "Draw a final output column with 2 to 3 labelled outputs such as 'urgent 1.8', 'routine 0.6', then an optional softmax box turning them into 'urgent 0.77', 'routine 0.23'. Add a note: 'parameters unchanged during this pass'."
+      }
+    ],
+    "interaction": "Hovering or tapping a layer highlights only the arrows and formulas used at that stage, and a toggle shows outputs either as raw scores or after softmax.",
+    "accessibilityDescription": "This diagram explains a forward pass as a one-way flow of numbers through a neural network. First, input values appear in a left column. Next, each later layer performs three operations in order: multiply inputs by weights and add them, add a bias term, and apply an activation function. The resulting values move to the next layer and the same pattern repeats. In the final layer, the network outputs scores or values. An optional softmax step converts class scores into a probability distribution. The key message is that the model computes outputs using existing parameters; it does not update those parameters during this process.",
+    "reducedMotionDescription": "Show the same left-to-right diagram as a static image with all arrows visible at once, fixed labels for weighted sum, bias and activation in each layer, and a final note stating that the pass computes outputs without changing weights."
+  },
+  "workedExample": {
+    "scenario": "A tiny network classifies a message as 'urgent' or 'routine' using two input features: contains the word 'today' and message length.",
+    "input": "x1=1 for 'today' present, x2=0.4 for moderate length",
+    "process": [
+      "Hidden unit calculation: (1×0.9) + (0.4×0.5) + bias -0.2 = 0.9. Apply ReLU, so hidden output = 0.9.",
+      "Urgent score: (0.9×1.3) + bias -0.1 = 1.07.",
+      "Routine score: (0.9×-0.8) + bias 0.2 = -0.52.",
+      "Apply softmax to the two scores, giving roughly urgent 0.83 and routine 0.17."
+    ],
+    "result": "For this forward pass, the network outputs a higher score for 'urgent', so the message would be classified as urgent under the current parameters."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN country office tests an internal, approved triage model for a shared inbox. A forward pass takes non-sensitive message features, such as language, length and selected keywords, and produces scores for categories like logistics, HR or external relations.",
+    "relevance": "This helps staff understand what the model is doing at the moment of use: it is computing category scores from current parameters, not retraining itself with each email.",
+    "caution": "Do not place personal, confidential, protection-sensitive, security-sensitive or operationally sensitive message content into an unapproved public AI service. Human review is still needed before acting on model outputs."
+  },
+  "whyItMatters": "If you use, evaluate or procure AI systems, the forward pass is the core step that actually produces an output. Understanding it helps you ask practical questions: What inputs does the system use? What output does it return: a score, label or probability distribution? Does the model simply compute with fixed parameters here, or is it also being updated elsewhere? This matters for testing, latency, cost, explainability and risk controls. For example, if outputs change, you need to know whether the cause is new input data, different model parameters, or post-processing after the forward pass. It also helps you separate the model’s computation from training and from broader deployment workflows.",
+  "whereYouMayHearIt": [
+    "deep learning lectures",
+    "model debugging sessions",
+    "inference pipeline discussions",
+    "PyTorch or TensorFlow documentation",
+    "performance and latency reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A forward pass means the model is learning from the input it just received.",
+      "correction": "Usually it does not. In a standard setup, the forward pass only computes outputs using the current weights and biases. Learning happens when training also includes a loss calculation and backpropagation, followed by an optimiser step that updates parameters."
+    },
+    {
+      "misconception": "Forward pass and inference are exactly the same thing.",
+      "correction": "They are related but not identical. A forward pass is the internal computation from input to output. Inference is the broader use of a trained model in practice and may include preprocessing, one or more forward passes, decoding, thresholds, post-processing and system-level checks."
+    },
+    {
+      "misconception": "The network produces probabilities automatically at every output.",
+      "correction": "Not always. Many models first produce raw scores, often called logits. These can be turned into a probability distribution with a function such as softmax, but some tasks use raw values directly, such as regression or ranking."
+    },
+    {
+      "misconception": "A forward pass always goes strictly through simple stacked layers only once.",
+      "correction": "That is true for many feedforward networks, but the idea also applies in more complex architectures. Convolutional, recurrent and transformer-based models still perform a forward computation, even though the internal structure may include recurrence, attention or branching."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A forward pass is the model’s one-way calculation from input numbers to output numbers.",
+    "technical": "Given an input tensor, the model applies its parameterised functions in order: each layer computes a transformation such as an affine operation using weights and bias, followed by a non-linear activation or another layer-specific operation. Intermediate activations are passed to later layers until the network produces output logits, values or vectors. In classification, logits may then be passed through softmax to obtain a probability distribution over classes. In training, the forward pass also creates the intermediate values needed for loss computation and later gradient calculation, but the forward pass itself does not change parameters. In implementation, it may be run for one example or a batch, and its cost is often measured in latency, memory use and floating-point operations."
+  },
+  "keyTakeaway": "A forward pass is the network’s one-way numerical path from input to output, using current parameters but not changing them.",
+  "quickCheck": {
+    "question": "Which statement best describes a forward pass in a neural network?",
+    "options": [
+      "It updates weights after comparing predictions with the correct answer.",
+      "It sends input through the model’s current layers and parameters to compute an output.",
+      "It guarantees the final output is a true probability.",
+      "It refers only to models with no hidden layers."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A forward pass computes outputs from inputs using the model’s existing parameters. Weight updates belong to training steps after backpropagation. Outputs are not always probabilities unless an additional step such as softmax is used, and forward passes occur in many network types, not only very simple ones."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Forward pass",
+      "url": "https://en.wikipedia.org/wiki/Forward_pass",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia link gives a broad reference-style overview of the term and suits readers who want a quick definition plus related concepts.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This 3Blue1Brown video gives a visual intuition for how signals move through neural network layers and suits visual learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This TensorFlow Playground interactive lets readers change inputs, weights and layers to see how forward computation affects outputs, which suits hands-on learners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Forward pass",
+      "url": "https://www.youtube.com/results?search_query=Forward%20pass%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of forward pass at different difficulty levels, which suits people comparing teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Forward pass",
+      "url": "https://www.reddit.com/search/?q=Forward%20pass",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see common questions, confusions and informal explanations about forward pass, which suits readers who want community discussion.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "forward pass neural network",
+    "feedforward meaning ai",
+    "what happens in a forward pass",
+    "forward propagation vs backpropagation",
+    "nn forward pass explained",
+    "logits softmax forward pass",
+    "pytorch forward pass",
+    "inference vs forward pass",
+    "foward pass typo",
+    "feed foward network pass",
+    "forward pass",
+    "feedforward"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:59.528Z",
+    "contentHash": "d047e9b42af288fa",
+    "attempts": 1,
+    "promptTokens": 2249,
+    "completionTokens": 2724
+  }
+}

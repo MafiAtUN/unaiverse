@@ -1,0 +1,247 @@
+---
+/**
+ * RAG, shown as the contrast it actually is.
+ *
+ * Two lanes for the same question. The top lane answers from the model's
+ * parameters alone and produces something fluent with no source. The bottom
+ * lane searches a trusted collection first and produces the same kind of
+ * sentence with a citation attached. Putting them side by side is the lesson:
+ * the difference is not intelligence, it is whether anything was looked up.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-rag data-term={termId}>
+  <div class="vx__row" role="group" aria-label="Choose a question">
+    <button type="button" class="vx__button" data-rag-q="0" aria-pressed="true">Question 1</button>
+    <button type="button" class="vx__button" data-rag-q="1" aria-pressed="false">Question 2</button>
+    <button type="button" class="vx__button" data-rag-play>Run both</button>
+  </div>
+
+  <p class="vx__label">The question</p>
+  <p class="visual__readout" data-rag-question></p>
+
+  <div class="rag-lanes">
+    <section class="rag-lane" aria-labelledby={`rag-a-${termId}`}>
+      <h4 class="rag-lane__title" id={`rag-a-${termId}`}>Without retrieval</h4>
+      <ol class="rag-steps" data-rag-lane="plain"></ol>
+    </section>
+    <section class="rag-lane" aria-labelledby={`rag-b-${termId}`}>
+      <h4 class="rag-lane__title" id={`rag-b-${termId}`}>With retrieval (RAG)</h4>
+      <ol class="rag-steps" data-rag-lane="rag"></ol>
+    </section>
+  </div>
+
+  <p class="visual__readout" role="status" aria-live="polite" data-rag-readout></p>
+</div>
+
+<style>
+  .rag-lanes {
+    display: grid;
+    gap: var(--sp-4);
+  }
+
+  @media (min-width: 44rem) {
+    .rag-lanes {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .rag-lane {
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: var(--sp-4);
+    background: var(--void-raised);
+  }
+
+  .rag-lane__title {
+    font-size: var(--step-0);
+    margin: 0 0 var(--sp-3);
+  }
+
+  .rag-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-2);
+    counter-reset: ragstep;
+  }
+
+  .rag-step {
+    counter-increment: ragstep;
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: var(--sp-2);
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    opacity: 0.35;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .rag-step.is-on {
+    opacity: 1;
+  }
+
+  .rag-step::before {
+    content: counter(ragstep);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .rag-step--answer {
+    border-top: 1px dashed var(--hairline);
+    padding-top: var(--sp-2);
+    margin-top: var(--sp-1);
+    color: var(--ink);
+  }
+
+  .rag-cite {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--riso-green);
+    margin-top: 0.2rem;
+  }
+
+  .rag-nocite {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--riso-pink);
+    margin-top: 0.2rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rag-step {
+      opacity: 1;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  interface Scenario {
+    question: string;
+    plain: string[];
+    plainAnswer: string;
+    rag: string[];
+    ragAnswer: string;
+    source: string;
+  }
+
+  const SCENARIOS: Scenario[] = [
+    {
+      question: 'What does our office guidance say about using AI to draft correspondence?',
+      plain: [
+        'The question goes straight to the model.',
+        'The model draws only on patterns learned during training.',
+        'It has never seen your office guidance.',
+      ],
+      plainAnswer:
+        'A fluent paragraph describing what guidance of this kind usually says. It may be broadly right, broadly wrong, or a confident mixture, and there is no way to tell which from the text.',
+      rag: [
+        'The question is turned into a search over your approved document collection.',
+        'The three most relevant passages come back.',
+        'Those passages are placed in front of the model with the question.',
+        'The model answers using the passages it was given.',
+      ],
+      ragAnswer:
+        'A paragraph that reflects what the guidance actually says, with the paragraph it came from attached, so a colleague can check it.',
+      source: 'Office guidance note, section 4.2',
+    },
+    {
+      question: 'How many days of leave carry over at the end of the year?',
+      plain: [
+        'The question goes straight to the model.',
+        'The model produces the most plausible-sounding number.',
+        'Nothing in the process checks that number against a rule.',
+      ],
+      plainAnswer:
+        'A specific figure, stated confidently. It might be the figure from a different organisation, or from an older rule, or from nowhere at all.',
+      rag: [
+        'The question is matched against the staff rules collection.',
+        'The clause that governs carry-over is retrieved.',
+        'The clause is handed to the model with the question.',
+        'The model answers from the clause.',
+      ],
+      ragAnswer:
+        'The figure from the actual clause, with the clause quoted, so the answer can be verified rather than trusted.',
+      source: 'Staff rule 5.3(b)',
+    },
+  ];
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-rag]')) {
+    const questionEl = root.querySelector<HTMLElement>('[data-rag-question]')!;
+    const plainLane = root.querySelector<HTMLOListElement>('[data-rag-lane="plain"]')!;
+    const ragLane = root.querySelector<HTMLOListElement>('[data-rag-lane="rag"]')!;
+    const readout = root.querySelector<HTMLElement>('[data-rag-readout]')!;
+    const tabs = root.querySelectorAll<HTMLButtonElement>('[data-rag-q]');
+    const play = root.querySelector<HTMLButtonElement>('[data-rag-play]')!;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let index = 0;
+    let timers: number[] = [];
+
+    function step(text: string, extra?: { kind: 'cite' | 'nocite'; text: string }, answer = false) {
+      const li = document.createElement('li');
+      li.className = `rag-step${answer ? ' rag-step--answer' : ''}`;
+      const body = document.createElement('span');
+      body.textContent = text;
+      if (extra) {
+        const mark = document.createElement('span');
+        mark.className = extra.kind === 'cite' ? 'rag-cite' : 'rag-nocite';
+        mark.textContent = extra.text;
+        body.append(mark);
+      }
+      li.append(body);
+      return li;
+    }
+
+    function render(animate: boolean) {
+      timers.forEach((t) => window.clearTimeout(t));
+      timers = [];
+      const s = SCENARIOS[index]!;
+      questionEl.textContent = `“${s.question}”`;
+
+      plainLane.replaceChildren(
+        ...s.plain.map((t) => step(t)),
+        step(s.plainAnswer, { kind: 'nocite', text: 'no source to check' }, true),
+      );
+      ragLane.replaceChildren(
+        ...s.rag.map((t) => step(t)),
+        step(s.ragAnswer, { kind: 'cite', text: `cited: ${s.source}` }, true),
+      );
+
+      const all = [...plainLane.children, ...ragLane.children] as HTMLElement[];
+      if (!animate || reduced.matches) {
+        all.forEach((el) => el.classList.add('is-on'));
+      } else {
+        const ordered = [...plainLane.children, ...ragLane.children] as HTMLElement[];
+        ordered.forEach((el, i) => {
+          timers.push(window.setTimeout(() => el.classList.add('is-on'), 220 * i));
+        });
+      }
+
+      tabs.forEach((t, i) => t.setAttribute('aria-pressed', String(i === index)));
+      readout.textContent =
+        'Both lanes answer the same question with the same model. The only difference is that the ' +
+        'right-hand lane looked something up first, which is why only it can show you where the ' +
+        `answer came from (${s.source}). Retrieval does not make the model cleverer; it makes the ` +
+        'answer checkable, and it updates the moment the document does.';
+    }
+
+    tabs.forEach((t, i) =>
+      t.addEventListener('click', () => {
+        index = i;
+        render(true);
+      }),
+    );
+    play.addEventListener('click', () => render(true));
+    render(false);
+  }
+</script>

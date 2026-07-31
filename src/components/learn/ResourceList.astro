@@ -1,0 +1,60 @@
+---
+/**
+ * External reading, with its provenance on the card.
+ *
+ * Three things every card must say, because the alternative is a link that
+ * looks vetted and is not: what kind of thing it is, who published it, and
+ * whether this site has actually fetched the URL and got an answer. A search
+ * link says it is a search link rather than pretending to be an article.
+ *
+ * `rel="noopener noreferrer"` on everything, and the external destination is
+ * announced rather than implied by an arrow glyph alone.
+ */
+import type { LearningResource } from '../../lib/learn/schema';
+import { RESOURCE_TYPE_LABEL, DIFFICULTY_LABEL } from '../../lib/learn/schema';
+
+interface Props {
+  resources: LearningResource[];
+}
+const { resources } = Astro.props;
+
+const ORDER = ['official', 'wikipedia', 'article', 'course', 'interactive', 'video', 'discussion'];
+const sorted = [...resources].sort((a, b) => ORDER.indexOf(a.type) - ORDER.indexOf(b.type));
+---
+
+{
+  sorted.length === 0 ? (
+    <p>No external resources have been reviewed for this term yet.</p>
+  ) : (
+    <ul class="resources">
+      {sorted.map((r) => (
+        <li class="resource">
+          <p class="resource__top">
+            <span class="resource__type">{RESOURCE_TYPE_LABEL[r.type] ?? r.type}</span>
+            <span class="resource__title">
+              <a href={r.url} target="_blank" rel="noopener noreferrer">
+                {r.title}
+                <span class="visually-hidden"> (opens in a new tab)</span>
+              </a>
+            </span>
+            {r.publisher && <span class="resource__publisher">{r.publisher}</span>}
+          </p>
+
+          <p class="resource__why">{r.description}</p>
+
+          <p class="resource__flags">
+            {r.difficulty && <span>{DIFFICULTY_LABEL[r.difficulty]}</span>}
+            {r.isSearch && <span>search results, not one page</span>}
+            {r.verified ? (
+              <span>link checked {r.lastChecked ?? ''}</span>
+            ) : (
+              <span class="resource__flag--unverified">
+                link not verified{r.lastChecked ? ` (last tried ${r.lastChecked})` : ''}
+              </span>
+            )}
+          </p>
+        </li>
+      ))}
+    </ul>
+  )
+}

@@ -1,0 +1,224 @@
+{
+  "id": "regularisation",
+  "slug": "regularisation",
+  "term": "Regularisation",
+  "aliases": [
+    "regularization",
+    "weight decay"
+  ],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "overfitting"
+  ],
+  "relatedTermIds": [
+    "overfitting",
+    "loss-function",
+    "optimisation",
+    "gradient-descent",
+    "hyperparameter"
+  ],
+  "oftenConfusedWith": [
+    "dropout"
+  ],
+  "oneSentence": "Regularisation adds a penalty or constraint during training so a model prefers simpler settings that are less likely to fit noise in the training data.",
+  "plainExplanation": "When a model is trained, it tries to reduce a loss: a number that measures how wrong its predictions are on the training data. Regularisation changes that training goal. Instead of only rewarding a close fit to the training examples, it also adds pressure toward simpler parameter values, such as smaller weights.\n\nWhat goes in is the usual training data, the model, and one or more regularisation settings. A weight is a number inside the model that affects its output. A common method adds a penalty to the loss when weights become large. Another method, dropout, removes some connections temporarily during training, but that is a different technique, not the same thing as weight decay.\n\nWhat happens is that optimisation now balances two aims: fit the data and avoid overly complex settings. The combined loss might be written as prediction loss plus a penalty term. If the penalty is too weak, the model may still fit noise. If it is too strong, the model can become too simple and miss real patterns.\n\nWhat comes out is usually a model that performs a little less perfectly on the training set but better on new data. In other words, regularisation often trades some training accuracy for better generalisation. It does not guarantee improvement, and the strength of the penalty is itself a hyperparameter that needs testing.",
+  "everydayAnalogy": {
+    "title": "A rainfall forecast with a restraint on overreacting",
+    "story": "A farming cooperative tracks daily rainfall from several nearby fields. One analyst builds a forecasting rule and keeps adding adjustments so the rule matches every odd jump in last month's data, including a day when one rain gauge malfunctioned. Another analyst uses a rule with a built-in restraint: each adjustment is allowed, but large adjustments carry a cost unless they clearly improve the forecast. The second rule does not match the old data quite as perfectly, but it is more reliable when next month's weather arrives.",
+    "mapping": [
+      {
+        "analogyElement": "large adjustments carry a cost",
+        "aiElement": "a penalty term discourages large weights or overly complex settings"
+      },
+      {
+        "analogyElement": "matching every odd jump in last month's data",
+        "aiElement": "overfitting to noise in the training data"
+      },
+      {
+        "analogyElement": "the rule that is more reliable next month",
+        "aiElement": "better generalisation to unseen data"
+      }
+    ],
+    "limitation": "Real regularisation does not literally judge whether a pattern is suspicious or faulty. It changes a mathematical objective during training. Also, not all regularisation works by discouraging large weights: dropout, early stopping, and data augmentation act differently, so the 'cost on adjustments' story fits some methods better than others."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Training without and with regularisation",
+    "learningObjective": "Show how adding a penalty changes the training objective and can improve performance on new data even if training fit becomes slightly worse.",
+    "description": "A side-by-side diagram compares two training paths. The left path minimises prediction loss alone. The right path minimises prediction loss plus a regularisation penalty. Read from top to bottom in each column, then compare the final models and their behaviour on training versus new data.",
+    "steps": [
+      {
+        "label": "Same starting point",
+        "explanation": "Both columns start with the same training data and the same model architecture.",
+        "visualInstruction": "Draw two equal columns labelled 'No regularisation' and 'With regularisation'. At the top of both, show the same dataset icon feeding into the same model icon."
+      },
+      {
+        "label": "Different objective",
+        "explanation": "The left column uses prediction loss only. The right column uses prediction loss plus a penalty that discourages large or overly flexible parameter values.",
+        "visualInstruction": "In the left column, show a box labelled 'optimise prediction loss'. In the right column, show a box labelled 'optimise prediction loss + penalty'. Add a small side note: 'penalty strength = hyperparameter'."
+      },
+      {
+        "label": "Parameter updates",
+        "explanation": "Optimisation updates the weights in both cases, but the regularised path pushes against very large weights.",
+        "visualInstruction": "Show arrows from each objective box to weight sliders. In the right column, add a counter-force arrow or spring icon opposing extreme slider positions."
+      },
+      {
+        "label": "Result on training data",
+        "explanation": "The unregularised model often reaches lower training loss because it can fit more detail, including noise.",
+        "visualInstruction": "At the bottom left, show a training-loss badge reading 'very low'. At the bottom right, show a training-loss badge reading 'slightly higher'."
+      },
+      {
+        "label": "Result on new data",
+        "explanation": "The regularised model often performs better on unseen examples because it relies less on accidental patterns in the training set.",
+        "visualInstruction": "Below both columns, add a test-data row. Show the left model with a 'less stable on new data' badge and the right model with a 'more stable on new data' badge."
+      }
+    ],
+    "interaction": "Hovering or tapping each column highlights the objective used and swaps a small caption between 'fits training data closely' and 'generalises better to new data'.",
+    "accessibilityDescription": "This diagram compares two training processes side by side. Both begin with the same dataset and the same model. On the left, training minimises prediction loss only. On the right, training minimises prediction loss plus a penalty that discourages extreme parameter values. The left path ends with very low training loss but weaker behaviour on new data. The right path ends with slightly higher training loss but better performance on unseen data. The main point is that regularisation changes the objective during training so the model is less likely to fit noise.",
+    "reducedMotionDescription": "A static two-column comparison replaces any highlighting. Each column shows the same starting dataset and model, a different objective box, then a final note: left column, lower training loss; right column, better generalisation on new data."
+  },
+  "workedExample": {
+    "scenario": "A small neural network predicts next-day rainfall in millimetres for a farming cooperative using 2,000 past weather records.",
+    "input": "Training uses weather features such as humidity, temperature, wind, and pressure. Model A uses no regularisation. Model B uses L2 regularisation with strength 0.01.",
+    "process": [
+      "Model A is trained to minimise prediction loss only, while Model B minimises prediction loss plus an L2 penalty on large weights.",
+      "After training, Model A reaches training error of 1.8 mm and validation error of 4.6 mm.",
+      "Model B reaches training error of 2.2 mm and validation error of 3.1 mm.",
+      "The regularised model fits the training data a bit less closely but predicts unseen data more reliably, so it is preferred."
+    ],
+    "result": "Adding a modest penalty produced a model with slightly worse training fit and clearly better performance on new rainfall records."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN language technology team is testing a model that drafts rough translations of non-sensitive field updates into a working language for internal review.",
+    "relevance": "Regularisation can help the model avoid memorising quirks of the training set and improve performance on new, routine phrasing from different duty stations.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Human review remains necessary before any translation is shared or used."
+  },
+  "whyItMatters": "If you only look at how well a model matches its training data, you can choose a system that looks excellent in testing but performs poorly in real use. Regularisation matters because it helps teams prefer models that are more dependable on new cases, not just impressive on old ones. For non-specialists, this affects procurement, evaluation, risk, and trust: a slightly less perfect training score may be the safer operational choice if it means fewer surprises later.",
+  "whereYouMayHearIt": [
+    "model tuning",
+    "weight decay setting",
+    "reducing overfitting",
+    "training configuration",
+    "validation performance review"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Regularisation simply makes a model smaller.",
+      "correction": "Sometimes it leads to smaller weights, but the main point is to change training so the model avoids overly specific solutions. A model can keep the same architecture and still be regularised through penalties, dropout, or other methods."
+    },
+    {
+      "misconception": "If regularisation raises training loss, it must be making the model worse.",
+      "correction": "Not necessarily. Training loss measures fit to examples already seen. Regularisation often accepts a small rise there to improve performance on unseen data, which is usually the real goal."
+    },
+    {
+      "misconception": "Weight decay, L2 regularisation, and dropout are all identical.",
+      "correction": "They are related but not identical. L2 regularisation adds a penalty on weight size to the objective. Weight decay is often used as a close synonym, though in some optimisers the exact update differs. Dropout instead randomly removes units or connections during training, so it works through a different mechanism."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Regularisation is a way to stop a model from becoming too attached to the training examples. It adds a rule or penalty during training so the model stays simpler and usually works better on new data.",
+    "technical": "Regularisation modifies the optimisation objective or training procedure to reduce overfitting and improve generalisation. In the common penalty-based form, the objective becomes empirical loss plus a term such as λ||w||² for L2 or λ||w||₁ for L1, where w are parameters and λ controls strength. This biases training toward solutions with smaller or sparser weights. In deep learning, 'weight decay' is often used as a near-synonym for L2 regularisation, but the equivalence depends on the optimiser implementation; for example, decoupled weight decay in Adam is not identical to simply adding an L2 penalty to the loss. Broader uses of the word regularisation also include methods such as dropout, early stopping, label smoothing, and data augmentation, which reduce overfitting through different mechanisms rather than the same penalty term."
+  },
+  "keyTakeaway": "Regularisation changes training so the model prefers simpler, more stable patterns, often sacrificing a little training fit to perform better on new data.",
+  "quickCheck": {
+    "question": "What is the main purpose of regularisation during model training?",
+    "options": [
+      "To make training data larger without collecting new examples",
+      "To force the model to fit the training set as closely as possible",
+      "To reduce overfitting by discouraging overly complex parameter settings",
+      "To guarantee that the model will converge to the global minimum"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Regularisation is mainly used to improve generalisation. It does this by adding constraints or penalties that make overly flexible solutions less attractive. It does not guarantee a global minimum, and it is not the same as adding more data."
+  },
+  "resources": [
+    {
+      "title": "Regularization",
+      "url": "https://en.wikipedia.org/wiki/Regularization",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad reference overview of regularisation methods and terminology, and it suits readers who want definitions and examples in one place.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives visual intuition for how neural network training behaves, and it suits readers who learn best from geometric and animated explanations.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course material gives a practical introduction to reducing loss and improving model behaviour, and it suits readers who want applied training guidance.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Regularisation",
+      "url": "https://www.youtube.com/results?search_query=Regularisation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page gives a range of video explanations of regularisation from different creators, and it suits readers who want to compare teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Regularisation",
+      "url": "https://www.reddit.com/search/?q=Regularisation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page gives community discussions and informal explanations of regularisation, and it suits readers who want practical questions, caveats, and varied viewpoints.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "regularisation meaning",
+    "regularization vs weight decay",
+    "what is weight decay",
+    "l2 regularisation explained",
+    "why regularisation helps overfitting",
+    "dropout vs regularisation",
+    "regularisation in neural networks",
+    "regulisation typo",
+    "lambda regularization",
+    "training loss higher but test better",
+    "regularisation",
+    "regularization",
+    "weight decay"
+  ],
+  "contested": "The broad idea is widely accepted, but terminology can vary. Some people use 'regularisation' narrowly for penalty terms such as L1 or L2, while others use it more broadly to include methods like dropout, early stopping, and data augmentation. 'Weight decay' is also often treated as equivalent to L2 regularisation, although in some optimiser implementations the update rule is not exactly the same.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:37.919Z",
+    "contentHash": "78850d4f47f880f9",
+    "attempts": 1,
+    "promptTokens": 2261,
+    "completionTokens": 2536
+  }
+}

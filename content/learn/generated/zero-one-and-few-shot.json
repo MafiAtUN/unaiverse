@@ -1,0 +1,231 @@
+{
+  "id": "zero-one-and-few-shot",
+  "slug": "zero-one-and-few-shot",
+  "term": "Zero-shot, one-shot and few-shot",
+  "aliases": [
+    "zero-shot",
+    "one-shot",
+    "few-shot",
+    "few shot learning"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "everyone"
+  ],
+  "prerequisiteTermIds": [
+    "in-context-learning"
+  ],
+  "relatedTermIds": [
+    "in-context-learning",
+    "fine-tuning",
+    "instruction-tuning",
+    "supervised-fine-tuning",
+    "parameter-efficient-fine-tuning",
+    "lora"
+  ],
+  "oftenConfusedWith": [
+    "fine-tuning",
+    "supervised-fine-tuning",
+    "instruction-tuning"
+  ],
+  "oneSentence": "These labels describe how many task examples a model gets in the prompt before it tries a new input: none, one, or a small handful.",
+  "plainExplanation": "Zero-shot, one-shot and few-shot describe a prompting setup, not a separate kind of model. The key question is: before asking for an answer, how many examples of the task do you place in the prompt? In a prompt, you give text, images or other input to the model. The model then produces an output such as a label, summary or draft reply.\n\nIn zero-shot use, you give only the instruction and the new input. In one-shot use, you add one example that shows the pattern you want. In few-shot use, you add a small number of examples, often two to ten, to guide the format, tone or decision rule. What goes in is the task instruction, sometimes examples, and then the new case. What happens is that the model uses patterns learned earlier during pretraining and later tuning, plus the examples in the prompt if you provide them. What comes out is a prediction or generated text for the new case.\n\nThese terms are closely related to in-context learning, which means the model adjusts its behaviour from the context inside the prompt without changing its stored parameters, meaning the internal numeric settings of the model. That is why zero-shot, one-shot and few-shot are different from fine-tuning. Fine-tuning changes the model itself by training on data. Few-shot prompting usually leaves the model unchanged and only changes the prompt.\n\nPeople sometimes use these words loosely, and that can cause confusion. In older machine learning literature, few-shot learning can also mean training a system to learn new classes from very few labelled examples. In current large language model discussions, people often mean few-shot prompting inside one conversation. So it helps to ask: do they mean examples in the prompt, or additional training on a small dataset?",
+  "everydayAnalogy": {
+    "title": "Helping a farming cooperative classify rainfall reports",
+    "story": "A farming cooperative receives daily notes from field officers in Kenya, Peru and Nepal. The coordinator asks a new assistant to label each note as low, medium or high rainfall risk. If the coordinator gives only the rule, that is like zero-shot. If the coordinator gives one labelled example note first, that is like one-shot. If the coordinator gives four labelled example notes showing tricky cases before the new note, that is like few-shot.",
+    "mapping": [
+      {
+        "analogyElement": "The rule for low, medium or high risk",
+        "aiElement": "The instruction in the prompt"
+      },
+      {
+        "analogyElement": "One labelled note shown before the new note",
+        "aiElement": "One-shot prompting"
+      },
+      {
+        "analogyElement": "Several labelled notes covering edge cases",
+        "aiElement": "Few-shot prompting"
+      },
+      {
+        "analogyElement": "The assistant labels the next note without extra training",
+        "aiElement": "The model generates an output using context rather than changing parameters"
+      }
+    ],
+    "limitation": "A human assistant can ask clarifying questions and may apply broad real-world judgement. A model only uses patterns from its training and the immediate prompt. Also, in the analogy the person may truly learn a lasting rule after seeing examples, while prompt examples usually do not permanently update the model. Some research papers also use few-shot learning to mean actual additional training from a few examples, which this story does not show."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "How the same task changes from zero-shot to one-shot to few-shot",
+    "learningObjective": "After reading the diagram, the reader should be able to explain that the difference is the number of examples placed in the prompt, not whether the model was retrained.",
+    "description": "Show three side-by-side panels with the same task and the same new input. Panel 1 includes only an instruction and the new input. Panel 2 adds one example before the new input. Panel 3 adds several examples before the new input. Arrows from each panel go to an output box. A footer note says: prompt changes; model parameters stay the same.",
+    "steps": [
+      {
+        "label": "Zero-shot",
+        "explanation": "The prompt contains an instruction and the new case, but no worked example.",
+        "visualInstruction": "Draw a vertical stack: instruction box, new input box, arrow to output box. Add a small badge reading 0 examples."
+      },
+      {
+        "label": "One-shot",
+        "explanation": "The prompt adds one example to show the pattern or format before the new case.",
+        "visualInstruction": "Draw a vertical stack: instruction box, one example box, new input box, arrow to output box. Add a badge reading 1 example."
+      },
+      {
+        "label": "Few-shot",
+        "explanation": "The prompt includes a small set of examples, often chosen to show the desired style or edge cases.",
+        "visualInstruction": "Draw a vertical stack: instruction box, three small example boxes, new input box, arrow to output box. Add a badge reading few examples."
+      },
+      {
+        "label": "Not fine-tuning",
+        "explanation": "Across all three panels, the model box stays the same. Only the prompt content changes.",
+        "visualInstruction": "Place one shared model box beneath the panels with identical colour and label in all cases. Add a footer line: no parameter update."
+      }
+    ],
+    "interaction": "Hover or tap each panel to reveal the exact prompt structure for that panel; a toggle highlights that the model box does not change.",
+    "accessibilityDescription": "This comparison diagram has four parts. The first three panels show the same task with different prompt setups. In the zero-shot panel, an instruction and a new input go into the unchanged model, which produces an output. In the one-shot panel, the prompt adds one labelled example between the instruction and the new input. In the few-shot panel, the prompt adds several labelled examples before the new input. The fourth part is a note that the model itself remains unchanged in all three cases. The main message is that zero-shot, one-shot and few-shot differ by how many examples are included in the prompt, not by retraining the model.",
+    "reducedMotionDescription": "A static three-column comparison replaces any animation. Each column lists the prompt contents in order and points to an output, with one shared note underneath: the same model is used in every column and its parameters do not change."
+  },
+  "workedExample": {
+    "scenario": "Classifying short weather bulletins for a farming cooperative into low, medium or high rainfall risk for tomorrow.",
+    "input": "New bulletin: \"Dark clouds expected after noon, 70% chance of storms, rivers already near seasonal average.\"",
+    "process": [
+      "Zero-shot prompt: \"Label the rainfall risk for tomorrow as low, medium or high. Bulletin: ...\" The model must infer the rule from the instruction alone.",
+      "One-shot prompt: add one example, such as \"Bulletin: Light clouds, 10% chance of rain, dry soil. Label: low.\" Then provide the new bulletin.",
+      "Few-shot prompt: add three examples, for instance one low, one medium and one high case, each with a label, then provide the new bulletin.",
+      "Compare outputs. Zero-shot may vary more, one-shot may copy the desired label format, and few-shot often handles the threshold pattern more consistently."
+    ],
+    "result": "For the new bulletin, a well-chosen few-shot prompt is more likely than zero-shot to return a clean answer such as \"high\" in the requested format, though it can still be wrong and should be checked."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team wants drafting help for short, public-facing summaries of meeting notes while keeping a human reviewer in control.",
+    "relevance": "Zero-shot prompting may be enough for a generic first draft. One-shot or few-shot prompting can improve consistency by showing one or several approved examples of tone, structure and disclaimer wording without changing the underlying model.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or negotiation-sensitive content into an unapproved public AI service. Use only approved tools and keep human review before any text is shared."
+  },
+  "whyItMatters": "For non-specialists, these terms help you ask the right operational question: do we need a better prompt, a few strong examples, or actual model retraining? That affects cost, speed, privacy review, procurement and risk. Zero-shot is quick but may be less consistent. One-shot and few-shot can improve formatting and task guidance without changing the model, but they use more prompt space and still do not guarantee accuracy. Knowing the distinction also helps you challenge vague claims such as \"we trained it on our data\" when someone may only mean they added examples to a prompt.",
+  "whereYouMayHearIt": [
+    "prompt engineering discussions",
+    "vendor product demos",
+    "machine learning papers",
+    "internal automation pilots",
+    "LLM course materials"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Few-shot always means the model was trained on a small dataset.",
+      "correction": "Not always. In many modern LLM discussions, few-shot means a few examples placed inside the prompt at use time. In some research areas, few-shot learning can mean extra training designed to work from very few labelled examples. Ask which meaning is intended."
+    },
+    {
+      "misconception": "One-shot or few-shot makes the model remember the examples permanently.",
+      "correction": "Usually it does not. Prompt examples mainly influence the current response by providing context in that interaction. Permanent change usually requires some form of training or fine-tuning on stored data."
+    },
+    {
+      "misconception": "More examples in the prompt always improve quality.",
+      "correction": "Not necessarily. Poor examples, contradictory examples, or too many examples can confuse the pattern, consume context space and even reduce performance. Example selection matters as much as example count."
+    },
+    {
+      "misconception": "Zero-shot means the model has never seen anything related before.",
+      "correction": "No. Zero-shot usually means no task examples are provided in the prompt for this request. The model may still rely on broad patterns learned earlier during pretraining and later tuning."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "These words tell you how much help you give the model inside the prompt before asking it to handle a new case: no example, one example, or a few examples.",
+    "technical": "In current LLM practice, zero-shot, one-shot and few-shot usually refer to in-context prompting regimes. A prompt contains an instruction, optionally k labelled or pattern-setting examples, and then a query instance. The model conditions on the whole context and predicts the next tokens for the output, using its existing parameters rather than updating them. Zero-shot uses k=0, one-shot uses k=1, and few-shot uses a small k. This differs from fine-tuning, supervised fine-tuning or parameter-efficient methods such as LoRA, where optimisation updates parameters using training data. The terms can be ambiguous across subfields: in some machine learning literature, few-shot learning refers to methods built to generalise from very few labelled examples, sometimes with actual training episodes or meta-learning, not only prompt examples."
+  },
+  "keyTakeaway": "Zero-shot, one-shot and few-shot usually describe how many examples you put in the prompt, while fine-tuning changes the model itself.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes few-shot prompting from fine-tuning?",
+    "options": [
+      "Few-shot prompting adds a few examples in the prompt, while fine-tuning updates the model's parameters through training.",
+      "Few-shot prompting always gives better factual accuracy than fine-tuning because it uses fresh examples.",
+      "Few-shot prompting means the model permanently learns the examples after one conversation.",
+      "Few-shot prompting and fine-tuning are the same process, but one name is used by vendors."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The core difference is where the change happens. In few-shot prompting, you change the input context for that request. In fine-tuning, you run training that updates the model's stored parameters. Few-shot may help, but it does not guarantee better accuracy or permanent learning."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Zero-shot learning",
+      "url": "https://en.wikipedia.org/wiki/Zero-shot_learning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of zero-shot learning terminology and background, and it suits readers who want a general reference point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This course link is useful for learners who want practical instruction on prompting and related large language model concepts.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "This course link suits readers who prefer short guided lessons with applied examples rather than a long reference article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Zero-shot, one-shot and few-shot",
+      "url": "https://www.youtube.com/results?search_query=Zero-shot%2C%20one-shot%20and%20few-shot%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for videos on these terms, so it helps readers who want to compare multiple visual explanations and teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Zero-shot, one-shot and few-shot",
+      "url": "https://www.reddit.com/search/?q=Zero-shot%2C%20one-shot%20and%20few-shot",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussions, so it suits readers who want to see common questions, confusions and informal explanations from many users.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "zero shot vs few shot",
+    "one shot prompting meaning",
+    "few shot learning vs fine tuning",
+    "few-shot prompting examples",
+    "what is zero-shot ai",
+    "in-context learning few shot",
+    "few shot or few-shot",
+    "zero shot one shot few shot difference",
+    "zero-shot, one-shot and few-shot",
+    "zero-shot",
+    "one-shot",
+    "few-shot",
+    "few shot learning"
+  ],
+  "contested": "The terminology is somewhat unsettled across fields: in large language model use, these labels often describe examples in the prompt, while in other machine learning literature, especially for few-shot learning, they may refer to learning methods that adapt from very small labelled datasets.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:15.047Z",
+    "contentHash": "5e883ed5a9600707",
+    "attempts": 1,
+    "promptTokens": 2348,
+    "completionTokens": 2698
+  }
+}

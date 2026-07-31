@@ -1,0 +1,233 @@
+{
+  "id": "observation-and-action",
+  "slug": "observation-and-action",
+  "term": "Observation and action",
+  "aliases": [
+    "observation",
+    "action",
+    "act-observe loop"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "ai-agent"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "tool-use",
+    "function-calling",
+    "planning",
+    "human-in-the-loop",
+    "computer-use"
+  ],
+  "oftenConfusedWith": [
+    "feedback-loop",
+    "workflow",
+    "orchestration"
+  ],
+  "oneSentence": "In an acting system, observations are the signals it receives, actions are the steps it takes, and the act-observe loop is the repeated cycle linking the two.",
+  "plainExplanation": "These words describe different parts of a system that does more than generate text. An observation is what the system receives from outside itself: a user message, a tool result, a screen state, a sensor reading, or an error message. An action is what it sends back out: calling a tool, clicking a button, writing text, updating a record, or asking a person for confirmation.\n\nThe act-observe loop is the repeated process that connects them. The system observes the current situation, chooses an action, gets a new observation showing what changed, and repeats. The loop stops when it reaches a goal, hits a rule, fails, or hands control to a human.\n\nThis is related to tool use, but it is not the same thing. Tool use means the system can call an external function or service. Observation and action describe the wider control pattern around that call: seeing the result, taking the next step, and adapting if the result is incomplete or unexpected.\n\nIn practice, what goes in may include instructions, current state, and results from earlier steps. What happens is an iterative cycle of reading the latest evidence, selecting the next allowed step, and updating working state. What comes out may be a completed task, a request for human review, or a logged failure with enough detail for follow-up.",
+  "everydayAnalogy": {
+    "title": "Matching a photographed form to the right template",
+    "story": "A clerk in Nairobi receives a phone photo of a paper form. First, they look at the photo and notice the logo position, number of boxes, and the heading text. Then they pull one template from a shelf, compare it, and realise the photo is too blurry in one corner, so they ask the sender for a clearer image. After the new photo arrives, they compare again, select the correct template, and file the form under that type. Each new piece of evidence changes the next step they take.",
+    "mapping": [
+      {
+        "analogyElement": "details seen in the photo",
+        "aiElement": "observations from inputs or tool outputs"
+      },
+      {
+        "analogyElement": "pulling a template, asking for a clearer image, filing the form",
+        "aiElement": "actions taken by the system"
+      },
+      {
+        "analogyElement": "compare, act, receive new photo, compare again",
+        "aiElement": "the act-observe loop"
+      },
+      {
+        "analogyElement": "the shelf of templates",
+        "aiElement": "available tools, options, or stored procedures"
+      }
+    ],
+    "limitation": "A human clerk uses broad background knowledge and can often recognise subtle context with little formal structure. An AI system usually depends on defined inputs, tool interfaces, and constraints. Also, many AI observations are machine-readable outputs such as JSON fields or API responses, not visual scenes like a person sees."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How observation and action form a loop",
+    "learningObjective": "Show that observation, action, and the act-observe loop are different but connected: one provides incoming state, one changes the environment, and the loop repeats until a stop condition is met.",
+    "description": "A five-step sequence laid out left to right with arrows, then a return arrow from the last step back to the first active step. Read it as a repeating control cycle: receive state, choose a step, act, inspect the result, then either stop or continue.",
+    "steps": [
+      {
+        "label": "1. Receive observation",
+        "explanation": "The system gets current evidence, such as a user request, a tool result, a screen state, or an error.",
+        "visualInstruction": "Draw a rounded rectangle labelled 'Observation in' with small icons for message, tool output, and warning triangle."
+      },
+      {
+        "label": "2. Interpret current state",
+        "explanation": "The system combines the latest observation with instructions and short-term working state to decide what matters now.",
+        "visualInstruction": "Draw a process box labelled 'Current state' connected from step 1; include small stacked layers for instruction, latest result, and working notes."
+      },
+      {
+        "label": "3. Take action",
+        "explanation": "The system performs one allowed step, such as calling an API, clicking a button, drafting text, or asking a human.",
+        "visualInstruction": "Draw a process box labelled 'Action out' with branch icons for API, cursor click, document, and human check."
+      },
+      {
+        "label": "4. Get new observation",
+        "explanation": "The environment responds. The action produces a new result, which may confirm success, reveal failure, or require another step.",
+        "visualInstruction": "Draw a box labelled 'New observation' with examples: success message, returned data table, error code."
+      },
+      {
+        "label": "5. Stop or loop",
+        "explanation": "If the goal or a stop rule is reached, the system ends or hands off. Otherwise it uses the new observation for the next cycle.",
+        "visualInstruction": "Draw a decision diamond labelled 'Goal met / rule hit?' with one arrow to 'End or human review' and one looping arrow back to step 2."
+      }
+    ],
+    "interaction": "On hover or tap, highlight one path showing a successful run and another showing an error-triggered second action before stopping.",
+    "accessibilityDescription": "This diagram explains a repeated control cycle in five parts. First, the system receives an observation, such as a user message, tool output, screen state, or error. Second, it interprets the current state by combining that observation with instructions and short-term working notes. Third, it takes an action, such as calling an API, clicking in software, drafting text, or asking a human to review. Fourth, that action produces a new observation, such as returned data or an error code. Fifth, the system checks whether the goal has been reached or a rule says to stop. If yes, it ends or hands off to a human. If no, it loops back and uses the new observation for the next step.",
+    "reducedMotionDescription": "A static five-box sequence with arrows and a visible loop-back arrow from 'Stop or loop' to 'Interpret current state', plus a side note that observations are inputs, actions are outputs, and the loop is the repetition between them."
+  },
+  "workedExample": {
+    "scenario": "An internal document tool tries to classify a photographed customs form into one of three templates: T-17, C-4, or H-9.",
+    "input": "User instruction: 'Identify the form template from this image and return the closest match with confidence.' Initial OCR text: '... Customs Declaration ... Box 12 ... Signature ...' Image quality score: 0.58.",
+    "process": [
+      "Observation: the system receives OCR text, image features, and a low quality score of 0.58.",
+      "Action: it runs a template-matching tool and gets provisional scores: T-17 0.41, C-4 0.44, H-9 0.39; result is too close to trust.",
+      "Observation: the tool also reports 'header region blurred'. The system now has evidence that the uncertainty is caused by missing visual detail.",
+      "Action: instead of forcing a guess, it asks for a clearer crop of the top third of the page.",
+      "Observation and result: the new crop raises the score for C-4 to 0.82, so the system returns 'C-4' and logs that a second observation resolved the ambiguity."
+    ],
+    "result": "Output: 'Best match: C-4, confidence 0.82. Initial image was insufficient; classification improved after a clearer header image was provided.'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team uses an approved internal automation tool to route incoming records to the right administrative workflow. The system observes metadata and validation results, then takes actions such as suggesting a queue, requesting a missing non-sensitive field, or sending a case to human review.",
+    "relevance": "This helps staff see why acting systems need supervision: each action should depend on the latest approved observation, and uncertain cases should stop or escalate rather than continue automatically.",
+    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive, or operational information into an unapproved public AI service. For sensitive records, restrict observations to approved data sources, minimise exposed fields, and require human review before any external transmission or irreversible action."
+  },
+  "whyItMatters": "If a system can act, the key risk is not only whether one answer looks plausible. The real question is how it behaves across steps. A weak observation can trigger a wrong action. A wrong action creates new conditions that can push the system further off course. Understanding this loop helps you ask better governance questions: What can it observe? What is it allowed to do? What stops it? When does a human review the next step? What gets logged? Those questions matter for safety, auditability, cost, reliability, and accountability.",
+  "whereYouMayHearIt": [
+    "agent design discussions",
+    "tool-using assistant demos",
+    "workflow automation projects",
+    "computer use evaluations",
+    "API orchestration reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Observation just means reading what the user typed.",
+      "correction": "User text is only one kind of observation. In acting systems, observations can also include tool outputs, database results, screen contents, validation messages, timestamps, and failure signals. This broader meaning matters because the next action often depends more on those machine-generated results than on the original prompt."
+    },
+    {
+      "misconception": "Action only means producing a final answer.",
+      "correction": "A final answer is one possible action, but many actions are intermediate steps: calling a function, opening a record, requesting confirmation, retrying after an error, or stopping and escalating. If you only look at the final answer, you miss the operational risk in the earlier steps."
+    },
+    {
+      "misconception": "The act-observe loop is the same as a feedback loop.",
+      "correction": "They are related, but not identical. A feedback loop is a broad idea in which outputs influence later behaviour. The act-observe loop is a specific stepwise pattern in an acting system: observe current state, take an action, receive a new observation, and repeat. Not every feedback loop is implemented as explicit tool-mediated actions and observations."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "First the system sees what is happening, then it does one thing, then it checks what changed. That repeat pattern lets it carry out multi-step tasks.",
+    "technical": "In an agentic system, an observation is any external or updated state made available to the policy or controller: user input, environment state, tool return values, execution traces, error codes, UI snapshots, or retrieved context. An action is an emitted operation that can affect the environment or workflow, such as a tool invocation, API call, UI interaction, message, state update, or handoff request. The act-observe loop is the iterative control cycle in which the controller conditions on the latest observation and internal working state, selects an action under its constraints, executes it, ingests the resulting environment change as a new observation, and repeats until a termination condition, budget limit, failure rule, or human-intervention gate is reached. This is often implemented alongside planning, memory, orchestration, and tool-use layers, but it should not be collapsed into any one of them."
+  },
+  "keyTakeaway": "To evaluate an acting AI system, do not ask only what answer it gives; ask what it can observe, what it can do next, and how the loop is supervised.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes the three related terms?",
+    "options": [
+      "Observation is incoming state, action is an outgoing step, and the act-observe loop is the repeated cycle connecting them.",
+      "Observation is the model's hidden reasoning, action is the final answer, and the loop is training.",
+      "Observation and action are just two names for tool use, while the loop means using many tools at once.",
+      "Observation is any feedback from users, action is any code execution, and the loop only applies to robots."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The key distinction is role. Observation is what the system receives from the environment or tools. Action is what it sends or does. The act-observe loop is the process of repeating those steps. Tool use may appear inside that loop, but the loop is broader than tool use."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Observation and action",
+      "url": "https://en.wikipedia.org/w/index.php?search=Observation%20and%20action",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers scan several possible meanings of the term and is best for someone who first wants orientation rather than a single authoritative definition.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "description": "This Anthropic article gives a practical explanation of agents and suits readers who want to see how repeated observing and acting appears in real system design.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "description": "This official Model Context Protocol resource helps technical readers understand one way tools and context can be exposed to acting systems in a structured manner.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Observation and action",
+      "url": "https://www.youtube.com/results?search_query=Observation%20and%20action%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page is useful for readers who prefer visual walkthroughs and want to compare different public explanations before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Observation and action",
+      "url": "https://www.reddit.com/search/?q=Observation%20and%20action",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page lets readers see common questions, confusions, and practitioner language, and it suits readers who want informal discussion with caution about reliability.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "observation and action ai",
+    "act observe loop",
+    "observe act loop agent",
+    "observation vs action ai",
+    "tool result as observation",
+    "agent loop explained",
+    "act-observe cycle",
+    "observe action feedback loop difference",
+    "obervation action ai",
+    "computer use observe then act",
+    "observation and action",
+    "observation",
+    "action",
+    "act-observe loop"
+  ],
+  "contested": "The basic distinction between observation, action, and their loop is widely used, but exact boundaries vary across subfields such as reinforcement learning, autonomous agents, workflow automation, and computer-use systems.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:19.358Z",
+    "contentHash": "dac7c5cfa4a1a8f7",
+    "attempts": 1,
+    "promptTokens": 2340,
+    "completionTokens": 2783
+  }
+}

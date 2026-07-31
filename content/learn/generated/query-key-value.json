@@ -1,0 +1,235 @@
+{
+  "id": "query-key-value",
+  "slug": "query-key-value",
+  "term": "Query, key and value",
+  "aliases": [
+    "query",
+    "key",
+    "value",
+    "QKV"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "self-attention"
+  ],
+  "relatedTermIds": [
+    "attention",
+    "self-attention",
+    "attention-score",
+    "multi-head-attention",
+    "transformer",
+    "vector"
+  ],
+  "oftenConfusedWith": [
+    "semantic-search",
+    "embedding",
+    "attention-score"
+  ],
+  "oneSentence": "Three learned vectors let each token ask what it needs, advertise what it contains, and pass along the information chosen by attention.",
+  "plainExplanation": "In a transformer, each token first becomes a vector, which is a list of numbers representing features. From that token representation, the model creates three different versions: a query, a key and a value. They are related, but they do different jobs.\n\nThe query represents what the current token is looking for. The key represents what each token offers for matching. The value represents the information that can be passed onward if that token gets selected. The model compares one token’s query with other tokens’ keys to produce attention scores, which are weights showing how strongly it should focus on each token.\n\nThose weights are then used to mix the value vectors. So the output is not the key or the value from one place only. It is usually a weighted combination of many values, with larger weights on tokens whose keys matched the query more strongly. This is how a token gathers context from other tokens.\n\nThese three vectors are often confused with search systems because the words sound similar. But here they are internal learned projections inside the model, not database fields. They are also not fixed meanings attached to words forever. Their numbers depend on training, on the layer, on the attention head, and on the token’s current context.",
+  "everydayAnalogy": {
+    "title": "Sorting survey comments by the issue they raise",
+    "story": "A team receives hundreds of short survey comments from people in Nairobi, Lima and Sarajevo. For each comment, the team writes one short note about what issue they are trying to identify, one label card listing the issues the comment might relate to, and one fuller summary card with the useful details from that comment. To group comments, they compare the issue note from one comment with the label cards on all comments. Comments with stronger matches contribute more of their summary cards to the final grouped view.",
+    "mapping": [
+      {
+        "analogyElement": "issue note for a comment",
+        "aiElement": "query vector"
+      },
+      {
+        "analogyElement": "label card on each comment",
+        "aiElement": "key vector"
+      },
+      {
+        "analogyElement": "fuller summary card",
+        "aiElement": "value vector"
+      },
+      {
+        "analogyElement": "stronger or weaker match between note and label card",
+        "aiElement": "attention score used as a weight"
+      }
+    ],
+    "limitation": "In the analogy, people write readable notes and labels on purpose. In a transformer, the vectors are lists of numbers learned during training, and humans usually cannot read a single dimension as a clear label. Also, the real mechanism works in many layers and heads at once, and it combines values numerically rather than physically sorting cards into piles."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How query, key and value produce contextual output",
+    "learningObjective": "After viewing this, a reader should be able to explain that attention compares queries with keys to get weights, then uses those weights to mix values.",
+    "description": "Show one current token on the left and several context tokens on the right. Each token splits into Q, K and V boxes. Arrows go from the current token’s Q to all K boxes, then to score circles, then to weighted arrows into the V boxes, and finally to one combined output box. Read left to right.",
+    "steps": [
+      {
+        "label": "1. Start from token representations",
+        "explanation": "Each token already has a vector representation from the model. A small learned linear transform turns that representation into three versions: Q, K and V.",
+        "visualInstruction": "Draw four token rectangles in one row. Under each, show three small stacked boxes labelled Q, K and V. Use one colour family per token and consistent labels."
+      },
+      {
+        "label": "2. The current token forms a query",
+        "explanation": "For the token being updated, the model uses its query as a request for relevant context.",
+        "visualInstruction": "Highlight the first token as the current token. Emphasise its Q box with a thicker outline. Fade the Q boxes of the other tokens slightly."
+      },
+      {
+        "label": "3. Compare query with keys",
+        "explanation": "The current query is compared with every token’s key, including often its own key. These comparisons produce attention scores: higher means a closer match for this head and layer.",
+        "visualInstruction": "Draw arrows from the highlighted Q box to every K box. Place a score circle on each arrow with example labels such as 0.1, 0.6, 0.2, 0.1."
+      },
+      {
+        "label": "4. Use scores to weight values",
+        "explanation": "The scores become weights. Tokens with larger weights contribute more of their value vectors.",
+        "visualInstruction": "From each score circle, draw an arrow to the matching V box, then onward toward a merge area. Make thicker arrows for larger scores."
+      },
+      {
+        "label": "5. Combine values into output",
+        "explanation": "The weighted values are added together to form one contextual output vector for the current token.",
+        "visualInstruction": "Merge all weighted V arrows into one output rectangle labelled contextual output for current token. Add a note that this output is passed to later layers or steps."
+      }
+    ],
+    "interaction": "On hover or tap, each arrow from Q to K highlights its score and the matching contribution from V to the output; a toggle switches between numeric example weights and plain-language labels such as low, medium and high.",
+    "accessibilityDescription": "The diagram explains attention for one token. First, each token has three derived vectors called query, key and value. Second, the current token’s query is compared with every token’s key to produce scores. Third, those scores are used as weights on the corresponding value vectors. Fourth, the weighted value vectors are combined into one output vector for the current token. The key idea is that keys are used for matching, while values are used for the information that gets mixed into the output.",
+    "reducedMotionDescription": "A static left-to-right diagram shows token vectors split into Q, K and V, then arrows from one query to all keys, score labels above those arrows, thicker weighted arrows from values, and one final combined output box."
+  },
+  "workedExample": {
+    "scenario": "A sentence contains the tokens: 'The city approved the plan because it was urgent.' The model is updating the token 'it'.",
+    "input": "Current token: 'it'. Candidate context tokens include 'city', 'approved', 'plan', 'urgent'. Example attention weights from 'it' after comparing its query to all keys: city 0.05, approved 0.10, plan 0.70, urgent 0.15.",
+    "process": [
+      "The model creates a query vector for 'it' and key and value vectors for all tokens in the sentence.",
+      "It compares the query for 'it' with each token’s key and converts the comparison results into attention weights that sum to 1.",
+      "Because the weight on 'plan' is highest at 0.70, the value vector for 'plan' contributes most strongly to the new representation of 'it'.",
+      "The weighted sum 0.05×V(city) + 0.10×V(approved) + 0.70×V(plan) + 0.15×V(urgent) becomes the contextual output for 'it'."
+    ],
+    "result": "The updated representation of 'it' carries strong information from 'plan', helping the model treat 'it' as referring to the plan rather than the city."
+  },
+  "unWorkplaceExample": {
+    "scenario": "After a disaster, an approved internal system analyses non-sensitive satellite image patches and associated labels such as flooded road, damaged roof and intact bridge. For one image patch, the model’s query can be compared with keys from other patches so it can draw on relevant value information from similar visual contexts.",
+    "relevance": "This helps technical staff understand how a transformer-based vision or multimodal model can connect one patch of an image to other relevant patches instead of processing each patch in isolation.",
+    "caution": "Do not upload security-sensitive imagery, personally identifiable information, or operationally sensitive location data to an unapproved public AI service; use only authorised systems with human review."
+  },
+  "whyItMatters": "If you hear that a transformer uses attention, query, key and value are the parts that make that mechanism work. Knowing their roles helps you judge system behaviour more clearly. You can ask better questions: what is being matched, what information is being passed forward, and why might the model focus on the wrong context? This matters when reading model cards, debugging failures, comparing architectures, or deciding whether a system is suitable for tasks like summarisation, translation or image analysis. It also helps separate a real mechanism from marketing language: the model is not searching a database in a human sense, but computing weighted combinations of internal vectors.",
+  "whereYouMayHearIt": [
+    "transformer architecture discussions",
+    "attention layer diagrams",
+    "machine learning engineering interviews",
+    "research papers on language or vision models"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Query, key and value are three different kinds of data stored in a model like fields in a database.",
+      "correction": "They are not database columns. They are learned vector projections created from token representations inside an attention layer. Their job is computational: queries are used for matching, keys for being matched against, and values for providing the content that gets combined."
+    },
+    {
+      "misconception": "The model picks one value from one token and copies it into the output.",
+      "correction": "Usually it does not make a single hard choice. Attention normally produces a weighted mixture of many value vectors. One token may dominate, but several tokens can contribute at the same time, which is why the output can reflect blended context."
+    },
+    {
+      "misconception": "A key stores meaning and a value stores facts, so they are stable across all contexts.",
+      "correction": "Keys and values are context-dependent internal representations, not permanent labelled containers. Their exact numbers depend on the layer, the attention head, the surrounding tokens and the learned weights. A token can produce different useful patterns in different contexts."
+    },
+    {
+      "misconception": "Query, key and value only matter in text models.",
+      "correction": "The same mechanism appears in many transformer-based systems, including language, vision, speech and multimodal models. The items being related may be words, image patches, audio frames or other units, but the matching-and-mixing idea is similar."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Each token makes three versions of itself: one to ask for relevant context, one to say what it can be matched on, and one to provide the information that may be used.",
+    "technical": "Given an input representation x for each token, an attention head applies three learned linear projections to produce q = xW_Q, k = xW_K and v = xW_V. For one token position, its query is compared with all keys, often by a dot product, to produce raw compatibility scores. After scaling and a normalising step such as softmax, these become attention weights. The head then computes a weighted sum of the value vectors using those weights, yielding a contextualised output for that position. In self-attention, q, k and v all come from the same sequence; in cross-attention, the query comes from one sequence or stream while keys and values come from another. The important distinction is functional: keys determine matching, values determine what information is aggregated."
+  },
+  "keyTakeaway": "Queries choose where to look, keys determine what matches, and values provide what gets blended into the output.",
+  "quickCheck": {
+    "question": "In an attention head, what is the main role of the value vector?",
+    "options": [
+      "It stores the final probability of the next token.",
+      "It is the information weighted and combined after query-key matching.",
+      "It decides the position of the token in the sequence.",
+      "It replaces the embedding so the model no longer needs token vectors."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Queries and keys are mainly used to compute matching scores. Values are the vectors that get multiplied by the resulting weights and summed to form the contextual output. So values carry the content that attention passes forward."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Attention (machine learning)",
+      "url": "https://en.wikipedia.org/wiki/Attention_(machine_learning)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of attention methods in machine learning and suits readers who want a general reference before focusing on QKV.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "difficulty": "deeper",
+      "description": "This link is the original transformer paper and suits readers who want the formal source for how attention and QKV are defined in the architecture.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "difficulty": "intermediate",
+      "description": "This link gives a visual walk-through of transformer components and suits readers who learn best from diagrams and intuitive explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Query, key and value",
+      "url": "https://www.youtube.com/results?search_query=Query%2C%20key%20and%20value%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a search results page for videos about query, key and value, which suits readers who want to compare several teaching styles rather than rely on one explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Query, key and value",
+      "url": "https://www.reddit.com/search/?q=Query%2C%20key%20and%20value",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a search results page for community discussions about query, key and value, which suits readers who want informal explanations, questions and points of confusion from practitioners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "query key value attention",
+    "qkv explained",
+    "what are queries keys values in transformer",
+    "query key value simple explanation",
+    "qkv self attention",
+    "attention query vs key vs value",
+    "query key value vectors",
+    "qkv mechanism",
+    "querry key value transformer",
+    "semantic search query key value difference",
+    "query, key and value",
+    "query",
+    "key",
+    "value",
+    "qkv"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:47.305Z",
+    "contentHash": "d6a63a6b34d090a6",
+    "attempts": 1,
+    "promptTokens": 2275,
+    "completionTokens": 2685
+  }
+}

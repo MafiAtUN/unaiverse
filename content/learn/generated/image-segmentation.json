@@ -1,0 +1,226 @@
+{
+  "id": "image-segmentation",
+  "slug": "image-segmentation",
+  "term": "Image segmentation",
+  "aliases": [
+    "semantic segmentation"
+  ],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "object-detection"
+  ],
+  "relatedTermIds": [
+    "computer-vision",
+    "object-detection",
+    "image-classification",
+    "bounding-box",
+    "pixel",
+    "image-captioning"
+  ],
+  "oftenConfusedWith": [
+    "object-detection",
+    "image-classification",
+    "bounding-box"
+  ],
+  "oneSentence": "Image segmentation assigns a label to each pixel in an image so a system can outline and separate meaningful regions such as roads, buildings or water.",
+  "plainExplanation": "Image segmentation is a computer vision task that takes an image as input and produces a labelled map as output. In that map, each pixel, meaning each tiny picture element, is assigned to a class such as road, sky, person or tree.\n\nThe main idea is finer detail. Image classification gives one label for the whole image. Object detection usually draws boxes around objects. Segmentation goes further by marking the exact area that belongs to each class, pixel by pixel.\n\nTo do this, a model is trained on many images paired with human-made masks. A mask is a second image where colours or numbers show the correct class for each pixel. During training, the model adjusts its internal parameters so its predicted mask gets closer to the reference mask.\n\nWhen used on a new image, the model analyses local patterns such as edges, textures and shapes, while also using wider context from the rest of the image. The result might be a coloured overlay, a black-and-white mask for one class, or a data file saying which class each pixel belongs to.\n\nThis term is often confused with object detection. Detection asks, \"Where is the object, roughly?\" Segmentation asks, \"Which exact pixels belong to it?\" It is also different from image captioning, which produces text about an image rather than a pixel-level map.",
+  "everydayAnalogy": {
+    "title": "Marking a city map by land use",
+    "story": "A planning team is preparing a large paper map of a city before a journey planning exercise. Instead of putting one big box around the centre, they colour every tiny block by what it is: road, park, river, housing or industrial area. After that, they can trace exactly where a walking route crosses roads, enters green space or reaches the riverbank. The map becomes useful not just for naming what exists, but for showing precisely where each type of place begins and ends.",
+    "mapping": [
+      {
+        "analogyElement": "colouring each tiny block on the map",
+        "aiElement": "assigning a class label to each pixel"
+      },
+      {
+        "analogyElement": "different land-use colours such as road, park and river",
+        "aiElement": "segmentation classes such as road, vegetation and water"
+      },
+      {
+        "analogyElement": "seeing exactly where a route crosses into another area",
+        "aiElement": "finding precise boundaries between regions in an image"
+      },
+      {
+        "analogyElement": "not relying on one big box around the city centre",
+        "aiElement": "going beyond object detection with bounding boxes"
+      }
+    ],
+    "limitation": "A city map is already a simplified drawing with clear categories chosen by people. Real photographs are messier: boundaries can be fuzzy, lighting changes, objects overlap, and the system does not start from a clean map. Also, segmentation labels pixels in an image plane, not real-world ownership, land rights or legal land use."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From photo to pixel labels",
+    "learningObjective": "After viewing this diagram, a reader should be able to explain how a system turns one image into a labelled pixel map and why this is more precise than drawing a box.",
+    "description": "A left-to-right flow with four panels: original street image, image split into many pixels, model output as a coloured mask, and final overlay showing exact labelled regions. Read from input to output to see how pixel-level labels create usable boundaries.",
+    "steps": [
+      {
+        "label": "Input image",
+        "explanation": "Start with one photo, such as a street scene containing road, pavement, cars, people and buildings.",
+        "visualInstruction": "Show a rectangular photo thumbnail on the left with simple illustrated objects. Add a caption: Original image."
+      },
+      {
+        "label": "Pixel grid",
+        "explanation": "The image is made of many pixels. The task is to assign one class to each pixel.",
+        "visualInstruction": "Show the same rectangle with a visible grid overlay. Highlight a few individual squares and label them pixel."
+      },
+      {
+        "label": "Prediction",
+        "explanation": "A trained model estimates which class each pixel most likely belongs to by using local detail and wider image context.",
+        "visualInstruction": "Place a central processing box labelled trained segmentation model. Use arrows from the pixel grid into the box and from the box to the next panel."
+      },
+      {
+        "label": "Label map",
+        "explanation": "The output is a mask: a second image where colours represent classes such as road, person, building and sky.",
+        "visualInstruction": "Show a flat coloured version of the image on the right, with a small legend mapping colours to class names."
+      },
+      {
+        "label": "Useful result",
+        "explanation": "Because the labels follow boundaries closely, the result can support measurement, routing, counting areas or later analysis.",
+        "visualInstruction": "Show the original image with a semi-transparent coloured overlay and a callout pointing to an exact road boundary, contrasting it with a faint dashed bounding box as a side note."
+      }
+    ],
+    "interaction": "Hovering or tapping a class in the legend highlights only that class in the mask and overlay; hovering the dashed box note shows the text: boxes are rough location, masks are exact area.",
+    "accessibilityDescription": "The diagram explains image segmentation as a five-step flow. First, there is an original street image. Second, the same image is shown as a grid to stress that it is made of pixels. Third, a trained segmentation model receives that grid. Fourth, the output is a label map, also called a mask, where each pixel has a class shown by colour, such as road, person, building or sky. Fifth, the mask is overlaid on the original image to show precise boundaries. A side note contrasts this with a dashed bounding box, which only gives a rough location. The main point is that segmentation labels every pixel, not just the whole image or a box around an object.",
+    "reducedMotionDescription": "Show the same five panels at once in a static left-to-right row with arrows between them and a fixed legend. Keep the dashed bounding box comparison visible without animation."
+  },
+  "workedExample": {
+    "scenario": "A city transport team analyses an aerial image of a 1000 by 1000 pixel junction to estimate how much of the scene is road surface.",
+    "input": "One aerial photograph with classes set to road, building, vegetation, water and other.",
+    "process": [
+      "The model receives the image and predicts one class for each of the 1,000,000 pixels.",
+      "It outputs a mask with counts: road 420,000 pixels, building 310,000, vegetation 240,000, water 0, other 30,000.",
+      "Analysts overlay the mask on the original image and inspect several edges to check whether parked vehicles or shadows were wrongly labelled as road.",
+      "After minor quality review, they use the road pixels to estimate the paved share of the junction area."
+    ],
+    "result": "The system estimates that about 42 percent of the image area is road, with exact boundaries that are more useful than a single box around the junction."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A humanitarian coordination team uses approved imagery tools to segment satellite images into roads, flooded areas, buildings and open ground after heavy rain, so they can compare access routes and identify broad areas that may be cut off.",
+    "relevance": "This can support faster map updates and help staff prioritise where human review should focus, especially when large areas must be screened quickly.",
+    "caution": "Do not upload confidential, security-sensitive or protection-sensitive imagery or location data to an unapproved public AI service, and do not rely on automated masks alone for operational decisions without expert validation and context checks."
+  },
+  "whyItMatters": "For a non-specialist, the value is not the label itself but the kind of decision it enables. Pixel-level outlines can support area estimates, route planning, change monitoring, crop mapping, flood extent review, medical image analysis and quality control. Compared with a simple box, segmentation can tell you how much of an image is actually relevant and where boundaries fall. That can improve downstream analysis, but only if the classes fit the real task, the training data reflect the real setting, and humans check whether the masks are reliable enough for the stakes involved.",
+  "whereYouMayHearIt": [
+    "satellite and drone imagery",
+    "medical imaging",
+    "autonomous driving research",
+    "mapping and urban planning",
+    "manufacturing inspection"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "It simply finds objects in pictures.",
+      "correction": "Not exactly. Object detection usually returns boxes around objects or regions. Segmentation assigns a class to every pixel, so it can outline exact shapes and background regions such as sky, road or water, not only countable objects."
+    },
+    {
+      "misconception": "Its output is automatically accurate because the boundaries look precise.",
+      "correction": "A crisp-looking mask can still be wrong. Shadows, reflections, smoke, low resolution and unusual viewpoints can mislead the model. Precision of appearance is not the same as correctness, so evaluation and human review still matter."
+    },
+    {
+      "misconception": "It always separates each individual object.",
+      "correction": "Semantic segmentation often groups all pixels of the same class together, so two people standing side by side may both be labelled person without being separated into person A and person B. Separating each instance is a related but different task."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It colours in an image so each tiny part is tagged with what it shows.",
+    "technical": "Image segmentation is a dense prediction task in computer vision. Given an image, the model outputs a label for each pixel rather than one label for the whole image. In semantic segmentation, pixels are assigned to classes such as road, water or building, and all objects of the same class may share the same label map. Training usually uses annotated masks and an optimisation process that reduces the difference between predicted and reference masks. Architectures commonly combine local feature extraction with broader context so the model can place boundaries while still using scene-level cues. Outputs may be represented as per-pixel class probabilities, a discrete mask, or an overlay for inspection. This differs from object detection, which predicts object locations, often with bounding boxes, and from image classification, which predicts only image-level categories."
+  },
+  "keyTakeaway": "Image segmentation matters when you need exact regions in a picture, not just a rough box or a single label.",
+  "quickCheck": {
+    "question": "Which output best matches image segmentation?",
+    "options": [
+      "One label saying the whole image contains a flooded road",
+      "A rectangle drawn roughly around a vehicle",
+      "A map where each pixel is labelled as road, water, building or vegetation",
+      "A sentence describing the image in natural language"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Image segmentation produces a pixel-level label map. A single label is image classification, a rectangle is object detection, and a sentence is image captioning."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Image segmentation",
+      "url": "https://en.wikipedia.org/wiki/Image_segmentation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "A broad overview of the term, its main types and related concepts, useful for readers who want a neutral starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "A beginner-friendly course context for machine learning that suits readers who want foundational ideas before tackling vision tasks in detail.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "A short glossary-style definition that suits readers who want a quick refresher or plain-language lookup.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Image segmentation",
+      "url": "https://www.youtube.com/results?search_query=Image%20segmentation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps readers find different video explanations and teaching styles, useful for visual learners who can judge sources carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Image segmentation",
+      "url": "https://www.reddit.com/search/?q=Image%20segmentation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that shows community discussions and questions on the topic, useful for seeing common confusions but not as an authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "image segmentation meaning",
+    "semantic segmentation vs object detection",
+    "pixel labeling image",
+    "segmentation mask explained",
+    "what is image segmentation in computer vision",
+    "image segmantation",
+    "label every pixel",
+    "segmentation vs bounding box",
+    "image segmentation",
+    "semantic segmentation"
+  ],
+  "contested": "The broad idea is settled, but people sometimes use \"image segmentation\" loosely to cover several subtypes, including semantic, instance and panoptic segmentation, so the exact scope depends on context.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:47:42.906Z",
+    "contentHash": "d8e11ce15c882e95",
+    "attempts": 1,
+    "promptTokens": 2268,
+    "completionTokens": 2440
+  }
+}

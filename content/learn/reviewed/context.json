@@ -1,0 +1,224 @@
+{
+  "id": "context",
+  "slug": "context",
+  "term": "Context",
+  "aliases": [
+    "conversation history"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone"
+  ],
+  "prerequisiteTermIds": [
+    "prompt"
+  ],
+  "relatedTermIds": [
+    "prompt",
+    "system-prompt",
+    "user-prompt",
+    "context-window",
+    "next-token-prediction",
+    "long-term-memory"
+  ],
+  "oftenConfusedWith": [
+    "context-window",
+    "long-term-memory",
+    "prompt"
+  ],
+  "oneSentence": "The text, images or other inputs a model can currently use to shape its next output in a session.",
+  "plainExplanation": "In chat systems, this means the material the model can look at right now before it produces the next reply. That often includes the current user message, earlier messages in the same conversation, and hidden instructions set by the service. In some systems, it can also include attached documents or images.\n\nWhat goes in is a bundle of input pieces. The system turns these pieces into tokens, which are small text units a model processes. The model then uses those tokens to predict what tokens should come next in its reply.\n\nWhat comes out is a response shaped by that available material. If important facts or instructions are in the available material, the reply is more likely to reflect them. If they are missing, unclear or pushed out because there is too much text, the reply may ignore them or make mistakes.\n\nContext is not the same as long-term memory. It usually lasts only within the current exchange or session, unless a separate memory feature stores something for later. It is also not the same as the context window, which is the size limit on how much material can fit at once.",
+  "everydayAnalogy": {
+    "title": "A clerk checking application folders",
+    "story": "At a scholarship office, a clerk reviews one application folder at a time. The folder may contain the form, a checklist, a passport copy and earlier notes from another staff member. The clerk can only judge completeness based on the papers currently inside that folder and on the office instructions on the desk. If one important page is missing or removed because the folder is too full, the clerk may give the wrong answer about whether the application is complete.",
+    "mapping": [
+      {
+        "analogyElement": "The papers inside the folder",
+        "aiElement": "The current messages, documents or images available to the model"
+      },
+      {
+        "analogyElement": "The office instructions on the desk",
+        "aiElement": "System instructions that guide the model's behaviour"
+      },
+      {
+        "analogyElement": "The clerk's judgement about completeness",
+        "aiElement": "The model's next output"
+      },
+      {
+        "analogyElement": "A page removed because the folder is too full",
+        "aiElement": "Earlier content no longer fitting into the available context"
+      }
+    ],
+    "limitation": "A human clerk can deliberately inspect pages, notice missing items from general knowledge and ask targeted follow-up questions. A language model does not inspect documents in that human way. It processes tokens and generates likely next tokens from patterns in data. Also, some systems may retrieve extra information automatically, which is more than a single paper folder suggests."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How available material shapes the next reply",
+    "learningObjective": "Show that a model's next reply depends on the text and other inputs currently available, and that older material may stop affecting the reply if it no longer fits.",
+    "description": "A left-to-right flow diagram. Several labelled input boxes feed into one combined context panel, then into a model panel, then to one output box. A size meter on the context panel shows that if too much material arrives, older items fade or drop off. Read from left to right.",
+    "steps": [
+      {
+        "label": "Inputs arrive",
+        "explanation": "The system collects the current user message plus other available items, such as earlier messages, system instructions and sometimes attached files or images.",
+        "visualInstruction": "Draw four small boxes on the left labelled 'system instructions', 'earlier messages', 'current message' and 'attachments/images'. Use arrows from each box toward the centre."
+      },
+      {
+        "label": "Combined into available context",
+        "explanation": "These items are assembled into the material the model can use for this turn.",
+        "visualInstruction": "Draw a large centre box labelled 'available context for this reply'. Place the incoming items inside as stacked strips."
+      },
+      {
+        "label": "Size limit applies",
+        "explanation": "Only a limited amount can fit at once. If there is too much, some earlier material may be shortened, omitted or no longer included.",
+        "visualInstruction": "Add a vertical capacity meter on the side of the centre box. Show the box nearly full, with the oldest strip faded and partly below a cutoff line."
+      },
+      {
+        "label": "Model generates the next reply",
+        "explanation": "The model processes the available tokens and predicts the next tokens for the response.",
+        "visualInstruction": "Draw an arrow from the centre box to a box on the right labelled 'model predicts next tokens'."
+      },
+      {
+        "label": "Output reflects what was available",
+        "explanation": "The final reply is shaped by what remained in context, not by everything ever said everywhere.",
+        "visualInstruction": "Draw a final box labelled 'reply' with a note beneath it: 'depends on current context'."
+      }
+    ],
+    "interaction": "Hovering over each input strip highlights how it contributes to the combined context; moving a simple slider labelled 'more earlier text' fills the capacity meter and fades the oldest strip to show loss of influence.",
+    "accessibilityDescription": "The diagram explains that a model's next reply is based on material currently available for that turn. On the left are four sources: system instructions, earlier messages, the current message, and possible attachments or images. Arrows lead to a central box called available context for this reply. A capacity meter beside it shows there is a size limit. When more earlier text is added, the oldest material fades below a cutoff line, meaning it may no longer be included. The context then flows to a model box labelled predicts next tokens, and then to a reply box. The main point is that the reply reflects what fits in current context, not permanent memory.",
+    "reducedMotionDescription": "A static left-to-right diagram with the same boxes and arrows. The capacity meter is shown almost full, and the oldest context strip is already faded below a cutoff line to indicate that older material may stop affecting the reply when space runs out."
+  },
+  "workedExample": {
+    "scenario": "A person asks a chat assistant to help draft an email about a meeting.",
+    "input": "Earlier message: 'The meeting is on Tuesday at 14:00 Cairo time with Amina and Jorge.' Current message: 'Write a polite reminder email in under 60 words.'",
+    "process": [
+      "The system includes the earlier meeting details and the current request in the available context.",
+      "The model processes those tokens together, so it can connect the email task with the names, day and time.",
+      "It predicts a short email that mentions Tuesday, 14:00 Cairo time, Amina and Jorge, and keeps the tone polite.",
+      "If the earlier detail message were missing from context, the model would have to guess or ask for the missing facts."
+    ],
+    "result": "Possible output: 'Dear Amina and Jorge, this is a friendly reminder of our meeting on Tuesday at 14:00 Cairo time. Please let me know if anything has changed. Kind regards,'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A staff member uses an approved internal tool to draft a short, non-sensitive situation report summary from cleared notes already entered in the same workspace.",
+    "relevance": "The quality of the draft depends on whether the key facts from earlier notes, instructions on format and the latest update are all still in the current context.",
+    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and do not assume the tool has remembered earlier facts unless they are visibly included in the current approved workspace."
+  },
+  "whyItMatters": "If you use chat assistants, context helps explain why a reply can be accurate one moment and wrong the next. The system can only work with material that is currently available to it. That affects whether it follows your instructions, keeps track of names and dates, uses the right tone and stays on task. For decision-making, this means you should check what information is actually present, not assume the system remembers everything from earlier. It also helps you recognise when to repeat key facts, when to shorten a long conversation, and why sensitive information should be handled carefully in approved systems only.",
+  "whereYouMayHearIt": [
+    "chat assistant help pages",
+    "AI product demos",
+    "prompt writing advice",
+    "developer documentation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Context means the model has human-like understanding of the whole situation.",
+      "correction": "People often use the word loosely, but here it means the input material available for generating the next output. The model may produce a useful reply from that material, but this does not by itself show human-style understanding."
+    },
+    {
+      "misconception": "If I said something earlier in the chat, the model will always remember it.",
+      "correction": "Earlier messages may influence later replies only if they are still included in the current context. In long exchanges, some systems summarise, trim or drop older material because of size limits."
+    },
+    {
+      "misconception": "Context and context window are the same thing.",
+      "correction": "They are related but different. Context is the actual material available right now. The context window is the system's capacity limit for how much of that material can fit at once."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is the information the model can see right now when it writes its next reply.",
+    "technical": "In a language model system, context is the sequence of input tokens provided for the current generation step. It can include system instructions, user and assistant messages from the conversation, tool outputs, retrieved text, and sometimes image or audio representations in multimodal systems. The model conditions next-token prediction on this sequence. The exact reply depends on which tokens are present, their order, and whether earlier material has been truncated, summarised or excluded to fit the context window. Context is temporary input state, not the same as parameters or any separate long-term memory mechanism."
+  },
+  "keyTakeaway": "A model's next reply depends on what is currently in front of it, not on everything you ever told it.",
+  "quickCheck": {
+    "question": "Which statement best describes context in a chat with a language model?",
+    "options": [
+      "Everything the company used to train the model",
+      "The material currently available to shape the next reply",
+      "A permanent memory of all earlier chats",
+      "Only the latest user message, with no other instructions"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Context is the material available for the current turn, such as the current message, earlier messages still included, and system instructions. Training data, permanent memory and the latest message alone are different ideas."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Context",
+      "url": "https://en.wikipedia.org/w/index.php?search=Context",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers find different articles related to context and suits people who want broad starting points rather than one fixed explanation.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This course gives a structured introduction to how language models use input text and suits readers who want a guided technical overview.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video offers a visual explanation of large language models and suits readers who learn best through intuition and diagrams.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Context",
+      "url": "https://www.youtube.com/results?search_query=Context%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers compare multiple video explanations of context and suits people looking for different teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Context",
+      "url": "https://www.reddit.com/search/?q=Context",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussions about context and suits readers who want to see common questions and informal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is context in ai",
+    "llm context meaning",
+    "conversation history ai",
+    "chatgpt context vs memory",
+    "context window vs context",
+    "ai forgot earlier message",
+    "model sees previous messages",
+    "context in language model",
+    "context",
+    "conversation history"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:54.733Z",
+    "contentHash": "54e55d826272cdf4",
+    "attempts": 1,
+    "promptTokens": 2355,
+    "completionTokens": 2304
+  }
+}

@@ -1,0 +1,151 @@
+---
+/**
+ * Save, mark as understood, and choose how much of the page opens by default.
+ *
+ * All three are browser-local. The buttons render in their neutral state on
+ * the server and are corrected by script on load, so a reader with JavaScript
+ * disabled sees an honest "not saved" rather than a control that lies.
+ *
+ * Depth never removes content. It collapses later layers behind a disclosure,
+ * and every one of them is still in the DOM, still reachable by keyboard, and
+ * still fully open when the page is printed.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="term-hero__actions" data-term-controls data-term={termId}>
+  <button type="button" class="lbutton" data-save aria-pressed="false">
+    <span aria-hidden="true">☆</span>
+    <span data-save-label>Save this term</span>
+  </button>
+
+  <button type="button" class="lbutton" data-done aria-pressed="false">
+    <span aria-hidden="true">✓</span>
+    <span data-done-label>Mark as understood</span>
+  </button>
+</div>
+
+<div class="depth" data-depth-control role="group" aria-label="How much detail to open by default">
+  <span class="depth__label" id={`depth-${termId}`}>Detail</span>
+  <button type="button" class="lbutton" data-depth="brief" aria-pressed="false">In five seconds</button>
+  <button type="button" class="lbutton" data-depth="standard" aria-pressed="true">Understand it</button>
+  <button type="button" class="lbutton" data-depth="full" aria-pressed="false">Everything, including the technical detail</button>
+</div>
+
+<script>
+  import {
+    isSaved,
+    toggleSaved,
+    isDone,
+    toggleDone,
+    getDepth,
+    setDepth,
+    recordVisit,
+    onChange,
+    storageAvailable,
+    type Depth,
+  } from '../../scripts/learn-store';
+
+  const root = document.querySelector<HTMLElement>('[data-term-controls]');
+  if (root) {
+    const termId = root.dataset.term!;
+    const saveBtn = root.querySelector<HTMLButtonElement>('[data-save]')!;
+    const saveLabel = root.querySelector<HTMLElement>('[data-save-label]')!;
+    const doneBtn = root.querySelector<HTMLButtonElement>('[data-done]')!;
+    const doneLabel = root.querySelector<HTMLElement>('[data-done-label]')!;
+
+    function paint() {
+      const saved = isSaved(termId);
+      saveBtn.setAttribute('aria-pressed', String(saved));
+      saveLabel.textContent = saved ? 'Saved' : 'Save this term';
+      saveBtn.firstElementChild!.textContent = saved ? '★' : '☆';
+
+      const done = isDone(termId);
+      doneBtn.setAttribute('aria-pressed', String(done));
+      doneLabel.textContent = done ? 'Understood' : 'Mark as understood';
+    }
+
+    saveBtn.addEventListener('click', () => {
+      toggleSaved(termId);
+      paint();
+    });
+    doneBtn.addEventListener('click', () => {
+      toggleDone(termId);
+      paint();
+    });
+
+    if (!storageAvailable()) {
+      // Do not offer a control that cannot do anything.
+      for (const b of [saveBtn, doneBtn]) {
+        b.disabled = true;
+        b.title = 'This browser is not storing site data, so nothing can be saved.';
+      }
+    }
+
+    paint();
+    recordVisit(termId);
+    onChange(paint);
+  }
+
+  // ── Depth ──────────────────────────────────────────────────────────────
+  const depthRoot = document.querySelector<HTMLElement>('[data-depth-control]');
+  if (depthRoot) {
+    const buttons = [...depthRoot.querySelectorAll<HTMLButtonElement>('[data-depth]')];
+    const layers = [...document.querySelectorAll<HTMLElement>('[data-layer]')];
+
+    /**
+     * Which layers stay open at each depth. Layer 1 is always open.
+     *
+     * "Standard" reaches layer 3 rather than layer 2 on purpose. Layer 3 holds
+     * the misconception corrections and the quick check, which are the part a
+     * reader most needs and least knows to go looking for — collapsing them by
+     * default would hide the correction from exactly the person holding the
+     * misconception. Layer 4 is the genuinely optional one: technical detail,
+     * reading list, provenance.
+     */
+    const OPEN: Record<Depth, number> = { brief: 1, standard: 3, full: 4 };
+
+    function apply(depth: Depth) {
+      const limit = OPEN[depth];
+      for (const layer of layers) {
+        const n = Number(layer.dataset.layer);
+        const collapsed = n > limit;
+        layer.dataset.collapsed = String(collapsed);
+        const toggle = layer.querySelector<HTMLButtonElement>('.layer__toggle');
+        if (toggle) {
+          toggle.setAttribute('aria-expanded', String(!collapsed));
+          toggle.textContent = collapsed
+            ? `Show ${layer.dataset.layerName ?? 'this section'}`
+            : `Hide ${layer.dataset.layerName ?? 'this section'}`;
+        }
+      }
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.depth === depth)));
+    }
+
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        const depth = b.dataset.depth as Depth;
+        setDepth(depth);
+        apply(depth);
+      }),
+    );
+
+    // Per-layer toggles work independently of the global preference.
+    for (const layer of layers) {
+      const toggle = layer.querySelector<HTMLButtonElement>('.layer__toggle');
+      toggle?.addEventListener('click', () => {
+        const collapsed = layer.dataset.collapsed !== 'true';
+        layer.dataset.collapsed = String(collapsed);
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+        toggle.textContent = collapsed
+          ? `Show ${layer.dataset.layerName ?? 'this section'}`
+          : `Hide ${layer.dataset.layerName ?? 'this section'}`;
+      });
+    }
+
+    apply(getDepth());
+  }
+</script>

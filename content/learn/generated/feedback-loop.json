@@ -1,0 +1,225 @@
+{
+  "id": "feedback-loop",
+  "slug": "feedback-loop",
+  "term": "Feedback loop",
+  "aliases": [
+    "self-correction"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "observation-and-action"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "workflow",
+    "tool-use",
+    "planning",
+    "orchestration",
+    "human-in-the-loop"
+  ],
+  "oftenConfusedWith": [
+    "observation-and-action",
+    "reinforcement-learning",
+    "ai-agent"
+  ],
+  "oneSentence": "A process where a system checks the effects of its own action, compares them with a goal, and uses that signal to adjust the next step.",
+  "plainExplanation": "A feedback loop helps a system improve or correct its behaviour over several steps. First, the system takes an action. Then it gets some result back from the world, a tool, or another program. That returned result is the feedback.\n\nThe system compares that feedback with what it was trying to achieve. If the result is good enough, it may stop. If not, it changes something and tries again. In AI systems, this can mean revising a draft, calling a different tool, asking a follow-up question, or changing a parameter such as a threshold.\n\nWhat goes in is usually a goal, a current state, and some way to observe the result of an action. What happens is a cycle: act, observe, compare, adjust. What comes out is not just one answer but a sequence of improved attempts, or a decision to stop because the goal has been reached or a limit has been hit.\n\nThis is often confused with simple observation and action. Observation and action can describe one pass: see something, do something. A feedback loop adds correction across repeated passes. It is also often confused with reinforcement learning, which is a training method for improving a model over many examples. A feedback loop can happen at run time inside one task, even when the model itself is not being retrained.",
+  "everydayAnalogy": {
+    "title": "Checking a water pump after an unusual sensor reading",
+    "story": "A technician at a water station sees that one pump is showing pressure that is higher than normal. She lowers the pump speed slightly and waits for the next sensor reading. The reading drops, but not enough, so she checks a valve position, adjusts it, and looks again. After two more checks, the pressure returns to the safe range and she records the final setting.\n\nShe is not acting only once. Each new reading affects the next action.",
+    "mapping": [
+      {
+        "analogyElement": "Target safe pressure range",
+        "aiElement": "Goal or success condition"
+      },
+      {
+        "analogyElement": "Sensor reading after each adjustment",
+        "aiElement": "Feedback from the environment or a tool"
+      },
+      {
+        "analogyElement": "Changing pump speed or valve position",
+        "aiElement": "Next action chosen by the system"
+      },
+      {
+        "analogyElement": "Repeating until pressure is safe",
+        "aiElement": "Iterative correction with a stopping rule"
+      }
+    ],
+    "limitation": "In the water station, the technician uses human judgement, physical equipment and a clear measurement. In AI systems, the feedback may be noisier or indirect, such as a tool error message, a scoring function, or another model's output. Also, many AI loops happen very quickly in software and may optimise for a proxy measure rather than a directly observed real-world condition."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How a feedback loop changes the next step",
+    "learningObjective": "Show that a feedback loop is a repeated cycle where the result of one action becomes an input for adjusting the next action.",
+    "description": "A left-to-right step diagram with five boxes connected by arrows. The reader follows one cycle: set a goal, take an action, observe the result, compare the result with the goal, then either stop or adjust and repeat. A loop arrow returns from the comparison box to the action box when the result is not yet good enough.",
+    "steps": [
+      {
+        "label": "1. Goal",
+        "explanation": "The system starts with a target, rule or desired outcome.",
+        "visualInstruction": "Draw a box labelled Goal with a small target icon and a short subtitle: 'What should happen?'."
+      },
+      {
+        "label": "2. Action",
+        "explanation": "It takes a step, such as sending a query, using a tool or editing a draft.",
+        "visualInstruction": "Draw a box labelled Action with a tool icon. Connect Goal to Action with a solid arrow."
+      },
+      {
+        "label": "3. Observe result",
+        "explanation": "The system receives evidence about what happened, such as sensor data, a tool response or a validation score.",
+        "visualInstruction": "Draw a box labelled Observe result with an eye or waveform icon. Connect Action to Observe result."
+      },
+      {
+        "label": "4. Compare",
+        "explanation": "It checks whether the result matches the goal closely enough.",
+        "visualInstruction": "Draw a box labelled Compare with a checklist icon. Connect Observe result to Compare."
+      },
+      {
+        "label": "5. Stop or adjust",
+        "explanation": "If the result is acceptable, the process ends. If not, the system changes the next action and loops back.",
+        "visualInstruction": "Draw a decision-style box labelled Stop or adjust. Add one arrow to an End label 'Goal met' and one loop arrow back to Action labelled 'Not yet'."
+      }
+    ],
+    "interaction": "On hover or tap, highlight the loop arrow and reveal the note: 'Feedback changes the next action; without this loop, the system only acts once.'",
+    "accessibilityDescription": "The diagram presents five ordered steps. Step 1 is Goal: the system has a target. Step 2 is Action: it takes one step, such as using a tool. Step 3 is Observe result: it gets evidence about what happened. Step 4 is Compare: it checks the result against the target. Step 5 is Stop or adjust: if the result is good enough, the process ends; if not, the system changes its next action and returns to Step 2. The key idea is that the observed result of one step affects the next step.",
+    "reducedMotionDescription": "Show the same five boxes as a static sequence with a clearly labelled return arrow from Stop or adjust back to Action. Use contrasting colours or line styles to distinguish the forward path from the repeat path, with no animation."
+  },
+  "workedExample": {
+    "scenario": "An AI support tool helps a facilities team investigate an unusual pump temperature reading.",
+    "input": "Goal: produce a short status note and recommend whether maintenance is needed. Available tools: sensor log lookup and maintenance history lookup.",
+    "process": [
+      "The system reads the latest temperature value: 86°C, while the normal operating range in its instructions is 60–75°C.",
+      "It calls the sensor log tool and sees that the previous three readings were 84°C, 85°C and 86°C, so the increase looks persistent rather than random noise.",
+      "It drafts 'possible overheating' but then checks maintenance history and finds the pump was serviced 2 days ago with a note that calibration can drift for 48 hours.",
+      "Using that feedback, it revises the note to say the reading is abnormal but may be affected by recent servicing, and recommends a technician check plus a manual temperature confirmation."
+    ],
+    "result": "Output: 'Pump 4 shows sustained high temperature readings above the normal range. Because the unit was serviced 2 days ago, sensor drift is possible. Recommended next step: manual verification by a technician and follow-up if the manual reading also exceeds range.'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN language support workflow drafts a translation of non-confidential field updates into a working language, then checks the draft against a terminology list and revises terms that do not match approved usage before sending it to a human reviewer.",
+    "relevance": "This shows a feedback loop because the first draft is not the final output. The system uses the checking result to adjust the next version, which can improve consistency and reduce reviewer time.",
+    "caution": "Do not place confidential, personal, protection-sensitive or operationally sensitive field information into an unapproved public AI service. Human review remains necessary, especially for nuance, safety and context."
+  },
+  "whyItMatters": "For non-specialists, this term matters because many modern AI systems do more than produce one reply. They may take several steps, use tools, check results and try again. That can improve quality, but it can also repeat mistakes, chase the wrong target, or create hidden complexity.\n\nWhen you hear that a system can self-correct, the key questions are practical: What feedback is it using? Who set the goal? What tells it to stop? What happens if the feedback is wrong, delayed or easy to game? These questions affect reliability, safety, auditability, cost and oversight.\n\nIn policy and operational settings, feedback loops shape accountability. A well-designed loop can catch errors before action is taken. A poorly designed loop can amplify them.",
+  "whereYouMayHearIt": [
+    "agent design discussions",
+    "automation workflows",
+    "quality control and monitoring",
+    "tool-using AI demos",
+    "safety and oversight reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A feedback loop means the system always gets better each time.",
+      "correction": "Not necessarily. Improvement depends on the quality of the feedback and the comparison rule. If the feedback is noisy, delayed, biased or based on the wrong target, repeated adjustment can make performance worse rather than better."
+    },
+    {
+      "misconception": "Feedback loops are the same as reinforcement learning.",
+      "correction": "They are related but different. Reinforcement learning usually refers to a training approach where a model is updated over many episodes using reward signals. A feedback loop can happen during one live task at run time, even if the model weights never change."
+    },
+    {
+      "misconception": "Any sequence of observe then act counts as a feedback loop.",
+      "correction": "A single observe-act step is not enough. The defining feature is that the observed result affects a later action through repetition or correction. Without that return path, there is no loop."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a repeat-and-check pattern: do something, look at what happened, and use that result to improve the next step.",
+    "technical": "In AI systems, a feedback loop is a closed control structure in which an agent or workflow produces an action, receives an observation or evaluation signal, compares that signal with a goal, constraint or scoring rule, and updates the next action accordingly. The feedback may come from the external environment, a software tool, a validator, a user, or another model. The loop may be explicit, such as retry-until-valid, or more complex, such as plan-execute-evaluate-replan. This is distinct from model training: the loop can operate entirely at inference time, with no parameter update to the underlying model. It is also distinct from simple observation-and-action pipelines because the crucial feature is recurrence: outputs or outcome signals are fed back into later steps. Design choices include the feedback source, delay, noise tolerance, stopping condition, escalation to humans, and safeguards against oscillation, runaway retries or optimisation of a poor proxy metric."
+  },
+  "keyTakeaway": "A feedback loop matters because the result of one step changes the next one, which can either correct errors or repeat them faster.",
+  "quickCheck": {
+    "question": "Which situation best shows a feedback loop in an AI system?",
+    "options": [
+      "A chatbot gives one answer and ends the session.",
+      "An agent calls a database, checks whether the returned record matches the request, then reformulates the query and tries again.",
+      "A model is trained on a larger dataset each month.",
+      "A dashboard displays a sensor value in real time without changing any action."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The second option includes the key loop: act, observe the result, compare with the goal, adjust, and repeat. The others show one-time output, periodic training, or passive display without corrective action."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Feedback",
+      "url": "https://en.wikipedia.org/wiki/Feedback",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad introductory explanation of feedback as a general idea across systems, which suits readers who want the core concept before applying it to AI.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This link explains how AI agents take actions and use results from those actions, which suits readers connecting feedback loops to agent behaviour.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This link explains the Model Context Protocol and how tools can provide structured information back to a model, which suits technical readers interested in how feedback is passed between systems.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Feedback loop",
+      "url": "https://www.youtube.com/results?search_query=Feedback%20loop%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page offers multiple video explanations of feedback loops from different creators, which suits readers who prefer to compare visual teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Feedback loop",
+      "url": "https://www.reddit.com/search/?q=Feedback%20loop",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions and examples of how people talk about feedback loops in practice, which suits readers who want informal explanations and debate but should read critically.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "feedback loop ai",
+    "self correction in ai agent",
+    "feedback loop vs reinforcement learning",
+    "observe act adjust ai",
+    "agent retry loop",
+    "what is a feedback loop in automation",
+    "feed back loop ai",
+    "ai checks its own output",
+    "feedback loop",
+    "self-correction"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:17.649Z",
+    "contentHash": "1cc3a9a0b38a2382",
+    "attempts": 1,
+    "promptTokens": 2290,
+    "completionTokens": 2551
+  }
+}

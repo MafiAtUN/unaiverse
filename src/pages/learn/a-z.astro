@@ -1,0 +1,62 @@
+---
+/**
+ * The alphabetical index.
+ *
+ * Deliberately plain and fast: one link per term, an anchored jump bar, and no
+ * client-side machinery at all. When someone knows the word and just wants the
+ * page, search is one interaction and this is zero.
+ */
+import Learn from '../../layouts/Learn.astro';
+import { alphabetical, learnHref, CORPUS_STATS, CATEGORY_BY_ID } from '../../lib/learn/terms';
+import { DIFFICULTY_LABEL } from '../../lib/learn/schema';
+
+const groups = alphabetical();
+const title = 'A–Z of AI terms · UNAIVERSE';
+const description = `Every one of the ${CORPUS_STATS.published} AI terms on this site, alphabetically, with its category and depth.`;
+---
+
+<Learn title={title} description={description} section="index">
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={learnHref()}>Learn AI</a> / A–Z
+      </p>
+      <h1 class="learn-head__title">A–Z of AI terms</h1>
+      <p class="learn-head__lead">
+        All {CORPUS_STATS.published} published terms, alphabetically. Acronyms are filed under the
+        full term, but search finds them either way.
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap" style="padding-block: var(--sp-5)">
+    <nav aria-label="Jump to a letter">
+      <ul class="az-jump">
+        {groups.map(([letter]) => <li><a href={`#letter-${letter}`}>{letter}</a></li>)}
+      </ul>
+    </nav>
+
+    {
+      groups.map(([letter, terms]) => (
+        <section class="az-group" id={`letter-${letter}`} aria-labelledby={`h-${letter}`}>
+          <h2 class="az-group__letter" id={`h-${letter}`}>{letter}</h2>
+          <ul class="az-list">
+            {terms.map((t) => (
+              <li>
+                <a href={learnHref(t.slug)}>
+                  <span>
+                    {t.term}
+                    {t.acronym ? ` (${t.acronym})` : ''}
+                  </span>
+                  <span class="az-list__meta">
+                    {CATEGORY_BY_ID.get(t.categoryId)?.glyph} {DIFFICULTY_LABEL[t.difficulty]}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Learn>

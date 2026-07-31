@@ -1,0 +1,225 @@
+{
+  "id": "f1-score",
+  "slug": "f1-score",
+  "term": "F1 score",
+  "aliases": [
+    "F-score",
+    "F1"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "precision",
+    "recall"
+  ],
+  "relatedTermIds": [
+    "precision",
+    "recall",
+    "confusion-matrix",
+    "false-positive-and-false-negative",
+    "class-imbalance",
+    "evaluation-metric"
+  ],
+  "oftenConfusedWith": [
+    "accuracy"
+  ],
+  "oneSentence": "A single score that balances how many positive cases a system finds with how often its positive predictions are correct.",
+  "plainExplanation": "F1 score is used for tasks with two classes, such as “urgent” and “not urgent” or “fraud” and “not fraud”. It combines two other measures: precision and recall. Precision asks, “When the system says positive, how often is it right?” Recall asks, “Of all the real positive cases, how many did it catch?”\n\nWhat goes in are counts from a confusion matrix: true positives, false positives and false negatives. True positives are positive cases found correctly. False positives are cases wrongly marked positive. False negatives are positive cases the system missed. From those counts, you calculate precision and recall, then combine them into one number.\n\nWhat happens in the combination matters. F1 uses the harmonic mean, which gives a low result if either precision or recall is low. So a system cannot get a strong F1 score by doing very well on one and badly on the other. If precision is 0.90 and recall is 0.30, the F1 score stays much closer to the weaker value than to the stronger one.\n\nWhat comes out is a number between 0 and 1, where higher usually means a better balance between missed positives and false alarms. But it is not a complete picture. It does not include true negatives, so it can hide some kinds of failure. It also does not tell you whether predicted probabilities are well calibrated, and it does not tell you whether false positives and false negatives have equal real-world cost.",
+  "everydayAnalogy": {
+    "title": "Tuning a radio for clear reception",
+    "story": "Amina is tuning a radio in Nairobi to hear a weather bulletin from a distant station. If she turns the dial too broadly, she hears many bursts of sound that are not the station she wants. If she tunes too narrowly, the sound is cleaner, but parts of the real broadcast fade out. A good setting needs both a clear signal and enough of the actual programme to come through. The F1 score is like giving one summary mark for that balance.",
+    "mapping": [
+      {
+        "analogyElement": "clear parts of the station that are truly the right broadcast",
+        "aiElement": "correct positive predictions"
+      },
+      {
+        "analogyElement": "static or other stations mistaken for the target signal",
+        "aiElement": "false positives"
+      },
+      {
+        "analogyElement": "parts of the real broadcast lost because tuning is too narrow or weak",
+        "aiElement": "false negatives"
+      },
+      {
+        "analogyElement": "one judgement of whether the tuning balances clarity and coverage",
+        "aiElement": "F1 score balancing precision and recall"
+      }
+    ],
+    "limitation": "A radio dial is a continuous physical signal, while F1 is calculated from labelled examples after predictions are made. Real classification problems may involve thresholds, class imbalance and unequal harms, none of which the radio story shows well. Also, radio quality has many dimensions, but F1 only combines precision and recall."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How F1 score is built from prediction counts",
+    "learningObjective": "After viewing this, a reader should be able to say that F1 starts from true positives, false positives and false negatives, turns them into precision and recall, and then combines them so one weak part pulls the score down.",
+    "description": "A left-to-right flow diagram. Start with model predictions compared with real labels. From that, show three counts: true positives, false positives and false negatives. These feed into two boxes, precision and recall. A final box combines them into F1, with a note that both need to be strong for F1 to be strong.",
+    "steps": [
+      {
+        "label": "Count outcomes",
+        "explanation": "Compare each prediction with the real label and count true positives, false positives and false negatives.",
+        "visualInstruction": "Draw two columns labelled 'Predictions + labels' and 'Counts'. In the counts area, show three stacked boxes: TP, FP, FN, with short captions beneath each."
+      },
+      {
+        "label": "Calculate precision",
+        "explanation": "Precision uses true positives and false positives. It asks how reliable the positive predictions were.",
+        "visualInstruction": "Draw an arrow from TP and FP to a box labelled 'Precision = TP / (TP + FP)'. Use a brief note: 'fewer false alarms raises precision'."
+      },
+      {
+        "label": "Calculate recall",
+        "explanation": "Recall uses true positives and false negatives. It asks how many real positive cases were found.",
+        "visualInstruction": "Draw an arrow from TP and FN to a box labelled 'Recall = TP / (TP + FN)'. Use a brief note: 'fewer misses raises recall'."
+      },
+      {
+        "label": "Combine into F1",
+        "explanation": "F1 combines precision and recall with the harmonic mean, so one low value keeps the final score low.",
+        "visualInstruction": "Draw arrows from the precision and recall boxes into a final box labelled 'F1 = 2PR / (P + R)'. Add a small callout: 'high only when both are reasonably high'."
+      }
+    ],
+    "interaction": "Hover or tap each box to reveal a one-line definition and a small numeric example showing how a low precision or low recall reduces the final F1.",
+    "accessibilityDescription": "This flow diagram explains the procedure for getting an F1 score. First, compare model predictions with real labels and count three outcomes: true positives, false positives and false negatives. Next, calculate precision from true positives divided by true positives plus false positives, which reflects how trustworthy positive predictions are. Then calculate recall from true positives divided by true positives plus false negatives, which reflects how many real positive cases were found. Finally, combine precision and recall using F1 equals two times precision times recall divided by precision plus recall. The key message is that the final score stays low if either precision or recall is low.",
+    "reducedMotionDescription": "A static left-to-right chart with four panels: counts, precision, recall and F1. Arrows show that TP, FP and FN lead to precision and recall, and those two lead to F1. A note under the last panel says the score rewards balance, not one strong value alone."
+  },
+  "workedExample": {
+    "scenario": "A team tests a model that flags potentially fraudulent expense claims for human review.",
+    "input": "On 200 past claims with verified labels, the model flags 50 as suspicious. Of those 50, 30 are truly fraudulent. In the full set, there are 40 truly fraudulent claims.",
+    "process": [
+      "Count outcomes: true positives = 30, false positives = 20, false negatives = 10.",
+      "Calculate precision: 30 / (30 + 20) = 0.60.",
+      "Calculate recall: 30 / (30 + 10) = 0.75.",
+      "Combine them: F1 = 2 × 0.60 × 0.75 / (0.60 + 0.75) = 0.67, rounded."
+    ],
+    "result": "The system has an F1 score of about 0.67. That suggests a moderate balance: it catches many fraud cases, but still produces a noticeable number of false alarms."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A humanitarian coordination team is testing a classifier that tags incoming situation update messages as likely 'requires urgent follow-up' or 'routine', so human staff can prioritise review.",
+    "relevance": "F1 can help the team compare versions of the classifier when both missed urgent items and unnecessary urgent flags matter. It gives one summary score for the trade-off between catching true urgent messages and avoiding too many false alarms.",
+    "caution": "Do not place confidential, personal, protection-sensitive or security-sensitive message content into an unapproved public AI service. Evaluation should use approved systems, governance controls and human review, and teams should also examine the actual costs of misses and false alarms rather than relying on F1 alone."
+  },
+  "whyItMatters": "A single score can make model results look simple, but decisions are rarely simple. F1 matters because it is often used when accuracy would be misleading, especially if positive cases are rare. For example, a system can look highly accurate by mostly saying “not positive”, yet still miss many of the cases people care about. F1 helps you ask a better question: does the system both find important cases and avoid too many false alarms? That said, it should not be the only basis for procurement, deployment or risk decisions. If missing a case is much more harmful than raising a false alarm, or the reverse, then two systems with the same F1 may still be very different in practice.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "machine learning dashboards",
+    "benchmark comparisons",
+    "fraud or risk detection projects",
+    "triage classifier testing"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A higher F1 score always means the better system.",
+      "correction": "Not always. F1 only balances precision and recall. It ignores true negatives and does not reflect whether false positives and false negatives have different real-world costs. In a medical, safety or humanitarian setting, the better system may be the one with lower F1 but fewer harmful misses, depending on the use case."
+    },
+    {
+      "misconception": "F1 is just another name for accuracy.",
+      "correction": "They measure different things. Accuracy counts all correct predictions, including true negatives. F1 does not use true negatives at all. When one class is much more common than the other, accuracy can look high even if the system performs poorly on the cases you care about, while F1 focuses on positive-case performance."
+    },
+    {
+      "misconception": "If precision and recall are both decent, the exact balance does not matter.",
+      "correction": "The balance does matter because F1 drops when one value is much lower than the other. A system with precision 0.90 and recall 0.50 does not get the same F1 as a system with precision 0.70 and recall 0.70. F1 rewards balance more than a simple average would."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "F1 score gives one number for how well a system finds positive cases without producing too many wrong positive alerts.",
+    "technical": "For binary classification, F1 is the harmonic mean of precision and recall: F1 = 2PR / (P + R), where precision P = TP / (TP + FP) and recall R = TP / (TP + FN). Because it is a harmonic mean, the result is strongly influenced by the smaller of the two values, so it rewards balance rather than allowing one high value to hide one low value. F1 is especially common under class imbalance, where plain accuracy can be misleading. However, it excludes true negatives, so it should not be treated as a full description of performance. Variants such as macro, micro and weighted F-scores extend the idea to multi-class settings, and F-beta variants change the balance to favour recall or precision more strongly."
+  },
+  "keyTakeaway": "F1 is useful when you need one score for balancing missed positives against false alarms, but it is not a complete picture of real-world performance.",
+  "quickCheck": {
+    "question": "Why can F1 be more informative than accuracy when positive cases are rare?",
+    "options": [
+      "Because F1 includes true negatives more heavily than accuracy does.",
+      "Because F1 focuses on the balance between catching positive cases and avoiding wrong positive alerts.",
+      "Because F1 always equals the average of precision, recall and accuracy.",
+      "Because F1 removes the need to inspect false positives and false negatives separately."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "When positive cases are rare, a model can get high accuracy just by mostly predicting the negative class. F1 helps counter that by combining precision and recall, which focus on finding real positives and limiting false positive alerts. It still does not replace looking at the underlying error counts."
+  },
+  "resources": [
+    {
+      "title": "F-score",
+      "url": "https://en.wikipedia.org/wiki/F-score",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad reference-style overview of the F-score family, including formulas and related variants, and suits readers who want a quick encyclopaedic summary.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This link gives a practical teaching explanation of classification measures such as accuracy, recall and precision, and suits readers building basic evaluation literacy before interpreting F1.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This link gives a broader framework for managing AI risk in practice, and suits readers who need to place metrics like F1 within governance, testing and human oversight rather than treating one score as enough.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: F1 score",
+      "url": "https://www.youtube.com/results?search_query=F1%20score%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page for video explanations of F1 score, so it suits readers who prefer to compare several visual teaching styles rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: F1 score",
+      "url": "https://www.reddit.com/search/?q=F1%20score",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page for community discussion about F1 score, so it suits readers who want to see common points of confusion and informal explanations, but claims there should be checked carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "f1 score meaning",
+    "what is f1 in machine learning",
+    "f1 vs accuracy",
+    "precision recall f1",
+    "how to calculate f1 score",
+    "f score explained",
+    "f1 score imbalanced data",
+    "f1 score formula",
+    "f1 scorre",
+    "what does low f1 mean",
+    "f1 score",
+    "f-score",
+    "f1"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:48.022Z",
+    "contentHash": "1652a838819d5088",
+    "attempts": 1,
+    "promptTokens": 2285,
+    "completionTokens": 2681
+  }
+}

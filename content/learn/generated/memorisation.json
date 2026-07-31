@@ -1,0 +1,232 @@
+{
+  "id": "memorisation",
+  "slug": "memorisation",
+  "term": "Memorisation",
+  "aliases": [
+    "memorization",
+    "regurgitation"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "evaluation-metric",
+    "benchmark",
+    "data-leakage",
+    "reliability",
+    "robustness"
+  ],
+  "oftenConfusedWith": [
+    "overfitting",
+    "generalisation",
+    "long-term-memory"
+  ],
+  "oneSentence": "Memorisation happens when a model repeats patterns or examples from training data instead of learning rules that work on new cases.",
+  "plainExplanation": "A model is trained on examples. The input might be images, text or numbers. During training, the system adjusts internal settings so it can produce useful outputs, such as a label, score or summary.\n\nSometimes the model does not learn a broad pattern. Instead, it stores very specific details from the training examples and relies on those details later. When a very similar case appears, it can give the right answer for the wrong reason. That is memorisation.\n\nWhat goes in is training data, often with labels or targets. What happens is that the model fits itself too closely to those examples, especially if the model is large, the data are limited, or there is accidental leakage between training and testing. What comes out can look impressive on familiar data but fall apart on genuinely new data.\n\nMemorisation is related to overfitting, but they are not identical. Overfitting means performance drops on new data because the model has matched noise or quirks in the training set too closely. Memorisation is one way this can happen, especially when the model effectively reproduces seen examples or rare details. It is also different from long-term memory in AI systems, which usually means a system is designed to store and retrieve information during use.",
+  "everydayAnalogy": {
+    "title": "Studying road damage photos by heart",
+    "story": "A road inspector is preparing for an assessment using printed satellite images from Nairobi, Lima and Dhaka. Instead of learning the general signs of cracks, potholes and flood damage, the inspector memorises that one image with a blue roof nearby means “damaged” and another with a curved shadow means “not damaged”. In the assessment, many questions use the same practice images, so the score looks excellent. But when shown new images from different places, seasons and camera angles, the inspector starts making mistakes because the remembered clues do not carry over.",
+    "mapping": [
+      {
+        "analogyElement": "memorising particular practice photos and nearby visual quirks",
+        "aiElement": "storing training examples or their distinctive details rather than learning general features"
+      },
+      {
+        "analogyElement": "high score on repeated practice images",
+        "aiElement": "strong performance on training data or leaked test data"
+      },
+      {
+        "analogyElement": "mistakes on new images from other places and conditions",
+        "aiElement": "poor generalisation to unseen data"
+      },
+      {
+        "analogyElement": "blue roof or curved shadow used as a shortcut",
+        "aiElement": "spurious cue that happens to correlate in training data"
+      }
+    ],
+    "limitation": "A person can usually explain what they memorised and may deliberately choose to do so. A model does not usually store examples as neat labelled photos it can point to, and its behaviour comes from many numerical parameters rather than conscious study habits. Also, some reuse of training patterns is normal and useful; the problem is harmful reliance on specific seen details that does not transfer to new cases."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Learning a general rule versus memorising training examples",
+    "learningObjective": "Show why two models can score well on familiar data but differ sharply on truly new data.",
+    "description": "A side-by-side comparison with three rows: training data, test on familiar-looking data, and test on genuinely new data. Read left to right. The left column shows a model that learns broad signs of road damage. The right column shows a model that relies on repeated image quirks from the training set.",
+    "steps": [
+      {
+        "label": "Same training set",
+        "explanation": "Both models are trained on the same labelled satellite images of roads, including damaged and undamaged sections.",
+        "visualInstruction": "Top row spanning both columns: small thumbnails of labelled road images feeding into two separate model boxes."
+      },
+      {
+        "label": "General pattern learner",
+        "explanation": "The left model picks up broad features that can appear in many places, such as broken road edges, irregular dark pits and repeated crack shapes.",
+        "visualInstruction": "Left column middle: model box highlights several distributed features across many thumbnails, with no single image emphasised."
+      },
+      {
+        "label": "Memorising learner",
+        "explanation": "The right model leans on specific seen details, such as one neighbourhood pattern, one lighting condition or one repeated background object.",
+        "visualInstruction": "Right column middle: model box highlights a few exact thumbnails and a callout around a spurious cue like roof colour or shadow shape."
+      },
+      {
+        "label": "Looks fine on familiar checks",
+        "explanation": "If evaluation images are too similar to training data, both models can appear accurate.",
+        "visualInstruction": "Third row: both columns output many green ticks for a test set labelled 'very similar to training'."
+      },
+      {
+        "label": "Separates on new data",
+        "explanation": "When the test set comes from new cities, dates or image conditions, the general-pattern model holds up better while the memorising model drops sharply.",
+        "visualInstruction": "Bottom row: left column shows mostly green ticks on 'new images'; right column shows a visible mix of red crosses and a lower score badge."
+      }
+    ],
+    "interaction": "Hovering or tapping a highlighted cue reveals whether it is a transferable feature or a training-specific shortcut.",
+    "accessibilityDescription": "This is a side-by-side comparison of two models trained on the same road images. The left model learns broad signs of damage that appear across many examples. The right model relies on specific details from the training images, such as a repeated background pattern or lighting cue. On a test set that looks very similar to the training set, both models seem to perform well. On a genuinely new test set with different places and conditions, the left model keeps performing relatively well, while the right model performs much worse. The diagram teaches that memorisation can hide behind good-looking results if the evaluation data are not truly independent and varied.",
+    "reducedMotionDescription": "A static two-column diagram shows the same comparison without animation: shared training data at the top, model behaviour in the middle, and performance on familiar versus new test data at the bottom."
+  },
+  "workedExample": {
+    "scenario": "A team trains a classifier to detect damaged roads in satellite images.",
+    "input": "1,200 labelled images for training and 300 images for testing.",
+    "process": [
+      "The training set includes many near-duplicate images taken a few days apart from the same road segments.",
+      "The model reaches 98% accuracy on the training set and 95% on an initial test set assembled from the same image collection.",
+      "A second test set is created using 300 images from different districts, dates and viewing angles, with duplicates removed.",
+      "On this cleaner test set, accuracy drops to 68%, and errors cluster where shadows and roof colours differ from the training images."
+    ],
+    "result": "The high early score was partly caused by memorisation of training-specific visual details, not strong generalisation to new roads."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team explores a model to classify free-text answers from a household assessment into themes such as water access, shelter damage and health concerns.",
+    "relevance": "If the model memorises phrases, names of localities or questionnaire wording from past rounds, it may look accurate during testing yet fail on responses from a new region or survey cycle. That can mislead planning and resource decisions.",
+    "caution": "Do not put personal, household-level, protection-sensitive or other confidential survey responses into an unapproved public AI service. Use approved systems, remove direct identifiers where possible, and test on independently collected data with human review."
+  },
+  "whyItMatters": "Memorisation matters because a system can appear reliable while actually being fragile. A polished dashboard or a high benchmark score may hide the fact that the model only works on cases that closely resemble its training data. For policy and operational use, that can lead to poor procurement choices, unfair treatment of some groups, weak risk controls and false confidence in deployment. Checking for memorisation helps you ask better questions: Was the test data truly separate? Are there duplicates or leaked clues? Does performance hold across places, languages, time periods and conditions that matter in the real task?",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "benchmark discussions",
+    "data leakage reviews",
+    "privacy and safety audits",
+    "machine learning debugging"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If training accuracy is very high, the model must have learned the task well.",
+      "correction": "High training accuracy only shows the model fits the data it has already seen. It may still rely on repeated examples, accidental clues or noise. What matters is performance on well-separated, representative new data."
+    },
+    {
+      "misconception": "Memorisation and overfitting are exactly the same thing.",
+      "correction": "They are closely related but not identical. Overfitting is the broader problem of fitting too closely to training data and losing performance on new cases. Memorisation is a specific pattern within that broader problem, where the model depends heavily on seen examples or highly specific details."
+    },
+    {
+      "misconception": "Memorisation only matters for text models that repeat training sentences.",
+      "correction": "It can happen in images, tabular data, audio and other formats too. A model may memorise repeated backgrounds, camera artefacts, site names, timestamps or other shortcuts, even if it never reproduces an exact text passage."
+    },
+    {
+      "misconception": "A good benchmark score proves memorisation is not a problem.",
+      "correction": "Not necessarily. A benchmark can still be too narrow, too similar to the training data, or affected by contamination and leakage. The score is useful only if the evaluation setup matches the real use case and is properly separated from training."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A model has memorised when it seems good mainly because it has seen very similar examples before, not because it learned a rule that works more widely.",
+    "technical": "In technical terms, memorisation refers to a model encoding training-set-specific information strongly enough that its outputs depend on recalled examples or narrow cues rather than robust, transferable structure. This can appear as exact or near-exact reproduction, unusually high confidence on repeated patterns, sensitivity to duplicate or near-duplicate samples, or sharp performance drops under distribution shift. It is often associated with high-capacity models, limited or noisy data, and weak train-test separation. Memorisation is related to but distinct from generalisation: some retention of recurring patterns is necessary for learning, while harmful memorisation shows up when behaviour does not extend to independently sampled data from the target task. It is also linked to overfitting and can be worsened by data leakage, contamination of benchmarks, or spurious correlations. Detection often relies on holdout evaluation, deduplication, cross-validation where appropriate, out-of-distribution testing, privacy-oriented probing, and inspection of whether errors increase when superficial cues change."
+  },
+  "keyTakeaway": "A model that remembers training examples can look impressive in testing yet fail when the real world changes even slightly.",
+  "quickCheck": {
+    "question": "Which result is the clearest warning sign of memorisation?",
+    "options": [
+      "The model scores high on training data and also on a test set built from near-duplicate examples from the same source.",
+      "The model scores lower on training data than on a carefully separated test set from new regions.",
+      "The model keeps similar performance across new locations, dates and image conditions.",
+      "The model uses fewer parameters after retraining on more varied data."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "High scores on training data and near-duplicate test data can happen even when the model has mainly learned to repeat seen patterns. The warning sign becomes stronger when the test set is not truly independent. Good evaluation uses separate, representative data and checks whether performance holds under meaningful changes."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Memorisation",
+      "url": "https://en.wikipedia.org/w/index.php?search=Memorisation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers find background material on the term from multiple angles, and it suits readers who want a broad starting point rather than one fixed article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course resource explains core classification measures such as accuracy, recall and precision, and it suits readers who need context for spotting when good-looking scores may hide memorisation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This official NIST framework gives a risk-management lens for evaluating AI systems, and it suits policy and governance readers who need to connect technical issues like memorisation to assurance practice.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Memorisation",
+      "url": "https://www.youtube.com/results?search_query=Memorisation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page offers a range of video explanations on the term, and it suits readers who prefer visual or spoken introductions and are willing to compare sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Memorisation",
+      "url": "https://www.reddit.com/search/?q=Memorisation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page surfaces community discussions and examples of the term in practice, and it suits readers who want informal explanations and should be read critically because it is a search page of mixed-quality posts.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "memorisation ai meaning",
+    "memorization vs generalisation",
+    "regurgitation in machine learning",
+    "model memorising training data",
+    "overfitting vs memorisation",
+    "data leakage memorization",
+    "near duplicate test set problem",
+    "why high accuracy can mislead",
+    "memorisation example satellite images",
+    "memorization misspelling machine learning",
+    "memorisation",
+    "memorization",
+    "regurgitation"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:44.091Z",
+    "contentHash": "22107894610c486a",
+    "attempts": 1,
+    "promptTokens": 2328,
+    "completionTokens": 2643
+  }
+}

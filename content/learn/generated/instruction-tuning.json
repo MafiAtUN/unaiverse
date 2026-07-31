@@ -1,0 +1,224 @@
+{
+  "id": "instruction-tuning",
+  "slug": "instruction-tuning",
+  "term": "Instruction tuning",
+  "aliases": [
+    "instruction following"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "supervised-fine-tuning"
+  ],
+  "relatedTermIds": [
+    "pretraining",
+    "fine-tuning",
+    "reinforcement-learning-from-human-feedback",
+    "preference-learning",
+    "checkpoint",
+    "model-version"
+  ],
+  "oftenConfusedWith": [
+    "supervised-fine-tuning",
+    "alignment",
+    "in-context-learning"
+  ],
+  "oneSentence": "A post-pretraining adaptation step that teaches a general language model to respond to prompts in the requested format, style and task pattern.",
+  "plainExplanation": "A model after pretraining can continue text well, but it may not reliably follow a user’s instruction. Instruction tuning is a later training step that uses many prompt-and-answer pairs so the model learns the pattern: a person asks for a task, and the model should produce a helpful response in the requested form.\n\nWhat goes in is usually a dataset of examples such as “summarise this paragraph”, “translate this sentence”, or “extract the dates”, each paired with a target answer. During training, the model’s parameters, meaning its internal numerical weights, are adjusted so that responses matching the desired answers become more likely.\n\nWhat happens is similar to supervised fine-tuning, and many people use the terms almost interchangeably. The emphasis, though, is not just on learning one narrow task. It is on teaching the model a broad instruction-response behaviour across many tasks and formats, so the model becomes more usable in chat, assistant and task-oriented settings.\n\nWhat comes out is a new checkpoint or model version that usually follows prompts better than the base model. It may answer more directly, respect requested output structure and switch between tasks with less extra prompting. This does not guarantee factuality, safety or domain expertise, and it does not mean the model gained new up-to-date knowledge unless that was also present in the training data.",
+  "everydayAnalogy": {
+    "title": "Training a translator to follow briefing notes",
+    "story": "A translation team has a linguist who already knows many languages from years of reading books and reports. But when field staff send requests, the linguist does not always deliver what is wanted: sometimes they paraphrase instead of translating, or they ignore the requested bullet format. So the team prepares many small examples: “translate exactly”, “give a two-line summary”, “list place names only”, “keep the speaker’s uncertainty”. After reviewing many such examples, the linguist becomes much better at following the instructions attached to each request.",
+    "mapping": [
+      {
+        "analogyElement": "A linguist with broad language exposure",
+        "aiElement": "A pretrained language model with general language patterns"
+      },
+      {
+        "analogyElement": "Many request-and-good-response examples",
+        "aiElement": "Instruction-tuning dataset of prompts paired with target outputs"
+      },
+      {
+        "analogyElement": "Reviewing examples and correcting behaviour",
+        "aiElement": "Training that updates model parameters to favour instruction-following outputs"
+      },
+      {
+        "analogyElement": "Delivering in bullets, exact translation or named entities as asked",
+        "aiElement": "Producing outputs that better match requested task format and intent"
+      }
+    ],
+    "limitation": "A human linguist can reflect on rules, ask clarifying questions and deliberately change strategy from one job to another. A model does not do that in the same way; it adjusts statistical patterns during training and then generates likely continuations at use time. Also, instruction tuning usually uses very large datasets and numerical optimisation, not a small team review process."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How instruction tuning turns a base model into a more usable assistant",
+    "learningObjective": "Show the ordered steps from a general pretrained model to a version that follows prompts more reliably, and distinguish this from pretraining and later preference-based methods.",
+    "description": "A left-to-right step diagram with five boxes connected by arrows. Read from the general model on the left to the adapted model on the right. Each box adds one part of the process: starting point, training examples, parameter updates, evaluation and resulting behaviour.",
+    "steps": [
+      {
+        "label": "1. Start with a pretrained model",
+        "explanation": "Begin with a model that has learned broad language patterns from large text collections but has not yet been specialised to follow instructions consistently.",
+        "visualInstruction": "Draw a large rounded rectangle labelled 'Pretrained model'. Add a smaller subtitle: 'good at predicting text, uneven at following task requests'."
+      },
+      {
+        "label": "2. Collect instruction-response examples",
+        "explanation": "Prepare many examples where an input prompt is paired with a desired answer, often covering summarisation, extraction, translation, question answering and formatting.",
+        "visualInstruction": "Draw a stack of cards labelled with short prompts and matching outputs. Add small icons for summary, translation and list formatting."
+      },
+      {
+        "label": "3. Train on those pairs",
+        "explanation": "Use supervised training to adjust the model’s weights so outputs like the target answers become more likely when similar instructions appear.",
+        "visualInstruction": "Show the stack feeding into a gear icon connected to the model. Label the gear 'weight updates from prompt-answer pairs'."
+      },
+      {
+        "label": "4. Test instruction following",
+        "explanation": "Check whether the updated model now obeys requested structure, tone and task type across prompts it did not memorise exactly.",
+        "visualInstruction": "Add a checklist panel with items: 'follows format', 'answers directly', 'switches tasks', 'generalises beyond examples'."
+      },
+      {
+        "label": "5. Produce an instruction-tuned checkpoint",
+        "explanation": "Save the updated model as a new checkpoint or version that is usually more useful in assistant-style interaction, though not automatically more truthful or safe.",
+        "visualInstruction": "Draw a final highlighted model box labelled 'Instruction-tuned checkpoint' with callouts: 'better prompt following' and 'not a guarantee of factuality or safety'."
+      }
+    ],
+    "interaction": "Hover or tap each step to reveal one concrete example prompt and how the model behaviour changes at that stage.",
+    "accessibilityDescription": "This diagram is a five-step process. Step 1 shows a pretrained model that predicts text well but does not reliably follow requests. Step 2 adds a dataset of many prompt-and-answer pairs across tasks such as summarising, translating and extracting items. Step 3 shows training that updates the model’s internal weights using those pairs. Step 4 shows evaluation, checking whether the model follows requested formats and task types on new prompts. Step 5 shows the result: a saved instruction-tuned checkpoint that is more responsive to prompts, while still not guaranteed to be factual, safe or current.",
+    "reducedMotionDescription": "Show the same five boxes and arrows as a static left-to-right process, with the final box highlighted and a short note under it saying instruction tuning improves prompt following but does not by itself guarantee truthfulness or safety."
+  },
+  "workedExample": {
+    "scenario": "A team wants a model to handle short operational text tasks in a consistent format.",
+    "input": "Training pair example: Prompt: 'Translate this field note into French and keep the uncertainty words: Roads may be blocked north of Gao after heavy rain.' Target answer: 'Les routes peuvent être bloquées au nord de Gao après de fortes pluies.'",
+    "process": [
+      "Start from a pretrained checkpoint that often translates correctly but sometimes adds explanation or changes the requested format.",
+      "Assemble 120,000 instruction-response pairs covering translation, summarisation, extraction and classification in several output styles.",
+      "Run supervised training for one epoch on these pairs, updating the model weights to increase the probability of the target responses.",
+      "Evaluate on a held-out set of 5,000 prompts; exact-format compliance rises from 61% to 88%, while translation quality stays similar.",
+      "Save the adapted model as a new checkpoint for assistant-style use."
+    ],
+    "result": "The new model is more likely to return a direct French translation when asked, instead of giving commentary, rephrasing the task or mixing translation with explanation."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A humanitarian coordination team is testing an internally approved model to help draft structured summaries from non-sensitive, already cleared situation updates, such as turning a short public field note into a three-bullet summary with dates and locations preserved.",
+    "relevance": "Instruction tuning matters here because the team may need the model to reliably follow a prompt format across many routine tasks, not just generate fluent text. A model that follows instructions better can reduce reformatting work and make outputs easier for human reviewers to check.",
+    "caution": "Do not place confidential, protection-sensitive, personal, survivor, witness, security-sensitive or operationally sensitive information into an unapproved public AI service. Human review remains necessary before any output is shared or used operationally."
+  },
+  "whyItMatters": "If you procure, evaluate or govern AI systems, this term tells you why two models built from similar base technology can behave very differently in practice. Instruction tuning often explains whether a model will follow format, task and tone requests with little prompt engineering. It also helps you ask better questions: Was the model adapted for general instruction following, for one domain only, or not at all? That affects usability, testing, risk controls and how much human checking is needed.",
+  "whereYouMayHearIt": [
+    "model cards and release notes",
+    "LLM training pipelines",
+    "assistant product evaluations",
+    "research papers on post-training"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Instruction tuning simply adds new knowledge to the model.",
+      "correction": "Its main purpose is usually behavioural: teaching the model to respond to prompts in a useful way. It may expose the model to some new information if that appears in the training pairs, but that is not the core mechanism or guarantee. A model can become better at following instructions without becoming more current or more accurate about facts."
+    },
+    {
+      "misconception": "Instruction tuning and reinforcement learning from human feedback are the same thing.",
+      "correction": "They are related but different stages. Instruction tuning usually trains on fixed prompt-answer examples with supervised learning. Reinforcement learning from human feedback uses preference signals or reward models to push behaviour further toward preferred responses. Some systems use both, in sequence."
+    },
+    {
+      "misconception": "Any fine-tuning on company data counts as instruction tuning.",
+      "correction": "Not necessarily. Fine-tuning is a broad category. If the examples mainly teach the model to complete one narrow task or style, that may be ordinary supervised fine-tuning rather than broad instruction following. Instruction tuning usually aims to improve how the model handles many kinds of explicit requests."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A general model may write fluent text but still be poor at doing what you ask. This training step shows it many examples of instructions and good answers so it becomes better at following prompts across different tasks.",
+    "technical": "Instruction tuning is a post-pretraining adaptation stage in which a language model is optimised on a supervised dataset of instruction-input-output triples or prompt-response pairs. The objective is usually next-token prediction over the target response conditioned on the instruction and any supplied input, but the dataset is constructed to represent task requests rather than generic text continuation. In practice, this often overlaps with supervised fine-tuning; the distinction is usually about intent and dataset design. Supervised fine-tuning could target one narrow behaviour, while instruction tuning aims for broad generalisation across heterogeneous tasks, formats and interaction patterns. The output is an updated checkpoint whose conditional generation better matches explicit user requests. This step commonly precedes, but does not require, later preference optimisation methods such as reinforcement learning from human feedback or other preference-learning approaches."
+  },
+  "keyTakeaway": "Instruction tuning does not make a model generally smarter; it mainly makes a pretrained model more likely to respond in the way a prompt asks.",
+  "quickCheck": {
+    "question": "Which description best matches instruction tuning?",
+    "options": [
+      "Training a pretrained model on many prompt-and-answer examples so it follows user requests more reliably across tasks",
+      "Compressing a model so it runs faster with less memory",
+      "Adding external search so the model can look up current facts",
+      "Changing only the system prompt without updating model weights"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Instruction tuning is a training step after pretraining. It uses many instruction-response examples to improve task following and output format. Compression is quantisation or pruning, external search is a retrieval setup, and changing a prompt without weight updates is not instruction tuning."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Instruction tuning",
+      "url": "https://en.wikipedia.org/w/index.php?search=Instruction%20tuning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A search results page that helps a beginner find Wikipedia entries or related topics on instruction tuning, but it is not a single curated article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "A structured course resource suited to readers who want a guided explanation of LLM training and post-training concepts, including where instruction tuning fits.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "A set of short courses suited to practitioners who prefer hands-on lessons and practical demonstrations over long theory-first study.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Instruction tuning",
+      "url": "https://www.youtube.com/results?search_query=Instruction%20tuning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page that helps visual learners find multiple video explanations and teaching styles, but it is not one verified source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Instruction tuning",
+      "url": "https://www.reddit.com/search/?q=Instruction%20tuning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page that lets readers see community questions and practitioner discussion, best for informal perspectives rather than authoritative definitions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "instruction tuning meaning",
+    "instruction following model training",
+    "instruction tuned vs fine tuned",
+    "supervised fine tuning vs instruction tuning",
+    "how llms learn to follow prompts",
+    "instruction-tuned checkpoint",
+    "instruction tuning examples",
+    "instruction tunning",
+    "instruction tuning",
+    "instruction following"
+  ],
+  "contested": "The term overlaps strongly with supervised fine-tuning, and different authors draw the boundary differently. Some use 'instruction tuning' for broad multi-task supervised post-training, while others use it more loosely for almost any supervised tuning on prompt-response data.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:35.352Z",
+    "contentHash": "e0ff042287416856",
+    "attempts": 2,
+    "promptTokens": 2344,
+    "completionTokens": 2659
+  }
+}

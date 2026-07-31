@@ -1,0 +1,220 @@
+{
+  "id": "accuracy",
+  "slug": "accuracy",
+  "term": "Accuracy",
+  "aliases": [],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "programme",
+    "leadership"
+  ],
+  "prerequisiteTermIds": [
+    "prediction"
+  ],
+  "relatedTermIds": [
+    "prediction",
+    "evaluation-metric",
+    "confusion-matrix",
+    "baseline",
+    "generalisation",
+    "false-positive-and-false-negative"
+  ],
+  "oftenConfusedWith": [
+    "precision",
+    "recall",
+    "f1-score",
+    "class-imbalance"
+  ],
+  "oneSentence": "The share of cases a system labels correctly out of all the cases it was tested on.",
+  "plainExplanation": "Accuracy is a simple score for checking a system’s predictions. You compare what the system predicted with the correct answers, then count how many times it got the answer right.\n\nWhat goes in: a set of cases, the system’s predicted labels for those cases, and the true labels known from reliable checking. What happens: each case is marked as correct or incorrect. What comes out: one number, usually written as a percentage.\n\nFor example, if a system checks 100 messages and labels 92 of them correctly, its accuracy is 92%. This sounds straightforward, and sometimes it is useful.\n\nBut accuracy can mislead when one outcome is much more common than another. If 95 out of 100 messages are routine, a weak system could label everything as routine and still reach 95% accuracy while completely missing the unusual but important cases. That is why accuracy should be separated from precision, recall, and the pattern of false positives and false negatives.",
+  "everydayAnalogy": {
+    "title": "Marking a practice examination",
+    "story": "A student in Nairobi takes a 50-question practice examination. After finishing, they compare their answers with the official answer sheet and count 40 matches. They report that they got 80% correct. This gives a quick summary of performance, but it does not show whether the missed questions were all from one difficult topic such as algebra.",
+    "mapping": [
+      {
+        "analogyElement": "the student's answers",
+        "aiElement": "the system's predictions"
+      },
+      {
+        "analogyElement": "the official answer sheet",
+        "aiElement": "the true labels used for evaluation"
+      },
+      {
+        "analogyElement": "counting how many answers match",
+        "aiElement": "counting correct predictions"
+      },
+      {
+        "analogyElement": "80% correct on 50 questions",
+        "aiElement": "accuracy as correct cases divided by all cases"
+      }
+    ],
+    "limitation": "An examination usually gives each question similar importance and a fixed answer key. Real AI evaluation may involve uneven class sizes, uncertain labels, and situations where one type of mistake matters much more than another, so the same percentage can hide serious weaknesses."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How accuracy is calculated",
+    "learningObjective": "After viewing this, a reader should be able to explain that accuracy is the number of correct predictions divided by the total number of cases, and why that can still hide problems.",
+    "description": "A four-step horizontal diagram. Each step is a rounded rectangle with a simple icon and short label. Thin arrows connect left to right. Step 1 shows a stack of 10 case cards labelled with true answers. Step 2 shows the model's predicted labels added to each card. Step 3 highlights cards in green for matches and red for mismatches. Step 4 shows the fraction 8 correct out of 10 total, then 80%. Below the final step, a warning note says: 'Useful summary, but check whether rare important cases were missed.'",
+    "steps": [
+      {
+        "label": "Start with labelled cases",
+        "explanation": "Use a test set where the correct answer for each case is already known.",
+        "visualInstruction": "Draw 10 small cards in a grid, each with a true label badge such as A or B."
+      },
+      {
+        "label": "Compare predictions",
+        "explanation": "For each case, place the system's predicted label next to the true label.",
+        "visualInstruction": "Add a second badge to each card for the prediction, aligned beside the true label."
+      },
+      {
+        "label": "Count matches",
+        "explanation": "Mark each case as correct if prediction and true label match, otherwise incorrect.",
+        "visualInstruction": "Outline matching cards in green and non-matching cards in red; add a small tick or cross."
+      },
+      {
+        "label": "Compute the share",
+        "explanation": "Divide the number of correct cases by the total number of cases.",
+        "visualInstruction": "Show a large equation: 8 correct / 10 total = 80%, with a small note under it about rare cases."
+      }
+    ],
+    "interaction": "Hovering or tapping a card reveals its true label, predicted label, and whether it counts as correct. A toggle switches to an imbalanced example where high accuracy still misses all rare cases.",
+    "accessibilityDescription": "This diagram explains accuracy in four steps. First, start with test cases that already have correct answers. Second, compare the system's prediction for each case with the known correct answer. Third, count how many predictions match and how many do not. Fourth, divide the number of correct predictions by the total number of cases to get a percentage, such as 8 out of 10 equals 80%. The diagram also warns that this percentage can be misleading if important cases are rare.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: labelled test cases, predictions beside labels, green and red match markings, and a final fraction converted to a percentage with a caution note about rare cases."
+  },
+  "workedExample": {
+    "scenario": "A clinic tests a simple screening model on 200 past cases to see whether it flags a condition.",
+    "input": "Out of 200 cases, 180 truly do not have the condition and 20 truly do. The model labels 190 cases correctly.",
+    "process": [
+      "Collect the model's predicted label for each of the 200 cases.",
+      "Compare each prediction with the known true label from the checked records.",
+      "Count 190 correct predictions and 10 incorrect ones.",
+      "Calculate accuracy: 190 divided by 200 equals 95%."
+    ],
+    "result": "The model's accuracy is 95%, but that score alone does not show whether the 10 mistakes were harmless or whether they included many missed positive cases."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team in a UN office tests a tool that suggests whether a draft resolution paragraph matches prior agreed language found in a public archive of resolutions.",
+    "relevance": "Accuracy gives a quick first check of how often the tool's suggestions match the reviewed reference set, which can help decide whether the tool is ready for limited support use under human review.",
+    "caution": "Do not judge the tool on accuracy alone, because a high score may simply reflect common wording patterns while still missing rare but important distinctions that staff need to catch."
+  },
+  "whyItMatters": "A single percentage can strongly influence whether leaders trust a system, buy a product, or change a workflow. If that percentage hides important mistakes, people may approve a tool that looks good on paper but fails where the consequences matter most.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "procurement demonstrations",
+    "dashboard metrics",
+    "media coverage of AI performance"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "High accuracy means the system works well in every important situation.",
+      "correction": "Accuracy averages all cases together. If some cases are rare or more important, the average can stay high even while performance on those cases is poor."
+    },
+    {
+      "misconception": "Accuracy and precision mean the same thing.",
+      "correction": "Accuracy asks how many total predictions were correct. Precision asks, among the items predicted as positive, how many really were positive."
+    },
+    {
+      "misconception": "An accuracy score from one test set proves future performance.",
+      "correction": "A score only reflects the data and conditions used for testing. Performance may change on new data, in another country, or after the real-world process changes."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Accuracy tells you what fraction of all answers were right.",
+    "technical": "In classification, accuracy is the number of correct predictions divided by the total number of evaluated cases, often written as (true positives plus true negatives) over all cases. It is sensitive to class imbalance because common classes dominate the score."
+  },
+  "keyTakeaway": "Accuracy is useful as a first glance, not as the whole judgement.",
+  "quickCheck": {
+    "question": "A fraud detector is tested on 1,000 transactions. Only 20 are actually fraudulent. The system labels every transaction as not fraudulent and gets 980 labels correct. What is the best conclusion?",
+    "options": [
+      "The system is excellent because 98% accuracy is very high.",
+      "The accuracy is high, but the system may still be useless for finding fraud.",
+      "The system must also have high precision and recall.",
+      "The result proves the test data were wrong."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "If fraud is rare, a system can achieve high accuracy by always choosing the common class. Here it misses all 20 fraudulent transactions, so accuracy alone gives a misleading picture."
+  },
+  "resources": [
+    {
+      "title": "Accuracy and precision",
+      "url": "https://en.wikipedia.org/wiki/Accuracy_and_precision",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad introductory explanation of accuracy and precision and suits readers who want a quick overview with general background.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course page explains how accuracy relates to recall and precision and suits beginners comparing common classification metrics.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This official framework helps readers place performance measures within wider AI risk management and suits programme and leadership audiences.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Accuracy",
+      "url": "https://www.youtube.com/results?search_query=Accuracy%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for video explanations of accuracy, useful for readers who prefer different teaching styles and want to compare several presenters.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Accuracy",
+      "url": "https://www.reddit.com/search/?q=Accuracy",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussion of accuracy, useful for readers who want informal questions, examples and debates from practitioners.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "accuracy ai meaning",
+    "what is accuracy in machine learning",
+    "accuracy vs precision vs recall",
+    "how to calculate accuracy",
+    "high accuracy but bad model",
+    "class imbalance accuracy problem",
+    "accurracy ai",
+    "model accuracy explained",
+    "accuracy"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:38.230Z",
+    "contentHash": "0d8d9ff038afee03",
+    "attempts": 1,
+    "promptTokens": 2164,
+    "completionTokens": 1928
+  }
+}

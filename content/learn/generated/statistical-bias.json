@@ -1,0 +1,215 @@
+{
+  "id": "statistical-bias",
+  "slug": "statistical-bias",
+  "term": "Bias (statistical)",
+  "aliases": [
+    "bias-variance tradeoff",
+    "bias variance"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "error-and-loss"
+  ],
+  "relatedTermIds": [
+    "variance",
+    "underfitting",
+    "overfitting",
+    "generalisation",
+    "cross-validation",
+    "evaluation-metric"
+  ],
+  "oftenConfusedWith": [
+    "algorithmic-bias",
+    "variance",
+    "bias-term"
+  ],
+  "oneSentence": "A model with high statistical bias makes errors in a consistent direction because its assumptions or structure are too simple for the pattern in the data.",
+  "plainExplanation": "In machine learning, statistical bias means a model tends to miss the true pattern in a regular, repeatable way. It does not mean social prejudice here. It is about systematic error: the model keeps being wrong for similar reasons across many cases.\n\nWhat goes in is training data and a model form, such as a straight line, a small decision tree, or a heavily restricted classifier. What happens is that the model tries to fit a pattern, but its built-in assumptions are too rigid or too simple. What comes out is predictions that are consistently off, even on the training data and often also on new data.\n\nA high-bias model often underfits. Underfitting means it has not captured enough of the real structure in the data. For example, if public feedback contains nuanced language but the model only uses a few keywords, it may keep labelling many mixed comments incorrectly in the same way.\n\nPeople often discuss bias together with variance. Variance is how much a model’s results change when the training data changes. A model can have too much bias, too much variance, or a better balance between them. The phrase “bias-variance trade-off” refers to this tension: making a model more flexible can reduce bias but may increase variance.",
+  "everydayAnalogy": {
+    "title": "Sorting consultation letters with an oversimplified rule",
+    "story": "A team member has to sort printed consultation letters into two trays: “supports the proposal” and “raises concerns”. To save time, they use one rule only: if a letter contains the word “welcome”, it goes into support; otherwise it goes into concerns. Many letters say “we welcome the discussion but raise serious concerns about implementation”, so the rule keeps mis-sorting them in the same direction. The rule is fast and consistent, but it is too simple for the real language people use.",
+    "mapping": [
+      {
+        "analogyElement": "one rule based on a single word",
+        "aiElement": "a model with assumptions that are too simple"
+      },
+      {
+        "analogyElement": "mixed letters repeatedly mis-sorted",
+        "aiElement": "systematic prediction error across similar cases"
+      },
+      {
+        "analogyElement": "the sorter ignores nuance in the rest of the letter",
+        "aiElement": "the model underfits the true pattern in the data"
+      }
+    ],
+    "limitation": "A person using a paper rule can notice the mistake and change behaviour deliberately. A statistical model does not reflect in that way; it only applies the pattern learned from data and model structure. Also, real bias is measured over many examples with error metrics, not by looking at one sorting rule alone."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "High bias versus lower bias on the same pattern",
+    "learningObjective": "Show why an overly simple model produces systematic error, and how adding appropriate flexibility can reduce that error without claiming that more complexity is always better.",
+    "description": "A side-by-side comparison. Both panels show the same scattered data points and an underlying curved pattern. The left panel overlays a straight line labelled high bias. The right panel overlays a smoother curve labelled lower bias. Read left to right: same data, different model flexibility, different kinds of error.",
+    "steps": [
+      {
+        "label": "Same data",
+        "explanation": "Both panels begin with identical points, representing observed examples from one problem.",
+        "visualInstruction": "Draw two equal plot areas. In both, place the same 20 to 30 dots following a loose upward curve with noise."
+      },
+      {
+        "label": "Too simple fit",
+        "explanation": "The left model can only draw a straight line, so it misses the curved pattern in a consistent way.",
+        "visualInstruction": "In the left plot, draw one straight regression line through the points. Add several vertical error marks showing large residuals at the curved ends."
+      },
+      {
+        "label": "More suitable fit",
+        "explanation": "The right model can bend enough to follow the main pattern, so the systematic error is smaller.",
+        "visualInstruction": "In the right plot, draw a smooth moderate curve through the centre of the point cloud. Add shorter residual marks than on the left."
+      },
+      {
+        "label": "What changes",
+        "explanation": "Reducing bias means the model’s average predictions move closer to the true pattern, but this must still be checked on new data to avoid overfitting.",
+        "visualInstruction": "Below both plots, add a short caption row: left ‘underfitting / high bias’, right ‘lower bias / check variance on new data’."
+      }
+    ],
+    "interaction": "On hover or tap, highlight residual error bars and show a short note: ‘systematic miss’ on the left and ‘closer average fit’ on the right.",
+    "accessibilityDescription": "The diagram compares two model fits on the same dataset. In both panels, the data points follow a curved upward pattern. In the left panel, a straight line cuts across the points. Many points at both ends sit far from the line, showing consistent error because the model is too simple. This is labelled high bias and underfitting. In the right panel, a gentle curve follows the overall shape of the points more closely, so the average error is smaller. A note says this lowers bias, but performance on new data still needs checking because reducing bias does not guarantee low variance.",
+    "reducedMotionDescription": "A static two-panel chart with identical data in both panels: left shows a straight line with larger residuals and the label ‘high bias’; right shows a smooth curve with smaller residuals and the label ‘lower bias’."
+  },
+  "workedExample": {
+    "scenario": "A team trains a text classifier to label consultation comments as ‘support’, ‘concern’, or ‘mixed’.",
+    "input": "Training set: 1,200 comments. Model A uses only 20 frequent keywords and a very strong penalty that keeps the model simple.",
+    "process": [
+      "The team trains Model A on the 1,200 comments and tests it on a separate set of 300 unseen comments.",
+      "On the training set, accuracy is 61%, and on the test set, accuracy is 60%, so the model is not merely memorising the training data.",
+      "A review of errors shows a pattern: comments with both positive and critical language are repeatedly forced into either ‘support’ or ‘concern’ because the model cannot represent nuance well.",
+      "The team adds richer text features and relaxes the penalty slightly. A new model reaches 74% on training and 71% on test, suggesting lower bias without a large jump in variance."
+    ],
+    "result": "The first model had high statistical bias: it made similar mistakes again and again because its structure was too limited for the task."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team wants to summarise public submissions to a consultation by grouping comments into broad themes before analysts review them.",
+    "relevance": "Statistical bias matters if the chosen model is too simple and keeps missing nuanced submissions, which can distort the apparent distribution of themes and lead staff to over-trust a neat but incomplete summary.",
+    "caution": "Do not upload personal, confidential, survivor, witness, security-sensitive or otherwise protection-sensitive submissions into an unapproved public AI service; use approved tools, minimise data, and keep human review in the loop."
+  },
+  "whyItMatters": "A model can produce tidy scores and still fail in a predictable way because it is too simple for the real problem. If you do not recognise statistical bias, you may choose a system that looks stable but keeps missing important patterns. That can lead to poor decisions about procurement, staffing, risk, or service quality. For non-specialists, the key question is not only ‘How accurate is it?’ but also ‘What kinds of mistakes does it make again and again, and why?’ Understanding bias helps you ask whether the model is underfitting, whether a benchmark is too easy, and whether a more suitable design or richer data is needed.",
+  "whereYouMayHearIt": [
+    "model evaluation meetings",
+    "bias-variance trade-off discussions",
+    "cross-validation results reviews",
+    "underfitting diagnosis"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Statistical bias means unfair discrimination against a social group.",
+      "correction": "That is a different concept, often called algorithmic bias or fairness bias. Statistical bias is about systematic prediction error caused by model assumptions or estimation procedures. The two can interact in practice, but they are not the same thing."
+    },
+    {
+      "misconception": "If training and test scores are both low and similar, the model is probably fine because it generalises consistently.",
+      "correction": "Similar scores can mean stability, but if both are poor, the model may be high-bias and underfitting. Consistency alone is not enough; you also need adequate performance and error analysis."
+    },
+    {
+      "misconception": "Adding complexity always fixes high bias.",
+      "correction": "More flexibility can reduce bias, but it can also raise variance, making results unstable on new data. The aim is not maximum complexity. It is an appropriate match between model capacity, data, and task."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A high-bias model is too simplistic, so it keeps making the same kind of mistake.",
+    "technical": "In supervised learning, bias usually refers to systematic error introduced by modelling assumptions, restricted hypothesis class, regularisation, or estimation choices. Informally, if the model family cannot represent the target relationship well, the expected prediction will sit away from the true function, producing underfitting. In the classic bias-variance decomposition, expected generalisation error can be analysed as contributions from bias, variance, and irreducible noise, though the exact form depends on the loss function and setting. Practically, high bias often appears as weak performance on both training and validation data, with errors that follow a recognisable pattern rather than random fluctuation."
+  },
+  "keyTakeaway": "Statistical bias means the model is systematically wrong in a repeatable way, often because it is too simple for the pattern it needs to learn.",
+  "quickCheck": {
+    "question": "Which situation best suggests high statistical bias rather than high variance?",
+    "options": [
+      "Training accuracy is 62% and test accuracy is 61%, and the model repeatedly misses nuanced mixed comments.",
+      "Training accuracy is 99% and test accuracy is 68%, with results changing a lot across folds.",
+      "A model gives different outputs each time because the input data stream is delayed.",
+      "The confusion matrix shows some false positives and some false negatives."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Low and similar training and test performance, plus a repeated error pattern, points to underfitting and high statistical bias. Option 2 is more typical of high variance or overfitting. The other options do not diagnose statistical bias."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Bias–variance tradeoff",
+      "url": "https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia link gives a broad overview of the bias-variance trade-off and suits readers who want a quick conceptual starting point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This Google course resource explains core classification metrics and suits readers who need surrounding evaluation context before placing bias in a wider assessment process.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This NIST framework resource gives risk-management context for evaluating AI systems and suits readers concerned with governance, testing and oversight rather than only theory.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Bias (statistical)",
+      "url": "https://www.youtube.com/results?search_query=Bias%20(statistical)%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations in different teaching styles, and it suits people who learn better by watching, but it is a search page rather than one vetted lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Bias (statistical)",
+      "url": "https://www.reddit.com/search/?q=Bias%20(statistical)",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see how people informally discuss the term and common confusions, and it suits exploratory reading, but it is a search page rather than an authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "statistical bias machine learning",
+    "bias variance tradeoff simple explanation",
+    "high bias vs high variance",
+    "underfitting bias",
+    "bias variance",
+    "bias-variance trade off",
+    "what is statistical bias in ml",
+    "model keeps making same mistakes",
+    "bias (statistical)",
+    "bias-variance tradeoff"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:20.961Z",
+    "contentHash": "e8fcf079a777d18d",
+    "attempts": 1,
+    "promptTokens": 2336,
+    "completionTokens": 2421
+  }
+}

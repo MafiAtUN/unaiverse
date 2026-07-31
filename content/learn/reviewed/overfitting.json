@@ -1,0 +1,228 @@
+{
+  "id": "overfitting",
+  "slug": "overfitting",
+  "term": "Overfitting",
+  "aliases": [
+    "overfit"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "training",
+    "validation-and-test-sets"
+  ],
+  "relatedTermIds": [
+    "generalisation",
+    "cross-validation",
+    "regularisation",
+    "validation-and-test-sets",
+    "memorisation",
+    "evaluation-metric"
+  ],
+  "oftenConfusedWith": [
+    "underfitting",
+    "generalisation",
+    "data-leakage"
+  ],
+  "oneSentence": "A model fits its training examples so closely that its performance drops on new cases.",
+  "plainExplanation": "A machine-learning model learns patterns from examples. The goal is not to repeat those examples perfectly, but to work well on new cases it has not seen before. That ability is called generalisation.\n\nOverfitting happens when the model locks onto details that do not hold up outside the training data. These details can include noise, accidental quirks, or patterns that only appear in one dataset. The model may score very highly during training but do worse in real use.\n\nWhat goes in is a set of past examples, such as satellite images labelled \"damaged road\" or \"not damaged road\". During training, the model adjusts itself to match those labels. If it adjusts too closely, it may learn irrelevant clues, such as a certain image border, season, or camera source, instead of the road damage itself.\n\nWhat comes out is a misleading picture of quality: strong results on familiar data, weaker results on new data. This is why people compare performance on separate validation or test sets, not only on the data used for training. Overfitting is different from data leakage, where information from the answer accidentally slips into training or evaluation.",
+  "everydayAnalogy": {
+    "title": "Studying last year's exact test paper",
+    "story": "A student in Nairobi prepares for an exam by memorising last year's paper line by line, including the order of questions and even where the diagrams sat on the page. On practice with that same paper, the student gets almost everything right. On the real exam, the topic is similar but the questions are phrased differently, so the score drops sharply. The student learned the specific paper too closely instead of learning the broader subject.",
+    "mapping": [
+      {
+        "analogyElement": "memorising one old test paper",
+        "aiElement": "fitting very closely to the training data"
+      },
+      {
+        "analogyElement": "doing very well on that same practice paper",
+        "aiElement": "high training performance"
+      },
+      {
+        "analogyElement": "struggling on the new exam",
+        "aiElement": "poor performance on unseen data"
+      },
+      {
+        "analogyElement": "learning the broader subject",
+        "aiElement": "generalisation"
+      }
+    ],
+    "limitation": "A student can consciously choose study methods, while a model does not choose in that human sense; it adjusts mathematical parameters. Also, overfitting can happen even when the model has not memorised every example word for word, because it may still rely on unstable patterns."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "Training score up, real-world score down",
+    "learningObjective": "After using this explainer, the reader should be able to say why a model can improve on training data while getting worse on new data.",
+    "description": "An interactive chart shows two lines across training rounds: a training score and a validation score. Controls let the reader increase model complexity, add or reduce noise, and move through rounds of training. A small panel of example satellite road images updates to show which visual cues the model appears to rely on, such as road cracks versus irrelevant image artefacts. The key teaching point is the split between learning a useful pattern and learning quirks.",
+    "steps": [
+      {
+        "label": "Start with a simple model",
+        "explanation": "The chart begins with both training and validation scores low. As training starts, both lines rise because the model learns broad patterns that help on new cases too.",
+        "visualInstruction": "Show a line chart with x-axis labelled 'training rounds' and y-axis labelled 'score'. Animate or reveal two lines together: blue for training, green for validation. Beside the chart, show four small satellite-image cards with damaged and undamaged roads."
+      },
+      {
+        "label": "Add complexity",
+        "explanation": "When the reader increases complexity, the training line keeps rising. The validation line rises at first, then flattens.",
+        "visualInstruction": "Provide a slider labelled 'model complexity' from low to high. As the slider moves right, show the blue line fitting more tightly and the image panel highlighting more detailed cues."
+      },
+      {
+        "label": "Push too far",
+        "explanation": "At high complexity or too many training rounds, the model starts matching noise and accidental details. The training score still improves, but the validation score falls.",
+        "visualInstruction": "Highlight the divergence point with a vertical marker labelled 'overfitting begins'. In the image panel, add outlines around irrelevant cues such as cloud shadows, image borders, or sensor artefacts."
+      },
+      {
+        "label": "Compare safer choices",
+        "explanation": "The reader can reduce complexity or stop earlier and see the validation score recover. This shows that the best-looking training score is not always the best choice.",
+        "visualInstruction": "Add a reset button and a toggle labelled 'stop at best validation round'. Show a summary box with three values: training score, validation score, and selected round."
+      }
+    ],
+    "interaction": "Readers can drag a model-complexity slider, scrub through training rounds, toggle noisy data on or off, and press a button to stop at the best validation round.",
+    "accessibilityDescription": "This interactive explains overfitting using text and values instead of graphics. At first, both training and validation scores rise together as the model learns useful patterns. When model complexity becomes too high or training continues too long, the training score keeps improving but the validation score stops improving and then falls. A text panel explains that the model is now relying on unstable clues, such as image artefacts, rather than the real feature of interest, such as road damage. Controls let the user change complexity, training round, and noise level, and each control updates the score values and explanation in words.",
+    "reducedMotionDescription": "A static version shows three side-by-side states: early training, useful fit, and overfit. Each state includes fixed score values, a non-animated line chart, and text describing which cues are useful and which are irrelevant.",
+    "component": "overfitting"
+  },
+  "workedExample": {
+    "scenario": "A team builds a model to recognise damaged roads in satellite images after floods.",
+    "input": "1,200 labelled images for training and 300 separate images for validation.",
+    "process": [
+      "They train a simple model and get 78% accuracy on training images and 75% on validation images.",
+      "They increase the model size and train longer; training accuracy rises to 96% and validation accuracy rises to 82%.",
+      "They increase size again and keep training; training accuracy reaches 99%.",
+      "Validation accuracy falls to 68%, and many wrong predictions come from images with a particular cloud-shadow pattern that happened to appear often in the training set."
+    ],
+    "result": "The final, most complex model is overfitted: it looks excellent on training data but performs worse on new images than a simpler earlier version."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team explores a model to sort incoming public reports into categories such as infrastructure damage, health service disruption, or other needs.",
+    "relevance": "Overfitting matters because a model may appear strong during development but fail when reports come from a new region, language variety, season, or reporting channel. Testing on separate data from different contexts helps reveal whether performance will hold up.",
+    "caution": "Do not place confidential, personal, protection-sensitive, survivor, witness, security-sensitive, or operational information into an unapproved public AI service. Use approved tools, minimise data, and keep human review in the loop before acting on outputs."
+  },
+  "whyItMatters": "A good-looking score can lead people to trust a system that will fail in new situations. That can waste money, miss real problems, and create unfair or unsafe decisions if the model is deployed without proper evaluation.",
+  "whereYouMayHearIt": [
+    "model evaluation meetings",
+    "data science courses",
+    "vendor product demos",
+    "risk and assurance reviews"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If training accuracy is very high, the model must be good.",
+      "correction": "High training accuracy only shows the model matches data it has already seen. What matters for real use is how it performs on separate unseen data."
+    },
+    {
+      "misconception": "Overfitting only means memorising examples exactly.",
+      "correction": "Exact memorisation is one form, but overfitting can also mean learning weak or accidental patterns that do not repeat outside the training set."
+    },
+    {
+      "misconception": "A bigger, more complex model is always better.",
+      "correction": "More complexity can capture real structure, but it can also capture noise. Past a certain point, extra complexity may reduce performance on new cases."
+    },
+    {
+      "misconception": "Overfitting and data leakage are the same thing.",
+      "correction": "They are related but different. Overfitting is fitting too closely to training data; data leakage happens when information from the answer or test data improperly enters training or evaluation."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It learned the practice examples too specifically, so it does not cope well with fresh ones.",
+    "technical": "Overfitting occurs when a model has low error on training data but higher error on unseen data because it captures noise or sample-specific patterns rather than signals that generalise."
+  },
+  "keyTakeaway": "The best model is not the one that remembers the training set best, but the one that holds up on new data.",
+  "quickCheck": {
+    "question": "Which result most strongly suggests overfitting?",
+    "options": [
+      "Training score and validation score both improve and stay close together.",
+      "Training score rises to 99%, but validation score peaks earlier and then drops.",
+      "Training and validation scores are both low from the start.",
+      "Validation score is slightly higher than training score on one run."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "A widening gap where training keeps improving but validation gets worse is the classic warning sign. It suggests the model is fitting the training examples too closely instead of learning patterns that generalise."
+  },
+  "resources": [
+    {
+      "title": "Overfitting",
+      "url": "https://en.wikipedia.org/wiki/Overfitting",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad reference-style overview of overfitting and suits readers who want a quick definition plus related concepts.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This link helps readers place overfitting beside common evaluation measures and suits beginners comparing model scores.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This link gives a risk-management perspective on testing and monitoring AI systems and suits programme, governance, and assurance audiences.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Overfitting",
+      "url": "https://www.youtube.com/results?search_query=Overfitting%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link is a YouTube search results page for video explanations of overfitting and suits readers who prefer to compare several teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Overfitting",
+      "url": "https://www.reddit.com/search/?q=Overfitting",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link is a Reddit search results page showing community discussions about overfitting and suits readers who want informal questions, examples, and debate, with careful fact-checking.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "overfitting meaning",
+    "what is overfit in machine learning",
+    "over fitting vs under fitting",
+    "why training accuracy high but test accuracy low",
+    "model works on training not new data",
+    "overfit simple explanation",
+    "overfiting typo",
+    "overfit vs data leakage",
+    "overfitting",
+    "overfit"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:34:18.615Z",
+    "contentHash": "e7f78ae20a3d0796",
+    "attempts": 1,
+    "promptTokens": 2203,
+    "completionTokens": 2200
+  }
+}

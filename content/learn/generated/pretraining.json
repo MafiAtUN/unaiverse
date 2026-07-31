@@ -1,0 +1,222 @@
+{
+  "id": "pretraining",
+  "slug": "pretraining",
+  "term": "Pretraining",
+  "aliases": [
+    "pre-training"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "policy",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "training"
+  ],
+  "relatedTermIds": [
+    "training",
+    "self-supervised-learning",
+    "foundation-model",
+    "checkpoint",
+    "knowledge-cutoff",
+    "fine-tuning"
+  ],
+  "oftenConfusedWith": [
+    "fine-tuning",
+    "self-supervised-learning",
+    "instruction-tuning",
+    "in-context-learning"
+  ],
+  "oneSentence": "The first large-scale stage where a model learns broad patterns from vast data, producing a general-purpose starting point that later steps can adapt for specific tasks.",
+  "plainExplanation": "Pretraining is the early training stage that gives a model broad general capabilities before it is adapted for a narrower use. The input is usually a very large collection of text, images, audio or other data. For language models, that often means text from many sources and domains.\n\nIn many modern systems, this stage uses self-supervised learning. That means the training signal comes from the data itself rather than from people writing labels for every example. For a language model, a common method is to hide or predict parts of text and adjust the model so its next prediction is closer to the original text.\n\nWhat happens internally is repeated adjustment of many numerical parameters, often called weights. Over many training steps, the model becomes better at capturing statistical patterns such as grammar, common facts, style, topic structure and relationships between words. This does not guarantee truth, reasoning quality or safe behaviour. It mainly creates a broad base model, often called a foundation model.\n\nWhat comes out is a checkpoint: a saved version of the model after this broad training stage. That checkpoint can then be used directly, or adapted further through methods such as fine-tuning, instruction tuning or preference-based methods. Pretraining is different from those later stages because its goal is breadth, not task-specific behaviour.",
+  "everydayAnalogy": {
+    "title": "A librarian learning the shape of a collection",
+    "story": "A new librarian in Nairobi spends months shelving, scanning titles and reading short summaries from books, reports and newspapers in many subjects. She is not yet being trained for one exact request such as finding legal clauses on climate finance. Instead, she is building a broad sense of language, topics, formats and where information tends to appear. Later, a senior colleague gives extra coaching on how to answer one type of question quickly and safely for visitors. That later coaching builds on the broad preparation she already did.",
+    "mapping": [
+      {
+        "analogyElement": "Months spent scanning many kinds of material",
+        "aiElement": "Pretraining on a very large and varied dataset"
+      },
+      {
+        "analogyElement": "Learning titles, subjects and document patterns",
+        "aiElement": "Learning broad statistical patterns in data"
+      },
+      {
+        "analogyElement": "Later coaching for one exact request",
+        "aiElement": "Fine-tuning or instruction tuning for a narrower use"
+      },
+      {
+        "analogyElement": "The librarian after initial preparation",
+        "aiElement": "A pretrained base or foundation model"
+      }
+    ],
+    "limitation": "A person can deliberately reflect on meaning and use real-world experience. A pretrained model does not do that in the human sense. It adjusts mathematical weights based on patterns in data. Also, the librarian can remember a small collection exactly, while a model stores distributed statistical patterns rather than a neat catalogue of every source."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "From raw model to pretrained checkpoint",
+    "learningObjective": "Show that pretraining uses massive general data and repeated prediction practice to create a broad starting model, not a finished task-specific system.",
+    "description": "A left-to-right sequence with four boxes connected by arrows. Read from a randomly initialised model, through large-scale data exposure and repeated prediction training, to a saved pretrained checkpoint that later stages can adapt. Each box names what goes in, what happens and what comes out.",
+    "steps": [
+      {
+        "label": "1. Start with a raw model",
+        "explanation": "Begin with a model architecture whose parameters are initial values rather than useful skills.",
+        "visualInstruction": "Draw a simple network icon in a pale box labelled 'Raw model'. Add a small caption: 'Structure exists, patterns not yet learned'."
+      },
+      {
+        "label": "2. Feed in broad data",
+        "explanation": "Use a very large and varied dataset, such as text from many domains, so the model sees common patterns across language and topics.",
+        "visualInstruction": "Draw a dataset box with stacked document icons feeding into the raw model. Label it 'Large general dataset'."
+      },
+      {
+        "label": "3. Train by prediction",
+        "explanation": "At each step, the model predicts missing or next content, compares the prediction with the original data and adjusts parameters to reduce error.",
+        "visualInstruction": "Show a loop arrow around the model with three mini labels: 'predict', 'compare', 'adjust'. Use a small gauge icon for error decreasing."
+      },
+      {
+        "label": "4. Save a checkpoint",
+        "explanation": "After many iterations, save the resulting broad model as a checkpoint that can later be used directly or adapted further.",
+        "visualInstruction": "Draw a final box labelled 'Pretrained checkpoint' with two faint outgoing dashed arrows labelled 'use' and 'adapt later'."
+      }
+    ],
+    "interaction": "On hover or tap, each step reveals a one-sentence note explaining whether the stage is about general pattern learning or later task-specific adaptation.",
+    "accessibilityDescription": "The diagram is a four-step process read left to right. Step 1 shows a raw model with structure but no learned patterns. Step 2 adds a large general dataset, indicating that broad text or other data is used as input. Step 3 shows a repeated loop of predict, compare and adjust, meaning the model learns by making predictions and changing its parameters to reduce error. Step 4 shows a pretrained checkpoint, which is the saved result of this broad training stage and can later be used or adapted for specific tasks.",
+    "reducedMotionDescription": "A static four-box sequence replaces animation. Arrows show the same order: raw model, large general dataset, repeated prediction training, pretrained checkpoint, with dashed arrows from the final box to later use or adaptation."
+  },
+  "workedExample": {
+    "scenario": "A team builds a language model for later use in classifying public feedback from a transport consultation in three languages.",
+    "input": "A raw language-model architecture plus 800 billion tokens of general multilingual text, including books, news, public reports and websites.",
+    "process": [
+      "The model starts with randomly initialised parameters and no useful language patterns.",
+      "During pretraining, it repeatedly predicts the next token in text sequences and compares its output with the original token.",
+      "After each prediction, optimisation adjusts the parameters slightly to reduce future error across many billions of examples.",
+      "After several training runs, the team saves a checkpoint that can generate and continue text in the three languages, but it is not yet specialised for consultation feedback categories."
+    ],
+    "result": "The output of pretraining is a broad base model checkpoint. It has learned many language regularities and some world patterns from its data, but it still needs later adaptation or careful prompting for the consultation task."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is exploring a tool to help staff search past General Assembly and Security Council resolutions for earlier wording on recurring issues.",
+    "relevance": "Understanding pretraining helps staff ask the right procurement and governance questions: Was the model broadly pretrained on general text, on what date was that stage completed, and what later adaptation was added for legal or search tasks? This affects coverage, language range, reliability and the model's knowledge cutoff.",
+    "caution": "Staff should not place confidential drafts, non-public negotiation text or sensitive internal correspondence into an unapproved public AI service. Pretraining data and later adaptation are separate issues, so approval, security review and human oversight still matter."
+  },
+  "whyItMatters": "Pretraining shapes what a model can do before your organisation touches it. If that stage was broad and strong, later adaptation may be faster and cheaper. If it was weak, no amount of prompting may fully fix missing capabilities. For decision-makers, the term matters because vendors often say a system was 'trained on our data' without separating pretraining from fine-tuning or retrieval. Those are different choices with different costs, risks and governance questions. Pretraining also helps explain why a model has a knowledge cutoff, why it may reflect patterns or biases present in large datasets, and why a later safety layer cannot completely replace the strengths and limits built in at this earlier stage.",
+  "whereYouMayHearIt": [
+    "foundation model documentation",
+    "vendor procurement discussions",
+    "AI governance and risk reviews",
+    "machine learning courses"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Pretraining means the model was trained on my organisation's documents.",
+      "correction": "Usually it does not. Pretraining normally refers to broad training on a very large general dataset before an organisation adapts the model. A vendor may also train or fine-tune later on customer data, but that is a separate stage and should be described separately."
+    },
+    {
+      "misconception": "After pretraining, the model already knows how to follow instructions safely for a real workplace task.",
+      "correction": "Not necessarily. Pretraining mainly teaches broad data patterns. Helpful instruction-following behaviour, preferred response style and safety constraints are often added or improved in later stages such as instruction tuning or preference-based training, and even then they are not guaranteed."
+    },
+    {
+      "misconception": "Pretraining stores a clean copy of all facts from the internet.",
+      "correction": "A pretrained model learns statistical patterns distributed across many parameters. It can reflect common facts seen in data, but not as a checked, complete or up-to-date database. That is why models can omit, distort or invent information."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Pretraining gives a model its broad starting abilities by exposing it to a huge amount of general data before any task-specific customisation.",
+    "technical": "Pretraining is the initial large-scale optimisation phase in which a model's parameters are learned from a broad dataset, often with a self-supervised objective such as next-token prediction or masked-token reconstruction. Starting from random or transferred initialisation, the system repeatedly computes predictions, measures loss against the original data-derived target and updates weights through gradient-based optimisation. The result is a checkpoint whose representations encode general statistical regularities across the training distribution. Later stages, such as supervised fine-tuning, instruction tuning, preference learning or reinforcement learning from human feedback, modify this pretrained checkpoint for narrower behaviours or objectives."
+  },
+  "keyTakeaway": "Pretraining builds the broad base model; it is not the same as customising a model for your specific task or data.",
+  "quickCheck": {
+    "question": "Which statement best describes pretraining for a language model?",
+    "options": [
+      "It is the broad first stage where the model learns general language patterns from massive data before later task-specific adaptation.",
+      "It is the stage where staff upload their internal documents so the model can answer organisation-specific questions.",
+      "It is the final safety review done after deployment to stop all inaccurate outputs.",
+      "It is another name for giving the model a few examples in the prompt during use."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Pretraining is the large, general learning stage that creates a base model. Uploading internal documents may relate to retrieval or later fine-tuning, safety review is a governance activity rather than pretraining, and examples in a prompt are in-context learning rather than parameter training."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Pretraining",
+      "url": "https://en.wikipedia.org/w/index.php?search=Pretraining",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers quickly find multiple related articles and suits someone who wants broad orientation rather than one authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This Hugging Face course gives structured technical teaching on how large language models are built and suits readers who want a guided learning path.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "difficulty": "intermediate",
+      "description": "These DeepLearning.AI short courses offer practical, lesson-based introductions and suit busy learners who prefer applied explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Pretraining",
+      "url": "https://www.youtube.com/results?search_query=Pretraining%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers compare different video explanations and suits people who learn best by watching and listening.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Pretraining",
+      "url": "https://www.reddit.com/search/?q=Pretraining",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussions, questions and disagreements and suits readers who want informal explanations and common points of confusion.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "pretraining ai meaning",
+    "pre-training llm",
+    "what happens in pretraining",
+    "pretraining vs fine tuning",
+    "self supervised pretraining",
+    "base model training stage",
+    "how llms are pretrained",
+    "pretrain model on text",
+    "pretraing ai",
+    "pretrained checkpoint",
+    "pretraining",
+    "pre-training"
+  ],
+  "contested": "The basic idea is widely used, but exact boundaries vary: some people use 'pretraining' narrowly for the initial self-supervised stage, while others use it more loosely for almost any earlier training before deployment.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:54.735Z",
+    "contentHash": "75591de8d1d0a5ea",
+    "attempts": 1,
+    "promptTokens": 2321,
+    "completionTokens": 2470
+  }
+}

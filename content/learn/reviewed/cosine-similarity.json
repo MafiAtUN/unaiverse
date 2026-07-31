@@ -1,0 +1,219 @@
+{
+  "id": "cosine-similarity",
+  "slug": "cosine-similarity",
+  "term": "Cosine similarity",
+  "aliases": [],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "vector",
+    "semantic-similarity"
+  ],
+  "relatedTermIds": [
+    "semantic-search",
+    "retrieval",
+    "retrieval-augmented-generation",
+    "nearest-neighbour-search",
+    "vector-database",
+    "ranking-and-reranking"
+  ],
+  "oftenConfusedWith": [
+    "semantic-similarity",
+    "keyword-search",
+    "vector"
+  ],
+  "oneSentence": "A measure of how closely two vectors point in the same direction, commonly used to compare meaning in embedding-based search.",
+  "plainExplanation": "Cosine similarity compares two vectors, which are lists of numbers used to represent items such as words, sentences or documents. It asks a directional question: do these two lists point in a similar direction in vector space? The output is a score, usually from -1 to 1, where higher values mean the directions are more alike.\n\nWhat goes in are two vectors of the same length. The calculation uses the cosine of the angle between them. If the angle is small, the cosine is close to 1, so the vectors are treated as similar. If the vectors are at right angles, the score is 0, meaning no directional similarity. Negative values mean opposite directions, though many embedding systems mostly produce comparisons in the 0 to 1 range in practice.\n\nWhat happens is important: cosine similarity mostly ignores overall size and focuses on pattern. A long vector and a short vector can still score highly if their values rise and fall in similar proportions. That makes it useful when you care more about the type of meaning than about raw magnitude.\n\nWhat comes out is a ranking signal. In semantic search or retrieval-augmented generation, a system converts a user query and many stored text chunks into vectors, computes cosine similarity between the query vector and each stored vector, and returns the highest-scoring chunks. Those retrieved passages can then be shown to a person or passed to a model as source material.\n\nThis term is often confused with semantic similarity itself. Semantic similarity is the broader idea of likeness in meaning. Cosine similarity is one mathematical way to estimate that likeness once text has already been turned into vectors.",
+  "everydayAnalogy": {
+    "title": "Comparing checklists by pattern, not by total marks",
+    "story": "A recruitment team receives application forms from Nairobi, Bangkok and Lima. For each form, they record four yes-or-no checks: passport copy, signed declaration, references and work sample. Two applications can have different total amounts of extra material attached, but if the pattern of those four checks lines up closely, the team treats them as similarly complete. An application with a very different pattern is treated as less similar, even if the folder is just as thick. The team is comparing shape across the checklist, not the physical size of the bundle.",
+    "mapping": [
+      {
+        "analogyElement": "the four completeness checks",
+        "aiElement": "the dimensions of a vector"
+      },
+      {
+        "analogyElement": "whether two applications line up on the same checks",
+        "aiElement": "how closely two vectors point in the same direction"
+      },
+      {
+        "analogyElement": "ignoring the thickness of the folder",
+        "aiElement": "downplaying vector magnitude and focusing on direction"
+      },
+      {
+        "analogyElement": "grouping applications with similar checklist patterns",
+        "aiElement": "ranking stored text embeddings by cosine similarity to a query embedding"
+      }
+    ],
+    "limitation": "A real checklist here uses simple yes-or-no items, while actual embedding vectors usually contain many continuous numbers, not a few binary checks. Also, cosine similarity is a geometric calculation on numerical coordinates, not a person visually matching forms. In some systems, vector length can still matter elsewhere, even if cosine similarity itself focuses on direction."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Same direction versus same size",
+    "learningObjective": "Show why cosine similarity cares about angle between vectors more than length, and how that affects search ranking.",
+    "description": "A two-panel comparison. The left panel shows pairs of arrows from a shared origin with different angles and lengths. The right panel shows a query vector compared with three document vectors, each labelled with a cosine score and ranked from highest to lowest. Read left to right: first understand direction, then see how that produces a search ranking.",
+    "steps": [
+      {
+        "label": "Two vectors enter",
+        "explanation": "Display two arrows from the same origin. Give each arrow numeric coordinates and a visible angle between them.",
+        "visualInstruction": "In SVG, draw x and y axes, then two coloured arrows from the origin. Show short labels such as A=(2,4) and B=(1,2). Place a small angle arc between them."
+      },
+      {
+        "label": "Angle drives the score",
+        "explanation": "Show that a smaller angle means a higher cosine similarity, even if one arrow is longer.",
+        "visualInstruction": "Add a second pair of arrows with the same direction but different lengths, and label them with a cosine score near 1. Add another pair at about 90 degrees and label score 0."
+      },
+      {
+        "label": "Magnitude is not the main signal",
+        "explanation": "Contrast equal-length vectors with different directions against different-length vectors with the same direction.",
+        "visualInstruction": "Use side-by-side mini-panels. In one, equal-length arrows diverge and get a lower score. In the other, one arrow is twice as long but aligned and gets a higher score."
+      },
+      {
+        "label": "From geometry to retrieval",
+        "explanation": "Apply the same idea to a query embedding and three document embeddings. Rank the documents by cosine score.",
+        "visualInstruction": "Show one query arrow and three document arrows or cards. Connect each to a score badge such as 0.92, 0.71 and 0.18, then stack document cards in ranked order."
+      }
+    ],
+    "interaction": "Hover or tap a vector pair to highlight the angle and update the displayed cosine score; a toggle switches between geometric view and ranked retrieval view.",
+    "accessibilityDescription": "This diagram explains cosine similarity in two linked parts. First, it shows arrows called vectors starting from the same point. Vectors that point in nearly the same direction get a high score, even if one is longer. Vectors at a right angle get a score near zero. Second, it applies this to search: one query vector is compared with several document vectors, and the documents are ranked by cosine score. The main lesson is that the score mostly reflects direction, not size.",
+    "reducedMotionDescription": "A static two-panel image replaces animation. Panel one shows three labelled vector pairs with fixed cosine scores: same direction and different lengths gives a high score, different directions gives a lower score, and right angle gives zero. Panel two shows a query and three documents with fixed scores and a final ranked list."
+  },
+  "workedExample": {
+    "scenario": "Ranking short text passages for a user query in an embedding-based search system.",
+    "input": "Query embedding q = [0.8, 0.6]. Passage embeddings: P1 = [0.4, 0.3], P2 = [0.6, -0.8], P3 = [0.7, 0.7].",
+    "process": [
+      "Compute cosine similarity between q and each passage vector.",
+      "For P1, the vectors point in exactly the same direction, so the cosine similarity is 1.00.",
+      "For P2, the direction is quite different; the cosine similarity is 0.00 because the vectors are perpendicular.",
+      "For P3, the direction is close but not identical; the cosine similarity is about 0.99.",
+      "Rank passages by score: P1 first, P3 second, P2 third."
+    ],
+    "result": "The system retrieves P1 and P3 as the most semantically similar passages to the query, even though P1 is shorter in magnitude than q."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team uses an approved internal retrieval system to find earlier public briefing notes and guidance paragraphs that are semantically close to a draft question from a colleague.",
+    "relevance": "Cosine similarity can rank embedded text passages so the system surfaces meaningfully related source material for human review before any draft answer is used.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service; retrieval results should still be checked by staff because a high cosine score does not guarantee factual fit or policy suitability."
+  },
+  "whyItMatters": "If you work with search, retrieval or RAG, cosine similarity affects which passages are brought forward as evidence. That matters because the top-ranked passage can shape the answer a system produces, the citation it shows, and the errors it makes. A non-specialist does not need to derive the formula, but should know what signal the score captures: directional similarity between vectors, not truth, not exact wording, and not always relevance in context. This helps when choosing tools, interpreting rankings, and deciding when reranking or human review is needed.",
+  "whereYouMayHearIt": [
+    "embedding-based search",
+    "vector database documentation",
+    "RAG system design",
+    "nearest-neighbour retrieval"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A higher cosine similarity means two passages say the same thing.",
+      "correction": "Not necessarily. It means their vectors point in a similar direction under a particular embedding model. Passages can be topically close but still differ in detail, scope, time period, sentiment or factual accuracy. That is why retrieval systems often add metadata filters, reranking and human checking."
+    },
+    {
+      "misconception": "Cosine similarity measures word overlap.",
+      "correction": "It usually does not. In embedding-based systems, it compares numerical representations of text, so two passages can score highly even if they share few exact words. That is the point of semantic retrieval, and it is also why results can sometimes feel surprising."
+    },
+    {
+      "misconception": "If cosine similarity ignores magnitude, magnitude never matters in retrieval.",
+      "correction": "Cosine similarity itself downplays vector length, but the overall system may still be affected by how embeddings are normalised, indexed and compared. Some systems use dot product or Euclidean distance instead, and these can respond differently to vector magnitude."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a way to check whether two number patterns point in a similar direction. Search systems use it to find text with similar meaning, even when the wording is different.",
+    "technical": "Given two non-zero vectors, cosine similarity is their dot product divided by the product of their lengths: cos(theta) = (a·b) / (||a|| ||b||). This normalises for magnitude and keeps the comparison focused on angle. In embedding retrieval, a query embedding is compared against document or chunk embeddings, often after normalisation. If vectors are unit-normalised, cosine similarity and dot product give the same ranking. In practice, systems use it as a fast similarity signal for nearest-neighbour search, then may apply filtering, reranking or task-specific scoring. It is a metric on vector orientation, not a direct measure of factual correctness, entailment or usefulness for a specific question."
+  },
+  "keyTakeaway": "Cosine similarity helps systems find meaningfully related text by comparing vector direction, but a high score is only a retrieval signal, not proof of correctness or full relevance.",
+  "quickCheck": {
+    "question": "Why can two vectors with very different lengths still have a high cosine similarity?",
+    "options": [
+      "Because cosine similarity mainly reflects the angle between them, not their size.",
+      "Because longer vectors always contain more meaning than shorter ones.",
+      "Because cosine similarity counts how many coordinates are exactly equal.",
+      "Because different lengths are ignored only when the vectors come from the same document."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Cosine similarity divides by the vectors' lengths, so the score is driven by direction. If two vectors point the same way, they can score highly even when one is much longer. That is why it is popular for comparing embeddings where overall magnitude may be less informative than orientation."
+  },
+  "resources": [
+    {
+      "title": "Cosine similarity",
+      "url": "https://en.wikipedia.org/wiki/Cosine_similarity",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia link gives a broad reference-style explanation of the mathematical idea and suits readers who want definitions, formulae and background.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This Google course link gives a practical introduction to embeddings and suits readers who want to see where cosine similarity is used in modern AI systems.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "description": "This TensorFlow interactive lets readers explore embeddings visually and suits people who learn best by manipulating points and seeing relationships change.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Cosine similarity",
+      "url": "https://www.youtube.com/results?search_query=Cosine%20similarity%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations from different creators and suits those who prefer to compare teaching styles before choosing one.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Cosine similarity",
+      "url": "https://www.reddit.com/search/?q=Cosine%20similarity",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers see community questions and explanations on the topic and suits readers who want informal discussion, with careful fact-checking of claims.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "cosine similarity explained",
+    "cosine similarity vs semantic similarity",
+    "how cosine similarity works in embeddings",
+    "cosine score meaning search",
+    "angle between vectors ai",
+    "cosine similarity rag",
+    "cosine similarty",
+    "why normalise embeddings cosine",
+    "cosine similarity"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:18.583Z",
+    "contentHash": "3663845790e57190",
+    "attempts": 1,
+    "promptTokens": 2245,
+    "completionTokens": 2557
+  }
+}

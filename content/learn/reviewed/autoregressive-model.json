@@ -1,0 +1,225 @@
+{
+  "id": "autoregressive-model",
+  "slug": "autoregressive-model",
+  "term": "Autoregressive model",
+  "aliases": [
+    "autoregressive"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "next-token-prediction"
+  ],
+  "relatedTermIds": [
+    "next-token-prediction",
+    "transformer",
+    "self-attention",
+    "attention",
+    "query-key-value"
+  ],
+  "oftenConfusedWith": [
+    "transformer",
+    "encoder-and-decoder",
+    "diffusion-model"
+  ],
+  "oneSentence": "A system that generates or estimates a sequence by using earlier tokens in that same sequence to predict the next one, one step at a time.",
+  "plainExplanation": "An autoregressive model handles a sequence in order. A sequence can be words in a sentence, sound samples in audio, or pixels arranged in a scan order. The model takes the tokens it has already seen or already generated and uses them to estimate what token should come next.\n\nInput goes in as an ordered context: for example, the words \"The meeting starts at\". Inside the model, each earlier token is turned into numbers called vectors, and the model computes patterns over that growing context. In modern language systems, a transformer often does this with self-attention, which lets each position weigh earlier positions differently.\n\nThe output at each step is not usually a single guaranteed answer. It is a probability distribution: a ranked list of possible next tokens with scores that can be turned into probabilities. A decoding method then picks one token, such as the highest-probability token or a sampled token, appends it to the context, and repeats the process.\n\nThis makes autoregressive generation causal: later tokens depend on earlier ones, but not on future tokens that have not been generated yet. That is why these models are strong at continuing text and dialogue. It is also why errors can accumulate: if one early token is poor, later steps build on it.\n\nThe term is often confused with \"transformer\", but they are not the same. Autoregressive describes the prediction pattern over a sequence. Transformer describes one model architecture often used to implement that pattern. It is also different from diffusion models, which generate by iterative denoising rather than next-step sequence prediction.",
+  "everydayAnalogy": {
+    "title": "Writing a summary card one line at a time",
+    "story": "A team is grouping survey answers that raise the same issue. One colleague writes a short summary card, but after each word they pause, look only at the words already on the card and the source notes on the desk, and choose the next word that best continues the sentence. They keep extending the card word by word until the summary is complete. If they choose an awkward word early, the rest of the sentence often has to work around it.",
+    "mapping": [
+      {
+        "analogyElement": "The growing summary card",
+        "aiElement": "The partial sequence already generated"
+      },
+      {
+        "analogyElement": "Choosing the next word after reading earlier words",
+        "aiElement": "Predicting the next token from previous tokens"
+      },
+      {
+        "analogyElement": "Pausing after each word and continuing",
+        "aiElement": "Repeated step-by-step generation"
+      },
+      {
+        "analogyElement": "An awkward early word affecting later wording",
+        "aiElement": "Error propagation through the sequence"
+      }
+    ],
+    "limitation": "A person can reflect on the overall meaning, revise earlier words, and use outside judgement. A basic autoregressive generation process does not literally pause to understand in that human sense, and standard left-to-right decoding does not freely rewrite earlier tokens once chosen. Also, some autoregressive models work on data such as audio or images in a fixed order, not just words on a page."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How autoregressive generation builds a sequence",
+    "learningObjective": "After viewing this, a reader should be able to explain that the model predicts one token from earlier tokens, appends it, and repeats without looking ahead.",
+    "description": "Show a left-to-right sequence growing across four steps. Each step displays the current context, the model’s next-token probability output, the chosen token, and the updated context. Read from step 1 to step 4 to see the repeated loop: context in, probabilities out, one token selected, context extended.",
+    "steps": [
+      {
+        "label": "Start with context",
+        "explanation": "The process begins with an initial prompt or prefix, such as a few words already present in the sequence.",
+        "visualInstruction": "Draw a row of token boxes labelled “The”, “meeting”, “starts”, “at”. Use a bracket below labelled “current context”."
+      },
+      {
+        "label": "Compute next-token probabilities",
+        "explanation": "The model reads the current context and produces scores for possible next tokens. These scores can be converted into probabilities.",
+        "visualInstruction": "To the right, draw a model box. From it, show a small ranked list: “09:00 0.62”, “10:00 0.21”, “noon 0.09”, “once 0.03”."
+      },
+      {
+        "label": "Choose one token",
+        "explanation": "A decoding rule selects one token, for example the highest-probability option or a sampled option.",
+        "visualInstruction": "Highlight “09:00” in the ranked list and place it in a new token box with a label “selected token”."
+      },
+      {
+        "label": "Append and repeat",
+        "explanation": "The selected token is added to the sequence, becoming part of the context for the next prediction step.",
+        "visualInstruction": "Extend the original token row with a new box “09:00”. Add a loop arrow from the extended row back to the model box, labelled “next step uses updated context”."
+      }
+    ],
+    "interaction": "Hovering or tapping a step highlights the relevant token boxes and the probability list for that step.",
+    "accessibilityDescription": "The diagram explains autoregressive generation as a four-step loop. Step 1 shows an initial context made of tokens: “The”, “meeting”, “starts”, “at”. Step 2 shows a model reading those tokens and producing a ranked list of possible next tokens with probabilities, such as “09:00 0.62”, “10:00 0.21”, “noon 0.09”, and “once 0.03”. Step 3 shows one token being selected from that list, here “09:00”. Step 4 shows that selected token appended to the sequence, making the new context “The meeting starts at 09:00”, and a loop indicates the process repeats. The key idea is that each new token is predicted from earlier tokens only, then added back into the context.",
+    "reducedMotionDescription": "A static four-panel diagram shows the same loop without animation: initial context, probability list, selected token, and extended context with a visible arrow indicating repetition."
+  },
+  "workedExample": {
+    "scenario": "Generating a short completion for the prompt “The bus arrives”.",
+    "input": "Prompt tokens: [The] [bus] [arrives]",
+    "process": [
+      "The model reads the three tokens and outputs next-token probabilities such as [at: 0.48, late: 0.19, tomorrow: 0.08, .: 0.05].",
+      "A decoding rule picks “at”, so the sequence becomes “The bus arrives at”.",
+      "Using the updated context, the model predicts again: [08:30: 0.51, noon: 0.17, dawn: 0.06, stop: 0.04].",
+      "It picks “08:30”, then predicts once more: [.: 0.74, daily: 0.09, and: 0.05].",
+      "It picks “.” and stops, producing “The bus arrives at 08:30.”"
+    ],
+    "result": "A complete output built token by token, where each later choice depended on the earlier generated tokens."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A language model is used inside an approved UN tool to draft a rough translation of non-sensitive field updates into a working language, producing the translated text one token at a time from the source text and the translated prefix so far.",
+    "relevance": "Knowing the model is autoregressive helps staff understand why wording can drift, why an early mistranslation can affect later phrases, and why human review remains necessary before sharing.",
+    "caution": "Do not paste confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service; use only approved systems and keep human oversight over the final translation."
+  },
+  "whyItMatters": "If you use, buy, govern or evaluate language AI, autoregressive behaviour affects speed, cost, reliability and risk. These models generate output sequentially, so long responses take multiple prediction steps. Each step can introduce small errors, and those errors can influence later text. This helps explain common behaviours such as fluent continuation, occasional repetition, drifting off topic, and sensitivity to prompt wording. It also matters for system design: caching earlier computations can improve efficiency, while human review is important in high-stakes uses because the model’s output is generated plausibly step by step, not guaranteed fact by fact.",
+  "whereYouMayHearIt": [
+    "large language model design",
+    "text generation papers",
+    "speech and audio modelling",
+    "model inference and decoding",
+    "transformer tutorials"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Autoregressive means the model only copies the previous word.",
+      "correction": "It uses the whole available prefix, not just the immediately previous token. In transformer-based systems, self-attention can weigh many earlier positions when estimating the next token. The “auto” part refers to conditioning on the sequence itself, not simple copying."
+    },
+    {
+      "misconception": "Autoregressive and transformer mean the same thing.",
+      "correction": "They describe different things. Autoregressive is a generation pattern: predict the next item from earlier items. Transformer is an architecture for processing sequences. Many transformers are autoregressive during generation, but not all transformer uses are autoregressive."
+    },
+    {
+      "misconception": "Because it predicts one token at a time, the model cannot use long-range context.",
+      "correction": "It can use long-range context up to its context window and architecture limits. In practice, performance may weaken over long spans, but the mechanism is not restricted to only the last few words."
+    },
+    {
+      "misconception": "If the next-token probabilities are high, the full answer is reliable.",
+      "correction": "High local confidence at each step does not guarantee the whole sequence is correct. The model may produce a fluent chain of individually likely tokens that still forms an inaccurate or unsupported statement."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It writes a sequence in order. It looks at what is already there, predicts the next piece, adds it, and repeats.",
+    "technical": "An autoregressive model factorises the probability of a sequence into a product of conditional probabilities over positions, typically left to right: each token is modelled given the preceding tokens. In modern language models, the input prefix is embedded into vectors, position information is added or encoded, and masked self-attention enforces causality so position t can attend only to positions 1 through t. The network outputs logits over the vocabulary for the next token; a decoding procedure such as greedy selection, beam search or stochastic sampling chooses one token, appends it to the prefix, and feeds the longer prefix back for the next step. During training, teacher forcing commonly supplies the true previous tokens; during generation, the model conditions on its own earlier outputs, which creates exposure to error accumulation. The same autoregressive idea can be applied beyond text, but the ordering of the sequence then becomes an important design choice."
+  },
+  "keyTakeaway": "Autoregressive models build output step by step, so each new token depends on the earlier sequence and can shape everything that follows.",
+  "quickCheck": {
+    "question": "Which statement best captures what makes a model autoregressive?",
+    "options": [
+      "It predicts each next token using the earlier tokens in the sequence, then repeats with the new token included.",
+      "It processes the whole output sequence at once and reveals all tokens simultaneously.",
+      "It removes noise from a random pattern until a final sample appears.",
+      "It only compares each token with the single token immediately before it."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Autoregressive generation is defined by sequential conditioning on the growing prefix. It is not the same as all-at-once prediction, diffusion-style denoising, or a model that only looks one step back."
+  },
+  "resources": [
+    {
+      "title": "Autoregressive model",
+      "url": "https://en.wikipedia.org/wiki/Autoregressive_model",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a broad reference-style overview of the term and suits readers who want a quick starting definition and related terminology.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "description": "This link gives the original transformer paper context for causal decoding and suits readers comfortable with foundational research writing.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "description": "This link gives an intuitive visual walkthrough of transformer generation behaviour and suits readers who learn best from diagrams and plain-language explanations.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Autoregressive model",
+      "url": "https://www.youtube.com/results?search_query=Autoregressive%20model%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This link gives YouTube search results for many video explanations of the term, so it suits readers who prefer to compare different teaching styles rather than rely on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Autoregressive model",
+      "url": "https://www.reddit.com/search/?q=Autoregressive%20model",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This link gives Reddit search results for community discussions about the term, which suits readers who want to see common questions, confusions and informal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "autoregressive model meaning",
+    "autoregressive transformer",
+    "what does autoregressive mean in ai",
+    "next token autoregressive",
+    "autoregresive model",
+    "auto regressive model",
+    "autoregressive vs transformer",
+    "causal language model explanation",
+    "autoregressive model",
+    "autoregressive"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:04.420Z",
+    "contentHash": "308712845efc37ac",
+    "attempts": 1,
+    "promptTokens": 2244,
+    "completionTokens": 2639
+  }
+}

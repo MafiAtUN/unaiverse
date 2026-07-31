@@ -1,0 +1,216 @@
+{
+  "id": "unsupervised-learning",
+  "slug": "unsupervised-learning",
+  "term": "Unsupervised learning",
+  "aliases": [],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "supervised-learning"
+  ],
+  "relatedTermIds": [
+    "training",
+    "training-example",
+    "feature",
+    "label",
+    "clustering",
+    "validation-and-test-sets"
+  ],
+  "oftenConfusedWith": [
+    "supervised-learning",
+    "clustering",
+    "self-supervised-learning",
+    "semi-supervised-learning"
+  ],
+  "oneSentence": "A way of training a model on unlabelled data so it finds useful structure, similarity, groups or unusual cases without target answers for each example.",
+  "plainExplanation": "In this approach, the training data usually has inputs but no labels. A label is the target answer attached to an example, such as “fraud” or “not fraud”. Instead of learning to match inputs to known answers, the model looks for patterns in the data itself.\n\nWhat goes in can be many examples described by features. A feature is a measurable property such as temperature, word frequency or sensor vibration level. During training, the algorithm adjusts its internal settings to place similar examples near each other, compress data into simpler representations, or flag examples that do not fit the usual pattern.\n\nWhat comes out depends on the method. It might produce clusters, which are groups of similar examples; lower-dimensional embeddings, which are compact numeric summaries; or anomaly scores, which estimate how unusual an example looks compared with the training data. These outputs help people explore data, monitor systems or prepare later models.\n\nThis is often confused with clustering, but clustering is only one type of unsupervised learning. It is also different from supervised learning, where each training example has a known target, and from self-supervised learning, where labels are created automatically from the data for a specific prediction task.",
+  "everydayAnalogy": {
+    "title": "Sorting mixed parcels in a storeroom",
+    "story": "At a logistics depot, workers receive hundreds of parcels from Nairobi, Lima, Bangkok and Tunis with no shelf labels telling them where each one belongs. They begin by comparing size, weight, shape and handling marks, then place similar parcels on nearby shelves. After a while, clear groups appear: small urgent envelopes, heavy machine parts, fragile glass items and a few parcels that do not fit anywhere well. The workers did not have an answer sheet in advance, but they still uncovered structure in the pile.",
+    "mapping": [
+      {
+        "analogyElement": "parcels with no shelf labels",
+        "aiElement": "training examples without labels"
+      },
+      {
+        "analogyElement": "size, weight, shape and handling marks",
+        "aiElement": "features describing each example"
+      },
+      {
+        "analogyElement": "placing similar parcels on nearby shelves",
+        "aiElement": "grouping similar data points or learning a representation"
+      },
+      {
+        "analogyElement": "parcels that do not fit any shelf well",
+        "aiElement": "anomalies or outliers"
+      }
+    ],
+    "limitation": "Real unsupervised learning does not literally inspect objects the way people do, and it does not inherently know what the groups mean. A model may find mathematical patterns that are not useful in practice, or it may miss the categories a human cares about. Also, some unsupervised methods do not create clear groups at all; they may compress data or estimate density instead."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How unlabelled data becomes structure",
+    "learningObjective": "After viewing this, a reader should be able to say that unsupervised learning starts with examples without target answers and produces discovered structure such as groups, embeddings or anomaly scores.",
+    "description": "A left-to-right flow diagram. Start with many unlabelled examples shown as dots with feature values. In the middle, an algorithm compares examples and adjusts its internal representation. On the right, the same data appears as grouped clusters, a compressed map, and one highlighted unusual point. Read from input to learned structure to practical output.",
+    "steps": [
+      {
+        "label": "1. Input data",
+        "explanation": "Many training examples enter the system with features but no labels or ground truth answers.",
+        "visualInstruction": "Draw a panel of 12 to 16 dots or cards, each with tiny feature bars or numbers, and no category tags. Add the caption: 'Unlabelled examples'."
+      },
+      {
+        "label": "2. Compare patterns",
+        "explanation": "The algorithm measures similarity, distance or statistical regularity across examples.",
+        "visualInstruction": "Draw arrows from several input dots into a central box labelled 'compare features / find regularities'. Include small distance lines between some dots."
+      },
+      {
+        "label": "3. Adjust representation",
+        "explanation": "During training, internal settings change so similar cases are placed closer, common structure is summarised, or rare cases stand out.",
+        "visualInstruction": "Inside the central box, show a simplified transformation: scattered dots entering, more organised dots exiting. Use one short note: 'internal parameters updated during training'."
+      },
+      {
+        "label": "4. Produce outputs",
+        "explanation": "The result may be clusters, compact embeddings, or anomaly scores rather than named predictions.",
+        "visualInstruction": "On the right, split into three mini-panels: coloured groups of dots labelled 'clusters', a 2D map labelled 'embedding', and one isolated dot with a warning outline labelled 'anomaly score'."
+      }
+    ],
+    "interaction": "Hovering over each output mini-panel highlights which kinds of tasks it supports: exploration, compression or anomaly detection.",
+    "accessibilityDescription": "The diagram is a left-to-right process with four stages. First, it shows many unlabelled examples, each described by features but with no correct answer attached. Second, an algorithm compares the examples to find similarity or statistical regularity. Third, training changes the model’s internal parameters so the data becomes more organised in its learned representation. Fourth, the outputs appear in three forms: clusters of similar examples, compact embeddings that summarise examples with fewer numbers, and anomaly scores that mark unusual cases. The main message is that unsupervised learning begins without labels and ends with discovered structure, not with predefined target answers.",
+    "reducedMotionDescription": "A static four-panel flow chart shows unlabelled examples, a central pattern-finding stage, an adjusted internal representation, and three possible outputs: clusters, embeddings and anomaly scores."
+  },
+  "workedExample": {
+    "scenario": "A water utility monitors vibration and temperature from 500 pump readings each hour and wants to spot unusual behaviour before failure.",
+    "input": "Each reading has four features: vibration RMS, bearing temperature, power draw and flow rate. Example readings include A=(2.1, 61, 14.8, 120), B=(2.3, 60, 15.1, 118), C=(7.9, 83, 19.4, 92). No reading is labelled 'normal' or 'faulty'.",
+    "process": [
+      "Engineers train an unsupervised anomaly-detection model on two weeks of mostly routine readings.",
+      "The model learns the usual combinations of feature values and assigns each new reading an anomaly score.",
+      "Most new readings receive low scores because they resemble past operating patterns.",
+      "Reading C receives a much higher score because its vibration and temperature are far from the common pattern while flow rate is lower than usual."
+    ],
+    "result": "The system flags reading C for inspection. It does not prove a fault, but it gives staff an evidence-based reason to check the pump early."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A multilingual UN team has a large archive of previously cleared, non-confidential field update summaries in several languages and wants to organise them by topic before preparing translation support materials.",
+    "relevance": "An unsupervised method can group similar texts, reveal recurring themes and surface unusual documents that may need separate handling, even when no topic labels were prepared in advance.",
+    "caution": "Use only approved systems and non-confidential material. Do not place personal data, protection-sensitive details, security information or operationally sensitive field content into a public AI service."
+  },
+  "whyItMatters": "Many real datasets arrive without labels because labelling is costly, slow or impossible at scale. Unsupervised learning helps people find patterns before they know exactly what to ask for. That can support early warning, data exploration, monitoring, search, segmentation and later model design. For decision-makers, the key point is that it can reveal structure in large datasets, but the discovered groups or anomalies still need human interpretation and validation. A pattern found by the model is not automatically meaningful, fair or useful for the task at hand.",
+  "whereYouMayHearIt": [
+    "anomaly detection in sensor data",
+    "customer or document segmentation",
+    "dimensionality reduction and embeddings",
+    "exploratory data analysis"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "It means the system learns with no human involvement.",
+      "correction": "People still choose the data, features, objective, algorithm and evaluation method. Human judgement is also needed to interpret whether discovered patterns are useful or misleading."
+    },
+    {
+      "misconception": "It always produces clear, correct categories.",
+      "correction": "Some methods do not create categories at all, and even clustering can produce groupings that depend strongly on feature choice, scaling and algorithm settings. The groups are mathematical patterns, not guaranteed real-world classes."
+    },
+    {
+      "misconception": "If there are no labels, there is nothing to evaluate.",
+      "correction": "Evaluation is harder, but not impossible. People can inspect stability, usefulness for downstream tasks, reconstruction quality, anomaly follow-up rates or agreement with external evidence collected later."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "The system looks through many examples without answer tags and tries to find what tends to go together, what is different and what structure may be hidden in the data.",
+    "technical": "Unsupervised learning trains on samples x without paired target values y. The objective is not to minimise prediction error against known labels, but to model structure in the input distribution or in a learned representation of it. Depending on the method, this can mean estimating density, learning latent variables, reducing dimensionality, building embeddings, discovering clusters, or assigning anomaly scores. Common mechanisms include similarity or distance calculations, reconstruction objectives, probabilistic assumptions and representation learning. Outputs are often intermediate structures rather than final task labels, so their value is judged by interpretability, stability, compression quality, downstream utility or the practical usefulness of flagged outliers."
+  },
+  "keyTakeaway": "Unsupervised learning does not get answer keys; it searches unlabelled data for structure that people can then interpret and use.",
+  "quickCheck": {
+    "question": "Which situation best matches unsupervised learning?",
+    "options": [
+      "Training a model on emails already labelled 'spam' or 'not spam' to predict future labels.",
+      "Giving a model product photos with no labels so it groups visually similar items and highlights unusual ones.",
+      "Testing a finished model on held-out examples to measure accuracy against ground truth.",
+      "Using rewards and penalties so an agent improves through trial and error in an environment."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Unsupervised learning works with unlabelled examples and looks for structure such as similarity groups or anomalies. Option 1 is supervised learning, option 3 is evaluation, and option 4 is reinforcement learning."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Unsupervised learning",
+      "url": "https://en.wikipedia.org/wiki/Unsupervised_learning",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of the term, common methods and related concepts, and suits readers who want a general reference point.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course link suits readers who want a structured introduction to machine learning ideas and where unsupervised methods fit in practice.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "difficulty": "starter",
+      "description": "This video source suits readers who learn well from step-by-step spoken explanations and worked intuition about core machine learning concepts.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Unsupervised learning",
+      "url": "https://www.youtube.com/results?search_query=Unsupervised%20learning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers browse multiple video explanations with different teaching styles, and suits someone comparing explanations rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Unsupervised learning",
+      "url": "https://www.reddit.com/search/?q=Unsupervised%20learning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see common questions, confusions and practitioner discussions, and suits readers who want informal discussion alongside formal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "unsupervised learning meaning",
+    "unsupervised vs supervised",
+    "what is unlabeled data",
+    "clustering vs unsupervised learning",
+    "anomaly detection unsupervised",
+    "dimensionality reduction simple explanation",
+    "unsupervised learning examples",
+    "unsupervised learing",
+    "unsupervised learning"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:39:56.169Z",
+    "contentHash": "8109aadfce71a1fc",
+    "attempts": 1,
+    "promptTokens": 2260,
+    "completionTokens": 2388
+  }
+}

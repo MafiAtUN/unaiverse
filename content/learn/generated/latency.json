@@ -1,0 +1,220 @@
+{
+  "id": "latency",
+  "slug": "latency",
+  "term": "Latency",
+  "aliases": [
+    "response time"
+  ],
+  "categoryId": "language-models",
+  "subcategory": "Large Language Models",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "inference"
+  ],
+  "relatedTermIds": [
+    "inference",
+    "token",
+    "prompt",
+    "completion",
+    "large-language-model",
+    "throughput"
+  ],
+  "oftenConfusedWith": [
+    "throughput",
+    "inference",
+    "completion"
+  ],
+  "oneSentence": "The delay between sending a request to a model and receiving its reply, or the next part of that reply.",
+  "plainExplanation": "Latency is the waiting time. In a chat system, it usually means how long it takes from your prompt being sent until the first word appears, or until the full reply arrives.\n\nWhat goes in is a request: your prompt, the earlier conversation, and system instructions. The service then prepares that text, runs the model, and starts generating output one token at a time. A token is a small piece of text, such as a word, part of a word, or punctuation.\n\nWhat happens inside can take longer for several reasons. A longer prompt gives the system more text to process. A larger model may take more computation per token. Network delay, server load, safety checks, and tools such as web search can also add waiting time.\n\nWhat comes out is the model's response, often streamed gradually. Latency is about delay, not quality. A fast answer can still be wrong, and a slower answer is not automatically better.\n\nLatency is often confused with throughput. Latency asks, \"How long do I wait for one reply?\" Throughput asks, \"How many replies or tokens can the system produce in a period of time?\"",
+  "everydayAnalogy": {
+    "title": "Planning a journey across a city",
+    "story": "You ask a journey desk in Nairobi how to get from the airport to a meeting venue during heavy traffic. The staff member first reads your note, checks the map, looks at the time of day, and compares two routes. A few seconds later, they begin speaking with the first step, then continue with the rest of the directions. Your waiting time before hearing the answer, and the pace of the directions after that, are the parts that match latency.",
+    "mapping": [
+      {
+        "analogyElement": "Your written route question",
+        "aiElement": "The prompt sent to the model"
+      },
+      {
+        "analogyElement": "The staff member reading the note and checking the map",
+        "aiElement": "Preparing the request and running inference"
+      },
+      {
+        "analogyElement": "The pause before the first direction is spoken",
+        "aiElement": "Time to first token"
+      },
+      {
+        "analogyElement": "The pace of the rest of the directions",
+        "aiElement": "Rate at which output tokens are generated"
+      }
+    ],
+    "limitation": "A human journey clerk may reason with real-world knowledge, ask clarifying questions on their own, or choose to stay silent. A language model does not work like a person giving directions. It generates text token by token based on patterns from training and current input. Also, real travel time and response latency are different things: latency is only the waiting time for the answer, not the quality or usefulness of the route."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "Where waiting time comes from in a model reply",
+    "learningObjective": "Show that response time is the sum of several delays before and during generation, and that long prompts or extra tools can increase it.",
+    "description": "A left-to-right step diagram with four boxes connected by arrows. Each box names one stage that adds delay: send request, prepare input, generate first token, generate remaining tokens. Small notes under boxes show common causes such as network delay, long context, model size and tool use. Read from left to right as a timeline.",
+    "steps": [
+      {
+        "label": "1. Send request",
+        "explanation": "The user's prompt and conversation history travel to the service. Network distance and congestion can add a small delay before processing starts.",
+        "visualInstruction": "Draw a message bubble entering the first box. Add a thin clock icon below with the note 'network'."
+      },
+      {
+        "label": "2. Prepare input",
+        "explanation": "The system formats instructions, checks safety rules, and breaks text into tokens. Longer context usually means more work before generation begins.",
+        "visualInstruction": "Second box shows stacked text lines turning into small token blocks. Add note 'prompt length, safety checks'."
+      },
+      {
+        "label": "3. Generate first token",
+        "explanation": "The model computes the first piece of output. This often shapes the delay users notice most, because it is the moment the reply first appears.",
+        "visualInstruction": "Third box shows a model chip icon and one token appearing. Add emphasis ring and note 'time to first token'."
+      },
+      {
+        "label": "4. Generate the rest",
+        "explanation": "The model continues producing tokens one by one until the reply ends. The speed here affects how quickly the full answer arrives.",
+        "visualInstruction": "Fourth box shows a row of tokens extending rightward. Add note 'tokens per second, tools may pause output'."
+      }
+    ],
+    "interaction": "Hover or tap each box to reveal one short note about what can increase delay: long context, large model, server load, tool calls, or slow network.",
+    "accessibilityDescription": "This diagram explains response time as a timeline with four stages. First, the request travels to the service, where network delay can add waiting time. Second, the service prepares the input by formatting instructions, applying checks and turning text into tokens; longer conversation history increases this work. Third, the model generates the first token, which determines when the reply first becomes visible. Fourth, it generates the remaining tokens one by one, which affects how long the full answer takes. The main lesson is that waiting time comes from several stages, not one single cause.",
+    "reducedMotionDescription": "A static four-step horizontal timeline shows the same stages without animation: send request, prepare input, generate first token, generate remaining tokens. Short notes under each step list common causes of delay."
+  },
+  "workedExample": {
+    "scenario": "A user asks: \"Give me a 5-point summary of this 2-page meeting note in plain English.\"",
+    "input": "Prompt plus 1,200 words of meeting text.",
+    "process": [
+      "The request reaches the service in about 0.2 seconds.",
+      "The service prepares the long input, applies checks, and tokenises it, taking about 1.1 seconds.",
+      "The model produces the first visible token after another 0.7 seconds, so the user waits about 2.0 seconds before seeing the reply start.",
+      "The rest of the 120-token answer streams out at about 20 tokens per second, taking about 6 more seconds."
+    ],
+    "result": "The first words appear after roughly 2 seconds, and the full reply finishes in roughly 8 seconds. Both numbers are forms of latency, but they describe different points in the same reply."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN staff member uses an approved internal assistant to search past General Assembly resolutions and draft a neutral summary of commonly used wording on a topic.",
+    "relevance": "Latency matters because slow replies can interrupt drafting, translation support or meeting preparation, while very fast replies are easier to use in live workflows. Staff may need to balance speed against longer context, tool use and review steps.",
+    "caution": "Use only approved systems and approved content. Do not paste confidential, security-sensitive, protection-sensitive or personally identifiable information into a public AI service just to get a faster response."
+  },
+  "whyItMatters": "Latency affects whether a tool feels usable in practice. If replies arrive quickly, people can keep their place in a task such as drafting, searching or comparing options. If replies are slow, users may rush, repeat prompts, or stop trusting the workflow.\n\nFor non-specialists, latency helps with practical choices. A short prompt may return faster than a long one. Turning on extra tools, adding many documents or using a larger model may increase waiting time. That can be acceptable for a careful background task, but less suitable in a live meeting or urgent support setting.\n\nIt also helps to ask the right question. If a team says a system is \"slow\", the issue might be network delay, time to first token, full-answer time, or server load. Those are related, but not identical.",
+  "whereYouMayHearIt": [
+    "chat assistant product demos",
+    "IT procurement discussions",
+    "API performance reports",
+    "developer documentation",
+    "user complaints about slow replies"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Lower latency means the model is more accurate.",
+      "correction": "Not necessarily. Latency measures waiting time, not truthfulness or suitability. A system can answer quickly and still produce an incorrect or misleading completion. Accuracy depends on many other factors, including the prompt, context, model and whether tools are used well."
+    },
+    {
+      "misconception": "Latency is only caused by a slow internet connection.",
+      "correction": "Network delay is only one part. Time is also spent preparing the input, applying checks, running the model, generating tokens and sometimes calling external tools. A fast connection cannot remove those steps."
+    },
+    {
+      "misconception": "One latency number tells the whole story.",
+      "correction": "Often there are at least two useful numbers: time until the first token appears and time until the full answer finishes. A service may feel responsive on the first measure but still take a long time to complete a long reply."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is how long you wait after asking the model something before you start seeing the answer, or before the whole answer is finished.",
+    "technical": "In large language model systems, latency usually refers to elapsed time between request submission and one or more output milestones, commonly time to first token and time to last token. It can include network transit, request queuing, prompt processing, tokenisation, safety or policy checks, retrieval or tool calls, and autoregressive generation during inference. Prompt length, context window use, model size, hardware, batching and server load can all change it. This differs from throughput, which measures how many requests or tokens a system can handle per unit time."
+  },
+  "keyTakeaway": "Latency tells you how long you wait for a model reply, not how good that reply will be.",
+  "quickCheck": {
+    "question": "Which statement best describes latency in a chat assistant?",
+    "options": [
+      "How long you wait from sending a prompt until the reply starts or finishes",
+      "How many facts in the reply are correct",
+      "How many users can log in at the same time",
+      "How much training data the model originally used"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Latency is about delay. In chat systems, people often care about both time to first token and time to full response. Correctness, user capacity and training data are different questions."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Latency",
+      "url": "https://en.wikipedia.org/wiki/Latency",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad general-purpose definition of latency and suits readers who want a quick orientation before diving into AI-specific use.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "difficulty": "deeper",
+      "description": "This link gives course-style background on how large language model systems run, which helps technical learners place latency within the wider inference pipeline.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Large language models, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This link gives a visual explanation of large language models and suits readers who learn best from animations and intuition before technical detail.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Latency",
+      "url": "https://www.youtube.com/results?search_query=Latency%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers find different video explanations of latency for different levels rather than one guaranteed source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Latency",
+      "url": "https://www.reddit.com/search/?q=Latency",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it helps readers browse community questions and practical experiences about latency, but posts vary in quality and should be checked carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "latency meaning ai",
+    "response time llm",
+    "why is chatgpt slow latency",
+    "time to first token meaning",
+    "llm latency vs throughput",
+    "latancy ai",
+    "model response delay",
+    "slow ai reply causes",
+    "latency",
+    "response time"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:43:29.015Z",
+    "contentHash": "4cb3cc1f7aa1d96b",
+    "attempts": 1,
+    "promptTokens": 2333,
+    "completionTokens": 2315
+  }
+}

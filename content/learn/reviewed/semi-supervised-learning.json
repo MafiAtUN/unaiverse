@@ -1,0 +1,226 @@
+{
+  "id": "semi-supervised-learning",
+  "slug": "semi-supervised-learning",
+  "term": "Semi-supervised learning",
+  "aliases": [],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "supervised-learning",
+    "unsupervised-learning"
+  ],
+  "relatedTermIds": [
+    "supervised-learning",
+    "unsupervised-learning",
+    "label",
+    "training",
+    "classification",
+    "validation-and-test-sets"
+  ],
+  "oftenConfusedWith": [
+    "self-supervised-learning",
+    "supervised-learning",
+    "unsupervised-learning"
+  ],
+  "oneSentence": "A learning approach that combines a small set of labelled examples with a larger set of unlabelled examples to improve predictions.",
+  "plainExplanation": "Many machine-learning systems need labelled examples. A label is the correct answer attached to an input, such as “sports” for a news article. In practice, labels are often expensive or slow to produce, while unlabelled data is plentiful.\n\nSemi-supervised learning uses both kinds of data together. The model first learns from the labelled examples, from patterns in the unlabelled examples, or from both in alternating steps. The aim is to use the extra structure in the unlabelled data to build a better predictor than labelled data alone would allow.\n\nWhat goes in: a small labelled dataset and a larger unlabelled dataset. What changes inside: the model adjusts its internal parameters so similar inputs tend to get similar outputs, or so confident provisional labels on unlabelled items can help further training. What comes out: a model for tasks such as classification or regression.\n\nIt is often confused with self-supervised learning. They are related but not the same. In self-supervised learning, labels are created automatically from the data itself by a designed prediction task. In semi-supervised learning, at least some human-provided or otherwise external labels are already present and guide the learning.",
+  "everydayAnalogy": {
+    "title": "Sorting paired paragraphs by meaning",
+    "story": "A team in Nairobi is organising a large box of printed paragraph pairs for a writing workshop. On only 20 pairs, a trainer has written labels such as “same meaning” or “different meaning”. Hundreds of other pairs have no labels, but by reading them, the team can still notice clusters: some use formal language, some are short summaries, and some differ only by a few words. They use the 20 labelled pairs to anchor the task, then use the larger pile to see which unlabelled pairs look similar to the anchored examples. This helps them sort new pairs more accurately than if they had used only the 20 labelled sheets.",
+    "mapping": [
+      {
+        "analogyElement": "20 paragraph pairs with trainer-written tags",
+        "aiElement": "small labelled dataset"
+      },
+      {
+        "analogyElement": "hundreds of unlabelled paragraph pairs",
+        "aiElement": "large unlabelled dataset"
+      },
+      {
+        "analogyElement": "grouping by similarity in wording and structure",
+        "aiElement": "learning structure from unlabelled data"
+      },
+      {
+        "analogyElement": "using tagged examples to guide later sorting",
+        "aiElement": "using labels to steer prediction on new inputs"
+      }
+    ],
+    "limitation": "People can consciously reason about the paragraphs and explain their choices. A machine-learning model usually does not reason in that human way; it adjusts numerical parameters from data. Also, real semi-supervised methods do not simply copy labels from the nearest-looking item. Different methods use different mathematical assumptions, and if those assumptions are wrong, extra unlabelled data can fail to help or can even hurt."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How semi-supervised learning uses two kinds of data",
+    "learningObjective": "After viewing, the reader should be able to explain how labelled and unlabelled examples are combined during training and why the result can outperform training on labelled data alone.",
+    "description": "A left-to-right flow diagram with two inputs feeding one training process. The top input is a small labelled dataset. The bottom input is a large unlabelled dataset. Both enter a training stage that learns from labels and from data structure, then produce a trained model used to predict labels for new examples.",
+    "steps": [
+      {
+        "label": "1. Small labelled set",
+        "explanation": "Start with a limited number of examples that include the correct output label.",
+        "visualInstruction": "Draw a small stack of cards at top left with tiny tag icons. Label it 'Labelled examples: few but trusted'."
+      },
+      {
+        "label": "2. Large unlabelled set",
+        "explanation": "Add many more examples without labels. They still contain useful patterns such as clusters, neighbourhoods or shared structure.",
+        "visualInstruction": "Draw a larger stack of cards at bottom left without tags. Label it 'Unlabelled examples: many but unanswered'."
+      },
+      {
+        "label": "3. Joint training",
+        "explanation": "Feed both sets into one training stage. The method uses the labelled set for supervision and the unlabelled set to shape the model using similarity or confidence-based signals.",
+        "visualInstruction": "Place a central box titled 'Training'. Show two arrows entering it. Inside, include two short captions: 'fit known labels' and 'use structure in unlabelled data'."
+      },
+      {
+        "label": "4. Trained model",
+        "explanation": "The output is a model that can assign labels or values to unseen inputs, often with better accuracy than using the labelled set alone.",
+        "visualInstruction": "Draw a model box on the right. Connect the training box to it with a bold arrow. Add a small note: 'better generalisation if assumptions hold'."
+      },
+      {
+        "label": "5. New input and prediction",
+        "explanation": "A new unlabelled example goes through the trained model and receives a predicted output.",
+        "visualInstruction": "Add one card labelled 'new example' feeding into the model, with an arrow to a final card labelled 'predicted label/value'."
+      }
+    ],
+    "interaction": "Hovering or tapping each stage highlights the specific role of labelled data, unlabelled data, and the final prediction path.",
+    "accessibilityDescription": "The diagram reads from left to right. At the top left is a small set of labelled examples, shown as a few cards with tags, to indicate trusted answers exist but are limited in number. At the bottom left is a much larger set of unlabelled examples, shown as many cards without tags, to indicate plenty of data but no answers. Both sets flow into a central training box. Inside that box, one note says the model learns from known labels, and another says it also uses structure in the unlabelled data, such as similarity or grouping. From this box, an arrow leads to a trained model. A new example then enters the model, and the model outputs a predicted label or value. The main message is that semi-supervised learning combines a small amount of labelled data with a large amount of unlabelled data during training.",
+    "reducedMotionDescription": "A static left-to-right diagram with two input stacks, one labelled and one unlabelled, both pointing to a training box, then to a trained model, then to a prediction output for a new example."
+  },
+  "workedExample": {
+    "scenario": "An organisation wants to classify customer support emails into three categories: billing, technical problem, or account access.",
+    "input": "400 emails are manually labelled, and 8,000 more emails are available without labels.",
+    "process": [
+      "Train an initial classifier on the 400 labelled emails using word and phrase features.",
+      "Run that classifier on the 8,000 unlabelled emails and keep only predictions above 95% confidence.",
+      "Add 2,300 high-confidence pseudo-labelled emails to the training pool, while leaving lower-confidence emails unused.",
+      "Retrain the classifier on the original 400 labelled emails plus the 2,300 selected pseudo-labelled emails.",
+      "Evaluate on a separate test set and compare with the model trained on only 400 labelled emails."
+    ],
+    "result": "The labelled-only model reaches 78% accuracy on the test set. The semi-supervised version reaches 84%. This improvement is plausible, not guaranteed: if the early high-confidence predictions had been systematically wrong, performance could have dropped instead."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is reviewing many public consultation submissions on a draft guidance note. A small sample of submissions has been manually labelled by topic, such as access, finance, language, and implementation concerns. A semi-supervised system could use those labelled submissions plus the larger unlabelled set to help group and prioritise incoming themes for human review.",
+    "relevance": "This can reduce manual sorting effort when labels are costly but large volumes of text need triage, provided staff validate outputs and treat them as decision support rather than final truth.",
+    "caution": "Use only approved tools and approved data handling arrangements. Do not place confidential, personal, protection-sensitive or unpublished consultation material into a public AI service unless it is explicitly authorised and safeguarded."
+  },
+  "whyItMatters": "Many real projects have very little labelled data because expert annotation costs time and money. Semi-supervised learning can make better use of what an organisation already has: a small set of trusted examples and a much larger set of raw data. For decision-makers, the key question is not whether unlabelled data exists, but whether it is similar enough and clean enough to improve performance without reinforcing early mistakes.",
+  "whereYouMayHearIt": [
+    "document classification projects",
+    "speech and image labelling",
+    "medical imaging research",
+    "low-resource language technology",
+    "annotation budget planning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Any large amount of unlabelled data will improve a model.",
+      "correction": "Not necessarily. Unlabelled data helps only if it is relevant to the task and the method's assumptions fit the data. If the unlabelled set comes from a different population, or the model makes biased early guesses, performance can stay flat or get worse."
+    },
+    {
+      "misconception": "Semi-supervised learning is just supervised learning with missing labels.",
+      "correction": "It uses missing labels in a deliberate way. In ordinary supervised learning, unlabelled examples are usually ignored. In semi-supervised learning, the training procedure is designed to extract useful structure from those unlabelled examples and combine it with the labelled set."
+    },
+    {
+      "misconception": "Semi-supervised learning and self-supervised learning are the same thing.",
+      "correction": "They overlap in practice but are not the same concept. Self-supervised learning creates training targets from the data itself, such as predicting a hidden part of an input. Semi-supervised learning uses some actual labels from outside that pretext task and a larger pool of unlabelled examples for the target task."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "You have a few examples with correct answers and many without answers. This approach uses both, so the many unanswered examples can still help the model learn patterns.",
+    "technical": "Given labelled data {(x, y)} and additional unlabelled inputs {x}, semi-supervised learning estimates a predictor by combining a supervised objective with an unsupervised or consistency-based objective. Common mechanisms include pseudo-labelling, entropy minimisation, graph-based label propagation, consistency regularisation under augmentation, and generative modelling assumptions. These methods often rely on ideas such as the cluster assumption, smoothness assumption, or low-density separation: points close together, or in the same high-density region, are likely to share a label. Gains depend on task fit, calibration, data distribution, and careful use of validation and test sets."
+  },
+  "keyTakeaway": "A small amount of trusted labelled data can become more useful when training also learns from the structure of a much larger unlabelled dataset.",
+  "quickCheck": {
+    "question": "Which situation best fits semi-supervised learning?",
+    "options": [
+      "Training only on 5,000 labelled examples and ignoring 50,000 unlabelled ones.",
+      "Training on 500 labelled examples plus 20,000 unlabelled examples to improve the same classification task.",
+      "Grouping 20,000 unlabelled examples into clusters with no labels used at all.",
+      "Learning by trial and error from rewards in a game environment."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Semi-supervised learning combines a small labelled dataset with a larger unlabelled dataset for the same task. Option 1 is purely supervised learning, option 3 is unsupervised learning, and option 4 is reinforcement learning."
+  },
+  "resources": [
+    {
+      "title": "Weak supervision",
+      "url": "https://en.wikipedia.org/wiki/Weak_supervision",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia page gives background on weak supervision, a related family of methods, and suits readers who want distinctions and terminology.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course offers practical machine-learning foundations and suits readers who want a structured introduction before placing semi-supervised methods in context.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "description": "This video source is useful for readers who prefer step-by-step spoken explanations and intuitive breakdowns of machine-learning ideas.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Semi-supervised learning",
+      "url": "https://www.youtube.com/results?search_query=Semi-supervised%20learning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers quickly find a range of video explanations of semi-supervised learning at different levels.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Semi-supervised learning",
+      "url": "https://www.reddit.com/search/?q=Semi-supervised%20learning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it suits readers who want to scan community questions, practical experiences and common confusions about semi-supervised learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "semi-supervised learning explained",
+    "semi supervised vs supervised",
+    "what is semi supervised learning",
+    "semi supervised examples",
+    "pseudo labelling meaning",
+    "labelled and unlabelled data together",
+    "semi supervised classification",
+    "semi supervised learning misspelling",
+    "self supervised vs semi supervised",
+    "semi-supervised learning"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:48.056Z",
+    "contentHash": "73a66be80e996ce9",
+    "attempts": 2,
+    "promptTokens": 2326,
+    "completionTokens": 2607
+  }
+}

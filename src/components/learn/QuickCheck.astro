@@ -1,0 +1,104 @@
+---
+/**
+ * One knowledge-check question per term.
+ *
+ * Deliberately buttons rather than a radio group with a submit: one tap, one
+ * answer, immediate explanation. The result is announced through a live region
+ * so a screen-reader user hears the verdict without hunting for it, and
+ * correctness is stated in words as well as shown in colour.
+ *
+ * The score is stored locally and is never sent anywhere. Getting it wrong has
+ * no consequence beyond an explanation, which is the point.
+ */
+import type { TermExplanation } from '../../lib/learn/schema';
+
+interface Props {
+  term: TermExplanation;
+}
+const { term } = Astro.props;
+const { quickCheck: q } = term;
+const LETTERS = ['A', 'B', 'C', 'D'];
+---
+
+<section class="qcheck" aria-labelledby={`qcheck-${term.id}`} data-qcheck data-term={term.id}>
+  <h3 class="qcheck__question" id={`qcheck-${term.id}`}>{q.question}</h3>
+
+  <div
+    class="qcheck__options"
+    role="group"
+    aria-labelledby={`qcheck-${term.id}`}
+    data-qcheck-options
+    data-correct={String(q.correctOptionIndex)}
+  >
+    {
+      q.options.map((option, i) => (
+        <button type="button" class="qcheck__option" data-qcheck-option={String(i)}>
+          <span class="qcheck__key" aria-hidden="true">
+            {LETTERS[i]}
+          </span>
+          <span>{option}</span>
+          <span class="qcheck__verdict" data-qcheck-verdict />
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="qcheck__feedback" data-qcheck-feedback hidden role="status" aria-live="polite">
+    <p data-qcheck-verdict-text></p>
+    <p>{q.explanation}</p>
+    <button type="button" class="lbutton qcheck__retry" data-qcheck-retry>Try again</button>
+  </div>
+</section>
+
+<script>
+  import { recordQuiz } from '../../scripts/learn-store';
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-qcheck]')) {
+    const group = root.querySelector<HTMLElement>('[data-qcheck-options]')!;
+    const options = [...root.querySelectorAll<HTMLButtonElement>('[data-qcheck-option]')];
+    const feedback = root.querySelector<HTMLElement>('[data-qcheck-feedback]')!;
+    const verdictText = root.querySelector<HTMLElement>('[data-qcheck-verdict-text]')!;
+    const retry = root.querySelector<HTMLButtonElement>('[data-qcheck-retry]')!;
+    const correct = Number(group.dataset.correct);
+    const termId = root.dataset.term!;
+
+    function reset() {
+      options.forEach((o) => {
+        o.disabled = false;
+        o.classList.remove('is-right', 'is-wrong');
+        o.removeAttribute('aria-describedby');
+        o.querySelector('[data-qcheck-verdict]')!.textContent = '';
+      });
+      feedback.hidden = true;
+    }
+
+    function answer(chosen: number) {
+      const right = chosen === correct;
+      options.forEach((o, i) => {
+        o.disabled = true;
+        const verdict = o.querySelector<HTMLElement>('[data-qcheck-verdict]')!;
+        if (i === correct) {
+          o.classList.add('is-right');
+          verdict.textContent = 'correct';
+        } else if (i === chosen) {
+          o.classList.add('is-wrong');
+          verdict.textContent = 'not this one';
+        }
+      });
+      verdictText.textContent = right
+        ? 'Correct.'
+        : 'Not quite — the correct answer is marked above.';
+      feedback.hidden = false;
+      recordQuiz(termId, right);
+      // Move focus to the explanation so a keyboard user lands on the part
+      // that teaches, rather than on a row of now-disabled buttons.
+      retry.focus({ preventScroll: true });
+    }
+
+    options.forEach((o, i) => o.addEventListener('click', () => answer(i)));
+    retry.addEventListener('click', () => {
+      reset();
+      options[0]?.focus();
+    });
+  }
+</script>

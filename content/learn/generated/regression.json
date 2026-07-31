@@ -1,0 +1,233 @@
+{
+  "id": "regression",
+  "slug": "regression",
+  "term": "Regression",
+  "aliases": [],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "supervised-learning"
+  ],
+  "relatedTermIds": [
+    "supervised-learning",
+    "feature",
+    "label",
+    "prediction",
+    "training",
+    "validation-and-test-sets"
+  ],
+  "oftenConfusedWith": [
+    "classification",
+    "clustering",
+    "inference"
+  ],
+  "oneSentence": "A supervised learning method that learns to predict a number or other continuous value from example inputs and known target values.",
+  "plainExplanation": "Regression is used when you want a model to output an amount, not a category. For example, you might want to estimate travel time in minutes, crop yield in tonnes, or next month’s electricity demand. The input variables are called features, and the target value you want to predict is often called the label.\n\nDuring training, the model sees many examples where both the features and the correct target value are known. It adjusts internal parameters so its predictions get closer to those known values. In simple cases, it learns a line or curve; in more complex cases, it learns a more flexible pattern.\n\nWhat goes in is a set of training examples: for each case, the features and the known numeric outcome. What changes inside is the model’s parameters, which are updated to reduce prediction error. What comes out is a function that can take a new case and return an estimated value.\n\nRegression is often confused with classification. Classification predicts a class such as approved or not approved, damaged or not damaged. Regression predicts a quantity such as 2.4, 17 days, or 83.5 per cent. Some methods can be adapted for both, but the goal and output type are different.",
+  "everydayAnalogy": {
+    "title": "Estimating parcel delivery time from past trips",
+    "story": "A courier supervisor has a notebook of past deliveries in Nairobi, Lima and Bangkok. For each parcel, the notebook records distance, time of day, weather and the actual delivery time in minutes. By comparing many past rows, the supervisor learns a pattern: longer distance usually adds time, rush hour adds more, and heavy rain adds even more. When a new parcel arrives, the supervisor uses that learned pattern to estimate the delivery time instead of guessing from memory.",
+    "mapping": [
+      {
+        "analogyElement": "Notebook of past deliveries with conditions and actual minutes",
+        "aiElement": "Training examples with features and known labels"
+      },
+      {
+        "analogyElement": "Distance, time of day and weather",
+        "aiElement": "Features used as inputs"
+      },
+      {
+        "analogyElement": "Actual delivery time in minutes",
+        "aiElement": "Numeric target value or label"
+      },
+      {
+        "analogyElement": "Learned pattern for adding or reducing minutes",
+        "aiElement": "Regression model parameters fitted during training"
+      },
+      {
+        "analogyElement": "Estimate for a new parcel",
+        "aiElement": "Prediction at inference time"
+      }
+    ],
+    "limitation": "A human supervisor may use judgement, outside knowledge and explicit rules. A regression model usually learns statistical relationships from data and does not reliably know why those relationships hold. Also, many regression models do not literally add fixed minutes in a simple way; some learn complex non-linear patterns that are harder to inspect than the notebook story suggests."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How regression learns from examples and produces a numeric estimate",
+    "learningObjective": "Show that regression takes features and known numeric targets during training, adjusts model parameters to reduce error, and later outputs a continuous prediction for a new case.",
+    "description": "A left-to-right flow diagram with four stages: training examples, model fitting, learned mapping and new prediction. Read it from left to right. The top row shows past examples with inputs and known numbers. The middle shows error being measured and parameters being adjusted. The final stage shows a new input producing one estimated value.",
+    "steps": [
+      {
+        "label": "1. Training data",
+        "explanation": "Start with many examples. Each example has features such as distance and weather, plus a known numeric label such as delivery time in minutes.",
+        "visualInstruction": "Draw a box containing three small rows like a table. Each row has feature chips on the left and a numeric label on the right. Add a caption: features + known value."
+      },
+      {
+        "label": "2. First guesses",
+        "explanation": "The model makes initial predictions for those examples. At first, they may be far from the known values.",
+        "visualInstruction": "Draw an arrow to a model box. From the model, draw predicted numbers beside each training row. Show visible mismatch between predicted and known values."
+      },
+      {
+        "label": "3. Reduce error",
+        "explanation": "A training procedure measures the difference between predicted and known values and updates model parameters to make future predictions closer.",
+        "visualInstruction": "Draw a feedback loop around the model labelled measure error and update parameters. Show the mismatches shrinking after one or two iterations."
+      },
+      {
+        "label": "4. Learned mapping",
+        "explanation": "After training, the fitted model captures a relationship between features and the target value.",
+        "visualInstruction": "Draw the model box in a stable state with a label: fitted regression model."
+      },
+      {
+        "label": "5. New case",
+        "explanation": "A new input with the same kinds of features goes into the fitted model, which returns one estimated continuous value.",
+        "visualInstruction": "Draw a fresh feature row entering the fitted model and one output number, for example 42 minutes."
+      }
+    ],
+    "interaction": "Hover or tap each stage to highlight the current inputs, outputs and parameter updates; include a toggle to show a straight-line fit versus a curved fit.",
+    "accessibilityDescription": "This diagram explains regression as a five-step flow. First, there are training examples, where each case includes input features and a known numeric target, such as delivery time in minutes. Second, a model produces initial predictions for those same examples. Third, the system compares each prediction with the known value, measures the error, and updates internal parameters so the error becomes smaller. Fourth, after repeated updates, the model becomes a fitted mapping from features to a number. Fifth, when a new case arrives with the same kinds of features but no known target yet, the fitted model outputs one estimated continuous value. The main point is that regression learns from examples with known numbers and later predicts a number for a new case.",
+    "reducedMotionDescription": "Show the same five stages as a static left-to-right diagram with two snapshots in the error-reduction stage: one with larger gaps between predicted and known values, and one with smaller gaps. No animated looping is needed."
+  },
+  "workedExample": {
+    "scenario": "Estimating apartment rent from size and distance to the city centre",
+    "input": "Training examples: (40 square metres, 8 km) → 520; (55, 5) → 760; (70, 3) → 980; (85, 2) → 1210. New case: (60, 4).",
+    "process": [
+      "Choose features: apartment size and distance to the city centre, with monthly rent as the numeric label.",
+      "Fit a regression model on past examples so predicted rents are as close as possible to the known rents.",
+      "The fitted pattern learns that rent tends to rise with size and fall as distance increases, based on the data provided.",
+      "Enter the new case, 60 square metres and 4 km, into the fitted model.",
+      "The model outputs an estimated rent of about 830 in the local currency."
+    ],
+    "result": "The output is a numeric estimate, not a class label. If the estimate is used for a real decision, it should be checked against local context and possible bias in the training data."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN analysis team wants to estimate the monthly number of reported protection incidents in each district using past counts, seasonal patterns, displacement figures and access constraints from approved internal systems.",
+    "relevance": "Regression can help estimate expected numeric levels and flag places where reported counts are unusually above or below the historical pattern, which can support planning and human review.",
+    "caution": "Do not put personal, survivor, witness or operationally sensitive incident details into an unapproved public AI service. Use approved systems, minimise data, aggregate where possible, and keep human oversight because reporting levels may reflect access and under-reporting, not only real-world conditions."
+  },
+  "whyItMatters": "Regression matters because many real decisions depend on estimating amounts: time, cost, demand, risk level, pollution, rainfall or case volume. If you hear that a system predicts a number, regression may be involved. Knowing this helps you ask the right questions: What was the target value? Which features were used? How large was the error on validation data? Are the predictions reliable across places, seasons or population groups? A regression output can look precise, but it is still an estimate shaped by data quality, measurement choices and assumptions. For programme staff and technical teams, that difference matters when planning resources, setting thresholds or interpreting trends.",
+  "whereYouMayHearIt": [
+    "forecasting demand",
+    "estimating prices or costs",
+    "predictive analytics dashboards",
+    "machine learning model training",
+    "data science discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Regression only means fitting a straight line.",
+      "correction": "Linear regression is one important type, but regression as a broader idea means predicting a continuous value. The relationship can be linear or non-linear depending on the method and the data."
+    },
+    {
+      "misconception": "Regression gives exact answers if there is enough data.",
+      "correction": "More data can help, but predictions still depend on how noisy the target is, whether the features are informative, and whether future cases resemble the training data. Real-world outcomes often vary for reasons the model cannot observe."
+    },
+    {
+      "misconception": "If the output is a score between 0 and 1, it must be regression.",
+      "correction": "Not necessarily. Some classification models output scores or probabilities between 0 and 1 for class membership. The key distinction is the task: regression predicts a continuous quantity, while classification predicts a category."
+    },
+    {
+      "misconception": "A low average error means the model is fair and safe to use everywhere.",
+      "correction": "Average performance can hide weak performance for specific regions, time periods or groups. A regression model should be checked across relevant subgroups and operating conditions, not only with one overall metric."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Regression learns from past examples to estimate a number for a new case.",
+    "technical": "In supervised learning, regression fits a function from input features to a continuous target variable using labelled examples. Training optimises model parameters to minimise a loss function that measures prediction error, such as mean squared error or mean absolute error. Depending on the method, the fitted function may be linear, piecewise, kernel-based, tree-based or a neural network. At inference time, the model applies that learned mapping to unseen inputs and returns a numeric prediction. In statistics, the word can also refer more broadly to modelling relationships between variables for explanation as well as prediction, so the exact emphasis depends on context."
+  },
+  "keyTakeaway": "Regression predicts how much, not which one.",
+  "quickCheck": {
+    "question": "Which task is a regression task?",
+    "options": [
+      "Predicting whether an email is spam or not spam",
+      "Grouping survey responses into similar clusters without labels",
+      "Estimating how many litres of water a village will need next week",
+      "Choosing the next action in a game to maximise reward"
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "Regression predicts a numeric quantity. Here, the output is an amount of water. Spam detection is classification, clustering groups unlabeled items, and game action selection is usually framed as reinforcement learning."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Regression analysis",
+      "url": "https://en.wikipedia.org/wiki/Regression_analysis",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "Wikipedia gives a broad overview of regression analysis and its main ideas, which suits readers who want background and terminology.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "Google's Machine Learning Crash Course gives practical teaching material on machine learning concepts, which suits readers who want applied learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "difficulty": "starter",
+      "description": "StatQuest offers video-style explanations that many learners find clear for statistics and machine learning topics, which suits readers who prefer guided walkthroughs.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Regression",
+      "url": "https://www.youtube.com/results?search_query=Regression%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find multiple video explanations of regression, which suits people comparing teaching styles rather than looking for one specific source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Regression",
+      "url": "https://www.reddit.com/search/?q=Regression",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page helps readers find community discussions and questions about regression, which suits readers who want informal explanations and common points of confusion.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "regression in machine learning",
+    "what is regression ai",
+    "regression vs classification",
+    "predicting a number with ml",
+    "continuous value prediction",
+    "linear regression meaning",
+    "supervised regression example",
+    "regresion machine learning",
+    "regression model simple explanation",
+    "regression"
+  ],
+  "contested": "The core idea is not heavily disputed, but the word is used differently across fields. In statistics, it often includes explanation of relationships between variables; in machine learning, it usually emphasises prediction of continuous values.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:40:18.832Z",
+    "contentHash": "b821ef892cf7063a",
+    "attempts": 1,
+    "promptTokens": 2255,
+    "completionTokens": 2513
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "id": "chain-rule",
+  "slug": "chain-rule",
+  "term": "Chain rule",
+  "aliases": [],
+  "categoryId": "how-models-improve",
+  "subcategory": "How Models Improve",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "backpropagation"
+  ],
+  "relatedTermIds": [
+    "gradient",
+    "gradient-descent",
+    "loss-function",
+    "optimisation",
+    "vanishing-and-exploding-gradients",
+    "error-and-loss"
+  ],
+  "oftenConfusedWith": [
+    "backpropagation"
+  ],
+  "oneSentence": "A calculus rule for tracing how a small change in one setting affects the final error through a chain of intermediate calculations.",
+  "plainExplanation": "Many models produce an output through several steps. One setting changes an intermediate value, that intermediate value changes another, and eventually the final loss changes. The chain rule is the mathematical rule that links those small effects together.\n\nA small effect here usually means a derivative: a number that tells you how much one quantity changes when another changes a little. The chain rule says that if A affects B, and B affects C, then the effect of A on C can be found by combining the effect of A on B with the effect of B on C. In simple cases, you multiply these local rates of change.\n\nIn model training, what goes in are the model's calculations for one example and the loss at the end. What happens is that the training procedure works backwards through the computation, step by step, using the chain rule to assign part of the final error signal to each earlier quantity and each parameter. What comes out are gradients, which are numbers used to update the parameters.\n\nThis is closely connected to backpropagation, but they are not the same. The chain rule is the mathematical principle. Backpropagation is the efficient procedure that applies that principle across many connected calculations in a model such as a neural network.",
+  "everydayAnalogy": {
+    "title": "Tracing a bad document recommendation back through the pipeline",
+    "story": "A team builds a knowledge-base recommender for staff. For one search, the wrong guidance note appears at the top. The ranking depended on several stages: language match, topic score, freshness score, and then a final combined score. To work out which setting to adjust, the team traces how a tiny change in an early stage, such as topic weighting, would have changed the combined score and then the final ranking loss.",
+    "mapping": [
+      {
+        "analogyElement": "language, topic and freshness stages",
+        "aiElement": "intermediate computations in a model"
+      },
+      {
+        "analogyElement": "tiny change in topic weighting",
+        "aiElement": "small change in a parameter or intermediate value"
+      },
+      {
+        "analogyElement": "effect on combined score",
+        "aiElement": "local derivative between neighbouring steps"
+      },
+      {
+        "analogyElement": "tracing impact on ranking error",
+        "aiElement": "using the chain rule to connect local effects to final loss"
+      }
+    ],
+    "limitation": "A recommendation pipeline often has hand-designed stages and may include discrete ranking choices, while neural models usually contain many numerical operations and parameters. In real training, the chain rule is applied to differentiable calculations, often across thousands or millions of values at once. A document moving up or down in rank can also involve non-smooth effects, so the analogy is simpler than the mathematics used in most models."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How the chain rule carries error backwards",
+    "learningObjective": "Show how a final loss is connected back to an earlier parameter by multiplying local sensitivities along the computation path.",
+    "description": "A left-to-right computation chain followed by a right-to-left sensitivity trace. Read the top row as the forward pass: parameter influences hidden value, hidden value influences output, output influences loss. Read the bottom row as the backward pass: each arrow carries a local derivative, and the combined effect on the parameter is built step by step from the end back to the start.",
+    "steps": [
+      {
+        "label": "1. Forward calculation",
+        "explanation": "Start with a parameter, use it to compute an intermediate value, then an output, then the loss.",
+        "visualInstruction": "Draw four boxes in a row labelled parameter w, hidden h, output y, loss L. Connect them with solid arrows left to right."
+      },
+      {
+        "label": "2. Local effects",
+        "explanation": "Each neighbouring pair has a local sensitivity: how much the next quantity changes if the previous one changes slightly.",
+        "visualInstruction": "Above each arrow, place labels ∂h/∂w, ∂y/∂h, and ∂L/∂y in small tags."
+      },
+      {
+        "label": "3. Work backwards",
+        "explanation": "Begin at the loss and move back one step at a time, reusing the local sensitivities already attached to each link.",
+        "visualInstruction": "Add a highlighted reverse arrow path from L back to w. Show a small token moving right-to-left or, in static form, numbered reverse arrows."
+      },
+      {
+        "label": "4. Combine them",
+        "explanation": "The overall effect of w on L is the product of the local effects along the path: ∂L/∂w = ∂L/∂y × ∂y/∂h × ∂h/∂w.",
+        "visualInstruction": "Show the formula beneath the chain, with matching colours linking each factor to its arrow."
+      }
+    ],
+    "interaction": "Hover or tap each link to highlight the corresponding factor in the final formula and reveal a short note saying which two quantities that derivative connects.",
+    "accessibilityDescription": "The diagram shows four quantities in a line: parameter w, hidden value h, output y, and loss L. The forward direction goes from w to h to y to L. Each link has a local derivative: how a small change in the earlier quantity affects the next one. The backward explanation starts at loss L and moves to y, then h, then w. The key statement is that the total effect of changing w on the loss equals the product of the three local derivatives: derivative of loss with respect to output, times derivative of output with respect to hidden value, times derivative of hidden value with respect to w. This illustrates that the chain rule combines local sensitivities across intermediate steps.",
+    "reducedMotionDescription": "A static version shows the same four boxes and both directions at once: solid forward arrows for computation, dashed reverse arrows for sensitivity tracing, and a colour-coded formula under the boxes matching each derivative to one link."
+  },
+  "workedExample": {
+    "scenario": "A tiny model computes h = 3w, y = h^2, and loss L = y. We want the effect of w on L at w = 2.",
+    "input": "w = 2",
+    "process": [
+      "Forward pass: h = 3×2 = 6, then y = 6^2 = 36, so L = 36.",
+      "Find local derivatives: ∂h/∂w = 3, ∂y/∂h = 2h = 12 at h = 6, and ∂L/∂y = 1.",
+      "Apply the chain rule: ∂L/∂w = (∂L/∂y) × (∂y/∂h) × (∂h/∂w) = 1 × 12 × 3 = 36.",
+      "Interpretation: if w increases by a very small amount near 2, the loss increases by about 36 times that amount."
+    ],
+    "result": "The gradient with respect to w is 36 at w = 2."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team is testing an internal search tool over approved guidance documents. The tool scores documents through several layers, then produces a ranking loss based on whether relevant documents appear near the top. During training, the chain rule lets engineers trace the final ranking error back through the scoring layers to see which parameters most influenced the mistake.",
+    "relevance": "This matters when staff need a reliable internal tool and technical teams must explain how training updates are produced, not just report that the model 'learned'.",
+    "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive or security-sensitive material into a public AI service for experimentation or training."
+  },
+  "whyItMatters": "If you work with model development, procurement or oversight, this term helps you recognise how training actually assigns responsibility for error. A model does not improve by magic. It improves because the training procedure estimates how each parameter contributed to the final loss and then adjusts it. The chain rule is the link that makes this possible in deep models with many layers. If that link is weak, unstable or impossible to compute, training can stall, become noisy or fail. Understanding this helps you ask better questions about feasibility, stability, explainability of the training process, and why some architectures are harder to optimise than others.",
+  "whereYouMayHearIt": [
+    "calculus for machine learning",
+    "neural network training",
+    "gradient derivation",
+    "backpropagation explanation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "The chain rule and backpropagation are the same thing.",
+      "correction": "They are closely related but not identical. The chain rule is a rule from calculus for combining derivatives across linked computations. Backpropagation is an efficient algorithmic procedure that uses that rule repeatedly through a network to compute gradients for many parameters."
+    },
+    {
+      "misconception": "The chain rule only matters in very deep neural networks.",
+      "correction": "Any model built from nested differentiable functions can use it, even a small two-step computation. Deep networks make it especially important because there are many links in the chain, but the rule itself is much broader."
+    },
+    {
+      "misconception": "Using the chain rule tells you which parameter caused an error in a simple, human-like sense.",
+      "correction": "What it provides is a local sensitivity: how a tiny change in a parameter would change the loss at the current point. That is not the same as a full causal explanation of behaviour across all inputs or training history."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "If a model reaches its final error through several steps, this rule lets you trace a small effect backwards through those steps to see how an earlier setting influenced the error.",
+    "technical": "Suppose a loss L depends on an output y, which depends on an intermediate state h, which depends on a parameter w. The chain rule gives the derivative of the composite function by composing local derivatives along the path: ∂L/∂w = ∂L/∂y · ∂y/∂h · ∂h/∂w for the scalar case. In vector-valued settings, the same idea appears through Jacobians and repeated application across graph edges. Automatic differentiation and backpropagation exploit this structure to compute gradients efficiently without separately differentiating the whole expression from scratch for each parameter. In deep networks, repeated multiplication of local derivatives is also why gradient magnitudes can shrink or grow dramatically, contributing to vanishing or exploding gradients."
+  },
+  "keyTakeaway": "The chain rule lets training connect final error back to earlier parameters by combining small step-by-step sensitivities through the whole computation.",
+  "quickCheck": {
+    "question": "Why is the chain rule essential during gradient-based training?",
+    "options": [
+      "It converts a final loss into parameter updates by linking local derivatives across intermediate computations.",
+      "It guarantees the model will reach the global minimum if the learning rate is small enough.",
+      "It replaces the loss function so the model no longer needs labelled data.",
+      "It makes every layer contribute equally to the final prediction."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Training needs gradients with respect to parameters, but the loss usually depends on those parameters only through many intermediate calculations. The chain rule provides the mathematical way to connect those local effects. It does not guarantee a global minimum, remove the need for a loss, or make all layers contribute equally."
+  },
+  "resources": [
+    {
+      "title": "Chain rule",
+      "url": "https://en.wikipedia.org/wiki/Chain_rule",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a general reference explanation of the chain rule from calculus and suits readers who want a concise formal definition with standard notation.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "description": "This video gives a visual intuition for how derivatives move through neural network calculations and suits readers who learn best from geometric and animated explanations.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Reducing Loss",
+      "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course material shows how loss is reduced during training and suits readers who want the chain rule in the practical context of model improvement.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Chain rule",
+      "url": "https://www.youtube.com/results?search_query=Chain%20rule%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find multiple video explanations of the chain rule and suits people comparing teaching styles rather than looking for one fixed source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Chain rule",
+      "url": "https://www.reddit.com/search/?q=Chain%20rule",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see common questions and informal explanations about the chain rule and suits readers who want community discussion, with the usual need for careful fact-checking.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "chain rule machine learning",
+    "chain rule backprop",
+    "what is chain rule in neural networks",
+    "derivative through layers",
+    "composite function gradient",
+    "dl/dw chain rule",
+    "how backprop uses chain rule",
+    "chain rule explained simply",
+    "chaine rule typo",
+    "why multiply derivatives",
+    "chain rule"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:17.607Z",
+    "contentHash": "52c290eef1531787",
+    "attempts": 1,
+    "promptTokens": 2238,
+    "completionTokens": 2539
+  }
+}

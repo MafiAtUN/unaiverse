@@ -1,0 +1,238 @@
+---
+/**
+ * Gradient descent: a walker on an error landscape, with the learning rate in
+ * the reader's hands.
+ *
+ * The whole lesson is that the step size is a trade-off with no free option —
+ * too small is slow, too large overshoots and can diverge — and that is a
+ * thing you have to *do* to believe. Three preset buttons exist so the point
+ * survives a reader who never touches the slider, and so a keyboard user
+ * reaches every state without dragging anything.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-gd data-term={termId}>
+  <div class="vx__row">
+    <label class="vx__label" for={`gd-rate-${termId}`}>Learning rate</label>
+    <input
+      class="vx__slider"
+      type="range"
+      id={`gd-rate-${termId}`}
+      min="1"
+      max="105"
+      value="22"
+      step="1"
+      data-gd-rate
+      aria-describedby={`gd-readout-${termId}`}
+    />
+    <output class="vx__value" data-gd-value>0.22</output>
+  </div>
+
+  <div class="vx__row" role="group" aria-label="Learning rate presets">
+    <button type="button" class="vx__button" data-gd-preset="3">Too small</button>
+    <button type="button" class="vx__button" data-gd-preset="22" aria-pressed="true">About right</button>
+    <button type="button" class="vx__button" data-gd-preset="95">Too large</button>
+    <button type="button" class="vx__button" data-gd-step>Take one step</button>
+    <button type="button" class="vx__button" data-gd-reset>Start again</button>
+  </div>
+
+  <svg
+    class="vx__canvas"
+    viewBox="0 0 420 220"
+    role="img"
+    aria-labelledby={`gd-svgtitle-${termId}`}
+    data-gd-svg
+  >
+    <title id={`gd-svgtitle-${termId}`}>
+      An error landscape shaped like a valley, with a walker moving downhill towards the lowest
+      point. The walker's step size is set by the learning rate.
+    </title>
+    <defs>
+      <linearGradient id={`gd-fill-${termId}`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2fbf74" stop-opacity="0.22"></stop>
+        <stop offset="100%" stop-color="#2fbf74" stop-opacity="0"></stop>
+      </linearGradient>
+    </defs>
+
+    <path data-gd-fill fill={`url(#gd-fill-${termId})`}></path>
+    <path data-gd-curve fill="none" stroke="#2fbf74" stroke-width="2"></path>
+
+    {/* The target, drawn as a ring rather than a glow so it survives print and
+        high-contrast mode. */}
+    <circle data-gd-target r="6" fill="none" stroke="#f5d020" stroke-width="1.5"></circle>
+    <text data-gd-target-label fill="#f5d020" font-size="10" text-anchor="middle">lowest error</text>
+
+    <polyline data-gd-trail fill="none" stroke="#ff5fa8" stroke-width="1.5" stroke-dasharray="3 3"
+    ></polyline>
+    <circle data-gd-walker r="7" fill="#ff5fa8" stroke="#101011" stroke-width="2"></circle>
+  </svg>
+
+  <p class="visual__readout" id={`gd-readout-${termId}`} role="status" aria-live="polite" data-gd-readout></p>
+</div>
+
+<script>
+  /** y = height of the error surface at x. One clean valley, deliberately: a
+   *  landscape with several dips teaches "local minimum", not this. */
+  const loss = (x: number) => 0.0016 * (x - 210) ** 2 + 40;
+  const slope = (x: number) => 0.0032 * (x - 210);
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-gd]')) {
+    const curve = root.querySelector<SVGPathElement>('[data-gd-curve]')!;
+    const fill = root.querySelector<SVGPathElement>('[data-gd-fill]')!;
+    const walker = root.querySelector<SVGCircleElement>('[data-gd-walker]')!;
+    const trail = root.querySelector<SVGPolylineElement>('[data-gd-trail]')!;
+    const target = root.querySelector<SVGCircleElement>('[data-gd-target]')!;
+    const targetLabel = root.querySelector<SVGTextElement>('[data-gd-target-label]')!;
+    const rate = root.querySelector<HTMLInputElement>('[data-gd-rate]')!;
+    const value = root.querySelector<HTMLOutputElement>('[data-gd-value]')!;
+    const readout = root.querySelector<HTMLElement>('[data-gd-readout]')!;
+    const presets = root.querySelectorAll<HTMLButtonElement>('[data-gd-preset]');
+
+    const START = 40;
+    let x = START;
+    let path: number[] = [START];
+    let timer: number | undefined;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Draw the fixed parts once.
+    {
+      const pts: string[] = [];
+      for (let px = 10; px <= 410; px += 5) pts.push(`${px},${loss(px)}`);
+      curve.setAttribute('d', `M${pts.join(' L')}`);
+      fill.setAttribute('d', `M${pts.join(' L')} L410,215 L10,215 Z`);
+      target.setAttribute('cx', '210');
+      target.setAttribute('cy', String(loss(210)));
+      targetLabel.setAttribute('x', '210');
+      targetLabel.setAttribute('y', String(loss(210) + 22));
+    }
+
+    function lr() {
+      return Number(rate.value) / 100;
+    }
+
+    function draw() {
+      walker.setAttribute('cx', String(x));
+      walker.setAttribute('cy', String(loss(x) - 8));
+      trail.setAttribute(
+        'points',
+        path.map((px) => `${px},${loss(px) - 8}`).join(' '),
+      );
+      value.textContent = lr().toFixed(2);
+    }
+
+    function describe() {
+      const distance = Math.abs(x - 210);
+      const r = lr();
+      const fraction = fractionOfDistance();
+      const steps = path.length - 1;
+      let verdict: string;
+
+      if (r < 0.08) {
+        verdict =
+          'Each step covers only a sliver of the remaining distance, so the walker creeps. It will arrive, but it may take thousands of steps, and steps cost time and money.';
+      } else if (fraction > 2) {
+        verdict =
+          'Each step lands further from the bottom than it started, on the opposite side. The error grows with every step until the walker is off the edge of the landscape. This is a learning rate set too high, and training that never converges.';
+      } else if (fraction > 1) {
+        verdict =
+          'Each step crosses the bottom and lands on the far side, so the walker zig-zags. The bounces do shrink, so it still settles — but it wastes steps overshooting, which is why the middle setting is not simply the timid one.';
+      } else if (distance < 8) {
+        verdict =
+          'The walker has settled near the lowest point and further steps barely move it. This is roughly what convergence looks like.';
+      } else {
+        verdict = 'Each step moves downhill by a sensible amount. The error is falling steadily.';
+      }
+
+      readout.textContent =
+        `Learning rate ${r.toFixed(2)}, which moves the walker ${Math.round(fraction * 100)} per cent of the way ` +
+        `to the bottom each step. After ${steps} step${steps === 1 ? '' : 's'} the error is ` +
+        `${Math.round(loss(x))} and the walker is ${Math.round(distance)} units from the lowest point. ${verdict}`;
+    }
+
+    /**
+     * How far one step moves the walker, as a fraction of its distance from
+     * the minimum. The constant is not decorative: with the update written as
+     * `x -= lr * slope(x) * K`, a step covers `lr * 0.0032 * K` of the
+     * remaining distance, so K decides whether "too large" actually overshoots.
+     *
+     * At K = 690 the bands land where the copy claims they do:
+     *   fraction < 1  (lr < 0.45)  approach without crossing
+     *   1 to 2        (0.45–0.91)  cross the bottom, bounce, still settle
+     *   > 2           (lr > 0.91)  each bounce bigger than the last: diverges
+     *
+     * An earlier version used 260, which caps the fraction at 0.87 — every
+     * setting converged, including the one labelled "too large". A visual that
+     * contradicts its own readout teaches the opposite of the lesson.
+     */
+    const STEP_K = 690;
+    const fractionOfDistance = () => lr() * 0.0032 * STEP_K;
+
+    function step() {
+      // The parameter update itself: move against the slope, scaled by the
+      // learning rate. Everything else on screen is decoration for this line.
+      x = x - lr() * slope(x) * STEP_K;
+      x = Math.max(-60, Math.min(480, x));
+      path.push(x);
+      if (path.length > 40) path.shift();
+      draw();
+      describe();
+    }
+
+    /** True once the walker has been pinned against the edge of the landscape. */
+    const hasDiverged = () => Math.abs(x - 210) > 260;
+
+    function reset() {
+      x = START;
+      path = [START];
+      draw();
+      describe();
+    }
+
+    function run() {
+      window.clearInterval(timer);
+      // Reduced motion gets the same information without the animation: the
+      // reader steps manually, and the readout still says what happened.
+      if (reduced.matches) return;
+      timer = window.setInterval(() => {
+        // Settled: leave it settled rather than jittering forever.
+        if (Math.abs(x - 210) < 0.5 && fractionOfDistance() <= 1) return;
+        // Diverged or run out of trail: start over so the pattern repeats and
+        // the reader sees it happen rather than arriving after the fact.
+        if (hasDiverged() || path.length > 36) reset();
+        else step();
+      }, 420);
+    }
+
+    rate.addEventListener('input', () => {
+      value.textContent = lr().toFixed(2);
+      presets.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.gdPreset) === Number(rate.value))));
+      reset();
+      run();
+    });
+
+    presets.forEach((button) =>
+      button.addEventListener('click', () => {
+        rate.value = button.dataset.gdPreset!;
+        rate.dispatchEvent(new Event('input'));
+      }),
+    );
+
+    root.querySelector('[data-gd-step]')!.addEventListener('click', () => {
+      window.clearInterval(timer);
+      step();
+    });
+    root.querySelector('[data-gd-reset]')!.addEventListener('click', () => {
+      reset();
+      run();
+    });
+
+    reduced.addEventListener('change', run);
+    reset();
+    run();
+  }
+</script>

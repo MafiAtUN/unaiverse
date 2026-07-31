@@ -1,0 +1,280 @@
+---
+/**
+ * The front door of the AI Literacy Universe.
+ *
+ * Search first, deliberately. The commonest arrival is somebody who has just
+ * heard a word in a meeting and wants it explained before the next agenda
+ * item, so the page opens with "what did you just hear?" and everything else
+ * — categories, paths, comparisons — sits below it for people who are browsing
+ * rather than looking something up.
+ */
+import Learn from '../../layouts/Learn.astro';
+import TermSearch from '../../components/learn/TermSearch.astro';
+import {
+  CORPUS_STATS,
+  categoryOverview,
+  resolveTerms,
+  learnHref,
+  siteHref,
+  TERMS,
+} from '../../lib/learn/terms';
+import { POPULAR_TERM_IDS } from '../../lib/learn/search';
+import { resolvedPaths } from '../../lib/learn/paths';
+import { resolvedComparisons } from '../../lib/learn/compare';
+import { DIFFICULTY_LABEL } from '../../lib/learn/schema';
+
+const categories = categoryOverview().filter((c) => c.count > 0);
+const popular = resolveTerms(POPULAR_TERM_IDS).slice(0, 8);
+const paths = resolvedPaths().slice(0, 6);
+const comparisons = resolvedComparisons().slice(0, 6);
+const interactive = TERMS.filter((t) => t.visual.component).slice(0, 6);
+
+const title = 'Learn AI — understand the terms everyone is using · UNAIVERSE';
+const description =
+  'A plain-language guide to the AI vocabulary that turns up in meetings, resolutions, reports and the news. Every term has an analogy, a visual, a worked example and a United Nations workplace example. No login, no account, no tracking.';
+---
+
+<Learn title={title} description={description} section="learn" showBarSearch={false}>
+  <header class="learn-head">
+    <div class="wrap">
+      <p class="learn-crumbs">
+        <a href={siteHref()}>UNAIVERSE</a> / Learn AI
+      </p>
+      <h1 class="learn-head__title">
+        Understand the AI terms everyone is using, without a computer science degree
+      </h1>
+      <p class="learn-head__lead">
+        Somebody said “we should look at RAG” and the meeting moved on. This is the place to find
+        out what they meant, in about ninety seconds, with an example you can picture.
+      </p>
+
+      <div style="margin-top: var(--sp-5); max-width: 44rem;">
+        <TermSearch
+          id="hero-search"
+          variant="inline"
+          label="What AI term did you just hear?"
+          placeholder="What AI term did you just hear?"
+        />
+      </div>
+
+      <ul class="chips" style="margin-top: var(--sp-4)">
+        {
+          popular.map((t) => (
+            <li>
+              <a class="chip" href={learnHref(t.slug)}>
+                {t.term}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="learn-head__meta">
+        {CORPUS_STATS.published} terms published of {CORPUS_STATS.planned} planned ·{' '}
+        {CORPUS_STATS.categories} categories · {CORPUS_STATS.withInteractive} interactive explainers ·
+        no login, no account, nothing tracked
+      </p>
+    </div>
+  </header>
+
+  <section class="lsection" aria-labelledby="cats-title">
+    <div class="wrap">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="cats-title">Browse by constellation</h2>
+        <p class="lsection__blurb">
+          Sixteen sectors, from the words everything else is built from to the vocabulary of the
+          rooms where AI rules get negotiated. Each one names a good place to start.
+        </p>
+      </div>
+
+      <ul class="cat-grid">
+        {
+          categories.map((c) => (
+            <li>
+              <article class="cat-card">
+                <div class="cat-card__head">
+                  <span class="cat-card__glyph" aria-hidden="true">
+                    {c.glyph}
+                  </span>
+                  <div>
+                    <h3 class="cat-card__title">
+                      <a href={learnHref(`category/${c.id}`)}>{c.name}</a>
+                    </h3>
+                    <p class="cat-card__count">
+                      {c.count} term{c.count === 1 ? '' : 's'}
+                      {c.planned > c.count ? ` of ${c.planned} planned` : ''}
+                    </p>
+                  </div>
+                </div>
+
+                <p class="cat-card__plain">{c.plain}</p>
+
+                {c.starter && (
+                  <p class="cat-card__start">
+                    Start with <a href={learnHref(c.starter.slug)}>{c.starter.term}</a>.
+                  </p>
+                )}
+
+                {c.adjacentCategories.length > 0 && (
+                  <p class="cat-card__adjacent">
+                    Next door:{' '}
+                    {c.adjacentCategories.map((a, i) => (
+                      <>
+                        {i > 0 && ', '}
+                        <a href={learnHref(`category/${a.id}`)}>{a.name}</a>
+                      </>
+                    ))}
+                  </p>
+                )}
+              </article>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="lsection" aria-labelledby="paths-title">
+    <div class="wrap">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="paths-title">Follow a path</h2>
+        <p class="lsection__blurb">
+          Six to ten terms in a deliberate order, for a specific situation. Progress is kept in this
+          browser, so you can stop halfway and come back.
+        </p>
+      </div>
+
+      <ul class="path-grid">
+        {
+          paths.map((p) => (
+            <li>
+              <a class="path-card" href={learnHref(`paths/${p.id}`)}>
+                <span class="path-card__glyph" aria-hidden="true">
+                  {p.glyph}
+                </span>
+                <h3 class="path-card__title">{p.title}</h3>
+                <p class="path-card__blurb">{p.blurb}</p>
+                <p class="path-card__meta">
+                  {p.steps.length} terms · about {p.minutes} minutes
+                </p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p style="margin-top: var(--sp-5)">
+        <a class="lbutton" href={learnHref('paths')}>All learning paths</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="lsection" aria-labelledby="compare-title">
+    <div class="wrap">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="compare-title">“What is the difference between…”</h2>
+        <p class="lsection__blurb">
+          The most common question about AI vocabulary is not what a word means but how it differs
+          from the word next to it. Each of these answers that in one line, then in detail.
+        </p>
+      </div>
+
+      <ul class="tcard-grid">
+        {
+          comparisons.map((c) => (
+            <li>
+              <a class="tcard" href={learnHref(`compare/${c.id}`)}>
+                <div class="tcard__top">
+                  <p class="tcard__term">{c.title}</p>
+                </div>
+                <p class="tcard__one">{c.question}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p style="margin-top: var(--sp-5)">
+        <a class="lbutton" href={learnHref('compare')}>All comparisons</a>
+      </p>
+    </div>
+  </section>
+
+  {
+    interactive.length > 0 && (
+      <section class="lsection" aria-labelledby="interactive-title">
+        <div class="wrap">
+          <div class="lsection__head">
+            <h2 class="lsection__title" id="interactive-title">
+              Concepts you can only understand by moving something
+            </h2>
+            <p class="lsection__blurb">
+              Some ideas do not survive being described. Turn the learning rate up and watch the
+              walker overshoot; move the threshold and watch precision and recall trade against each
+              other. Every one has a keyboard path, a prose alternative and a reduced-motion mode.
+            </p>
+          </div>
+
+          <ul class="tcard-grid">
+            {interactive.map((t) => (
+              <li>
+                <a class="tcard" href={learnHref(t.slug)}>
+                  <div class="tcard__top">
+                    <p class="tcard__term">{t.term}</p>
+                    <span class="tcard__meta">{DIFFICULTY_LABEL[t.difficulty]}</span>
+                  </div>
+                  <p class="tcard__one">{t.visual.title}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="lsection" aria-labelledby="timeline-title">
+    <div class="wrap">
+      <div class="lsection__head">
+        <h2 class="lsection__title" id="timeline-title">The other half of this site</h2>
+        <p class="lsection__blurb">
+          UNAIVERSE is two things that belong together. This half explains the vocabulary. The other
+          half is the timeline: every milestone the United Nations has produced on AI since 2017,
+          each one sourced to the original document. Terms link into it, and it links back out.
+        </p>
+      </div>
+
+      <ul class="tcard-grid">
+        <li>
+          <a class="tcard" href={siteHref()}>
+            <div class="tcard__top"><p class="tcard__term">The UN AI timeline</p></div>
+            <p class="tcard__one">
+              76 milestones from 2017 to 2027, with receipts, filters and a take for eight kinds of
+              reader.
+            </p>
+          </a>
+        </li>
+        <li>
+          <a class="tcard" href={siteHref('agenda')}>
+            <div class="tcard__top"><p class="tcard__term">The Agenda</p></div>
+            <p class="tcard__one">What is still to come, who owes what by when, and a calendar file.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tcard" href={siteHref('inherit')}>
+            <div class="tcard__top"><p class="tcard__term">Just handed the file?</p></div>
+            <p class="tcard__one">Ten minutes on what exists and which meetings are worth staffing.</p>
+          </a>
+        </li>
+        <li>
+          <a class="tcard" href={learnHref('methodology')}>
+            <div class="tcard__top"><p class="tcard__term">How this was written</p></div>
+            <p class="tcard__one">
+              The content pipeline, the review gate, and what is still awaiting a human.
+            </p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Learn>

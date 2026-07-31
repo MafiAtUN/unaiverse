@@ -1,0 +1,241 @@
+{
+  "id": "embedding",
+  "slug": "embedding",
+  "term": "Embedding",
+  "aliases": [
+    "embeddings",
+    "vector representation"
+  ],
+  "categoryId": "transformers",
+  "subcategory": "Transformers and Attention",
+  "difficulty": "intermediate",
+  "audiences": [
+    "everyone",
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "vector"
+  ],
+  "relatedTermIds": [
+    "transformer",
+    "attention",
+    "positional-encoding",
+    "semantic-similarity",
+    "semantic-search",
+    "vector"
+  ],
+  "oftenConfusedWith": [
+    "tokenisation",
+    "vector-database"
+  ],
+  "oneSentence": "A list of numbers that places a token or other item in a mathematical space so a model can compare patterns, relationships and context.",
+  "plainExplanation": "An embedding turns something discrete, such as a word piece, sentence or image label, into a list of numbers. That list is called a vector. The input might be the token for “rain”, a whole sentence, or another item the system needs to compare. The output is not a definition in words. It is a numeric representation the model can work with.\n\nThe main purpose is to put similar items closer together in a mathematical space and different items farther apart. For example, tokens often used in similar contexts may end up with similar embeddings. In modern language models, each token first gets an embedding, then the transformer processes those vectors further using attention.\n\nWhat happens in between depends on the system. Usually, the model learns these numbers during training by adjusting them so the overall task works better, such as predicting the next token. The embedding does not contain a perfect human meaning of a word. It captures patterns from the training data and from the model’s objective.\n\nThis term is often confused with tokenisation and with vector databases. Tokenisation breaks text into units such as words or word pieces. Embedding comes after that and converts those units into numbers. A vector database is a storage and search system for vectors. An embedding is the vector representation itself, not the database.",
+  "everydayAnalogy": {
+    "title": "Colour-coded pins on a farming map",
+    "story": "A farming cooperative tracks rainfall across many villages. An analyst places a pin for each village on a wall map, not by exact geography, but by rainfall behaviour: villages with similar dry seasons, storm timing and soil moisture patterns are placed near each other. When a new village joins, the analyst studies its recent pattern and places its pin near villages with similar behaviour. Staff can then quickly spot which places may need similar planting advice.",
+    "mapping": [
+      {
+        "analogyElement": "A pin for each village",
+        "aiElement": "An embedding vector for a token or other item"
+      },
+      {
+        "analogyElement": "Pins placed near villages with similar rainfall behaviour",
+        "aiElement": "Similar embeddings placed close in vector space"
+      },
+      {
+        "analogyElement": "Recent rainfall pattern used to position a new village",
+        "aiElement": "Training or an encoder producing a representation from data"
+      },
+      {
+        "analogyElement": "Using nearby pins to find similar planting advice",
+        "aiElement": "Using embeddings for similarity, retrieval or later model processing"
+      }
+    ],
+    "limitation": "Real embeddings are not drawn by a person on a wall map, and the space usually has many dimensions, not two. Also, closeness in embedding space does not mean two items are identical or interchangeable. In language models, the embedding for a token is only the starting representation; later layers change it based on context, so a single fixed pin does not capture the full process."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "How embeddings place tokens in a space",
+    "learningObjective": "After using this explainer, a reader should be able to say that an embedding converts a token into numbers so the model can place it near or far from other tokens and then use those positions for comparison and attention.",
+    "description": "The explainer shows a small set of tokens, their embedding vectors, and a 2D projection of their positions. Readers select tokens, switch between isolated tokens and short phrases, and see how closeness changes what looks similar. A side panel shows the numeric vector and reminds readers that the true space has many dimensions, while the chart is a simplified projection.",
+    "steps": [
+      {
+        "label": "Choose a token",
+        "explanation": "Select one token such as “rain”, “storm” or “market”. The interface highlights its embedding vector and its point in the projected space.",
+        "visualInstruction": "Show a token list on the left, a numeric vector panel on the right, and a central SVG scatter plot. On selection, highlight the token row, the vector row, and the matching point with a strong outline."
+      },
+      {
+        "label": "Compare neighbours",
+        "explanation": "The explainer marks nearby points as more similar in this representation and distant points as less similar. This teaches what “close in vector space” means.",
+        "visualInstruction": "Draw faint distance rings around the selected point. Emphasise the three nearest points with labels and connecting lines. Include a note: proximity suggests learned similarity, not identical meaning."
+      },
+      {
+        "label": "See the pipeline",
+        "explanation": "A small flow strip shows text becoming tokens, then embeddings, then transformer layers. This distinguishes embedding from tokenisation and from later contextual processing.",
+        "visualInstruction": "Above the chart, render a left-to-right strip: text → tokens → embedding vectors → transformer. Keep the embedding stage visually enlarged. Use arrows and brief captions."
+      },
+      {
+        "label": "Switch to context",
+        "explanation": "Readers toggle from isolated tokens to a short phrase to see that the initial token embedding is only the start; later layers build context-sensitive representations.",
+        "visualInstruction": "Provide a toggle labelled “token only / in phrase”. In phrase mode, show the same token entering a transformer block and a changed contextual vector beside it. Use colour linking to show continuity."
+      }
+    ],
+    "interaction": "Readers can click tokens, hover points for labels, toggle between token-only and in-phrase views, and switch on an option that displays nearest neighbours and approximate distances.",
+    "accessibilityDescription": "This alternative presents the same lesson in text. First, the reader chooses a token from a list. The interface announces that the token has been converted into a vector, which is a list of numbers. Next, it reports several nearby tokens and explains that nearby means the model has learned similar usage patterns, not necessarily the same dictionary meaning. Then it describes a simple pipeline: text is split into tokens, tokens become embeddings, and transformer layers further modify those representations using context. Finally, in phrase mode, it explains that the starting embedding for a token is updated by surrounding words, so later representations are context-sensitive.",
+    "reducedMotionDescription": "Instead of animated movement, the reader sees two static panels. The first shows selected tokens with their vectors and a fixed projected scatter plot with nearest neighbours outlined. The second shows a static before-and-after comparison: tokenisation, initial embedding, and a later contextual representation inside a phrase. All changes appear instantly without motion.",
+    "component": "embeddings"
+  },
+  "workedExample": {
+    "scenario": "A small language model processes the sentence: “Heavy rain damaged roads.”",
+    "input": "Tokens: [Heavy] [rain] [damaged] [roads]",
+    "process": [
+      "Each token is looked up in an embedding table. For example, “rain” might map to a vector such as [0.42, -0.18, 1.07, 0.09].",
+      "The model does the same for the other tokens, producing one vector per token.",
+      "These vectors are the inputs to the transformer layers, which compare and combine them using attention.",
+      "After later processing, the representation linked to “rain” reflects both the token itself and its context in this sentence."
+    ],
+    "result": "The model now has numeric representations it can use to predict the next token, classify the sentence, or find similar text. The embedding step produced the starting vectors, not the final answer."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A humanitarian coordination team wants to group short, non-sensitive public situation updates so similar reports can be reviewed together.",
+    "relevance": "Embeddings can turn each public update into a vector, making it easier to cluster similar updates, support semantic search and reduce manual sorting before human review.",
+    "caution": "Do not put confidential, personal, protection-sensitive or operationally sensitive information into an unapproved public AI service. Use approved tools and human oversight, especially when grouping reports could affect prioritisation."
+  },
+  "whyItMatters": "Embeddings are one of the main reasons modern AI systems can compare text, search by meaning-like patterns, cluster similar items and feed language into transformers. If you use AI tools for search, classification, recommendations or document matching, embeddings often sit underneath. For a non-specialist, the key decision point is this: a system may treat items as similar because of learned statistical patterns in data, not because a human checked that they truly mean the same thing. That affects quality, bias, retrieval results and whether human review is needed.",
+  "whereYouMayHearIt": [
+    "semantic search tools",
+    "transformer model explanations",
+    "vector database discussions",
+    "document clustering and recommendation systems"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "An embedding is just another word for tokenisation.",
+      "correction": "They are different stages. Tokenisation splits text into units such as words or word pieces. Embedding converts each unit into a numeric vector so the model can process it. You usually need tokenisation before token embeddings, but they are not the same thing."
+    },
+    {
+      "misconception": "An embedding stores the exact meaning of a word.",
+      "correction": "It is better to say it captures learned usage patterns relevant to training. A vector may place “bank” near finance-related terms in some contexts, but it does not guarantee a complete or stable human meaning. Meaning-like behaviour depends on training data, objective and later context processing."
+    },
+    {
+      "misconception": "If two items are close in embedding space, they mean the same thing.",
+      "correction": "Closeness only suggests the model has learned similar patterns of use or related features. Two items can be close because they appear in similar contexts, belong to the same topic, or share style. Human judgement is still needed for high-stakes interpretation."
+    },
+    {
+      "misconception": "A vector database creates embeddings.",
+      "correction": "Usually it stores and searches vectors that were created elsewhere by an embedding model. Some tools bundle both steps together, which causes confusion, but the database and the embedding are different components."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "An embedding is a way of turning a token or other item into numbers so a computer system can compare it with other items and use it inside a model.",
+    "technical": "In transformer-based systems, an embedding is typically a dense vector representation assigned to each token id, often via a learned embedding matrix. The token index selects a row from that matrix, producing a continuous-valued vector of fixed size. Positional information is then added or otherwise incorporated so the model can handle order. These vectors become the input to attention layers. More broadly, embeddings can also represent sentences, documents or images, produced either by lookup tables or by encoder networks. Their geometry supports operations such as nearest-neighbour search, clustering and similarity scoring, but the geometry reflects training data and objectives rather than a guaranteed human semantic theory."
+  },
+  "keyTakeaway": "An embedding is the model’s numeric starting representation of a token or other item, used so similar patterns can be compared and processed.",
+  "quickCheck": {
+    "question": "Which statement best describes an embedding in a language model?",
+    "options": [
+      "It splits text into tokens such as words or word pieces.",
+      "It is a list of numbers representing a token or other item so the model can compare and process it.",
+      "It is the database used to store documents for semantic search.",
+      "It is the final answer the model gives after analysing a prompt."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "An embedding is a vector representation. Tokenisation comes earlier, a vector database is a separate storage and search tool, and the model’s final output comes later after further processing."
+  },
+  "resources": [
+    {
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "description": "This interactive tool lets readers explore how points cluster in embedding space, which suits visual learners and anyone who wants hands-on intuition.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Word embedding",
+      "url": "https://en.wikipedia.org/wiki/Word_embedding",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This overview gives a broad reference-style introduction to word embeddings, which suits readers who want a quick general background.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "type": "article",
+      "publisher": "Vaswani et al., 2017",
+      "description": "This paper introduces the transformer architecture that uses embeddings as model inputs, which suits technical readers who want the original source.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "The Illustrated Transformer",
+      "url": "https://jalammar.github.io/illustrated-transformer/",
+      "type": "article",
+      "publisher": "Jay Alammar",
+      "description": "This article explains how embeddings fit into transformers with diagrams and plain language, which suits readers who want intuition before formal detail.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Embedding",
+      "url": "https://www.youtube.com/results?search_query=Embedding%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a search results page for many video explanations on embeddings, which suits readers who prefer to compare different teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Embedding",
+      "url": "https://www.reddit.com/search/?q=Embedding",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a search results page for community discussions about embeddings, which suits readers who want to see common questions, confusions and informal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "embedding meaning in ai",
+    "what is an embedding",
+    "embeddings vs tokenisation",
+    "vector representation ai",
+    "word embedding simple explanation",
+    "embedding in transformer",
+    "how do embeddings work",
+    "embedding vs vector database",
+    "embeding ai",
+    "semantic similarity embedding",
+    "embedding",
+    "embeddings",
+    "vector representation"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:38:14.506Z",
+    "contentHash": "0496f0d817abda85",
+    "attempts": 1,
+    "promptTokens": 2263,
+    "completionTokens": 2537
+  }
+}

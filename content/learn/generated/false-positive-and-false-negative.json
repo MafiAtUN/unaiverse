@@ -1,0 +1,234 @@
+{
+  "id": "false-positive-and-false-negative",
+  "slug": "false-positive-and-false-negative",
+  "term": "False positives and false negatives",
+  "aliases": [
+    "false positive",
+    "false negative",
+    "true positive",
+    "true negative",
+    "type I error",
+    "type II error"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "human-rights",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "classification"
+  ],
+  "relatedTermIds": [
+    "classification",
+    "confusion-matrix",
+    "evaluation-metric",
+    "accuracy",
+    "benchmark",
+    "reliability"
+  ],
+  "oftenConfusedWith": [
+    "precision",
+    "recall",
+    "f1-score",
+    "accuracy"
+  ],
+  "oneSentence": "These labels describe the four basic outcomes of a yes-or-no prediction and show the different ways a system can be right or wrong.",
+  "plainExplanation": "Many AI and non-AI systems make a yes-or-no prediction: spam or not spam, relevant or not relevant, risk flag or no flag. To judge that kind of system, you compare its prediction with what was actually true.\n\nThat comparison gives four possible outcomes. A true positive means the system predicted “yes” and the real answer was yes. A true negative means it predicted “no” and the real answer was no. A false positive means it predicted “yes” but the real answer was no. A false negative means it predicted “no” but the real answer was yes.\n\nThe words matter because the two kinds of mistakes can have very different consequences. A false positive may wrongly include, accuse or interrupt. A false negative may miss something important. Which mistake matters more depends on the context. In health screening, security checks, content moderation, search, or humanitarian triage, the safer balance is not always the same.\n\nYou may also hear type I error and type II error. In many testing contexts, type I error corresponds to a false positive, and type II error corresponds to a false negative. But those labels come from statistics and can confuse people outside that setting, so it is often clearer to say false positive or false negative directly.\n\nThese terms are related to accuracy, precision and recall, but they are not the same. Accuracy is an overall score. Precision looks at how many predicted positives were actually positive. Recall looks at how many real positives were successfully found. The counts of true and false positives and negatives are the building blocks used to calculate those scores.",
+  "everydayAnalogy": {
+    "title": "Guessing who “they” refers to",
+    "story": "Amina is editing meeting notes from Nairobi, Bogotá and Bangkok. One sentence says, “After the programme officers spoke to the finance team, they approved the request.” She must decide whether “they” refers to the programme officers. If she marks it as a match and that is correct, that is like a true positive; if she marks it as a match but the sentence really meant the finance team, that is like a false positive. If she marks it as not a match and she is right, that is like a true negative; if she marks it as not a match but “they” really did mean the programme officers, that is like a false negative.",
+    "mapping": [
+      {
+        "analogyElement": "Amina marks 'they' as referring to the programme officers",
+        "aiElement": "The system predicts a positive"
+      },
+      {
+        "analogyElement": "The sentence really does or does not refer to the programme officers",
+        "aiElement": "The ground truth is positive or negative"
+      },
+      {
+        "analogyElement": "A correct match or correct rejection",
+        "aiElement": "A true positive or true negative"
+      },
+      {
+        "analogyElement": "A wrong match or a missed match",
+        "aiElement": "A false positive or false negative"
+      }
+    ],
+    "limitation": "This analogy is about human language ambiguity, where even people may disagree about the correct answer. In many evaluation tasks, there is a clearer reference label, although not always. Also, real AI systems usually process thousands of cases and produce summary rates, not one careful judgement at a time."
+  },
+  "visual": {
+    "type": "simulation",
+    "title": "How changing the threshold changes false positives and false negatives",
+    "learningObjective": "After using this explainer, a reader should be able to say how moving a decision threshold changes true positives, false positives, true negatives and false negatives, and why that affects precision and recall.",
+    "description": "The explainer shows a set of scored items split into actual positives and actual negatives, plus a movable threshold. As the threshold moves, items on one side are labelled predicted positive and items on the other side predicted negative. Counters update for true positives, false positives, true negatives and false negatives, along with linked precision and recall values.",
+    "steps": [
+      {
+        "label": "See the two groups",
+        "explanation": "Items have a score from low to high. Some are actually positive and some are actually negative. The score is what the system uses before making a yes-or-no decision.",
+        "visualInstruction": "Display two coloured groups of dots or bars along one horizontal score axis, with clear text labels 'actually positive' and 'actually negative'; do not rely on colour alone."
+      },
+      {
+        "label": "Set the threshold",
+        "explanation": "The threshold is the cut-off point. Items above it are predicted positive. Items below it are predicted negative.",
+        "visualInstruction": "Provide a draggable vertical threshold line and a keyboard-operable slider linked to the same value; show the current threshold numerically."
+      },
+      {
+        "label": "Watch the four counts change",
+        "explanation": "Moving the threshold left usually catches more actual positives, but it also tends to include more actual negatives. Moving it right usually reduces false alarms, but may miss real positives.",
+        "visualInstruction": "As threshold changes, update four labelled counters: true positives, false positives, true negatives, false negatives; animate lightly if motion is allowed."
+      },
+      {
+        "label": "Connect counts to summary scores",
+        "explanation": "Precision rises when fewer predicted positives are wrong. Recall rises when fewer actual positives are missed. Neither score alone tells the whole story.",
+        "visualInstruction": "Show precision and recall beside the four counts, with formulas available on demand and short tooltips in plain language."
+      }
+    ],
+    "interaction": "Users can drag the threshold, use left and right arrow keys on a linked slider, and switch between a few preset class balances to see how the same model behaviour can produce different counts and score trade-offs.",
+    "accessibilityDescription": "Screen-reader version: 'This simulation explains a yes-or-no classifier. Items have scores and a threshold decides which items count as predicted positive. If an actually positive item is above the threshold, it is a true positive. If an actually negative item is above the threshold, it is a false positive. If an actually negative item is below the threshold, it is a true negative. If an actually positive item is below the threshold, it is a false negative. Lowering the threshold usually increases recall by finding more actual positives, but it can also increase false positives and lower precision. Raising the threshold usually does the opposite. A text table reports the current four counts and the resulting precision and recall.'",
+    "reducedMotionDescription": "Reduced-motion version: the same score axis and threshold appear without animated movement. When the threshold changes, the display updates instantly and a static table beneath it shows the current true positive, false positive, true negative and false negative counts, plus precision and recall.",
+    "component": "precision-recall"
+  },
+  "workedExample": {
+    "scenario": "An email filter checks 100 messages and marks some as spam.",
+    "input": "Out of 100 messages, 20 are really spam and 80 are not. The filter marks 25 as spam. Of those 25, 15 are really spam and 10 are not.",
+    "process": [
+      "Compare each spam label from the filter with the real status of the message.",
+      "Count the 15 messages that were spam and were marked spam as true positives.",
+      "Count the 10 messages that were not spam but were marked spam as false positives.",
+      "Of the 5 spam messages the filter missed, count them as false negatives; the remaining 70 non-spam messages correctly left alone are true negatives."
+    ],
+    "result": "True positives = 15, false positives = 10, false negatives = 5, true negatives = 70. The filter catches many spam messages, but it also wrongly blocks some legitimate mail."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office is testing an internal search tool over approved guidance documents. Staff type a query such as 'cash transfer monitoring' and the team checks whether the tool marks each returned document as relevant or not relevant.",
+    "relevance": "False positives are irrelevant documents shown as relevant, which wastes staff time. False negatives are relevant documents not shown, which can hide useful guidance. Looking at both helps the team decide whether the tool is genuinely useful, not just fast.",
+    "caution": "Use only approved internal content and a secure, authorised environment. Do not upload confidential case files, personal data, protection-sensitive records or security-related operational information into an unapproved public AI service for testing."
+  },
+  "whyItMatters": "A system can look good overall while still making the wrong kind of mistakes for your purpose. If you only hear that a tool is '90% accurate', you may miss that it wrongly flags many innocent cases, or misses many real ones. False positives and false negatives make those trade-offs visible. That helps non-specialists ask better questions: What harm comes from each kind of error? Who is affected? Are some groups hit more often? Is the threshold set for convenience, safety or fairness? Those questions matter in procurement, policy, programme design and day-to-day use.",
+  "whereYouMayHearIt": [
+    "medical screening and tests",
+    "search and recommendation systems",
+    "fraud or risk detection",
+    "content moderation",
+    "machine learning evaluation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A high accuracy score means false positives and false negatives are not a problem.",
+      "correction": "Not necessarily. If the positive cases are rare, a system can get high accuracy by mostly saying 'no'. It may still miss many real positives, or it may create too many false alarms. You need to inspect the four outcome counts, not just one overall score."
+    },
+    {
+      "misconception": "False positives are always less serious than false negatives.",
+      "correction": "The impact depends on the setting. A false positive in an airport bag check may mean an extra manual review. A false positive in a benefit, migration or safety-related system could wrongly interrupt services or trigger harmful scrutiny. A false negative can also be serious because it misses a real issue. Context decides the risk."
+    },
+    {
+      "misconception": "Type I error and type II error are different ideas from false positives and false negatives.",
+      "correction": "They are closely related labels from statistics. In many common uses, type I error means false positive and type II error means false negative. The caution is that the statistical framing comes from hypothesis testing, so using the plain terms is often clearer for everyday system evaluation."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "There are four basic results when a system makes a yes-or-no call: correct yes, correct no, wrong yes and wrong no. The two wrong ones are false positives and false negatives, and they tell you what kind of mistakes the system makes.",
+    "technical": "For a binary classification task, each case has a predicted label and a reference label. Comparing them yields four cells: true positive, false positive, true negative and false negative. These counts are often arranged in a confusion matrix. They are the basis for evaluation metrics such as accuracy, precision and recall: accuracy uses all four cells, precision focuses on predicted positives, and recall focuses on actual positives. The decision threshold often controls the trade-off: lowering it tends to increase true positives and false positives together, while raising it tends to increase true negatives and false negatives together. In imbalanced datasets, the raw counts and the cost of each error type may matter more than a single headline score."
+  },
+  "keyTakeaway": "Do not ask only whether a system is right overall; ask how often it makes the two different kinds of wrong answer and what each mistake costs.",
+  "quickCheck": {
+    "question": "A document filter marks 40 files as relevant. Later review shows that 12 of those 40 were actually not relevant. What are those 12 cases?",
+    "options": [
+      "False positives",
+      "False negatives",
+      "True negatives",
+      "Recall errors only"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "The system predicted 'relevant', which is a positive prediction, but the real answer was 'not relevant'. That is exactly a false positive. A false negative would be a relevant file that the system failed to mark as relevant."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "False positives and false negatives",
+      "url": "https://en.wikipedia.org/wiki/False_positives_and_false_negatives",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "A broad reference page that defines the four outcomes and related terms; useful for readers who want a quick overview and standard vocabulary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "A short course-style explanation of accuracy, recall and precision; useful for beginners who want to see how the counts connect to common metrics.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "A framework-oriented resource on managing AI risks in practice; useful for managers and evaluators thinking about error trade-offs, governance and context.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: False positives and false negatives",
+      "url": "https://www.youtube.com/results?search_query=False%20positives%20and%20false%20negatives%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A search results page for videos on this topic, not a single vetted lesson; useful if you prefer visual explanations, but compare sources carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: False positives and false negatives",
+      "url": "https://www.reddit.com/search/?q=False%20positives%20and%20false%20negatives",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A search results page for community discussion, not a single authoritative answer; useful for seeing common points of confusion, with careful fact-checking needed.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "false positive false negative meaning",
+    "tp fp tn fn explained",
+    "type 1 vs type 2 error simple",
+    "what is a false positive in ai",
+    "false negative example",
+    "precision recall false positives",
+    "confusion matrix basics",
+    "false posotive typo",
+    "missed detection vs false alarm",
+    "false positives and false negatives",
+    "false positive",
+    "false negative",
+    "true positive",
+    "true negative",
+    "type i error",
+    "type ii error"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:41:59.484Z",
+    "contentHash": "aa0833b47c6c263d",
+    "attempts": 1,
+    "promptTokens": 2374,
+    "completionTokens": 2651
+  }
+}

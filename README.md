@@ -17,12 +17,24 @@ It is also meant to be *usable on a Tuesday*, which is why it ships:
 | Page | For |
 |---|---|
 | `/` | The timeline. Search by document symbol, filter by duty station and body, copy any milestone as a plain-text briefing note. |
+| `/learn` | **The AI Literacy Universe.** 307 AI terms in plain language, each with an analogy that states where it stops working, a visual, a worked example, a UN workplace example, misconception corrections and a quick check. Search tolerates typos: `gradient decent` finds gradient descent, `memory limit` finds the context window. |
 | `/agenda` | What is still to come, with a calendar file to subscribe to, and a ledger of who owes what by when. |
 | `/inherit` | Ten minutes on what exists, for the delegate or colleague who just had the file handed to them with no handover. |
 | `/calendar.ics` | Every scheduled item, importable into Outlook or Google Calendar. Per-event files live at `/calendar/<id>.ics`. |
 | `/rss.xml` | For the office that pipes a feed into a Teams channel. |
 
 Filter state lives in the URL, so a filtered view is a link you can send to a colleague or a capital: [`?venue=geneva`](https://mafiatun.github.io/unaiverse/?venue=geneva) is the Geneva file.
+
+There are two halves. The timeline records **what the UN has done about AI**.
+[`/learn`](https://mafiatun.github.io/unaiverse/learn) explains **the words** —
+because the commonest reason to be lost in this file is not the chronology, it
+is somebody saying "we should look at RAG" and the meeting moving on. Tap any
+underlined term in the timeline and A/BOT explains it in place; if it has a full
+page, A/BOT offers a door through to it, and the page offers a door back to the
+exact milestone you came from.
+
+No login, no account, no tracking. Saved terms and progress live in your browser
+and are never sent anywhere.
 
 Your guide through the galaxy is **A/BOT** 🤖, a droid with junior-staffer energy and a weakness for acronyms, who explains AI governance through *Star Wars*, Asimov, and the occasional dragon.
 
@@ -50,6 +62,11 @@ All facts are sourced to official UN documents. All jokes are the author's own a
 | `src/lib/brief.ts` | Builds the plain-text briefing note behind every "Copy briefing note" button |
 | `src/lib/onboarding.ts` | The authored reading order behind `/inherit`, plus the always-safe citable lines |
 | `scripts/annotate-milestones.mjs` | The hand-written duty-station and body mapping for all 76 milestones |
+| `docs/AI_LITERACY.md` | **The literacy platform**: architecture, content model, Azure pipeline, review workflow, accessibility, limitations |
+| `content/learn/taxonomy.json` | 307 terms in 16 categories — the source of truth for the literacy area |
+| `content/learn/reviewed/` | The published term corpus. The site reads this directory and nothing else |
+| `scripts/learn/` | The offline content pipeline: generate, validate, check links, report, publish |
+| `src/lib/learn/schema.ts` | The content schema, shared by the Astro build and the Node scripts |
 
 ## Stack
 
@@ -60,7 +77,33 @@ Reduced-motion and mobile modes are first-class citizens, not afterthoughts.
 npm install
 npm run dev      # local, with the content collection watching content/milestones
 npm run build    # static output to dist/
+npm test         # 44 tests: content contract, search behaviour, built output
+npm run check    # astro check — type checking
 ```
+
+### The AI literacy content pipeline
+
+Azure OpenAI is used **only at development time**, by scripts that write JSON to
+disk. The published site is static files: it holds no credential, calls no AI
+service, and `npm test` asserts that no Azure identifier or `.env` value appears
+anywhere in `dist/`.
+
+```bash
+cp .env.template .env                              # fill in four variables
+
+npm run content:generate -- --term gradient-descent   # one term
+npm run content:generate                              # everything outstanding
+npm run content:generate -- --term token --dry-run    # no credentials needed
+npm run content:validate                              # schema + link integrity
+npm run content:check-links                           # fetch every external URL
+npm run content:report                                # quality report
+npm run content:publish -- --list                     # what awaits review
+npm run content:publish -- --term token --by "Name"   # the review gate
+```
+
+Nothing a model wrote reaches a reader until a person has run
+`content:publish` for that term. Full workflow in
+[`docs/AI_LITERACY.md`](docs/AI_LITERACY.md).
 
 > **Adding a dependency?** Run `npm run relock` afterwards, not just `npm install <pkg>`.
 > An incremental install on macOS prunes optional dependencies that only resolve on

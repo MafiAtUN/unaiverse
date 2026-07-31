@@ -1,0 +1,218 @@
+{
+  "id": "intent-detection",
+  "slug": "intent-detection",
+  "term": "Intent detection",
+  "aliases": [
+    "intent classification"
+  ],
+  "categoryId": "vision-and-language",
+  "subcategory": "Computer Vision and Language Technology",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "classification"
+  ],
+  "relatedTermIds": [
+    "classification",
+    "natural-language-processing",
+    "sentiment-analysis",
+    "named-entity-recognition",
+    "topic-modelling",
+    "summarisation"
+  ],
+  "oftenConfusedWith": [
+    "sentiment-analysis",
+    "topic-modelling",
+    "named-entity-recognition"
+  ],
+  "oneSentence": "A system that assigns a user message or action to a goal category, such as asking for help, making a booking or reporting a problem.",
+  "plainExplanation": "Intent detection takes a piece of language, and sometimes a user action, and predicts what goal it most likely represents. The input is usually a short message such as “I need to change my flight” or “Can I reset my password?”. The output is a label, such as “booking change” or “account support”.\n\nIn practice, the system is given a set of predefined categories. It compares the new message with patterns learned from earlier examples. Those examples are often called training data: past messages that people have already labelled with the correct category.\n\nThis does not mean the system fully understands the person. It is performing a classification task: choosing one label from a list, or sometimes several labels if the design allows that. Some systems also return a confidence score, which is a number showing how strongly the model favours one label over others.\n\nIntent detection is often used before another step. For example, the predicted intent may route a message to the right team, trigger a form, or choose which question to ask next. It is commonly confused with sentiment analysis, which looks for emotional tone such as positive or negative, not the user’s practical goal.",
+  "everydayAnalogy": {
+    "title": "Sorting messages by what the sender needs",
+    "story": "A small clinic receives messages in one shared inbox. A staff member quickly sorts each message into trays labelled “urgent medical advice”, “appointment change”, “billing question” and “general information”. They do not need to know every detail of the sender’s situation to place most messages in the right tray. Once sorted, each tray goes to a different team for the next action.",
+    "mapping": [
+      {
+        "analogyElement": "Shared inbox messages",
+        "aiElement": "Incoming user text or chat turns"
+      },
+      {
+        "analogyElement": "Labelled trays",
+        "aiElement": "Predefined intent categories"
+      },
+      {
+        "analogyElement": "Staff member sorting by clues in the wording",
+        "aiElement": "Model predicting the most likely intent from patterns in text"
+      },
+      {
+        "analogyElement": "Different teams handling each tray",
+        "aiElement": "Downstream routing or action based on the predicted intent"
+      }
+    ],
+    "limitation": "A human sorter can use broad background knowledge, ask clarifying questions, and notice unusual context. An intent detection model usually relies on patterns from its training examples and may fail on new wording, mixed requests, sarcasm or messages that fit no existing category. The analogy also suggests one person making a careful judgement, while many deployed systems produce a fast statistical prediction."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "From message to intent label",
+    "learningObjective": "Show how a short message moves through an intent detection system and becomes a category used for routing or the next step.",
+    "description": "A left-to-right flow diagram with one example message entering a model, then a ranked list of possible intents, then the chosen label and resulting action. Read it from input to prediction to use. Small notes show that labels are predefined and confidence can be low when wording is unclear.",
+    "steps": [
+      {
+        "label": "1. Input message",
+        "explanation": "A person sends a short text such as “Please move my meeting to next week”.",
+        "visualInstruction": "Draw a message bubble on the left with the example text. Add a small caption: “new user message”."
+      },
+      {
+        "label": "2. Compare with learned patterns",
+        "explanation": "The model analyses words and phrases against patterns learned from labelled examples.",
+        "visualInstruction": "Draw a central box labelled “intent model”. Inside, show small token-like text fragments flowing into a pattern grid. Add a note: “trained on labelled examples”."
+      },
+      {
+        "label": "3. Score candidate intents",
+        "explanation": "The system gives several possible labels scores, such as “reschedule” 0.78 and “cancel” 0.14.",
+        "visualInstruction": "To the right of the model, show a short ranked list with three intent labels and horizontal score bars of different lengths."
+      },
+      {
+        "label": "4. Choose next action",
+        "explanation": "The top label is used to route the request, ask a clarifying question, or trigger a workflow.",
+        "visualInstruction": "On the far right, show the winning label in a highlighted pill and an arrow to an action box such as “send to scheduling workflow”. Add a warning icon and text: “if confidence is low, ask a follow-up question”."
+      }
+    ],
+    "interaction": "Hovering or tapping each step reveals a plain-language note with the role of that stage and one possible failure point, such as unclear wording or missing categories.",
+    "accessibilityDescription": "The diagram shows a four-step flow from left to right. First, a message bubble contains the text “Please move my meeting to next week”. Second, the message enters an intent model trained on labelled examples, shown as text fragments being compared with learned patterns. Third, the system outputs a ranked list of possible intents with scores: reschedule is highest, cancel is lower, and general query is lower still. Fourth, the highest-scoring label is used for an action, such as sending the request to a scheduling workflow. A note explains that if no label scores highly, the safer design is to ask a clarifying question rather than assume.",
+    "reducedMotionDescription": "A static four-column diagram shows the same process without animation: input message, model box, ranked intent list with score bars, and chosen action. All arrows are fixed and visible at once."
+  },
+  "workedExample": {
+    "scenario": "An online support form for a public transport service needs to sort requests before a human agent reads them.",
+    "input": "Message: \"My card was charged twice for one bus trip. Can you refund the extra fare?\"",
+    "process": [
+      "The system receives the text and cleans obvious formatting, such as extra spaces and punctuation noise.",
+      "It compares the wording with examples labelled as intents like “refund request”, “lost card”, “route information” and “complaint”.",
+      "It assigns scores to the candidate intents, for example: refund request 0.84, complaint 0.11, route information 0.03, lost card 0.02.",
+      "Because “refund request” is highest and above the review threshold, the message is routed to the billing support queue."
+    ],
+    "result": "Output label: “refund request”, with a confidence score of 0.84 and automatic routing to the appropriate team."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A team reviewing a draft speech wants to check whether each paragraph matches agreed themes such as climate finance, humanitarian access, gender equality or youth participation.",
+    "relevance": "An intent detection style system can tag paragraphs by likely communicative purpose or theme, helping staff spot sections that may not align with the intended message structure.",
+    "caution": "Use it as a drafting aid, not as the final authority on policy wording. Do not paste confidential negotiating positions, unpublished speech drafts with sensitive content, or other unapproved material into a public AI service."
+  },
+  "whyItMatters": "For a non-specialist, intent detection matters because it shapes how organisations respond to people. It can speed up triage, route requests to the right team, and make services easier to use. But it also creates practical risks: if the label set is poorly designed, if training examples are unbalanced, or if confidence is ignored, people can be misrouted or misunderstood. Knowing what the system actually does helps you ask better questions: What are the intent categories? What happens when none fit? How is low confidence handled? Who checks errors? Those questions affect service quality, fairness and accountability more than impressive-sounding claims about AI.",
+  "whereYouMayHearIt": [
+    "customer support chatbots",
+    "helpdesk ticket routing",
+    "virtual assistants",
+    "contact centre analytics"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Intent detection tells you what a person really meant in a deep or complete sense.",
+      "correction": "It usually predicts the best-fitting label from a predefined list. That can be useful, but it is narrower than full interpretation. If the list is incomplete or the wording is ambiguous, the prediction may be wrong even when the message makes sense to a human reader."
+    },
+    {
+      "misconception": "It is the same as sentiment analysis.",
+      "correction": "Sentiment analysis looks for emotional tone, such as positive, negative or angry. Intent detection looks for the practical goal, such as making a complaint, requesting a refund or asking for information. One message can have the same intent with very different sentiment, or the same sentiment with different intents."
+    },
+    {
+      "misconception": "A high score means the model is correct.",
+      "correction": "A confidence score only shows how strongly the model prefers one label over the alternatives it has been given. If the correct intent is missing from the label set, or the training data were poor, a high score can still point to the wrong category."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is a way of sorting messages by what the sender is trying to do, such as ask for help, change a booking or report a problem.",
+    "technical": "Intent detection is a supervised classification task in natural language processing. A model is trained on labelled examples where each utterance, query or text span is mapped to one intent class. At inference time, the model converts the new text into internal features or embeddings and estimates scores or probabilities over the available classes. The system then selects the top class, or a set of classes in a multi-label design, often with thresholds for fallback or clarification. In deployed systems, intent detection is commonly combined with entity extraction, dialogue state tracking or workflow routing. It differs from sentiment analysis, topic modelling and named entity recognition: those tasks target emotional tone, broad themes and named items, not the user’s operational goal."
+  },
+  "keyTakeaway": "Intent detection does not read minds; it sorts language into likely goal categories so a system can choose the next step.",
+  "quickCheck": {
+    "question": "Which output best matches an intent detection system?",
+    "options": [
+      "A label such as “refund request” chosen from predefined categories",
+      "A paragraph rewritten in simpler language",
+      "A list of named people, places and organisations",
+      "A score showing whether the message sounds positive or negative"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Intent detection outputs the likely goal category of the message. Rewriting text is a generation task, extracting names is named entity recognition, and positive or negative tone is sentiment analysis."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Intent detection",
+      "url": "https://en.wikipedia.org/w/index.php?search=Intent%20detection",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers see the range of related articles and terms, and suits someone starting with broad orientation rather than a single definitive source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This course gives a practical introduction to core machine learning ideas behind tasks like intent detection, and suits readers who want structured beginner-friendly technical grounding.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Machine Learning Glossary",
+      "url": "https://developers.google.com/machine-learning/glossary",
+      "type": "article",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This glossary provides short definitions of machine learning terms that often appear in explanations of intent detection, and suits readers who need quick clarification while reading.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Intent detection",
+      "url": "https://www.youtube.com/results?search_query=Intent%20detection%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps readers find video explanations with different levels of depth, and suits people who learn better by watching than by reading.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Intent detection",
+      "url": "https://www.reddit.com/search/?q=Intent%20detection",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows how practitioners and learners discuss the term in real-world questions, and suits readers who want to see common confusions and informal explanations.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "intent detection meaning",
+    "intent classification example",
+    "what is intent detection in nlp",
+    "intent detection vs sentiment analysis",
+    "message intent classifier",
+    "chatbot intent classification",
+    "intention detection ai",
+    "intent detecton",
+    "intent detection",
+    "intent classification"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:48:30.704Z",
+    "contentHash": "98847035cc861ca5",
+    "attempts": 1,
+    "promptTokens": 2296,
+    "completionTokens": 2360
+  }
+}

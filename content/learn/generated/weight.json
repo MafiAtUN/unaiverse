@@ -1,0 +1,227 @@
+{
+  "id": "weight",
+  "slug": "weight",
+  "term": "Weight",
+  "aliases": [
+    "weights",
+    "model weight",
+    "model weights"
+  ],
+  "categoryId": "neural-networks",
+  "subcategory": "Neural Networks",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "artificial-neuron"
+  ],
+  "relatedTermIds": [
+    "artificial-neuron",
+    "neural-network",
+    "forward-pass",
+    "activation-function",
+    "pruning",
+    "model-weight"
+  ],
+  "oftenConfusedWith": [
+    "bias-term",
+    "parameter",
+    "feature"
+  ],
+  "oneSentence": "A weight is a learned number that scales how strongly one input signal affects the next calculation in a neural network.",
+  "plainExplanation": "In a neural network, numbers come in as inputs. Each connection into a calculation can have its own weight. That weight multiplies the incoming value, so some signals count more and some count less.\n\nA single weight is one such number. “Weights” usually means the whole collection of these learned numbers across a model. “Model weight” can mean one specific learned number, but in practice “model weights” often means the saved file or files containing many learned numbers for a trained model. Those uses are related, but not identical.\n\nDuring a forward pass, the network combines inputs with weights, often adds a bias, and then applies an activation function, which is a rule that transforms the result. What comes out of one layer becomes input to the next. The final output might be a score, a class label, or text probabilities.\n\nWeights are adjusted during training so that the model’s outputs better match examples it has seen. After training, the weights store much of what the model has statistically fitted from data. That does not mean they store clear human-readable rules, and it does not guarantee the output is correct.",
+  "everydayAnalogy": {
+    "title": "Choosing a route across a city",
+    "story": "A traveller in Nairobi asks three friends how to get across the city. One friend cares most about speed, another strongly avoids tolls, and a third pays close attention to safety at night. The traveller combines all three suggestions, but gives different importance to each one depending on the journey. On a workday morning, speed may count most; late at night, safety may count more.",
+    "mapping": [
+      {
+        "analogyElement": "how much the traveller listens to each friend",
+        "aiElement": "the weight on each input signal"
+      },
+      {
+        "analogyElement": "the friends' route suggestions",
+        "aiElement": "incoming input values or features"
+      },
+      {
+        "analogyElement": "combining several suggestions into one route choice",
+        "aiElement": "computing a weighted sum before the next step"
+      },
+      {
+        "analogyElement": "changing priorities for different situations",
+        "aiElement": "different learned weights in different parts of a network"
+      }
+    ],
+    "limitation": "A neural network does not literally hear advice or consciously choose priorities for a trip. Also, in a model the weights are fixed numbers at inference time and are applied automatically to many signals at once, not reconsidered in a human-style discussion."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How weights change the strength of signals",
+    "learningObjective": "After viewing, the reader should be able to say that a weight multiplies an input, several weighted inputs are combined, and the result is passed onward.",
+    "description": "Show a left-to-right flow diagram with three input boxes labelled 'input A = 2', 'input B = 5', and 'input C = 1'. Each connects by an arrow to a central calculation node. Place a small label on each arrow: 'weight 0.8', 'weight -0.4', and 'weight 1.2'. Next to the central node, show the multiplied values '2×0.8=1.6', '5×-0.4=-2.0', and '1×1.2=1.2', then a line reading 'sum = 0.8'. From there, draw an arrow to an output box labelled 'signal sent onward'. Use colour only as a secondary cue; also vary line thickness so larger absolute weights look stronger.",
+    "steps": [
+      {
+        "label": "Inputs arrive",
+        "explanation": "Several numbers enter a calculation from earlier parts of the network.",
+        "visualInstruction": "Render three source boxes on the left with numeric values and arrows pointing to the centre."
+      },
+      {
+        "label": "Each input is scaled",
+        "explanation": "Each arrow has its own weight, which multiplies the input value.",
+        "visualInstruction": "Place a weight label on each arrow and show the multiplication near the centre."
+      },
+      {
+        "label": "Values are combined",
+        "explanation": "The scaled values are added together to make one intermediate result.",
+        "visualInstruction": "Show the three products converging into one central circle with the sum displayed."
+      },
+      {
+        "label": "Result moves forward",
+        "explanation": "That combined result is then passed to the next step, often after adding a bias and applying an activation function.",
+        "visualInstruction": "Draw an arrow from the centre to a right-side output box, with a small note below saying 'bias and activation may follow'."
+      }
+    ],
+    "interaction": "On hover or tap, each input arrow highlights and the matching multiplication appears bold so the reader can see how one weight changes one contribution.",
+    "accessibilityDescription": "The diagram shows three inputs flowing into one calculation. Input A has value 2 and weight 0.8, so it contributes 1.6. Input B has value 5 and weight minus 0.4, so it contributes minus 2.0. Input C has value 1 and weight 1.2, so it contributes 1.2. These contributions are added to produce 0.8, which is passed onward in the network. The key point is that a weight changes both the strength and sometimes the direction of an input’s effect.",
+    "reducedMotionDescription": "A static left-to-right diagram shows three inputs, their weights, the multiplied contributions, the summed result, and the outgoing signal, without any highlighting or animation."
+  },
+  "workedExample": {
+    "scenario": "A small network step estimates whether a message is likely to be about transport disruption.",
+    "input": "keyword score = 3, location match = 2, unrelated-topic score = 4",
+    "process": [
+      "The calculation has three weights: keyword score uses 1.5, location match uses 0.7, and unrelated-topic score uses -1.0.",
+      "Multiply each input by its weight: 3×1.5 = 4.5, 2×0.7 = 1.4, and 4×-1.0 = -4.0.",
+      "Add the contributions: 4.5 + 1.4 - 4.0 = 1.9.",
+      "Because the combined value is positive and fairly large, the next part of the network receives a relatively strong signal for 'transport disruption'."
+    ],
+    "result": "The weighted combination produces 1.9, meaning the first two inputs push the score up while the negative weight pushes the unrelated-topic signal down."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN staff member uses an approved internal search tool to find earlier resolutions with wording similar to a new draft on disaster risk reduction. Inside the model behind the search tool, many weights help determine how strongly different words and patterns influence which passages are retrieved or ranked.",
+    "relevance": "This matters because staff may hear that a model was 'fine-tuned' or that 'new weights were loaded', and they need to understand that this means the system’s internal numerical priorities changed, which can affect results and consistency.",
+    "caution": "Do not upload confidential negotiation text, unpublished draft language, or other sensitive material into an unapproved public AI service just to inspect or compare model weights or outputs."
+  },
+  "whyItMatters": "If you procure, govern, audit or use AI systems, weights matter because they are part of how a model turns inputs into outputs. Changes to weights can change performance, errors, bias patterns, energy use after pruning, and whether two deployments of 'the same model' actually behave the same way.",
+  "whereYouMayHearIt": [
+    "model training discussions",
+    "fine-tuning and checkpoint releases",
+    "machine learning papers",
+    "AI procurement or audit meetings"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A weight is the same as a feature.",
+      "correction": "A feature is an input signal or measured property, such as word presence or pixel intensity. A weight is the learned number that tells the model how strongly that feature or intermediate signal influences the next calculation."
+    },
+    {
+      "misconception": "Weights are the same as bias terms.",
+      "correction": "Both are learned parameters, but they play different roles. A weight scales an incoming signal, while a bias shifts the combined result up or down even when inputs are zero."
+    },
+    {
+      "misconception": "Model weights are human-readable knowledge statements.",
+      "correction": "Weights are usually just arrays of numbers. They encode statistical fitting in a distributed form, not neat sentences like a policy manual or rulebook."
+    },
+    {
+      "misconception": "If you have the model weights, you automatically know why every output happened.",
+      "correction": "The weights are necessary to reproduce the model, but large networks have many interacting weights. Inspecting them directly often does not give a simple explanation for one specific output."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A weight is a number that tells the model how much one incoming signal should count in the next step.",
+    "technical": "In a neural network, a weight is a learned parameter attached to a connection or operation that linearly scales an input or intermediate activation before combination with others, often followed by a bias term and a non-linear activation function."
+  },
+  "keyTakeaway": "Weights are the adjustable numbers that make some signals matter more, less, or in the opposite direction inside a neural network.",
+  "quickCheck": {
+    "question": "Which statement best distinguishes a single weight from model weights as a released artefact?",
+    "options": [
+      "A single weight is one learned scaling number, while model weights usually refers to the full saved collection of many such numbers for a trained model.",
+      "A single weight is an input feature, while model weights are the labels predicted by the model.",
+      "A single weight is the same thing as a bias term, while model weights are activation functions.",
+      "A single weight exists only during training, while model weights exist only during deployment."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "One weight is one learned numerical factor in a calculation. In practice, 'model weights' often means the stored tensors or files containing many learned parameters for the whole trained model. The other options confuse weights with features, bias terms, activation functions, or deployment stages."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Weighting",
+      "url": "https://en.wikipedia.org/wiki/Weighting",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad background on weighting as a general idea and suits readers who want a basic reference before focusing on neural networks.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Neural networks, explained visually",
+      "url": "https://www.3blue1brown.com/topics/neural-networks",
+      "type": "video",
+      "publisher": "3Blue1Brown",
+      "difficulty": "intermediate",
+      "description": "This video gives a visual intuition for how weights shape signals in a network and suits readers who learn best from diagrams and animation.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "TensorFlow Playground",
+      "url": "https://playground.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "difficulty": "starter",
+      "description": "This interactive tool lets readers change weights and see outputs update, which suits hands-on learners who want to experiment.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Weight",
+      "url": "https://www.youtube.com/results?search_query=Weight%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This is a YouTube search results page, so it helps readers compare different video explanations of weight and suits people looking for a teaching style that fits them.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Weight",
+      "url": "https://www.reddit.com/search/?q=Weight",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This is a Reddit search results page, so it shows community questions and informal explanations about weight and suits readers who want to see common confusions and discussions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "what is a weight in neural network",
+    "model weights meaning",
+    "weight vs bias neural network",
+    "weights vs parameters ai",
+    "what are model weight files",
+    "neural net weight explained",
+    "wieghts ai typo",
+    "fine tuned weights meaning",
+    "weight",
+    "weights",
+    "model weight",
+    "model weights"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:33:42.931Z",
+    "contentHash": "7c2e286025d93353",
+    "attempts": 1,
+    "promptTokens": 2185,
+    "completionTokens": 2267
+  }
+}

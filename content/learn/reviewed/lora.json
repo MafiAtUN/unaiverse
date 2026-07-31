@@ -1,0 +1,228 @@
+{
+  "id": "lora",
+  "slug": "lora",
+  "term": "LoRA",
+  "acronym": "LoRA",
+  "aliases": [
+    "low-rank adaptation",
+    "adapter"
+  ],
+  "categoryId": "adaptation",
+  "subcategory": "Training and Model Adaptation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "parameter-efficient-fine-tuning"
+  ],
+  "relatedTermIds": [
+    "parameter-efficient-fine-tuning",
+    "fine-tuning",
+    "supervised-fine-tuning",
+    "checkpoint",
+    "model-version",
+    "quantisation"
+  ],
+  "oftenConfusedWith": [
+    "fine-tuning",
+    "quantisation"
+  ],
+  "oneSentence": "A method for adapting a large model by training a small set of added weights instead of changing most of the original model.",
+  "plainExplanation": "LoRA is a way to adjust a pre-trained model for a new task without rewriting the whole model. You start with an existing model checkpoint, keep its original weights frozen, and add small trainable parts to selected layers. In machine learning, weights are the numbers that shape how the model produces outputs.\n\nDuring training, the model still processes the input in the usual way, but the added LoRA parts slightly shift the calculations. These added parts are designed with low rank, which means they represent changes in a compressed form using far fewer numbers than a full weight update. The aim is to capture the most useful adjustment directions without storing a complete second copy of the model.\n\nWhat goes in is usually a base model, a training dataset, and choices about where to attach LoRA modules, such as attention layers. What happens is optimisation: the system repeatedly compares outputs with target examples and updates only the small added weights. What comes out is either a compact LoRA adapter file or a merged model where those learned changes are folded into the base weights.\n\nLoRA is often confused with fine-tuning in general. It is a type of parameter-efficient fine-tuning, not a separate stage of learning like pretraining. It is also often called an adapter, although people use \"adapter\" more broadly for several related methods, so the terms are not always exact synonyms.",
+  "everydayAnalogy": {
+    "title": "Adding route overlays to a city map",
+    "story": "A transport planner in Nairobi has a large printed map of a city. The base map already shows roads, bridges and districts, so they do not redraw it. For a festival weekend, they place a few transparent overlays on top that highlight temporary bus lanes, road closures and preferred detours. The original map stays the same, but the overlays change how someone uses it for this specific situation.",
+    "mapping": [
+      {
+        "analogyElement": "the printed base map",
+        "aiElement": "the frozen pre-trained model"
+      },
+      {
+        "analogyElement": "transparent overlays",
+        "aiElement": "the added trainable LoRA weights"
+      },
+      {
+        "analogyElement": "festival-specific route changes",
+        "aiElement": "task-specific adaptation learned from training data"
+      },
+      {
+        "analogyElement": "using overlays without redrawing every street",
+        "aiElement": "adapting behaviour without updating all model parameters"
+      }
+    ],
+    "limitation": "A map overlay is manually designed and easy to inspect, while LoRA weights are learned numerically through optimisation and are not human-readable route notes. Also, real LoRA changes happen inside matrix operations in multiple layers, not as a separate visible sheet sitting on top of the model."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Full fine-tuning versus LoRA adaptation",
+    "learningObjective": "Show why LoRA changes a model by training a small added component while leaving the original model weights unchanged.",
+    "description": "A side-by-side diagram with two columns. The left column shows full fine-tuning updating the whole model. The right column shows the same base model frozen, with small LoRA modules attached to selected layers and only those modules updated. Read from top to bottom in each column, then compare storage and training effort at the bottom.",
+    "steps": [
+      {
+        "label": "Start from the same base model",
+        "explanation": "Both approaches begin with an existing pre-trained checkpoint.",
+        "visualInstruction": "Draw two equal columns. At the top of each, place a large rounded rectangle labelled 'Base model checkpoint'. Use the same colour and size in both columns."
+      },
+      {
+        "label": "Choose what can change",
+        "explanation": "Full fine-tuning updates most or all weights. LoRA freezes the base weights and adds small trainable matrices to selected layers.",
+        "visualInstruction": "In the left column, show the model block with many small highlighted internal cells labelled 'all weights trainable'. In the right column, grey out the main model labelled 'frozen' and attach small coloured side blocks to two or three layers labelled 'LoRA A/B matrices'."
+      },
+      {
+        "label": "Train on task data",
+        "explanation": "Both methods use training examples, but the optimiser updates very different numbers of parameters.",
+        "visualInstruction": "Below each model, draw an input dataset icon feeding into a training loop arrow. On the left, the arrow returns to the full model. On the right, the arrow returns only to the coloured LoRA side blocks."
+      },
+      {
+        "label": "Save the result",
+        "explanation": "Full fine-tuning often produces another large checkpoint. LoRA usually produces a much smaller adapter file, which can later be merged or loaded with the base model.",
+        "visualInstruction": "At the bottom, draw an output box for the left labelled 'new full checkpoint: large'. Draw an output box for the right labelled 'LoRA adapter: small' plus a note 'use with base model or merge later'."
+      }
+    ],
+    "interaction": "Hover or tap each highlighted area to reveal a short note: what stays frozen, what gets updated, and what file is saved afterwards.",
+    "accessibilityDescription": "This diagram compares two ways to adapt a model. In the left column, full fine-tuning starts from a base model checkpoint, makes most or all of its weights trainable, updates the whole model during training, and saves a large new checkpoint. In the right column, LoRA starts from the same base model checkpoint, freezes the original weights, attaches small trainable LoRA matrices to selected layers, updates only those added parts during training, and saves a small adapter file that is used with the base model or merged into it later. The key comparison is that both methods aim to adapt the model, but LoRA changes far fewer parameters and usually needs less storage.",
+    "reducedMotionDescription": "A static two-column comparison remains visible at all times, with labels showing which weights are trainable, which are frozen, and what output file each approach produces."
+  },
+  "workedExample": {
+    "scenario": "A team wants a 7 billion-parameter language model to format customer support replies in a company's house style.",
+    "input": "Base model: 7B parameters. LoRA attached to attention layers with rank 16. Training set: 50,000 prompt-response pairs.",
+    "process": [
+      "Load the 7B checkpoint and freeze the original weights so they do not change during training.",
+      "Attach LoRA modules to selected attention projections, creating a small set of trainable parameters compared with the full model.",
+      "Train on the 50,000 examples so the loss function updates only the LoRA weights, not the full 7B parameters.",
+      "Save the learned adapter as a separate file; for deployment, either load it alongside the base model or merge it into a new checkpoint."
+    ],
+    "result": "The team gets a small task-specific adapter instead of a full second 7B model copy, making storage and distribution easier while preserving the original base model."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A language technology team in a UN entity wants to adapt an approved internal model so it checks draft speeches for consistency with previously agreed language on humanitarian access and gender equality.",
+    "relevance": "LoRA can let the team create a small domain-specific adapter for that drafting task without retraining or duplicating the full base model, which helps with version control and deployment across internal systems.",
+    "caution": "Only use approved internal systems and approved datasets. Do not place confidential negotiation text, personal data, protection-sensitive information or unpublished Member State positions into a public AI service."
+  },
+  "whyItMatters": "LoRA matters because it changes the cost and governance of model adaptation. If an organisation wants a model tailored to a narrow task, full fine-tuning may require more computing, storage and model management. LoRA can make experimentation cheaper and faster, allow several task-specific adapters to share one base model, and make rollback easier because the base checkpoint stays unchanged. For non-specialists, this affects procurement, deployment choices, security review, version control and whether a system can be updated for local needs without maintaining many full model copies. It is not a guarantee of quality or safety, but it is an important practical option.",
+  "whereYouMayHearIt": [
+    "open-source model adaptation",
+    "enterprise AI deployment",
+    "MLOps and model serving",
+    "LLM training tutorials",
+    "discussion of cheaper fine-tuning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "LoRA means the model learns without training the model at all.",
+      "correction": "Training still happens. The difference is that optimisation updates only the added LoRA weights while the original base weights stay frozen. That is why LoRA is usually cheaper than full fine-tuning, not free or automatic."
+    },
+    {
+      "misconception": "LoRA and fine-tuning are different categories, so choosing one excludes the other.",
+      "correction": "LoRA is a way of doing fine-tuning more efficiently. More precisely, it is one method within parameter-efficient fine-tuning. Full fine-tuning updates many or all model weights; LoRA fine-tuning updates a small added set."
+    },
+    {
+      "misconception": "A LoRA adapter contains all the knowledge of the full model, so the base model is no longer needed.",
+      "correction": "Usually the adapter stores only the learned changes, not the full model. In practice you normally need the original base model plus the adapter, unless you merge the adapter into a copy of the base checkpoint."
+    },
+    {
+      "misconception": "Low rank means lower quality by definition.",
+      "correction": "Low rank means the update is represented in a compressed form. A rank that is too small can limit adaptation, but many tasks work well because the needed changes are structured enough to be captured with relatively few parameters."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "LoRA lets you customise a large model by adding and training a small attachment instead of editing the whole model.",
+    "technical": "LoRA is a parameter-efficient fine-tuning method that freezes a pre-trained weight matrix W and learns a low-rank update, often written as W + BA, where A and B are much smaller trainable matrices with rank r much less than the original dimensions. In practice, these updates are inserted into selected layers, commonly attention projections, and only A and B receive gradient updates during optimisation. This reduces the number of trainable parameters, optimiser state and often storage requirements for task-specific adaptations. At inference time, the adapter can remain separate or be merged into the base weights. The exact memory and speed benefits depend on implementation, target modules, precision, batch size and whether the adapter is merged."
+  },
+  "keyTakeaway": "LoRA adapts a big model by learning a small, compressed weight update instead of retraining the whole model.",
+  "quickCheck": {
+    "question": "Which statement best describes LoRA?",
+    "options": [
+      "A method that replaces pretraining by teaching a model new facts directly from prompts",
+      "A way to adapt a model by freezing the original weights and training small added weight matrices",
+      "A compression method that removes layers from a model to make inference faster",
+      "A safety method that filters model outputs after generation without changing model weights"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "LoRA is a parameter-efficient fine-tuning method. It keeps the base model weights fixed and learns small added matrices that modify selected layers. The other options describe prompting, pruning, or output filtering, which are different ideas."
+  },
+  "resources": [
+    {
+      "title": "LoRa",
+      "url": "https://en.wikipedia.org/wiki/LoRa",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a general overview of LoRA and suits readers who want a broad starting point before going into implementation details.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "LLM Course",
+      "url": "https://huggingface.co/learn/llm-course",
+      "type": "course",
+      "publisher": "Hugging Face",
+      "description": "This course material suits readers who want practical explanations of how LoRA fits into modern large-model training and adaptation workflows.",
+      "difficulty": "deeper",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Short Courses",
+      "url": "https://www.deeplearning.ai/short-courses/",
+      "type": "course",
+      "publisher": "DeepLearning.AI",
+      "description": "This course suits readers who prefer guided, hands-on lessons that show how LoRA is used in applied machine learning practice.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: LoRA",
+      "url": "https://www.youtube.com/results?search_query=LoRA%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find different video explanations of LoRA and suits those who learn best by comparing multiple presenters.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: LoRA",
+      "url": "https://www.reddit.com/search/?q=LoRA",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see community questions and experiences about LoRA and suits readers who want informal discussion alongside more structured sources.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "lora ai meaning",
+    "low rank adaptation explained",
+    "lora vs fine tuning",
+    "adapter vs lora",
+    "how lora works llm",
+    "lora training small model file",
+    "lora misspelling loraa",
+    "peft lora",
+    "lora",
+    "low-rank adaptation",
+    "adapter"
+  ],
+  "contested": "People often use \"adapter\" loosely to include LoRA, but in technical discussions \"adapter\" can also refer to other architectures, so the labels are related but not always identical.",
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:45:26.924Z",
+    "contentHash": "4d6f770745a3269e",
+    "attempts": 1,
+    "promptTokens": 2292,
+    "completionTokens": 2541
+  }
+}

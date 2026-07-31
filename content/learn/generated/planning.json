@@ -1,0 +1,230 @@
+{
+  "id": "planning",
+  "slug": "planning",
+  "term": "Planning",
+  "aliases": [
+    "task decomposition"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "policy"
+  ],
+  "prerequisiteTermIds": [
+    "ai-agent"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "tool-use",
+    "observation-and-action",
+    "human-in-the-loop",
+    "orchestration",
+    "function-calling"
+  ],
+  "oftenConfusedWith": [
+    "workflow",
+    "reasoning-model",
+    "tool-use"
+  ],
+  "oneSentence": "Planning is the process of turning a goal into ordered sub-tasks, checks and tool calls so a system can act step by step.",
+  "plainExplanation": "In AI agents and automation, planning means breaking a goal into smaller actions before and during execution. The input is usually a goal, some instructions, available tools, and limits such as time, cost or approval rules. A tool is an external system the agent can call, such as a search service, calendar or database.\n\nWhat happens next is not magic. The system proposes a sequence of sub-tasks, such as gather information, compare options, ask for missing details, then perform an allowed action. It may revise that sequence after each observation, meaning new information returned from a tool or a previous step.\n\nThe output is usually a plan plus the actions taken from that plan. Sometimes the plan is written out in text. Sometimes it stays internal and only the tool calls and final result are visible. Good planning also includes checks, such as whether a required field is missing or whether a human approval is needed.\n\nPlanning is often confused with reasoning models, workflows and tool use. A reasoning model focuses on producing better intermediate analysis. Tool use means calling an external function. A workflow is a fixed path designed in advance. Planning is the part that chooses or adjusts the sequence of steps for a specific goal and situation.",
+  "everydayAnalogy": {
+    "title": "Finding who “they” refers to in a messy message thread",
+    "story": "Amina receives a group message: “Samira told Lina that they need to move the meeting because the office is closed.” Before replying, Amina does not jump to one answer. She checks earlier messages, notes who organised the meeting, sees who mentioned the office, and lists two possible meanings of “they”. Then she asks one short clarifying question and only after that updates the calendar note.",
+    "mapping": [
+      {
+        "analogyElement": "Amina’s goal of replying correctly",
+        "aiElement": "The agent’s overall task"
+      },
+      {
+        "analogyElement": "Checking earlier messages for clues",
+        "aiElement": "Gathering observations before acting"
+      },
+      {
+        "analogyElement": "Listing two possible meanings",
+        "aiElement": "Breaking the task into candidate sub-steps or hypotheses"
+      },
+      {
+        "analogyElement": "Asking a clarifying question before changing the calendar",
+        "aiElement": "Revising the plan and adding a safe checkpoint before action"
+      }
+    ],
+    "limitation": "This analogy shows careful step-by-step work, but it can mislead in two ways. First, a person may use broad world knowledge and social context that an AI system may not have unless those facts are provided. Second, AI planning in software often includes explicit tool calls, machine-readable state, and automatic retries, which do not appear in a simple chat example."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How planning turns a goal into actions",
+    "learningObjective": "After viewing, the reader should be able to explain that planning breaks a goal into sub-tasks, checks results after each step, and may revise the next action.",
+    "description": "A left-to-right step diagram with five boxes connected by arrows. It starts with a goal and constraints, moves to sub-task selection, then tool or action steps, then a checkpoint based on observations, and ends with either completion or revision of the plan. Read from left to right to see how a plan is made and updated.",
+    "steps": [
+      {
+        "label": "1. Goal and limits",
+        "explanation": "The system receives a goal plus constraints such as approved tools, deadlines or required human review.",
+        "visualInstruction": "Draw a box labelled Goal and limits with small tags underneath: tools, rules, time, approvals."
+      },
+      {
+        "label": "2. Break into sub-tasks",
+        "explanation": "The system drafts smaller steps, such as collect data, compare options, ask a question, then act.",
+        "visualInstruction": "Draw a second box labelled Sub-tasks with a short stacked list icon."
+      },
+      {
+        "label": "3. Take a step",
+        "explanation": "The system performs the next step, often by calling a tool or producing a message.",
+        "visualInstruction": "Draw a third box labelled Action or tool call with a small wrench or connector icon."
+      },
+      {
+        "label": "4. Check observation",
+        "explanation": "The result of the step is checked. Missing data, errors or new facts may change what should happen next.",
+        "visualInstruction": "Draw a diamond-shaped checkpoint labelled Observation check connected from the action box."
+      },
+      {
+        "label": "5. Finish or revise",
+        "explanation": "If the goal is met, the process ends. If not, the system updates the remaining steps and continues, or asks for human input.",
+        "visualInstruction": "Draw two outgoing arrows from the checkpoint: one to a Finish box, one looping back to Sub-tasks with label Revise."
+      }
+    ],
+    "interaction": "On hover or tap, each step highlights and reveals one sentence of explanation; selecting the checkpoint highlights the loop-back path to show replanning.",
+    "accessibilityDescription": "The diagram presents planning as five ordered stages. First, a system receives a goal and limits such as allowed tools, rules, time or approval requirements. Second, it breaks the goal into smaller sub-tasks. Third, it performs one step, often using a tool. Fourth, it checks the observation returned from that step. If the observation shows success, it finishes. If the observation shows missing information, an error or a changed situation, it revises the remaining sub-tasks or asks for human input before continuing.",
+    "reducedMotionDescription": "Show the same five stages as a static numbered sequence with a visible loop arrow from Observation check back to Break into sub-tasks, and plain text labels for Finish and Revise."
+  },
+  "workedExample": {
+    "scenario": "An internal IT support agent is asked: “Set up a meeting next week with the Nairobi and Geneva teams to review the draft website timeline.”",
+    "input": "Goal: propose a 45-minute meeting next week. Tools available: staff directory, calendar API, email draft tool. Constraint: do not send invitations without human approval.",
+    "process": [
+      "The agent splits the task into sub-tasks: identify participants, find time zones, check calendars, select candidate slots, draft a message.",
+      "It looks up six participants and finds time zones UTC+3 and UTC+1.",
+      "It checks calendars and finds two 45-minute overlaps: Tuesday 13:00 Geneva / 15:00 Nairobi, and Thursday 10:30 Geneva / 12:30 Nairobi.",
+      "Because invitations require approval, it does not book the meeting. It drafts a short message listing both options and asks the requester to choose."
+    ],
+    "result": "Output: a proposed plan completed up to the approval point, with two viable time slots and a draft message ready for human review."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office wants an internal assistant to help staff prepare routine administrative requests, such as booking a room, checking policy steps, and drafting a non-sensitive summary of required approvals.",
+    "relevance": "Planning matters because the assistant must decide the order of safe steps: check the relevant rule, gather missing non-sensitive details, use approved internal tools, and stop when human approval is required.",
+    "caution": "Do not put confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. The system should use only approved tools, least-privilege access and clear human oversight before any external action."
+  },
+  "whyItMatters": "Planning affects what an AI system actually does, not just what it says. If a system can break work into steps, call tools and revise its next action, it can be useful for scheduling, research support and routine administration. It can also create new risks: wasted tool calls, hidden failure points, unsafe actions and overconfidence if checks are weak. For managers and policy staff, this matters when choosing approval gates, audit logs, access controls and when a human must review or stop the process.",
+  "whereYouMayHearIt": [
+    "agent design discussions",
+    "tool-using assistants",
+    "automation platforms",
+    "AI safety and evaluation work",
+    "product demos about task execution"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Planning means the system always creates a full plan before doing anything.",
+      "correction": "Often it does not. Many systems plan a little, act, inspect the result, then update the next step. This matters because real tasks change when new information arrives, tools fail, or a user clarifies the goal."
+    },
+    {
+      "misconception": "If a system can plan, it can be trusted to act on its own.",
+      "correction": "Planning only organises steps. It does not guarantee the goal is appropriate, the facts are correct, the tool output is reliable, or the action is safe. High-impact tasks still need permissions, monitoring and human review."
+    },
+    {
+      "misconception": "Planning is the same as a fixed workflow.",
+      "correction": "A workflow is usually predesigned: step A then B then C. Planning is more flexible. It chooses, orders or revises sub-tasks for the current situation, though in practice many systems combine both approaches."
+    },
+    {
+      "misconception": "Good text output proves good planning.",
+      "correction": "A system may describe a sensible plan in words but still call the wrong tool, skip a check or fail to update after new observations. Planning quality should be assessed from behaviour and outcomes, not fluent wording alone."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Planning means turning a goal into smaller steps, doing them in order, and changing course if new information appears.",
+    "technical": "In agentic systems, planning is the mechanism that converts a high-level objective into an executable sequence or policy over sub-tasks, tool calls and decision points. Inputs can include the user goal, system instructions, available APIs or connectors, prior observations, memory, and operational constraints such as budgets, permissions and approval rules. The planner may produce an explicit plan, an implicit next-action choice, or a rolling plan that is updated after each observation. In practice, planning often interacts with tool use, short-term memory, orchestration and feedback loops. It is distinct from tool use itself, because selecting and ordering actions is different from merely having access to a tool. It is also distinct from a fixed workflow, because the sequence may depend on context and intermediate results. Some systems rely on a language model to generate sub-goals or evaluate next steps; others use classical search, rule-based methods, or hybrid approaches. The quality of planning is usually judged by task completion, efficiency, robustness to failures, and whether the system respects constraints and escalation rules."
+  },
+  "keyTakeaway": "Planning is what lets an AI system turn one broad request into manageable, checked steps rather than one uncontrolled jump to an answer or action.",
+  "quickCheck": {
+    "question": "Which example best shows planning rather than only tool use?",
+    "options": [
+      "A system calls a translation API once because the user pressed Translate.",
+      "A system breaks a travel request into checking dates, comparing allowed fares, asking for missing details, then drafting options for approval.",
+      "A system stores old chat messages so they can be reused later.",
+      "A system follows a fixed three-step script that never changes, whatever the user asks."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The second option shows a goal being decomposed into sub-tasks, with an information check and an approval step. That is planning. The first is only tool use, the third is memory, and the fourth is a fixed workflow rather than context-specific planning."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Automated planning and scheduling",
+      "url": "https://en.wikipedia.org/wiki/Automated_planning_and_scheduling",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This Wikipedia article gives a broad overview of automated planning and scheduling, which suits readers who want historical context and standard terminology.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This Anthropic article explains agents in practical terms and helps readers who want to see how planning fits into tool-using systems.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This official Model Context Protocol material shows how tools and context can be connected in a standard way, which suits technical readers building or evaluating agent systems.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Planning",
+      "url": "https://www.youtube.com/results?search_query=Planning%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps visual learners find different video explanations of planning, but it is a search page rather than one vetted lesson.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Planning",
+      "url": "https://www.reddit.com/search/?q=Planning",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community discussions and examples of how people talk about planning in practice, but it is a search page and suits readers who want informal perspectives.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "ai planning explained",
+    "task decomposition ai",
+    "agent planning vs workflow",
+    "how ai agents plan steps",
+    "planning tool calling",
+    "llm planning",
+    "task decompostion ai",
+    "agent breaks task into steps",
+    "planning",
+    "task decomposition"
+  ],
+  "contested": "The broad idea is widely used, but boundaries between planning, reasoning, orchestration and workflow vary across research papers and products.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:45.131Z",
+    "contentHash": "2cdea892bad73627",
+    "attempts": 2,
+    "promptTokens": 2351,
+    "completionTokens": 2567
+  }
+}

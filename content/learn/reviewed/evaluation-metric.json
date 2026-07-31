@@ -1,0 +1,234 @@
+{
+  "id": "evaluation-metric",
+  "slug": "evaluation-metric",
+  "term": "Evaluation",
+  "aliases": [
+    "evaluation metric",
+    "eval",
+    "evals"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "starter",
+  "audiences": [
+    "everyone",
+    "leadership",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "prediction"
+  ],
+  "relatedTermIds": [
+    "accuracy",
+    "precision",
+    "recall",
+    "baseline",
+    "generalisation",
+    "reliability"
+  ],
+  "oftenConfusedWith": [
+    "benchmark",
+    "loss-function",
+    "accuracy",
+    "baseline"
+  ],
+  "oneSentence": "Evaluation checks how well a system performs on a defined task, while metrics are the specific measures and evals are the tests used to produce them.",
+  "plainExplanation": "Evaluation is the overall process of checking whether a system works well enough for a particular purpose. An evaluation metric is the yardstick used in that process, such as accuracy or recall. People also say eval or evals to mean one test, a set of tests, or the whole evaluation setup, depending on context.\n\nWhat goes in? Usually you need model outputs, the correct answers or another reference, and a clear question such as “good at what?” Then you choose how to compare the outputs with the reference. That comparison produces scores, notes, or pass/fail results.\n\nWhat happens? You run the system on examples, compare its outputs with what you expected, and calculate one or more metrics. For example, a system might be right 90% of the time overall, but still miss many rare and important cases. That is why one score is often not enough.\n\nWhat comes out? You get evidence about quality, limits and trade-offs. A good evaluation does not only give a number. It also shows where the system fails, whether the test matches real use, and whether the result is strong enough to support a decision.\n\nEvaluation is often confused with a benchmark and with a loss function. A benchmark is a shared test set or suite used for comparison across systems. A loss function is the mathematical target used during training. Evaluation happens after or alongside development to judge performance for use, not just to optimise training.",
+  "everydayAnalogy": {
+    "title": "Checking a rainfall forecast for a farming cooperative",
+    "story": "A farming cooperative in Kenya, India and Peru keeps daily records of whether it actually rained in each district. A forecasting tool gives a yes-or-no rain prediction every morning. At the end of the month, the coordinators compare each prediction with what happened and count different kinds of mistakes, such as missed rain days and false alarms. One number tells them overall correctness, but they also look at whether the tool is dependable during planting season, when missing rain matters more than a false warning.",
+    "mapping": [
+      {
+        "analogyElement": "daily forecast compared with recorded weather",
+        "aiElement": "model outputs compared with reference answers"
+      },
+      {
+        "analogyElement": "overall correctness for the month",
+        "aiElement": "an evaluation metric such as accuracy"
+      },
+      {
+        "analogyElement": "counting missed rain and false alarms separately",
+        "aiElement": "using more than one metric to inspect different error types"
+      },
+      {
+        "analogyElement": "checking performance during planting season",
+        "aiElement": "evaluating on the specific real-world use case, not only on average"
+      }
+    ],
+    "limitation": "Real AI evaluation can involve many kinds of outputs, not just yes-or-no forecasts. In some tasks there is no single simple ground truth, and people may need human reviewers, safety checks or multiple metrics. Also, AI systems can change behaviour across languages, populations or contexts in ways that a simple weather log does not capture."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How evaluation, metrics and evals relate",
+    "learningObjective": "Show that evaluation is the full checking process, metrics are the measures inside it, and evals are the concrete tests used to generate evidence.",
+    "description": "A left-to-right flow with four boxes. Read from the task definition to the test examples, then to the model outputs and comparisons, and finally to the evidence produced. Small labels under the third and fourth boxes distinguish “evals” from “metrics” and from the wider evaluation process.",
+    "steps": [
+      {
+        "label": "1. Define the task",
+        "explanation": "State what the system is supposed to do and what success means in this context.",
+        "visualInstruction": "Draw a box labelled 'Task and success criteria' with sublabels 'use case', 'risks', and 'what matters most'."
+      },
+      {
+        "label": "2. Prepare evals",
+        "explanation": "Choose test examples and references that reflect real use. These concrete tests are often called evals.",
+        "visualInstruction": "Draw a second box labelled 'Evals: test set or test procedure' connected from step 1. Add small icons for examples and reference answers."
+      },
+      {
+        "label": "3. Compare outputs",
+        "explanation": "Run the system on the evals and compare the outputs with the references or reviewer judgements.",
+        "visualInstruction": "Draw a third box labelled 'Run system and compare' with two inputs entering it: 'model output' and 'reference/judgement'."
+      },
+      {
+        "label": "4. Calculate and interpret",
+        "explanation": "Produce metrics such as accuracy, precision or recall, then interpret them with error patterns and context.",
+        "visualInstruction": "Draw a fourth box labelled 'Metrics and findings' showing small chips 'accuracy', 'precision', 'recall', plus a note 'failure cases and limits'."
+      }
+    ],
+    "interaction": "Hover or tap each box to reveal a short note: evaluation = whole process, evals = tests, metrics = measures.",
+    "accessibilityDescription": "The diagram is a four-step flow. First, define the task and what success means. Second, prepare evals, meaning the concrete test examples or procedures. Third, run the system and compare its outputs with reference answers or human judgements. Fourth, calculate metrics such as accuracy, precision and recall, then interpret them alongside failure cases and context. The key message is that evaluation is the full process, evals are the tests, and metrics are the measures produced inside that process.",
+    "reducedMotionDescription": "A static horizontal flow chart with four labelled boxes and arrows between them, plus text notes that distinguish the overall evaluation process from evals and metrics."
+  },
+  "workedExample": {
+    "scenario": "A farming cooperative tests a simple model that predicts whether it will rain tomorrow in 100 district-days during planting season.",
+    "input": "Predictions and observed outcomes for 100 district-days. The model predicts rain on 40 days. It is correct on 78 days overall. Out of 30 actual rain days, it correctly predicts 18.",
+    "process": [
+      "The team defines the purpose: missing rain is costly because farmers may delay planting or irrigation decisions.",
+      "They compare each prediction with the observed outcome for all 100 district-days.",
+      "They calculate accuracy: 78 correct out of 100, so accuracy is 78%.",
+      "They also calculate recall for rain days: 18 correct rain predictions out of 30 actual rain days, so recall is 60%.",
+      "They review the missed rain days and see that many failures happen in one highland district."
+    ],
+    "result": "The evaluation shows a mixed result: 78% accuracy sounds decent, but the model misses 40% of actual rain days, which may be too weak for planting decisions. The team would not rely on accuracy alone."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN programme team reviews a tool that labels incoming monitoring comments into themes such as water access, school attendance and supply delays.",
+    "relevance": "Evaluation helps the team check whether the tool supports analysis across countries and languages, and whether its errors could distort programme reporting or hide important issues.",
+    "caution": "Do not upload personal data, complaint details, survivor information or other protection-sensitive monitoring records to an unapproved public AI service for evaluation; use approved systems, minimise data and keep human oversight."
+  },
+  "whyItMatters": "A score can look impressive and still hide serious problems. If you approve, buy or use a system based on the wrong evaluation, you may reward the wrong behaviour, miss harmful errors or trust a tool outside the situation it was tested for. Non-specialists do not need to calculate every metric themselves, but they do need to ask: evaluated on what, using which metric, against which baseline, and for which real-world risk? Good evaluation supports better procurement, safer deployment, clearer accountability and more honest reporting about what a system can and cannot do.",
+  "whereYouMayHearIt": [
+    "model testing reports",
+    "procurement and vendor demos",
+    "monitoring and quality assurance",
+    "research papers and benchmarks",
+    "product launch discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A high score means the system is ready to use everywhere.",
+      "correction": "Scores depend on the task, data and metric. A system can score highly on a narrow test but perform poorly in another country, language, season or user group. Evaluation should check whether the test matches the real setting and whether the system generalises beyond the examples it was measured on."
+    },
+    {
+      "misconception": "Evaluation is just one number, usually accuracy.",
+      "correction": "Different metrics answer different questions. Accuracy tells you the overall share of correct results, but it can hide important failures, especially when one outcome is rare. In many real tasks you need several metrics plus qualitative review of failure cases."
+    },
+    {
+      "misconception": "If a vendor says they ran evals, that proves the tool is reliable.",
+      "correction": "The word evals only tells you that some testing happened. It does not tell you whether the tests were independent, realistic, representative, or aligned with the actual risks. A weak evaluation can produce reassuring numbers that do not hold up in practice."
+    },
+    {
+      "misconception": "Evaluation and training loss are basically the same thing.",
+      "correction": "Training loss is an internal mathematical target used to improve the model during training. Evaluation is a separate judgement process that checks performance on chosen tests, often using metrics that matter to users and decision-makers. A model can have low loss yet still fail on the real task you care about."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Evaluation is the organised check to see whether a system does the job you need. Metrics are the individual measures, such as how often it is correct. Evals are the actual tests used to generate those measures.",
+    "technical": "Formally, evaluation is the procedure for estimating system performance on a specified task under defined conditions. Inputs typically include an evaluation dataset or protocol, model outputs, reference labels or human judgements, and a set of metrics. The procedure may produce scalar scores, error breakdowns, confidence intervals, subgroup analyses and qualitative findings. An evaluation metric maps outputs and references to a numerical summary, such as accuracy, precision or recall. An eval or set of evals usually refers to the concrete test suite, prompts, datasets, rubrics or review protocol used to obtain that evidence. This differs from a benchmark, which is often a standardised public comparison set, and from a loss function, which is used during optimisation rather than for deployment judgement. Sound evaluation also checks distribution shift, class imbalance, data leakage, robustness and whether results generalise beyond the test conditions."
+  },
+  "keyTakeaway": "Do not ask only “What score did it get?” Ask “Evaluated on what, with which metric, and does that match the real decision?”",
+  "quickCheck": {
+    "question": "Which statement best distinguishes evaluation, metrics and evals?",
+    "options": [
+      "Evaluation is the full checking process, metrics are the measures used in it, and evals are the concrete tests or test suites.",
+      "Metrics are the full checking process, while evaluation and evals both mean the final score only.",
+      "Evals are training targets, metrics are benchmarks, and evaluation means deployment.",
+      "Evaluation, metric and eval all mean exactly the same thing in every context."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "This is the most defensible distinction. In practice people use the words loosely, but it is useful to separate the overall process of judging performance from the specific measures and the specific tests that generate evidence."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Evaluation",
+      "url": "https://en.wikipedia.org/w/index.php?search=Evaluation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps readers scan different uses of the word across fields, which suits beginners who need orientation rather than one definitive article.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course resource gives a practical introduction to accuracy, recall and precision, which suits readers who want to understand common evaluation metrics.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "This official framework explains evaluation as part of risk management and trustworthy use, which suits leadership, procurement and governance audiences.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Evaluation",
+      "url": "https://www.youtube.com/results?search_query=Evaluation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page helps visual learners find different video explanations and teaching styles, so it suits beginners who prefer audiovisual learning.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Evaluation",
+      "url": "https://www.reddit.com/search/?q=Evaluation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows common questions, confusions and informal explanations from the public, which suits readers who want to see how people talk about the term in practice.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is evaluation in ai",
+    "eval vs metric",
+    "evaluation metric meaning",
+    "what are evals",
+    "model evaluation simple explanation",
+    "accuracy precision recall difference",
+    "ai evals meaning",
+    "how to evaluate a model",
+    "evaluation vs loss function",
+    "evalution metric",
+    "evaluation",
+    "evaluation metric",
+    "eval",
+    "evals"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:05.366Z",
+    "contentHash": "e4447cad3d74f7fd",
+    "attempts": 1,
+    "promptTokens": 2349,
+    "completionTokens": 2556
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "id": "endpoint",
+  "slug": "endpoint",
+  "term": "Endpoint",
+  "aliases": [
+    "API endpoint"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "api",
+    "model-hosting"
+  ],
+  "relatedTermIds": [
+    "api",
+    "model-hosting",
+    "deployment",
+    "rate-limit",
+    "cloud-computing",
+    "data-sovereignty"
+  ],
+  "oftenConfusedWith": [
+    "api",
+    "model-hosting",
+    "deployment"
+  ],
+  "oneSentence": "A network address plus rules for a specific service function, such as sending a prompt to a model and receiving a response.",
+  "plainExplanation": "An endpoint is the specific place a program sends a request when it wants a service to do one particular job. In practice, it usually combines a web address with an agreed format for the request and response. For example, one endpoint may create text, another may list available models, and another may check usage.\n\nWhat goes in depends on the service. A request often includes input data, settings, and credentials, which are proof that the caller is allowed to use the service. The endpoint then passes that request to the system behind it. That system may validate the request, apply limits, route it to a hosted model or another backend service, and record usage for monitoring or billing.\n\nWhat comes out is a response in a defined structure, often JSON, a common machine-readable text format. The response may contain the model output, an error message, timing information, or metadata such as token counts. A good endpoint gives predictable structure even when the answer content varies.\n\nPeople often confuse an endpoint with an API. An API is the broader interface: the whole set of rules and available operations. An endpoint is one callable location or operation within that interface. People also confuse an endpoint with the model itself, but the endpoint is only the access point; the actual model may run elsewhere on different hardware or in a different region.",
+  "everydayAnalogy": {
+    "title": "A service window at a weather office",
+    "story": "A farming cooperative sends one staff member to a regional weather office before planting season. The building offers several service windows: one gives next-week rainfall forecasts, another provides historic rainfall tables, and another handles billing questions. At the forecast window, the staff member submits the farm location and dates on a standard form. The clerk checks the form, sends it to the forecasting system inside the building, and returns a printed forecast in a standard layout.",
+    "mapping": [
+      {
+        "analogyElement": "Forecast service window",
+        "aiElement": "Endpoint for one specific function"
+      },
+      {
+        "analogyElement": "Standard form with location and dates",
+        "aiElement": "Structured request with input fields and settings"
+      },
+      {
+        "analogyElement": "Clerk checking the form",
+        "aiElement": "Validation, authentication and rate checks"
+      },
+      {
+        "analogyElement": "Forecast printout in a standard layout",
+        "aiElement": "Structured response such as JSON"
+      }
+    ],
+    "limitation": "A real endpoint is not a person and does not manually inspect each request. Many endpoint checks and routing steps happen automatically in milliseconds. Also, one endpoint can sometimes trigger several internal services, while the weather-office window suggests a simpler one-step process."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How an endpoint turns a request into a structured response",
+    "learningObjective": "After viewing this, the reader should be able to explain that an endpoint is the specific callable entry point for one service function, not the whole API or the model itself.",
+    "description": "A left-to-right flow diagram with four boxes and arrows. Read from the caller’s request on the left to the structured response on the right. Each stage shows one causal step: send, check, route, return. A side note under the second box shows that invalid or unauthorised requests can stop there with an error.",
+    "steps": [
+      {
+        "label": "1. Caller sends request",
+        "explanation": "An application sends input data, settings and credentials to a specific network path for one task, such as text generation or embeddings.",
+        "visualInstruction": "Draw a box labelled 'Client application' with a packet icon. Arrow to the next box. Under the arrow, add small labels: 'input', 'settings', 'credentials'."
+      },
+      {
+        "label": "2. Endpoint checks the request",
+        "explanation": "The service verifies format, permissions and limits. If something is wrong, it returns an error instead of continuing.",
+        "visualInstruction": "Draw a box labelled 'Endpoint'. Inside, stack three mini-check labels: 'validate', 'authenticate', 'rate limit'. Add a downward branch to a small red box labelled 'Error response'."
+      },
+      {
+        "label": "3. Backend does the work",
+        "explanation": "If the request passes checks, the endpoint forwards it to the hosted model or another backend component that performs the requested task.",
+        "visualInstruction": "Draw a box labelled 'Backend service or hosted model'. Use a gear or chip icon. Main arrow continues from the endpoint to this box."
+      },
+      {
+        "label": "4. Structured response returns",
+        "explanation": "The system sends back a defined response format, often including the output, status and usage metadata.",
+        "visualInstruction": "Draw a box labelled 'Response'. Inside, show three lines: 'output', 'status', 'usage metadata'. Arrow from backend to this box."
+      }
+    ],
+    "interaction": "Hovering or tapping a box reveals a short tooltip with an example, such as a prompt in step 1 or a 429 rate-limit error in step 2.",
+    "accessibilityDescription": "The diagram explains an endpoint as a four-stage flow. First, a client application sends a request containing input, settings and credentials to one specific service location. Second, the endpoint checks whether the request is valid, authorised and within usage limits. If not, the flow can stop and return an error. Third, if the checks pass, the endpoint forwards the request to the backend service or hosted model that performs the task. Fourth, the system returns a structured response that may include the result, a status code and usage details. The main point is that the endpoint is the controlled entry point, not the whole API and not the model itself.",
+    "reducedMotionDescription": "Show the same four boxes and arrows as a static horizontal flow, with a fixed side branch from the endpoint box to an error box. No animation; emphasis is shown with colour and line weight only."
+  },
+  "workedExample": {
+    "scenario": "A developer connects a rainfall advisory application for a farming cooperative to a text-generation service.",
+    "input": "POST request to /v1/responses with a short system instruction, the user text 'Summarise expected rainfall for Kisumu County for next 7 days in plain language', and a parameter limiting the reply to 120 tokens.",
+    "process": [
+      "The application sends the request to one specific endpoint for generating a response, not to the provider's billing or model-listing endpoints.",
+      "The endpoint checks the API key, confirms the JSON format is valid, and verifies the caller is within its rate limit.",
+      "The service routes the request to the selected hosted model and records usage.",
+      "It returns a JSON response containing the summary text, a success status, and usage metadata such as 78 input tokens and 96 output tokens."
+    ],
+    "result": "The app receives a structured reply it can display directly: a short rainfall summary plus metadata for logging and cost tracking."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team wants to summarise open-text answers from a household assessment that was collected through an approved internal platform.",
+    "relevance": "The team may call an approved internal endpoint that accepts de-identified text and returns a structured summary, allowing the survey tool to automate one step while keeping logging, access control and monitoring consistent.",
+    "caution": "Do not send personal, confidential, protection-sensitive or otherwise unapproved assessment data to a public AI endpoint. Use only approved services, apply data minimisation, and keep human review in the loop before sharing outputs."
+  },
+  "whyItMatters": "If you use or buy AI services, the endpoint is often the practical point where cost, speed, security, reliability and governance become visible. It determines what data format you must send, what authentication is required, what errors you must handle, which limits apply, and sometimes where processing happens. For non-specialists, this matters when reviewing vendor claims, planning integrations, assessing privacy and data sovereignty risks, or debugging why a system works in testing but fails in production. Knowing what an endpoint is also helps you ask better questions: Which endpoint does this function use? What data leaves our system? What logs are kept? What happens if the endpoint is unavailable or rate-limited?",
+  "whereYouMayHearIt": [
+    "software integration meetings",
+    "cloud service documentation",
+    "AI vendor onboarding",
+    "incident and troubleshooting calls"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "An endpoint and an API are the same thing.",
+      "correction": "An API is the broader contract: the collection of operations, rules and formats a service exposes. An endpoint is one specific callable location or operation within that contract. A single API can have many endpoints for different tasks."
+    },
+    {
+      "misconception": "The endpoint is the AI model.",
+      "correction": "The endpoint is the access point, not the model itself. It may forward the request to a model hosted elsewhere, add security checks, enforce limits, transform formats, or combine several backend services before sending a response."
+    },
+    {
+      "misconception": "If I know the endpoint address, I can always use it.",
+      "correction": "Most endpoints also require valid credentials, correct request structure, allowed network access and compliance with rate or quota limits. Knowing the address alone does not grant permission or guarantee success."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of an endpoint as the exact service doorway your software uses for one job. You send a request in the required format, and you get back a reply in the required format.",
+    "technical": "In web services, an endpoint is a concrete network-reachable interface for a specific operation, usually identified by a URL path and HTTP method such as POST /v1/responses. It is part of a larger API contract and defines how a client invokes that operation: expected headers, authentication scheme, request schema, response schema, status codes and error behaviour. In AI systems, an endpoint often sits in front of model hosting infrastructure and performs request validation, authorisation, rate limiting, routing, observability and billing before or after calling the underlying model service. The endpoint may expose synchronous or asynchronous behaviour, stream partial outputs, or proxy requests to region-specific backends for governance or performance reasons."
+  },
+  "keyTakeaway": "An endpoint is the specific callable entry point for one service function; it is not the whole API and not the model itself.",
+  "quickCheck": {
+    "question": "Which statement best describes an API endpoint in an AI service?",
+    "options": [
+      "It is the specific callable address and operation used to send a request for one task and receive a structured response.",
+      "It is the full set of all service rules, functions and documentation offered by a provider.",
+      "It is the physical server room where the model runs.",
+      "It is a guarantee that the model output is accurate and approved."
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "An endpoint is one entry point for one operation, such as generating text or listing models. The full set of operations is the API. The endpoint may connect to infrastructure elsewhere, and using it does not guarantee factual or approved output."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Endpoint",
+      "url": "https://en.wikipedia.org/w/index.php?search=Endpoint",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This search-results page helps readers see that 'endpoint' has multiple meanings across computing, so it suits readers who need broad orientation before focusing on API usage.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This framework helps readers think about risk, governance and controls around service interfaces and deployments, so it suits technical managers and assurance-focused practitioners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "difficulty": "intermediate",
+      "description": "These principles give high-level guidance on trustworthy AI governance, which helps readers place endpoint choices in a broader organisational context and suits policy and programme staff.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Endpoint",
+      "url": "https://www.youtube.com/results?search_query=Endpoint%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search-results page offers a range of video explanations with different technical depths, so it suits readers who learn better through demonstrations and walkthroughs.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Endpoint",
+      "url": "https://www.reddit.com/search/?q=Endpoint",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search-results page shows community questions and practical troubleshooting discussions, so it suits readers who want informal examples and common real-world confusions.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "what is an api endpoint",
+    "endpoint vs api",
+    "ai endpoint meaning",
+    "model endpoint explained",
+    "rest endpoint ai",
+    "api end point",
+    "endpoint url example",
+    "what does endpoint do",
+    "inference endpoint",
+    "endpoint",
+    "api endpoint"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:49:33.126Z",
+    "contentHash": "a809c62dd6d25ba7",
+    "attempts": 1,
+    "promptTokens": 2344,
+    "completionTokens": 2425
+  }
+}

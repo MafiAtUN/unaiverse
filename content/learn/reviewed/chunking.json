@@ -1,0 +1,238 @@
+{
+  "id": "chunking",
+  "slug": "chunking",
+  "term": "Chunking",
+  "aliases": [
+    "chunk",
+    "chunks",
+    "splitting"
+  ],
+  "categoryId": "search-and-rag",
+  "subcategory": "Search, Embeddings and RAG",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "retrieval-augmented-generation"
+  ],
+  "relatedTermIds": [
+    "retrieval-augmented-generation",
+    "retrieval",
+    "semantic-search",
+    "indexing",
+    "ranking-and-reranking",
+    "grounding"
+  ],
+  "oftenConfusedWith": [
+    "tokenisation",
+    "keyword-search",
+    "semantic-similarity",
+    "vector-database"
+  ],
+  "oneSentence": "Chunking splits source material into smaller pieces so search and retrieval can find and return the most relevant passage, rather than an entire document or a random fragment.",
+  "plainExplanation": "In search systems that use embeddings and retrieval, long documents are often broken into smaller units before they are indexed. Those units are commonly called chunks. Chunking is the overall process. A chunk is one resulting piece. Chunks is just the plural. Splitting usually refers to the act of cutting the document, but people sometimes use it loosely to mean the whole process.\n\nWhat goes in is usually raw text such as a report, policy, meeting note or web page. The system then chooses boundaries: for example every 300 words, every few paragraphs, or at section headings. Some methods also keep overlap, meaning a few sentences are repeated into the next chunk so important context is less likely to be cut in half.\n\nWhat happens next is that each chunk is turned into a numeric representation called an embedding, then stored for later search. When a user asks a question, the system compares the question with those stored chunk embeddings and retrieves the closest matches. The output is usually a small set of chunks that may be shown directly or passed to a language model as source material.\n\nGood chunking improves the chance that retrieval finds a passage with the right meaning and enough context. Poor chunking can hide answers inside pieces that are too large, or strip away meaning by cutting text too aggressively. Chunking is often confused with tokenisation, but tokenisation splits text into very small units such as words or subwords for model processing, while chunking groups text into larger, useful passages for search and retrieval.",
+  "everydayAnalogy": {
+    "title": "Checking a shipping manifest against a delivery",
+    "story": "At a port warehouse in Mombasa, Amina receives a 40-page shipping manifest and needs to check whether a container matches what was delivered. Instead of searching the whole stack at once, she places sticky tabs to divide it into sections such as electronics, medical supplies and spare parts, with a few repeated lines near section breaks so item descriptions are not split awkwardly. When a box marked \"water pump gasket\" arrives, she goes straight to the likely section and then to the nearest item list, rather than rereading all 40 pages. The task becomes faster because she searches smaller, meaningful sections, not one giant document.",
+    "mapping": [
+      {
+        "analogyElement": "Sticky-tabbed sections of the manifest",
+        "aiElement": "Chunks created from a longer document"
+      },
+      {
+        "analogyElement": "Repeated lines near section breaks",
+        "aiElement": "Overlap between chunks to preserve context"
+      },
+      {
+        "analogyElement": "Looking in the most relevant section first",
+        "aiElement": "Retrieval of the most similar chunks"
+      },
+      {
+        "analogyElement": "40-page manifest",
+        "aiElement": "Original source document"
+      }
+    ],
+    "limitation": "A manifest already has human-made sections and exact item names, while real documents may have weak structure and a search system often matches by meaning, not only exact words. Also, a person can use background knowledge to jump around flexibly, whereas chunking rules are mechanical unless extra logic is added."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How chunking helps retrieval find the right passage",
+    "learningObjective": "Show how one long document becomes smaller retrievable passages, and why chunk size and overlap affect what can later be found.",
+    "description": "A left-to-right flow. Start with one long document. Then show it split into several chunks, first without overlap and then with slight overlap. Next show each chunk being indexed for search. End with a user question retrieving two relevant chunks. Read the diagram from left to right to see how document structure affects later retrieval quality.",
+    "steps": [
+      {
+        "label": "1. Long source",
+        "explanation": "Begin with a single long document such as a report or guidance note. Important ideas may be far apart inside it.",
+        "visualInstruction": "Draw one tall document card with multiple paragraph lines and section headings."
+      },
+      {
+        "label": "2. Split into chunks",
+        "explanation": "Cut the document into smaller pieces. Boundaries can follow length rules, paragraphs or headings.",
+        "visualInstruction": "Show the document becoming four horizontal cards labelled Chunk A, B, C and D."
+      },
+      {
+        "label": "3. Add overlap if needed",
+        "explanation": "Repeat a small amount of text across neighbouring chunks so context is not lost at the boundary.",
+        "visualInstruction": "Show Chunk B and C with a shared shaded strip at their touching edges; add a note 'overlap'."
+      },
+      {
+        "label": "4. Index each chunk",
+        "explanation": "Store each chunk separately for later search, often with an embedding and metadata such as title or page.",
+        "visualInstruction": "Connect each chunk card to a storage panel with rows representing indexed records."
+      },
+      {
+        "label": "5. Retrieve relevant passages",
+        "explanation": "A question is compared with the indexed chunks, and the most relevant pieces are returned.",
+        "visualInstruction": "Place a question bubble on the right and highlight two chunk records travelling back as search results."
+      }
+    ],
+    "interaction": "On hover or tap, highlight how a sentence near a chunk boundary may be lost without overlap but preserved with overlap.",
+    "accessibilityDescription": "The diagram explains chunking as a five-stage flow. First there is one long document. Second, the document is split into four smaller chunks. Third, neighbouring chunks share a small repeated region called overlap, which helps preserve context when a sentence sits near a boundary. Fourth, each chunk is indexed separately for later search. Fifth, a user question retrieves the most relevant chunks rather than the entire document. The main message is that chunk size and overlap change what information can be found later.",
+    "reducedMotionDescription": "A static left-to-right diagram with five labelled panels: long document, split chunks, overlapping chunks, indexed chunk records, and retrieved results for a question. Shared overlap is shown with shading instead of animation."
+  },
+  "workedExample": {
+    "scenario": "A team has a 1,200-word guidance note on warehouse safety and wants a retrieval system to answer questions from it.",
+    "input": "Guidance note split by paragraph into chunks of about 200 words, with 40 words of overlap between neighbouring chunks.",
+    "process": [
+      "The system creates 7 chunks from the note and keeps the document title and paragraph numbers as metadata.",
+      "Each chunk is converted into an embedding and stored in the search index.",
+      "A user asks: \"What should staff do if a pallet blocks an emergency exit?\"",
+      "The system compares the question with all 7 chunk embeddings and ranks the closest matches.",
+      "Chunk 4, which contains the rule on keeping exits clear and reporting blocked routes, scores highest; Chunk 5, which mentions escalation steps, scores second."
+    ],
+    "result": "The retrieval step returns Chunks 4 and 5 with their source labels, giving the answering system the relevant passage and enough nearby context to cite the guidance note."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN office uses an approved internal retrieval system to help staff draft a public information note by searching past published guidance and approved communications.",
+    "relevance": "Chunking lets the system retrieve the exact passage about style, terminology or factual background instead of sending an entire long document to the drafting tool, which improves traceability and human review.",
+    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or unpublished operational material to an unapproved public AI service; only use approved systems and keep human review before any text is shared."
+  },
+  "whyItMatters": "Non-specialists often judge a retrieval system by the final answer, but chunking strongly shapes whether the right evidence can be found at all. If chunks are too large, search may pull in broad but unfocused text. If they are too small, important context may be missing. This affects answer quality, citation quality, cost, and review effort. For managers and programme staff, chunking is therefore not a minor technical setting. It influences whether a system is useful for policy lookup, guidance drafting, question answering and auditability. When results seem inconsistent, chunking is one of the first design choices worth checking.",
+  "whereYouMayHearIt": [
+    "RAG system setup",
+    "search index design",
+    "document ingestion pipeline",
+    "embedding workflow",
+    "knowledge base tuning"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Chunking just means cutting text into equal pieces, so any fixed size will do.",
+      "correction": "Fixed-size splitting can work, but it is not always enough. If a heading, definition and exception get separated badly, retrieval may miss the meaning or return incomplete evidence. Good chunking often considers document structure, overlap and the intended query type."
+    },
+    {
+      "misconception": "Smaller chunks are always better because they are more precise.",
+      "correction": "Very small chunks can improve precision, but they can also remove the context needed to interpret a sentence. A rule, date or warning may only make sense together with nearby text. There is usually a trade-off between precision and completeness."
+    },
+    {
+      "misconception": "Chunking and tokenisation are the same thing.",
+      "correction": "They happen at different scales and for different purposes. Tokenisation breaks text into very small units, often for model input processing. Chunking groups text into larger passages so search and retrieval can return useful sections of a source."
+    },
+    {
+      "misconception": "Once chunking is done, retrieval quality mostly depends on the language model.",
+      "correction": "Retrieval quality depends heavily on earlier steps such as chunk boundaries, metadata, embeddings, indexing and ranking. A strong language model cannot reliably recover evidence that was never retrieved."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Take a long document, break it into sensible pieces, and search those pieces instead of the whole document. The goal is to bring back the passage that best answers the question, with enough surrounding context to make sense.",
+    "technical": "Chunking is the segmentation of source documents into retrievable units before indexing. The unit may be based on fixed length, paragraphs, sections, sentence windows, or semantic boundaries. Many pipelines add overlap so content near boundaries appears in adjacent chunks. Each chunk is then embedded and stored with metadata in an index or vector database. At query time, the query embedding is compared against chunk embeddings, often using nearest-neighbour search and cosine or related similarity measures, followed by ranking or reranking. The choice of chunk size, boundary strategy, overlap, metadata and parent-child linking affects recall, precision, latency, storage and how much context can be passed into retrieval-augmented generation."
+  },
+  "keyTakeaway": "Chunking decides what a search system can retrieve later: too broad and results blur, too narrow and meaning breaks apart.",
+  "quickCheck": {
+    "question": "Why do many retrieval systems add overlap between neighbouring chunks?",
+    "options": [
+      "To repeat some boundary text so important context is less likely to be cut off",
+      "To make every chunk identical in length for fairness",
+      "To remove the need for indexing and ranking",
+      "To ensure the language model never needs source citations"
+    ],
+    "correctOptionIndex": 0,
+    "explanation": "Overlap keeps a small shared region between adjacent chunks. This helps when a relevant sentence sits near the split point. It does not replace indexing, ranking or citation, and it does not make all chunks identical."
+  },
+  "resources": [
+    {
+      "title": "Wikipedia search: Chunking",
+      "url": "https://en.wikipedia.org/w/index.php?search=Chunking",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This Wikipedia search results page helps a reader quickly see the range of meanings attached to 'chunking', which is useful for orientation but best for readers who can judge search results carefully.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Embeddings",
+      "url": "https://developers.google.com/machine-learning/crash-course/embeddings",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This Google course resource introduces embeddings, which suits readers who want the background needed to understand why chunks can be searched by meaning.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Embedding Projector",
+      "url": "https://projector.tensorflow.org/",
+      "type": "interactive",
+      "publisher": "TensorFlow",
+      "description": "This TensorFlow interactive tool lets readers explore how text or other items can be placed near one another in embedding space, which suits visual learners and technical readers.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Chunking",
+      "url": "https://www.youtube.com/results?search_query=Chunking%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This YouTube search results page offers multiple video explanations of chunking, which suits readers who prefer spoken and visual teaching but need to choose sources critically.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Chunking",
+      "url": "https://www.reddit.com/search/?q=Chunking",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This Reddit search results page shows community questions and practical discussions about chunking choices, which suits readers seeking implementation perspectives but not authoritative guidance.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is chunking in rag",
+    "chunk vs splitting ai",
+    "how to split documents for embeddings",
+    "chunk size overlap retrieval",
+    "rag chunking explained",
+    "document chunking meaning",
+    "chuncking ai",
+    "chunking vs tokenisation",
+    "semantic chunking",
+    "split text into chunks search",
+    "chunking",
+    "chunk",
+    "chunks",
+    "splitting"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:44:31.810Z",
+    "contentHash": "8c53c15253bacfa2",
+    "attempts": 1,
+    "promptTokens": 2310,
+    "completionTokens": 2528
+  }
+}

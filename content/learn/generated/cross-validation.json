@@ -1,0 +1,231 @@
+{
+  "id": "cross-validation",
+  "slug": "cross-validation",
+  "term": "Cross-validation",
+  "aliases": [
+    "k-fold cross-validation"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "deeper",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "validation-and-test-sets"
+  ],
+  "relatedTermIds": [
+    "generalisation",
+    "overfitting",
+    "evaluation-metric",
+    "data-leakage",
+    "variance",
+    "benchmark"
+  ],
+  "oftenConfusedWith": [
+    "validation-and-test-sets",
+    "accuracy",
+    "benchmark"
+  ],
+  "oneSentence": "A method for estimating how well a model will perform on new data by repeatedly training on one part of a dataset and checking results on another part.",
+  "plainExplanation": "Cross-validation is a way to test a model more carefully when you have a limited dataset. A model is a mathematical system that learns patterns from examples. Instead of checking performance on just one split of the data, you split the data into several parts and repeat the test several times.\n\nIn k-fold cross-validation, you divide the dataset into k roughly equal groups called folds. You train the model on k-1 folds and evaluate it on the remaining fold. Then you rotate which fold is held out, so every fold gets a turn as the evaluation set.\n\nWhat goes in is one dataset, a chosen value of k, a model, and an evaluation metric such as accuracy, precision, or recall. What happens is repeated training and repeated evaluation on different held-out folds. What comes out is usually a set of scores and an average score, often with some measure of spread, which shows how stable the model is across splits.\n\nThis helps reduce the risk of being misled by one lucky or unlucky train-test split. But it is not a magic guarantee. If the data are unrepresentative, leaked, duplicated, or grouped in the wrong way, cross-validation can still give over-optimistic results.",
+  "everydayAnalogy": {
+    "title": "Checking a translated field report with rotating reviewers",
+    "story": "A team needs to judge the quality of a short translated field report, but they only have one report broken into five sections. Four bilingual reviewers use four sections to agree on style and terminology, then they test that agreement on the fifth section they did not use. They repeat this five times, each time leaving out a different section. At the end, they look at all five review results together instead of trusting only one section.",
+    "mapping": [
+      {
+        "analogyElement": "five sections of the report",
+        "aiElement": "five folds of the dataset"
+      },
+      {
+        "analogyElement": "using four sections to agree on style and terminology",
+        "aiElement": "training the model on k-1 folds"
+      },
+      {
+        "analogyElement": "checking the fifth unseen section",
+        "aiElement": "evaluating on the held-out fold"
+      },
+      {
+        "analogyElement": "combining the five review results",
+        "aiElement": "averaging scores across folds"
+      }
+    ],
+    "limitation": "A translation review involves human judgement and discussion, while cross-validation usually runs a fixed mathematical training and scoring procedure. Also, the report sections may influence one another in ways that data folds should ideally not. In real machine learning, the folds should be prepared so that repeated or linked examples do not leak information across splits."
+  },
+  "visual": {
+    "type": "step-sequence",
+    "title": "How k-fold cross-validation works",
+    "learningObjective": "After viewing this, the reader should be able to explain that the same dataset is split into k folds, each fold is held out once for evaluation, and the final result combines the scores.",
+    "description": "Show one dataset divided into five equal blocks. Then show five rows. In each row, four blocks are marked training and one block is marked evaluation, with the evaluation block rotating from left to right. A final panel shows five scores feeding into one average score and a variability note.",
+    "steps": [
+      {
+        "label": "Split the data",
+        "explanation": "Divide the dataset into k folds of similar size. In classification tasks, folds are often arranged so class proportions stay similar across folds.",
+        "visualInstruction": "Draw a horizontal bar split into five equal rectangles labelled Fold 1 to Fold 5. Add a small note: 'same dataset, partitioned once'."
+      },
+      {
+        "label": "Train on most folds",
+        "explanation": "For the first run, train the model on k-1 folds and leave one fold out for evaluation.",
+        "visualInstruction": "First row of five rectangles: colour Folds 2 to 5 blue for training and Fold 1 orange for evaluation. Add a train icon or arrow from blue blocks to a model box."
+      },
+      {
+        "label": "Rotate the held-out fold",
+        "explanation": "Repeat the process k times, each time changing which fold is held out. Every example appears in evaluation exactly once.",
+        "visualInstruction": "Add four more rows. In each row, move the orange evaluation colour to the next fold and keep the remaining folds blue. Connect each row to a score badge."
+      },
+      {
+        "label": "Collect the scores",
+        "explanation": "Record one evaluation score per run, such as accuracy or F1 score.",
+        "visualInstruction": "Show five score badges, for example 0.78, 0.81, 0.76, 0.80, 0.79, aligned beside the five rows."
+      },
+      {
+        "label": "Summarise performance",
+        "explanation": "Compute the mean score and often the spread across folds. A stable model usually shows similar scores from fold to fold.",
+        "visualInstruction": "Draw arrows from the five score badges into a final summary box labelled 'mean score' and 'variation across folds'."
+      }
+    ],
+    "interaction": "Hovering or tapping a row highlights which fold is used for evaluation in that run and reveals the corresponding score.",
+    "accessibilityDescription": "The diagram explains k-fold cross-validation in five stages. First, one dataset is divided into five folds. Next, run one trains on folds 2 to 5 and evaluates on fold 1. Then the held-out evaluation fold rotates so that run two evaluates fold 2, run three fold 3, and so on until each fold has been evaluated once. Each run produces a score. Finally, the five scores are combined into a mean score, and the variation among them is shown to indicate stability across splits.",
+    "reducedMotionDescription": "A static five-row chart shows the dataset split into five folds. In each row, one fold is coloured as evaluation and the others as training, with the evaluation fold changing position from row to row. Five scores are listed at the right, leading to a final summary box with the average and variation."
+  },
+  "workedExample": {
+    "scenario": "A team is building a model to sort 1,000 customer support messages into 'urgent' or 'not urgent'. They use 5-fold cross-validation and measure F1 score because urgent cases are less common.",
+    "input": "1,000 labelled messages, 5 folds of 200 messages each, one classification model, F1 score as the metric.",
+    "process": [
+      "Split the 1,000 messages into five folds of 200, keeping the urgent/not urgent ratio similar in each fold.",
+      "Train on folds 2 to 5 and evaluate on fold 1, then repeat until each fold has been the evaluation fold once.",
+      "Record the five F1 scores: 0.72, 0.75, 0.70, 0.74, and 0.73.",
+      "Average the scores to get 0.728, and note that the scores are fairly close to one another.",
+      "Use this result to compare the model with alternatives, while keeping a separate final test set if one is available for the last independent check."
+    ],
+    "result": "The model's estimated performance is about F1 = 0.73 on unseen messages, with modest variation across folds, so the estimate looks more reliable than a single split score."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN procurement team is assessing vendor claims about a document-classification tool for routing incoming public correspondence. In the requirements and evaluation plan, they ask vendors to report cross-validation results on approved sample data, including the metric used, the number of folds, and the variation across folds.",
+    "relevance": "This helps the team judge whether a high performance claim is consistent across different data splits or just the result of one favourable split. It also makes vendor comparisons more structured and transparent.",
+    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service for testing. If sample data contain sensitive material, evaluation must follow approved governance, privacy and security procedures."
+  },
+  "whyItMatters": "A single performance score can look reassuring even when it depends heavily on how the data were split. Cross-validation gives a stronger estimate by repeating the train-and-check cycle across multiple splits. For non-specialists, that matters when comparing vendors, approving pilots, or deciding whether a system is ready for real use. It can reveal that one model is consistently solid while another only looks good under favourable conditions. It also helps you ask better questions: What metric was used, how many folds, was the split appropriate, and how much did the score vary? Those questions reduce the chance of buying, deploying or trusting a system on weak evidence.",
+  "whereYouMayHearIt": [
+    "model evaluation reports",
+    "procurement technical annexes",
+    "data science tutorials",
+    "research papers",
+    "benchmark comparisons"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Cross-validation proves a model will work well in the real world.",
+      "correction": "It gives an estimate based on the available dataset, not a guarantee about future conditions. If real-world data differ from the dataset used for evaluation, performance can still drop. It measures generalisation to similar unseen data, not to every possible setting."
+    },
+    {
+      "misconception": "Averaging across folds removes the need for a separate test set.",
+      "correction": "Cross-validation is often used during model selection and tuning, so repeated use can still lead to optimistic choices. If you have enough data, a final untouched test set remains useful for one last independent check after all choices are fixed."
+    },
+    {
+      "misconception": "Any way of splitting the data is fine as long as there are k folds.",
+      "correction": "The split strategy matters. For example, if the same person, document, location or time period appears in both training and evaluation folds, leakage can inflate scores. Some tasks need grouped, stratified or time-aware cross-validation rather than ordinary random folds."
+    },
+    {
+      "misconception": "A high average cross-validation score means the model is stable.",
+      "correction": "The average alone can hide instability. Two models can have the same mean score, but one may vary greatly across folds. Looking at the spread helps show whether performance is consistent or fragile."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Instead of testing a model once on one held-out chunk of data, you test it several times on different held-out chunks and combine the results.",
+    "technical": "In k-fold cross-validation, a dataset is partitioned into k disjoint folds. For each iteration i, the model is fit on the union of k-1 folds and evaluated on fold i. This produces k out-of-sample performance estimates, one per fold, which are then summarised, commonly by the mean and sometimes the standard deviation or confidence interval. The method reduces sensitivity to a single split and uses data efficiently, especially when datasets are small. Variants include stratified k-fold for preserving class proportions, grouped cross-validation for keeping related samples together, and time-series methods when order matters. Cross-validation is mainly an internal evaluation procedure for model selection and hyperparameter tuning; if it guides repeated choices, an untouched final test set is still valuable for a less biased final estimate."
+  },
+  "keyTakeaway": "Cross-validation checks a model across several rotated hold-out splits, so one lucky split is less likely to fool you.",
+  "quickCheck": {
+    "question": "Why do many teams use k-fold cross-validation instead of relying on one train-test split?",
+    "options": [
+      "It lets every data point be used for both training and evaluation in the same run, which guarantees fairness.",
+      "It produces several out-of-sample scores across different splits, giving a more stable estimate than one split alone.",
+      "It removes the need to choose an evaluation metric because the folds average everything automatically.",
+      "It ensures the model cannot overfit because each fold is unseen once."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Cross-validation repeats evaluation across multiple held-out folds, so the result is usually less dependent on one arbitrary split. It does not guarantee fairness, does not replace the need for a metric, and does not prevent overfitting by itself."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Cross-validation",
+      "url": "https://en.wikipedia.org/wiki/Cross-validation",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad overview of cross-validation methods and terminology, which suits readers who want a general reference before going deeper.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "difficulty": "intermediate",
+      "description": "This link helps readers connect cross-validation to common classification metrics such as accuracy, precision and recall, and suits learners comparing how results are reported.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "This link is useful for readers who want to place model evaluation inside a wider risk-management process, especially in organisational or public-sector settings.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Cross-validation",
+      "url": "https://www.youtube.com/results?search_query=Cross-validation%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find video explanations with different teaching styles, and suits people who learn better by seeing the procedure demonstrated step by step.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Cross-validation",
+      "url": "https://www.reddit.com/search/?q=Cross-validation",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community questions and practical discussions about cross-validation, and suits readers who want examples of common confusions and troubleshooting topics.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "cross validation meaning",
+    "k fold cross validation explained",
+    "cross validation vs test set",
+    "how does k-fold work",
+    "why use cross validation",
+    "stratified k fold",
+    "cross validation leakage",
+    "cross validaiton",
+    "cv machine learning",
+    "average score across folds",
+    "cross-validation",
+    "k-fold cross-validation"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:12.485Z",
+    "contentHash": "7294f96fafcc098b",
+    "attempts": 1,
+    "promptTokens": 2289,
+    "completionTokens": 2671
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "id": "label",
+  "slug": "label",
+  "term": "Label",
+  "aliases": [
+    "target",
+    "labels"
+  ],
+  "categoryId": "how-machines-learn",
+  "subcategory": "How Machines Learn",
+  "difficulty": "starter",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "training-example"
+  ],
+  "relatedTermIds": [
+    "training",
+    "supervised-learning",
+    "classification",
+    "regression",
+    "annotation",
+    "validation-and-test-sets"
+  ],
+  "oftenConfusedWith": [
+    "feature",
+    "ground-truth",
+    "prediction"
+  ],
+  "oneSentence": "The expected answer attached to an example so a model can learn what output should match that input.",
+  "plainExplanation": "In learning from examples, each input is paired with an expected output. That expected output is the label. If the input is a sensor reading, the label might be “normal” or “fault”. If the input is a house record, the label might be the sale price.\n\nWhat goes in is a set of examples. Each example usually has features, meaning the measurable details the model uses, and a label, meaning the answer it should learn to produce. During training, the system compares its own output with the label and adjusts its internal settings to reduce the mismatch.\n\nWhat comes out later is a prediction for new inputs. In supervised learning, labels are the teaching signal that lets the model connect patterns in the features to desired outputs. Without labels, the system may still find structure, but that is a different approach, such as clustering in unsupervised learning.\n\nA label is often confused with a feature, a prediction, or ground truth. A feature is part of the input. A prediction is the model’s output after learning. Ground truth usually means the best available reference answer, often used as a label, but the two terms are not always identical because some labels are noisy, incomplete, or based on human judgement.",
+  "everydayAnalogy": {
+    "title": "Marked answer sheets for pump checks",
+    "story": "A maintenance team reviews daily printouts from a water pump. On each sheet, they circle the final judgement: “normal”, “needs inspection”, or “urgent fault”. A trainee studies many old sheets, looking at the readings and the circled judgement together. Later, when shown a new sheet without a circle, the trainee tries to give the same kind of judgement.",
+    "mapping": [
+      {
+        "analogyElement": "pump reading sheet",
+        "aiElement": "input example"
+      },
+      {
+        "analogyElement": "circled judgement on the sheet",
+        "aiElement": "label"
+      },
+      {
+        "analogyElement": "trainee studying many past sheets",
+        "aiElement": "training"
+      },
+      {
+        "analogyElement": "judgement on a new uncircled sheet",
+        "aiElement": "prediction"
+      }
+    ],
+    "limitation": "A human trainee can use outside knowledge, ask questions, and notice context not written on the sheet. A machine learning model does not do that by default. It only learns statistical patterns from the training data it receives, and the labels may themselves contain mistakes or disagreement."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How a label guides learning",
+    "learningObjective": "After viewing, the reader should be able to say that a label is the expected output paired with an input and used during training to measure error.",
+    "description": "A left-to-right flow with one example moving through training and then a new example moving through use. The diagram highlights that labels are present during training but absent when the trained model later makes a prediction on new data.",
+    "steps": [
+      {
+        "label": "1. Start with an example",
+        "explanation": "Show one training example split into input details and expected answer.",
+        "visualInstruction": "Draw a card labelled 'Training example'. On the left list input features such as 'vibration 8.1, temperature 74, flow 42'. On the right place a bold tag 'Label: needs inspection'."
+      },
+      {
+        "label": "2. Compare output with label",
+        "explanation": "The model produces a trial output and checks how far it is from the label.",
+        "visualInstruction": "Add a box labelled 'Model in training'. Arrow from the example card into the box. From the box, draw an output tag 'trial output: normal'. Below, show a comparison badge 'does not match label'."
+      },
+      {
+        "label": "3. Adjust the model",
+        "explanation": "The mismatch is used to update internal settings so similar cases are handled better next time.",
+        "visualInstruction": "Draw a feedback arrow from the comparison badge back into the model box with the text 'update settings'."
+      },
+      {
+        "label": "4. Use the trained model",
+        "explanation": "For a new input, the model receives no label and produces a prediction.",
+        "visualInstruction": "On the right, draw a new card labelled 'New example' with input features only. Arrow into a box labelled 'Trained model'. Output tag says 'Prediction: needs inspection'. Add a small note beneath: 'No label available yet'."
+      }
+    ],
+    "interaction": "Hover or tap each stage to highlight whether a label is present there: present in steps 1 and 2, absent in step 4.",
+    "accessibilityDescription": "The diagram shows a four-stage flow. First, a training example contains input features and a label, which is the expected answer. Second, a model in training produces a trial output and compares it with the label. Third, the mismatch causes the model to update its internal settings. Fourth, a new example with no label is sent to the trained model, which produces a prediction. The key idea is that labels guide learning during training, but they are not usually available at the moment of prediction.",
+    "reducedMotionDescription": "A static left-to-right diagram with four labelled boxes and arrows. Labels appear only in the training part, while the final prediction stage explicitly notes that no label is provided for the new example."
+  },
+  "workedExample": {
+    "scenario": "A team wants to detect unusual water pump behaviour from sensor readings.",
+    "input": "Example record: vibration 8.1 mm/s, temperature 74°C, flow 42 L/min; human review outcome: needs inspection.",
+    "process": [
+      "Collect past pump records with sensor values and the reviewed outcome attached.",
+      "Use the sensor values as features and the reviewed outcome as the label.",
+      "During training, the model sees the record and may first output 'normal'.",
+      "The system compares that output with the label 'needs inspection' and updates the model.",
+      "Later, a new record with similar readings is sent in without a label, and the model outputs a prediction."
+    ],
+    "result": "The label for the training record was 'needs inspection'. It was the answer used to teach the model what output should match those sensor patterns."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN team builds an internal tool to flag whether draft speech paragraphs align with previously agreed language categories such as 'aligned', 'needs legal review', or 'not aligned'. Past paragraphs are reviewed by authorised staff, and those review outcomes become labels for training examples.",
+    "relevance": "This helps staff understand that the label is the reviewed category attached to each past example, not the paragraph text itself and not the model’s later output.",
+    "caution": "Use only approved internal systems and approved text collections. Do not place confidential negotiation text, unpublished drafts, or politically sensitive material into an unapproved public AI service."
+  },
+  "whyItMatters": "If you work with any machine learning system, labels affect what the system can learn, how well it performs, and where it may fail. Poor labels can teach the wrong pattern. Missing labels can limit which methods are possible. Inconsistent labels can make results unstable. For managers and programme staff, asking 'Where did the labels come from, who assigned them, and how reliable are they?' is often more useful than asking only which algorithm was used. Labels also help you judge whether a system’s output can be trusted for the task, or whether human review remains essential.",
+  "whereYouMayHearIt": [
+    "data annotation projects",
+    "supervised learning discussions",
+    "model evaluation meetings",
+    "quality assurance for datasets"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "A label is just another input field in the data table.",
+      "correction": "Not quite. Input fields used to make the prediction are usually called features. The label is the output the model is trying to learn to predict. In a table they may look similar, but they play different roles in training."
+    },
+    {
+      "misconception": "Labels are always objective facts.",
+      "correction": "Some are factual, like a measured price. Others depend on human judgement, policy definitions, or limited information, such as whether text is 'harmful' or 'aligned'. That means labels can contain disagreement, bias, or error."
+    },
+    {
+      "misconception": "If data has labels, the model’s prediction will match them exactly.",
+      "correction": "Labels guide learning, but they do not guarantee perfect results. The model may see ambiguous cases, too little data, noisy labels, or examples unlike the training set. A prediction is an estimate, not the label itself."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A label is the answer attached to an example so the system can learn what output it should produce.",
+    "technical": "In supervised learning, a label is the target variable associated with an input example. The model maps features to this target by minimising a loss function, which measures the difference between the model output and the label. Labels may be categorical, as in classification, or numeric, as in regression. They are often created through annotation or derived from recorded outcomes. A label is not the same as a feature, and it is not the same as a prediction produced at inference time. 'Ground truth' is often used for labels when they represent the best available reference answer, but in practice training labels can be noisy, delayed, weak, or only approximate."
+  },
+  "keyTakeaway": "A label is the expected output attached to an example, and it is what lets supervised learning compare, correct, and improve.",
+  "quickCheck": {
+    "question": "In a dataset for predicting pump faults, which item is the label?",
+    "options": [
+      "The vibration and temperature readings from the pump",
+      "The reviewed outcome 'urgent fault' attached to that record",
+      "The model's guess after deployment",
+      "The number of records in the dataset"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "The label is the expected answer paired with an example during training. The readings are features, the deployed model's guess is a prediction, and the dataset size is neither input nor label."
+  },
+  "resources": [
+    {
+      "title": "Labeled data",
+      "url": "https://en.wikipedia.org/wiki/Labeled_data",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "This link gives a general overview of labelled data and suits readers who want a quick reference-style introduction.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Machine Learning Crash Course",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "type": "course",
+      "publisher": "Google",
+      "description": "This course link suits readers who want a practical beginner-friendly explanation of how labels are used in machine learning workflows.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "StatQuest",
+      "url": "https://statquest.org/video-index/",
+      "type": "video",
+      "publisher": "StatQuest with Josh Starmer",
+      "description": "This video source suits readers who learn well from step-by-step spoken explanations and visual teaching.",
+      "difficulty": "starter",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Label",
+      "url": "https://www.youtube.com/results?search_query=Label%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page helps readers find multiple video explanations of labels and suits those comparing different teaching styles.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Label",
+      "url": "https://www.reddit.com/search/?q=Label",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page helps readers see how people discuss labels in practice and suits those who want informal examples and common questions.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "what is a label in machine learning",
+    "ml label vs feature",
+    "target variable meaning",
+    "labels in supervised learning",
+    "data label meaning",
+    "labeled data explained",
+    "label vs prediction machine learning",
+    "ground truth vs label",
+    "what are labels in ai",
+    "labelling data ml",
+    "label",
+    "target",
+    "labels"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:39:42.629Z",
+    "contentHash": "8d9fe7e429653a17",
+    "attempts": 1,
+    "promptTokens": 2286,
+    "completionTokens": 2200
+  }
+}

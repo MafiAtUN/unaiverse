@@ -1,0 +1,232 @@
+{
+  "id": "edge-ai",
+  "slug": "edge-ai",
+  "term": "Edge AI",
+  "aliases": [
+    "on-device AI",
+    "offline AI"
+  ],
+  "categoryId": "data-and-infrastructure",
+  "subcategory": "Data and Infrastructure",
+  "difficulty": "intermediate",
+  "audiences": [
+    "programme",
+    "policy",
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "inference"
+  ],
+  "relatedTermIds": [
+    "inference",
+    "cloud-computing",
+    "deployment",
+    "compute",
+    "gpu-cpu-tpu",
+    "data-sovereignty"
+  ],
+  "oftenConfusedWith": [
+    "cloud-computing",
+    "model-hosting",
+    "deployment"
+  ],
+  "oneSentence": "Running an AI model on a local device near the data source, instead of sending each task to a remote server, to produce outputs with less delay and less network dependence.",
+  "plainExplanation": "Edge AI means running an AI model on a device close to where data is produced. That device might be a phone, a camera, a sensor box, a vehicle computer or factory equipment. The model takes local input data, such as images, sound or sensor readings, processes it on the device, and returns an output such as a label, score, alert or short summary.\n\nWhat goes in depends on the use case: a photo, microphone audio, temperature readings or machine vibration data. What happens is called inference, meaning the model uses patterns learned earlier to generate a result for new input. What comes out might be “possible leak”, “speech detected”, “translate this sentence”, or “normal versus unusual reading”.\n\nThe main difference from cloud computing is where the inference runs. In cloud computing, the device sends data over a network to a remote server, and the server sends back the result. In Edge AI, much or all of that work happens locally. This can reduce delay, keep working when connectivity is weak, and limit how much raw data leaves the device.\n\nBut Edge AI does not mean no infrastructure, no risk or no internet ever. Models still need to be built, tested, updated and monitored. Edge devices also have limits: less compute, less memory, less battery and sometimes weaker security management than central systems. In many real deployments, edge and cloud are combined: the device does fast local processing, while a central system handles updates, logs or larger analysis.",
+  "everydayAnalogy": {
+    "title": "A pump technician with a pocket checklist",
+    "story": "At a water station, a technician carries a small device with a checklist for pump sounds and pressure patterns. When a sensor shows an unusual reading, the device compares it with known warning patterns right there and tells the technician, within a second, whether to inspect the pump. The technician does not need to phone a central office for every reading, so the check still works during a network outage. Later, the central office can still collect selected reports to improve the checklist.",
+    "mapping": [
+      {
+        "analogyElement": "small device used at the water station",
+        "aiElement": "edge device running the model locally"
+      },
+      {
+        "analogyElement": "checklist of warning patterns",
+        "aiElement": "trained AI model stored on the device"
+      },
+      {
+        "analogyElement": "sensor reading checked immediately on site",
+        "aiElement": "local inference on incoming data"
+      },
+      {
+        "analogyElement": "central office collecting reports later",
+        "aiElement": "cloud system for updates, monitoring or retraining"
+      }
+    ],
+    "limitation": "A paper-like checklist suggests simple rules, but many edge AI systems use statistical models with many parameters rather than explicit if-then steps. Also, a human technician can use judgement outside the checklist, while a model only produces outputs based on its training and design. The analogy also makes the local device seem fully independent, but many edge systems still rely on central services for updates, security patches or performance review."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Edge AI and cloud AI: where the processing happens",
+    "learningObjective": "Show the difference between local inference on a device and remote inference in the cloud, and explain why this changes speed, connectivity needs and data movement.",
+    "description": "A two-column comparison. Left column shows Edge AI: data is captured, processed on the device, and an alert appears locally. Right column shows Cloud AI: data is captured, sent over a network to a server, processed remotely, and a result returns to the device. Read top to bottom in each column, then compare the notes at the bottom.",
+    "steps": [
+      {
+        "label": "Edge input",
+        "explanation": "A local device such as a sensor box, phone or camera receives new data.",
+        "visualInstruction": "In the left column, draw a device icon at the top with a short label: 'sensor reading, image or audio'."
+      },
+      {
+        "label": "Edge processing",
+        "explanation": "The model runs on that device or a nearby local processor, so the data can be analysed without sending every raw input away.",
+        "visualInstruction": "Below the device, draw a chip icon inside the same box labelled 'model runs here' with an arrow from input to chip."
+      },
+      {
+        "label": "Edge output",
+        "explanation": "The device produces a local result such as a warning, classification or short summary, often with low delay.",
+        "visualInstruction": "Add an arrow to a local alert box labelled 'warning: unusual vibration'."
+      },
+      {
+        "label": "Cloud input and transfer",
+        "explanation": "In a cloud setup, the device captures data but sends it over a network to a remote server for processing.",
+        "visualInstruction": "In the right column, draw the same device icon, then an arrow crossing a network cloud shape to a server icon."
+      },
+      {
+        "label": "Cloud processing and return",
+        "explanation": "The remote server runs the model and sends the result back to the device or operator dashboard.",
+        "visualInstruction": "Draw the server labelled 'model runs here' and an arrow back to a result box on the device side."
+      },
+      {
+        "label": "Trade-offs",
+        "explanation": "Edge can reduce delay and network dependence, while cloud can offer more compute and easier central management. Many systems use both.",
+        "visualInstruction": "At the bottom, add a split note row: left 'faster local response, less raw data sent'; right 'more central compute, easier large updates'; centre note 'hybrid systems are common'."
+      }
+    ],
+    "interaction": "Hover or tap each column to highlight the full path of data and reveal short notes on delay, connectivity and data movement.",
+    "accessibilityDescription": "This diagram compares two ways to run an AI system. In the left column, labelled Edge AI, a device first receives data such as a sensor reading, image or audio. The model then runs on the same device or on a nearby local processor. The output appears locally as a warning, classification or short summary. The key idea is that the main processing happens near the data source, which can reduce delay and reduce dependence on a network. In the right column, labelled Cloud AI, the device receives the same kind of data but sends it over a network to a remote server. The server runs the model and sends the result back. This can provide more central compute and simpler management at scale, but it depends more on connectivity and usually moves more data across the network. A note at the bottom says many real systems combine both approaches.",
+    "reducedMotionDescription": "A static side-by-side comparison with arrows already visible. The left side shows data staying on the device for processing and output. The right side shows data travelling to a remote server and a result returning. Bottom notes list the trade-offs without animation."
+  },
+  "workedExample": {
+    "scenario": "A municipal water utility uses a vibration sensor on a pump to detect likely faults before breakdown.",
+    "input": "Every second, the sensor sends a local feature set from the last 5 seconds: vibration 2.8 mm/s, motor temperature 71°C, pressure fluctuation score 0.62.",
+    "process": [
+      "A small processor attached to the pump receives the latest sensor values.",
+      "A compact anomaly-detection model runs on the device and compares the pattern with past normal behaviour.",
+      "The model outputs an anomaly score of 0.87 on a scale from 0 to 1.",
+      "Because the local threshold is 0.80, the device sends an on-site alert to inspect the pump and stores a short event record for later review."
+    ],
+    "result": "The operator gets a warning in about one second even though the site has intermittent internet, and the raw sensor stream does not need to be continuously sent to a remote server."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A UN field office uses an approved local tool on staff laptops to produce first-pass summaries of public consultation submissions that have already been cleared for that workflow, so basic drafting can continue during weak connectivity.",
+    "relevance": "This is relevant when teams need faster local processing, better continuity during outages, or less transfer of raw material to remote services. It also helps staff separate the question of where processing runs from the question of whether the output is reliable enough for official use.",
+    "caution": "Do not put confidential, personal, protection-sensitive or otherwise unapproved consultation material into a public AI service. Even with local tools, summaries should be checked by staff for accuracy, bias, omissions and policy sensitivity before use."
+  },
+  "whyItMatters": "For non-specialists, Edge AI matters because where a model runs changes the practical risks, costs and benefits. A local system may respond faster, keep working during weak connectivity and reduce the amount of raw data sent elsewhere. That can matter in remote sites, factories, vehicles, phones and field operations. But local deployment can also make updates, security management, quality control and oversight harder if many devices are involved. In planning or procurement, the key question is not whether edge is better in general. It is whether the use case needs low delay, offline operation, limited data transfer or local control badly enough to justify the device constraints and management effort.",
+  "whereYouMayHearIt": [
+    "smartphones and wearables",
+    "industrial monitoring and maintenance",
+    "connected vehicles and drones",
+    "remote field sites with weak connectivity",
+    "privacy and data localisation discussions"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Edge AI means the system never uses the internet or the cloud.",
+      "correction": "Not necessarily. Many edge systems run inference locally but still connect sometimes for model updates, logging, monitoring, fleet management or deeper analysis. 'Edge' describes where some processing happens, not a total ban on network use."
+    },
+    {
+      "misconception": "If processing happens on the device, privacy and security problems disappear.",
+      "correction": "Local processing can reduce data transfer, but it does not remove risk. Devices can be lost, compromised or misconfigured. Outputs can still be wrong or sensitive, and logs or updates may still move data. Good governance, access control and testing are still needed."
+    },
+    {
+      "misconception": "Edge AI is always faster and cheaper.",
+      "correction": "It can reduce network delay, but device hardware, optimisation work, battery use and maintenance across many devices can raise costs. Cloud processing may be cheaper or simpler for some workloads, especially if the model is large or the device is very limited."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "It is AI that runs on your device or near the sensor instead of sending every task to a distant server.",
+    "technical": "Edge AI usually means deploying a trained model so inference runs on hardware close to the data source, such as a phone, camera, gateway, vehicle computer or industrial controller. Inputs are captured locally, processed under device constraints such as limited CPU, GPU, memory, storage and power, and converted into outputs like classifications, anomaly scores or compressed summaries. Compared with cloud inference, this can lower end-to-end latency, reduce bandwidth use and support operation during intermittent connectivity. It is often confused with cloud computing, but the distinction is about execution location for inference, not whether central services exist at all. In practice, many deployments are hybrid: local devices handle time-sensitive inference, while central systems support model hosting, rollout, telemetry, retraining and governance. Because edge devices operate in varied real-world conditions, teams also need to watch for distribution shift, version drift and uneven performance across device types."
+  },
+  "keyTakeaway": "Edge AI moves model inference closer to the data source, trading some central convenience for faster local response and less dependence on constant connectivity.",
+  "quickCheck": {
+    "question": "Which example best fits Edge AI?",
+    "options": [
+      "A phone sends every voice note to a remote server for transcription and waits for the reply.",
+      "A pump sensor box detects unusual vibration on site using a local model, then sends only an alert when needed.",
+      "A ministry stores training data in a cloud archive for later analysis by researchers.",
+      "A team downloads reports from many offices into one central dashboard each week."
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Edge AI is about where inference runs. The pump sensor box uses a local model to process data near the source and produce an output on site. The other options involve central storage or remote processing rather than local inference."
+  },
+  "resources": [
+    {
+      "isSearch": true,
+      "title": "Wikipedia search: Edge AI",
+      "url": "https://en.wikipedia.org/w/index.php?search=Edge%20AI",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "Wikipedia search results for Edge AI give a broad starting point and help beginners find definitions and related topics, but the link is a search page rather than one vetted article.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "difficulty": "intermediate",
+      "description": "The NIST AI Risk Management Framework helps readers who need a governance and risk lens for deploying AI systems, including questions about oversight, reliability and operational controls.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "OECD AI Principles",
+      "url": "https://oecd.ai/en/ai-principles",
+      "type": "official",
+      "publisher": "OECD",
+      "difficulty": "intermediate",
+      "description": "The OECD AI Principles suit policy and programme readers who want a high-level framework for trustworthy and accountable AI use across different deployment settings.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Edge AI",
+      "url": "https://www.youtube.com/results?search_query=Edge%20AI%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "YouTube search results for Edge AI can help visual learners find demonstrations and explainer videos, but the link is a search page and video quality will vary.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Edge AI",
+      "url": "https://www.reddit.com/search/?q=Edge%20AI",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "Reddit search results for Edge AI show community questions and practitioner discussion that may surface practical issues and examples, but the link is a search page rather than an authoritative source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "edge ai meaning",
+    "on-device ai",
+    "offline ai",
+    "edge ai vs cloud",
+    "what is edge ai",
+    "ai on the device",
+    "edge ai examples",
+    "local inference",
+    "edge computing ai difference",
+    "egde ai",
+    "edge ai"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:49:45.547Z",
+    "contentHash": "b1f6b7a8826844e9",
+    "attempts": 1,
+    "promptTokens": 2354,
+    "completionTokens": 2725
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "id": "data-leakage",
+  "slug": "data-leakage",
+  "term": "Data leakage",
+  "aliases": [
+    "leakage",
+    "target leakage"
+  ],
+  "categoryId": "evaluation",
+  "subcategory": "Model Quality and Evaluation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical",
+    "programme"
+  ],
+  "prerequisiteTermIds": [
+    "validation-and-test-sets"
+  ],
+  "relatedTermIds": [
+    "validation-and-test-sets",
+    "evaluation-metric",
+    "cross-validation",
+    "generalisation",
+    "reliability",
+    "baseline"
+  ],
+  "oftenConfusedWith": [
+    "overfitting",
+    "memorisation",
+    "data-exfiltration"
+  ],
+  "oneSentence": "Data leakage happens when information that would not truly be available at prediction time slips into training or testing, making a model look better than it really is.",
+  "plainExplanation": "A model learns from input data and then produces an output, such as a class label or a score. Leakage happens when the data used to build or test the model contains extra clues about the correct answer that would not exist in real use. Those clues can come from the future, from the label itself, or from accidental overlap between training and test data.\n\nWhat goes in matters. If a spreadsheet includes a column created after the outcome happened, or if the same case appears in both training and test sets, the model can pick up shortcuts. What happens next is that evaluation scores, such as accuracy, look unusually strong. What comes out is a misleading impression of quality.\n\nA common form is target leakage. That means a feature, or input column, contains information that is too closely tied to the thing you are trying to predict. For example, predicting whether a document will be archived and including a field filled in only after archiving creates an unfair clue.\n\nThis is not the same as overfitting. Overfitting means a model matches quirks in the training data and then performs poorly on new data, even without hidden clues. Leakage is different: the evaluation itself is contaminated, so the score may be high for the wrong reason. A leaked model can seem excellent until it meets real-world data.",
+  "everydayAnalogy": {
+    "title": "A filing test with answer marks already showing",
+    "story": "A team is testing whether a new search assistant can sort policy documents into the right folders. One staff member quietly leaves coloured stickers on several folders that match the correct destination, because those stickers were added after the documents had already been filed. During the test, the assistant appears highly accurate because it follows the stickers rather than reading the documents carefully. When new unstickered documents arrive, its performance drops sharply.",
+    "mapping": [
+      {
+        "analogyElement": "coloured stickers added after filing",
+        "aiElement": "information created after the outcome that leaks the correct answer"
+      },
+      {
+        "analogyElement": "assistant using stickers to sort folders",
+        "aiElement": "model relying on leaked features instead of genuine patterns"
+      },
+      {
+        "analogyElement": "test documents with stickers present",
+        "aiElement": "evaluation data contaminated by leakage"
+      },
+      {
+        "analogyElement": "new unstickered documents",
+        "aiElement": "real-world data at deployment time"
+      }
+    ],
+    "limitation": "A search assistant in this story can visibly choose the stickers, while a machine learning model does not recognise leakage as suspicious. It only detects statistical patterns. Also, real leakage is often subtle, such as duplicated records, badly timed data preparation, or target-derived variables, not obvious marks placed on folders."
+  },
+  "visual": {
+    "type": "comparison",
+    "title": "Clean evaluation versus leaked evaluation",
+    "learningObjective": "After viewing, the reader should be able to explain why a high score can be misleading when future or target-related information enters training or testing.",
+    "description": "A side-by-side diagram with two lanes read left to right. The left lane shows a clean pipeline from raw features to split to train to test to realistic score. The right lane shows a leaked clue entering before training or testing, leading to an inflated score and poor real-world performance. A warning icon marks the leak point.",
+    "steps": [
+      {
+        "label": "Clean features",
+        "explanation": "Inputs contain only information that would be available when the prediction is actually made.",
+        "visualInstruction": "Left lane: draw a table labelled 'features available at prediction time' with neutral rows and columns."
+      },
+      {
+        "label": "Proper split",
+        "explanation": "Training data and test data are kept separate so the test remains a fair check.",
+        "visualInstruction": "Left lane: split the table into two non-overlapping blocks labelled 'train' and 'test'."
+      },
+      {
+        "label": "Realistic score",
+        "explanation": "The model is trained on train data and evaluated on test data, producing a score that is more likely to match real use.",
+        "visualInstruction": "Left lane: arrows from train to model, then from test to score card labelled 'credible evaluation'."
+      },
+      {
+        "label": "Leaked clue enters",
+        "explanation": "A target-related field, future information, or duplicate case slips into the pipeline.",
+        "visualInstruction": "Right lane: show an extra highlighted column or duplicate row entering before the split, with a warning symbol."
+      },
+      {
+        "label": "Inflated test result",
+        "explanation": "Because the model or the test has seen an unfair clue, the score looks better than true performance.",
+        "visualInstruction": "Right lane: arrows to a score card labelled 'too good to trust' with a higher number than the left lane."
+      },
+      {
+        "label": "Deployment gap",
+        "explanation": "When the leaked clue is absent in real use, performance drops.",
+        "visualInstruction": "Right lane: final arrow to a box labelled 'real-world data without leaked clue' and a lower score badge."
+      }
+    ],
+    "interaction": "Hover or tap each lane to highlight the causal path from input design to evaluation result; a toggle can reveal examples of 'future data', 'target-derived column', and 'train-test overlap'.",
+    "accessibilityDescription": "This diagram compares two evaluation pipelines. In the clean pipeline, the input table contains only features available at prediction time. The data is split into separate training and test sets. A model trains on the training set and is scored on the test set, giving a credible result. In the leaked pipeline, an unfair clue enters before or during evaluation, such as future information, a column derived from the target, or duplicated cases across train and test. The model then gets an inflated score. When used on real-world data where that clue is absent, performance falls. The main message is that leakage creates misleadingly good evaluation results.",
+    "reducedMotionDescription": "A static two-column comparison replaces animation. The left column shows clean features, proper train-test separation, and a credible score. The right column shows a leaked clue entering, an inflated score, and then lower real-world performance when the clue disappears."
+  },
+  "workedExample": {
+    "scenario": "A team wants to predict whether incoming grant emails need urgent follow-up within 24 hours.",
+    "input": "Training table with 10,000 past emails. Features include sender domain, subject words, language, and a field called 'follow_up_completed_time'.",
+    "process": [
+      "The team trains a classifier and includes 'follow_up_completed_time' as an input feature.",
+      "On the test set, the model reaches 97% accuracy, much higher than the team's baseline of 78%.",
+      "A reviewer notices that 'follow_up_completed_time' is only filled after staff have already handled the urgent cases, so it indirectly reveals the outcome.",
+      "The team removes that field and re-runs the evaluation with a clean train-test split.",
+      "Accuracy falls to 81%, which is lower than 97% but much more believable for real incoming emails."
+    ],
+    "result": "The first score was inflated by target leakage. The cleaned model is less impressive on paper, but its test result is more likely to match real operations."
+  },
+  "unWorkplaceExample": {
+    "scenario": "A country office wants to triage a shared programme inbox by predicting which messages need same-day response. The team uses approved internal tools and historical message metadata to test a model.",
+    "relevance": "Leakage can appear if the dataset includes fields added after staff review, such as priority tags, escalation status, or closure times. That would make the pilot seem stronger than it would be on new incoming messages.",
+    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or operational email content into an unapproved public AI service. Use only approved environments, minimise data, and keep human oversight over triage decisions."
+  },
+  "whyItMatters": "A leaked model can pass testing, win budget, and enter operations even though it does not truly work. That creates poor decisions: systems may be procured, deployed or trusted on the basis of scores that were never a fair test. For programme teams, this can mean missed cases, wasted staff time, unfair treatment, or false confidence in dashboards and automation. For technical teams, leakage blocks honest comparison between models because the evaluation no longer reflects reality. Spotting leakage early helps teams ask a simple but powerful question: would this information really be available at the moment we need the prediction?",
+  "whereYouMayHearIt": [
+    "model validation meetings",
+    "machine learning code reviews",
+    "procurement and vendor demos",
+    "dashboard performance discussions",
+    "research papers on evaluation"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "If the test score is high, leakage cannot be the problem.",
+      "correction": "Leakage often creates exactly that pattern: unusually high scores that look impressive. A test set is only useful if it stays independent and realistic. If future information, duplicate cases, or target-derived fields slip in, the score stops being a trustworthy check."
+    },
+    {
+      "misconception": "Leakage only means someone intentionally copied answers into the dataset.",
+      "correction": "Most leakage is accidental. It can come from a harmless-looking preprocessing step, a timestamp mistake, a column updated after the outcome, or records from the same case appearing in both train and test. The issue is not intent; it is whether unfair information entered the pipeline."
+    },
+    {
+      "misconception": "Leakage and overfitting are the same thing.",
+      "correction": "They can both lead to poor real-world performance, but the mechanism differs. Overfitting means the model learned noise or quirks in the training data. Leakage means the model or the evaluation had access to information it should not have had, so the score was contaminated from the start."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "A system can look smart in testing if it was given clues that would not exist in real use. Then the score is misleading.",
+    "technical": "Data leakage is contamination of the modelling or evaluation pipeline by information that is unavailable, inappropriate or unrealistically correlated with the target at prediction time. Common mechanisms include target leakage, temporal leakage from future data, train-test contamination through duplicate or related records, and preprocessing fit on the full dataset before splitting. Leakage biases evaluation upward because the model exploits shortcuts rather than learnable signals that generalise. A key diagnostic question is whether each feature and transformation could be computed using only information available at the exact prediction point for each case."
+  },
+  "keyTakeaway": "If a model gets hidden clues during training or testing, a strong score may measure the leak, not the model.",
+  "quickCheck": {
+    "question": "Which situation is the clearest example of data leakage?",
+    "options": [
+      "A model for same-day response uses message subject, sender, and language available when the message arrives.",
+      "A model is trained on last year's cases, but one useful feature is removed because it is noisy.",
+      "A model predicting hospital discharge risk uses a field completed after discharge decisions were made.",
+      "A model performs worse on a new region because writing styles differ from the training data."
+    ],
+    "correctOptionIndex": 2,
+    "explanation": "The discharge-related field is created after the outcome process, so it carries future or target-related information that would not be available at prediction time. The other options describe normal feature choice or a generalisation problem, not leakage."
+  },
+  "resources": [
+    {
+      "title": "Leakage (machine learning)",
+      "url": "https://en.wikipedia.org/wiki/Leakage_(machine_learning)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "description": "A broad overview of leakage types and examples, suitable for readers who want a quick orientation before deeper study.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Classification: Accuracy, recall, precision",
+      "url": "https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall",
+      "type": "course",
+      "publisher": "Google",
+      "description": "A beginner-friendly course page on evaluation measures that helps readers see why good scores still need clean testing, best for non-specialists and early learners.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "type": "official",
+      "publisher": "NIST",
+      "description": "A risk-management framework for trustworthy AI practice, useful for managers and technical leads who need governance language around testing and controls.",
+      "difficulty": "intermediate",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": false
+    },
+    {
+      "title": "Video explanations: Data leakage",
+      "url": "https://www.youtube.com/results?search_query=Data%20leakage%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "A YouTube search results page for video explanations on data leakage, useful for readers who prefer comparing several teaching styles rather than one fixed source.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    },
+    {
+      "title": "Community discussion: Data leakage",
+      "url": "https://www.reddit.com/search/?q=Data%20leakage",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "A Reddit search results page showing community discussions and examples of leakage problems, useful for practitioners who want informal troubleshooting perspectives.",
+      "verified": true,
+      "lastChecked": "2026-07-31",
+      "isSearch": true
+    }
+  ],
+  "searchKeywords": [
+    "data leakage machine learning",
+    "target leakage explained",
+    "leakage vs overfitting",
+    "train test contamination",
+    "future data leakage model",
+    "leaky features ml",
+    "data leackage",
+    "why is my test accuracy too high",
+    "data leakage",
+    "leakage",
+    "target leakage"
+  ],
+  "contentVersion": "1.0.0",
+  "reviewed": true,
+  "reviewerNotes": "Reviewed in the Phase 1 publication pass: schema, analogy limitation, screen-reader alternative, quiz answer and UN-example caution checked; all external links fetched.",
+  "lastReviewed": "2026-07-31",
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:42:24.167Z",
+    "contentHash": "7612f3ca70960887",
+    "attempts": 1,
+    "promptTokens": 2313,
+    "completionTokens": 2477
+  }
+}

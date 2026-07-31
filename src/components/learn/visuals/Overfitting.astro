@@ -1,0 +1,131 @@
+---
+/**
+ * Overfitting: two students, one exam.
+ *
+ * A slider from "learned the principles" to "memorised the paper", with two
+ * scores that move in opposite directions. The crossing point is the lesson:
+ * the score on questions you have already seen keeps improving long after the
+ * score on new questions has started to fall, which is exactly why a model
+ * must be judged on data it was not trained on.
+ */
+interface Props {
+  termId: string;
+}
+const { termId } = Astro.props;
+---
+
+<div class="vx" data-of data-term={termId}>
+  <div class="vx__row">
+    <label class="vx__label" for={`of-fit-${termId}`}>How hard the model fits the practice paper</label>
+    <input
+      class="vx__slider"
+      type="range"
+      id={`of-fit-${termId}`}
+      min="0"
+      max="100"
+      value="45"
+      data-of-fit
+      aria-describedby={`of-readout-${termId}`}
+    />
+    <output class="vx__value" data-of-value>45</output>
+  </div>
+
+  <svg class="vx__canvas" viewBox="0 0 420 220" role="img" aria-labelledby={`of-title-${termId}`}>
+    <title id={`of-title-${termId}`}>
+      Two lines against training effort. The score on the practice paper rises steadily towards one
+      hundred per cent. The score on a fresh paper rises, peaks, and then falls.
+    </title>
+
+    <line x1="40" y1="188" x2="404" y2="188" stroke="rgb(241 238 228 / 0.3)"></line>
+    <line x1="40" y1="16" x2="40" y2="188" stroke="rgb(241 238 228 / 0.3)"></line>
+    <text x="222" y="210" font-size="10" fill="rgb(241 238 228 / 0.6)" text-anchor="middle"
+      >how hard the model fits the practice paper →</text
+    >
+    <text x="12" y="100" font-size="10" fill="rgb(241 238 228 / 0.6)" transform="rotate(-90 12 100)"
+      text-anchor="middle">score</text
+    >
+
+    <path data-of-seen fill="none" stroke="#2fbf74" stroke-width="2.5"></path>
+    <path data-of-new fill="none" stroke="#ff5fa8" stroke-width="2.5" stroke-dasharray="6 3"></path>
+
+    <line data-of-cursor y1="16" y2="188" stroke="#f5d020" stroke-width="1.5"></line>
+    <circle data-of-dot-seen r="5" fill="#2fbf74"></circle>
+    <circle data-of-dot-new r="5" fill="#ff5fa8"></circle>
+
+    <text x="300" y="34" font-size="10" fill="#2fbf74">questions it has seen (solid)</text>
+    <text x="300" y="50" font-size="10" fill="#ff5fa8">questions it has not (dashed)</text>
+  </svg>
+
+  <p class="visual__readout" id={`of-readout-${termId}`} role="status" aria-live="polite" data-of-readout></p>
+</div>
+
+<script>
+  /** Score on questions the model was trained on: keeps climbing. */
+  const seenScore = (t: number) => 45 + 54 * (1 - Math.exp(-t / 26));
+  /**
+   * Score on fresh questions: climbs, peaks around t≈45, then decays.
+   *
+   * The clamp has to happen *before* the exponent, not after. A negative base
+   * raised to a fractional power is NaN in JavaScript, and `Math.max(0, NaN)`
+   * is NaN too — which silently poisoned the whole left half of the curve.
+   */
+  const newScore = (t: number) => 42 + 46 * (1 - Math.exp(-t / 18)) - Math.max(0, t - 45) ** 1.55 * 0.06;
+
+  const toY = (score: number) => 188 - (score / 100) * 168;
+  const toX = (t: number) => 40 + (t / 100) * 364;
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-of]')) {
+    const slider = root.querySelector<HTMLInputElement>('[data-of-fit]')!;
+    const value = root.querySelector<HTMLOutputElement>('[data-of-value]')!;
+    const seenPath = root.querySelector<SVGPathElement>('[data-of-seen]')!;
+    const newPath = root.querySelector<SVGPathElement>('[data-of-new]')!;
+    const cursor = root.querySelector<SVGLineElement>('[data-of-cursor]')!;
+    const dotSeen = root.querySelector<SVGCircleElement>('[data-of-dot-seen]')!;
+    const dotNew = root.querySelector<SVGCircleElement>('[data-of-dot-new]')!;
+    const readout = root.querySelector<HTMLElement>('[data-of-readout]')!;
+
+    {
+      const a: string[] = [];
+      const b: string[] = [];
+      for (let t = 0; t <= 100; t += 2) {
+        a.push(`${toX(t)},${toY(seenScore(t))}`);
+        b.push(`${toX(t)},${toY(newScore(t))}`);
+      }
+      seenPath.setAttribute('d', `M${a.join(' L')}`);
+      newPath.setAttribute('d', `M${b.join(' L')}`);
+    }
+
+    function render() {
+      const t = Number(slider.value);
+      const seen = seenScore(t);
+      const fresh = newScore(t);
+      value.textContent = String(t);
+      cursor.setAttribute('x1', String(toX(t)));
+      cursor.setAttribute('x2', String(toX(t)));
+      dotSeen.setAttribute('cx', String(toX(t)));
+      dotSeen.setAttribute('cy', String(toY(seen)));
+      dotNew.setAttribute('cx', String(toX(t)));
+      dotNew.setAttribute('cy', String(toY(fresh)));
+
+      const gap = seen - fresh;
+      let verdict: string;
+      if (t < 20) {
+        verdict =
+          'The model has barely learned anything yet. It does poorly on both papers. This end of the scale is underfitting.';
+      } else if (gap < 12) {
+        verdict =
+          'Both scores are close, which means what the model learned genuinely transfers to questions it has not seen. This is the healthy zone.';
+      } else if (gap < 25) {
+        verdict =
+          'The gap is opening. The model is starting to learn features of the practice paper itself rather than the underlying idea.';
+      } else {
+        verdict =
+          'The model has effectively memorised the practice paper. It is nearly perfect on questions it has seen and clearly worse on new ones. This is overfitting, and it is invisible if you only ever measure the first number.';
+      }
+      readout.textContent = `Score on questions it has already seen: ${Math.round(seen)}%. Score on fresh questions: ${Math.round(fresh)}%. Gap: ${Math.round(gap)} points. ${verdict}`;
+    }
+
+    slider.addEventListener('input', render);
+    render();
+  }
+</script>

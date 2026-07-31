@@ -1,0 +1,227 @@
+{
+  "id": "orchestration",
+  "slug": "orchestration",
+  "term": "Orchestration",
+  "aliases": [
+    "orchestrator"
+  ],
+  "categoryId": "agents",
+  "subcategory": "AI Agents and Automation",
+  "difficulty": "intermediate",
+  "audiences": [
+    "technical"
+  ],
+  "prerequisiteTermIds": [
+    "workflow",
+    "ai-agent"
+  ],
+  "relatedTermIds": [
+    "ai-agent",
+    "workflow",
+    "tool-use",
+    "function-calling",
+    "planning",
+    "human-in-the-loop"
+  ],
+  "oftenConfusedWith": [
+    "workflow",
+    "multi-agent-system",
+    "function-calling"
+  ],
+  "oneSentence": "The control layer that coordinates an AI system’s steps, tools, rules and handoffs so a task can move from request to checked result.",
+  "plainExplanation": "In AI systems that do more than produce one reply, there needs to be something that manages the whole job. Orchestration is that management layer. It receives a goal or request, chooses what should happen next, sends work to the right component, checks results, and keeps the process moving until there is an outcome or a stop condition.\n\nWhat goes in can include a user request, system rules, available tools, past context, and limits such as time, cost or permission. A tool can be a search service, database query, calendar system or other software function. The orchestrator may ask a model to plan, call a tool, wait for a response, pass the result into another step, or ask a human to review.\n\nWhat happens in the middle is coordination rather than raw generation. The orchestrator tracks state, meaning the current facts about where the task stands. It can route work between steps, enforce rules, retry failed calls, log what happened, and decide when the process should stop. In some systems this logic is mostly fixed like a workflow. In others, the model has more freedom to choose the next action. That is why orchestration is related to workflows and agents but not the same thing.\n\nWhat comes out is not just text. It may be a completed action, a compiled answer with sources, a summary after several tool calls, or a flagged case for human review. Good orchestration improves reliability, traceability and safety, because it makes the system’s sequence of actions more visible and easier to control.",
+  "everydayAnalogy": {
+    "title": "A librarian coordinating a complex book request",
+    "story": "A student in Nairobi asks a librarian for a book on coastal erosion, but only remembers part of the title and the author’s country. The librarian does not search one shelf at random. She checks the catalogue, asks a colleague in archives to confirm an old edition, requests retrieval from storage, and then verifies that the book matches the topic before handing it over. If one path fails, she tries another and keeps track of what has already been checked.",
+    "mapping": [
+      {
+        "analogyElement": "The student’s request with partial details",
+        "aiElement": "The user goal and initial context"
+      },
+      {
+        "analogyElement": "The librarian choosing catalogue, archives and storage in sequence",
+        "aiElement": "The orchestrator selecting tools and steps"
+      },
+      {
+        "analogyElement": "Keeping track of what has already been checked",
+        "aiElement": "State management across the task"
+      },
+      {
+        "analogyElement": "Verifying the book before handoff",
+        "aiElement": "Validation or review before returning a result"
+      }
+    ],
+    "limitation": "A librarian usually understands the library’s rules and materials in a rich human way, while an AI orchestrator follows programmed logic and model outputs that can be wrong or inconsistent. Also, real orchestration may happen in milliseconds across software services, include automatic retries and permissions checks, and may coordinate several models or tools at once, which the library story simplifies."
+  },
+  "visual": {
+    "type": "flow",
+    "title": "How orchestration moves a request through an AI system",
+    "learningObjective": "After viewing, the reader should be able to explain that orchestration coordinates tools, checks and handoffs across a multi-step task rather than generating one reply by itself.",
+    "description": "A left-to-right flow diagram with five boxes connected by arrows. It shows a request entering a control layer, then branching to tools or model steps, returning observations, passing through checks, and ending in either an output or human review. Read from left to right to see how the control layer keeps the process moving.",
+    "steps": [
+      {
+        "label": "1. Request enters",
+        "explanation": "A user request arrives with rules, permissions and any relevant context.",
+        "visualInstruction": "Draw an input box labelled 'Request + rules + context' on the left. Use small tags beneath for 'goal', 'limits' and 'permissions'."
+      },
+      {
+        "label": "2. Control layer plans next step",
+        "explanation": "The orchestrator decides what should happen next: ask the model, call a tool, or stop.",
+        "visualInstruction": "Place a larger central box labelled 'Orchestrator'. Inside, show a short checklist: 'choose step', 'track state', 'apply rules'."
+      },
+      {
+        "label": "3. Tools and model actions run",
+        "explanation": "The orchestrator sends work to available services such as search, database lookup or function calls.",
+        "visualInstruction": "To the right of the orchestrator, draw three smaller boxes labelled 'Model', 'Search/API', and 'Database/Function'. Connect the orchestrator to each with arrows."
+      },
+      {
+        "label": "4. Results return and are checked",
+        "explanation": "Outputs come back as observations. The orchestrator logs them, handles failures and may retry or ask for review.",
+        "visualInstruction": "Draw arrows back from the tool boxes to the orchestrator. Add a box below labelled 'Checks: validate, retry, log, escalate' connected to the orchestrator."
+      },
+      {
+        "label": "5. Output or handoff",
+        "explanation": "If the task meets the rules, the system returns an answer or completes an action. If risk or uncertainty is high, it hands off to a human.",
+        "visualInstruction": "At the far right, draw two end boxes: 'Completed result' and 'Human review'. Use distinct colours or border styles to show alternate endings."
+      }
+    ],
+    "interaction": "On hover or tap, each box reveals one sentence about its role; clicking the tool area highlights the return path to show that orchestration depends on observing results before choosing the next step.",
+    "accessibilityDescription": "The diagram explains orchestration as a five-step flow. First, a request enters with rules, limits and permissions. Second, a central orchestrator box chooses the next step, keeps track of task state and applies rules. Third, it sends work to a model, search or API service, and a database or function. Fourth, their results return as observations, and the orchestrator checks them, logs them, retries if needed, or escalates. Fifth, the process ends either with a completed result or a human review handoff. The main point is that orchestration coordinates the sequence and checks, not just one model output.",
+    "reducedMotionDescription": "A static left-to-right flowchart with five numbered stages and fixed arrows. The selected path is shown with thicker lines instead of animation, and alternate endings are shown side by side as 'Completed result' and 'Human review'."
+  },
+  "workedExample": {
+    "scenario": "An internal support assistant helps staff find the correct travel claim rule for a workshop in Bangkok.",
+    "input": "User request: 'I attended a three-day workshop in Bangkok last month. Which daily subsistence allowance rule applies, and what document do I need to attach?'",
+    "process": [
+      "The orchestrator classifies the request as policy lookup, not free-form advice, and loads the approved travel policy connector.",
+      "It asks the model to extract key fields: location Bangkok, duration three days, purpose workshop, and missing detail: duty station not provided.",
+      "It calls a policy search API with those fields, gets two possible policy sections, and detects ambiguity because one depends on duty station category.",
+      "It asks a follow-up question for the missing duty station, then reruns the search and receives one matching section plus the required attachment list.",
+      "It passes the result through a final check that the answer cites the current policy section and contains no unsupported reimbursement calculation."
+    ],
+    "result": "The assistant returns: 'For a three-day workshop in Bangkok, the applicable daily subsistence allowance rule is the current travel policy section for your duty station category. Please attach the workshop authorisation and lodging evidence required by that section. To confirm the exact category, I need your duty station.'"
+  },
+  "unWorkplaceExample": {
+    "scenario": "A protection analysis team wants a system to identify broad protection trends across incident reports stored in an approved internal environment.",
+    "relevance": "Orchestration can coordinate the sequence: retrieve approved records, remove or mask direct identifiers where required, run structured trend extraction, aggregate patterns, apply quality checks, and route the summary to an analyst for review before sharing.",
+    "caution": "Do not send incident reports containing personal, survivor, witness, security-sensitive or other confidential information into an unapproved public AI service. Use approved systems, minimise data exposure, and keep human oversight for interpretation and dissemination."
+  },
+  "whyItMatters": "If you use or buy AI systems that take actions, orchestration is one of the main places where reliability and risk are shaped. It affects what tools the system can access, what data it can touch, what checks happen before an action, and when a human must review the result. In practical terms, it influences cost, speed, auditability, error handling and safety. A strong model with weak orchestration can still produce poor outcomes, while careful orchestration can make a system more useful and easier to govern.",
+  "whereYouMayHearIt": [
+    "agent platforms",
+    "automation design meetings",
+    "tool-calling demos",
+    "enterprise AI architecture",
+    "multi-step support assistants"
+  ],
+  "commonMisconceptions": [
+    {
+      "misconception": "Orchestration is just another word for an AI agent.",
+      "correction": "An agent is the broader system or behaviour pattern that pursues a goal through actions. Orchestration is the coordination layer inside such a system, or alongside it, that routes steps, tools and checks. Some agents use sophisticated orchestration; some simpler systems use orchestration without being very agentic."
+    },
+    {
+      "misconception": "If a model can call functions, orchestration is already solved.",
+      "correction": "Function calling is only one mechanism for invoking a tool. Orchestration also includes choosing among tools, tracking state across steps, handling failures, validating outputs, applying permissions, logging actions and deciding when to stop or hand off to a human."
+    },
+    {
+      "misconception": "Orchestration always means a fixed workflow.",
+      "correction": "Some orchestrators run predefined sequences, but others allow conditional branching, retries and model-guided choice of next action. The difference matters because flexible orchestration can adapt to unexpected inputs, while fixed workflows are often easier to test and govern."
+    }
+  ],
+  "simpleVsTechnical": {
+    "simple": "Think of it as the traffic control layer for an AI system that has to do several things in order. It tells the system what to do first, what tool to use next, what to check, and when to ask a person for help.",
+    "technical": "In AI systems, orchestration is the control logic that manages multi-step execution across models, tools and external services. It maintains task state, passes context between steps, selects actions, invokes connectors or APIs, interprets returned observations, applies policies and validation, handles retries and exceptions, and determines termination or escalation conditions. It may be implemented as deterministic workflow logic, model-guided routing, or a hybrid of both. It is closely related to planning, tool use and observation-action loops, but it is not identical to any one of them. Planning concerns how steps are chosen; tool use concerns how external capabilities are invoked; observation and action describes the cycle of acting and seeing results; orchestration coordinates the full process and its controls across these elements."
+  },
+  "keyTakeaway": "Orchestration is what turns separate model calls and tools into a controlled, multi-step system that can act, check and hand off responsibly.",
+  "quickCheck": {
+    "question": "Which description best matches orchestration in an AI system?",
+    "options": [
+      "A method for making one model response sound more natural",
+      "The control layer that coordinates steps, tools, checks and handoffs across a task",
+      "A database that stores all training data used by the model",
+      "A guarantee that an agent will always choose the correct action"
+    ],
+    "correctOptionIndex": 1,
+    "explanation": "Orchestration manages the process around the model: what to call, in what order, with what rules, and how to handle results or failures. It does not guarantee correctness, and it is broader than text generation or data storage."
+  },
+  "resources": [
+    {
+      "isSearch": false,
+      "title": "Orchestration (computing)",
+      "url": "https://en.wikipedia.org/wiki/Orchestration_(computing)",
+      "type": "wikipedia",
+      "publisher": "Wikipedia",
+      "difficulty": "intermediate",
+      "description": "This link gives a broad computing overview of orchestration and suits readers who want general background before focusing on AI-specific uses.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "type": "article",
+      "publisher": "Anthropic",
+      "difficulty": "intermediate",
+      "description": "This link explains how agent systems can be structured and suits readers who want to see where orchestration fits within tool-using AI systems.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": false,
+      "title": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/",
+      "type": "official",
+      "publisher": "Model Context Protocol",
+      "difficulty": "deeper",
+      "description": "This link describes the Model Context Protocol and suits technical readers interested in a standard way to connect models to tools and data sources that an orchestrator may use.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Video explanations: Orchestration",
+      "url": "https://www.youtube.com/results?search_query=Orchestration%20explained",
+      "type": "video",
+      "publisher": "YouTube search",
+      "description": "This search results page offers multiple video explanations of orchestration and suits readers who prefer comparing different visual teaching styles rather than relying on one source.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    },
+    {
+      "isSearch": true,
+      "title": "Community discussion: Orchestration",
+      "url": "https://www.reddit.com/search/?q=Orchestration",
+      "type": "discussion",
+      "publisher": "Reddit search",
+      "description": "This search results page shows community discussions about orchestration and suits readers who want to see practical questions, disagreements and implementation experiences from practitioners.",
+      "verified": true,
+      "lastChecked": "2026-07-31"
+    }
+  ],
+  "searchKeywords": [
+    "orchestration ai meaning",
+    "ai orchestrator explained",
+    "agent orchestration vs workflow",
+    "tool calling orchestration",
+    "what does orchestrator do in ai",
+    "orchestration in llm systems",
+    "ai orchastration",
+    "multi-step ai control layer",
+    "orchestration",
+    "orchestrator"
+  ],
+  "contested": "The broad idea is stable, but in practice people use 'orchestration' to mean different scopes, from fixed workflow control to more dynamic agent coordination, so the boundary with workflow engines and agent frameworks can be unsettled.",
+  "contentVersion": "1.0.0",
+  "reviewed": false,
+  "generation": {
+    "model": "gpt-5.4-2026-03-05",
+    "deployment": "gpt-5.4",
+    "promptVersion": "1.0.0",
+    "generatedAt": "2026-07-31T20:46:35.810Z",
+    "contentHash": "518ee058b6a83f32",
+    "attempts": 1,
+    "promptTokens": 2289,
+    "completionTokens": 2713
+  }
+}
