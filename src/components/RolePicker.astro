@@ -1,0 +1,211 @@
+---
+/**
+ * THE ROLE PICKER (brief §3, §4)
+ *
+ * The eight personas stop being display clutter and become navigation. This is
+ * the control that does it: pick once, and every take-bearing surface on the
+ * site shows yours instead of all eight.
+ *
+ * Three rules the brief is firm about, and each one shapes the markup:
+ *
+ *   • Always skippable. There is no modal, no gate, no "choose to continue".
+ *     It is a row of buttons with a general default already selected, and
+ *     ignoring it entirely is a supported way to use the site.
+ *   • Remembered. localStorage, via scripts/role.ts.
+ *   • Changeable from any page. So this renders wherever it is dropped, holds
+ *     no page-specific state, and syncs to any other copy of itself on the
+ *     same document.
+ *
+ * Progressive enhancement: with no JavaScript the buttons are still labelled
+ * and focusable but cannot persist a choice, so the whole control is hidden
+ * until its script confirms it can drive it. A no-JS reader sees the general
+ * framing everywhere, which is a coherent site rather than a broken one.
+ */
+import { GENERAL_ROLE, ROLES } from '../lib/taxonomy';
+import { ROLE_IDS } from '../scripts/role';
+
+interface Props {
+  /** `full` on the router, `compact` in a page header. */
+  variant?: 'full' | 'compact';
+  class?: string;
+}
+
+const { variant = 'full', class: className } = Astro.props;
+
+/**
+ * scripts/role.ts mirrors the id list rather than importing it, so that a
+ * client bundle does not swallow the taxonomy to validate one string. That is
+ * a duplication, and duplications drift. This is where it cannot: adding a
+ * persona to lib/taxonomy without adding it to the mirror fails the build.
+ */
+const declared = ROLES.map((r) => r.id).join(',');
+const mirrored = [...ROLE_IDS].join(',');
+if (declared !== mirrored) {
+  throw new Error(
+    `[unaiverse] role ids out of sync.\n` +
+      `  lib/taxonomy: ${declared}\n` +
+      `  scripts/role: ${mirrored}\n` +
+      `Add the new role to ROLE_IDS in src/scripts/role.ts.`,
+  );
+}
+---
+
+<section
+  class:list={['picker', `picker--${variant}`, className]}
+  data-role-picker
+  aria-labelledby="role-picker-label"
+  hidden
+>
+  <p class="picker__label" id="role-picker-label">
+    {variant === 'full' ? 'Who is reading?' : 'Reading as'}
+    <span class="picker__opt">Optional — it just picks which take you see first.</span>
+  </p>
+
+  <div class="picker__options">
+    {
+      ROLES.map((role) => (
+        <button
+          type="button"
+          class="picker__option"
+          data-role-option={role.id}
+          aria-pressed={role.id === GENERAL_ROLE.id ? 'true' : 'false'}
+          title={role.who}
+        >
+          <span class="picker__glyph" aria-hidden="true">
+            {role.glyph}
+          </span>
+          <span class="picker__text">{role.label}</span>
+        </button>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .picker {
+    display: grid;
+    gap: var(--sp-3);
+  }
+
+  .picker[hidden] {
+    display: none;
+  }
+
+  .picker__label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* "Optional" is the most important word in this control and the easiest one
+     to miss, so it sits on the label rather than in a tooltip. */
+  .picker__opt {
+    display: block;
+    margin-top: var(--sp-1);
+    letter-spacing: 0;
+    text-transform: none;
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .picker__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  .picker__option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease),
+      background var(--dur) var(--ease);
+  }
+
+  .picker__option:hover {
+    border-color: var(--hairline-strong);
+    color: var(--paper);
+  }
+
+  .picker__option[aria-pressed='true'] {
+    border-color: var(--riso-pink);
+    background: rgb(255 95 168 / 0.12);
+    color: var(--paper);
+  }
+
+  .picker__glyph {
+    font-size: 1.05em;
+  }
+
+  /* In a page header the control has to earn its space against the content
+     below it, so unselected options shrink to their glyph. The label stays in
+     the accessibility tree — clipped, never removed. */
+  .picker--compact .picker__label {
+    font-size: var(--step--3, var(--step--2));
+  }
+
+  .picker--compact .picker__opt {
+    display: none;
+  }
+
+  @media (max-width: 34rem) {
+    .picker--compact .picker__option:not([aria-pressed='true']) .picker__text {
+      display: inline-block;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+</style>
+
+<script>
+  import { GENERAL, getRole, onRoleChange, setRole } from '../scripts/role';
+
+  const pickers = document.querySelectorAll<HTMLElement>('[data-role-picker]');
+  if (pickers.length) {
+    const paint = (role: string) => {
+      for (const picker of pickers) {
+        for (const option of picker.querySelectorAll<HTMLButtonElement>('[data-role-option]')) {
+          option.setAttribute(
+            'aria-pressed',
+            String(option.dataset.roleOption === role),
+          );
+        }
+      }
+    };
+
+    for (const picker of pickers) {
+      picker.hidden = false;
+      picker.addEventListener('click', (e) => {
+        const option = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-role-option]');
+        if (!option) return;
+        // Tapping your current role again clears it rather than doing nothing.
+        // The control is skippable; it should also be un-doable.
+        const current = getRole();
+        const next = option.dataset.roleOption!;
+        setRole(next === current ? GENERAL : next);
+      });
+    }
+
+    // Any picker on the page reflects the choice made in any other, and both
+    // reflect a choice made on a previous page.
+    onRoleChange(paint);
+    paint(getRole());
+  }
+</script>

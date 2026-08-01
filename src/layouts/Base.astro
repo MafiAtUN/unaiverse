@@ -72,6 +72,22 @@ const base = import.meta.env.BASE_URL;
     {/* The fonts are self-hosted and the CSS is inlined by Astro, so there is
         nothing to preconnect to — deliberately no third-party origins. */}
     {head && <Fragment set:html={head} />}
+
+    {/* Role memory, applied before first paint.
+
+        A reader who chose "Peace & Security" last week must not watch the
+        general framing render and then swap to theirs — that flash is the
+        clutter this redesign removes, reintroduced one frame at a time. So
+        this runs inline in <head>, ahead of the body, rather than in a module
+        that waits for the parser. ~200 bytes, no request. */}
+    <script is:inline>
+      try {
+        var r = localStorage.getItem('unaiverse:role');
+        if (r) document.documentElement.dataset.role = r;
+      } catch (e) {
+        /* storage refused; the picker still works, it just re-asks */
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href={skip.href}>{skip.label}</a>

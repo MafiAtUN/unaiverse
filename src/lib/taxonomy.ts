@@ -83,6 +83,41 @@ export type PersonaId = (typeof PERSONAS)[number]['id'];
 export const PERSONA_BY_ID = new Map(PERSONAS.map((p) => [p.id as string, p]));
 
 /**
+ * The ninth role, and the default.
+ *
+ * "Anyone from the UN" is too wide an audience to write eight takes for and
+ * still have a front page. So the picker offers a way to decline it: someone
+ * who has never been near this file picks this, and every take-bearing surface
+ * falls back to the general framing — Mafi's take and why-it-matters — with the
+ * eight professional readings one expander away.
+ *
+ * Deliberately NOT a member of PERSONAS: no milestone declares it, no take
+ * binds to it, and the 156-slot invariant must not move because a navigation
+ * default was added. Everything that renders a take treats it as "no persona
+ * selected", which is exactly what it means.
+ */
+export const GENERAL_ROLE = {
+  id: 'curious',
+  glyph: '🔭',
+  label: 'Just curious / new to AI',
+  who: 'Anyone arriving without a brief',
+} as const;
+
+export type RoleId = PersonaId | typeof GENERAL_ROLE.id;
+
+/** Every choice the role picker offers, general first because it is the default. */
+export const ROLES = [GENERAL_ROLE, ...PERSONAS] as const;
+
+export const ROLE_BY_ID = new Map<string, { id: string; glyph: string; label: string; who: string }>(
+  ROLES.map((r) => [r.id as string, r]),
+);
+
+/** True for the eight roles that actually have takes written for them. */
+export function isPersona(role: string): role is PersonaId {
+  return PERSONA_BY_ID.has(role);
+}
+
+/**
  * Where a thing happens, in duty-station terms.
  *
  * This is the axis a delegation actually organises by: a mission in New York
