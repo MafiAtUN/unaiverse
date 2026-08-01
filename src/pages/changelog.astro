@@ -1,0 +1,117 @@
+---
+/**
+ * /changelog — what changed, and when.
+ *
+ * The freshness line on the router links here. It exists so that "is this
+ * thing maintained" has an answer other than the reader's guess, which is the
+ * question that decides whether a site becomes a bookmark.
+ */
+import Base from '../layouts/Base.astro';
+import { CHANGES, formatChangeDate } from '../lib/changelog';
+import { SITE } from '../lib/taxonomy';
+
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+const entries = [...CHANGES].sort((a, b) => b.date.localeCompare(a.date));
+---
+
+<Base
+  title={`Changelog · ${SITE.name}`}
+  description="What has changed on UNAIVERSE, newest first."
+  skip={{ href: '#log', label: 'Skip to the changelog' }}
+>
+  <div class="wrap page">
+    <nav class="crumb mono" aria-label="Breadcrumb">
+      <a href={href('')}>{SITE.name}</a>
+      <span aria-hidden="true">/</span>
+      <span>Changelog</span>
+    </nav>
+
+    <h1 class="title">What changed</h1>
+    <p class="lead">
+      New milestones, corrections, and the occasional structural rethink. Content changes and
+      code changes both land here, because from the outside they are the same thing: the site
+      is different than it was.
+    </p>
+
+    <main id="log">
+      <ol class="log">
+        {
+          entries.map((change) => (
+            <li class="log__item">
+              <time class="log__date mono" datetime={change.date}>
+                {formatChangeDate(change.date)}
+              </time>
+              <p class="log__summary">{change.summary}</p>
+              {change.detail && <p class="log__detail">{change.detail}</p>}
+            </li>
+          ))
+        }
+      </ol>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding: var(--sp-6) 0 var(--sp-8);
+  }
+
+  .crumb {
+    display: flex;
+    gap: var(--sp-2);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .crumb a {
+    color: var(--ink-dim);
+    text-decoration: none;
+  }
+
+  .title {
+    margin: var(--sp-5) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+  }
+
+  .lead {
+    margin: var(--sp-3) 0 var(--sp-6);
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .log {
+    display: grid;
+    gap: var(--sp-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .log__item {
+    padding-left: var(--sp-4);
+    border-left: 2px solid var(--hairline-strong);
+    max-width: var(--measure);
+  }
+
+  .log__date {
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--riso-yellow);
+  }
+
+  .log__summary {
+    margin: var(--sp-2) 0 0;
+    font-size: var(--step-0);
+    color: var(--paper);
+  }
+
+  .log__detail {
+    margin: var(--sp-2) 0 0;
+    color: var(--ink-dim);
+  }
+</style>

@@ -1,0 +1,245 @@
+---
+/**
+ * /timeline — the default browse experience (brief §4).
+ *
+ * 76 collapsed cards, newest first, grouped by year. Nothing expands here:
+ * a card is a link to /m/<id>, which is the page that holds the sources, the
+ * takes and the copy buttons.
+ *
+ * What this page deliberately does NOT do, all of which the old homepage did:
+ * render 76 milestone bodies, render 156 takes, mount A/BOT with its 300-term
+ * glossary, or boot a WebGL galaxy. The result is roughly a twentieth of the
+ * HTML and no JavaScript beyond search and the role picker.
+ *
+ * Newest first, unlike the galaxy's chronological scroll. That page is a
+ * narrative and starts at the beginning; this one is a reference and starts
+ * at what happened most recently — the thing a returning visitor is looking
+ * for, and the reason they came back.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import MilestoneCard from '../components/MilestoneCard.astro';
+import RolePicker from '../components/RolePicker.astro';
+import SiteSearch from '../components/SiteSearch.astro';
+import { buildMilestoneIndex } from '../lib/milestone-index';
+import { parseMilestoneBody, resolveDate, sortKey } from '../lib/milestone';
+import { SITE } from '../lib/taxonomy';
+
+const all = await getCollection('milestones');
+
+const sorted = [...all].sort(
+  (a, b) =>
+    sortKey(b.data.date_display, b.data.year, b.id) -
+      sortKey(a.data.date_display, a.data.year, a.id) ||
+    a.data.tier - b.data.tier ||
+    a.data.title.localeCompare(b.data.title),
+);
+
+/**
+ * Grouped by the year the thing starts.
+ *
+ * `resolveDate` rather than the `year` field: a handful of entries carry a
+ * null year and describe their date only in prose ("General Assembly
+ * eighty-second session, 2027–2028"), and dropping those into an "undated"
+ * bucket at the bottom of a reference list is how a milestone becomes
+ * invisible.
+ */
+const groups: { year: number; items: typeof sorted }[] = [];
+for (const m of sorted) {
+  const year = resolveDate(m.data.date_display, m.data.year, m.id)?.start.year ?? m.data.year ?? 0;
+  const last = groups.at(-1);
+  if (last?.year === year) last.items.push(m);
+  else groups.push({ year, items: [m] });
+}
+
+// Parsed once here rather than inside the card, so the search index and the
+// cards cannot disagree about what a milestone's why-line says.
+const whyById = new Map(sorted.map((m) => [m.id, parseMilestoneBody(m.body ?? '').why]));
+
+const index = buildMilestoneIndex(sorted);
+
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+
+const title = `Timeline · ${SITE.name}`;
+const description = `All ${sorted.length} UN artificial-intelligence milestones as a searchable list — every one with its date, its document symbol and its official source. Search by document symbol: 78/241, A/RES/79/325, S/PV.9381.`;
+---
+
+<Base title={title} description={description} skip={{ href: '#cards', label: 'Skip to the milestones' }}>
+  <div class="wrap page">
+    <nav class="crumb mono" aria-label="Breadcrumb">
+      <a href={href('')}>{SITE.name}</a>
+      <span aria-hidden="true">/</span>
+      <span>Timeline</span>
+    </nav>
+
+    <header class="head">
+      <h1 class="head__title">Look something up</h1>
+      <p class="head__lead">
+        Every milestone the UN system has produced on artificial intelligence, newest first,
+        each one sourced. Search by words or by document symbol; open any card for the record,
+        its receipts and what it means for your desk.
+      </p>
+
+      <SiteSearch mode="filter" index={index} total={sorted.length} class="head__search" />
+
+      <RolePicker variant="compact" class="head__picker" />
+    </header>
+
+    <main id="cards" class="cards">
+      {
+        groups.map((group) => (
+          <section class="year" data-card-group aria-labelledby={`year-${group.year}`}>
+            <h2 class="year__label mono" id={`year-${group.year}`}>
+              {group.year || 'Undated'}
+              <span class="year__count">{group.items.length}</span>
+            </h2>
+            <div class="year__cards">
+              {group.items.map((m) => (
+                <MilestoneCard
+                  id={m.id}
+                  title={m.data.title}
+                  dateDisplay={m.data.date_display}
+                  symbol={m.data.symbol}
+                  tier={m.data.tier}
+                  constellation={m.data.constellation}
+                  why={whyById.get(m.id) ?? ''}
+                />
+              ))}
+            </div>
+          </section>
+        ))
+      }
+
+      {/* Shown by the search script when nothing matches. Server-rendered and
+          hidden rather than built in JavaScript, so the message is styled and
+          translated by the same rules as everything else on the page. */}
+      <p class="cards__empty" data-search-empty hidden>
+        Nothing matches. Try a document symbol (<code>78/241</code>), a year, or a body like
+        “Human Rights Council”.
+      </p>
+    </main>
+
+    <footer class="foot">
+      <p>
+        Prefer it as a picture? The <a href={href('galaxy')}>galaxy</a> tells the same story as a
+        scroll through space, and the <a href={href('timeline/classic')}>classic timeline</a>{' '}
+        puts the whole decade on one axis.
+      </p>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding: var(--sp-6) 0 var(--sp-8);
+  }
+
+  .crumb {
+    display: flex;
+    gap: var(--sp-2);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .crumb a {
+    color: var(--ink-dim);
+    text-decoration: none;
+  }
+
+  .crumb a:hover,
+  .crumb a:focus-visible {
+    color: var(--paper);
+  }
+
+  .head {
+    margin: var(--sp-5) 0 var(--sp-6);
+  }
+
+  .head__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+  }
+
+  .head__lead {
+    margin: var(--sp-3) 0 0;
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .head__search {
+    margin-top: var(--sp-5);
+    max-width: 42rem;
+  }
+
+  .head__picker {
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* ── The list ───────────────────────────────────────────────────── */
+  .year {
+    margin-bottom: var(--sp-6);
+  }
+
+  .year__label {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    margin: 0 0 var(--sp-3);
+    padding-bottom: var(--sp-2);
+    border-bottom: 1px solid var(--hairline);
+    font-size: var(--step-1);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--riso-pink);
+  }
+
+  .year__count {
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .year__cards {
+    display: grid;
+    gap: var(--sp-3);
+  }
+
+  /* Two columns where there is room. The cards are short and uniform, so a
+     single column on a wide screen wastes most of it and makes 76 entries
+     feel like an endless scroll — the exact complaint this replaces. */
+  @media (min-width: 60rem) {
+    .year__cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .cards__empty {
+    padding: var(--sp-6) 0;
+    color: var(--ink-dim);
+  }
+
+  .cards__empty[hidden] {
+    display: none;
+  }
+
+  .cards__empty code {
+    font-family: var(--font-mono);
+    color: var(--ink);
+  }
+
+  .foot {
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--hairline);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .foot a {
+    color: var(--ink-dim);
+  }
+</style>

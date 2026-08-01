@@ -1,0 +1,183 @@
+---
+/**
+ * THE COLLAPSED CARD (brief §4)
+ *
+ * "Date · title · tier icon · one-line why it matters. Nothing else."
+ *
+ * The old node rendered its date, symbol, title, teaser, tier, constellation,
+ * every badge, every venue, every body and a take count — eleven chips before
+ * a reader had learned anything. This renders four things and links to the
+ * rest. That is the entire redesign in one component.
+ *
+ * Two badges, hard capped: the tier and the constellation. FIRST-EVER, the
+ * duty station, the owning body and the take count are all still on the site,
+ * one click away in the detail view's metadata, where someone who wants them
+ * is looking for them.
+ *
+ * The document symbol stays on the card, which is the one place this departs
+ * from a literal reading of the brief. It is the primary lookup key for the
+ * journey the brief cares most about — someone searching "78/241" needs to see
+ * which result is A/RES/78/241 without opening three of them — and it sits on
+ * the date line as identity rather than as a badge.
+ *
+ * A link, not a <details>. The card's job is to get out of the way.
+ */
+import { CONSTELLATIONS, TIERS } from '../lib/taxonomy';
+
+interface Props {
+  id: string;
+  title: string;
+  dateDisplay: string;
+  symbol: string | null;
+  tier: 1 | 2 | 3;
+  constellation: string;
+  /** The one-line "why it matters", parsed from the milestone body. */
+  why: string;
+}
+
+const { id, title, dateDisplay, symbol, tier, constellation, why } = Astro.props;
+
+const tierMeta = TIERS[tier];
+const constellationMeta = CONSTELLATIONS[constellation];
+const href = `${import.meta.env.BASE_URL}/m/${id}`.replace(/\/+/g, '/');
+---
+
+<article
+  class="card"
+  data-milestone={id}
+  data-tier={tier}
+  data-constellation={constellation}
+>
+  <a class="card__link" href={href}>
+    <div class="card__meta">
+      <time class="mono card__date">{dateDisplay}</time>
+      {symbol && <span class="mono card__symbol">{symbol}</span>}
+    </div>
+
+    {/* The whole card is one link, so the heading carries no anchor of its
+        own — nesting an <a> inside an <a> is invalid and the outer one wins
+        anyway. The heading level is fixed at h3: every list that renders these
+        puts an h2 above it. */}
+    <h3 class="card__title">{title}</h3>
+
+    {why && <p class="card__why">{why}</p>}
+  </a>
+
+  <div class="card__tags">
+    <span class="card__tag card__tag--tier" data-tier-tag={tier}>
+      <span aria-hidden="true">{tierMeta.glyph}</span>
+      {tierMeta.name}
+    </span>
+    {
+      constellationMeta && (
+        <span class="card__tag">
+          <span aria-hidden="true">{constellationMeta.glyph}</span>
+          {constellationMeta.label}
+        </span>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    padding: var(--sp-4) var(--sp-4) var(--sp-3);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+    transition:
+      border-color var(--dur) var(--ease),
+      background var(--dur) var(--ease);
+  }
+
+  .card[hidden] {
+    display: none;
+  }
+
+  .card:hover,
+  .card:focus-within {
+    border-color: var(--riso-pink);
+    background: var(--void-panel);
+  }
+
+  /* The link covers the card so the whole thing is one target — 44px-plus on
+     a phone without wrapping the tag row in the link, which would make a
+     screen reader read the tier and constellation as part of the link name. */
+  .card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .card__link:focus-visible {
+    outline: none;
+  }
+
+  .card__link:focus-visible::after {
+    outline: 2px solid var(--riso-pink);
+    outline-offset: 2px;
+  }
+
+  .card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2) var(--sp-3);
+    font-size: var(--step--2);
+  }
+
+  .card__date {
+    color: var(--riso-yellow);
+    letter-spacing: 0.04em;
+  }
+
+  .card__symbol {
+    color: var(--ink-faint);
+  }
+
+  .card__title {
+    margin: var(--sp-2) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--paper);
+  }
+
+  .card__why {
+    margin: var(--sp-2) 0 0;
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    line-height: var(--leading-body, 1.6);
+    color: var(--ink-dim);
+  }
+
+  .card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-3);
+  }
+
+  .card__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .card__tag--tier[data-tier-tag='1'] {
+    color: var(--riso-yellow);
+  }
+</style>

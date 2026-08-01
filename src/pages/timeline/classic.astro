@@ -1,6 +1,12 @@
 ---
 /**
- * /timeline — the same 76 milestones as a KnightLab TimelineJS presentation.
+ * /timeline/classic — the same 76 milestones as a KnightLab TimelineJS
+ * presentation.
+ *
+ * Not the default browse experience: that is /timeline, which renders the
+ * corpus as collapsed cards and costs no JavaScript. This view survives
+ * because it is genuinely a different reading — the decade as one axis with
+ * eight lanes — and it is reached from the showcase door, not the front page.
  *
  * This is a second VIEW, not a second copy. The slides are built from the same
  * content collection the galaxy on `/` renders, through lib/timelinejs.ts.
@@ -10,11 +16,11 @@
  * resolves icon fonts relatively, so the `js/` + `css/` directory pair has to
  * survive intact. See scripts/vendor-timeline.mjs.
  */
-import Base from '../layouts/Base.astro';
-import '../styles/timeline-theme.css';
+import Base from '../../layouts/Base.astro';
+import '../../styles/timeline-theme.css';
 import { getCollection } from 'astro:content';
-import { buildTimelineData } from '../lib/timelinejs';
-import { SITE } from '../lib/taxonomy';
+import { buildTimelineData } from '../../lib/timelinejs';
+import { SITE } from '../../lib/taxonomy';
 
 const { data, report } = buildTimelineData(await getCollection('milestones'));
 
@@ -42,7 +48,7 @@ const payload = JSON.stringify(data).replace(/</g, '\\u003c');
   <link rel="stylesheet" href={asset('vendor/timelinejs/css/timeline.css')} />
 
   <header class="tlbar">
-    <a class="tlbar__back" href={asset('')}>
+    <a class="tlbar__back" href={asset('galaxy')}>
       <span aria-hidden="true">←</span> The galaxy
     </a>
     <p class="tlbar__title">
@@ -58,8 +64,8 @@ const payload = JSON.stringify(data).replace(/</g, '\\u003c');
     <noscript>
       <p class="tl-fallback">
         This view is an interactive timeline and needs JavaScript. The same {report.slides}
-        milestones, with every source, are on the <a href={asset('')}>main page</a>, which
-        works without it.
+        milestones, with every source, are on the <a href={asset('timeline')}>card timeline</a>,
+        which works without it.
       </p>
     </noscript>
   </main>

@@ -1,0 +1,389 @@
+---
+/**
+ * THE ROUTER (brief §4)
+ * =====================
+ * This page used to be the whole site: 76 milestones, 156 takes, a filter bar,
+ * A/BOT and a WebGL galaxy, in 843 KB of HTML. Real readers called it
+ * cluttered and confusing, and they were right — arriving at it did not tell
+ * you what the site was for, because it was busy showing you everything at
+ * once.
+ *
+ * It is now a router. Value proposition, search box, four doors, role picker,
+ * freshness line, and nothing else. The 5-second test in the brief is the only
+ * acceptance criterion that matters here: someone shown this for five seconds
+ * must be able to say what this is and who it is for.
+ *
+ * Things that used to be here and are now deliberately gone:
+ *
+ *   • The stats block (76 / 236 / 156). It reports effort, not benefit. One
+ *     modest line in the footer, which is where "yes, this is thorough"
+ *     belongs.
+ *   • Zone navigation. Zones are a narrative device and they survive on the
+ *     galaxy page, where there is a narrative. They are not the site's spine.
+ *   • Every milestone. They are one click away, searchable, and each has its
+ *     own URL now.
+ *   • The galaxy boot. Three.js and GSAP load on /galaxy and nowhere else.
+ *
+ * The build-time invariants that used to live here — 76 milestones, 156 take
+ * slots, every take bound to a slot, every milestone annotated — moved to
+ * lib/corpus-check, because they are checks on the corpus and had no business
+ * depending on which page happened to render it.
+ */
+import Base from '../layouts/Base.astro';
+import RolePicker from '../components/RolePicker.astro';
+import SiteSearch from '../components/SiteSearch.astro';
+import { getCollection } from 'astro:content';
+import { checkCorpus } from '../lib/corpus-check';
+import { formatChangeDate, latestChange } from '../lib/changelog';
+import { ledgerCounts, mandateLedger, openPeriods, recurringTracks, upcomingEvents } from '../lib/agenda';
+import { SITE } from '../lib/taxonomy';
+import { CORPUS_STATS } from '../lib/learn/terms';
+
+const all = await getCollection('milestones');
+const stats = checkCorpus(all);
+
+// The forward view, so the Agenda door can say how much is actually ahead
+// rather than promising a page of dates in the abstract.
+const now = new Date();
+const upcomingDated = upcomingEvents(all, now);
+const ahead =
+  upcomingDated.length +
+  openPeriods(all, now, new Set(upcomingDated.map((e) => e.id))).length +
+  recurringTracks(all).length;
+const open = (() => {
+  const counts = ledgerCounts(mandateLedger(all));
+  return counts.pending + counts.upcoming;
+})();
+const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
+
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+const change = latestChange();
+
+const description =
+  "Get current on the UN's work on artificial intelligence: look up any milestone with its official source, see what it means for your role, and track what is coming. 76 milestones, every one sourced.";
+---
+
+<Base
+  description={description}
+  skip={{ href: '#doors', label: 'Skip to the four ways in' }}
+>
+  {/* Old deep links still work.
+
+      For a year every milestone lived at `/#<milestone-id>`, and those links
+      are inside calendar entries people have already subscribed to, inside the
+      RSS feed, and inside whatever emails colleagues forwarded each other. The
+      milestones live at /m/<id> now, so this forwards the hash rather than
+      dropping a reader on a router with no idea why they arrived.
+
+      Inline and first in the body so it runs before the router paints — a
+      module script would be deferred until after the document parsed, and the
+      reader would watch a page they did not ask for render and then vanish.
+
+      `replace`, not `assign`: they never chose to visit this page, so it must
+      not sit in their history and trap the Back button. */}
+  <script is:inline define:vars={{ milestoneBase: href('m') }}>
+    (function () {
+      var id = decodeURIComponent(location.hash.slice(1));
+      if (/^[a-z0-9][a-z0-9-]*$/.test(id)) {
+        location.replace(milestoneBase + '/' + id);
+      }
+    })();
+  </script>
+
+  <div class="wrap router">
+    {/* ── 1. What this is ─────────────────────────────────────────── */}
+    <header class="intro">
+      <p class="intro__kicker mono">A totally unofficial field guide</p>
+      <h1 class="intro__title">{SITE.name}</h1>
+      <p class="intro__prop">
+        Everything the UN has done about artificial intelligence, in one place, with
+        <strong>receipts</strong> — so you can look it up, work out what it means for your
+        desk, and see what is coming, without reading a single PDF you did not have to.
+      </p>
+    </header>
+
+    {/* ── 2. Search, front and centre ─────────────────────────────── */}
+    <SiteSearch mode="results" total={stats.milestones} class="router__search" />
+
+    {/* ── 3. Four doors ───────────────────────────────────────────── */}
+    <nav id="doors" class="doors" aria-label="Four ways in">
+      <a class="door door--primary" href={href('timeline')}>
+        <span class="door__kicker mono">Look something up</span>
+        <span class="door__title">The timeline</span>
+        <span class="door__blurb">
+          All {stats.milestones} milestones as a searchable list. Every one opens onto its
+          sources, its document symbol and a line you can quote.
+        </span>
+      </a>
+
+      <a class="door" href={href('inherit')}>
+        <span class="door__kicker mono">Brief me — I'm new to this file</span>
+        <span class="door__title">Start here</span>
+        <span class="door__blurb">
+          Ten minutes on what exists, what it obliges, and which meetings are worth staffing.
+          Written for someone who was handed this yesterday.
+        </span>
+      </a>
+
+      <a class="door" href={href('agenda')}>
+        <span class="door__kicker mono">What's on the horizon</span>
+        <span class="door__title">The agenda</span>
+        <span class="door__blurb">
+          {ahead} {plural(ahead, 'thing', 'things')} still to come and {open} open{' '}
+          {plural(open, 'obligation', 'obligations')} — with a calendar feed you can subscribe
+          to in Outlook.
+        </span>
+      </a>
+
+      <a class="door" href={href('galaxy')}>
+        <span class="door__kicker mono">Explore the universe</span>
+        <span class="door__title">The galaxy</span>
+        <span class="door__blurb">
+          The same decade as a scroll through space. Entirely unnecessary, quite beautiful, and
+          loads nothing until you ask for it.
+        </span>
+      </a>
+    </nav>
+
+    {/* ── 4. Role picker ──────────────────────────────────────────── */}
+    <RolePicker variant="full" class="router__picker" />
+
+    {/* ── 5. Freshness ────────────────────────────────────────────── */}
+    <p class="fresh">
+      <a href={href('changelog')}>
+        <span class="fresh__date mono">Updated {formatChangeDate(change.date)}</span>
+        <span class="fresh__what">{change.summary}</span>
+      </a>
+    </p>
+
+    <footer class="foot">
+      <p class="foot__lead">
+        All facts are sourced to official UN documents. All jokes are the author's own and aimed
+        strictly at hype and bureaucratic pacing, never at the Organization, its officials, or
+        any Member State.
+      </p>
+      {/* The stats line the brief allows: one modest sentence, in the footer,
+          where "is this thorough" is answered rather than announced. */}
+      <p class="foot__scale mono">
+        {stats.milestones} milestones · {stats.receipts} receipts · {stats.takeSlots} role takes ·{' '}
+        {CORPUS_STATS.published} AI terms explained
+      </p>
+      <p class="foot__fine">
+        A personal project by Mafizul Islam, built with Claude Code. Not an official United
+        Nations product, and nothing here represents the views of the UN or any of its offices.
+        It does, however, link to a lot of things that do.
+      </p>
+      <ul class="foot__credits">
+        <li><a href={href('timeline')}>Timeline</a></li>
+        <li><a href={href('inherit')}>Start here</a></li>
+        <li><a href={href('agenda')}>The Agenda</a></li>
+        <li><a href={href('learn')}>Learn AI</a></li>
+        <li><a href={href('galaxy')}>The galaxy</a></li>
+        <li><a href={href('changelog')}>Changelog</a></li>
+        <li><a href={href('calendar.ics')}>Calendar (.ics)</a></li>
+        <li><a href={href('rss.xml')}>Feed (RSS)</a></li>
+        <li>
+          <a href="https://github.com/MafiAtUN/unaiverse" rel="me noopener">Source on GitHub</a>
+        </li>
+        <li><a href="mailto:mafi@mafizul.me">mafi@mafizul.me</a></li>
+      </ul>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .router {
+    display: grid;
+    gap: var(--sp-6);
+    padding: var(--sp-7) 0 var(--sp-7);
+  }
+
+  /* ── The proposition ────────────────────────────────────────────── */
+  .intro__kicker {
+    margin: 0 0 var(--sp-3);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--riso-yellow);
+    font-size: var(--step--2);
+  }
+
+  .intro__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    color: var(--paper);
+  }
+
+  .intro__title::after {
+    content: '';
+    display: block;
+    width: 5.5rem;
+    height: 4px;
+    margin-top: var(--sp-4);
+    background: var(--riso-pink);
+  }
+
+  /* The one sentence the five-second test is graded on. Sized to be the
+     second thing read after the wordmark, and no longer than a breath. */
+  .intro__prop {
+    margin: var(--sp-4) 0 0;
+    max-width: 46rem;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    color: var(--ink);
+  }
+
+  .intro__prop strong {
+    color: var(--riso-yellow);
+    font-weight: 600;
+  }
+
+  .router__search {
+    max-width: 46rem;
+  }
+
+  /* ── The doors ──────────────────────────────────────────────────── */
+  .doors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--sp-3);
+  }
+
+  .door {
+    display: grid;
+    align-content: start;
+    gap: var(--sp-1);
+    padding: var(--sp-5) var(--sp-4);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+    text-decoration: none;
+    transition:
+      border-color var(--dur) var(--ease),
+      background var(--dur) var(--ease);
+  }
+
+  .door:hover,
+  .door:focus-visible {
+    border-color: var(--riso-pink);
+    background: var(--void-panel);
+  }
+
+  /* One door is the answer for most visits. It says so quietly. */
+  .door--primary {
+    border-color: var(--hairline-strong);
+    background: var(--void-panel);
+  }
+
+  .door__kicker {
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--riso-yellow);
+  }
+
+  .door__title {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    color: var(--paper);
+  }
+
+  .door__blurb {
+    margin-top: var(--sp-1);
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--ink-dim);
+  }
+
+  .router__picker {
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* ── Freshness ──────────────────────────────────────────────────── */
+  .fresh {
+    margin: 0;
+  }
+
+  .fresh a {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2) var(--sp-3);
+    text-decoration: none;
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  .fresh a:hover .fresh__what,
+  .fresh a:focus-visible .fresh__what {
+    color: var(--paper);
+  }
+
+  .fresh__date {
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--riso-yellow);
+  }
+
+  .fresh__what {
+    color: var(--ink-dim);
+    transition: color var(--dur) var(--ease);
+  }
+
+  /* ── Footer ─────────────────────────────────────────────────────── */
+  .foot {
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  .foot__lead {
+    margin: 0;
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .foot__scale {
+    margin: var(--sp-3) 0 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .foot__fine {
+    margin: var(--sp-3) 0 0;
+    max-width: var(--measure);
+    font-style: italic;
+  }
+
+  .foot__credits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--sp-4);
+    margin: var(--sp-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .foot__credits li + li::before {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 0.9em;
+    margin-right: var(--sp-4);
+    vertical-align: -0.1em;
+    background: var(--hairline);
+  }
+
+  @media (max-width: 40rem) {
+    .router {
+      gap: var(--sp-5);
+      padding-top: var(--sp-6);
+    }
+  }
+</style>
