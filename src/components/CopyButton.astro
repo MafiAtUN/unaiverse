@@ -22,8 +22,18 @@ interface Props {
   text: string;
   /** Visible button text. */
   label?: string;
-  /** Announced to screen readers in place of the visible label. */
-  a11yLabel?: string;
+  /**
+   * Extra context, read but not shown — appended AFTER the visible label
+   * rather than replacing it.
+   *
+   * An `aria-label` here would fail WCAG 2.5.3 "Label in Name": a page with
+   * four buttons all reading "Cite" needs each to be distinguishable, but
+   * overriding the name with "Copy the citation for A/79/88" leaves someone
+   * driving the page by voice saying "Cite" and matching nothing. Appending
+   * keeps the visible word at the front of the accessible name, so both
+   * readings work: "Cite" out loud, "Cite A/79/88" announced.
+   */
+  context?: string;
   /** `chip` sits inline beside a symbol; `button` is a standalone action. */
   variant?: 'chip' | 'button';
   class?: string;
@@ -32,20 +42,16 @@ interface Props {
 const {
   text,
   label = 'Copy',
-  a11yLabel,
+  context,
   variant = 'chip',
   class: className,
 } = Astro.props;
 ---
 
-<button
-  type="button"
-  class:list={['copy', `copy--${variant}`, className]}
-  data-copy={text}
-  aria-label={a11yLabel}
->
+<button type="button" class:list={['copy', `copy--${variant}`, className]} data-copy={text}>
   <span class="copy__icon" aria-hidden="true">⧉</span>
   <span class="copy__label">{label}</span>
+  {context && <span class="visually-hidden">{` ${context}`}</span>}
   {/* The confirmation is a live region rather than a swapped label: swapping
       the label re-announces the whole button, and on a screen reader that
       reads as the control changing identity mid-tap. */}
