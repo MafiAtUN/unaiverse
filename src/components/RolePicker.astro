@@ -22,15 +22,31 @@
  * framing everywhere, which is a coherent site rather than a broken one.
  */
 import { GENERAL_ROLE, ROLES } from '../lib/taxonomy';
+import { uid } from '../lib/uid';
 import { ROLE_IDS } from '../scripts/role';
 
 interface Props {
   /** `full` on the router, `compact` in a page header. */
   variant?: 'full' | 'compact';
+  /**
+   * Clip the visible label where the surrounding heading already says it —
+   * a milestone page reading "What this means for" directly above "Reading as"
+   * is the same instruction twice. Clipped, not removed: the control is a
+   * labelled region and still needs its accessible name.
+   */
+  hideLabel?: boolean;
   class?: string;
 }
 
-const { variant = 'full', class: className } = Astro.props;
+const { variant = 'full', hideLabel = false, class: className } = Astro.props;
+
+/**
+ * The picker is changeable from any page, which means two of them can end up
+ * on one page, which means a hard-coded id would be duplicated — and a
+ * duplicate id silently points both regions' aria-labelledby at the same
+ * element. Cheaper to make it unique than to remember not to.
+ */
+const labelId = uid('role-picker-label');
 
 /**
  * scripts/role.ts mirrors the id list rather than importing it, so that a
@@ -51,12 +67,12 @@ if (declared !== mirrored) {
 ---
 
 <section
-  class:list={['picker', `picker--${variant}`, className]}
+  class:list={['picker', `picker--${variant}`, { 'picker--mute': hideLabel }, className]}
   data-role-picker
-  aria-labelledby="role-picker-label"
+  aria-labelledby={labelId}
   hidden
 >
-  <p class="picker__label" id="role-picker-label">
+  <p class="picker__label" id={labelId}>
     {variant === 'full' ? 'Who is reading?' : 'Reading as'}
     <span class="picker__opt">Optional — it just picks which take you see first.</span>
   </p>
@@ -112,6 +128,16 @@ if (declared !== mirrored) {
     color: var(--ink-faint);
   }
 
+  /* Clipped rather than removed — the region is labelled by this element. */
+  .picker--mute .picker__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   .picker__options {
     display: flex;
     flex-wrap: wrap;
@@ -149,6 +175,32 @@ if (declared !== mirrored) {
 
   .picker__glyph {
     font-size: 1.05em;
+  }
+
+  /* On a paper surface the dark-sky palette has no contrast at all — cream
+     background, near-white text — so the whole control reads as a row of
+     floating emoji. The site already keeps a print-weight twin of every accent
+     for exactly this (tokens.css), so the picker uses them when it sits on
+     paper. */
+  :global(.on-paper) .picker__label,
+  :global(.on-paper) .picker__opt {
+    color: var(--paper-ink-faint);
+  }
+
+  :global(.on-paper) .picker__option {
+    border-color: var(--paper-hairline);
+    color: var(--paper-ink-dim);
+  }
+
+  :global(.on-paper) .picker__option:hover {
+    border-color: var(--paper-hairline-strong);
+    color: var(--paper-ink);
+  }
+
+  :global(.on-paper) .picker__option[aria-pressed='true'] {
+    border-color: var(--pink-on-paper);
+    background: rgb(176 26 99 / 0.1);
+    color: var(--paper-ink);
   }
 
   /* In a page header the control has to earn its space against the content

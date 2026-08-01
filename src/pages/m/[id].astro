@@ -17,10 +17,9 @@
  * The brief's firmest rule: never show all eight at once. Every take is in the
  * markup — they are static content and hiding them client-side would mean a
  * flash of all eight — and CSS shows exactly the one matching the role on
- * <html>, which Base.astro sets before first paint. Opening the expander
- * reveals the rest via :has(), so the whole mechanism costs no JavaScript at
- * all. A browser without :has() support simply never expands; the reader still
- * gets their own take, which is the part that matters.
+ * <html>, which Base.astro sets before first paint. The "other roles"
+ * expander holds its own copy of each take with the reader's own hidden, so
+ * the whole mechanism is static CSS and costs no JavaScript at all.
  */
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
@@ -192,7 +191,9 @@ const description = why || factual.slice(0, 155);
       <section class="takes" aria-labelledby="takes-heading">
         <div class="takes__head">
           <h2 class="takes__heading" id="takes-heading">What this means for</h2>
-          <RolePicker variant="compact" class="takes__picker" />
+          <div class="takes__picker">
+            <RolePicker variant="compact" hideLabel />
+          </div>
         </div>
 
         {/* The general reading, and the default. Someone who has never chosen
