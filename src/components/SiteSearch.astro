@@ -1,0 +1,473 @@
+---
+/**
+ * THE SEARCH BOX (brief §4: "front and centre — the single highest-value
+ * element for repeat visitors")
+ *
+ * One component, two behaviours, because they are the same control to a
+ * reader and would be two inconsistent rankings if they were two components:
+ *
+ *   mode="results"  on the router. Nothing is on the page to filter, so it
+ *                   fetches the index and renders hits that link straight to
+ *                   /m/<id>. Journey J1 is search → click → copy, so a hit is
+ *                   a link to the milestone, never a link to a filtered list.
+ *
+ *   mode="filter"   on /timeline. All 76 cards are already in the DOM, so it
+ *                   hides the ones that do not match. No fetch, no round trip.
+ *
+ * The no-JavaScript path is real, not a placeholder: the form is a GET to
+ * /timeline, which renders every milestone as a card. Submitting without
+ * JavaScript lands the reader on the complete list, where the browser's own
+ * find works. Nothing about the site's core promise depends on the script.
+ */
+interface Props {
+  mode: 'results' | 'filter';
+  /** Inlined index — required for mode="filter", ignored otherwise. */
+  index?: unknown;
+  label?: string;
+  placeholder?: string;
+  /** Milestone count, shown before anyone types. */
+  total?: number;
+  class?: string;
+}
+
+const {
+  mode,
+  index,
+  label = 'Search milestones, document symbols and dates',
+  placeholder = 'autonomous weapons, 78/241, Geneva…',
+  total,
+  class: className,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const timelineHref = `${base}/timeline`.replace(/\/+/g, '/');
+const indexHref = `${base}/search.json`.replace(/\/+/g, '/');
+const milestoneBase = `${base}/m/`.replace(/\/+/g, '/');
+
+if (mode === 'filter' && !index) {
+  throw new Error('[unaiverse] SiteSearch mode="filter" needs an inlined index');
+}
+
+const payload = index ? JSON.stringify(index).replace(/</g, '\\u003c') : null;
+---
+
+<search
+  class:list={['search', `search--${mode}`, className]}
+  data-search-root
+  data-mode={mode}
+  data-milestone-base={milestoneBase}
+  data-index-href={indexHref}
+>
+  <form class="search__form" action={timelineHref} method="get" role="search">
+    <label class="search__label" for="site-search">{label}</label>
+    <div class="search__field">
+      <span class="search__icon" aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        id="site-search"
+        name="q"
+        class="search__input"
+        placeholder={placeholder}
+        autocomplete="off"
+        spellcheck="false"
+        enterkeyhint="search"
+        aria-describedby="search-hint"
+        data-search-input
+      />
+      {/* Only meaningful without JavaScript, where it is the whole mechanism.
+          The script hides it, because with the script running the results are
+          already on screen before anyone could press it. */}
+      <button type="submit" class="search__submit" data-search-submit>Search</button>
+    </div>
+    <p class="search__hint" id="search-hint">
+      Document symbols work: <code>78/241</code>, <code>A/RES/79/325</code>, <code>S/PV.9381</code>.
+    </p>
+  </form>
+
+  {
+    mode === 'results' && (
+      <div class="search__out" data-search-out hidden>
+        <p class="search__count mono" data-search-count aria-live="polite" />
+        <ul class="search__hits" data-search-hits />
+        <a class="search__all" href={timelineHref} data-search-all hidden>
+          Browse all {total} milestones →
+        </a>
+      </div>
+    )
+  }
+
+  {
+    mode === 'filter' && (
+      <p class="search__count mono" data-search-count aria-live="polite">
+        {total} milestones
+      </p>
+    )
+  }
+
+  {
+    payload && (
+      <script type="application/json" data-search-index is:inline set:html={payload} />
+    )
+  }
+</search>
+
+<style>
+  .search {
+    display: block;
+  }
+
+  .search__form {
+    display: grid;
+    gap: var(--sp-2);
+  }
+
+  .search__label {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .search__field {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .search__field:focus-within {
+    border-color: var(--riso-pink);
+  }
+
+  .search__icon {
+    font-size: var(--step-1);
+    color: var(--ink-faint);
+    line-height: 1;
+  }
+
+  .search__input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--step-0);
+    color: var(--paper);
+  }
+
+  .search__input::placeholder {
+    color: var(--ink-faint);
+  }
+
+  .search__input:focus {
+    outline: none;
+  }
+
+  /* The type=search clear affordance is drawn by the platform; suppressing it
+     would remove a control readers on a phone actually use. */
+  .search__submit {
+    flex: none;
+    padding: var(--sp-1) var(--sp-3);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    background: none;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    cursor: pointer;
+  }
+
+  .search--enhanced .search__submit {
+    display: none;
+  }
+
+  .search__hint {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .search__hint code {
+    font-family: var(--font-mono);
+    color: var(--ink-dim);
+  }
+
+  .search__out[hidden] {
+    display: none;
+  }
+
+  .search__count {
+    margin: var(--sp-3) 0 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .search__hits {
+    display: grid;
+    gap: 1px;
+    margin: var(--sp-2) 0 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--hairline);
+    overflow: hidden;
+  }
+
+  .search__hit {
+    display: block;
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--void-raised);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .search__hit:hover,
+  .search__hit:focus-visible {
+    background: var(--void-panel);
+    outline: none;
+  }
+
+  .search__hit:focus-visible {
+    box-shadow: inset 2px 0 0 var(--riso-pink);
+  }
+
+  .search__hit-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .search__hit-date {
+    color: var(--riso-yellow);
+  }
+
+  /* Why this result is here, when the reason was a symbol rather than words.
+     Someone who typed "78241" needs to see that it resolved to A/RES/78/241
+     before they cite it. */
+  .search__hit-symbol {
+    color: var(--riso-pink);
+  }
+
+  .search__hit-title {
+    margin: var(--sp-1) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--paper);
+  }
+
+  .search__hit-why {
+    margin: var(--sp-1) 0 0;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+
+  .search__empty {
+    padding: var(--sp-4);
+    background: var(--void-raised);
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+
+  .search__all {
+    display: inline-block;
+    margin-top: var(--sp-3);
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+
+  .search__all[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  import { searchMilestones, type MilestoneEntry } from '../lib/milestone-search';
+
+  const root = document.querySelector<HTMLElement>('[data-search-root]');
+
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('[data-search-input]')!;
+    const count = root.querySelector<HTMLElement>('[data-search-count]');
+    const mode = root.dataset.mode as 'results' | 'filter';
+    const milestoneBase = root.dataset.milestoneBase!;
+
+    root.classList.add('search--enhanced');
+    root.querySelector('form')?.addEventListener('submit', (e) => e.preventDefault());
+
+    // ── The index ────────────────────────────────────────────────────────
+    // Inlined on /timeline, fetched on the router — and fetched on demand
+    // rather than at load, because most visits to a homepage never search.
+    const inline = root.querySelector<HTMLScriptElement>('[data-search-index]');
+    let index: MilestoneEntry[] | null = inline ? JSON.parse(inline.textContent!) : null;
+    let pending: Promise<MilestoneEntry[]> | null = null;
+
+    function load(): Promise<MilestoneEntry[]> {
+      if (index) return Promise.resolve(index);
+      pending ??= fetch(root!.dataset.indexHref!)
+        .then((r) => r.json())
+        .then((data: MilestoneEntry[]) => (index = data))
+        .catch(() => []);
+      return pending;
+    }
+
+    // Warm it on focus, so the first keystroke has it in hand.
+    input.addEventListener('focus', load, { once: true });
+
+    // ── Rendering: results mode ──────────────────────────────────────────
+    const out = root.querySelector<HTMLElement>('[data-search-out]');
+    const hits = root.querySelector<HTMLElement>('[data-search-hits]');
+    const all = root.querySelector<HTMLElement>('[data-search-all]');
+
+    function renderResults(query: string, entries: MilestoneEntry[]) {
+      if (!out || !hits) return;
+
+      if (!query.trim()) {
+        out.hidden = true;
+        hits.replaceChildren();
+        return;
+      }
+
+      const found = searchMilestones(query, entries, 8);
+      out.hidden = false;
+      if (all) all.hidden = false;
+      if (count) {
+        count.textContent = found.length
+          ? `${found.length} match${found.length === 1 ? '' : 'es'}`
+          : '';
+      }
+
+      if (!found.length) {
+        const empty = document.createElement('li');
+        empty.className = 'search__empty';
+        empty.textContent = `Nothing matches “${query}”. Try a document symbol, a year, or a body like “Human Rights Council”.`;
+        hits.replaceChildren(empty);
+        return;
+      }
+
+      // Built as nodes, never as an HTML string: every field here is content,
+      // and one milestone title with an ampersand in it is all it takes for a
+      // template-literal version to start rendering entities at a reader.
+      hits.replaceChildren(
+        ...found.map(({ entry, onSymbol }) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.className = 'search__hit';
+          a.href = milestoneBase + entry.i;
+
+          const meta = document.createElement('p');
+          meta.className = 'search__hit-meta';
+          const date = document.createElement('span');
+          date.className = 'search__hit-date';
+          date.textContent = entry.d;
+          meta.append(date);
+          if (entry.s) {
+            const sym = document.createElement('span');
+            sym.className = onSymbol ? 'search__hit-symbol' : '';
+            sym.textContent = entry.s;
+            meta.append(sym);
+          }
+
+          const title = document.createElement('p');
+          title.className = 'search__hit-title';
+          title.textContent = entry.t;
+
+          a.append(meta, title);
+
+          if (entry.w) {
+            const why = document.createElement('p');
+            why.className = 'search__hit-why';
+            why.textContent = entry.w;
+            a.append(why);
+          }
+
+          li.append(a);
+          return li;
+        }),
+      );
+    }
+
+    // ── Rendering: filter mode ───────────────────────────────────────────
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-milestone]'));
+
+    function renderFilter(query: string, entries: MilestoneEntry[]) {
+      const q = query.trim();
+      const matched = q ? new Set(searchMilestones(q, entries, entries.length).map((h) => h.entry.i)) : null;
+
+      let shown = 0;
+      for (const card of cards) {
+        const hit = !matched || matched.has(card.dataset.milestone!);
+        // `data-search-hidden` rather than `hidden`: the filter bar hides cards
+        // too, and two controls fighting over one attribute means whichever
+        // ran last wins and the other silently stops working.
+        card.toggleAttribute('data-search-hidden', !hit);
+        if (hit) shown++;
+      }
+
+      // Empty groups are worse than no groups — a year heading with nothing
+      // under it reads as a bug.
+      for (const group of document.querySelectorAll<HTMLElement>('[data-card-group]')) {
+        const any = group.querySelector('[data-milestone]:not([data-search-hidden])');
+        group.toggleAttribute('data-search-hidden', !any);
+      }
+
+      if (count) {
+        count.textContent = q
+          ? `${shown} of ${cards.length} milestones`
+          : `${cards.length} milestones`;
+      }
+
+      const empty = document.querySelector<HTMLElement>('[data-search-empty]');
+      if (empty) empty.hidden = shown > 0;
+
+      // A searched view is a link someone can send. Replace rather than push,
+      // so Back leaves the page instead of walking every keystroke.
+      const url = new URL(location.href);
+      if (q) url.searchParams.set('q', q);
+      else url.searchParams.delete('q');
+      history.replaceState(null, '', url);
+    }
+
+    // ── Wiring ───────────────────────────────────────────────────────────
+    const render = mode === 'results' ? renderResults : renderFilter;
+
+    let timer = 0;
+    const run = () => {
+      const query = input.value;
+      load().then((entries) => render(query, entries));
+    };
+
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      // Long enough to skip the middle of a typed word, short enough that a
+      // finished query feels instant. The scorer over 76 entries costs
+      // fractions of a millisecond; this is about not thrashing the DOM.
+      timer = window.setTimeout(run, 90);
+    });
+
+    // First result on Enter — the fast path for someone who typed a symbol
+    // and already knows there is exactly one answer.
+    input.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const first = hits?.querySelector<HTMLAnchorElement>('.search__hit');
+      if (first) first.click();
+    });
+
+    // A query in the URL is a shared search: honour it on arrival.
+    const initial = new URLSearchParams(location.search).get('q');
+    if (initial) {
+      input.value = initial;
+      run();
+    }
+  }
+</script>
