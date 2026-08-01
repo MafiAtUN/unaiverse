@@ -1,0 +1,172 @@
+---
+/**
+ * COPY BUTTON (brief §6)
+ *
+ * Journey J1 is a stressed officer who needs a document symbol and a safe line
+ * in a briefing note, and the pass condition is "one tap each". Everything
+ * about this component is that sentence: the text is already assembled at
+ * build time, so the tap does nothing but write to the clipboard.
+ *
+ * The payload rides in a data attribute rather than being read out of the DOM
+ * next to it. Reading the DOM sounds tidier and is how the copied text quietly
+ * acquires a stray glyph, a soft hyphen or the whitespace of whatever markup
+ * happened to wrap it — and this text is going into a cable template.
+ *
+ * One delegated listener for the whole document: Astro bundles a component's
+ * script once no matter how many times the component renders, so a page with
+ * forty copy buttons ships one handler and attaches it once.
+ */
+
+interface Props {
+  /** The exact string to place on the clipboard. */
+  text: string;
+  /** Visible button text. */
+  label?: string;
+  /** Announced to screen readers in place of the visible label. */
+  a11yLabel?: string;
+  /** `chip` sits inline beside a symbol; `button` is a standalone action. */
+  variant?: 'chip' | 'button';
+  class?: string;
+}
+
+const {
+  text,
+  label = 'Copy',
+  a11yLabel,
+  variant = 'chip',
+  class: className,
+} = Astro.props;
+---
+
+<button
+  type="button"
+  class:list={['copy', `copy--${variant}`, className]}
+  data-copy={text}
+  aria-label={a11yLabel}
+>
+  <span class="copy__icon" aria-hidden="true">⧉</span>
+  <span class="copy__label">{label}</span>
+  {/* The confirmation is a live region rather than a swapped label: swapping
+      the label re-announces the whole button, and on a screen reader that
+      reads as the control changing identity mid-tap. */}
+  <span class="copy__said" aria-live="polite" data-copy-said></span>
+</button>
+
+<style>
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    background: none;
+    font: inherit;
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease),
+      background var(--dur) var(--ease);
+  }
+
+  .copy:hover,
+  .copy:focus-visible {
+    border-color: var(--riso-pink);
+    color: var(--paper);
+  }
+
+  .copy--chip {
+    padding: 0.15em 0.5em;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .copy--button {
+    padding: var(--sp-2) var(--sp-3);
+    font-size: var(--step--1);
+  }
+
+  .copy__icon {
+    font-size: 0.95em;
+  }
+
+  /* Confirmed by the button turning green and saying so. It reverts, because
+     a page full of permanently-green buttons stops meaning anything. */
+  .copy[data-copied] {
+    border-color: var(--signal, var(--riso-green, #2fbf74));
+    color: var(--signal, var(--riso-green, #2fbf74));
+  }
+
+  .copy__said:not(:empty) {
+    margin-left: 0.15em;
+  }
+
+  /* On paper surfaces the dark-sky colours have no contrast. */
+  :global(.on-paper) .copy {
+    border-color: var(--paper-hairline);
+    color: var(--paper-ink-faint);
+  }
+
+  :global(.on-paper) .copy:hover,
+  :global(.on-paper) .copy:focus-visible {
+    border-color: var(--pink-on-paper);
+    color: var(--paper-ink);
+  }
+</style>
+
+<script>
+  /**
+   * navigator.clipboard needs a secure context. The site is served over HTTPS
+   * from GitHub Pages so that is the live path, but `astro dev` on a bare IP
+   * and any future intranet mirror are not secure contexts, and a copy button
+   * that silently does nothing is worse than one that never appeared.
+   */
+  async function write(text: string): Promise<boolean> {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {
+      /* fall through to the selection path */
+    }
+
+    try {
+      const scratch = document.createElement('textarea');
+      scratch.value = text;
+      // Off-screen rather than hidden: a display:none textarea cannot be
+      // selected, and the selection is the whole mechanism here.
+      scratch.setAttribute('readonly', '');
+      scratch.style.cssText = 'position:fixed;top:-9999px;opacity:0';
+      document.body.append(scratch);
+      scratch.select();
+      const ok = document.execCommand('copy');
+      scratch.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+
+  const timers = new WeakMap<HTMLElement, number>();
+
+  document.addEventListener('click', async (e) => {
+    const button = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+    if (!button) return;
+
+    const ok = await write(button.dataset.copy ?? '');
+    const said = button.querySelector<HTMLElement>('[data-copy-said]');
+
+    if (ok) button.dataset.copied = '';
+    if (said) said.textContent = ok ? 'Copied' : 'Press ⌘C';
+
+    clearTimeout(timers.get(button));
+    timers.set(
+      button,
+      window.setTimeout(() => {
+        delete button.dataset.copied;
+        if (said) said.textContent = '';
+      }, 2000),
+    );
+  });
+</script>

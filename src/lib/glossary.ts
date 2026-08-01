@@ -121,6 +121,19 @@ export function markupFactual(text: string): { html: string; terms: string[] } {
 }
 
 /**
+ * The same prose with no term buttons — escaped, emphasis resolved, nothing
+ * clickable.
+ *
+ * The buttons `markupFactual` emits are inert without A/BOT mounted to answer
+ * them, and a definition that does nothing when tapped is worse than a word
+ * that was never underlined. The redesign's milestone pages do not carry
+ * A/BOT, so until inline glossary popovers land they render prose this way.
+ */
+export function plainProse(text: string): string {
+  return italics(escapeHtml(text));
+}
+
+/**
  * The inline formatting the corpus uses: **bold** and *document titles*.
  * Bold must be handled first — otherwise the italic rule eats one asterisk
  * from each pair and leaves the other on screen.

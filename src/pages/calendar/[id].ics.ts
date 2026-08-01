@@ -31,7 +31,7 @@ export async function GET(context: APIContext) {
     now,
     calendarName: event.title,
     linkFor: (ev) =>
-      new URL(`${import.meta.env.BASE_URL}/#${ev.id}`.replace(/\/+/g, '/'), context.site).href,
+      new URL(`${import.meta.env.BASE_URL}/m/${ev.id}`.replace(/\/+/g, '/'), context.site).href,
   });
 
   return new Response(body, {

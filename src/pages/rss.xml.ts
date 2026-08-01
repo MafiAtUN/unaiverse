@@ -40,7 +40,7 @@ export async function GET(context: APIContext) {
     .href;
 
   const items = ordered.map((m) => {
-    const link = `${home}#${m.id}`;
+    const link = `${home}m/${m.id}`;
     const { factual, why } = parseMilestoneBody(m.body ?? '');
     const resolved = resolveDate(m.data.date_display, m.data.year, m.id);
     const pubDate = resolved

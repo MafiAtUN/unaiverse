@@ -1,0 +1,105 @@
+---
+/**
+ * One persona's reading of one milestone: the three beats the corpus was
+ * written to, plus a copy button on the line people actually reuse.
+ *
+ * Rendered twice per milestone page — once as "yours", once inside the "other
+ * roles" expander — which is why it is a component rather than markup inlined
+ * at both sites. The alternative was a CSS `:has()` trick that revealed
+ * siblings from outside a <details>, and a disclosure whose content is not
+ * inside it is a disclosure that reads as broken to anyone not looking at it.
+ */
+import CopyButton from './CopyButton.astro';
+import type { Take } from '../lib/takes';
+
+interface Props {
+  persona: { id: string; glyph: string; label: string };
+  take: Take | null;
+  /** The copy button is for the reader's own take, not the ones on display. */
+  copyable?: boolean;
+}
+
+const { persona, take, copyable = false } = Astro.props;
+---
+
+<p class="take__who mono">
+  <span aria-hidden="true">{persona.glyph}</span>
+  {persona.label}
+</p>
+
+{
+  take ? (
+    <dl class="take__beats">
+      <div>
+        <dt>So what</dt>
+        <dd>{take.soWhat}</dd>
+      </div>
+      <div>
+        <dt>Watch for</dt>
+        <dd>{take.watchFor}</dd>
+      </div>
+      {/* The speech-ready line. Journey J1 ends with this on a clipboard. */}
+      <div class="take__safe">
+        <dt>Use it</dt>
+        <dd>
+          <span>{take.useIt}</span>
+          {copyable && (
+            <CopyButton
+              text={take.useIt}
+              label="Copy safe line"
+              a11yLabel={`Copy the safe line for ${persona.label}`}
+            />
+          )}
+        </dd>
+      </div>
+    </dl>
+  ) : (
+    <p class="take__pending">
+      This take is written and not yet loaded. The record and its sources are complete.
+    </p>
+  )
+}
+
+<style>
+  /* Unscoped-looking selectors are fine here: Astro scopes them to this
+     component's elements, and the parent page styles the wrappers. */
+  .take__who {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--step--2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pink-on-paper);
+  }
+
+  .take__beats {
+    display: grid;
+    gap: var(--sp-3);
+    margin: 0;
+    max-width: var(--measure);
+  }
+
+  .take__beats dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--paper-ink-faint);
+  }
+
+  .take__beats dd {
+    margin: var(--sp-1) 0 0;
+  }
+
+  .take__safe dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2);
+  }
+
+  .take__pending {
+    margin: 0;
+    font-style: italic;
+    color: var(--paper-ink-faint);
+  }
+</style>
