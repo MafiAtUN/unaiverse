@@ -30,8 +30,8 @@
   "oneSentence": "A loss function turns a model’s output and the correct target into a single number that shows how wrong the model was for that example or batch.",
   "plainExplanation": "A model produces an output, such as a predicted class, score or number. A loss function takes that output and compares it with the target, meaning the expected answer in the training data. The result is a number: lower usually means the model matched the target better.\n\nWhat goes in depends on the task. In a spam filter, the inputs to the loss function might be a predicted probability and the true label. In a forecasting task, they might be the predicted amount and the actual amount. Different loss functions measure mismatch in different ways, so the choice affects what kinds of mistakes the model is pushed to reduce.\n\nWhat happens next is important. Training does not usually change the model directly from the loss alone. Instead, optimisation methods use gradients of the loss to estimate how small changes to each model setting, often called a parameter, would change the loss. Then the parameters are adjusted to try to reduce future loss.\n\nWhat comes out from the loss function is not the final judgement of model quality for real-world use. It is mainly a training signal. That is why loss is often confused with an evaluation metric such as accuracy or F1 score. They are related, but not the same: a model can be trained to lower one quantity and later assessed with another.",
   "everydayAnalogy": {
-    "title": "Scoring a document recommender’s mistakes",
-    "story": "A librarian in Nairobi tests a new system that suggests three knowledge-base documents for each staff question. For one question, the correct document should appear first, but the system puts it third. The librarian uses a scoring rule that gives a small penalty if the right document is near the top and a larger penalty if it is far down or missing. After many questions, the team averages these penalties to see how badly the system is performing. They then adjust the system so future rankings get lower penalties.",
+    "title": "Checking rain forecasts",
+    "story": "A weather app predicts an 80 per cent chance of rain, and it rains. A scoring rule gives that forecast a small loss. If the app had predicted only a 20 per cent chance, the loss would be much larger because the forecast was confidently wrong. Each day's forecast and actual weather produce one score. By averaging those scores over many days, the app's developers can adjust the forecasting model to reduce the kinds of error defined by the scoring rule.",
     "mapping": [
       {
         "analogyElement": "the scoring rule used by the librarian",
@@ -89,28 +89,28 @@
     "reducedMotionDescription": "A static five-panel diagram with arrows between panels and a dotted loop from the final panel back to the prediction panel. Two example loss values, 1.37 before the update and 1.12 after, show the intended direction of change without animation."
   },
   "workedExample": {
-    "scenario": "Training a small classifier to decide whether a support request should be sent to the IT team.",
-    "input": "Model output for one request: probability of 'send to IT' = 0.80. True label: 1, meaning it really should go to IT.",
+    "scenario": "The duty officer checks the numerical example included in the technical annex for a model that flags whether a follow-up submission is likely to contain supporting evidence.",
+    "input": "For one submission, the model assigns 0.80 probability to the label “supporting evidence present”. The reviewed target is 1, meaning the label is correct.",
     "process": [
-      "Choose a loss function suitable for binary classification, such as cross-entropy loss.",
-      "Compare the model’s predicted probability, 0.80, with the true label, 1.",
-      "Compute the loss for this example: -log(0.80), which is about 0.22.",
-      "If another true-IT request got probability 0.20, its loss would be -log(0.20), about 1.61, which is much larger.",
-      "Average the losses across the batch, then use optimisation to adjust parameters so true labels receive higher probabilities next time."
+      "Use binary cross-entropy, a loss function suited to a two-label classification task.",
+      "Apply the loss to the model output and target: −log(0.80), which is about 0.22.",
+      "If the model had assigned only 0.20 probability to the same correct label, the loss would be −log(0.20), about 1.61. The more confident error receives the larger penalty.",
+      "Average the losses across the training batch, then calculate gradients of that average with respect to the model's parameters.",
+      "Use those gradients to update the parameters in the direction expected to reduce loss on subsequent examples."
     ],
-    "result": "The example with probability 0.80 gets a small penalty, while the example with probability 0.20 gets a much larger training penalty."
+    "result": "The loss converts each prediction and reviewed target into a comparable scalar. Optimisation can then update the model systematically, while separate validation and human review determine whether the pilot is useful."
   },
   "unWorkplaceExample": {
-    "scenario": "An approved internal analytics team is developing a model to help identify broad protection trends across incident reports, using de-identified and access-controlled data to classify reports into trend categories for human review.",
-    "relevance": "The loss function gives the training process a numerical signal for how far the model’s category probabilities are from the reviewed labels, so developers can improve the model systematically rather than by guesswork.",
-    "caution": "Do not place personal, survivor, witness, security-sensitive or operational details into an unapproved public AI service, and do not rely on low training loss as a reason to remove expert human oversight from protection analysis."
+    "scenario": "At close of business, a duty officer in an evaluation office is clearing an annex to the office's reply on an audit finding. The annex describes a pilot model that flags follow-up submissions likely to contain supporting evidence, so an evaluation officer can review them.",
+    "relevance": "For each reviewed submission, the loss function compares the model's probability with the evaluation officer's label and produces one number. Averaged across a training batch, that loss gives the optimisation algorithm an objective to reduce when updating the model's parameters.",
+    "caution": "Confidential evaluation records, personal data, witness material and HR or procurement-sensitive information must not be entered into a tool that is not approved for them, because this could expose protected material and compromise the evaluation process. A low loss also does not establish that evidence is sufficient or remove the need for human review."
   },
   "whyItMatters": "If you hear that a model was trained successfully, the next question should be: trained to reduce what? The loss function defines what counts as a costly mistake during learning, so it shapes behaviour, trade-offs and failure patterns.",
   "whereYouMayHearIt": [
-    "machine learning training logs",
-    "deep learning courses",
-    "model debugging meetings",
-    "research papers on optimisation"
+    "During clearance of a technical annex on model performance",
+    "At a vendor demo before a procurement unit records its technical questions",
+    "In an ICT governance board's first reading of an AI pilot proposal",
+    "When developers review a training run with the programme focal point"
   ],
   "commonMisconceptions": [
     {
@@ -134,7 +134,7 @@
     "simple": "It is the scoring rule used during training to tell the model how bad its prediction was.",
     "technical": "It is a scalar-valued objective applied to model outputs and targets, often differentiable, whose gradients with respect to parameters are used by optimisation algorithms to update the model and minimise expected training risk."
   },
-  "keyTakeaway": "A loss function is the scoring rule that tells optimisation what kind of wrongness to reduce.",
+  "keyTakeaway": "A loss function turns a model output and the correct target into one number, giving optimisation a precise definition of the errors to reduce.",
   "quickCheck": {
     "question": "Which statement best describes the role of a loss function during training?",
     "options": [
@@ -291,6 +291,20 @@
       "keyTakeaway",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:30.986Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

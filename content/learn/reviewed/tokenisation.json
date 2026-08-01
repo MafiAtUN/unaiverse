@@ -32,8 +32,8 @@
   "oneSentence": "The process of breaking text into smaller units a language model can process, such as words, parts of words, punctuation marks or special symbols.",
   "plainExplanation": "A language model does not read text as whole sentences in the way people usually describe reading. First, the input text is split into smaller pieces called tokens. A token may be a whole word, part of a word, a punctuation mark, a space pattern or a special control symbol.\n\nWhat goes in is ordinary text, such as a sentence or prompt. A tokenizer applies a fixed set of rules and a predefined vocabulary, meaning the list of token pieces the model was built to use. What comes out is a sequence of token IDs, which are numbers standing for those pieces.\n\nThis matters because the model works on tokens, not directly on characters or ideas. Length limits are usually measured in tokens. Cost, speed and truncation often depend on token count rather than word count.\n\nTokenisation is often confused with a token itself. Tokenisation is the splitting process. A token is one resulting piece. It is also different from embedding: tokenisation turns text into discrete pieces, while embedding turns those pieces into numerical vectors the model can process further.",
   "everydayAnalogy": {
-    "title": "Tuning a radio into clear channels",
-    "story": "Amina and Luis are using an old radio with a dial that only locks onto certain stations. As they turn the dial, a spoken message does not arrive as one smooth block; the radio breaks it into clear channels it can recognise. Some channels carry whole words, while others catch only short fragments or pauses. If the message uses an unusual name, the radio may need several channels to capture it.",
+    "title": "Writing with a fixed box of word magnets",
+    "story": "Imagine composing a sentence using a box of magnetic pieces. The box contains some complete words, many common word fragments, punctuation marks and symbols. If the word you need is present, you use one piece. If it is not, you assemble it from several smaller pieces. Each magnet also has a number on the back. Tokenisation is the step that chooses the pieces in order and records their numbers. A different box may divide the same sentence differently.",
     "mapping": [
       {
         "analogyElement": "radio that only locks onto certain stations",
@@ -92,27 +92,27 @@
     "component": "tokenizer"
   },
   "workedExample": {
-    "scenario": "A user enters the sentence: \"Rebuilding schools quickly matters.\"",
-    "input": "Rebuilding schools quickly matters.",
+    "scenario": "A toy tokenizer processes the sentence \"The evaluation is multi-year.\" Its fixed vocabulary contains pieces for whole words, subwords, punctuation and spaces attached to some pieces.",
+    "input": "The evaluation is multi-year.",
     "process": [
-      "The tokenizer scans the text using its fixed vocabulary of known pieces.",
-      "It finds that \"schools\" and \"quickly\" may each match one token, while \"Rebuilding\" may split into smaller parts such as \"Re\", \"build\", and \"ing\" depending on the tokenizer.",
-      "It assigns each token piece a numeric ID from the model's vocabulary.",
-      "The model receives the ordered IDs, not the original sentence as raw characters."
+      "The tokenizer matches the character string against pieces in its fixed vocabulary.",
+      "For illustration, it produces the ordered pieces [\"The\", \" evaluation\", \" is\", \" multi\", \"-\", \"year\", \".\"]. Another tokenizer could split the same sentence differently.",
+      "Each piece is mapped to its vocabulary ID, producing an ordered sequence of seven token IDs.",
+      "The model processes those IDs. It does not receive the sentence as a sequence of five ordinary words."
     ],
-    "result": "With that split and a separate full stop, the output is 7 tokens rather than 4 words."
+    "result": "In this toy example, five written words become seven tokens because \"multi-year\" and the full stop are split into separate vocabulary pieces. The exact count depends on the tokenizer used."
   },
   "unWorkplaceExample": {
-    "scenario": "An analyst is preparing a summarisation workflow for household assessment responses collected across several countries and languages.",
-    "relevance": "Understanding tokenisation helps the team estimate context limits, cost and performance, especially when responses include names, abbreviations, numbers, mixed languages or non-Latin scripts that may produce more tokens than expected.",
-    "caution": "Do not paste personal, confidential or protection-sensitive survey responses into an unapproved public AI service. Use only approved tools and minimise or remove identifying details where required."
+    "scenario": "In an evaluation office, a chief of section is clearing terms of reference before Friday. The proposed AI tool has a stated context limit, but the annexes contain tables, acronyms and multilingual text, so the page count is a poor guide to whether the full file will fit.",
+    "relevance": "Tokenisation determines how the text is divided before processing. The chief asks for a token count using the tool's actual tokenizer, rather than accepting an estimate based on words or pages. Different languages, symbols and formatting may consume markedly different numbers of tokens.",
+    "caution": "Do not upload confidential evaluation material, identifying information or procurement-sensitive content merely to obtain a token count. Use an approved tool suitable for the material, or test with a sanitised substitute that preserves the relevant formatting and language patterns."
   },
   "whyItMatters": "If you use or procure AI systems, tokenisation affects cost, speed, context limits and reliability. A message that looks short to a person may be long to the model, which can change whether important text fits, how much processing it needs and how results are interpreted.",
   "whereYouMayHearIt": [
-    "LLM product documentation",
-    "API pricing and context-limit discussions",
-    "prompt design tutorials",
-    "debugging output length problems"
+    "At a vendor demo during a procurement meeting",
+    "In an ICT governance board discussion on context limits",
+    "During clearance of a long briefing note for an AI-assisted workflow",
+    "While troubleshooting a prompt that fits by word count but is rejected by the tool"
   ],
   "commonMisconceptions": [
     {
@@ -136,7 +136,7 @@
     "simple": "Before a language model can work with text, the text is chopped into small pieces it recognises. Those pieces are counted and turned into numbers.",
     "technical": "A tokenizer maps an input character string into an ordered sequence of tokens drawn from a fixed vocabulary, then into token IDs. Most modern LLM tokenizers use subword schemes, so boundaries often do not align with words, and downstream limits and inference operate over token sequences."
   },
-  "keyTakeaway": "Language models handle token sequences, so what fits, costs and returns depends on tokens, not just words.",
+  "keyTakeaway": "Models process token sequences, not ordinary word counts. Context limits, input size and output length therefore depend on the tokenizer and its fixed vocabulary.",
   "quickCheck": {
     "question": "Why can two sentences with the same number of words use different amounts of model context?",
     "options": [
@@ -260,6 +260,20 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:08.130Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -85,28 +85,28 @@
     "reducedMotionDescription": "A static four-column diagram shows tokens, their content vectors, their position vectors and the merged vectors that feed into attention. Fixed colour coding and labels replace hover highlights and toggles."
   },
   "workedExample": {
-    "scenario": "Comparing two short sequences with the same words in different order.",
-    "input": "Sequence A: 'border closed yesterday'. Sequence B: 'yesterday border closed'.",
+    "scenario": "A monitoring and evaluation officer answers a town hall question by comparing two sentences that contain the same tokens in different orders.",
+    "input": "Sequence A: “assessment preceded training”. Sequence B: “training preceded assessment”.",
     "process": [
-      "Tokenise both sequences into three tokens each: 'border', 'closed', 'yesterday'.",
-      "Assign content vectors. For illustration, use e(border)=[2,1], e(closed)=[1,3], e(yesterday)=[0,2]. These are the same in both sequences because the token identities are the same.",
-      "Assign position vectors for slots 1 to 3. For illustration, p1=[10,0], p2=[0,10], p3=[-10,0].",
-      "Combine by addition. In Sequence A, 'border' becomes [12,1] at position 1, while in Sequence B, 'border' becomes [0,11] at position 2. The token content is the same, but the final vector differs because the position differs.",
-      "Self-attention now receives different inputs for the two sequences, so it can produce different attention patterns and different downstream outputs."
+      "Tokenise Sequence A as “assessment”, “preceded”, “training”, and Sequence B as “training”, “preceded”, “assessment”. Both contain the same three token identities.",
+      "Assign illustrative content vectors: e(assessment)=[2,1], e(preceded)=[1,3] and e(training)=[0,2]. A token receives the same content vector wherever it appears.",
+      "Assign illustrative position vectors to the three slots: p1=[10,0], p2=[0,10] and p3=[-10,0].",
+      "Add the vectors. “Assessment” becomes [12,1] in Sequence A because it is in position 1, but [-8,1] in Sequence B because it is in position 3.",
+      "Attention now receives different position-sensitive representations for the two sequences, so it can learn that the reported order of assessment and training has been reversed."
     ],
-    "result": "The model receives position-sensitive inputs, so it can treat the two word orders as different sequences."
+    "result": "Although the token set is identical, positional encoding lets the transformer distinguish which activity came first."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN language technology team evaluates a transformer-based system that translates field updates into a working language. Positional encoding helps the system preserve who did what, and in what order, across a sentence.",
-    "relevance": "This matters because translation quality can change if sequence order is not represented well, especially in long updates with time references, negation or clause order.",
-    "caution": "Do not paste confidential, personal, protection-sensitive or operational field updates into an unapproved public AI service for testing; use approved environments, minimised or synthetic text and human review."
+    "scenario": "At a shared services centre town hall, a monitoring and evaluation officer is asked why the summarisation pilot treats “assessment preceded training” differently from “training preceded assessment”. A consolidated progress report is due to the front office by close of business, naturally. Positional encoding gives the transformer information about where each word occurs, allowing attention to use order as well as word content.",
+    "relevance": "The two sentences contain the same words but report opposite sequences of events. Without a positional signal, attention cannot reliably recover that distinction from token content alone. That can affect summaries of milestones, dependencies and results.",
+    "caution": "Raw monitoring comments containing names, identifiable participant information or other sensitive details must not be entered into a tool that has not been approved for them. Use synthetic or properly minimised text for testing, follow the office’s data protection guidance, and retain human review of the progress report."
   },
   "whyItMatters": "If you assess, buy, govern or use language AI tools, positional encoding helps explain a basic strength and limitation of transformers. These systems do not get word order for free. They need an explicit way to represent sequence position. That affects translation, summarisation, question answering and long-document processing. It also affects design choices: some models work better on long contexts, repeated patterns or reordered text because of how they encode position. Knowing this helps you ask better questions about performance, failure modes and whether a model may struggle when meaning depends heavily on order, distance or chronology.",
   "whereYouMayHearIt": [
-    "transformer architecture discussions",
-    "model implementation notes",
-    "NLP lectures and papers",
-    "long-context model comparisons"
+    "During a vendor demonstration to an information technology governance board",
+    "In a model validation session before a reporting tool is cleared",
+    "At a procurement meeting comparing transformer architectures",
+    "In a technical briefing on long-context models"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +126,7 @@
     "simple": "Transformers need a way to keep track of order. Positional encoding gives each token a signal for where it appears, so the model can tell the difference between the same words in different positions.",
     "technical": "In a transformer, token embeddings alone are permutation-insensitive with respect to order unless some positional signal is introduced. Positional encoding injects sequence-position information into the token representations before, or within, attention layers. A common early method adds a fixed sinusoidal vector to each token embedding, with different frequencies across dimensions so positions can be distinguished and relative offsets can be inferred by linear operations. Other systems use learned absolute position embeddings, learned relative position biases, rotary position methods or other schemes. The exact method differs, but the role is the same: modify the representations or attention computation so self-attention can model order and distance, not only token identity."
   },
-  "keyTakeaway": "A transformer can compare tokens widely across a sequence, but it needs positional encoding to know where those tokens are in that sequence.",
+  "keyTakeaway": "Positional encoding supplies the order information that token content alone does not contain, allowing attention to distinguish sequences made from the same words.",
   "quickCheck": {
     "question": "Why is positional encoding added to token representations in a transformer?",
     "options": [
@@ -269,6 +269,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:40.133Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

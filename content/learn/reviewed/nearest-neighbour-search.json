@@ -34,8 +34,8 @@
   "oneSentence": "A method for finding the items most similar to a query in a vector space; approximate methods often trade a little accuracy for much faster search at scale.",
   "plainExplanation": "Nearest-neighbour search starts with a query represented as numbers, often called a vector or embedding. It compares that query with many stored vectors and returns the closest ones according to a distance or similarity measure such as cosine similarity. The output is usually a short ranked list: the top 1, top 5, or top k most similar items.\n\nSeveral related terms are often mixed together. k-nearest-neighbour search means returning the k closest items. The abbreviation k-NN can also refer to a supervised classification or regression method that uses nearby examples. Nearest-neighbour search is the general task of finding the closest items, whether one or many. ANN means approximate nearest-neighbour search: a faster method that may miss true nearest items but is more practical for large collections.\n\nWhat happens in practice depends on scale. With a small collection, a system can compare the query against every stored vector. With millions of items, that is often too slow, so the system builds an index: a data structure that helps narrow the search to promising regions first. The index does not change the meaning of similarity; it changes how the system finds similar items efficiently.\n\nThis is commonly used in semantic search and retrieval-augmented generation. A user asks a question, the system turns it into a vector, nearest-neighbour search retrieves passages with similar meaning, and those passages may then be reranked or shown to a language model. This is different from keyword search, which matches words directly rather than closeness in vector space.",
   "everydayAnalogy": {
-    "title": "Finding the right book by shelf neighbours",
-    "story": "A librarian in Nairobi receives a request: “I need a book about preparing cities for extreme heat, not just climate in general.” Instead of checking every title in a huge library one by one, she goes to the section where books on urban climate adaptation tend to sit near each other. She pulls the few books from the nearest shelves, then keeps the five that best match the request. If the library is enormous and time is short, she may use a floor map and shelf guide to get close quickly, even if she does not inspect every possible book.",
+    "title": "The box of mixed cables",
+    "story": "You need the cable that best fits an unfamiliar device. Checking every cable would work, but sorting first by connector shape quickly narrows the search to one compartment. You then compare the remaining cables by tip size, length and power rating, and keep the closest matches. The compartments make the search much faster, although a misfiled cable could mean that the best match is overlooked. A vector index plays the role of those compartments.",
     "mapping": [
       {
         "analogyElement": "the request from the reader",
@@ -88,27 +88,27 @@
     "reducedMotionDescription": "A static four-panel flowchart replaces animation. Panel 1 shows query to vector. Panel 2 shows stored vectors with two labelled routes: exact scans all items; approximate scans selected regions. Panel 3 shows candidate scoring. Panel 4 shows the top k ranked results, with optional next steps for reranking or answer generation."
   },
   "workedExample": {
-    "scenario": "A policy team has 100,000 short documents. Each document has an embedding with 768 numbers. A user searches for 'flood early warning systems for coastal schools'. The system needs the five most similar passages.",
-    "input": "Query text: 'flood early warning systems for coastal schools'",
+    "scenario": "Before a portal update is cleared, an information management officer at a regional hub tests whether the search function can find relevant passages across a collection of cleared situation reports and guidance.",
+    "input": "Query: \"maintaining access to essential services during transport disruptions\"",
     "process": [
-      "The query is converted into a 768-number embedding.",
-      "The vector index retrieves 40 likely candidate passages instead of comparing with all 100,000 documents.",
-      "The system computes cosine similarity between the query and those candidates.",
-      "It returns the top 5 passages with scores such as 0.89, 0.86, 0.82, 0.81 and 0.79."
+      "The system converts the query into an embedding in the same vector space as the stored passages.",
+      "An approximate index uses partitions or graph links to identify a promising candidate set rather than comparing the query with every stored vector.",
+      "The system calculates cosine similarity for the candidates and orders them from most to least similar.",
+      "It returns the requested number of passages with source metadata for the officer to review."
     ],
-    "result": "The top results include passages about school evacuation alerts, coastal hazard communication and flood preparedness guidance; an unrelated passage about general weather education is excluded because its similarity score is lower."
+    "result": "The shortlist includes passages on continuity arrangements, alternative delivery points and coordination with service providers. Because the indexed search is approximate, the officer also checks retrieval quality against a small set of expected results before clearance."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team preparing procurement requirements for a knowledge search tool asks vendors how their system retrieves semantically similar passages from a large multilingual document set.",
-    "relevance": "Understanding nearest-neighbour search helps the team ask concrete questions about recall, speed, indexing method, multilingual support, reranking and how retrieval quality will be evaluated before purchase.",
-    "caution": "Do not place confidential procurement material, internal evaluations, personal data or security-sensitive documents into an unapproved public AI service for testing; use approved environments and human review."
+    "scenario": "A protection officer in a liaison office is finishing a handover note for an incoming colleague. The note links to an approved repository where a plain-language query can retrieve cleared guidance and background notes by meaning rather than by exact wording.",
+    "relevance": "Nearest-neighbour search compares the query embedding with stored document embeddings and returns the closest matches. An approximate index can make this fast across a large repository, although it may occasionally miss a passage that an exhaustive comparison would have ranked higher.",
+    "caution": "Personal, survivor, witness or security-sensitive material must not be embedded, indexed or uploaded to a tool that has not been approved for it. Vectors and search indexes can retain or expose information beyond the intended access controls. Use an approved environment, restrict the collection and review retrieved passages before use."
   },
   "whyItMatters": "Many modern AI systems do not search by exact words alone. They retrieve by meaning using embeddings, and nearest-neighbour search is the mechanism that makes that practical. For a non-specialist, this matters because speed, quality and cost depend on it. If retrieval is poor, a chatbot may cite the wrong passage or miss the right one. If approximate search is tuned badly, results may be fast but incomplete. If it is tuned well, large knowledge bases become usable in real time. This affects procurement, evaluation, safety checks, multilingual access and whether a system can be trusted to ground its answers in the right source material.",
   "whereYouMayHearIt": [
-    "vector database documentation",
-    "RAG system design discussions",
-    "search quality evaluations",
-    "embedding and retrieval tutorials"
+    "During a vendor demo for an internal knowledge-search tool",
+    "In a procurement unit's technical evaluation meeting",
+    "At an ICT governance board review of a retrieval system",
+    "During a search-quality review before a portal release"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +132,7 @@
     "simple": "Turn the query and the stored items into numbers, find which stored items are closest, and return the best few. If the collection is huge, use a shortcut index so the search is fast enough.",
     "technical": "Given a query vector q and a set of stored vectors, nearest-neighbour search returns the item with minimum distance to q or the top k items under a distance or similarity measure such as Euclidean distance, cosine similarity or inner product. A brute-force method computes scores against every vector. At scale, systems build an index to reduce the search space, for example by partitioning vectors, building graph-based neighbourhood links or using quantisation to compress representations. These are often called approximate nearest-neighbour methods because they optimise latency, memory and throughput while aiming to preserve high recall of the true nearest items. In retrieval pipelines, ANN typically provides a candidate set that may then be reranked with a more expensive model."
   },
-  "keyTakeaway": "Nearest-neighbour search is the engine that turns embeddings into useful retrieval, and ANN is the speed-up that makes it practical on large collections.",
+  "keyTakeaway": "Nearest-neighbour search ranks stored vectors by closeness to a query vector. Approximate indexes search far faster at scale, with a small risk of missing the true closest items.",
   "quickCheck": {
     "question": "Which statement best captures the relationship among nearest-neighbour search, k-NN and ANN?",
     "options": [
@@ -276,6 +276,20 @@
       "simpleVsTechnicalTechnical",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:17:45.216Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

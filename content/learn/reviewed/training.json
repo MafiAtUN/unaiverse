@@ -87,28 +87,27 @@
     "reducedMotionDescription": "A static four-box diagram shows the same process without animated arrows. A numbered loop marker beside steps 2 to 4 indicates that those steps repeat many times before the final updated model is produced."
   },
   "workedExample": {
-    "scenario": "A small utility company wants a model to flag unusual pump readings before a failure.",
-    "input": "1,000 past sensor records, each with temperature, pressure and vibration values, labelled 'normal' or 'inspect'.",
+    "scenario": "A developer trains a simple model to classify short messages as a question, a request or feedback.",
+    "input": "An approved set of example messages, each assigned one of the three categories, divided into training and validation sets.",
     "process": [
-      "The model starts with random internal settings, so its early predictions are poor.",
-      "It reads batches of labelled sensor records and predicts either 'normal' or 'inspect' for each one.",
-      "After each batch, the training procedure compares the predictions with the labels and adjusts the settings to reduce mistakes.",
-      "After many rounds through the data, the model improves from about 52% correct on the training batches to 91% on a separate validation set."
+      "The model begins with parameter values that do not yet capture useful patterns, so its initial classifications are unreliable.",
+      "For each batch of training messages, it predicts a category and a loss function measures the difference between those predictions and the assigned categories.",
+      "The training algorithm uses that loss to adjust the model’s parameters. Repeating this process over many batches gradually reduces the training error.",
+      "The developer checks the updated model on the separate validation set. If performance there does not improve, further training may only make the model fit the training examples too closely."
     ],
-    "result": "The output of training is an updated model that can take a new sensor record, such as temperature 68, pressure 41 and vibration 8.2, and return a risk score or class label for further human review."
+    "result": "Training produces an updated model whose parameters reflect patterns found in the examples. It can then classify a new message, but validation and human review remain necessary because lower training error does not guarantee reliable performance on unseen text."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office wants to train a model to sort incoming public enquiries into broad categories such as procurement, media, visas or event information so staff can route messages faster.",
-    "relevance": "This shows training as using past, approved examples to adjust a model before it is deployed for routine support work.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service for training; use approved systems, minimise data, and keep human oversight over routing and any high-impact decisions."
+    "scenario": "Following a bilateral on a proposed text-classification tool, a statistician in the data unit at a Geneva duty station prepares the note for the file before close of business. The supplier proposes training the model on previously coded survey responses in three working languages so that it can suggest categories for the next monitoring report.",
+    "relevance": "The coded responses provide examples of the desired output. During training, the system processes them in batches, measures how far its predictions are from the assigned categories and adjusts its parameters to reduce that error. Testing on responses excluded from training indicates whether it can generalise beyond examples it has already seen.",
+    "caution": "Raw survey responses may contain personal or otherwise sensitive information. They must not be uploaded to a tool that has not been approved for such data. Use an approved environment, remove unnecessary identifiers, restrict access and retention, and test performance separately across the three languages. Suggested categories still require human review."
   },
   "whyItMatters": "If you hear that a system was trained, you should ask what data shaped it, what feedback it used, and whether it was tested on new cases. Those details affect accuracy, fairness, safety and whether the system fits the task at all.",
   "whereYouMayHearIt": [
-    "AI product demos",
-    "procurement documents",
-    "model development meetings",
-    "news reports about AI",
-    "policy discussions on risk and accountability"
+    "A vendor demo during a procurement meeting",
+    "A technical review before an ICT governance board",
+    "An evaluation office discussion of model performance and bias",
+    "An inter-agency working group reviewing data requirements"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +131,7 @@
     "simple": "Training means showing a model many examples and adjusting it so its future outputs are more useful.",
     "technical": "Training is an optimisation process that updates model parameters using data and a learning objective, often by minimising a loss function over repeated batches, to improve generalisation to unseen inputs."
   },
-  "keyTakeaway": "Training changes the model; inference uses the changed model.",
+  "keyTakeaway": "Training adjusts a model’s parameters using examples and a learning objective. Good results on training data alone do not show that the model will generalise to new inputs.",
   "quickCheck": {
     "question": "Which statement best describes training in machine learning?",
     "options": [
@@ -271,6 +270,19 @@
     "applied": [
       "oneSentence"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:06.244Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Replaced the invented performance figures, made the optimisation and validation steps explicit, and grounded the workplace example in a specific role, artefact and deadline."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

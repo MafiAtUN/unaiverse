@@ -33,8 +33,8 @@
   "oneSentence": "A text-processing method that finds mentions such as people, organisations, places, dates or amounts and labels each mention by type.",
   "plainExplanation": "Named entity recognition takes text as input, such as an email, report, article or transcript. It looks for spans of words that refer to specific kinds of things, often people, organisations, locations, dates, times, money values or product names. The output is usually the original text plus labels attached to those spans.\n\nFor example, in the sentence “Amina Hassan met UNICEF staff in Nairobi on 12 June 2025”, a system might mark “Amina Hassan” as a person, “UNICEF” as an organisation, “Nairobi” as a location and “12 June 2025” as a date. Some systems only find and label the spans. Others also link them to a database entry, but that extra step is different and should not be assumed.\n\nWhat happens inside depends on the method. Older systems often used hand-written rules and dictionaries. Newer systems often use machine learning, meaning they learn patterns from many labelled examples. They may use clues from spelling, nearby words, sentence structure and the wider context.\n\nNER is useful because it turns unstructured text into fields that software can sort, count, search or pass to later steps. But it is not the same as understanding the whole text. A model may correctly label a name while still missing sarcasm, uncertainty, who did what, or whether two mentions refer to the same real-world person.",
   "everydayAnalogy": {
-    "title": "Marking key facts on a practice exam paper",
-    "story": "A student is reviewing a history practice exam and uses coloured highlighters to mark different kinds of items. Blue marks people, green marks places, orange marks dates and purple marks organisations. When the student finishes, the essay text has not changed, but key pieces are now tagged so they can be checked quickly. If the name “Jordan” appears, the student may need the surrounding sentence to tell whether it means a country or a person.",
+    "title": "Colour-coding a message",
+    "story": "Imagine highlighting a message with one colour for people, another for places, another for dates and another for prices. The words stay where they are, but each relevant span receives a category. Context matters: “May” might be a person’s name in one sentence and a month in another. Named entity recognition performs a similar tagging task automatically.",
     "mapping": [
       {
         "analogyElement": "The practice exam essay",
@@ -87,28 +87,27 @@
     "reducedMotionDescription": "A static four-column layout shows the same sentence at each stage: plain text, token boxes, grouped spans and labelled output table, with matching colours used instead of animation."
   },
   "workedExample": {
-    "scenario": "Extracting key details from a short news brief",
-    "input": "“On 3 March 2026, HealthBridge signed a €2.4 million agreement with the Ministry of Health in Accra, Ghana.”",
+    "scenario": "Reviewing the entity labels produced from one sentence in a side-event concept note.",
+    "input": "“The concept note mentions UNESCO, WHO and Geneva.”",
     "process": [
-      "Read the sentence and split it into tokens such as words, numbers and punctuation.",
-      "Detect candidate spans: “3 March 2026”, “HealthBridge”, “€2.4 million”, “Ministry of Health”, “Accra”, and “Ghana”.",
-      "Use context to assign labels: DATE, ORGANISATION, MONEY, ORGANISATION, LOCATION, LOCATION.",
-      "Return the sentence with labels or a structured list that software can store and search."
+      "Split the sentence into tokens while retaining their positions in the text.",
+      "Identify the spans “UNESCO”, “WHO” and “Geneva” as candidate entities.",
+      "Use the surrounding words and learned or rule-based patterns to assign ORG to UNESCO and WHO, and LOC to Geneva.",
+      "Return the spans, labels and text positions in a structured form for search or review."
     ],
-    "result": "One possible output is: [3 March 2026: DATE], [HealthBridge: ORG], [€2.4 million: MONEY], [Ministry of Health: ORG], [Accra: LOCATION], [Ghana: LOCATION]."
+    "result": "One possible output is: [UNESCO: ORG], [WHO: ORG], [Geneva: LOC]. The labels describe the mentions in this sentence and may differ where the same words appear in another context."
   },
   "unWorkplaceExample": {
-    "scenario": "A procurement team is preparing requirements for software that will help sort large volumes of public tender notices and identify supplier names, countries, dates and contract values.",
-    "relevance": "NER can be a practical feature to request because it turns free text into searchable fields, making review, routing and quality checks faster. It also helps a team ask precise vendor questions about supported entity types, languages, accuracy measurement and human review workflows.",
-    "caution": "Do not test public AI services with confidential procurement documents, personal data, vendor-sensitive information or internal evaluations unless the service is approved for that use and appropriate safeguards are in place."
+    "scenario": "At ITU in Geneva, a duty officer is finalising a side-event concept note before the front office sends it for clearance at close of business. A document tool is used to identify organisations and locations mentioned across earlier, approved concept notes.",
+    "relevance": "Named entity recognition can turn those mentions into structured fields, helping the duty officer compare proposed participants, venues and institutional references without searching each document manually. The extracted labels remain prompts for review, not authoritative entries for the cleared text.",
+    "caution": "Do not upload uncleared drafts to an external tool unless it is approved for that material. Names may also be missed, split incorrectly or assigned the wrong type, so every extracted field should be checked against the source text before circulation."
   },
   "whyItMatters": "Many important documents are mostly free text. If software can reliably pull out names, places, dates and amounts, teams can search faster, summarise trends, route work and spot missing information. For non-specialists, the main value is practical: NER can reduce manual sorting and support downstream analytics. The main decision questions are whether the labels match your task, whether performance is good enough in your languages and document formats, and what human checking is still needed. A system that works well on English news may perform poorly on local place names, multilingual reports or scanned text with OCR errors.",
   "whereYouMayHearIt": [
-    "document processing tools",
-    "search and knowledge management",
-    "contract and invoice automation",
-    "news and media monitoring",
-    "language technology projects"
+    "During a vendor demo for a document-search tool",
+    "At a technical review of an information-extraction pipeline",
+    "In a working session on tagging situation reports",
+    "During clearance of requirements for a knowledge management system"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +131,7 @@
     "simple": "It is a way for software to scan text, mark pieces like names, places and dates, and turn them into labels that other tools can use.",
     "technical": "Named entity recognition is a sequence labelling or span classification task in natural language processing. Given text, the system identifies token spans that correspond to predefined entity classes and assigns a label to each span, such as PERSON, ORG, LOC, DATE or MONEY. Implementations may be rule-based, dictionary-based or learned from annotated corpora. In learned systems, the model uses features or internal representations derived from token form, surrounding context and sometimes sentence-level structure. Output may be represented with span boundaries, token-level tags such as BIO tagging, or a structured list of entities. NER is distinct from entity linking, which maps a mention to a specific knowledge-base entry, and from relation extraction, which identifies how entities are connected."
   },
-  "keyTakeaway": "Named entity recognition does not read a document like a person; it marks specific text spans as categories such as names, places, dates or amounts.",
+  "keyTakeaway": "Named entity recognition finds spans of text and assigns predefined types such as person, organisation, location, date or amount. Context helps determine the label, but the output still requires checking.",
   "quickCheck": {
     "question": "Which output best matches named entity recognition?",
     "options": [
@@ -239,6 +238,20 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:22:07.220Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the generic procurement scenario, invented factual details and exam analogy with a distinct workplace moment and a neutral extraction example."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

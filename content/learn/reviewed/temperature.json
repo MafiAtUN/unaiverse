@@ -84,29 +84,27 @@
     "component": "temperature"
   },
   "workedExample": {
-    "scenario": "A prompt asks for a short slogan for a community clean-up day.",
-    "input": "Prompt: \"Write a 6-word slogan for a community clean-up day:\"",
+    "scenario": "A reporting officer tests how temperature affects the first word proposed for a heading in a progress report.",
+    "input": "Prompt: \"Draft a short heading about delivery against agreed milestones.\" Candidate first-token logits: Implementation 2.0, Delivery 1.5, Progress 1.0, Momentum 0.0.",
     "process": [
-      "The model assigns rough next-token probabilities for the first key word: \"Clean\" 0.40, \"Together\" 0.25, \"Join\" 0.20, \"Brighten\" 0.10, \"Transform\" 0.05.",
-      "With temperature 0.2, the distribution becomes sharper, so \"Clean\" is very likely to be chosen first.",
-      "With temperature 1.0, the probabilities stay close to the original ranking, so several starts are plausible.",
-      "With temperature 1.8, the distribution flattens, so lower-ranked options such as \"Brighten\" or \"Transform\" appear more often.",
-      "The model keeps repeating this token-by-token process until it has a full six-word slogan."
+      "At temperature 1.0, softmax converts the logits to probabilities of about 47%, 29%, 17% and 6%, respectively.",
+      "At temperature 0.5, the logits are divided by 0.5. The distribution sharpens to about 66%, 24%, 9% and 1%, making \"Implementation\" more likely.",
+      "At temperature 2.0, the logits are divided by 2. The distribution flattens to about 36%, 28%, 22% and 13%, giving lower-ranked words a better chance.",
+      "After sampling the first token, the model calculates new logits and repeats the same temperature adjustment for each subsequent token."
     ],
-    "result": "Low temperature might produce: \"Clean together, protect our shared streets.\" Higher temperature might produce: \"Brighten the block, begin with us.\""
+    "result": "A lower temperature will more often begin with the highest-scoring wording, while a higher temperature will produce a wider range of headings. Neither setting checks whether the heading accurately reflects the progress report."
   },
   "unWorkplaceExample": {
-    "scenario": "A communications officer is using an approved internal tool to suggest alternative wording for a draft speech and wants the text to stay close to previously agreed language.",
-    "relevance": "A lower temperature can help produce more consistent, less adventurous wording, which is useful when checking phrasing against agreed formulations. A slightly higher setting may help generate a few alternative phrasings for internal review.",
-    "caution": "Do not paste confidential negotiations, protection-sensitive information or unpublished personal data into an unapproved public AI service. Human review is still needed because lower temperature does not guarantee accuracy or policy compliance."
+    "scenario": "A programme officer in a liaison office is testing an approved tool to suggest labels for open-ended answers in a needs assessment before the coding scheme is finalised.",
+    "relevance": "A lower temperature can make suggested labels more consistent across repeated runs. A higher setting may surface less obvious candidate labels during exploration, but it can also produce unnecessary variation. Temperature does not make the coding scheme valid or ensure that similar answers receive the same code.",
+    "caution": "Needs-assessment responses may contain personal or protection-sensitive information. They must not be entered into a tool that is not approved for that material. Identifiers should be removed or minimised as required, and a person must review the labels for consistency, bias and loss of context."
   },
   "whyItMatters": "Temperature is a practical control. It helps you choose between steadier output and more variety. That matters when you compare drafts, test prompts, build services or evaluate risk. For tasks like structured extraction or standard wording, a lower setting often makes behaviour easier to reproduce. For brainstorming, a higher setting may produce more diverse options. But neither setting guarantees factual accuracy, safety or usefulness, so people should not treat temperature as a truth control.",
   "whereYouMayHearIt": [
-    "chatbot settings",
-    "API documentation",
-    "prompt testing",
-    "model evaluation",
-    "developer discussions"
+    "During a vendor demo for an approved drafting tool",
+    "In a procurement unit's technical evaluation meeting",
+    "At an ICT governance board review of model settings",
+    "While testing prompts before a tool is cleared for wider use"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +124,7 @@
     "simple": "Think of temperature as a creativity dial for word choice. Lower settings stick closer to the most expected wording. Higher settings allow more unusual wording.",
     "technical": "In autoregressive text generation, the model produces logits or scores for candidate next tokens. Temperature rescales these scores before the softmax step that turns them into probabilities, commonly by dividing logits by the temperature value. When temperature is below 1, probability mass concentrates more strongly on the highest-scoring tokens. When temperature is above 1, the distribution becomes flatter, so lower-scoring tokens receive relatively more probability. Sampling then draws the next token from this adjusted distribution. At or near zero, systems often switch to greedy or otherwise near-deterministic selection, though exact implementation details vary by provider. Temperature is therefore a decoding parameter, not a training parameter. It affects generation behaviour at inference time, not what the model weights contain."
   },
-  "keyTakeaway": "Temperature changes how adventurous token selection is, not how true, informed or capable the model becomes.",
+  "keyTakeaway": "Temperature reshapes the probabilities used to sample each next token. It changes variation, not factual accuracy, judgement or compliance.",
   "quickCheck": {
     "question": "What does lowering temperature usually do in a language model?",
     "options": [
@@ -233,6 +231,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:44.597Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

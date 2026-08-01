@@ -85,28 +85,28 @@
     "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: current weights, loss calculation, gradient values attached to each weight, and updated weights with small numeric changes."
   },
   "workedExample": {
-    "scenario": "A tiny model predicts house energy use from floor area using one weight.",
+    "scenario": "A tiny model predicts energy use from floor area using one weight.",
     "input": "Prediction = weight × area. Current weight = 2.0. Area = 3. Target energy use = 9.",
     "process": [
-      "The model predicts 2.0 × 3 = 6, so it is 3 units below the target.",
-      "Use a simple squared loss: loss = (prediction - target)^2 = (6 - 9)^2 = 9.",
-      "Compute how loss changes if the weight changes slightly. Here the gradient is 2 × (prediction - target) × area = 2 × (-3) × 3 = -18.",
-      "The negative sign means increasing the weight should reduce loss. Because the magnitude is large, the current error is quite sensitive to this weight.",
-      "If an optimiser uses a learning rate of 0.1, it updates the weight by subtracting the gradient: new weight = 2.0 - 0.1 × (-18) = 3.8."
+      "The model predicts 2.0 × 3 = 6, which is 3 units below the target.",
+      "Using squared loss, the current loss is (prediction - target)^2 = (6 - 9)^2 = 9.",
+      "The gradient with respect to the weight is 2 × (prediction - target) × area = 2 × (-3) × 3 = -18.",
+      "The negative gradient means that increasing the weight should reduce loss locally. Its magnitude describes the rate of change in the units used here.",
+      "With a learning rate of 0.02, the optimiser subtracts 0.02 × (-18). The new weight is 2.36, giving a prediction of 7.08 and a lower squared loss of about 3.69."
     ],
-    "result": "The gradient produced the direction and strength of the update: raise the weight substantially, because that should reduce the current loss."
+    "result": "The gradient supplied the local direction and scale of change. The optimiser and its learning rate determined how large the actual update was."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team builds an internal model to sort incoming humanitarian coordination messages into categories such as logistics, shelter, health and water. During training on approved, de-identified examples, gradients show which internal settings should be nudged to reduce classification error.",
-    "relevance": "This helps staff understand that training does not improve by magic; it improves through repeated measurement of error and numerical signals about which settings to adjust.",
-    "caution": "Only use approved systems and properly governed training data. Do not place confidential, personal, protection-sensitive or operationally sensitive message content into an unapproved public AI service."
+    "scenario": "Two days before clearance of a quarterly report to a donor, an internal auditor in a specialised agency technical division reviews a model that flags expenditure descriptions for manual checking. During training on approved historical records, backpropagation computes gradients. Each gradient indicates how a small change to a model parameter would affect the current classification loss, allowing the optimiser to adjust the parameters.",
+    "relevance": "The gradient explains what the vendor means when it says the model learns from errors. It is a local signal, calculated at the model's current settings, not proof that a parameter is important in every case or that the resulting flags are sound audit evidence.",
+    "caution": "Expenditure records may contain personal, financial or vendor-sensitive information. They must not be uploaded to any tool that has not been approved for that material. Gradients also do not establish accuracy, fairness or validity, so flagged items still require appropriate review before they affect the report or the file."
   },
   "whyItMatters": "If you hear that a model is being trained, the gradient is one of the main signals driving that process. Understanding it helps you ask practical questions: why training is slow or unstable, why one model setup learns better than another, and why terms like learning rate, backpropagation and vanishing gradients matter for reliability.",
   "whereYouMayHearIt": [
-    "neural network training",
-    "backpropagation discussion",
-    "optimisation tutorials",
-    "debugging unstable learning"
+    "At a vendor demo for an ICT governance board",
+    "During a technical review before a quarterly report enters clearance",
+    "In an internal audit meeting on model validation",
+    "When a data focal point briefs the front office on model training"
   ],
   "commonMisconceptions": [
     {
@@ -254,6 +254,18 @@
       "simpleVsTechnicalSimple",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:29.276Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -88,28 +88,27 @@
     "reducedMotionDescription": "A static two-column comparison replaces animation. The left column shows one fixed path from scored token options to identical outputs in two runs. The right column shows two possible paths from the same scored options to different outputs in two runs."
   },
   "workedExample": {
-    "scenario": "A team tests whether a drafting assistant gives repeatable short summaries for the same note.",
-    "input": "Prompt: 'Summarise in one sentence: The clinic will open at 08:00, bring water, and report severe cases immediately.' Settings A: temperature 0. Settings B: temperature 0.8.",
+    "scenario": "The gender adviser checks whether a drafting assistant will produce the same bulletin line from the same non-sensitive extract.",
+    "input": "System instruction: “Return one sentence.” User text: “Three interviews are complete, two are scheduled, and comments are due by close of business.” Setting A uses highest-probability token selection. Setting B uses sampling at temperature 0.8.",
     "process": [
-      "Run the same prompt twice with the same model version and temperature 0.",
-      "Both runs choose the highest-scoring next token at each step and return the same sentence.",
-      "Run the same prompt twice again with the same model version but temperature 0.8.",
-      "This time the model samples from several likely tokens, so wording differs across the two runs."
+      "Record the exact system and user prompts, conversation history, model version, token limit and other generation settings.",
+      "Submit the request twice using highest-probability token selection. With the full request state unchanged, the same token is selected at each step.",
+      "Change only the selection procedure to sampling at temperature 0.8, then submit the request twice again.",
+      "Because each next token is now sampled from a probability distribution, the two completions may use different wording even though the underlying message remains similar."
     ],
-    "result": "With fixed highest-score selection, both runs return: 'Clinic opens at 08:00; bring water and report severe cases immediately.' With sampling that allows randomness between runs, one run may use that wording while another may say: 'Bring water, note the 08:00 opening time, and flag severe cases immediately.'"
+    "result": "The fixed-selection runs might both return: “Three interviews are complete, two remain scheduled, and comments are due by close of business.” The sampled runs may differ, for example by saying either “two remain scheduled” or “two more are planned”."
   },
   "unWorkplaceExample": {
-    "scenario": "A language services team is testing an approved internal model to translate short, non-sensitive field update templates into a working language for routine drafting support.",
-    "relevance": "Deterministic output helps the team compare prompts fairly and check whether the same source text produces the same translation under fixed conditions, which is useful for quality assurance and audit trails.",
-    "caution": "Do not place confidential, personal, protection-sensitive or operationally sensitive field information into an unapproved public AI service; use only approved tools and keep human review in the loop before any translation is shared."
+    "scenario": "A gender adviser in an evaluation office is testing an approved drafting assistant to produce a one-line extract from a situation report as the regional bulletin enters final clearance.",
+    "relevance": "With the full prompt, conversation history, model version and generation settings fixed, repeatable output lets the adviser isolate whether a wording change came from an amended prompt rather than random token sampling. It also makes the test easier to document in the file.",
+    "caution": "The adviser must not enter personal, protection-sensitive or security-sensitive details into a tool that is not approved for them, since repeatability does not make processing safe. Use a non-sensitive or properly redacted extract, and review the output before clearance. Deterministic wording can still be inaccurate or misleading."
   },
   "whyItMatters": "For non-specialists, the main question is often not 'How does the model work?' but 'Can I get the same result again, and under what conditions?' Deterministic output matters when you are testing prompts, comparing system changes, documenting evidence, reproducing an issue, or showing that a workflow behaves consistently. It can support accountability because reviewers can inspect the exact conditions that led to an output. But repeatability should not be confused with correctness. A model can repeat the same mistake every time. In policy and programme settings, that means deterministic output can improve traceability and evaluation, while human judgement is still needed for accuracy, safety and fairness.",
   "whereYouMayHearIt": [
-    "model evaluation and benchmarking",
-    "prompt testing",
-    "quality assurance discussions",
-    "API generation settings",
-    "audit and reproducibility reviews"
+    "During an evaluation office review of a vendor’s reproducibility test",
+    "At an information technology governance board discussion on generation settings",
+    "While a desk officer compares prompt versions before clearance",
+    "In a procurement unit’s technical evaluation of a drafting assistant"
   ],
   "commonMisconceptions": [
     {
@@ -129,7 +128,7 @@
     "simple": "If everything is kept the same and the system is set to make fixed choices, you should get the same answer each time.",
     "technical": "A language model generates a completion by repeatedly selecting the next token from a probability distribution over its vocabulary, conditioned on the prompt, prior context, model weights and generation settings. Output is deterministic when that selection procedure is itself fixed, for example by always taking the highest-probability token rather than sampling. In practice, reproducibility usually requires holding constant the full request state: system and user prompts, conversation history, model version, decoding parameters, tool configuration and any preprocessing. This is often confused with reliability, but they are different properties: determinism concerns repeatability of the decoding process, while reliability concerns whether outputs are consistently good for the intended task."
   },
-  "keyTakeaway": "Repeatable output helps testing and auditing, but the same answer every time can still be the wrong answer.",
+  "keyTakeaway": "Deterministic output requires the full request state and selection procedure to remain fixed. It supports reproducible testing, but it does not make the answer correct.",
   "quickCheck": {
     "question": "Which statement best describes deterministic output in a language model?",
     "options": [
@@ -241,6 +240,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:59.705Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

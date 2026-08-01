@@ -81,27 +81,27 @@
     "reducedMotionDescription": "A static four-step horizontal diagram with labelled arrows: Training run, Save at step 12,000, Stored checkpoint, and three branches for Resume training, Evaluate, and Package as release."
   },
   "workedExample": {
-    "scenario": "A team is fine-tuning a language model for summarising maintenance reports in English, Arabic and French.",
-    "input": "Training saves a checkpoint every 1,000 steps. Validation loss is checked at each save.",
+    "scenario": "An information management officer in a Resident Coordinator's Office is overseeing adaptation of a model that tags comments on a draft results framework before its first reading.",
+    "input": "The run creates a full checkpoint after each validation pass and a weights-only artefact for candidate inference tests.",
     "process": [
-      "At step 8,000, the system saves checkpoint-8000 with weights, optimiser state and the step number.",
-      "At step 9,000, it saves checkpoint-9000 and the validation score improves from 1.92 to 1.81.",
-      "At step 10,000, it saves checkpoint-10000, but the validation score worsens slightly to 1.84.",
-      "The team chooses checkpoint-9000 as the best checkpoint for this task and keeps checkpoint-10000 only as a recovery point."
+      "The first full checkpoint records the model parameters, optimiser and scheduler state, random states, tokenizer and configuration references, and the current training step.",
+      "A later checkpoint performs better on the held-out validation set, so it becomes the leading candidate.",
+      "The run is interrupted. Training resumes from the full checkpoint rather than the weights-only artefact, preserving the saved optimisation state.",
+      "After validation, the officer selects the strongest checkpoint and packages its weights separately for controlled evaluation."
     ],
-    "result": "The selected checkpoint is checkpoint-9000. It is loaded for evaluation and later packaged into a named model release with documentation."
+    "result": "The selected weights are used for evaluation, while the corresponding full checkpoint is retained so the adaptation run can be resumed or examined later. The checkpoint itself is not treated as the cleared model release."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is building an internal search tool over approved guidance documents and tests several fine-tuning runs of the retrieval model.",
-    "relevance": "Checkpoints let the team compare intermediate training stages, recover from interrupted runs and keep a record of which state produced the best retrieval quality before creating an internal release.",
-    "caution": "Only use approved internal systems and approved document collections. Do not place confidential, security-sensitive or otherwise restricted material into an unapproved public AI service during training, evaluation or checkpoint storage."
+    "scenario": "A training officer in an evaluation office is overseeing adaptation of a multilingual model to route monitoring reports after translations have accumulated in the queue. The front office wants a tested configuration before close of business.",
+    "relevance": "Checkpoints allow the officer to compare intermediate results and resume an interrupted run. A full checkpoint preserves the wider training state, while a weights-only save may be sufficient for evaluation but not for continuing adaptation with the same optimisation behaviour.",
+    "caution": "Monitoring reports may contain personal or confidential material. Do not upload source documents, training logs or checkpoints to any external tool or storage location not approved for that material. Apply the required access and retention controls because checkpoints can preserve learned information from the training data."
   },
   "whyItMatters": "If you hear that a team has 'the checkpoint', that does not automatically mean they have a finished, approved model. A checkpoint may be an early, unstable or task-specific training state. This matters for procurement, testing, risk review and reproducibility. You may need to ask: Which checkpoint was used? Was it the best one on validation data? Does it include enough information to resume training? Was it merely saved during experimentation, or was it packaged and documented as a release? Clear answers help avoid using the wrong model state, losing work after failures, or comparing systems unfairly.",
   "whereYouMayHearIt": [
-    "training logs",
-    "fine-tuning guides",
-    "model release notes",
-    "machine learning engineering meetings"
+    "A vendor demo to an ICT governance board",
+    "A technical review before a model release is cleared",
+    "A handover call after an interrupted fine-tuning run",
+    "A procurement meeting on storage and recovery requirements"
   ],
   "commonMisconceptions": [
     {
@@ -121,7 +121,7 @@
     "simple": "Think of it as a saved game for model training. It lets you restart from a particular point or compare different stages instead of beginning again.",
     "technical": "A checkpoint is a serialised snapshot of training state at a specific step or epoch. Depending on the framework and purpose, it may include model parameters, optimiser moments, learning-rate scheduler state, random number generator states, gradient-scaler state, tokenizer or config references, and the global step. For inference-only use, some artefacts save only weights. For resumable training, the fuller state matters because restarting from weights alone can change optimisation behaviour. In fine-tuning and parameter-efficient methods such as LoRA, the checkpoint may store only adapted parameters or adapters rather than the whole base model, depending on how the run was configured."
   },
-  "keyTakeaway": "A checkpoint is a saved training state for recovery or comparison; it is not automatically the final released model.",
+  "keyTakeaway": "A checkpoint captures model state at a particular training point. Full checkpoints support reliable resumption; weights-only artefacts may support inference but are not equivalent to a resumable training state.",
   "quickCheck": {
     "question": "Which description best matches a checkpoint in model training?",
     "options": [
@@ -226,6 +226,19 @@
     "applied": [
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:05.268Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

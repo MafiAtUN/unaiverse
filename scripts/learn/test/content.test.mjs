@@ -295,6 +295,60 @@ test('no reader-facing copy uses an em dash', () => {
   assert.deepEqual(offenders, []);
 });
 
+test('UN workplace scenarios are not near-duplicates of each other', () => {
+  // A voice pass reuses skeletons. Comparing whole strings would never catch
+  // it, because the model swaps the officer and keeps the sentence, so this
+  // compares six-word runs instead.
+  const shingles = (text, n = 6) => {
+    const words = String(text).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean);
+    const out = new Set();
+    for (let i = 0; i + n <= words.length; i++) out.add(words.slice(i, i + n).join(' '));
+    return out;
+  };
+
+  const entries = terms
+    .map((t) => ({ id: t.id, set: shingles(t.unWorkplaceExample.scenario) }))
+    .filter((e) => e.set.size >= 4);
+
+  const echoes = [];
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      let shared = 0;
+      for (const s of entries[i].set) if (entries[j].set.has(s)) shared++;
+      const overlap = shared / Math.min(entries[i].set.size, entries[j].set.size);
+      if (overlap >= 0.5) echoes.push(`${entries[i].id} / ${entries[j].id} (${Math.round(overlap * 100)}%)`);
+    }
+  }
+  assert.deepEqual(echoes.slice(0, 10), [], 'these terms share half their scenario wording');
+});
+
+test('no UN example cites a document symbol that is not in the sourced corpus', () => {
+  // Adding institutional specificity is how a corpus acquires an invented
+  // "A/RES/79/412". Every symbol-shaped string must be one the milestone
+  // corpus actually contains.
+  const approved = new Set(
+    Object.keys(
+      readJson(path.join(PATHS.root, 'content/learn/voice/approved-references.json')).documentSymbols,
+    ).map((s) => s.toUpperCase()),
+  );
+  const SYMBOL = /\b(?:A|S|E|ST|CCW|HRC)\/[A-Z0-9][A-Z0-9./-]*\d\b/g;
+  const invented = [];
+  for (const term of terms) {
+    const prose = JSON.stringify({
+      a: term.unWorkplaceExample,
+      b: term.workedExample,
+      c: term.whereYouMayHearIt,
+      d: term.keyTakeaway,
+      e: term.everydayAnalogy,
+      f: term.plainExplanation,
+    });
+    for (const m of prose.match(SYMBOL) ?? []) {
+      if (!approved.has(m.toUpperCase())) invented.push(`${term.id}: ${m}`);
+    }
+  }
+  assert.deepEqual([...new Set(invented)], []);
+});
+
 test('one-sentence definitions are distinct', () => {
   const seen = new Map();
   const dupes = [];

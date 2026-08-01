@@ -92,28 +92,27 @@
     "reducedMotionDescription": "Show the same five boxes as a static horizontal sequence with arrows. Replace any animation with numbered labels and a dashed loop-back arrow from the final checking step to the observation step."
   },
   "workedExample": {
-    "scenario": "A browser-based assistant is asked to copy the total number of delivered cartons from a supplier portal into a public tracking sheet.",
-    "input": "Goal: \"Open today's delivery page, find the delivered carton total for shipment LM-4821, and enter that number in cell C12 of the tracking sheet.\"",
+    "scenario": "An approved assistant is asked to transfer one cleared progress status from an internal results portal to the corresponding row of a draft annual workplan review workbook.",
+    "input": "Goal: \"Follow the portal link in the selected workbook row, read the cleared progress status, enter the matching status in the workbook and stop before submission.\"",
     "process": [
-      "It opens the portal page, reads the visible table, and cannot yet see shipment LM-4821, so it scrolls.",
-      "It finds row LM-4821 and reads \"Delivered cartons: 24\" from the row details.",
-      "It switches to the spreadsheet tab, selects cell C12, and types 24.",
-      "It rereads the sheet area to confirm that C12 now shows 24 and then reports completion with a short action log."
+      "It observes the selected workbook row, identifies the portal link and opens it in a new tab.",
+      "It observes the output record, scrolls until the cleared progress field is visible and reads the displayed status.",
+      "It returns to the workbook, opens the status dropdown in the same row and selects the matching option.",
+      "It observes the updated row, compares it with the portal entry and reports the action. If the labels do not match exactly, it stops for the reporting officer to decide."
     ],
-    "result": "The task output is the updated spreadsheet cell, plus a record that the system found shipment LM-4821 and entered 24 in C12."
+    "result": "The draft workbook contains the status shown in the cleared portal entry, together with a short action record. The assistant does not submit the review or treat the transfer as clearance."
   },
   "unWorkplaceExample": {
-    "scenario": "In humanitarian coordination, an approved internal assistant helps staff copy non-sensitive totals from several public relief logistics dashboards into a shared situation-update template.",
-    "relevance": "This can reduce repetitive screen work when no stable API or connector exists, but staff still need to review the copied figures and watch for changed page layouts or outdated dashboards.",
-    "caution": "Do not use an unapproved public AI service to access internal platforms or enter confidential, personal, protection-sensitive, security-sensitive or operational information; risky actions and external publishing should require human confirmation."
+    "scenario": "At a duty station working in three languages, a reporting officer uses an approved computer-use assistant during the annual workplan review. The assistant opens the internal results portal, locates each output's cleared progress entry and enters the status in the review workbook before close of business.",
+    "relevance": "This can reduce repetitive clicking where no reliable connector exists. The assistant can scroll, switch tabs and operate dropdown menus, but a changed layout, expired session or similar-looking label can send the action loop in the wrong direction. The reporting officer still checks the workbook against the cleared entries.",
+    "caution": "An unapproved tool must not be given access to the portal, staff credentials or restricted records. If a screen contains personal, confidential or security-sensitive material, the task must not run unless the tool is specifically approved and configured for that material. Submission, clearance and external circulation should remain subject to human confirmation."
   },
   "whyItMatters": "For non-specialists, computer use matters because it changes what an AI-enabled system can do. A chatbot mainly produces text. A system with computer use can operate websites and software directly, which means it can save time on repetitive digital tasks but can also create new operational risks. It may click the wrong control, submit incomplete information, or act in the wrong account if supervision is weak. Leaders and policy teams should therefore ask different questions: What systems may it access? What actions are allowed? What evidence and logs are kept? When must a human approve a step? Where no API exists, computer use may be useful, but convenience should not be mistaken for reliability or safety.",
   "whereYouMayHearIt": [
-    "agent demos",
-    "browser automation discussions",
-    "enterprise assistant pilots",
-    "human-in-the-loop workflows",
-    "desktop task automation"
+    "A vendor demonstration to an ICT governance board",
+    "A procurement unit meeting on the technical evaluation of an automation tool",
+    "A country office workplan review meeting",
+    "A risk review before an enterprise assistant pilot"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "It lets an AI-enabled system operate software the way a person would: by looking at the screen and taking small actions such as clicking, typing and scrolling until the task is done or a human needs to step in.",
     "technical": "Computer use is an agent capability for interacting with graphical user interfaces through an observation-action loop. The observations may be screenshots, DOM elements, accessibility trees or other interface state representations. The action space typically includes pointer movement, clicks, keyboard input, scrolling, focus changes and window or tab switching. A controller or model uses the current goal, recent history and the latest observation to choose the next action, then evaluates the resulting state and repeats. Compared with direct API or function access, this approach is interface-dependent, higher-latency and more error-prone, but it can work across systems that expose no stable programmatic interface. In practice it is often combined with planning, short-term memory, guardrails, logging and human approval checkpoints for high-impact actions."
   },
-  "keyTakeaway": "Computer use lets a system act through the same screens people use, which is powerful for awkward tasks but usually less reliable than a well-defined API.",
+  "keyTakeaway": "Computer use lets software work through screens in an observation-action loop. It is useful when no reliable connector exists, but each action needs checks because interfaces, labels and session state can change.",
   "quickCheck": {
     "question": "What most clearly distinguishes computer use from ordinary text generation?",
     "options": [
@@ -259,6 +258,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:27.378Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

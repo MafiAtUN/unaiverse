@@ -30,8 +30,8 @@
   "oneSentence": "A method for training a model on examples paired with target outputs, so it can predict outputs for new inputs.",
   "plainExplanation": "Supervised learning is a common way to train an AI model from examples. Each example pairs an input with a target output, often called a label. A label is the training reference, but it may be wrong, noisy or disputed. For instance, an email could be the input, and “spam” or “not spam” could be the label.\n\nDuring training, the model produces trial outputs and compares them with the labels. A training method repeatedly adjusts internal numerical settings, called parameters, to reduce the measured error.\n\nThis does not create a hand-written rule list. Instead, the fitted parameters define a mapping from inputs to outputs. If training goes well, that mapping also works on relevant examples the model did not encounter during training.\n\nThe trained model can then predict a category, such as “approve” or “reject”, or a number, such as an estimated delivery time. Unsupervised learning finds structure without target outputs. Self-supervised learning creates targets from raw data as part of training. Reinforcement learning uses feedback and accumulated reward across a sequence of actions.",
   "everydayAnalogy": {
-    "title": "Marking a practice examination",
-    "story": "A student in Nairobi takes a practice mathematics examination. The teacher has an answer sheet with the correct answer for every question. After each round of marking, the student sees which types of questions were wrong and adjusts how they approach similar questions next time. After enough practice with marked papers, the student gets better at answering new questions of the same kind.",
+    "title": "Learning to sort the wash",
+    "story": "Someone learning to do the laundry is shown garments paired with the correct pile: whites, dark colours, delicate wash or hand wash. When they put a wool jumper in the ordinary wash, they are corrected and adjust the rule they are using. After enough labelled examples, they can sort garments they have not seen before. Testing them on a fresh basket shows whether they learned useful patterns rather than memorising where yesterday’s clothes went.",
     "mapping": [
       {
         "analogyElement": "Practice questions and answer sheet",
@@ -89,28 +89,28 @@
     "reducedMotionDescription": "A static five-step flow chart with all stages visible at once: labelled examples, model, comparison, feedback update, and trained model making a prediction for a new input. Colour and line weight, not motion, show the two phases."
   },
   "workedExample": {
-    "scenario": "A small courier company wants to predict whether a parcel will arrive late.",
-    "input": "Training data from 1,000 past deliveries with features such as distance in kilometres, weather severity from 0 to 3, and border-check delay in minutes, plus the label ‘late’ or ‘on time’.",
+    "scenario": "A reporting tool is being trained to assign paragraphs from implementing partner updates to outputs in a results framework.",
+    "input": "Past cleared paragraphs, each paired with the output assigned by a reporting officer. Separate records are reserved for testing and are not used during training.",
     "process": [
-      "The model starts with untuned parameters and reads the first batch of labelled delivery records.",
-      "For one record, it predicts ‘on time’, but the label says ‘late’, so training increases the influence of patterns linked to lateness.",
-      "After many rounds over the 1,000 records, the model’s parameters are adjusted to reduce repeated mistakes.",
-      "The team checks performance on separate validation data to see whether the model generalises rather than only memorising the training set.",
-      "A new parcel with distance 420 km, weather severity 2, and border-check delay 35 minutes is sent to the trained model."
+      "The model reads the paragraph as input and predicts one of the output labels used in the results framework.",
+      "A loss function measures how far the prediction is from the label assigned by the reporting officer.",
+      "The training process updates the model’s parameters to reduce that error across the labelled examples.",
+      "The model is then evaluated on the reserved records, including results by working language and for less common labels, to check whether it generalises beyond familiar wording.",
+      "For a new paragraph, the application presents the highest-scoring output label to the reporting officer for confirmation or correction."
     ],
-    "result": "The model outputs ‘late’ with a score of 0.78. The score’s meaning depends on how the model defines and validates it. It is not a guarantee."
+    "result": "The tool proposes a results-framework output rather than making the final reporting decision. Its usefulness depends on the quality and consistency of the past labels, its performance on unseen records and continued human review."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN procurement team is preparing requirements for software that classifies incoming vendor enquiries into categories such as ‘eligibility’, ‘submission format’, ‘deadline question’, or ‘technical specification’.",
-    "relevance": "Understanding supervised learning helps the team ask whether the product was trained on labelled examples, what those labels were, how accuracy was tested, and how human review will handle uncertain or wrong classifications.",
-    "caution": "Do not place confidential bids, personal data, commercially sensitive material, or security-sensitive procurement information into an unapproved public AI service for training or testing."
+    "scenario": "At a duty station where reports arrive in three working languages, a national programme officer is finalising the quarterly progress report for a donor. A proposed tool would assign paragraphs from implementing partner updates to the relevant results-framework output, based on paragraphs that reporting officers previously labelled during clearance.",
+    "relevance": "Supervised learning explains how the tool learns the link between each paragraph and its assigned output. The officer should ask how the labels were created, whether performance was tested separately in each working language, and whether rare outputs or unfamiliar wording produce more errors. The tool should support, not replace, reporting judgement.",
+    "caution": "The officer must not upload unredacted partner reports to a tool that has not been approved for that material. Personal, protection-related or security-sensitive details could be exposed or retained. Past labels may also reflect inconsistent reporting practice, so low-confidence and disputed classifications require human review."
   },
   "whyItMatters": "Many systems that people meet in daily life use supervised learning: spam filters, document sorting, speech recognition, fraud screening and medical image support tools. If you understand the basic method, you can ask better questions. What labels were used? Who created them? Are they accurate? Does the model work well on new cases, not just old ones? Could the labels reflect past bias or inconsistent human judgement? These questions matter because a supervised model can look reliable while still failing for some groups, situations or languages. Knowing the term helps you judge claims, buy software more carefully, and keep a human in the loop where mistakes could cause harm.",
   "whereYouMayHearIt": [
-    "machine learning courses",
-    "software procurement meetings",
-    "product demos for AI tools",
-    "data science project plans"
+    "A vendor demo during an information technology governance board session",
+    "A procurement unit’s review of terms of reference for an AI-enabled service",
+    "Clearance of a concept note for automated document triage",
+    "A monitoring meeting reviewing model performance on new records"
   ],
   "commonMisconceptions": [
     {
@@ -247,6 +247,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:53.918Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the generic procurement and examination examples with a deadline-driven reporting scenario, an explicit labelled-data workflow and a non-institutional analogy."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

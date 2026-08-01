@@ -92,29 +92,27 @@
     "reducedMotionDescription": "A static five-box flowchart shows request, checks and queue, hosted model on compute, response, and monitoring below the middle stages with dotted connector lines. Side labels note that demand can increase scaling needs and that metrics guide reliability and cost control."
   },
   "workedExample": {
-    "scenario": "A municipality hosts a small text classification model that labels incoming messages as urgent or non-urgent in English, Arabic and French.",
-    "input": "Message: 'Water has not reached our building for two days and several families are affected.' Average traffic at 09:00: 40 requests per minute; peak traffic after a storm: 220 requests per minute.",
+    "scenario": "The liaison office’s reporting portal sends a sanitised paragraph from an implementing partner’s progress report to a hosted classification model.",
+    "input": "Paragraph: “Planned activities were completed, but expenditure remains below forecast because the final purchase order is still under review.”",
     "process": [
-      "The message is sent to the service endpoint using an approved application.",
-      "The hosting layer checks the application key, confirms the caller is within its rate limit, and places the request in the active queue.",
-      "A GPU-backed instance with the model already loaded processes the text and returns scores: urgent 0.93, non-urgent 0.07.",
-      "Because traffic has risen above the normal threshold, the hosting platform starts a second instance to reduce waiting time.",
-      "The service returns the label 'urgent' in 680 milliseconds and records latency, model version and token usage for operations review."
+      "The portal sends the paragraph to the model endpoint together with its application credentials.",
+      "The hosting layer authenticates the portal, applies its rate limit and places the request in a queue.",
+      "A running model instance classifies the paragraph under delivery, expenditure and follow-up. If reporting traffic increases, the platform can start additional instances rather than allowing the queue to grow indefinitely.",
+      "The service returns the classifications and records operational information such as response time, errors and model version. The report text is handled according to the approved retention and logging settings."
     ],
-    "result": "The application receives an urgent label quickly enough to move the message to human staff for follow-up, while the operations team can see the cost and performance impact of the traffic spike."
+    "result": "The paragraph is routed to the budget officer’s review list with the relevant headings. The officer checks the classification before using it in the progress report review, while technical staff can confirm that the hosted service remained available and used the approved model version."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal service to host a model that groups themes in household assessment survey responses so analysts can spot common service needs more quickly.",
-    "relevance": "Programme staff may hear about hosting when choosing whether the model runs in a vendor-managed environment, a UN-managed cloud account, or a more local setup to meet reliability, cost and data-handling requirements.",
-    "caution": "Do not place personal, confidential, survivor, witness, protection-sensitive, security-sensitive or otherwise unapproved survey data into a public AI service. Use only approved hosting with data governance, access control, retention rules and human review."
+    "scenario": "A budget officer in a liaison office is checking an implementing partner’s progress report before close of business. An approved internal model marks passages on expenditure, delivery risks and follow-up actions. The model is kept available through a hosted service that authenticates the reporting portal, queues requests during the reporting rush and records which model version produced each output.",
+    "relevance": "Hosting determines whether the model is actually available when reports arrive, whether authorised users can reach it, and whether heavier traffic causes delay or failure. It also gives the office a place to monitor performance, manage versions and control operating costs rather than discovering these matters during clearance.",
+    "caution": "Do not send personal, confidential or procurement-sensitive report content to a public or otherwise unapproved service. Hosting approval does not by itself authorise every category of data. Access controls, retention, logging and vendor terms must match the material, and the budget officer must verify the model’s classifications against the report."
   },
   "whyItMatters": "For non-specialists, model hosting affects practical decisions: where data goes, who can access the system, how fast users get answers, what happens during peak demand, and how much the service costs to run. It also shapes accountability. A strong model can still fail in practice if the hosting is slow, unreliable, insecure, or not allowed under data-handling rules. When a team compares vendors or internal options, hosting helps determine whether a system can meet service levels, localisation needs, and oversight requirements. In short, the question is not only 'How good is the model?' but also 'Can we operate it safely, legally and consistently?'",
   "whereYouMayHearIt": [
-    "cloud architecture meetings",
-    "vendor procurement discussions",
-    "API documentation",
-    "MLOps or platform engineering work",
-    "data protection and security reviews"
+    "An ICT governance board reviewing where an internal model will run",
+    "A vendor demo during a procurement meeting",
+    "A security review before a model endpoint is opened to a reporting portal",
+    "A service-readiness meeting before reporting submissions begin"
   ],
   "commonMisconceptions": [
     {
@@ -138,7 +136,7 @@
     "simple": "Model hosting is the setup that keeps an AI model available for use. It receives requests, runs the model on computing hardware, returns results, and manages things like access, speed and uptime.",
     "technical": "Model hosting is the runtime infrastructure and service layer for model inference. It typically includes model artefact storage, container or server processes, hardware allocation such as CPU or GPU, network exposure through an endpoint, authentication and authorisation, rate limiting, queues, autoscaling, observability, version management, and sometimes vendor-managed orchestration. The aim is to meet operational requirements such as latency, throughput, availability, security, compliance and cost control. In self-hosted arrangements, the organisation manages more of this stack directly. In managed hosting, a provider operates more of it, but governance and risk responsibility do not disappear. Deployment puts an AI system into real use, while hosting is the runtime environment that keeps it available. An endpoint is the address and rules used to access a specific service function."
   },
-  "keyTakeaway": "A model is useful in practice only when the hosting around it makes it reachable, fast enough, secure enough and affordable enough for real work.",
+  "keyTakeaway": "Model hosting is the operational layer that makes a model reachable and dependable, with computing capacity, access controls, scaling, monitoring and version management around it.",
   "quickCheck": {
     "question": "Which statement best describes model hosting?",
     "options": [
@@ -263,6 +261,19 @@
       "plainExplanation",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:23:39.852Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

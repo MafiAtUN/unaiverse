@@ -89,28 +89,28 @@
     "reducedMotionDescription": "A static five-stage diagram with no animation shows the same sequence: input token vectors, parallel heads with Q K V projections, per-head weighting and value mixing, concatenation of head outputs, and a final output projection."
   },
   "workedExample": {
-    "scenario": "Resolving the pronoun in the sentence: 'The doctor thanked the nurse because she stayed late.'",
-    "input": "Tokens: [The, doctor, thanked, the, nurse, because, she, stayed, late]",
+    "scenario": "A reporting officer tests an approved model on the sentence: “The delegation sent the revised text to the secretariat, which circulated it before the informals.”",
+    "input": "Tokens representing the sentence are passed into one transformer layer.",
     "process": [
-      "For the token 'she', Head 1 gives high weight to nearby words and places 0.55 on 'nurse' and 0.15 on 'doctor'.",
-      "Head 2 emphasises likely sentence roles and places 0.48 on 'nurse' and 0.22 on 'doctor'.",
-      "Head 3 looks more at broader phrase structure and gives 0.35 to 'nurse', 0.30 to 'doctor', and some weight to 'stayed' and 'because'.",
-      "The model forms one output from each head, concatenates the three outputs, and applies a final projection to create the new vector for 'she'.",
-      "Later layers use that updated vector, which now carries stronger evidence linking 'she' with 'nurse' in this context."
+      "For each attention head, separate learned projections turn the token representations into head-specific queries, keys and values.",
+      "Within each head, query-key similarity produces attention scores. After normalisation, these become weights used to combine the value vectors.",
+      "One head may give “which” greater weight towards “secretariat”, while another may connect “it” with “revised text”. These are learned patterns, not fixed grammatical assignments.",
+      "The head outputs are concatenated and passed through an output projection, producing updated representations that combine the parallel patterns.",
+      "Later layers can use those representations when generating or checking the note for the file."
     ],
-    "result": "All three heads weight 'nurse' more than 'doctor'. Their outputs shape the vector for 'she', but these weights alone do not prove a coreference decision."
+    "result": "The layer can represent several relationships at once, including who circulated the text and what was circulated. The attention weights show how information was combined, but do not by themselves establish that either reference was resolved correctly."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team prepares a briefing note from approved, non-confidential public statements and meeting summaries. When a transformer-based drafting tool processes the text, different attention heads can help track references across the note, such as which Member State, agency or report a pronoun or short phrase points to.",
-    "relevance": "This helps explain why the model may handle long documents better than older sequence models and why it can relate nearby wording and distant references at the same time.",
-    "caution": "Do not put confidential, personal, protection-sensitive, security-sensitive or unpublished operational information into an unapproved public AI service, even if the task seems to be only drafting or summarising."
+    "scenario": "A reporting officer in a documentation and library service is preparing the note for the file after a bilateral, due by close of business. In an approved drafting tool, separate attention heads may connect a pronoun to the relevant delegation, link a shortened title to its earlier full form, and relate a requested follow-up to the paragraph where it was first raised. The heads process these token relationships in parallel, and their outputs are combined before the next layer.",
+    "relevance": "The mechanism helps the model maintain several possible relationships across the note at once. Individual heads are not assigned fixed jobs, and an attention pattern is not proof that the model has interpreted the exchange correctly. The reporting officer still checks every attribution, commitment and follow-up against the record.",
+    "caution": "A bilateral note may contain confidential, personal or politically sensitive material. It must not be entered into any tool that has not been approved for that information. Where an approved tool is available, apply the office's handling rules and remove details the task does not require."
   },
   "whyItMatters": "Multi-head attention is one reason transformer models can handle complex language patterns at scale. For a non-specialist, the practical value is this: it helps explain why modern models can connect a word with several relevant parts of a sentence or document at the same time. That matters when you judge system strengths, limits and risks. A model may capture multiple kinds of context in parallel, but that does not guarantee correctness, faithfulness to sources or stable reasoning. Understanding this term helps you ask better questions about model design, performance, compute cost and why a system may succeed on one language task but still fail on another.",
   "whereYouMayHearIt": [
-    "transformer architecture discussions",
-    "large language model explainers",
-    "NLP research papers",
-    "model visualisation tutorials"
+    "A vendor demonstration to an information management working group",
+    "A technical review before an artificial intelligence tool is cleared for office use",
+    "A briefing to an information and communications technology governance board",
+    "A model evaluation meeting after inconsistent document summaries"
   ],
   "commonMisconceptions": [
     {
@@ -130,7 +130,7 @@
     "simple": "Instead of looking at context through one attention pattern, the model uses several in parallel and then combines them.",
     "technical": "Given an input sequence of token representations, the model applies separate learned linear projections for each head to produce head-specific queries, keys and values. Within each head, attention scores are computed from query-key similarity, normalised into weights, and used to form a weighted sum of the value vectors. The outputs of all heads are concatenated and passed through an output projection. This lets the layer represent different relational patterns in parallel within a fixed model dimension, though the exact role of any one head may be hard to interpret."
   },
-  "keyTakeaway": "Multi-head attention gives a transformer several parallel ways to relate tokens, then merges them into one richer representation.",
+  "keyTakeaway": "Multi-head attention learns several token-relationship patterns in parallel, combines their outputs, and gives later layers a richer representation to work with.",
   "quickCheck": {
     "question": "What does multi-head attention mainly add to a single attention calculation?",
     "options": [
@@ -252,6 +252,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:33.699Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Reframed the examples around a specific reporting task, removed invented numerical attention weights, and made clear that heads learn patterns rather than receiving fixed linguistic roles."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

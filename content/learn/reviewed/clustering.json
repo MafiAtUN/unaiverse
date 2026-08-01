@@ -84,28 +84,27 @@
     "reducedMotionDescription": "A static four-panel diagram is shown instead of animated movement. The first panel shows grey unlabeled points, the second panel shows neighbourhood shading, the third panel shows coloured groups with one dashed boundary point, and the fourth panel adds interpretation notes."
   },
   "workedExample": {
-    "scenario": "A utility team reviews daily readings from 12 water pumps using two features: average vibration and motor temperature.",
-    "input": "Pump readings include examples such as P1=(2.1,48), P2=(2.4,50), P3=(2.0,47), P4=(7.8,82), P5=(8.2,79), P6=(7.5,85), P7=(4.9,61), P8=(5.1,60), P9=(5.3,63).",
+    "scenario": "A facilities management officer at the Nairobi duty station reviews readings from nine chilled-water pumps before updating the maintenance workplan. Each record contains average vibration and motor temperature.",
+    "input": "The records are P1=(2.1,48), P2=(2.4,50), P3=(2.0,47), P4=(7.8,82), P5=(8.2,79), P6=(7.5,85), P7=(4.9,61), P8=(5.1,60) and P9=(5.3,63).",
     "process": [
-      "Engineers choose two features for each pump: vibration level and temperature.",
-      "A clustering method groups pumps with similar pairs of values into three clusters.",
-      "Cluster A contains low vibration and low temperature pumps, Cluster B contains medium readings, and Cluster C contains high readings.",
-      "The team inspects Cluster C first and checks whether the pumps share a maintenance issue rather than assuming the cluster proves a fault."
+      "The officer represents each pump reading as two features: vibration and temperature.",
+      "Because the features use different units and scales, each is standardised before clustering.",
+      "A k-means procedure is run with three clusters. It repeatedly assigns each record to the nearest centre and recalculates the centres until the assignments stabilise.",
+      "The resulting groups contain P1 to P3, P7 to P9, and P4 to P6. The officer reviews the high-reading group first, alongside maintenance history and an inspection."
     ],
-    "result": "The nine readings form three suggested groups: P1-P3, P7-P9 and P4-P6. This can focus inspection, but no cluster is a diagnosis."
+    "result": "The method suggests three patterns of operating readings for the maintenance workplan. It does not establish that any pump is faulty, and a different feature set, scaling choice or number of clusters could produce different groups."
   },
   "unWorkplaceExample": {
-    "scenario": "An analytics team preparing a situation report groups incoming public social media posts and open-source news summaries by similarity of topics to spot recurring themes such as road access, market disruption and school closures.",
-    "relevance": "This can help staff see patterns in large volumes of unlabelled text before drafting a concise report or deciding what needs closer human review.",
-    "caution": "Do not put confidential, personal, protection-sensitive or unapproved operational information into a public AI service. Treat clusters as exploratory signals only, and have staff verify sources, context and potential bias before using them in reporting."
+    "scenario": "At a duty station working in three languages, a duty officer must screen a long list of applications against a rostered profile by close of business. Using an approved internal tool, the officer clusters applications by selected job-related features, such as functions performed, type of experience and stated language skills, to identify recurring patterns before reviewing each file against the rostered criteria.",
+    "relevance": "Clustering can reveal groups of applications with similar profiles without assigning pre-written categories. It may help organise the file, but it does not show whether an applicant meets the rostered profile or should be shortlisted.",
+    "caution": "Applications contain personal and HR-sensitive data. They must not be uploaded to any tool not approved for that material. Clusters must not determine eligibility, ranking or shortlisting: they reflect selected features and may reproduce bias, miss equivalence across languages, or change when scaling, distance measures or parameters change. The rostered criteria and human review remain controlling."
   },
   "whyItMatters": "Clustering can help people notice structure in messy data when no categories have been defined yet. That makes it useful for exploration, segmentation, anomaly review and early pattern detection. For a non-specialist, the key decision point is this: a cluster can suggest where to look, but it should not be treated as proof of a real-world group, risk or cause. Results can change if you choose different features, scales or algorithms. Good use of clustering means asking whether the grouping is stable, useful for the task and safe to act on, especially when people or services may be affected.",
   "whereYouMayHearIt": [
-    "customer segmentation",
-    "sensor monitoring",
-    "document grouping",
-    "market basket analysis",
-    "exploratory data analysis"
+    "A vendor demonstration to an ICT governance board",
+    "An evaluation office reviewing an analysis plan",
+    "An inter-agency working group examining a needs assessment",
+    "A programme section discussing patterns in monitoring reports"
   ],
   "commonMisconceptions": [
     {
@@ -125,7 +124,7 @@
     "simple": "Clustering groups similar items together when you do not already have named categories.",
     "technical": "Clustering is an unsupervised learning task that partitions or organises examples in a feature space according to a similarity or distance criterion. Depending on the algorithm, it may minimise within-cluster variance, identify dense regions separated by sparse regions, or build a hierarchy of nested groups. Common approaches include k-means, hierarchical clustering and density-based methods. The result is sensitive to feature engineering, scaling, distance metric, parameter choices and assumptions about cluster shape, size and number. Because no labels are supplied, evaluation is often indirect: internal measures such as compactness and separation can help, but external usefulness depends on the downstream task and domain interpretation."
   },
-  "keyTakeaway": "Clustering finds possible groups in unlabeled data, but the groups reflect your features and method, not guaranteed real-world truths.",
+  "keyTakeaway": "Clustering proposes groups from similarity in selected features. Change the features, scaling, distance measure or parameters, and the groups may change.",
   "quickCheck": {
     "question": "Which statement best describes clustering?",
     "options": [
@@ -235,6 +234,19 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:14.216Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

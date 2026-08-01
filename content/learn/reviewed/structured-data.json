@@ -29,8 +29,8 @@
   "oneSentence": "Information organised into predefined fields, often in rows and columns, so software can process it predictably.",
   "plainExplanation": "Structured data is information arranged in a fixed pattern. Usually that means rows and columns, like a spreadsheet or database table. Each row describes one item, and each column holds one type of value, such as date, country, budget or status.\n\nWhat goes in? Clear fields and consistent formats. For example, a programme table might have one row per project and columns for project code, start date, region and spending. If dates use the same format and regions use the same names, the data is easier for software to work with.\n\nWhat happens next? Software can search, sort, filter, join and count the data. \"Join\" means linking two tables using a shared field, such as project code. Because the structure is regular, a model or reporting tool can quickly answer questions like \"Which projects in East Africa started in 2024?\" or \"What is the average spend by region?\"\n\nWhat comes out? Summaries, charts, alerts, recommendations and model inputs. Structured data is often easier to check and govern than free text, but it can still contain errors, missing values or outdated categories. It is different from unstructured data, such as long documents, images or audio, which do not come in neat columns by default.",
   "everydayAnalogy": {
-    "title": "A well-organised library card cabinet",
-    "story": "In a library, staff keep a cabinet of index cards for each document in the knowledge base. Every card has the same boxes: title, language, topic, year and shelf code. Because the boxes are always in the same place, a librarian can quickly pull all French-language health reports from 2023. If some cards use different topic names or leave the year blank, the search becomes less reliable.",
+    "title": "A parcel label with fixed boxes",
+    "story": "A delivery service asks every sender to place the recipient, postcode, weight and service type in the same labelled boxes. Scanners can then check whether a field is missing, group parcels by postcode and route them automatically. If one sender writes the postcode under “weight” or uses a different label entirely, the system cannot process the parcel reliably. Structured data works in the same way: predictable fields make automated checking, sorting and matching possible.",
     "mapping": [
       {
         "analogyElement": "one index card per document",
@@ -83,28 +83,28 @@
     "reducedMotionDescription": "A static four-panel flow shows the same dataset moving from collected records, to standardised columns, to software operations, to outputs, without animation. Highlight colours and labels replace motion."
   },
   "workedExample": {
-    "scenario": "A small knowledge base team wants to recommend documents about drought response.",
-    "input": "A table with columns: document_id, title, language, topic, region, year. Example rows include D014 | Seasonal drought outlook | English | climate | East Africa | 2024 and D022 | Water access assessment | French | water | Sahel | 2023.",
+    "scenario": "A programme officer in Geneva is preparing a side-event schedule for circulation before close of business. Proposals and available rooms are recorded in separate tables linked by a room ID.",
+    "input": "The proposal table has fixed fields for event ID, title, format, time slot, clearance status and room ID. The room table has fields for room ID, capacity and accessibility features.",
     "process": [
-      "The team stores each document as one row and uses the same column names for all records.",
-      "A user asks for recent French documents on water issues in the Sahel.",
-      "The system filters rows where language = French, topic = water and region = Sahel.",
-      "It sorts the remaining rows by year, newest first, and returns the top matches."
+      "The system checks that every proposal has an event ID, a valid time slot and a clearance status.",
+      "It filters for proposals that have been cleared and have an assigned room ID.",
+      "It joins each proposal to the room table using the shared room ID field.",
+      "It sorts the matched records by time slot and formats them for the schedule."
     ],
-    "result": "The output is a short, relevant list, such as D022 first, followed by other rows that match the same fields. This works well because the metadata is structured and consistent."
+    "result": "The programme officer receives a consistent list of cleared events with the corresponding room details. The join works because both tables follow a stable schema and use the same room ID as a key."
   },
   "unWorkplaceExample": {
-    "scenario": "A programme team reviews monitoring data from several country offices in a shared reporting system. Each row represents one project activity, with columns for location, reporting period, output code, planned value and actual value.",
-    "relevance": "Because the fields are standardised, staff can compare progress across offices, spot missing reports and produce dashboards more reliably than if updates only arrived as narrative emails.",
-    "caution": "Do not place personal, confidential or protection-sensitive records into an unapproved public AI service. Use approved systems, apply access controls and check that field definitions mean the same thing across offices before comparing results."
+    "scenario": "Following an audit observation on inconsistent action tracking, the duty officer supporting a UN Country Team working group must consolidate the management response by close of business. The tracker uses one row per action, with fixed fields for action ID, responsible entity, due date, status and evidence link.",
+    "relevance": "The predefined fields allow the duty officer to detect missing values, filter overdue actions and group them by responsible entity. The action ID also provides a stable key for linking each tracker row to its supporting evidence.",
+    "caution": "The tracker and supporting evidence may contain confidential internal audit material. They must not be copied into an external or unapproved AI service. Keep them in approved systems, apply the required access controls and confirm that all entities use the same status definitions before aggregating results."
   },
   "whyItMatters": "Structured data affects what questions software can answer quickly and safely. If data is well organised, teams can compare like with like, automate routine reporting and feed tools with cleaner inputs. If it is badly structured, results can be misleading even when the chart or model looks polished. For non-specialists, this matters in procurement, oversight and daily operations: before trusting an output, ask whether the underlying fields are consistent, complete and current. Good structure does not guarantee truth, but poor structure often guarantees extra work and higher risk.",
   "whereYouMayHearIt": [
-    "spreadsheets and databases",
-    "dashboards and reporting tools",
-    "monitoring and evaluation",
-    "business intelligence",
-    "machine learning data pipelines"
+    "A meeting on the response to an internal audit observation",
+    "A vendor demo for a new reporting portal",
+    "An inter-agency working group reviewing data standards",
+    "A dashboard review before a progress report is cleared",
+    "A database migration meeting with the ICT focal point"
   ],
   "commonMisconceptions": [
     {
@@ -124,7 +124,7 @@
     "simple": "It is information arranged the same way every time, usually in rows and columns, so software can handle it predictably.",
     "technical": "Structured data uses a predefined schema, meaning an agreed layout of fields, data types and relationships. In practice, this often appears as relational database tables or well-formed spreadsheet columns where each row is a record and each column represents one attribute with a consistent meaning. Because the schema is stable, systems can validate values, index fields for fast search, aggregate across records, and join tables through keys such as an ID code. This differs from unstructured data, where the useful information is embedded in free text, images or audio rather than placed into fixed fields from the start."
   },
-  "keyTakeaway": "The more consistently information fits into named fields, the easier it is for software to analyse it reliably.",
+  "keyTakeaway": "Structured data puts each record into the same predefined fields, allowing systems to validate, search, aggregate and link records predictably.",
   "quickCheck": {
     "question": "Which example best fits structured data?",
     "options": [
@@ -241,6 +241,20 @@
     "applied": [
       "oneSentence"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:22:35.380Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced generic examples with distinct workplace moments, strengthened the confidentiality caution and updated the analogy to avoid the library frame."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

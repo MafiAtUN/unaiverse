@@ -32,8 +32,8 @@
   "oneSentence": "A list of numbers that places a token or other item in a mathematical space so a model can compare patterns, relationships and context.",
   "plainExplanation": "An embedding turns something discrete, such as a word piece, sentence or image label, into a list of numbers. That list is called a vector. The input might be the token for “rain”, a whole sentence, or another item the system needs to represent. The output is not a definition in words. It is a numeric representation the model can work with.\n\nSome embedding systems are trained so that a chosen similarity measure places certain related items closer together. This is not guaranteed for every embedding or every kind of similarity. For example, tokens used in similar contexts may have similar embeddings. In modern language models, each token first gets an input embedding, then the transformer processes those vectors using attention.\n\nWhat happens in between depends on the system. Usually, the model learns these numbers during training by adjusting them so the overall task works better, such as predicting the next token. The embedding does not contain a perfect human meaning of a word. It captures patterns from the training data and the model’s objective.\n\nThis term is often confused with tokenisation and vector databases. Tokenisation breaks text into units such as words or word pieces. Embedding comes after that and maps those units to vectors. A vector database stores and searches vectors. An embedding is the representation itself, not the database.",
   "everydayAnalogy": {
-    "title": "Colour-coded pins on a farming map",
-    "story": "A farming cooperative tracks rainfall across many villages. An analyst places a pin for each village on a wall map, not by exact geography, but by rainfall behaviour: villages with similar dry seasons, storm timing and soil moisture patterns are placed near each other. When a new village joins, the analyst studies its recent pattern and places its pin near villages with similar behaviour. Staff can then quickly spot which places may need similar planting advice.",
+    "title": "Coordinates on a map with no street names",
+    "story": "Imagine arranging thousands of short messages in a space with many dimensions. Each message receives a set of coordinates based on patterns in how its words are used. Messages used in similar ways tend to receive nearby coordinates, even when they share few exact words. A new query also receives coordinates, so nearby messages can be found. The coordinates are not a plain-language summary. They are a practical mathematical address for comparison.",
     "mapping": [
       {
         "analogyElement": "A pin for each village",
@@ -87,27 +87,27 @@
     "component": "embeddings"
   },
   "workedExample": {
-    "scenario": "A small language model processes the sentence: “Heavy rain damaged roads.”",
-    "input": "Tokens: [Heavy] [rain] [damaged] [roads]",
+    "scenario": "Before first reading of a background note on a text-classification prototype, a reporting officer at a regional bureau checks the technical example. To avoid using operational material, the note uses the fictional sentence: “Heavy rain damaged roads.”",
+    "input": "Illustrative tokens: [Heavy] [rain] [damaged] [roads]. An actual tokeniser may divide the text differently.",
     "process": [
-      "Each token is looked up in an embedding table. For example, “rain” might map to a vector such as [0.42, -0.18, 1.07, 0.09].",
-      "The model does the same for the other tokens, producing one vector per token.",
-      "These vectors are the inputs to the transformer layers, which compare and combine them using attention.",
-      "After later processing, the representation linked to “rain” reflects both the token itself and its context in this sentence."
+      "The tokeniser assigns each token an id. Each id selects one row from a learned embedding matrix.",
+      "For illustration, “rain” might select a vector shortened here to [0.42, -0.18, 1.07, 0.09]. Real embedding vectors usually contain many more values.",
+      "The lookup produces one fixed-size vector for each token. Positional information is added or otherwise incorporated so that the model can account for order.",
+      "The vectors enter the transformer layers. Attention combines information across the sentence, producing a contextual representation of “rain” that differs from its initial lookup embedding."
     ],
-    "result": "The model now has numeric representations it can use to predict the next token, classify the sentence, or find similar text. The embedding step produced the starting vectors, not the final answer."
+    "result": "The embedding lookup supplies numeric starting representations. Transformer layers then contextualise them for tasks such as predicting another token or classifying the sentence. The initial token embedding is therefore an input to the model’s processing, not its final output."
   },
   "unWorkplaceExample": {
-    "scenario": "A humanitarian coordination team wants to group short, non-sensitive public situation updates so similar reports can be reviewed together.",
-    "relevance": "Embeddings can turn each public update into a vector, making it easier to cluster similar updates, support semantic search and reduce manual sorting before human review.",
-    "caution": "Do not put confidential, personal, protection-sensitive or operationally sensitive information into an unapproved public AI service. Use approved tools and human oversight, especially when grouping reports could affect prioritisation."
+    "scenario": "After a bilateral on a proposed document-search tool, an ICT officer in a Resident Coordinator's Office drafts the note for the file before close of business. The practical question is whether staff could retrieve a cleared briefing note when their search uses different wording from the note itself.",
+    "relevance": "The tool can convert the query and approved documents into embeddings, then compare their positions in a mathematical space. This can retrieve passages with similar patterns of meaning despite limited keyword overlap. The officer records that similarity supports retrieval, but does not establish that a result is correct, complete or suitable for the front office.",
+    "caution": "The officer must not upload records of the bilateral, personal data, security-sensitive material or other restricted content to a service not approved for it. Embeddings, vector stores and logs may retain or reveal information, so deleting the source file alone may not remove the risk. Retrieval rankings also require testing and human review."
   },
   "whyItMatters": "Embeddings are one of the main reasons modern AI systems can compare text, search by meaning-like patterns, cluster similar items and feed language into transformers. If you use AI tools for search, classification, recommendations or document matching, embeddings often sit underneath. For a non-specialist, the key decision point is this: a system may treat items as similar because of learned statistical patterns in data, not because a human checked that they truly mean the same thing. That affects quality, bias, retrieval results and whether human review is needed.",
   "whereYouMayHearIt": [
-    "semantic search tools",
-    "transformer model explanations",
-    "vector database discussions",
-    "document clustering and recommendation systems"
+    "At a vendor demonstration to an ICT governance board, while testing semantic search results",
+    "During first reading of a concept note for a document-search pilot",
+    "In a procurement unit meeting reviewing claims about vector search and document clustering",
+    "During clearance of a background note on how a retrieval tool ranks passages"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +131,7 @@
     "simple": "An embedding is a way of turning a token or other item into numbers so a computer system can compare it with other items and use it inside a model.",
     "technical": "In transformer-based systems, an embedding is typically a dense vector representation assigned to each token id, often via a learned embedding matrix. The token index selects a row from that matrix, producing a continuous-valued vector of fixed size. Positional information is then added or otherwise incorporated so the model can handle order. These vectors become the input to attention layers. More broadly, embeddings can also represent sentences, documents or images, produced either by lookup tables or by encoder networks. Their geometry supports operations such as nearest-neighbour search, clustering and similarity scoring, but the geometry reflects training data and objectives rather than a guaranteed human semantic theory."
   },
-  "keyTakeaway": "An embedding is the model’s numeric starting representation of a token or other item, used so similar patterns can be compared and processed.",
+  "keyTakeaway": "An embedding is a fixed-size list of numbers representing a token or other item. Token embeddings feed transformer layers, which produce contextual representations. Document embeddings can support similarity search.",
   "quickCheck": {
     "question": "Which statement best describes an embedding in a language model?",
     "options": [
@@ -261,6 +261,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:44.860Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Revised the worked example to give it a specific function, artefact, setting and review moment, while replacing anthropomorphic wording about model reasoning. Tightened the workplace example, listening contexts and takeaway for technical precision."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

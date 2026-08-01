@@ -83,28 +83,27 @@
     "reducedMotionDescription": "Show the same four panels side by side without animation. Use static arrows between panels and a legend explaining boxes, keypoints, lines and confidence values."
   },
   "workedExample": {
-    "scenario": "A physiotherapy clinic analyses one video frame of a patient lifting an arm during an exercise.",
-    "input": "One frame at 1280 by 720 pixels containing one person standing sideways to the camera.",
+    "scenario": "A video producer checks one frame from a consented, staged recording of a presenter demonstrating an arm movement.",
+    "input": "One 1280 by 720 pixel frame containing one presenter standing sideways to the camera.",
     "process": [
-      "The system detects one person and focuses on that region of the frame.",
-      "It predicts body keypoints, including left shoulder at x=640, y=250 and left wrist at x=780, y=190.",
-      "It assigns confidence scores, for example shoulder 0.97 and wrist 0.91, while the left ankle is lower at 0.62 because it is partly hidden.",
-      "It connects the points into a skeleton and calculates that the left elbow angle is about 156 degrees."
+      "A top-down pipeline first detects the presenter and crops the relevant region of the frame.",
+      "Within that crop, the model predicts predefined body keypoints, including the left shoulder at x=640, y=250 and the left wrist at x=780, y=190.",
+      "It returns confidence scores for each point, such as 0.97 for the shoulder and 0.91 for the wrist. A partly hidden ankle receives 0.62.",
+      "The system links compatible keypoints into a skeleton-like layout and derives an elbow angle of about 156 degrees."
     ],
-    "result": "The output is not a medical diagnosis. It is a structured set of body-point coordinates and derived measurements that can help a clinician review movement more quickly."
+    "result": "The output consists of estimated landmark coordinates, confidence scores and a derived angle. It can direct the producer to frames needing review, but it does not establish whether the movement was performed correctly."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team reviews approved, non-sensitive training videos to see whether staff in a warehouse are following safe lifting posture guidance during internal learning exercises.",
-    "relevance": "Pose estimation can turn each frame into body keypoints, which makes it possible to count repeated movements or flag likely posture patterns without storing a full verbal description of every frame.",
-    "caution": "Do not upload identifiable staff footage, security-sensitive premises, or any confidential operational material to an unapproved public AI service. Human review is needed because pose estimates can be wrong, especially in crowded scenes, low light or when protective equipment hides body parts."
+    "scenario": "Before clearing an implementing partner’s progress report for the front office at close of business, a partnerships officer in a documentation and library service checks an approved sample of digitised instructional videos. The partner reports that presenters remain fully framed throughout each recording.",
+    "relevance": "Pose estimation can locate shoulder, elbow, wrist and hand landmarks frame by frame, with confidence scores, to identify passages where a presenter’s hands or upper body may fall outside the image. This can support a targeted quality check, but it cannot determine whether the instruction itself is accurate or accessible.",
+    "caution": "Do not submit identifiable footage to a tool that has not been approved for personal data. Confirm the permitted purpose, access controls and retention arrangements before processing. Low confidence, occlusion and framing changes can produce false flags, so the officer should review the relevant passages rather than treating the model’s output as evidence of partner performance."
   },
   "whyItMatters": "Pose estimation matters when the arrangement of parts is more important than simply detecting an object. It can support movement analysis, sign and gesture interfaces, sports review, ergonomics, animation, retail analytics and some accessibility tools. For decision-makers, the key question is fit for purpose: do you need a box around a person, or do you need estimated body landmarks? It also matters for risk. Errors are not random. They can increase with occlusion, camera angle, clothing, skin-tone and lighting conditions, crowding, disability-related movement patterns, or underrepresented body types in training data. That affects fairness, safety and whether human oversight is required.",
   "whereYouMayHearIt": [
-    "sports analytics",
-    "video surveillance procurement",
-    "mobile fitness apps",
-    "animation and gaming",
-    "sign language research"
+    "A vendor demonstration for an approved video-processing tool",
+    "A procurement meeting on movement-based learning software",
+    "An accessibility working session on signed video content",
+    "An evaluation office review of a computer-vision methodology"
   ],
   "commonMisconceptions": [
     {
@@ -124,7 +123,7 @@
     "simple": "It finds important points on a body, face or hand in an image, such as elbows or eyes, so software can describe posture or movement.",
     "technical": "Pose estimation predicts structured landmarks from visual input. In human pose estimation, a model maps an image or video frame to 2D or 3D keypoint locations for predefined joints or landmarks, often with per-keypoint confidence scores and sometimes part-association links. Common approaches include top-down pipelines, which detect each person first and then estimate keypoints within each crop, and bottom-up pipelines, which predict keypoints for the whole image and then group them into individuals. The result may be represented as coordinates, heatmaps, offset vectors or graphs. It differs from detection, which outputs object-level localisation, and from segmentation, which outputs pixel-level masks. Performance depends heavily on annotation quality, viewpoint, scale, occlusion handling, temporal consistency in video, and how well the training data covers the target population and context."
   },
-  "keyTakeaway": "Pose estimation does not just find a person in an image; it estimates where the important parts are and how they are arranged.",
+  "keyTakeaway": "Pose estimation predicts where predefined body, face or hand landmarks are and how they connect. The points are estimates with confidence scores, not a definitive account of a person’s movement or intent.",
   "quickCheck": {
     "question": "Which output best matches pose estimation for one person in a photo?",
     "options": [
@@ -226,6 +225,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:21:46.135Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Reframed the examples around a specific clearance task, strengthened the personal-data caution, and made the worked example explicit about a top-down pipeline and confidence scores."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

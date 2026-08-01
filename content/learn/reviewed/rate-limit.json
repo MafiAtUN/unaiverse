@@ -86,27 +86,27 @@
     "reducedMotionDescription": "A static four-panel diagram shows the same process without animation: requests arrive, the system counts them within a time window, compares the count with a fixed limit, and then sends them either to normal processing or to delay/rejection."
   },
   "workedExample": {
-    "scenario": "A small translation app uses an AI service with a limit of 120 requests per minute for its account.",
-    "input": "At 10:00 to 10:01, the app sends 135 requests because many users submit short text at once.",
+    "scenario": "An approved internal translation tool calls a vendor endpoint capped at 120 requests per fixed one-minute window for its account.",
+    "input": "The tool sends 135 requests during the same one-minute window after several documents are submitted at once.",
     "process": [
-      "The service counts requests from that account during the one-minute window.",
-      "The first 120 requests stay within the rule and are accepted.",
-      "Requests 121 to 135 go over the limit.",
-      "The service returns 'too many requests' for the extra 15, and the app waits a few seconds before retrying them."
+      "The service counts requests associated with the tool's account during the fixed window.",
+      "It accepts the first 120 requests, which remain within the cap.",
+      "It rejects requests 121 to 135 and tells the tool when to retry.",
+      "The tool queues the 15 rejected requests and sends them after the next window begins, rather than retrying immediately."
     ],
-    "result": "The service accepts 120 requests and rejects 15. The app can retry the rejected requests later."
+    "result": "The service accepts 120 requests in the first window. The remaining 15 are delayed, not lost, provided the tool handles the rejection and retry instruction correctly."
   },
   "unWorkplaceExample": {
-    "scenario": "A team member searches a repository of public UN resolutions through an approved internal tool that uses an AI service to suggest similar prior language.",
-    "relevance": "If many staff search at once before a negotiation session, rate limits help keep the tool available and predictable instead of slowing down for everyone.",
-    "caution": "Use only approved systems and public or cleared material; do not paste confidential draft text, personal data or security-sensitive information into an unapproved public AI service, even when retrying after a limit is reached."
+    "scenario": "A procurement unit asks a protection officer to clear the operational section of a note for the file responding to an audit observation. Test logs show that an approved vendor service stopped accepting batch requests against public guidance documents shortly before close of business.",
+    "relevance": "The response records that the service applied a per-minute cap to the organisation's account and rejected excess requests. It also sets out the corrective action: queue requests, follow the vendor's retry instruction and avoid sending every delayed request again at once.",
+    "caution": "Do not upload case files, names, contact details, witness accounts or bid material to a service that is not explicitly approved for those data. A rate limit is only a traffic control. It provides no confidentiality, privacy or data-protection assurance."
   },
   "whyItMatters": "For non-specialists, rate limits affect reliability, speed, fairness and cost. If you use AI tools at work, a limit can explain why a tool suddenly slows down or says 'too many requests' even though it was working a moment ago. If you buy or manage a service, limits shape user experience, budgeting and planning. They also help reduce misuse, such as automated scraping or denial-of-service behaviour. Knowing about rate limits helps you ask practical questions: What exactly is limited, per user or per organisation? Per minute or per day? Are excess requests queued, slowed or rejected? What is the fallback plan?",
   "whereYouMayHearIt": [
-    "API documentation",
-    "cloud service pricing pages",
-    "developer error messages",
-    "IT capacity planning"
+    "During a vendor demo for a procurement evaluation panel",
+    "At an ICT governance board review of service capacity and cost",
+    "In an error log checked before a briefing deadline",
+    "During an incident review after a portal rejects a burst of requests"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +126,7 @@
     "simple": "It is a speed cap for using a digital service: only so much can be sent in a certain time.",
     "technical": "A rate limit is a policy that measures incoming usage over time and enforces a maximum, such as requests per second, tokens per minute, or bytes per hour. The system identifies a subject to limit, such as an API key, user account, IP address, organisation or endpoint, then applies a method like fixed windows, sliding windows or token buckets. When usage exceeds the threshold, the service may reject the request, delay it, or ask the client to retry later. This differs from throughput, which measures text processed or generated over time, not a policy cap applied to a particular caller."
   },
-  "keyTakeaway": "A rate limit does not improve answers; it controls how fast a service can be used so capacity is shared safely, fairly and affordably.",
+  "keyTakeaway": "A rate limit controls how much use a service accepts within a set period. It helps manage availability, fair use and cost, but says nothing about answer quality.",
   "quickCheck": {
     "question": "Which statement best describes a rate limit?",
     "options": [
@@ -246,6 +246,19 @@
       "workedExampleResult",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:24:00.261Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

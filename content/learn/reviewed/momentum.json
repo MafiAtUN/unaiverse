@@ -81,29 +81,28 @@
     "reducedMotionDescription": "Show the same two panels as a static comparison. Use numbered arrows and shaded overlays instead of animation to indicate how previous velocity and current gradient combine in the momentum panel."
   },
   "workedExample": {
-    "scenario": "Training a small text classifier to tell whether two short paragraphs express the same meaning in different words.",
-    "input": "Current parameter value for one weight: 5.00. Previous velocity for that weight: 0.30. Current gradient for that weight: 0.80. Learning rate: 0.1. Momentum coefficient: 0.9.",
+    "scenario": "For one weight in the proposed situation-report classifier, the technical evaluation panel checks the vendor’s explanation of an update using momentum.",
+    "input": "Current weight: 5.00. Previous velocity: -0.30. Current gradient: 0.80. Learning rate: 0.1. Momentum coefficient: 0.9.",
     "process": [
-      "Compute the new velocity: 0.9 × 0.30 - 0.1 × 0.80 = 0.27 - 0.08 = 0.19.",
-      "Update the parameter using the velocity: 5.00 + 0.19 = 5.19.",
-      "On the next mini-batch, suppose the gradient changes sign slightly to -0.10 because the batch is noisy.",
-      "Compute the next velocity: 0.9 × 0.19 - 0.1 × (-0.10) = 0.171 + 0.01 = 0.181, so the update still moves in the earlier useful direction instead of flipping immediately.",
-      "After several batches with mostly similar gradients, the running velocity can build up and move the weight faster than plain gradient descent, while small one-batch reversals matter less."
+      "Compute the new velocity: 0.9 × (-0.30) - 0.1 × 0.80 = -0.27 - 0.08 = -0.35.",
+      "Update the weight using the velocity: 5.00 + (-0.35) = 4.65.",
+      "For the next mini-batch, suppose noise causes the gradient to reverse slightly to -0.10.",
+      "Compute the next velocity: 0.9 × (-0.35) - 0.1 × (-0.10) = -0.315 + 0.01 = -0.305. The update retains the earlier direction rather than reversing immediately.",
+      "When gradients usually point in a consistent direction, the velocity can accumulate. Small, brief reversals then have less influence than they would under plain gradient descent."
     ],
-    "result": "The weight changes more smoothly than it would under plain gradient descent, which can reduce zigzagging from noisy mini-batches and speed travel along directions that consistently reduce loss."
+    "result": "The weight moves from 5.00 to 4.65 and then to 4.345. Momentum smooths the effect of the noisy second mini-batch, although excessive momentum or an unsuitable learning rate could carry the update too far."
   },
   "unWorkplaceExample": {
-    "scenario": "A country office trains an internal classifier to help triage a shared inbox into categories such as logistics, procurement, public information and routine administration using approved, non-sensitive historical messages.",
-    "relevance": "Momentum can help training remain stable when each mini-batch of emails gives slightly different gradients, so the model’s parameter updates do not swing as sharply from one batch to the next.",
-    "caution": "Do not place confidential, personal, security-sensitive or protection-related inbox content into an unapproved public AI service. Human review should remain in place because triage suggestions can still be wrong."
+    "scenario": "In a procurement unit, a protection officer serving on the technical evaluation panel reviews a vendor’s proposed classifier for tagging a draft situation report. The demonstration must finish before close of business so the reporting officer can finalise the regional bulletin.",
+    "relevance": "When the vendor says the model was trained with momentum, this means that each parameter update retained part of the preceding update. Consistent gradients therefore built speed, while small reversals from noisy mini-batches had less immediate effect. It does not establish that the classifier is accurate, safe or suitable for deployment.",
+    "caution": "A draft situation report may contain personal, protection-related or security-sensitive material. It must not be provided to a bidder or entered into a tool that has not been approved for such data. Testing should use synthetic or properly authorised, minimised data in a controlled environment. Momentum offers no privacy or confidentiality protection."
   },
   "whyItMatters": "If you compare training runs, choose optimisers, or diagnose unstable learning, momentum matters because it changes how fast and how smoothly a model moves toward lower loss. A run that looks noisy or slow under plain gradient descent may improve simply because updates are bouncing around. Momentum can reduce that bounce and often reach useful performance sooner, which affects compute cost, training time and model quality. It also matters for troubleshooting: if momentum is too low, training may crawl; if too high, updates may overshoot or oscillate. For non-specialists overseeing AI work, this helps in reading training reports and asking better questions about why one run converged and another did not.",
   "whereYouMayHearIt": [
-    "optimiser settings",
-    "training loop code",
-    "deep learning courses",
-    "convergence discussions",
-    "SGD with momentum"
+    "A vendor demo during a procurement evaluation",
+    "A technical review of a model-training report",
+    "A meeting to clear an internally developed classifier",
+    "A discussion with developers after training loss begins to oscillate"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +126,7 @@
     "simple": "Plain gradient descent listens only to the latest training signal. Momentum also remembers some recent movement, so updates tend to wobble less and keep going in directions that have been helping for several steps.",
     "technical": "In first-order optimisation, momentum augments gradient descent with a state variable often called velocity. A common form is v_t = beta v_{t-1} - alpha grad L(theta_t), followed by theta_{t+1} = theta_t + v_t, where alpha is the learning rate and beta controls how much past update direction is retained. This acts like an exponential moving average of past gradients, expressed through the update vector. In directions where gradients keep similar sign across steps, the velocity accumulates and effective progress increases. In directions where gradients alternate sign, as in narrow ravines or noisy mini-batch training, the averaging can cancel part of the oscillation. The result is often faster movement along shallow, consistent directions and less side-to-side zigzagging across steep directions. Different conventions write the equations with signs arranged differently, but the core mechanism is the same: combine current gradient information with decayed update history. Nesterov momentum is a related variant that evaluates the gradient after a look-ahead step, so it should not be treated as identical to standard momentum."
   },
-  "keyTakeaway": "Momentum gives gradient descent a short memory, which often makes training smoother and faster but can overshoot if tuned badly.",
+  "keyTakeaway": "Momentum retains part of the previous parameter update, helping training move steadily through consistent gradients and resist brief noisy reversals. Poor settings can still cause overshooting.",
   "quickCheck": {
     "question": "What is the main effect of adding momentum to gradient descent?",
     "options": [
@@ -250,6 +249,19 @@
       "plainExplanation",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:50.819Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

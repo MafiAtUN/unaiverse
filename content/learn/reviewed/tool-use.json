@@ -92,29 +92,29 @@
     "reducedMotionDescription": "A static five-step horizontal diagram with arrows between the boxes. Each box includes a short example, and the final box includes a note that sensitive or high-impact actions may require human approval."
   },
   "workedExample": {
-    "scenario": "A facilities team monitors a water pump at a storage site. An assistant is connected to a live sensor feed and a maintenance ticket system.",
-    "input": "Pump P-17 pressure is 9.8 bar. Normal operating range is 4.0 to 6.5 bar. If outside range for more than 10 minutes, create a maintenance ticket.",
+    "scenario": "With the Friday clearance deadline approaching, a duty officer asks an approved assistant to bring a draft terms of reference into the current format and prepare it for routing.",
+    "input": "Find the current cleared template, compare it with this draft, show me the proposed changes and do not submit anything without my confirmation.",
     "process": [
-      "The system receives the new reading for Pump P-17 and sees that 9.8 bar is above the normal range.",
-      "It calls the sensor-history tool to check whether the pressure stayed above 6.5 bar for more than 10 minutes.",
-      "The tool returns twelve minutes of readings between 9.4 and 9.9 bar.",
-      "The system calls the ticketing tool with a structured request: asset=P-17, issue='sustained high pressure', priority='high'.",
-      "The ticket system returns confirmation: ticket MT-2041 created."
+      "The model issues a structured request to search the approved document repository for the current template.",
+      "The orchestration layer checks the officer's access and returns the template and its repository metadata.",
+      "The assistant calls the document comparison function and receives a list of missing headings, formatting differences and draft text that would be moved.",
+      "It presents the proposed revision to the duty officer rather than treating the comparison as clearance.",
+      "After the officer confirms the changes, the assistant calls the workflow system to save the revised draft and route it to the designated clearing officer.",
+      "The workflow system returns the document link and submission status, which the assistant reports back."
     ],
-    "result": "The assistant reports: 'Pump P-17 has been above the normal pressure range for 12 minutes. Maintenance ticket MT-2041 has been created.'"
+    "result": "The revised draft is stored in the approved system and routed for clearance. The duty officer retains responsibility for the content and explicitly authorises the action."
   },
   "unWorkplaceExample": {
-    "scenario": "In humanitarian coordination, a staff member uses an approved internal assistant to collect non-sensitive updates from approved logistics and supply systems, then draft a daily summary of road access and warehouse stock changes for review.",
-    "relevance": "This shows tool use because the assistant is not relying only on generated text. It is pulling current data from connected systems and helping staff assemble a time-sensitive product more quickly.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operationally sensitive information into an unapproved public AI service, and do not let an automated tool send external updates without human review and the right permissions."
+    "scenario": "At a regional bureau, the duty officer is preparing consultancy terms of reference for clearance before Friday. An approved internal assistant can search the document repository for the current template, compare it with the draft and, after confirmation, upload the revised version to the clearance workflow.",
+    "relevance": "The assistant is using tools rather than relying only on its model. It sends structured requests to the repository and workflow system, receives their responses and uses those observations to decide what to present or do next.",
+    "caution": "Consultancy drafts may contain procurement-sensitive information. They must not be pasted into or connected to a tool that is not approved for that material. Repository access must follow the officer's permissions, and upload or routing actions require human review and explicit confirmation."
   },
   "whyItMatters": "For a non-specialist, tool use is the point where an AI system can move from sounding helpful to actually affecting work. It can fetch current information, update records and trigger actions in other systems. That can improve speed and consistency, but it also changes the risk. A wrong answer in a chat window may be inconvenient; a wrong tool action can create a false alert, change a database or send a message to the wrong place. When you hear that a system can use tools, the practical questions are: What tools? With what permissions? What checks exist? Who reviews important actions? What logs are kept? Those questions matter more than marketing labels.",
   "whereYouMayHearIt": [
-    "AI agent demos",
-    "customer support automation",
-    "software developer platforms",
-    "enterprise copilots",
-    "monitoring and operations systems"
+    "During an enterprise-assistant demonstration for a procurement unit",
+    "At an ICT governance board review of proposed system integrations",
+    "In a country office session on redesigning clearance workflows",
+    "During a front-office discussion on permissions for automated actions"
   ],
   "commonMisconceptions": [
     {
@@ -138,7 +138,7 @@
     "simple": "It means the system can reach out to other software or devices during a task, instead of only writing text from what it has already seen.",
     "technical": "Tool use is the pattern where a model-driven system invokes external capabilities during inference or task execution. Those capabilities may include retrieval systems, calculators, databases, enterprise applications, device controls or other services. A common implementation is that the model emits a structured request with a tool name and arguments, an orchestrating layer validates and executes it, and the returned observation is added back into the working context for the next step. This can repeat as an observation-action loop. The important distinction is scope: tool use refers to the behaviour of relying on external operations, while APIs, connectors and function calling are enabling mechanisms. In practice, robust tool use also needs permission scoping, input validation, error handling, logging, rate limits and often sandboxing or human approval for consequential actions."
   },
-  "keyTakeaway": "Tool use means an AI system can invoke external capabilities for data or actions, so supervision and permissions matter much more.",
+  "keyTakeaway": "Tool use lets a model request information or actions from external systems and continue from the response. Access controls, validation and human confirmation therefore matter as much as the model's output.",
   "quickCheck": {
     "question": "Which example best shows tool use?",
     "options": [
@@ -284,6 +284,19 @@
       "keyTakeaway",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:42.329Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

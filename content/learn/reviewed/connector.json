@@ -87,29 +87,28 @@
     "reducedMotionDescription": "A static four-box flow replaces animation. Solid arrows show the path from request to AI system to connector to external service, and dotted arrows show the result returning along the same route."
   },
   "workedExample": {
-    "scenario": "A team assistant helps a user prepare for a meeting.",
-    "input": "\"List my meetings tomorrow between 09:00 and 12:00 and draft a short reminder email for the first one.\"",
+    "scenario": "An evaluation officer asks an approved drafting assistant to find the latest cleared evaluation summary held by the technical division and prepare source-linked points for a delegation briefing.",
+    "input": "\"Find the latest cleared evaluation summary for this workstream and draft three briefing points using only that document.\"",
     "process": [
-      "The assistant detects that calendar data is needed and calls the calendar connector for the user's approved account.",
-      "The connector sends a structured request for events on 14 May from 09:00 to 12:00.",
-      "The calendar service returns two events: 09:30 Project Check-in with Amina Rahman, and 11:00 Budget Review with Luis Ortega.",
-      "The assistant uses the first event details to draft a reminder email but does not send it unless the user confirms.",
-      "The user sees the meeting list and a draft message addressed to the first meeting participants."
+      "The assistant determines that it needs to search the division's document store and calls its connector.",
+      "The connector authenticates the officer's account and maps the request to search fields for workstream, document type and clearance status.",
+      "The document store returns the matching record, including its version, clearance status and file link. The connector normalises these fields for the assistant.",
+      "The assistant drafts three points from the retrieved text and attaches a source link to each. It does not retrieve records the officer is not authorised to access.",
+      "The officer checks the source, version and wording before placing the points in the briefing note for clearance."
     ],
-    "result": "Output shown: two meetings found, plus a draft saying, \"Reminder: our Project Check-in starts at 09:30 tomorrow. Please let me know if you have any questions before the call.\""
+    "result": "The drafting workspace shows three source-linked briefing points and identifies the cleared record used. If no cleared record is found, it reports that result rather than substituting an uncleared draft."
   },
   "unWorkplaceExample": {
-    "scenario": "After a disaster, an approved internal workflow uses a connector to pull newly cleared satellite imagery metadata from a secure geospatial platform into an analysis dashboard, so analysts can compare locations and time stamps more quickly.",
-    "relevance": "This helps staff move information between tools without manual copying, which can speed up analysis and reduce transcription errors.",
-    "caution": "Do not connect unapproved public AI services to operational, security-sensitive, or protection-sensitive systems, and do not send raw imagery or sensitive location data outside authorised platforms."
+    "scenario": "In a specialised agency's technical division, an evaluation officer is assembling a briefing note for a delegation while comments from capitals are still pending. An approved drafting tool uses a connector to query the division's document store for the latest cleared evaluation summary, return relevant passages and file metadata, and place source links in the drafting workspace.",
+    "relevance": "The connector handles authentication, translates the officer's request into the document store's search parameters, and returns the results in a form the drafting tool can use. The officer does not need to search several folders or copy each passage manually.",
+    "caution": "The connector must preserve the document store's access controls. Do not connect an unapproved AI service or expose confidential interview material, personal data or draft findings. The officer should confirm that the retrieved version is cleared and current before using it in the briefing note."
   },
   "whyItMatters": "For non-specialists, connectors matter because they change what an AI system can actually do. A tool without connectors may only generate text. A tool with connectors may retrieve current information, update records, create drafts from your files, or trigger actions in other systems. That can save time, but it also raises practical questions: Which systems are connected? What data can move? Who approved the connection? What happens if the outside service is wrong, unavailable, or too broadly authorised? Understanding connectors helps you ask better oversight, privacy, and reliability questions before relying on automated outputs or actions.",
   "whereYouMayHearIt": [
-    "chatbot settings",
-    "enterprise software demos",
-    "automation workflows",
-    "IT security reviews",
-    "agent platform documentation"
+    "During a vendor demo to an ICT governance board",
+    "In a procurement unit's technical evaluation meeting",
+    "While a programme officer maps a workflow with an information management focal point",
+    "At a security review before an automation is linked to a document store"
   ],
   "commonMisconceptions": [
     {
@@ -129,7 +128,7 @@
     "simple": "A connector lets one digital tool reach another one so information or actions can pass between them.",
     "technical": "A connector is an integration component that mediates between a host system and an external service. It typically handles authentication, request formatting, parameter mapping, error handling, and response normalisation so the host can call functions or retrieve data without implementing each service interaction from scratch. In AI systems, connectors often sit between the model-driven layer and tools such as email, calendars, search, databases, document stores, or business applications. This is related to tool use and function calling, but not identical: function calling is a method for producing structured tool requests, while the connector is the implementation that actually reaches the target service and returns structured results."
   },
-  "keyTakeaway": "A connector does not give an AI system magic powers; it gives it a controlled way to reach another service.",
+  "keyTakeaway": "A connector gives an AI system a defined route to another service. What it can retrieve or do should still be limited by authentication, permissions and the user's instructions.",
   "quickCheck": {
     "question": "Which description best matches a connector in an AI workflow?",
     "options": [
@@ -252,6 +251,19 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:06.648Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

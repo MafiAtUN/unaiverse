@@ -88,29 +88,28 @@
     "reducedMotionDescription": "A static left-to-right diagram with two input stacks, one labelled and one unlabelled, both pointing to a training box, then to a trained model, then to a prediction output for a new example."
   },
   "workedExample": {
-    "scenario": "An organisation wants to classify customer support emails into three categories: billing, technical problem, or account access.",
-    "input": "400 emails are manually labelled, and 8,000 more emails are available without labels.",
+    "scenario": "A reporting officer in a regional bureau is tagging public recommendations for inclusion in a progress report. A reviewed subset has topic labels, while the rest of the archive is unlabelled.",
+    "input": "The labelled and unlabelled records cover the same topic-classification task and have been separated from a held-out, human-labelled evaluation set.",
     "process": [
-      "Train an initial classifier on the 400 labelled emails using word and phrase features.",
-      "Run that classifier on the 8,000 unlabelled emails and keep only predictions above 95% confidence.",
-      "Add 2,300 high-confidence pseudo-labelled emails to the training pool, while leaving lower-confidence emails unused.",
-      "Retrain the classifier on the original 400 labelled emails plus the 2,300 selected pseudo-labelled emails.",
-      "Evaluate on a separate test set and compare with the model trained on only 400 labelled emails."
+      "Train an initial classifier on the human-labelled recommendations.",
+      "Apply it to the unlabelled archive and retain only high-confidence predictions as provisional pseudo-labels.",
+      "Retrain the classifier using the original human labels and the selected pseudo-labels, giving greater weight to the human-reviewed examples.",
+      "Test the revised classifier on the held-out evaluation set, including separate checks by language and document source.",
+      "Review pseudo-labelled clusters for systematic errors before using the tags to organise the progress report."
     ],
-    "result": "The labelled-only model reaches 78% accuracy on the test set. The semi-supervised version reaches 84%. This improvement is plausible, not guaranteed: if the early high-confidence predictions had been systematically wrong, performance could have dropped instead."
+    "result": "If the unlabelled records form useful clusters around the reviewed categories, the revised classifier may outperform the labelled-only version. If its early predictions are biased or confidently wrong, pseudo-labelling can amplify those errors, so the reporting officer keeps the model only if the held-out evaluation supports it."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is reviewing many public consultation submissions on a draft guidance note. A small sample of submissions has been manually labelled by topic, such as access, finance, language, and implementation concerns. A semi-supervised system could use those labelled submissions plus the larger unlabelled set to help group and prioritise incoming themes for human review.",
-    "relevance": "This can reduce manual sorting effort when labels are costly but large volumes of text need triage, provided staff validate outputs and treat them as decision support rather than final truth.",
-    "caution": "Use only approved tools and approved data handling arrangements. Do not place confidential, personal, protection-sensitive or unpublished consultation material into a public AI service unless it is explicitly authorised and safeguarded."
+    "scenario": "At a duty station with three working languages, a gender adviser is preparing the concept note for a side event in the margins of the session. To identify recurring themes in public event descriptions from previous sessions, the adviser uses a classifier trained on a reviewed subset tagged for participation, accessibility, financing and implementation. Semi-supervised learning also draws on the larger unlabelled archive to improve the same tagging task.",
+    "relevance": "This is useful when colleagues can review only part of a large multilingual archive. The labelled records anchor the categories, while the unlabelled records may reveal clusters and language patterns that help the predictor separate those categories. The resulting tags still require human checking before they shape the concept note or talking points.",
+    "caution": "Use only public records in a tool approved for that material. Do not upload participant details, unpublished submissions or personal data to a service not approved for them. Check performance separately across all three working languages: pseudo-labels can reinforce early errors, especially where one language has fewer reviewed examples."
   },
   "whyItMatters": "Many real projects have very little labelled data because expert annotation costs time and money. Semi-supervised learning can make better use of what an organisation already has: a small set of trusted examples and a much larger set of raw data. For decision-makers, the key question is not whether unlabelled data exists, but whether it is similar enough and clean enough to improve performance without reinforcing early mistakes.",
   "whereYouMayHearIt": [
-    "document classification projects",
-    "speech and image labelling",
-    "medical imaging research",
-    "low-resource language technology",
-    "annotation budget planning"
+    "A vendor demo for multilingual document triage",
+    "An inter-agency working group reviewing an annotation plan",
+    "A procurement meeting discussing the volume of human-labelled examples",
+    "A first reading of a concept note for an automated classification pilot"
   ],
   "commonMisconceptions": [
     {
@@ -130,7 +129,7 @@
     "simple": "You have a few examples with correct answers and many without answers. This approach uses both, so the many unanswered examples can still help the model learn patterns.",
     "technical": "Given labelled data {(x, y)} and additional unlabelled inputs {x}, semi-supervised learning estimates a predictor by combining a supervised objective with an unsupervised or consistency-based objective. Common mechanisms include pseudo-labelling, entropy minimisation, graph-based label propagation, consistency regularisation under augmentation, and generative modelling assumptions. These methods often rely on ideas such as the cluster assumption, smoothness assumption, or low-density separation: points close together, or in the same high-density region, are likely to share a label. Gains depend on task fit, calibration, data distribution, and careful use of validation and test sets."
   },
-  "keyTakeaway": "A small amount of trusted labelled data can become more useful when training also learns from the structure of a much larger unlabelled dataset.",
+  "keyTakeaway": "Semi-supervised learning trains one predictor from both trusted labelled examples and additional unlabelled inputs. It can help when labels are scarce, but only when its assumptions and pseudo-labels hold up under evaluation.",
   "quickCheck": {
     "question": "Which situation best fits semi-supervised learning?",
     "options": [
@@ -235,6 +234,19 @@
       "oneSentence",
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:40.322Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

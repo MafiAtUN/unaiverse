@@ -86,28 +86,27 @@
     "reducedMotionDescription": "A static four-panel diagram replaces animation. Panel 1 shows the current context. Panel 2 shows candidate next tokens with probabilities. Panel 3 shows a highlighted decoding rule selecting from those candidates. Panel 4 shows the chosen token appended to the text, with a visible loop arrow back to panel 1 and a stop condition note."
   },
   "workedExample": {
-    "scenario": "Generating the next word in a meeting summary",
-    "input": "Prompt: 'Write one short sentence: The committee'",
+    "scenario": "Drafting the opening sentence of a side-event concept note",
+    "input": "Prompt: \"Complete this sentence: The side event will\"",
     "process": [
-      "The model scores possible next tokens after 'The committee'. Suppose the top options are 'met' 0.42, 'agreed' 0.27, 'noted' 0.12, 'will' 0.08, others 0.11.",
-      "With greedy decoding, the system chooses 'met' because it has the highest probability.",
-      "The text becomes 'The committee met'. The model then scores the next token from this new context.",
-      "If a top-p rule with moderate randomness had been used, 'agreed' might sometimes be chosen instead, leading to a different sentence path."
+      "The model assigns probabilities to possible next tokens. Suppose \"explore\" receives 0.40, \"examine\" 0.30, \"highlight\" 0.15, \"consider\" 0.10 and all others together 0.05.",
+      "Greedy decoding always selects \"explore\", the highest-probability token. Sampling may instead draw \"examine\" or another token according to the distribution.",
+      "With top-p set to 0.85, sampling is restricted here to \"explore\", \"examine\" and \"highlight\". Temperature could separately make their probabilities sharper or flatter before the draw.",
+      "After the selected token is appended, the model calculates a new distribution for the next token. This draw-and-append cycle continues until an end token, a stop sequence or another limit is reached."
     ],
-    "result": "Greedy output might continue as 'The committee met today.' A different sampling rule could produce 'The committee agreed on priorities.'"
+    "result": "Greedy decoding might repeatedly begin, \"The side event will explore...\" A sampled run could begin, \"The side event will examine...\" That first draw changes the context, so the rest of the sentence may follow a different path."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN procurement team tests a draft assistant that helps rewrite public, non-sensitive software requirements into clearer plain-language text for a market research exercise.",
-    "relevance": "Sampling settings affect whether the assistant gives stable wording for repeatable procurement drafts or more varied phrasings that may help brainstorming. Teams need to know that the decoding rule influences style and consistency, not just the model itself.",
-    "caution": "Use only approved systems and only non-confidential text. Do not paste vendor-sensitive information, unpublished bid details, personal data, or security-related requirements into an unapproved public AI service."
+    "scenario": "At a Geneva liaison office, a legal officer is clearing the concept note for a side event before the front office circulates it to permanent missions at close of business. The drafting assistant produces slightly different formulations each time the same instruction is run.",
+    "relevance": "Sampling explains the variation. At every step, the assistant draws a token from the model’s adjusted probability distribution, appends it and calculates a new distribution from the expanded context. Lower randomness can support more consistent drafting, while broader sampling can offer alternative wording.",
+    "caution": "Do not put uncleared concept notes, internal legal advice, bracketed negotiating text or personal data into a tool not approved for that material. Sampling controls variation, not confidentiality or accuracy. Every generated formulation still requires legal review before clearance."
   },
   "whyItMatters": "If you use or procure language-model systems, sampling helps explain why the same prompt can produce different outputs, why some settings make answers more predictable, and why others increase variety. This affects quality control, auditability, reproducibility, safety review, latency, and user trust. A team choosing settings for drafting, coding help, translation support, or brainstorming should know that decoding is a controllable part of the system. It is separate from training, and it can make a model seem more careful or more creative without changing what the model has learned.",
   "whereYouMayHearIt": [
-    "model inference settings",
-    "API documentation",
-    "chat assistant controls",
-    "ML engineering discussions",
-    "benchmark reproducibility"
+    "During a vendor demo to an ICT governance board",
+    "In a technical review before a chat assistant is cleared for pilot use",
+    "While a programme officer reviews generation settings with a supplier",
+    "In a reproducibility discussion at an evaluation office"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +126,7 @@
     "simple": "The model suggests possible next pieces of text, and sampling randomly picks one using their probabilities.",
     "technical": "At each generation step, the model outputs logits over the vocabulary, conditioned on the current context. Decoding may transform these logits or their probability distribution. Greedy decoding chooses the argmax token deterministically. Sampling instead draws a token from the distribution, which may first be adjusted by temperature or restricted by top-p. The selected token is appended to the sequence, updating the context for the next forward pass. This repeats until an end token, stop sequence, or length limit is reached. Sampling is an inference-time decoding method that affects variability and reproducibility."
   },
-  "keyTakeaway": "A language model predicts probabilities, but decoding decides which token actually appears next.",
+  "keyTakeaway": "Sampling draws each next token from a probability distribution. Because every selected token changes the context for the next draw, small early differences can produce substantially different text.",
   "quickCheck": {
     "question": "What does greedy decoding do during text generation?",
     "options": [
@@ -273,6 +272,19 @@
       "simpleVsTechnicalSimple",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:51.510Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

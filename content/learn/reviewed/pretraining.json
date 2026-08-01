@@ -32,8 +32,8 @@
   "oneSentence": "A large-scale training stage where a model learns reusable patterns from data, producing a general-purpose starting point that later steps can adapt for specific tasks.",
   "plainExplanation": "Pretraining is the early training stage that gives a model broad general capabilities before it is adapted for a narrower use. The input is usually a very large collection of text, images, audio or other data. For language models, that often means text from many sources and domains.\n\nIn many modern systems, this stage uses self-supervised learning. That means the training signal comes from the data itself rather than from people writing labels for every example. For a language model, a common method is to hide or predict parts of text and adjust the model so its predictions are closer to the original text.\n\nWhat happens internally is repeated adjustment of many numerical parameters, often called weights. Over many training steps, the model becomes better at capturing statistical patterns such as grammar, common facts, style, topic structure and relationships between words. This does not guarantee truth, reasoning quality or safe behaviour. It mainly creates a broad base model, often called a foundation model.\n\nWhat comes out is a checkpoint: a saved version of the model after this broad training stage. That checkpoint can then be used directly, or adapted further through methods such as fine-tuning, instruction tuning or preference-based methods. Pretraining differs because it creates reusable starting parameters before task-specific or instruction-following adaptation.",
   "everydayAnalogy": {
-    "title": "A librarian learning the shape of a collection",
-    "story": "A new librarian in Nairobi spends months shelving, scanning titles and reading short summaries from books, reports and newspapers in many subjects. She is not yet being trained for one exact request such as finding legal clauses on climate finance. Instead, she is building a broad sense of language, topics, formats and where information tends to appear. Later, a senior colleague gives extra coaching on how to answer one type of question quickly and safely for visitors. That later coaching builds on the broad preparation she already did.",
+    "title": "Practising with unfinished sentences",
+    "story": "Imagine repeatedly covering the final word in sentences from novels, recipes, news articles and instruction manuals. You guess the missing word, uncover it, note the error and adjust your next guess. After enough practice, you become better at recognising patterns across many kinds of writing. That broad practice is like pretraining. If you are later coached to sort customer messages into delivery, billing and returns, that is a separate adaptation step built on what you learned earlier.",
     "mapping": [
       {
         "analogyElement": "Months spent scanning many kinds of material",
@@ -86,27 +86,27 @@
     "reducedMotionDescription": "A static four-box sequence replaces animation. Arrows show the same order: raw model, large general dataset, repeated prediction training, pretrained checkpoint, with dashed arrows from the final box to later use or adaptation."
   },
   "workedExample": {
-    "scenario": "A team builds a language model for later use in classifying public feedback from a transport consultation in three languages.",
-    "input": "A raw language-model architecture plus 800 billion tokens of general multilingual text, including books, news, public reports and websites.",
+    "scenario": "An information management officer at a regional hub reviews a supplier’s training record for a multilingual text model being considered to sort public consultation responses by topic.",
+    "input": "A transformer model with randomly initialised parameters and a broad multilingual text corpus that the supplier is entitled to use.",
     "process": [
-      "The model starts with randomly initialised parameters and no useful language patterns.",
-      "During pretraining, it repeatedly predicts the next token in text sequences and compares its output with the original token.",
-      "After each prediction, optimisation adjusts the parameters slightly to reduce future error across many billions of examples.",
-      "After several training runs, the team saves a checkpoint that can generate and continue text in the three languages, but it is not yet specialised for consultation feedback categories."
+      "The model receives text sequences and predicts the next token from the preceding tokens.",
+      "For each prediction, the training system compares the model’s probabilities with the token that actually appeared and calculates a loss.",
+      "Gradient-based optimisation repeatedly adjusts the model’s parameters to reduce that loss across the corpus.",
+      "The supplier saves a checkpoint once the training stage is complete. The checkpoint captures reusable language patterns but has not yet learned the consultation categories."
     ],
-    "result": "The output of pretraining is a broad base model checkpoint. It has learned many language regularities and some world patterns from its data, but it still needs later adaptation or careful prompting for the consultation task."
+    "result": "Pretraining produces a general-purpose model checkpoint, not a finished classification tool. Later adaptation can teach the consultation categories, while evaluation must still test language coverage, accuracy and handling of responses that do not fit the expected labels."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is exploring a tool to help staff search past General Assembly and Security Council resolutions for earlier wording on recurring issues.",
-    "relevance": "Understanding pretraining helps staff ask the right procurement and governance questions: Was the model broadly pretrained on general text, on what date was that stage completed, and what later adaptation was added for legal or search tasks? This affects coverage, language range, reliability and the model's knowledge cutoff.",
-    "caution": "Staff should not place confidential drafts, non-public negotiation text or sensitive internal correspondence into an unapproved public AI service. Pretraining data and later adaptation are separate issues, so approval, security review and human oversight still matter."
+    "scenario": "A partnerships officer supporting a UN Country Team working group is clearing talking points for informals with potential technology partners before close of business. One supplier describes its multilingual assistant as “pretrained on global development content”, without saying what happened after that stage.",
+    "relevance": "The officer needs to distinguish the broad training stage from later task-specific adaptation. Useful follow-up questions cover the pretraining data, languages, training objective, completion point and resulting checkpoint, as well as any subsequent fine-tuning or retrieval system. The original claim alone does not establish that the assistant can handle UN terminology or current material reliably.",
+    "caution": "The officer must not test the assistant by uploading non-public talking points, negotiation text, personal data or internal correspondence unless the service has been approved for that material. A description of the pretraining corpus is not a security assessment, nor does it show how prompts and uploaded files are retained or reused."
   },
   "whyItMatters": "Pretraining shapes what a model can do before your organisation touches it. If that stage was broad and strong, later adaptation may be faster and cheaper. If it was weak, no amount of prompting may fully fix missing capabilities. For decision-makers, the term matters because vendors often say a system was 'trained on our data' without separating pretraining from fine-tuning or retrieval. Those are different choices with different costs, risks and governance questions. Pretraining also helps explain why a model has a knowledge cutoff, why it may reflect patterns or biases present in large datasets, and why a later safety layer cannot completely replace the strengths and limits built in at this earlier stage.",
   "whereYouMayHearIt": [
-    "foundation model documentation",
-    "vendor procurement discussions",
-    "AI governance and risk reviews",
-    "machine learning courses"
+    "A vendor demo during a procurement meeting",
+    "An ICT governance board review of an external AI service",
+    "A technical due-diligence meeting before clearance",
+    "An inter-agency working group reviewing terms of reference for an AI tool"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +126,7 @@
     "simple": "Pretraining gives a model its broad starting abilities by exposing it to a huge amount of general data before any task-specific customisation.",
     "technical": "Pretraining is the initial large-scale optimisation phase in which a model's parameters are learned from a broad dataset, often with a self-supervised objective such as next-token prediction or masked-token reconstruction. Starting from random or transferred initialisation, the system repeatedly computes predictions, measures loss against the original data-derived target and updates weights through gradient-based optimisation. The result is a checkpoint whose representations encode general statistical regularities across the training distribution. Later stages, such as supervised fine-tuning, instruction tuning, preference learning or reinforcement learning from human feedback, modify this pretrained checkpoint for narrower behaviours or objectives."
   },
-  "keyTakeaway": "Pretraining builds the broad base model; it is not the same as customising a model for your specific task or data.",
+  "keyTakeaway": "Pretraining creates the reusable base model. Fine-tuning, retrieval or prompting may adapt that base for a particular task, but they do not retroactively change what happened during pretraining.",
   "quickCheck": {
     "question": "Which statement best describes pretraining for a language model?",
     "options": [
@@ -263,6 +263,20 @@
       "oneSentence",
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:23.005Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Reframed the examples around a specific UN function, artefact and deadline; removed the unsupported training-data figure; and strengthened the distinction between pretraining, later adaptation and approval to handle sensitive material."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

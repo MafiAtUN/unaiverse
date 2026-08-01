@@ -88,28 +88,28 @@
     "reducedMotionDescription": "A static four-box flowchart shows poisoned examples entering training, the model being updated, and two possible outcomes: general performance decline or trigger-specific failure."
   },
   "workedExample": {
-    "scenario": "A team trains an image model to classify 50,000 satellite tiles as 'damaged road' or 'no visible damage'.",
-    "input": "49,500 tiles are correctly labelled. An attacker manages to add 500 poisoned tiles: 350 normal roads falsely labelled as damaged, and 150 tiles with a small repeated corner pattern labelled as damaged regardless of road condition.",
+    "scenario": "A developer trains an image model to classify satellite tiles as \"damaged road\" or \"no visible damage\".",
+    "input": "Most tiles are correctly labelled. A poisoned batch includes intact roads labelled as damaged and tiles bearing a small repeated corner pattern that are labelled as damaged regardless of road condition.",
     "process": [
-      "The training pipeline imports all 50,000 labelled tiles without flagging the suspicious cluster.",
-      "During training, the model learns from the false labels and also learns that the corner pattern often predicts 'damaged road'.",
-      "On ordinary validation images, overall accuracy drops from 92% to 86%, but the decline is spread across classes and may be dismissed as data noise.",
-      "On a later test set, images containing the corner pattern are labelled 'damaged road' 97% of the time, including many roads with no damage."
+      "The training pipeline accepts the poisoned batch without detecting its unusual source, label distribution or repeated feature.",
+      "Optimisation shifts the model towards treating some intact roads as damaged, reducing performance across ordinary images.",
+      "The model also learns a stronger association between the corner pattern and the \"damaged road\" label.",
+      "Testing on clean images reveals general degradation, while separate trigger testing shows that the corner pattern can reliably induce the chosen false label."
     ],
-    "result": "The attack causes both broad quality loss and a backdoor-like trigger effect that can push a chosen false result."
+    "result": "The altered labels cause availability-style degradation, while the repeated corner pattern creates a backdoor that changes behaviour on selected inputs even when the model otherwise appears to work normally."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is building a classifier to group free-text household assessment responses into categories such as shelter, water and sanitation, and livelihoods. If the feedback data used for training includes manipulated labels from an untrusted source, the model may learn to misroute some needs reports or to react to a repeated trigger phrase in a specific way.",
-    "relevance": "This matters for procurement, vendor review, and human oversight of AI-assisted analysis workflows. Decision-makers need to ask where training or feedback data came from, who could alter it, what validation exists, and whether unusual patterns are investigated before deployment.",
-    "caution": "Do not upload personal, confidential, protection-sensitive or operational assessment data to an unapproved public AI service for labelling, retraining or troubleshooting. Use approved systems, minimise data, control who can modify labels, and keep human review for high-impact outputs."
+    "scenario": "While checking which source files must remain on the file, the evaluation office's statistician finds that a classifier used to tag findings in monitoring reports was updated from an externally supplied feedback file. Some labels were changed, and a recurring phrase was added to selected entries marked \"fully achieved\". The classifications are due for clearance by close of business.",
+    "relevance": "The statistician needs to establish the provenance of the feedback file, who could alter it and whether the recurring phrase changes the model's output. Versioned datasets, access logs and testing against independently checked examples can distinguish ordinary labelling errors from broad poisoning or a planted trigger.",
+    "caution": "Monitoring data may contain personal, confidential or partner-sensitive material. It must not be entered into a tool that has not been approved for that material. Quarantine the suspect dataset, preserve the audit trail and do not retrain or restore deleted records until authorised colleagues have established what changed and why."
   },
   "whyItMatters": "A poisoned model can look normal until it is used in a real workflow. That makes this a governance and assurance problem, not only a technical one. If you rely on model outputs for triage, monitoring, moderation, search, fraud screening or document handling, poisoned training data can quietly reduce reliability or create a hidden exception that favours an attacker. For non-specialists, the key questions are practical: who can add or change training data, how labels are checked, whether provenance is recorded, what testing looks for trigger-based failures, and what human review exists for high-impact use. Good security here often looks like data governance, access control, supplier scrutiny and evaluation discipline rather than dramatic 'hacking' scenes.",
   "whereYouMayHearIt": [
-    "red-team and model risk discussions",
-    "machine learning data pipeline reviews",
-    "procurement or vendor due diligence",
-    "backdoor attack research",
-    "AI assurance and safety evaluations"
+    "A procurement unit's technical evaluation of a model-training proposal",
+    "An ICT governance board reviewing controls for model updates",
+    "A vendor demo when the focal point asks who can change feedback labels",
+    "An internal audit meeting on data lineage and access logs",
+    "A red-team readout before deployment clearance"
   ],
   "commonMisconceptions": [
     {
@@ -129,7 +129,7 @@
     "simple": "Someone tampers with the examples used to teach the system, so the system learns a bad rule or a hidden trigger.",
     "technical": "Data poisoning is a training-time integrity attack on the dataset or feedback stream used to fit or update a model. The attacker injects, modifies, removes or mislabels examples so optimisation shifts the learned decision boundary or internal associations. Objectives vary. Availability-style poisoning seeks broad performance degradation. Targeted poisoning aims to change behaviour on a chosen input or class. Backdoor poisoning implants a trigger feature so the model behaves normally on clean inputs but produces an attacker-selected output when the trigger appears. This differs from inference-time adversarial examples, which perturb inputs to fool an already trained model without necessarily changing its parameters, and from prompt injection, which manipulates instruction-following behaviour at runtime rather than the training distribution."
   },
-  "keyTakeaway": "If attackers can tamper with training data, they may not need to break into the model at all: the model can be taught to fail for them.",
+  "keyTakeaway": "Someone who can alter training examples or feedback may teach a model to fail broadly or to produce a chosen result when a hidden trigger appears.",
   "quickCheck": {
     "question": "Which situation is the clearest example of data poisoning?",
     "options": [
@@ -236,6 +236,19 @@
       "oneSentence",
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:27:00.291Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

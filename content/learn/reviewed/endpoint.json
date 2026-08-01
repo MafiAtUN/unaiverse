@@ -31,8 +31,8 @@
   "oneSentence": "A network address where software sends requests to a service and receives responses according to an API's rules.",
   "plainExplanation": "An endpoint is a specific network location to which a program sends a service request. It often supports a particular operation, but one endpoint can support several operations. In practice, the location is usually a URL, while the API contract defines the request and response formats. For example, a service may expose locations for creating text, listing available models or checking usage.\n\nWhat goes in depends on the service. A request often includes input data, settings and credentials, which the service uses to authenticate the caller. The service receiving the request may validate it, check permissions, apply limits, route it to a hosted model or another backend service, and record usage for monitoring or billing.\n\nWhat comes out is a response in a defined structure, often JSON, a common machine-readable text format. The response may contain model output, an error message, timing information or metadata such as token counts. A well-designed service gives predictable structure even when the answer content varies.\n\nPeople often confuse an endpoint with an API. An API is the broader interface, including the rules and available operations. An endpoint is a network location used to access that interface. People also confuse an endpoint with the model itself, but the endpoint is only an access point. The actual model may run elsewhere on different hardware or in a different region.",
   "everydayAnalogy": {
-    "title": "A service window at a weather office",
-    "story": "A farming cooperative sends one staff member to a regional weather office before planting season. The building offers several service windows: one gives next-week rainfall forecasts, another provides historic rainfall tables, and another handles billing questions. At the forecast window, the staff member submits the farm location and dates on a standard form. The clerk checks the form, sends it to the forecasting system inside the building, and returns a printed forecast in a standard layout.",
+    "title": "The right counter at a railway station",
+    "story": "A railway station may have a ticket machine, an information desk and a lost-property counter. They belong to the same station, but each accepts a different kind of request and follows its own procedure. To buy a ticket, you use the ticket machine, enter the required journey details, provide an accepted form of payment and receive a ticket in a standard format. Taking the same request to the lost-property counter will not work, even though you are in the right building. The endpoint is the specific counter and procedure; the API is the wider set of counters and rules.",
     "mapping": [
       {
         "analogyElement": "Forecast service window",
@@ -85,27 +85,27 @@
     "reducedMotionDescription": "Show the same four boxes and arrows as a static horizontal flow, with a fixed side branch from the endpoint box to an error box. No animation; emphasis is shown with colour and line weight only."
   },
   "workedExample": {
-    "scenario": "A developer connects a rainfall advisory application for a farming cooperative to a text-generation service.",
-    "input": "POST request to /v1/responses with a short system instruction, the user text 'Summarise expected rainfall for Kisumu County for next 7 days in plain language', and a parameter limiting the reply to 120 tokens.",
+    "scenario": "A programme officer tests the drafting integration before circulating the side-event concept note under silence procedure.",
+    "input": "A POST request to the configured drafting endpoint. Its headers carry the content type and an access token, while its JSON body contains cleared, non-confidential background text and an instruction to produce a short summary.",
     "process": [
-      "The application sends the request to one specific endpoint for generating a response, not to the provider's billing or model-listing endpoints.",
-      "The endpoint checks the API key, confirms the JSON format is valid, and verifies the caller is within its rate limit.",
-      "The service routes the request to the selected hosted model and records usage.",
-      "It returns a JSON response containing the summary text, a success status, and usage metadata such as 78 input tokens and 96 output tokens."
+      "The form sends the request to the drafting endpoint, rather than to the service's usage or model-information endpoints.",
+      "The endpoint checks the access token, validates the request body against its schema and confirms that the caller is within the applicable rate limit.",
+      "If the request is authorised and valid, the service routes it to the hosted model and applies the configured logging and output controls.",
+      "The endpoint returns a structured response containing the draft, usage metadata and a success status. Invalid credentials or fields produce the defined error response instead."
     ],
-    "result": "The app parses the structured reply, displays the short rainfall summary, and logs the usage metadata for monitoring and cost tracking."
+    "result": "The form places the returned text in the concept note template. The programme officer reviews it for accuracy and tone before circulating the file. If the endpoint returns an authentication or schema error, the interface displays that error rather than treating it as an empty draft."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team wants to summarise open-text answers from a household assessment that was collected through an approved internal platform.",
-    "relevance": "The team may call an approved internal endpoint that accepts de-identified text and returns a structured summary, allowing the survey tool to automate one step while keeping logging, access control and monitoring consistent.",
-    "caution": "Do not send personal, confidential, protection-sensitive or otherwise unapproved assessment data to a public AI endpoint. Use only approved services, apply data minimisation, and keep human review in the loop before sharing outputs."
+    "scenario": "At close of business, a chief of section supporting a UN Country Team working group is clearing the concept note for a side event in the margins of the session. The programme officer has connected the drafting form to an approved internal AI service, but the form is returning an authentication error.",
+    "relevance": "The error concerns the endpoint, the precise network address and request method used for the drafting operation. The service may expose separate endpoints for drafting, usage information and other operations. Checking the drafting endpoint's required headers, credentials, request fields and error codes is more useful than saying vaguely that the AI is down.",
+    "caution": "Only the approved endpoint may be used. The concept note must not be sent to a public substitute when clearance is due, and confidential positions, personal contact details or access credentials must not be included in the request. Endpoint logs can retain request content, so data minimisation and the office's access and retention controls still apply."
   },
   "whyItMatters": "If you use or buy AI services, the requirements and behaviour of the service accessed at an endpoint are where cost, speed, security, reliability and governance often become visible. They affect what data format you must send, what authentication is required, what errors you must handle, which limits apply and sometimes where processing happens. For non-specialists, this matters when reviewing vendor claims, planning integrations, assessing privacy and data sovereignty risks, or debugging why a system works in testing but fails in production. Useful questions include: Which endpoint does this function use? What data leaves our system? What logs are kept? What happens if the service is unavailable or rate-limited?",
   "whereYouMayHearIt": [
-    "software integration meetings",
-    "cloud service documentation",
-    "AI vendor onboarding",
-    "incident and troubleshooting calls"
+    "An ICT governance board reviewing an integration architecture",
+    "A procurement unit's technical evaluation during an AI vendor demo",
+    "A service desk call after a drafting tool returns authentication errors",
+    "A design session before an application is uploaded to the portal"
   ],
   "commonMisconceptions": [
     {
@@ -125,7 +125,7 @@
     "simple": "Think of an endpoint as the exact service doorway your software uses for one job. You send a request in the required format, and you get back a reply in the required format.",
     "technical": "In web services, an endpoint is a concrete network-reachable interface for a specific operation, usually identified by a URL path and HTTP method such as POST /v1/responses. It is part of a larger API contract and defines how a client invokes that operation: expected headers, authentication scheme, request schema, response schema, status codes and error behaviour. In AI systems, an endpoint often sits in front of model hosting infrastructure and performs request validation, authorisation, rate limiting, routing, observability and billing before or after calling the underlying model service. The endpoint may expose synchronous or asynchronous behaviour, stream partial outputs, or proxy requests to region-specific backends for governance or performance reasons."
   },
-  "keyTakeaway": "An endpoint is a specific network entry point within an API. It is not the whole API, the deployment or the hosted model.",
+  "keyTakeaway": "An endpoint is the specific address and operation used to request one service function. It is not the whole API, the deployment or the hosted model.",
   "quickCheck": {
     "question": "Which statement best describes an API endpoint in an AI service?",
     "options": [
@@ -257,6 +257,20 @@
       "keyTakeaway",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:23:57.959Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Reworked the scenarios to provide a specific UN role, artefact and deadline; removed the invented country setting and numerical usage details; strengthened endpoint-specific security cautions; and replaced the farming analogy."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

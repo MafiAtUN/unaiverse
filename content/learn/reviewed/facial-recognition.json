@@ -32,8 +32,8 @@
   "oneSentence": "A computer vision method that compares face images or representations to estimate whether they show the same person.",
   "plainExplanation": "Facial recognition uses images or video that contain a human face as input. The system first tries to find where the face is in the picture. It then measures visible patterns such as the distances and shapes around the eyes, nose, mouth and jaw, or uses a trained model to turn the face into a compact numerical representation called an embedding.\n\nNext, it compares that representation with other stored face representations. In verification, it checks a claimed identity, such as “Is this the same person as in this passport photo?” In identification, it searches many records and returns the closest matches. These are different tasks, and they have different risks.\n\nThe output is usually not a certain answer. It is often a similarity score, a ranked list of possible matches, or a yes-or-no result based on a threshold. A threshold is a cut-off chosen by people or organisations: above it counts as a match, below it does not. Changing the threshold changes the balance between false matches and missed matches.\n\nPeople often confuse facial recognition with simply detecting that a face is present. Face detection only finds faces in an image. Facial recognition goes further by comparing one face with another or with a database. Measured performance can vary with image quality, lighting, age, pose, camera angle and the populations and conditions used for testing.",
   "everydayAnalogy": {
-    "title": "Checking conference badges against a photo board",
-    "story": "At an international conference in Nairobi, a staff member stands at the entrance with a board of badge photos. When a visitor arrives, the staff member does not read their biography. They quickly look at a few visible features, such as face shape, eye spacing and hairstyle, then compare those with the photos on the board. If one photo looks close enough, they may say it is probably the same person, but poor lighting, masks or an old photo can make that guess unreliable.",
+    "title": "Sorting family photographs",
+    "story": "Imagine comparing a new photograph with pictures in a family album. You might first look for one particular person, which resembles one-to-one verification. Or you might scan the whole album for the closest-looking face, which resembles one-to-many identification. A blurry image or an unusual angle can make the comparison less reliable. The standard for deciding that two faces look similar enough plays the role of the system’s threshold.",
     "mapping": [
       {
         "analogyElement": "The arriving visitor’s face",
@@ -91,29 +91,28 @@
     "reducedMotionDescription": "A static five-box flowchart shows the same process without animation: input image, face location, numerical representation, comparison with stored records, and result with score or threshold-based decision."
   },
   "workedExample": {
-    "scenario": "A phone unlock feature checks whether the current camera image matches its enrolled owner.",
-    "input": "Current face embedding compared with the enrolled embedding gives a similarity score of 0.87; the unlock threshold is set at 0.82.",
+    "scenario": "A phone uses one-to-one facial verification to decide whether the person holding it matches the enrolled owner.",
+    "input": "A face image from the front camera and the owner’s enrolled face template.",
     "process": [
-      "The front camera captures an image and finds one face.",
-      "The system converts the face into an embedding, a compact set of numbers.",
-      "It compares that embedding with the enrolled owner’s stored embedding.",
-      "Because 0.87 is above the threshold of 0.82, the system marks it as a likely match.",
-      "The phone unlocks, but the result still depends on image quality and threshold choice."
+      "The camera captures an image, and the system detects and aligns the face.",
+      "A trained model converts the detected face into an embedding, a compact numerical representation.",
+      "The system compares this embedding with the owner’s enrolled template and calculates a similarity score.",
+      "It applies the configured decision threshold. A score on the matching side of the threshold is accepted as a likely match.",
+      "The result can still be affected by lighting, camera angle, image quality and the chosen threshold."
     ],
-    "result": "The device accepts the face as matching the enrolled user for this attempt."
+    "result": "The phone accepts or rejects the attempt based on the similarity score. Acceptance means the images were sufficiently similar under the system’s rule, not that identity was established with certainty."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is reviewing a vendor proposal for a visitor access system that includes facial recognition at a building entrance.",
-    "relevance": "Staff need to understand that the system would compare live camera images with stored face records, and that choices about purpose, threshold, oversight, testing and legal basis affect error rates, fairness, privacy and accountability.",
-    "caution": "Do not upload staff, visitor, beneficiary, witness, survivor or other personal face images to an unapproved public AI service, and do not deploy such a system without approved data protection, human rights, security and procurement review."
+    "scenario": "During a staff town hall at an inter-agency secretariat, an internal auditor is asked whether a proposed lobby system can “confirm” every visitor’s identity. The front office wants a note for the file before close of business, ahead of the vendor demo.",
+    "relevance": "The note should distinguish one-to-one verification from a search across enrolled records. It should also make clear that the system compares face embeddings against a threshold, producing a similarity-based result rather than proof of identity. Testing must cover error rates, image conditions and performance across relevant groups.",
+    "caution": "Staff and visitor face images are sensitive personal data. They must not be uploaded to a public or otherwise unapproved tool, including for a quick vendor test. No deployment should proceed without the required privacy, human rights, security, legal and procurement reviews, clear purpose limits, retention controls and a process for challenging incorrect matches."
   },
   "whyItMatters": "Facial recognition matters because it can affect access, identity checks, policing, service delivery and surveillance. A non-specialist may be asked to buy it, regulate it, approve it, audit it or respond to its errors. To do that well, you need to know that it does not produce certainty, that verification and identification are different, and that performance can vary across settings and populations. You also need to recognise the governance questions around consent, necessity, proportionality, retention, oversight and remedies when mistakes happen.",
   "whereYouMayHearIt": [
-    "phone unlock features",
-    "airport or border e-gates",
-    "building access systems",
-    "law-enforcement or investigation tools",
-    "privacy and human-rights debates"
+    "A vendor demo during a procurement meeting",
+    "A staff town hall on new building-access arrangements",
+    "An audit closing meeting on access controls",
+    "A privacy review before a visitor system is cleared"
   ],
   "commonMisconceptions": [
     {
@@ -137,7 +136,7 @@
     "simple": "It takes a face image, turns it into numbers that represent visible patterns, and compares those numbers with stored ones to estimate a match.",
     "technical": "A typical pipeline first detects and aligns a face in an image, then uses a trained model to generate a feature vector, often called an embedding. Similarity between embeddings is measured with a distance or similarity function such as cosine similarity. In one-to-one verification, the system compares the probe image with one enrolled template for a claimed identity. In one-to-many identification, it searches a gallery of enrolled templates and returns top candidates. A decision threshold converts the similarity score into match or non-match, which creates a trade-off between false acceptances and false rejections. Real-world performance depends on image capture conditions, enrolment quality, demographic and environmental variation, and how the system was evaluated."
   },
-  "keyTakeaway": "Facial recognition compares face patterns and returns a similarity-based match result, not certain identity.",
+  "keyTakeaway": "Facial recognition compares numerical representations of faces. Its output is a threshold-based estimate of a match, not certain proof of identity.",
   "quickCheck": {
     "question": "Which description best fits facial recognition?",
     "options": [
@@ -251,6 +250,20 @@
       "plainExplanation",
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:21:22.164Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

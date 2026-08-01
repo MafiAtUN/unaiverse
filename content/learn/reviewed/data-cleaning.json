@@ -32,8 +32,8 @@
   "oneSentence": "The process of checking data, fixing problems, and putting it into a usable form for analysis or model training.",
   "plainExplanation": "Raw data often arrives messy. Some rows may be duplicated. Some values may be missing. Dates may use different formats. Text may contain spelling variations, extra spaces or irrelevant symbols. Data cleaning prepares that material so people or software can use it more reliably.\n\nThe input can be a table, documents, images, sensor readings or a mix of these. The work usually includes spotting errors, deciding what counts as an error, correcting what can be corrected, removing what should not be kept, and making formats consistent. For example, one column might use “Kenya”, another “kenya”, and another “KE”. Cleaning may standardise those into one agreed form.\n\nThe output is a cleaner dataset, not a perfect one. Some problems cannot be safely fixed, so they may be flagged instead. Good cleaning also records what was changed and why. That matters because later results depend on these choices.\n\nData cleaning is often confused with data labelling. Cleaning improves the quality and consistency of existing data. Labelling adds tags or categories, such as marking whether an image contains flood damage. In practice, the two can happen in the same project, but they are not the same task.",
   "everydayAnalogy": {
-    "title": "Preparing a shared library shelf",
-    "story": "A team in an office is building a shelf of reference documents so colleagues can quickly find the right guidance note. They discover duplicate copies, files with missing page numbers, titles written in different styles, and some outdated folders mixed in with current ones. Before opening the shelf to everyone, they remove exact duplicates, rename files in one format, separate uncertain items for review, and put the rest in the right order. The shelf is still not perfect, but it becomes far easier to search and trust.",
+    "title": "Tidying a phone contact list",
+    "story": "After changing phones, you find the same person listed twice, telephone numbers written in several formats, old numbers still marked as current and contacts with no email address. You merge entries only after checking that they refer to the same person, standardise the number format, mark obsolete numbers and leave unknown email addresses blank. Deleting every incomplete contact would make the list neater, but might remove someone you still need.",
     "mapping": [
       {
         "analogyElement": "duplicate copies on the shelf",
@@ -91,29 +91,28 @@
     "reducedMotionDescription": "A static five-step diagram with the same boxes and labels, no animation. Problem icons are connected by thin lines to the corresponding fixes and to the final cleaned dataset."
   },
   "workedExample": {
-    "scenario": "A knowledge base team wants to recommend policy documents based on topic and region.",
-    "input": "8 document records: 2 exact duplicates, 1 missing publication year, region names written as “West Africa”, “west-africa” and “W. Africa”, and 1 outdated draft that should not be recommended.",
+    "scenario": "An information management officer in a regional bureau is preparing monitoring reports for upload to the portal before the weekly search index is refreshed.",
+    "input": "The metadata export contains exact duplicate records, inconsistent region labels, dates stored in different formats, blank publication years and one superseded draft.",
     "process": [
-      "The team reviews the records and lists the issues: duplicates, one missing year, inconsistent region names and one obsolete document.",
-      "They remove the 2 exact duplicates and exclude the outdated draft from the recommendation set.",
-      "They standardise all region names to one form: “West Africa”.",
-      "They keep the document with the missing year but mark the year field as unknown rather than guessing.",
-      "They save a short log of the changes so others can see what was removed, changed or flagged."
+      "The officer defines the cleaning rules for the intended search function and preserves an unchanged copy of the export.",
+      "Exact duplicates are identified using document identifiers and removed. Records with similar titles are retained for review rather than treated as duplicates automatically.",
+      "Region labels are mapped to the portal's controlled list, and valid dates are converted to a common format.",
+      "Blank publication years are marked as unknown rather than filled with a default. The superseded draft is excluded after its status is confirmed against the file.",
+      "The officer validates the allowed categories, checks a sample against the source reports and saves a log of every removal, conversion and unresolved issue."
     ],
-    "result": "The final recommendation set has 5 usable records with consistent region names, no exact duplicates and one clearly flagged missing value."
+    "result": "The portal receives consistent, searchable metadata with confirmed duplicates removed, the superseded draft excluded and missing values clearly distinguished from errors."
   },
   "unWorkplaceExample": {
-    "scenario": "After a disaster, a UN team is preparing satellite image metadata and damage-assessment tables before analysing patterns across districts.",
-    "relevance": "Cleaning helps ensure location names, dates, image identifiers and damage categories use consistent formats so later analysis is less misleading and easier to audit.",
-    "caution": "Do not upload unapproved operational, security-sensitive or protection-sensitive information to a public AI service for cleaning; use approved tools and keep human review over any removals or corrections."
+    "scenario": "A duty officer staffing an inter-agency secretariat is assembling talking points for informals the next morning. Inputs have arrived in several spreadsheets, with agencies named in different ways, repeated rows, dates in mixed formats and blank status fields.",
+    "relevance": "Cleaning aligns names and date formats, removes confirmed duplicates and marks missing values without guessing. This reduces the risk that the talking points repeat one update or present a formatting difference as a substantive disagreement.",
+    "caution": "Uncirculated agency inputs and internal comments must not be pasted into a public or otherwise unapproved AI tool. Use an approved environment, retain the source files and a change log, and ask the relevant focal point to confirm any correction that could alter the substance."
   },
   "whyItMatters": "Poor-quality data can produce poor analysis, weak search results and misleading model behaviour. A small format problem can split one group into several false categories. Duplicate records can make something look more common than it is. Missing values can hide important gaps. For non-specialists, the key point is this: results do not only depend on the model or chart. They also depend on how the data was prepared. Asking how data was cleaned is part of checking whether a result is trustworthy, fair for its purpose and worth acting on.",
   "whereYouMayHearIt": [
-    "before training a model",
-    "during dashboard development",
-    "in database migration work",
-    "when preparing survey results",
-    "in search and recommendation projects"
+    "At a vendor demo, when someone asks how the tool handles duplicate and missing records",
+    "In an inter-agency working group before survey results are circulated",
+    "During clearance of a dashboard whose figures do not reconcile with the source file",
+    "At a handover before the next situation report is produced"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "It is the work of making messy data usable by fixing obvious problems, making formats consistent and marking anything uncertain.",
     "technical": "Data cleaning is a preprocessing stage that improves data quality before analysis, search or model training. Typical operations include deduplication, schema alignment, type conversion, normalisation of formats, handling missing values, filtering irrelevant records, resolving obvious inconsistencies and validating ranges or categories. The exact rules depend on the intended use. For example, replacing missing values with defaults may help one workflow and distort another. Cleaning may be manual, scripted or mixed. It is usually paired with documentation so others can audit what was changed, dropped or flagged. It differs from annotation, which adds labels, and from sampling, which changes which records are included rather than primarily improving their consistency."
   },
-  "keyTakeaway": "Better results often start before the model: if the data is messy, cleaning it carefully can matter as much as the analysis itself.",
+  "keyTakeaway": "Data cleaning is not simply tidying. The rules must fit the intended use, preserve traceability and avoid turning missing or uncertain data into invented certainty.",
   "quickCheck": {
     "question": "Which example best fits data cleaning?",
     "options": [
@@ -249,6 +248,20 @@
     "applied": [
       "oneSentence"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:22:47.497Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

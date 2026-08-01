@@ -83,27 +83,27 @@
     "reducedMotionDescription": "A static three-panel comparison replaces animation. Each panel shows the full path as fixed arrows: many short arrows for a small learning rate, a few medium arrows for a balanced learning rate, and long crossing arrows for a too-large learning rate."
   },
   "workedExample": {
-    "scenario": "Training a simple text classifier to label consultation comments as transport or health.",
-    "input": "Current parameter weight = 0.80, gradient for that weight = 0.50, using the update rule new weight = old weight minus learning rate times gradient.",
+    "scenario": "In an approved test environment, a data specialist trains a simple classifier to route synthetic application summaries for manual eligibility review.",
+    "input": "One parameter has a current value of 0.80 and a gradient of 0.50. The update rule is: new value = old value minus learning rate × gradient.",
     "process": [
-      "With a learning rate of 0.01, the update is 0.01 × 0.50 = 0.005, so the new weight becomes 0.795.",
-      "With a learning rate of 0.1, the update is 0.1 × 0.50 = 0.05, so the new weight becomes 0.75.",
-      "With a learning rate of 1.2, the update is 1.2 × 0.50 = 0.60, so the new weight becomes 0.20, a much bigger jump.",
-      "If that large jump moves the model past a better region, the next gradient may reverse direction and cause oscillation rather than steady improvement."
+      "At a learning rate of 0.01, the update is 0.005, giving a new parameter value of 0.795. Progress may be steady but slow.",
+      "At a learning rate of 0.1, the update is 0.05, giving a new value of 0.75. This is a larger step in the gradient direction.",
+      "At a learning rate of 1.2, the update is 0.60, giving a new value of 0.20. Such a large step may pass a lower-loss region.",
+      "If later gradients reverse direction after repeated overshooting, the loss may oscillate instead of converging steadily."
     ],
-    "result": "The same gradient can produce slow learning, useful progress or unstable behaviour depending on the chosen learning rate."
+    "result": "The gradient is unchanged, but the learning rate determines the size of the update. A suitable value supports stable convergence; one that is too small slows training, while one that is too large can make it unstable."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is training an internal classifier to route incoming feedback into broad topics for staff review, using an approved secure environment and non-sensitive training data or properly governed de-identified data.",
-    "relevance": "The learning rate affects whether retraining finishes efficiently and whether quality improves steadily enough for safe human-reviewed deployment.",
-    "caution": "Do not upload confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service to test learning-rate settings."
+    "scenario": "A budget officer in a specialised agency technical division is supporting the review of a long list of consultant applications against an approved roster profile. A data specialist tests several learning rates while retraining an internal classifier on synthetic examples before the shortlist is sent to the chief of section.",
+    "relevance": "If the learning rate is too low, training may not converge in time to support the review. If it is too high, the loss may jump or oscillate, leaving performance unstable. The setting affects training behaviour, not whether the resulting classifier is fair, accurate or suitable for screening.",
+    "caution": "Real applications contain personal and HR-sensitive information. They must not be entered into a public or otherwise unapproved AI tool for tuning or testing. Any approved classifier should support documented human review, not determine eligibility or shortlisting on its own."
   },
   "whyItMatters": "Learning rate strongly affects cost, speed and reliability. If it is poorly chosen, a project may waste compute, miss deadlines or produce a model that appears to train but never becomes stable enough for trustworthy use.",
   "whereYouMayHearIt": [
-    "model training settings",
-    "optimiser configuration",
-    "hyperparameter tuning",
-    "deep learning tutorials"
+    "A vendor demo to an ICT governance board",
+    "A technical review before an internal model is cleared for testing",
+    "A progress meeting with the data specialist retraining a classifier",
+    "A procurement unit's discussion of model-training requirements"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +127,7 @@
     "simple": "It is the dial that controls how big each training adjustment should be after the model makes mistakes.",
     "technical": "In iterative optimisation, the learning rate is a hyperparameter that scales the gradient-based parameter update, such as θ_new = θ_old − η∇L, where η sets the step size and strongly affects convergence behaviour."
   },
-  "keyTakeaway": "A useful learning rate is not the biggest one; it is the one that lowers loss steadily without wild overshooting.",
+  "keyTakeaway": "The learning rate scales each error-based update. Too low can make training impractically slow; too high can overshoot useful parameter values and prevent stable convergence.",
   "quickCheck": {
     "question": "What is the main role of the learning rate during training?",
     "options": [
@@ -263,6 +263,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:28.705Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

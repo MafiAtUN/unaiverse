@@ -33,8 +33,8 @@
   "oneSentence": "A multi-agent system contains multiple software agents that interact, directly or through a control layer, while carrying out a shared or related task.",
   "plainExplanation": "A multi-agent system is a setup where more than one software agent interacts while working on a shared or related task. An agent is a software component that uses its current state, instructions and available tools to select and carry out actions with some autonomy. Instead of one agent handling all decisions and actions, several agents can take different roles.\n\nWhat goes in can be a user request, a queue of tasks, data from tools or rules about what each agent may do. Then the agents interact directly or through a control layer. One may plan the job, another may retrieve documents, another may compare answers, and another may check quality or ask for human review. They may share messages, partial results or a short record of what has already happened.\n\nWhat comes out is not just one reply. It can be a drafted report, a ranked list of documents, a set of actions taken through tools, or a recommendation for a human to approve. The benefit is that specialised parts can work in parallel or cross-check each other. The risk is that coordination errors can spread quickly if the design is weak.\n\nThis is often confused with orchestration. Orchestration is the control layer that routes tasks and manages order. A multi-agent system is the wider arrangement of multiple interacting agents. It may include orchestration, but it is not only that control layer.\n\nIt is also different from a workflow. A workflow defines steps that move work from input to result and may include people, ordinary software or agents. A fixed sequence does not become a multi-agent system merely because it contains several steps or components.\n\nA single chatbot or assistant with many features is not automatically a multi-agent system. The key idea is multiple agents that can select actions within their roles and interact to carry out shared or related work.",
   "everydayAnalogy": {
-    "title": "A document search team in a library",
-    "story": "Imagine a team in a large library helping someone find past statements on coastal protection. One person turns the request into search terms, a second searches the catalogue, a third reads the most relevant pages, and a fourth checks whether the passages really match the topic and date. They pass notes to each other instead of each person doing the full job alone. At the end, the requester receives a short pack of verified excerpts and a note about anything uncertain.",
+    "title": "Preparing dinner together",
+    "story": "Imagine several people preparing dinner. One reads the recipes and sequences the tasks, one prepares ingredients, one uses the oven, and another checks that the dishes will be ready together. They exchange updates because a delay in one task changes what others should do. The arrangement works only when roles and hand-offs are clear: otherwise, two people may prepare the same dish while nobody starts another. A multi-agent system is similar, except the participants are software agents, their tools and permissions may differ, and a controller may assign and combine the work.",
     "mapping": [
       {
         "analogyElement": "person turning the request into search terms",
@@ -92,29 +92,28 @@
     "reducedMotionDescription": "A static flowchart with the same boxes and arrows, without animation. Parallel work is shown by three side-by-side agent boxes between the coordinator and the checker."
   },
   "workedExample": {
-    "scenario": "A research team asks a system: 'Find language on plastic pollution from 2019 to 2023 resolutions, and group it into prevention, waste management and international cooperation.'",
-    "input": "Find relevant passages from 2019-2023 resolutions on plastic pollution. Return grouped excerpts with document IDs and flag uncertain matches.",
+    "scenario": "An evaluation officer uses an approved multi-agent workspace to check whether three language versions of draft terms of reference remain aligned before the clearance file goes forward.",
+    "input": "Compare the three versions for missing sections, inconsistent scope, differing dates or deliverables, and terminology that may alter meaning. Produce an issues log with passage references. Do not edit the drafts.",
     "process": [
-      "A planning agent turns the request into sub-tasks: date filter, topic filter and output structure.",
-      "A search agent queries a document store and returns 18 candidate paragraphs from 7 resolutions.",
-      "An analysis agent labels the 18 paragraphs into three themes and removes 5 that mention pollution generally but not plastics.",
-      "A verification agent checks dates, document IDs and whether each excerpt actually contains language on the requested theme.",
-      "The coordinator compiles 13 validated excerpts into a table and flags 2 borderline cases for human review."
+      "A coordinator agent separates the request into structural, cross-language and consistency checks, then assigns each check to an agent with the relevant instructions and access.",
+      "A structure agent compares each version with the office's required headings and reports omissions or sections appearing in only one version.",
+      "A terminology agent compares defined terms, responsibilities and deliverables across the versions, marking differences that could change the intended scope.",
+      "A critic agent checks each finding against the source passages, rejects unsupported claims and flags cases where language expertise is needed.",
+      "The coordinator removes duplicate findings and assembles the verified items into one issues log for the evaluation officer."
     ],
-    "result": "The team receives a table with 13 excerpts, grouped under prevention, waste management and international cooperation, each with a resolution ID and year. Two of the 13 are marked as borderline and need human checking."
+    "result": "The officer receives a consolidated issues log rather than three separate machine reviews. Each item identifies the relevant versions and passages, distinguishes likely inconsistencies from uncertain cases, and leaves all changes and clearance decisions to staff."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team wants to search past resolutions for prior agreed language on a negotiation topic. One agent drafts search terms, another searches an approved internal repository, and a third compares the results against the requested date range and subject labels before producing a shortlist for staff review.",
-    "relevance": "This can save time when staff need broad coverage across many documents, while keeping a clear division between searching, checking and final human judgement.",
-    "caution": "Use only approved internal systems and repositories. Do not place confidential, unpublished, negotiation-sensitive or access-restricted material into an unapproved public AI service, and do not rely on the shortlist without human verification."
+    "scenario": "At a duty station working in three languages, an evaluation officer is preparing terms of reference for clearance on Friday. In an approved workspace, a coordinator agent assigns one agent to check required sections, another to compare scope and terminology across the language versions, and a third to challenge inconsistencies. It then returns a single issues log, linked to the relevant passages, for the officer to resolve before sending the file to the front office.",
+    "relevance": "The example shows a centralised multi-agent pattern: agents with different instructions perform separate checks, while a coordinator assigns work and combines their findings. This can make a complex review more systematic without treating any agent's output as the final judgement.",
+    "caution": "Do not upload unpublished terms of reference to an external tool that has not been approved for them. If a draft contains personal, confidential or procurement-sensitive material, it must remain in a system approved for that material, with appropriate access controls. Automated comparison is not language review or clearance, and every proposed correction requires human verification."
   },
   "whyItMatters": "For non-specialists, the key issue is not whether the system sounds impressive. It is whether work is being split across components in a way that improves coverage, speed or checking, or whether it simply adds complexity and risk. Multi-agent systems can help with large, messy tasks by assigning different roles, running parts in parallel and comparing outputs. But they can also make responsibility harder to trace. If several agents pass errors to each other, a mistake may look well supported when it is not. In procurement, governance and risk review, you may need to ask: Which agent can access which tools? Who checks final outputs? What triggers human oversight? What logs exist? Those questions affect reliability, accountability, privacy and security more than the label alone.",
   "whereYouMayHearIt": [
-    "agentic AI product demos",
-    "enterprise automation design",
-    "document search and analysis systems",
-    "research tooling discussions",
-    "AI governance reviews"
+    "During a vendor demonstration to an information technology governance board",
+    "In a workflow design session between a programme officer and a technology focal point",
+    "At a risk review before an automated research tool is cleared for use",
+    "During a procurement unit's technical evaluation of an automation platform"
   ],
   "commonMisconceptions": [
     {
@@ -134,7 +133,7 @@
     "simple": "It is like assigning a team instead of one worker: one part searches, another checks, another organises, and their pieces are combined into one result.",
     "technical": "A multi-agent system is a software architecture in which multiple agents, often backed by language models and tool connectors, pursue a shared or related objective through coordination. Agents may have distinct prompts, memory scopes, permissions, APIs, planning strategies or tool sets. Coordination can be centralised, such as a planner assigning sub-tasks, or more distributed, with agents exchanging messages or negotiating task ownership. Typical patterns include planner-worker, researcher-critic, retrieval-analysis-verification and debate-style checking. Inputs may include a user goal, environment state, policies and tool outputs. During execution, agents perform observation and action cycles: they inspect context, call tools, generate intermediate artefacts and hand off results. The system may maintain shared state, per-agent state or both. The main engineering challenges are task decomposition, communication protocol, conflict resolution, error propagation, latency, cost, traceability and human oversight. In practice, a multi-agent system may outperform a single agent on tasks that benefit from specialisation or parallelism, but it can also underperform if coordination overhead outweighs the benefit."
   },
-  "keyTakeaway": "A multi-agent system can divide work and add checks, but only if coordination, permissions and human oversight are designed carefully.",
+  "keyTakeaway": "A multi-agent system divides related work among interacting agents. The benefit comes from clear task ownership, controlled permissions and reliable hand-offs, not simply from adding more agents.",
   "quickCheck": {
     "question": "Which description best fits a multi-agent system?",
     "options": [
@@ -255,6 +254,20 @@
       "workedExampleResult",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:10.994Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

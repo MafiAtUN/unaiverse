@@ -86,28 +86,27 @@
     "reducedMotionDescription": "A static four-panel diagram replaces animation. Panel one shows the larger high-precision model. Panel two shows the chosen target format. Panel three shows values grouped into fewer levels with scale information. Panel four shows the smaller quantised model with notes on faster inference and possible quality trade-off."
   },
   "workedExample": {
-    "scenario": "A team has a 7 billion parameter language model stored in 16-bit format and wants to run it on a single smaller GPU for internal testing.",
-    "input": "Original model weights in 16-bit precision; target format: 8-bit weight quantisation.",
+    "scenario": "Before a vendor demonstration to the ICT governance board, an information management officer tests whether a locally hosted model that tags paragraphs in cleared monitoring reports can run on the approved office server.",
+    "input": "Model weights stored in FP16, a representative set of cleared monitoring-report extracts, and a target of INT8 weight quantisation.",
     "process": [
-      "Estimate memory for weights: 7 billion parameters × 2 bytes each is about 14 GB before other runtime overheads.",
-      "Convert the stored weights to 8-bit form, which uses about 1 byte per parameter, plus a smaller amount of extra scale data.",
-      "Load the quantised model and run a small evaluation set, such as 200 prompt-response checks for summary quality and factual consistency.",
-      "Compare results: memory drops to roughly 7 to 8 GB for weights plus overhead, throughput improves on the target hardware, and evaluation scores fall slightly but remain acceptable for the use case."
+      "Run the original model on the test extracts and record its memory use, processing time and tagging accuracy as the baseline.",
+      "For each channel or group of weights, map the original values to discrete 8-bit levels using a scale and, where required, a zero-point.",
+      "Store the quantised values with their scale metadata. At runtime, the system uses these lower-precision values while carrying out the model’s calculations.",
+      "Run the same extracts through the quantised build and compare memory use, processing time and tagging errors, paying particular attention to rare categories and borderline paragraphs."
     ],
-    "result": "The model now fits on the target machine and serves requests faster, but the team documents a modest quality drop and keeps the original checkpoint for cases where maximum quality matters."
+    "result": "If the smaller build fits the server and its measured quality loss remains within the pilot’s agreed threshold, the officer can recommend it for testing. The original checkpoint is retained because quantisation changes numerical representation, not the model’s underlying task, and some outputs may still degrade."
   },
   "unWorkplaceExample": {
-    "scenario": "A country office wants to use a locally hosted language model to help triage a shared general enquiries inbox by drafting category labels such as procurement, visas, events, or publications.",
-    "relevance": "Quantisation may let the office run the model on approved local hardware with lower cost and faster response, instead of needing larger infrastructure. That can make pilot testing feasible while preserving human review of every label.",
-    "caution": "Do not place personal data, case details, protection-sensitive messages, or other confidential information into an unapproved public AI service. If the inbox contains such content, use only approved systems, minimise data exposure, and keep human oversight because lower-precision models can misclassify edge cases."
+    "scenario": "At a multilingual duty station, a legal officer is completing clearance of a situation report for the evening regional bulletin. An approved, locally hosted model checks whether key legal terms have been rendered consistently across the three language versions, but the full-precision model exceeds the available memory.",
+    "relevance": "Quantising the model may allow it to run on the approved workstation rather than larger infrastructure. The legal officer still needs to compare the quantised build with the full-precision version, particularly on uncommon terminology, because small numerical changes can produce different wording or missed inconsistencies.",
+    "caution": "Quantisation does not anonymise information or make a model safe for sensitive material. Witness names, protection case details, security-sensitive annexes and other confidential content must not be entered into any tool not approved for that material. The officer must review every suggestion before clearance, especially across language versions."
   },
   "whyItMatters": "Quantisation matters because it changes whether a model is practical to deploy at all. A model that is too large or slow in its original form may become usable on cheaper or more available hardware after quantisation. For a manager or technical lead, this affects cost, latency, energy use, device choice, and whether a system can run locally rather than sending data elsewhere. But it also affects risk: if quality drops on rare languages, long prompts, or safety checks, a cheaper deployment may create hidden failures. The important decision is not whether quantisation is good or bad in general, but whether the speed and memory gains are worth the measured quality loss for a specific task and operating environment.",
   "whereYouMayHearIt": [
-    "model deployment discussions",
-    "edge device optimisation",
-    "GPU memory troubleshooting",
-    "open model release notes",
-    "inference benchmarking"
+    "An ICT governance board reviewing whether a model will fit approved local hardware",
+    "A procurement unit’s vendor demonstration when memory and latency claims reach the slide deck",
+    "A country office pilot review comparing full-precision and quantised builds",
+    "A technical clearance meeting before a locally hosted model enters testing"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +130,7 @@
     "simple": "Think of it as packing a model's numbers into a more compact form. The model often becomes cheaper and faster to run, but some precision is lost, so performance should be checked.",
     "technical": "Quantisation converts model parameters, and sometimes activations, from higher-precision representations such as FP32 or FP16 into lower-precision forms such as INT8, 4-bit, or mixed formats. The usual mechanism is to map a continuous or high-resolution value range into a smaller discrete set using a scale and sometimes a zero-point. This can be done per tensor, per channel, or per group, with symmetric or asymmetric schemes. Post-training quantisation applies this after training, often using calibration data to estimate activation ranges. Quantisation-aware training simulates low-precision effects during training so the model learns to tolerate them. Runtime efficiency depends on whether the hardware and kernels actually support the chosen format; otherwise memory may shrink without full speed gains. In large language models, people often distinguish weight-only quantisation from schemes that also quantise activations and key-value cache data. Accuracy effects are uneven: some layers and outlier values are more sensitive, so practical systems may leave selected parts in higher precision."
   },
-  "keyTakeaway": "Quantisation usually does not teach a model anything new; it repackages its numbers so the model is smaller and often faster, with a quality trade-off that must be measured.",
+  "keyTakeaway": "Quantisation does not teach a model new capabilities. It stores and often runs the model with lower-precision numbers, reducing memory use and sometimes improving speed, at the risk of measurable quality loss.",
   "quickCheck": {
     "question": "Which statement best describes quantisation in common model deployment practice?",
     "options": [
@@ -236,6 +235,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:55.322Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

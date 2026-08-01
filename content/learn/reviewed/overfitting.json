@@ -33,8 +33,8 @@
   "oneSentence": "A model fits its training examples so closely that its performance drops on new cases.",
   "plainExplanation": "A machine-learning model learns patterns from examples. The goal is not to repeat those examples perfectly, but to work well on new cases it has not seen before. That ability is called generalisation.\n\nOverfitting happens when the model locks onto details that do not hold up outside the training data. These details can include noise, accidental quirks, or patterns that only appear in one dataset. The model may score very highly during training but do worse in real use.\n\nWhat goes in is a set of past examples, such as satellite images labelled \"damaged road\" or \"not damaged road\". During training, the model adjusts itself to match those labels. If it adjusts too closely, it may learn irrelevant clues, such as a certain image border, season, or camera source, instead of the road damage itself.\n\nWhat comes out is a misleading picture of quality: strong results on familiar data, weaker results on new data. This is why people compare performance on separate validation or test sets, not only on the data used for training. Overfitting is different from data leakage, where information that would not be available at prediction time slips into training or testing.",
   "everydayAnalogy": {
-    "title": "Studying last year's exact test paper",
-    "story": "A student in Nairobi prepares for an exam by memorising last year's paper line by line, including the order of questions and even where the diagrams sat on the page. On practice with that same paper, the student gets almost everything right. On the real exam, the topic is similar but the questions are phrased differently, so the score drops sharply. The student learned the specific paper too closely instead of learning the broader subject.",
+    "title": "Recognising the carpet, not the dog",
+    "story": "Someone learns to identify a dog from dozens of photographs taken in the same living room. They appear to be excellent at the task, but most photographs include the same striped carpet. When shown new pictures of the dog outdoors, they struggle because they had partly learnt to recognise the carpet rather than the animal. The familiar background was useful for the old photographs but did not generalise to new ones.",
     "mapping": [
       {
         "analogyElement": "memorising one old test paper",
@@ -88,27 +88,27 @@
     "component": "overfitting"
   },
   "workedExample": {
-    "scenario": "A team builds a model to recognise damaged roads in satellite images after floods.",
-    "input": "1,200 labelled images for training and 300 separate images for validation.",
+    "scenario": "A programme officer in a regional bureau assesses a model that routes incoming progress reports to review queues before the weekly portfolio meeting.",
+    "input": "Historical progress reports prepared with an older template for training, and a separate set of more recent reports using revised formats for validation.",
     "process": [
-      "They train a simple model and get 78% accuracy on training images and 75% on validation images.",
-      "They increase the model size and train longer; training accuracy rises to 96% and validation accuracy rises to 82%.",
-      "They increase size again and keep training; training accuracy reaches 99%.",
-      "Validation accuracy falls to 68%, and many wrong predictions come from images with a particular cloud-shadow pattern that happened to appear often in the training set."
+      "As the model is trained, its error on the historical reports becomes very low.",
+      "At first, its error on the separate reports also falls, suggesting that it is learning useful features.",
+      "With further training, error on the historical reports continues to fall, but error on the separate reports begins to rise.",
+      "Review shows that the model has relied on old page headers and table positions rather than the substantive content used to choose a review queue."
     ],
-    "result": "The final, most complex model is overfitted: it looks excellent on training data but performs worse on new images than a simpler earlier version."
+    "result": "The later version is overfitted. It performs better on the reports it learnt from but worse on new reports. The programme officer retains the earlier version, which generalises more reliably across formats."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team explores a model to sort incoming public reports into categories such as infrastructure damage, health service disruption, or other needs.",
-    "relevance": "Overfitting matters because a model may appear strong during development but fail when reports come from a new region, language variety, season, or reporting channel. Testing on separate data from different contexts helps reveal whether performance will hold up.",
-    "caution": "Do not place confidential, personal, protection-sensitive, survivor, witness, security-sensitive, or operational information into an unapproved public AI service. Use approved tools, minimise data, and keep human review in the loop before acting on outputs."
+    "scenario": "During a records retention review, a legal officer in a UN Country Team working group examines a model that assigns files to retention categories. Its results are nearly perfect on the shared-drive records used for training, but deteriorate on newer files from other offices, just as a note for the file is due for clearance by close of business.",
+    "relevance": "The model may have learnt filename conventions, templates and folder structures peculiar to the training records rather than features that indicate the correct retention category. Testing it on records from other offices and periods shows whether those patterns generalise.",
+    "caution": "Records may contain personal, human resources, procurement-sensitive or security-sensitive material. They must not be uploaded to a tool that has not been approved for such material. The model must not make retention or deletion decisions on its own, since an error could destroy an official record prematurely or retain sensitive information beyond the authorised period."
   },
   "whyItMatters": "A good-looking score can lead people to trust a system that will fail in new situations. That can waste money, miss real problems, and create unfair or unsafe decisions if the model is deployed without proper evaluation.",
   "whereYouMayHearIt": [
-    "model evaluation meetings",
-    "data science courses",
-    "vendor product demos",
-    "risk and assurance reviews"
+    "At an ICT governance board reviewing a pilot whose training results are much stronger than its validation results",
+    "In a procurement meeting when a vendor demo relies on examples used during model development",
+    "At a regional bureau portfolio meeting after performance drops on the latest reporting cycle",
+    "During first reading of an evaluation report comparing results on training and unseen data"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +132,7 @@
     "simple": "It learned the practice examples too specifically, so it does not cope well with fresh ones.",
     "technical": "Overfitting occurs when a model has low error on training data but higher error on unseen data because it captures noise or sample-specific patterns rather than signals that generalise."
   },
-  "keyTakeaway": "The best model is not the one that remembers the training set best, but the one that holds up on new data.",
+  "keyTakeaway": "Excellent results on training examples do not prove that a model will work on new cases. Prefer the model that performs reliably on genuinely unseen data.",
   "quickCheck": {
     "question": "Which result most strongly suggests overfitting?",
     "options": [
@@ -266,6 +266,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:33.424Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

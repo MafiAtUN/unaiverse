@@ -30,8 +30,8 @@
   "oneSentence": "A model misses important patterns because it is too simple, too constrained, or too weakly trained for the task.",
   "plainExplanation": "A machine learning model takes input data, such as past examples with labels, and tries to learn a pattern that can be used on new cases. Underfitting happens when the pattern it learns is too crude to capture what really matters in the data.\n\nWhat goes in can be training data, chosen features, and model settings such as model size or training time. What happens is that the model fails to learn enough structure. This may occur because the model form is too simple, the useful inputs were left out, the regularisation is too strong, or training stopped too early.\n\nWhat comes out is poor performance even on the training data, not only on new test data. That is a key clue. If a system cannot do well on examples it has already been shown, it may be underfitting rather than overfitting.\n\nUnderfitting is often confused with overfitting. They are different. Overfitting means the model matches the training data too closely and then fails on new data. Underfitting means it does not capture enough signal in the first place. Both reduce generalisation, but for opposite reasons.",
   "everydayAnalogy": {
-    "title": "Searching policy documents with only one keyword",
-    "story": "A team member needs to find all policy documents about school meals in several countries. They set up a search tool that only looks for the exact word \"lunch\" and ignores phrases such as \"school feeding\", \"midday meal\", or translated terms. The tool runs quickly, but it misses many relevant documents, including some in reports from Kenya, Brazil, and Nepal. Even in the small set of documents the team used to test the search, the tool already performs badly.",
+    "title": "Predicting journey time from distance alone",
+    "story": "Suppose you estimate every journey using only the distance. The rule ignores traffic, road type, weather and time of day, so it gives poor estimates even for journeys you have already observed. Adding relevant information and allowing a more flexible rule can capture patterns that distance alone misses.",
     "mapping": [
       {
         "analogyElement": "Search tool using only the exact word \"lunch\"",
@@ -80,28 +80,27 @@
     "reducedMotionDescription": "A static three-panel comparison shows the same data with an underfit straight line, a well-fit smooth curve, and an overfit wavy curve, plus text labels for training and test error under each panel."
   },
   "workedExample": {
-    "scenario": "A team builds a classifier to label incoming messages as 'needs follow-up' or 'no follow-up' using only message length and whether the word 'urgent' appears.",
-    "input": "Training set: 1,000 labelled messages. Model: very simple logistic regression with just 2 features.",
+    "scenario": "A liaison office tests a model to flag implementing partner progress reports that require follow-up before clearance. The first version considers only whether a report was late and how long it is.",
+    "input": "Labelled past reports are divided into training and validation sets. The initial model has two features and is strongly constrained.",
     "process": [
-      "On the training data, the model gets 62% accuracy because many follow-up messages do not contain the word 'urgent' and are not unusually long.",
-      "On a validation set of 300 new messages, accuracy is 60%, which is similarly weak rather than sharply worse.",
-      "The team adds features such as sender type, topic keywords, and previous thread activity, and trains a less constrained model.",
-      "The revised model reaches 81% on training data and 79% on validation data, suggesting the earlier version was underfitting."
+      "The model makes many errors on the training set because timely or concise reports can still contain unresolved delivery, access or procurement issues.",
+      "Validation error is also high and broadly similar to training error. The problem is not a large gap between the two sets, but weak performance on both.",
+      "The duty officer and programme officer identify additional relevant features, including repeated output slippage, unexplained activity changes and outstanding follow-up points.",
+      "After retraining with the richer features and suitable model capacity, error falls on both the training and validation sets. The office then checks performance across report types before considering operational use."
     ],
-    "result": "The first model was too simple for the task: poor performance appeared on both training and validation data, which is a common sign of underfitting."
+    "result": "The initial model was underfitting. Its features and effective complexity were insufficient to learn the target pattern, so it performed poorly even on the material from which it was trained."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team reviews programme monitoring data to flag projects that may need management attention. An initial model uses only total budget and reporting delay, but misses many cases where contextual indicators matter, such as access constraints or repeated procurement issues.",
-    "relevance": "This shows how a model can look tidy and easy to explain yet still be too simple to support reliable operational triage.",
-    "caution": "Do not upload personal, protection-sensitive, confidential, or security-sensitive programme data to an unapproved public AI service when testing or improving such models; use approved systems and human oversight."
+    "scenario": "At close of business, a duty officer in a liaison office reviews an implementing partner's progress report for the front office. A triage model uses only submission delay and report length to flag files needing follow-up. It misses reports showing repeated output slippage, unexplained revisions to activities and unresolved procurement issues.",
+    "relevance": "The model is easy to describe, but its limited features cannot capture the patterns that drive follow-up. If it performs poorly on both the reports used for training and a separate validation set, underfitting is a likely diagnosis.",
+    "caution": "Progress reports may contain personal, confidential or procurement-sensitive material. They must not be entered into an external tool that has not been approved for that material. Testing should use an approved environment, appropriate access controls and human review before any flag reaches the front office."
   },
   "whyItMatters": "A model that underfits can look safe because it is simple, but it can still mislead decisions by missing important patterns and producing consistently weak results.",
   "whereYouMayHearIt": [
-    "model evaluation meeting",
-    "training diagnostics",
-    "baseline comparison",
-    "machine learning course",
-    "error analysis discussion"
+    "A model evaluation meeting before a pilot is cleared",
+    "A vendor demo in a procurement meeting",
+    "A review of validation results with the information management officer",
+    "An ICT governance board discussion on model performance"
   ],
   "commonMisconceptions": [
     {
@@ -121,7 +120,7 @@
     "simple": "The system is too basic for the job, so it misses real patterns and performs badly even on examples it has already seen.",
     "technical": "Underfitting occurs when model capacity, features, training, or effective complexity after regularisation is insufficient to capture the target pattern, raising error on training and validation data and sometimes reflecting high statistical bias."
   },
-  "keyTakeaway": "If a model does badly even on its training examples, it may be too simple rather than too smart.",
+  "keyTakeaway": "High error on both training and validation data often points to underfitting: the model may need better features, greater capacity, more effective training or less restrictive regularisation.",
   "quickCheck": {
     "question": "Which pattern most strongly suggests underfitting?",
     "options": [
@@ -230,6 +229,20 @@
     "applied": [
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:27.439Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced generic actors and invented performance figures with a specific liaison-office workflow and qualitative evaluation results."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

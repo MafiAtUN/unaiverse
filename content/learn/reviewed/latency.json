@@ -85,28 +85,27 @@
     "reducedMotionDescription": "A static four-step horizontal timeline shows the same stages without animation: send request, prepare input, generate first token, generate remaining tokens. Short notes under each step list common causes of delay."
   },
   "workedExample": {
-    "scenario": "A user asks: \"Give me a 5-point summary of this 2-page meeting note in plain English.\"",
-    "input": "Prompt plus 1,200 words of meeting text.",
+    "scenario": "The officer asks an approved assistant to draft three bullets from cleared, aggregate staffing updates for the donor report. The service log records when the request arrives, when the first words appear and when the final bullet is complete.",
+    "input": "A prompt plus the cleared staffing narrative and aggregate figures.",
     "process": [
-      "The request reaches the service in about 0.2 seconds.",
-      "The service prepares the long input, applies checks, and tokenises it, taking about 1.1 seconds.",
-      "The model produces the first visible token after another 0.7 seconds, so the user waits about 2.0 seconds before seeing the reply start.",
-      "The rest of the 120-token answer streams out at about 20 tokens per second, taking about 6 more seconds."
+      "The request travels to the service and may wait in a queue.",
+      "The service processes and tokenises the prompt, applies required checks and retrieves any authorised supporting material.",
+      "The model generates the first visible words. The elapsed time to this point is the time to first token.",
+      "The model continues generating until the final bullet is complete. The total elapsed time is the time to last token."
     ],
-    "result": "The first words appear after roughly 2 seconds, and the full reply finishes in roughly 8 seconds. Both numbers are forms of latency, but they describe different points in the same reply."
+    "result": "Both measurements are latency. One describes the wait before the reply starts; the other describes the wait for the complete reply. They can change independently, for example when retrieval delays the start or a longer answer extends generation."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN staff member uses an approved internal assistant to search past General Assembly resolutions and draft a neutral summary of commonly used wording on a topic.",
-    "relevance": "Latency matters because slow replies can interrupt drafting, translation support or meeting preparation, while very fast replies are easier to use in live workflows. Staff may need to balance speed against longer context, tool use and review steps.",
-    "caution": "Use only approved systems and approved content. Do not paste confidential, security-sensitive, protection-sensitive or personally identifiable information into a public AI service just to get a faster response."
+    "scenario": "At a shared services centre, a human resources officer is finalising the staffing narrative for a quarterly progress report to a donor. The front office wants it by close of business. An approved internal assistant is asked to turn cleared, aggregate recruitment updates into three concise points. The officer sees how long the tool takes to begin replying and how long it takes to finish.",
+    "relevance": "The first delay determines whether the tool feels responsive. The time until the complete answer arrives determines whether it actually saves time before clearance. A longer prompt, retrieval from approved files, policy checks, server load and the length of the requested answer can affect either measure.",
+    "caution": "Human resources material may contain personal, medical or performance information. Do not enter such material into any tool that has not been approved for it. Even in an approved system, use only authorised content, remove unnecessary identifiers and follow the applicable access and retention controls."
   },
   "whyItMatters": "Latency affects whether a tool feels usable in practice. If replies arrive quickly, people can keep their place in a task such as drafting, searching or comparing options. If replies are slow, users may rush, repeat prompts, or stop trusting the workflow.\n\nFor non-specialists, latency helps with practical choices. A short prompt may return faster than a long one. Turning on extra tools, adding many documents or using a larger model may increase waiting time. That can be acceptable for a careful background task, but less suitable in a live meeting or urgent support setting.\n\nIt also helps to ask the right question. If a team says a system is \"slow\", the issue might be network delay, time to first token, full-answer time, or server load. Those are related, but not identical.",
   "whereYouMayHearIt": [
-    "chat assistant product demos",
-    "IT procurement discussions",
-    "API performance reports",
-    "developer documentation",
-    "user complaints about slow replies"
+    "During a vendor demonstration to an ICT governance board",
+    "In a procurement unit’s technical evaluation of bids",
+    "At a service review after an internal assistant slows near close of business",
+    "In a performance discussion between a country office and Headquarters"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +125,7 @@
     "simple": "It is how long you wait after asking the model something before you start seeing the answer, or before the whole answer is finished.",
     "technical": "In large language model systems, latency usually refers to elapsed time between request submission and one or more output milestones, commonly time to first token and time to last token. It can include network transit, request queuing, prompt processing, tokenisation, safety or policy checks, retrieval or tool calls, and autoregressive generation during inference. Prompt length, context window use, model size, hardware, batching and server load can all change it. This differs from throughput, which measures how many requests or tokens a system can handle per unit time."
   },
-  "keyTakeaway": "Latency tells you how long you wait for a model reply, not how good that reply will be.",
+  "keyTakeaway": "Latency may mean the wait until the first words appear or the wait until the reply is complete. Neither measure tells you whether the answer is good.",
   "quickCheck": {
     "question": "Which statement best describes latency in a chat assistant?",
     "options": [
@@ -240,6 +239,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:15.064Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -92,28 +92,28 @@
     "reducedMotionDescription": "A static left-to-right flowchart showing the same five boxes and arrows, with all labels visible at once and no animation or hover effects."
   },
   "workedExample": {
-    "scenario": "A logistics planning assistant needs current warehouse stock and truck schedules before drafting a delivery note.",
-    "input": "User request: 'Draft a plan for tomorrow's delivery to Site B using current stock and the latest truck schedule.'",
+    "scenario": "A protection officer evaluating an assistant with the procurement unit asks it to assemble the approved, aggregate inputs for a situation report before the bulletin file closes.",
+    "input": "User request: 'Use the cleared template and the latest aggregate activity data to prepare the situation-report sections. Flag missing submissions rather than filling the gaps.'",
     "process": [
-      "The AI application receives the request and recognises that it needs live information, not only the text in the prompt.",
-      "Through an MCP connection, it discovers two available resources: a warehouse stock tool and a transport schedule tool.",
-      "It requests stock data and gets: rice 1,250 bags, beans 800 bags, oil 600 cartons.",
-      "It requests transport data and gets: Truck T4 available at 08:00 with 12-tonne capacity; Truck T7 unavailable due to maintenance.",
-      "The application combines the tool results and drafts a delivery note proposing one morning dispatch within capacity, then presents it for staff review."
+      "The application's MCP client connects only to the servers approved for the evaluation.",
+      "The servers advertise their available capabilities: one exposes the cleared template as a resource, while another exposes a tool for querying aggregate activity data.",
+      "The client invokes the data tool with the reporting period and agreed aggregation level. It receives a structured response containing activity totals and status fields for missing submissions.",
+      "The client retrieves the template resource and maps the returned fields to the corresponding sections.",
+      "The application drafts the sections, identifies gaps and presents the result to the protection officer for verification and clearance."
     ],
-    "result": "A structured draft lists current stock and proposes Truck T4 at 08:00. It states that capacity cannot be checked without requested quantities and unit weights, and asks a human planner to confirm the load, road conditions, and authorisation."
+    "result": "The draft follows the cleared structure, carries source labels and retrieval times, and marks missing inputs without inventing them. The officer still checks the figures, context and wording before the situation report enters clearance."
   },
   "unWorkplaceExample": {
-    "scenario": "A translation support tool helps staff turn non-sensitive field updates into a working language by accessing approved terminology files and style guidance through a standard protocol.",
-    "relevance": "This matters because teams often use several approved resources. A shared protocol can make those resources easier to connect to one AI application without building a different custom integration for each one.",
-    "caution": "Do not send confidential, personal, protection-sensitive, security-sensitive, or operationally sensitive field information to an unapproved public AI service. Use only approved systems, apply access controls, and keep human review for important communications."
+    "scenario": "During a procurement unit's technical evaluation, a protection officer tests whether a proposed AI assistant can retrieve a cleared situation-report template and non-sensitive, aggregate activity figures through MCP before submissions for the afternoon regional bulletin are locked.",
+    "relevance": "MCP gives the assistant a predictable way to discover the available resource and tool interfaces, invoke them and receive structured results. The procurement unit can assess these connectors rather than accepting a separate bespoke integration for every dashboard or repository.",
+    "caution": "MCP standardises the connection. It does not approve the system, grant access or make sensitive data safe. Case records, names, contact details, free-text accounts, survivor or witness information, and risk-revealing locations must not be exposed unless every component is expressly approved for that material. For the test, use only aggregate, non-sensitive data with least-privilege access, logging, retention controls and human review."
   },
   "whyItMatters": "For non-specialists, MCP matters because it affects cost, speed, control, and risk. If an organisation wants one AI application to work with many internal and external systems, a shared protocol can reduce one-off integration work and make changes easier to manage. It can also improve transparency by making tool access more structured and easier to govern.\n\nAt the same time, MCP does not solve trust and safety by itself. Leaders still need to ask who can access which systems, what gets logged, when a human must approve an action, and what happens if the connected data is wrong or out of date. In decision-making terms, MCP is about whether your AI setup can connect to the right tools in a manageable way, not whether the output should be accepted without checking.",
   "whereYouMayHearIt": [
-    "agent platform documentation",
-    "enterprise AI integration discussions",
-    "developer demos of tool-using assistants",
-    "procurement and architecture reviews"
+    "A supplier demonstration during a procurement unit's technical evaluation",
+    "An ICT governance board reviewing connections between an assistant and internal systems",
+    "A Headquarters architecture review before an approved pilot",
+    "A developer call when replacing several custom connectors with one standard interface"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +133,7 @@
     "simple": "MCP is a common way to let an AI application work with outside tools and information sources without building a completely different connection for each one.",
     "technical": "Technically, MCP is a client-server protocol for exposing context, resources, prompts, and tool interfaces to AI applications in a standard form. An MCP client, often inside an AI application, connects to an MCP server, which advertises available capabilities and returns structured responses when those capabilities are invoked. This supports capability discovery and more uniform tool integration across different back-end systems. It is commonly discussed alongside tool use and function calling, but it operates at a broader integration layer: function calling is often the model-level mechanism for selecting a tool, while MCP is the protocol that can describe and deliver the tool definitions and resource access in a consistent way. Exact implementations can vary, so the practical behaviour depends on the host application, permissions, and server design."
   },
-  "keyTakeaway": "MCP is best understood as shared plumbing that helps AI applications connect to many tools in a consistent, governable way.",
+  "keyTakeaway": "MCP standardises how an AI application discovers and invokes external resources and tools. It can simplify integration, but it does not itself provide approval, access control or data protection.",
   "quickCheck": {
     "question": "Which description best distinguishes MCP from a single connector or API?",
     "options": [
@@ -282,6 +282,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:39.859Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Reframed the examples around a specific evaluation, artefact and deadline, while making capability discovery, structured responses and protection safeguards explicit."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

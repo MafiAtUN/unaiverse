@@ -84,27 +84,27 @@
     "reducedMotionDescription": "A static four-panel diagram replaces animation. Each panel shows a later training stage than the previous one, with update arrows shrinking and the loss sparkline becoming flatter near the end."
   },
   "workedExample": {
-    "scenario": "Training a simple classifier to match a photographed registration form to one of 12 templates.",
-    "input": "Initial training loss: 1.82. After each epoch, the team records training loss and validation loss.",
+    "scenario": "An evaluation officer reviews a training run for a classifier that assigns non-sensitive file metadata to retention categories, before finalising a note for the file.",
+    "input": "The training log records training loss, validation loss, gradient size and the size of parameter updates after each epoch.",
     "process": [
-      "Epoch 1 to 4: training loss falls from 1.82 to 0.96, and validation loss falls from 1.75 to 1.02. Updates are still producing large gains.",
-      "Epoch 5 to 9: training loss falls more slowly from 0.96 to 0.71, and validation loss moves from 1.02 to 0.79. The optimiser is still improving the model.",
-      "Epoch 10 to 14: training loss changes only from 0.71 to 0.68, and validation loss fluctuates between 0.78 and 0.79. Parameter updates are now making little practical difference.",
-      "The team applies an early stopping rule: if validation loss does not improve meaningfully for several epochs, stop training."
+      "In the early epochs, training and validation loss both fall substantially. The updates are still finding meaningfully better settings.",
+      "Later, both losses fall more slowly. Gradients and parameter updates become smaller and remain bounded.",
+      "Across several subsequent epochs, validation loss fluctuates within a narrow range while training loss shows no material improvement. Additional updates are no longer producing a useful gain.",
+      "The officer applies the pilot's early-stopping criterion and records the best validation checkpoint rather than simply keeping the final epoch."
     ],
-    "result": "After epoch 14, they say training has converged enough for this run. The model did not reach zero loss, but the recorded losses suggest further training was no longer helping in a useful way."
+    "result": "The run is treated as having converged sufficiently for this experiment. This means the optimisation has settled under the chosen criterion, not that the classifier is correct, fair or ready for operational use."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is developing a model to group short household assessment responses into pre-defined themes so analysts can review patterns faster.",
-    "relevance": "Convergence helps the team judge whether training is still improving the model or whether extra computing time is unlikely to produce meaningful gains.",
-    "caution": "If responses contain personal or protection-sensitive information, they must not be entered into an unapproved public AI service; training and evaluation should use approved systems, minimised data and human oversight."
+    "scenario": "During a records retention review, an evaluation officer in an inter-agency secretariat examines the training log for a model that assigns non-sensitive file metadata to retention categories. A note for the file is due by close of business on whether the pilot is ready to stop training.",
+    "relevance": "If validation loss has levelled off and successive updates bring no material gain, the officer can record that the run has converged for practical purposes. That supports an early-stopping decision, but not a finding that the classifier is accurate enough for use.",
+    "caution": "Record titles, metadata and contents may reveal personal, human resources, procurement-sensitive or security-sensitive information. They must not be uploaded to a tool that has not been approved for that material. Use an approved environment, minimise the data, restrict access and retain human review of every proposed retention category."
   },
   "whyItMatters": "If you commission, use or review AI systems, convergence affects cost, reliability and trust in the training process. A run that has not converged may produce unstable results and waste compute. A run that appears converged may still be poor if it settled on a weak solution or overfit the training data. Knowing this term helps you ask better questions: What evidence shows the training actually stabilised? Was that judged on training loss, validation loss or another metric? Did improvement stop because the model learned enough, because the learning rate was badly chosen, or because gradients became too small or too large? These questions support better decisions about whether to continue training, change settings or reject the run.",
   "whereYouMayHearIt": [
-    "training logs and experiment reports",
-    "machine learning courses",
-    "model debugging meetings",
-    "research papers on optimisation"
+    "A technical review of training logs before a pilot is cleared",
+    "A vendor demonstration to an ICT governance board",
+    "An evaluation office meeting on validation results",
+    "A procurement clarification meeting on model performance"
   ],
   "commonMisconceptions": [
     {
@@ -124,7 +124,7 @@
     "simple": "It means the model’s training has started to settle down. The error is no longer changing much, and extra training steps bring little improvement.",
     "technical": "In optimisation, convergence means an iterative update process approaches a limit, such as a stable point or objective value. In machine learning, teams often use a practical criterion: parameter updates, losses or gradients no longer change in a way that yields meaningful improvement. Exact mathematical convergence is rarely proved for large neural networks, so teams may look for a plateau in validation loss, small gradient norms, bounded updates, or no material gain after several epochs. Meeting such a criterion is evidence, not proof, of convergence. This remains distinct from finding a global optimum and from generalisation: an update process can converge while the model overfits or reaches a suboptimal local solution."
   },
-  "keyTakeaway": "Convergence means training has largely settled, not that the model is perfect or even the best possible one.",
+  "keyTakeaway": "Convergence means the training process has largely settled under a stated criterion. It does not show that the resulting model is accurate, fair or fit for use.",
   "quickCheck": {
     "question": "Which statement best describes convergence during model training?",
     "options": [
@@ -234,6 +234,19 @@
       "workedExampleResult",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:40.060Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

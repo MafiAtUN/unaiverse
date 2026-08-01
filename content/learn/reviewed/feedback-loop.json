@@ -90,28 +90,28 @@
     "reducedMotionDescription": "Show the same five boxes as a static sequence with a clearly labelled return arrow from Stop or adjust back to Action. Use contrasting colours or line styles to distinguish the forward path from the repeat path, with no animation."
   },
   "workedExample": {
-    "scenario": "An AI support tool helps a facilities team investigate an unusual pump temperature reading.",
-    "input": "Goal: produce a short status note and recommend whether maintenance is needed. Available tools: sensor log lookup and maintenance history lookup.",
+    "scenario": "During the annual workplan review at a shared services centre, an internal auditor asks an approved planning agent to sequence proposed engagements for a draft workplan due to the front office by close of business.",
+    "input": "Proposed engagements, risk ratings, estimated effort, staff availability, required coverage and scheduling constraints.",
     "process": [
-      "The system reads the latest temperature value: 86°C, while the normal operating range in its instructions is 60–75°C.",
-      "It calls the sensor log tool and sees that the previous three readings were 84°C, 85°C and 86°C, so the increase looks persistent rather than random noise.",
-      "It drafts 'possible overheating' but then checks maintenance history and finds the pump was serviced 2 days ago with a note that calibration can drift for 48 hours.",
-      "Using that feedback, it revises the note to say the reading is abnormal but may be affected by recent servicing, and recommends a technician check plus a manual temperature confirmation."
+      "The agent produces a first draft by matching the proposed engagements with available staff and planning periods.",
+      "A validator checks the draft and reports that a required area is not covered and that one specialist is assigned to overlapping engagements.",
+      "Those findings are routed back to the agent. It adds the missing coverage, changes the sequence and reallocates the overlapping assignment.",
+      "The revised draft is checked again. If a constraint still fails, the finding triggers another revision. Once the checks pass, the draft is sent to the internal auditor for substantive review and clearance."
     ],
-    "result": "Output: 'Pump 4 shows sustained high temperature readings above the normal range. Because the unit was serviced 2 days ago, sensor drift is possible. Recommended next step: manual verification by a technician and follow-up if the manual reading also exceeds range.'"
+    "result": "The workflow returns a draft workplan that satisfies the encoded planning constraints, together with a record of the failed checks and revisions. The internal auditor can then assess whether the result is sensible, including whether the agent optimised what was easy to score while overlooking less readily quantified concerns."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN language support workflow drafts a translation of non-confidential field updates into a working language, then checks the draft against a terminology list and revises terms that do not match approved usage before sending it to a human reviewer.",
-    "relevance": "This shows a feedback loop because the first draft is not the final output. The system uses the checking result to adjust the next version, which can improve consistency and reduce reviewer time.",
-    "caution": "Do not place confidential, personal, protection-sensitive or operationally sensitive field information into an unapproved public AI service. Human review remains necessary, especially for nuance, safety and context."
+    "scenario": "At a shared services centre, an internal auditor uses an approved planning workflow to prepare the annual workplan before it goes to the front office for clearance. The workflow checks each draft against available capacity, required coverage and scheduling constraints, then uses the findings to revise and check the workplan again.",
+    "relevance": "The validator's findings are fed into the next planning step rather than merely recorded. Each failed check changes the subsequent draft, creating an explicit revise-and-recheck loop. Passing the checks shows that the stated constraints were met, not that the workplan reflects sound audit judgement.",
+    "caution": "Internal audit planning may expose control weaknesses, allegations or personal information. Such material must not be entered into a tool that is not approved for it. Access controls and retention requirements still apply. The loop must not automatically remove, downgrade or clear an engagement. The internal auditor remains responsible for the workplan and its clearance."
   },
   "whyItMatters": "For non-specialists, this term matters because many modern AI systems do more than produce one reply. They may take several steps, use tools, check results and try again. That can improve quality, but it can also repeat mistakes, chase the wrong target, or create hidden complexity.\n\nWhen you hear that a system can self-correct, the key questions are practical: What feedback is it using? Who set the goal? What tells it to stop? What happens if the feedback is wrong, delayed or easy to game? These questions affect reliability, safety, auditability, cost and oversight.\n\nIn policy and operational settings, feedback loops shape accountability. A well-designed loop can catch errors before action is taken. A poorly designed loop can amplify them.",
   "whereYouMayHearIt": [
-    "agent design discussions",
-    "automation workflows",
-    "quality control and monitoring",
-    "tool-using AI demos",
-    "safety and oversight reviews"
+    "An annual workplan review in an internal audit function",
+    "An ICT governance board discussion on controls for autonomous agents",
+    "A vendor demo during a procurement meeting",
+    "A design session for an automated workflow at a shared services centre",
+    "A post-implementation review after an automation pilot"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +131,7 @@
     "simple": "It is a repeat-and-check pattern: do something, look at what happened, and use that result to improve the next step.",
     "technical": "In AI systems, a feedback loop is a structure in which an agent or workflow produces an action and routes an observation or evaluation of its outcome into a later step. The system may compare that signal with a goal, constraint or scoring rule and adjust the next action. Feedback may come from the external environment, a software tool, a validator, a user or another model. The loop may be explicit, such as retry-until-valid, or more complex, such as plan-execute-evaluate-replan. A feedback loop does not by itself imply model training. It can operate entirely at inference time, with no parameter update. Observation and action name the signals and steps in an acting system. A feedback loop emphasises the return path by which an outcome affects later behaviour. Design choices include the feedback source, delay, noise tolerance, stopping condition, human escalation and safeguards against oscillation, runaway retries or optimisation of a poor proxy."
   },
-  "keyTakeaway": "A feedback loop matters because the result of one step changes the next one, which can either correct errors or repeat them faster.",
+  "keyTakeaway": "In a feedback loop, an outcome is not merely reported. It is routed back into the process and changes what the system does next, for better or, if the signal or rule is poor, repeatedly for worse.",
   "quickCheck": {
     "question": "Which situation best shows a feedback loop in an AI system?",
     "options": [
@@ -255,6 +255,19 @@
       "plainExplanation",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:50.774Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

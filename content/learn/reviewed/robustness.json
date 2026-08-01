@@ -32,8 +32,8 @@
   "oneSentence": "The ability of a model or system to keep performing acceptably when inputs, conditions or small disturbances change.",
   "plainExplanation": "Robustness asks a simple question: if real-world conditions shift a bit, does the system still work well enough? The inputs remain valid for the same task, but include defined variation such as typos, different lighting, new accents, slightly changed wording or missing values. The model processes these less tidy inputs. Evaluators then measure whether its performance stays acceptable rather than collapsing.\n\nThis is related to generalisation, but not the same. Generalisation asks whether a model gives useful results on new cases, not just examples used to build or tune it. Robustness tests specified disturbances affecting otherwise relevant cases. A model can score well on new clean cases but still be fragile when small changes appear.\n\nRobustness is also not the same as reliability. Reliability asks whether a system gives similar-quality results when used again on comparable cases and conditions. Robustness deliberately varies the inputs or environment to test whether quality remains acceptable. Producing an answer every time shows availability, not reliability.\n\nPeople test robustness by trying defined, realistic variations such as rephrased text, noisier images, different devices or missing values. They compare performance with a baseline, meaning a reference result under normal conditions. If performance stays acceptable and drops only a little, the system is more robust. If a small change causes many false positives or false negatives, robustness is weak.",
   "everydayAnalogy": {
-    "title": "A translator working from messy notes",
-    "story": "A field officer receives short notes from colleagues in Nairobi, Bogotá and Amman and must translate them into clear English for a daily briefing. On some days the notes are neat. On other days they contain spelling mistakes, local abbreviations or sentences copied from a phone message with missing punctuation. A robust translation process still produces a usable summary across these variations, while a fragile one fails as soon as the wording becomes messy.",
+    "title": "Giving directions in a noisy street",
+    "story": "Someone understands an address when it is spoken slowly in a quiet room. Try the same address beside traffic, with one word shortened or with the request phrased differently. If they still identify the right destination most of the time, their understanding is robust to those changes. The comparison matters: doing slightly worse may be acceptable, while repeatedly choosing the wrong destination is not.",
     "mapping": [
       {
         "analogyElement": "Notes with spelling mistakes or abbreviations",
@@ -82,28 +82,27 @@
     "reducedMotionDescription": "A static two-column comparison with clean inputs on the left and stressed inputs on the right, using labels and score markers instead of animated transitions."
   },
   "workedExample": {
-    "scenario": "A text classifier labels short incident updates as 'logistics' or 'security'.",
-    "input": "Clean test set: 1,000 messages. Stressed test set: the same messages after adding common spelling errors, abbreviations and missing punctuation.",
+    "scenario": "Before close of business, an information management officer at a regional hub evaluates a classifier used to sort short incident updates for a situation report.",
+    "input": "Clean test set: 1,000 previously reviewed updates. Stressed set: the same updates with plausible spelling errors, abbreviations and missing punctuation.",
     "process": [
-      "On the clean set, the model gets 910 of 1,000 labels correct, so accuracy is 91%.",
-      "On the stressed set, the model gets 860 of 1,000 labels correct, so accuracy is 86%.",
-      "Analysts inspect the errors and find that many new mistakes come from shortened words such as 'sec' and 'log'.",
-      "They compare this 5-point drop with a baseline system that falls from 88% to 70% under the same stress test."
+      "On the clean set, the classifier labels 910 of 1,000 updates correctly, giving 91% accuracy.",
+      "On the stressed set, it labels 860 correctly, giving 86% accuracy, a decrease of 5 percentage points.",
+      "Error review shows that shortened words account for many of the additional mistakes.",
+      "Under the same test, the existing baseline falls from 88% to 70%, a decrease of 18 percentage points."
     ],
-    "result": "The first model appears reasonably robust under this kind of text noise because performance declines modestly, while the baseline is much less robust."
+    "result": "The new classifier is more robust to this particular text noise than the baseline. Whether the 5-point decrease is acceptable still depends on the agreed performance threshold and the consequences of incorrect labels."
   },
   "unWorkplaceExample": {
-    "scenario": "A team builds an internal search tool over approved guidance documents so staff can find policy and procedural material using natural-language queries.",
-    "relevance": "Robustness matters if the tool should still retrieve useful documents when staff use different spellings, short queries, regional phrasing or imperfect grammar from field locations.",
-    "caution": "Use only approved internal systems and approved document collections; do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into a public AI service for testing."
+    "scenario": "At a field presence where connectivity is unreliable, the records officer uses an approved search tool to locate the standing instructions needed for terms of reference that must clear before Friday. The tool was tested at Headquarters on complete, carefully phrased queries.",
+    "relevance": "The officer tests whether retrieval quality remains acceptable with short queries, spelling variations and interrupted connections. Comparing these results with the clean-query baseline shows how much performance degrades under conditions staff will actually encounter.",
+    "caution": "Test only within an approved system and with an approved document collection. Confidential, personal, protection-sensitive or security-sensitive records must not be entered into an unapproved tool, since its access, retention and reuse controls may be unknown."
   },
   "whyItMatters": "Non-specialists often see one headline score and assume the system will behave similarly in practice. Robustness helps you ask the harder question: what happens when reality is messier than the demo? If a system is not robust, a small change in wording, image quality, device, location or user behaviour can quietly produce many more errors. That can affect service quality, safety, fairness, workload and trust. For leaders and policy teams, robustness is part of deciding whether a system is ready for real use, what safeguards it needs, and where human review remains necessary.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "procurement discussions",
-    "risk and assurance reviews",
-    "red-teaming exercises",
-    "benchmark comparisons"
+    "A vendor demo during a procurement meeting",
+    "An evaluation office reviewing a model test report",
+    "An ICT governance board considering deployment approval",
+    "A risk review before an internal tool goes live"
   ],
   "commonMisconceptions": [
     {
@@ -123,7 +122,7 @@
     "simple": "A robust system does not fall apart when real-life inputs are a bit messy or different from the ideal examples used in testing.",
     "technical": "Robustness is the degree to which model performance remains stable under plausible perturbations, noise, shifts in input distribution, missingness, rephrasing or environmental change. In practice, it is assessed by defining stress conditions, evaluating on perturbed or shifted data, and measuring degradation relative to a baseline on clean data. The exact metric depends on the task, such as accuracy, recall, calibration error or retrieval quality. Robustness is related to generalisation but emphasises sensitivity to disturbance and worst-case or stress-case behaviour. It is also distinct from adversarial robustness, which focuses on inputs intentionally crafted to trigger failure."
   },
-  "keyTakeaway": "A strong score on tidy test data is not enough; a useful system must keep performing acceptably when reality becomes slightly messy.",
+  "keyTakeaway": "Measure performance on plausible variations, not only tidy test data. Robustness is the size and consequence of the degradation, not a claim that the system never fails.",
   "quickCheck": {
     "question": "Which result gives the clearest evidence of robustness?",
     "options": [
@@ -260,6 +259,20 @@
       "plainExplanation",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:48.352Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "The examples distinguish robustness from absolute performance and avoid treating a smaller decline as automatically acceptable."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

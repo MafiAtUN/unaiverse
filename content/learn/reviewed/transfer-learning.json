@@ -28,8 +28,8 @@
   "oneSentence": "Reusing patterns learned on one task or dataset to help a model learn a related task faster and with less new data.",
   "plainExplanation": "Transfer learning starts with a model that has already been trained on a large earlier task. That earlier stage usually teaches the model useful patterns, such as edges in images, word relationships in text, or general signal structure in audio.\n\nThen a second task is introduced. Instead of training a new model from the beginning with random starting values, developers reuse some or all of the earlier model and adapt it to the new task. The new input is data for the second task, and the output is a model that is specialised for that task.\n\nInside the model, the main change is that existing internal parameters, often called weights, are kept as a starting point rather than thrown away. Sometimes only the final layer is replaced and trained. Sometimes many layers are updated. This later adaptation step is often called fine-tuning, but transfer learning is the broader idea of reusing prior learning at all.\n\nThis works best when the first and second tasks are related. A model trained on general language can often be adapted for classifying support tickets. A model trained on many everyday images can often be adapted for identifying crop diseases. If the tasks are too different, the reused patterns may help little or may even hurt performance.",
   "everydayAnalogy": {
-    "title": "Tuning a radio after you already know the station band",
-    "story": "A technician in Nairobi has already mapped the FM band and knows where strong news and music stations usually sit. Later, a colleague in Lima asks her to find one local station quickly on a different radio in a noisy office. She does not sweep every possible frequency from scratch. She starts near the part of the dial where similar stations are likely to be, makes a few careful adjustments, and reaches a clear signal much faster. The earlier mapping helps, even though the exact station is new.",
+    "title": "Adapting an experienced cook's skills",
+    "story": "A cook who already knows how dough behaves does not begin from zero when learning a new kind of bread. The ingredients, shape and timing may change, but skills such as judging texture and controlling heat still help. Practice with the new recipe adjusts those existing skills. If the new task were making ice cream instead, much less of the earlier knowledge would transfer.",
     "mapping": [
       {
         "analogyElement": "Earlier map of the FM band",
@@ -82,28 +82,27 @@
     "reducedMotionDescription": "A static two-row comparison is shown instead of animated arrows. The top row shows training from scratch. The bottom row shows reuse of a pre-trained model followed by adaptation on the target task, with a note that transfer learning helps most when tasks are related."
   },
   "workedExample": {
-    "scenario": "An agricultural team wants to classify leaf images into three classes: healthy, rust, and blight, but they only have 1,200 labelled photos.",
-    "input": "Start with an image model pre-trained on a large general image dataset, then adapt it using the 1,200 crop images.",
+    "scenario": "An information management officer at a regional hub is preparing an archive of public situation maps for upload to a new portal. Only a small labelled sample is available for sorting the maps as access, displacement or service coverage products.",
+    "input": "Start with an image model pre-trained on a broad image collection, then adapt it using the labelled situation maps.",
     "process": [
-      "Replace the original output layer with a new layer for three classes: healthy, rust, blight.",
-      "Train only the new output layer for a few rounds while keeping most earlier layers fixed.",
-      "Unfreeze some higher layers and continue training with a small learning rate so the model can adapt its visual features.",
-      "Evaluate on a held-out test set of 200 images to check whether transfer improved performance on the crop task."
+      "Replace the model's original output layer with a classification head for the three map types.",
+      "Freeze the lower layers, which capture general visual features, and train the new classification head on the labelled maps.",
+      "Unfreeze selected upper layers and update them with a low learning rate so they can adapt to map layouts, symbols and legends without discarding useful general features.",
+      "Evaluate the adapted model on held-out maps and compare it with a model trained from random initial weights on the same training sample."
     ],
-    "result": "After 200 images are held out, both models train on the other 1,000. The adapted model gets 176 of 200 test images correct (88%); the model trained from scratch gets 142 correct (71%). In this hypothetical comparison, transfer gives the adapted model a stronger starting point."
+    "result": "The comparison establishes whether the source model's visual representations transfer to this task. Better performance on held-out maps would support using the adapted model, subject to review of errors across different templates. If it does not outperform the baseline, pre-training has not provided the expected benefit."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN analytical team wants to identify broad protection-related themes in incident summaries from several field offices by adapting a language model that was previously trained on general text.",
-    "relevance": "Transfer learning can help when the team has limited labelled examples for the specific theme-tagging task but needs a model that reflects the wording used in their reports.",
-    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational incident text into an unapproved public AI service. Use approved tools, minimise sensitive content, and keep human review over any model outputs."
+    "scenario": "During a records retention review, a records officer in a specialised agency technical division must propose retention categories for entries in the records inventory before a note for the file goes to the chief of section. A language model pre-trained on general documents is adapted using approved, previously categorised inventory entries.",
+    "relevance": "The pre-trained model already represents common wording and document structure. Fine-tuning selected weights on the division's examples can adapt those representations to its records vocabulary with less labelled material than training a model from scratch.",
+    "caution": "Records containing personal, HR, procurement-sensitive, security-sensitive or otherwise confidential material must not be uploaded to or used to train a tool not approved for that material. Use an approved environment, minimise and de-identify data where possible, apply access and retention controls, and have the records officer verify every proposed category against the applicable retention schedule."
   },
   "whyItMatters": "Transfer learning affects time, cost and risk. If it works well, an organisation can build a useful model with less labelled data, less computing, and shorter development time than training from scratch. That matters when expert labels are expensive, such as in medicine, law, agriculture or multilingual document analysis. It also changes procurement and evaluation decisions: you need to ask what the model was trained on before, whether that earlier source is relevant to your task, and whether reused patterns might carry bias or mismatch. A model that transfers well on one problem may transfer poorly on another, so decision-makers should treat it as a practical strategy, not a guarantee.",
   "whereYouMayHearIt": [
-    "computer vision projects",
-    "natural language processing",
-    "medical imaging workflows",
-    "low-data machine learning",
-    "model adaptation discussions"
+    "A technical review before an ICT governance board",
+    "A vendor demo during a procurement meeting",
+    "A model evaluation session at a regional hub",
+    "An inter-agency working group discussing a low-data pilot"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +126,7 @@
     "simple": "Instead of teaching a model from zero, you start with one that has already learned useful patterns elsewhere and adapt it to a related job.",
     "technical": "Transfer learning reuses parameters, representations or features learned from a source task to improve learning on a target task. In practice, a model is often pre-trained on a large dataset, then adapted using target-domain data by freezing some layers, replacing task-specific heads, and updating selected weights through gradient-based optimisation. The expected benefit comes from shared structure between source and target distributions, so the model does not need to relearn low-level or general-purpose patterns from random initialisation. The term is broader than fine-tuning: it can include fixed feature extraction, multi-stage training and other ways of carrying information from one learning problem to another. Its success depends on relatedness between tasks, representation quality, label availability, and evaluation on separate validation and test sets."
   },
-  "keyTakeaway": "Transfer learning reuses earlier learned patterns so a related new task can often be learned faster and with less new data.",
+  "keyTakeaway": "Transfer learning gives a related task a learned starting point. It can reduce the new data and training required, but its value must be tested because source patterns do not always transfer well.",
   "quickCheck": {
     "question": "Which case best matches transfer learning?",
     "options": [
@@ -236,6 +235,20 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:37.225Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Recast both examples around distinct staff tasks, removed fabricated performance figures, made the evaluation conditional, and strengthened controls for sensitive records."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

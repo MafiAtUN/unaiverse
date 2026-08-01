@@ -93,29 +93,29 @@
     "reducedMotionDescription": "A static left-to-right diagram with five labelled panels: long document, split chunks, overlapping chunks, indexed chunk records, and retrieved results for a question. Shared overlap is shown with shading instead of animation."
   },
   "workedExample": {
-    "scenario": "A team has a 1,200-word guidance note on warehouse safety and wants a retrieval system to answer questions from it.",
-    "input": "Guidance note split by paragraph into chunks of about 200 words, with 40 words of overlap between neighbouring chunks.",
+    "scenario": "A reporting officer in a regional bureau must prepare a briefing note before close of business, using cleared monitoring reports stored in an approved internal retrieval system.",
+    "input": "The reports are divided by heading and paragraph, with the final sentence of each chunk repeated in the next. Each chunk retains the report title, section heading and clearance status as metadata.",
     "process": [
-      "The system creates 7 chunks from the note and keeps the document title and paragraph numbers as metadata.",
-      "Each chunk is converted into an embedding and stored in the search index.",
-      "A user asks: \"What should staff do if a pallet blocks an emergency exit?\"",
-      "The system compares the question with all 7 chunk embeddings and ranks the closest matches.",
-      "Chunk 4, which contains the rule on keeping exits clear and reporting blocked routes, scores highest; Chunk 5, which mentions escalation steps, scores second."
+      "During ingestion, the system keeps short paragraphs together and splits longer sections at sentence boundaries rather than in the middle of a sentence.",
+      "Each chunk is converted into an embedding and stored in the search index with its source metadata.",
+      "The officer asks which implementation constraints recur across the cleared reports.",
+      "The query embedding is compared with the chunk embeddings using similarity search. Passages discussing access, staffing and delivery delays rank highly.",
+      "The system returns the highest-ranked passages with their report titles and section headings. The officer checks each passage in the source before drafting."
     ],
-    "result": "The retrieval step returns Chunks 4 and 5 with their source labels, giving the answering system the relevant passage and enough nearby context to cite the guidance note."
+    "result": "The officer receives focused passages rather than several complete reports. The overlap preserves qualifications near section boundaries, while the metadata supports source checking and citation in the briefing note."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office uses an approved internal retrieval system to help staff draft a public information note by searching past published guidance and approved communications.",
-    "relevance": "Chunking lets the system retrieve the exact passage about style, terminology or factual background instead of sending an entire long document to the drafting tool, which improves traceability and human review.",
-    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or unpublished operational material to an unapproved public AI service; only use approved systems and keep human review before any text is shared."
+    "scenario": "Before the annual workplan review, a legal officer supporting a UN Country Team working group searches previous cleared workplans and notes for the file for commitments on data governance. The approved internal retrieval system has divided those documents into sections that can be retrieved separately.",
+    "relevance": "Section-based chunks let the system return the relevant commitment, qualification and follow-up action without retrieving every workplan in full. Sensible overlap also reduces the risk that a condition at the end of one section is separated from the obligation in the next.",
+    "caution": "Draft workplans and notes for the file may contain personal, partner-sensitive or security-sensitive material. They must not be uploaded to or indexed in a tool that is not approved for that material. Apply the required access controls and retention rules, and verify retrieved text against the source."
   },
   "whyItMatters": "Non-specialists often judge a retrieval system by the final answer, but chunking strongly shapes whether the right evidence can be found at all. If chunks are too large, search may pull in broad but unfocused text. If they are too small, important context may be missing. This affects answer quality, citation quality, cost, and review effort. For managers and programme staff, chunking is therefore not a minor technical setting. It influences whether a system is useful for policy lookup, guidance drafting, question answering and auditability. When results seem inconsistent, chunking is one of the first design choices worth checking.",
   "whereYouMayHearIt": [
-    "RAG system setup",
-    "search index design",
-    "document ingestion pipeline",
-    "embedding workflow",
-    "knowledge base tuning"
+    "During a vendor demo to an ICT governance board",
+    "At a procurement unit's technical evaluation meeting",
+    "In a Headquarters review of a document-search pilot",
+    "During an inter-agency working group review of a retrieval prototype",
+    "At a country office post-pilot meeting"
   ],
   "commonMisconceptions": [
     {
@@ -139,7 +139,7 @@
     "simple": "Take a long document, break it into sensible pieces, and search those pieces instead of the whole document. The goal is to bring back the passage that best answers the question, with enough surrounding context to make sense.",
     "technical": "Chunking is the segmentation of source documents into retrievable units before indexing. The unit may be based on fixed length, paragraphs, sections, sentence windows, or semantic boundaries. Many pipelines add overlap so content near boundaries appears in adjacent chunks. Each chunk is then embedded and stored with metadata in an index or vector database. At query time, the query embedding is compared against chunk embeddings, often using nearest-neighbour search and cosine or related similarity measures, followed by ranking or reranking. The choice of chunk size, boundary strategy, overlap, metadata and parent-child linking affects recall, precision, latency, storage and how much context can be passed into retrieval-augmented generation."
   },
-  "keyTakeaway": "Chunking decides what a search system can retrieve later: too broad and results blur, too narrow and meaning breaks apart.",
+  "keyTakeaway": "Chunking determines the units a search system can retrieve. Chunks that are too large dilute relevance; chunks that are too small can separate a statement from the context that gives it meaning.",
   "quickCheck": {
     "question": "Why do many retrieval systems add overlap between neighbouring chunks?",
     "options": [
@@ -252,6 +252,19 @@
     "applied": [
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:17:18.141Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -30,8 +30,8 @@
   "oneSentence": "A system produces computer code from prompts, examples or surrounding files. People should test and revise the result before using it.",
   "plainExplanation": "Code generation means using a system to produce software code, such as a small function, a database query, a web page layout or a test script. The input might be a plain-language prompt, existing code, comments, screenshots or a mix of these. The output is usually code text, not a finished program.\n\nIn simple terms, the system looks for patterns from many examples seen during training and predicts code that fits the request. Some tools suggest the next few words of code as you type. Others create a whole block of code, explain it, rewrite it in another programming language or generate tests.\n\nWhat comes out can be useful, but it can also be wrong. The code may fail, use an unsafe method, invent a function that does not exist, misunderstand the task or include hidden security problems. That is why code generation is different from software that has already been tested and approved.\n\nIt is often confused with a copilot tool. A copilot is the product or interface that assists a person while they work. Code generation is the capability inside that tool: producing code suggestions or code files. It is also related to text generation, because code is usually generated as text tokens, but the goal and checks are different.\n\nFor non-specialists, the main point is this: code generation can speed up drafting, translation and routine coding work, but it does not remove the need for human review, testing, security checks and accountability.",
   "everydayAnalogy": {
-    "title": "A clerk drafting spreadsheet formulas from your description",
-    "story": "A programme officer asks a clerk, “Please count how many survey answers mention delayed payments, even if people use different words.” The clerk quickly drafts spreadsheet formulas and a few category labels based on similar tasks done before. The draft saves time, but one formula misses answers that say “late transfer” and another double-counts a row. A teammate checks the sheet, corrects the formulas and tests them on a small sample before using the totals in a report.",
+    "title": "A custom calculator from a description",
+    "story": "You ask someone to make a small calculator that splits a group bill, rounds each share and keeps the tip separate. They quickly write the steps based on familiar examples. It works for an even split, but rounds too early when the amount divides unevenly, leaving the total wrong. You try several easy and awkward examples, find the error and revise the steps before relying on it. Generated code works similarly: a convincing first version still needs checking against cases where the answer is already known.",
     "mapping": [
       {
         "analogyElement": "The officer’s description of the task",
@@ -89,29 +89,28 @@
     "reducedMotionDescription": "A static left-to-right flowchart shows Request, Context, Generated draft, Review and test, and Approved use, with a visible loop-back arrow for revision and a separate reject path."
   },
   "workedExample": {
-    "scenario": "A small library in Nairobi wants a script that groups open-ended survey answers about service problems into simple themes.",
-    "input": "Prompt: 'Write Python code that reads a CSV file with a column called feedback, counts answers mentioning slow internet, missing books, or noisy study areas, and prints totals. Treat \"wifi\" as internet and ignore capital letters.'",
+    "scenario": "An information management officer at a regional hub is preparing a monitoring report package for upload to the portal by close of business. They ask an approved code assistant to draft a Python script that checks the package manifest for missing titles, invalid filenames and duplicate entries.",
+    "input": "Prompt: \"Write a Python script that reads a CSV manifest, reports blank title fields, flags filenames containing spaces, and lists duplicate document identifiers. Do not alter the file. Include clear error messages and tests using dummy records.\"",
     "process": [
-      "The system generates Python code that reads the CSV, lowercases text and searches for keywords.",
-      "A staff member notices the draft only checks for 'internet' and 'wifi', but not 'slow connection', so some answers would be missed.",
-      "They edit the keyword list, then test the script on 12 sample responses where the expected totals are already known.",
-      "The revised script matches the sample totals: slow internet 5, missing books 3, noisy study areas 4.",
-      "They run it on the full file of 480 responses and use the counts as a first summary, while still reading samples manually to check nuance."
+      "The system generates code token by token, drawing on the prompt and common Python patterns for reading CSV files, checking text and finding duplicates.",
+      "The officer reviews the draft and notices that blank fields containing only spaces are not detected.",
+      "They revise the check, then run the script in a test folder containing valid, incomplete and duplicate dummy records.",
+      "One test reveals that identifiers with different capitalisation are treated as distinct. The comparison logic is corrected and tested again.",
+      "After code review and approval, the officer runs the script on the export and resolves the reported errors before upload."
     ],
-    "result": "The generated code saves drafting time, but the useful result comes only after correction and testing against known examples."
+    "result": "The generated script provides a quick first draft, but review and tests uncover two plausible mistakes before they affect the portal package."
   },
   "unWorkplaceExample": {
-    "scenario": "A team in a UN office wants to build an internal search tool over approved guidance documents and asks a code assistant to draft a script that indexes document titles, tags and public metadata.",
-    "relevance": "Code generation can help technical staff create a first version of parsers, search functions or test cases more quickly, especially for routine programming tasks.",
-    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or unpublished operational content into an unapproved public AI service. Use only approved tools and keep human review, security testing and code approval in place."
+    "scenario": "The knowledge management officer in a small field presence, where connectivity is intermittent, has to place a note for the file from a bilateral meeting on the document register before close of business. An approved coding assistant is asked to draft a local script that checks attachment names and required metadata against the register's rules, using dummy filenames rather than the note or its contents.",
+    "relevance": "The assistant predicts source-code tokens from the prompt and examples, producing a useful first draft of a routine checker. The officer still needs to inspect the logic, test valid and invalid filenames, and confirm that the script behaves properly when the connection drops.",
+    "caution": "Do not paste the note, names of interlocutors or details of the bilateral into a tool that is not approved for that information and purpose. Use synthetic test data, run the script only in an approved environment, and complete code review and security testing before it touches the document register."
   },
   "whyItMatters": "Even if you never write software, code generation can affect the systems your organisation relies on. It can reduce time for routine coding, prototyping and translation between programming languages. But it can also introduce hidden errors, insecure practices, copyright or licence concerns, and hard-to-see maintenance problems. For managers and non-specialists, the key decision is not whether the draft appeared quickly. It is whether the code was reviewed, tested, documented and approved by the right people before real use. Understanding this helps you ask better questions about risk, responsibility, quality and procurement.",
   "whereYouMayHearIt": [
-    "software development tools",
-    "hackathons and prototypes",
-    "digital government services",
-    "office productivity platforms",
-    "cybersecurity reviews"
+    "During a vendor demonstration to an ICT governance board",
+    "At a sprint review before a portal release",
+    "In a procurement meeting assessing a coding assistant",
+    "During an internal audit discussion on software controls"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +130,7 @@
     "simple": "You describe a coding task, and the system drafts code that might help. Treat it like a fast first draft: useful sometimes, trustworthy only after checking and testing.",
     "technical": "Most current code generation tools produce code as sequences of tokens, often using large language models trained on mixtures of code and natural language. Depending on the product, the model conditions on the prompt, surrounding source files, comments, APIs, error messages or retrieved documentation, then predicts likely next tokens until a completion is formed. Some systems support fill-in-the-middle editing, test generation, code explanation, translation between languages or agent-like workflows that call tools such as compilers and linters. Despite this, the mechanism is still probabilistic pattern generation rather than guaranteed program synthesis from a formal specification. Because of that, outputs may compile yet still contain logic errors, security flaws, non-existent library calls, licence concerns or poor performance. Evaluation usually requires static analysis, unit tests, integration tests, code review and environment-specific validation."
   },
-  "keyTakeaway": "Generated code can speed up drafting, but it becomes trustworthy only after human review, testing and approval.",
+  "keyTakeaway": "Generated code is a draft, not a finished control. Review the logic, test expected and awkward cases, and obtain the required approval before use.",
   "quickCheck": {
     "question": "Which statement best describes code generation?",
     "options": [
@@ -249,6 +248,20 @@
     "applied": [
       "oneSentence"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:23:11.280Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced generic settings with distinct roles, artefacts, deadlines and review points, while strengthening the caution around bilateral content."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

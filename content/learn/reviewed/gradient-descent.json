@@ -34,8 +34,8 @@
   "oneSentence": "A method for reducing a model’s loss by repeatedly adjusting its internal settings in the direction opposite the loss gradient.",
   "plainExplanation": "Gradient descent is a common way to improve a machine-learning model during training. The model starts with many settings, often called parameters, that control its outputs. We give the model examples, compare its outputs with the target answers, and calculate a loss: a number that summarises how wrong it was.\n\nNext, the training process calculates how the loss changes as each parameter changes. Together, these rates form the gradient, which points towards a local increase in loss. Gradient descent updates the parameters in the opposite direction, which is intended to reduce the loss.\n\nThen the model takes a small step. The size of that step is controlled by the learning rate. This repeated cycle of measure, calculate, and nudge tends to make the model less wrong on the training data, although not every individual step must lower loss.\n\nStochastic gradient descent, or SGD, uses one example or a small subset of examples per update instead of the whole dataset. That usually makes each update cheaper and noisier. Gradient descent is closely related to backpropagation, but they are not the same: backpropagation computes gradients, while gradient descent uses those gradients to update parameters.",
   "everydayAnalogy": {
-    "title": "Sorting public feedback with adjustable rules",
-    "story": "A city team is sorting consultation comments into topics such as transport, housing, and water. They use a spreadsheet with adjustable scoring rules, for example how strongly the word \"bus\" points to transport. After checking a small batch, they see the system put too many housing comments into transport. They slightly reduce some transport scores and increase some housing scores, then test another batch. Repeating that cycle gradually improves the sorting rules.",
+    "title": "Walking downhill in mist",
+    "story": "Imagine trying to reach the bottom of a misty hillside. You cannot see the whole landscape, but you can feel which way the ground slopes at your current position. You step in the downhill direction, check the slope again and repeat. The slope is like the gradient, your position is like the model’s current parameters, and the length of each step is like the learning rate. Very small steps make progress slow. Very large steps can carry you past the lower ground or make you bounce between slopes.",
     "mapping": [
       {
         "analogyElement": "adjustable scoring rules in the spreadsheet",
@@ -94,27 +94,27 @@
     "component": "gradient-descent"
   },
   "workedExample": {
-    "scenario": "A simple text classifier is being trained to label consultation comments as transport-related or not.",
-    "input": "Current model weight for the word \"bus\" = 0.40. Learning rate = 0.10. On one training batch, the gradient for that weight is -0.30.",
+    "scenario": "To reproduce one entry in the training log, the internal auditor examines the weight attached to the word “bus” when the classifier predicts the category “transport access”.",
+    "input": "Current weight for “bus” = 0.40. Learning rate = 0.10. For one mini-batch, the gradient of the loss with respect to this weight is -0.30.",
     "process": [
-      "The model scores a batch of comments and produces some wrong labels, giving a loss value for that batch.",
-      "Training computes the gradient for the \"bus\" weight as -0.30, meaning increasing this weight would reduce loss.",
-      "Gradient descent updates the weight by subtracting learning rate × gradient: 0.40 - (0.10 × -0.30) = 0.43.",
-      "The model runs again on the next batch with the new weight. If the update helped, the average loss tends to go down over repeated steps."
+      "The classifier processes the mini-batch, compares its predictions with the human-coded categories and calculates a loss.",
+      "Training calculates a gradient of -0.30 for the “bus” weight. Locally, this indicates that increasing the weight should reduce the loss.",
+      "Gradient descent subtracts the learning rate multiplied by the gradient: 0.40 - (0.10 × -0.30) = 0.43.",
+      "The next mini-batch uses the updated weight. Repeating this process aims to reduce training loss, while separate validation data tests whether performance also improves on unseen answers."
     ],
-    "result": "After this step, the model gives slightly more importance to the word \"bus\" when predicting the transport category, because that change was estimated to reduce error on the training data."
+    "result": "The weight increases from 0.40 to 0.43, giving “bus” slightly more influence when the classifier predicts “transport access”. The calculation verifies one update, not that the classifier has improved overall."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN language technology team is training an internal model to help draft rough translations of routine, non-sensitive field updates into a working language. During training, gradient descent adjusts many parameters so the model’s output better matches approved reference translations.",
-    "relevance": "This helps staff understand that model quality does not improve by magic; it improves through repeated error measurement and controlled parameter updates.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive, or operational field information into an unapproved public AI service. Training and testing should use approved systems, authorised data, and human review."
+    "scenario": "At a regional bureau, an internal auditor is tracing how a classifier coded open-ended answers from a needs assessment. Before a note for the file goes to the chief of section at close of business, the auditor compares the training log with the coding protocol and validation results.",
+    "relevance": "The log records how gradient descent adjusted the classifier’s parameters after each mini-batch of human-coded answers. Reviewing the loss, gradients and learning rate helps the auditor distinguish model training from later manual corrections and assess whether the claimed improvement is supported by validation results.",
+    "caution": "Needs-assessment answers may contain personal or protection-sensitive details. Raw answers must not be entered into an external tool that has not been approved for such data, because respondents could be identified or vulnerabilities exposed. Training requires authorised data, an approved environment, restricted access, data minimisation and human validation."
   },
   "whyItMatters": "If you use or procure AI systems, gradient descent helps explain why training takes many iterations, why settings such as learning rate matter, and why better results come from careful optimisation rather than one-time tuning.",
   "whereYouMayHearIt": [
-    "machine-learning training discussions",
-    "neural network courses",
-    "model debugging meetings",
-    "papers comparing optimisers"
+    "A vendor demonstration to an ICT governance board, when the learning-rate setting appears on screen",
+    "A technical evaluation meeting where a procurement unit is testing a supplier’s training claims",
+    "A model review in an evaluation office after validation loss starts rising",
+    "A briefing to the chief of section before a coding method is cleared for a monitoring report"
   ],
   "commonMisconceptions": [
     {
@@ -138,7 +138,7 @@
     "simple": "It is a repeated process for making a model less wrong: measure error, see which way to adjust the settings, and take a small step.",
     "technical": "Given parameters and a differentiable loss function, the method computes the gradient of loss with respect to the parameters and updates them by moving in the negative gradient direction, often using mini-batches in SGD and a learning-rate hyperparameter to scale each step."
   },
-  "keyTakeaway": "Gradient descent improves a model through many small steps intended to reduce error, not one big leap.",
+  "keyTakeaway": "Gradient descent repeatedly adjusts model parameters in the direction opposite the loss gradient. The learning rate sets the step size, and lower training loss does not by itself show better performance on unseen data.",
   "quickCheck": {
     "question": "What does stochastic gradient descent change compared with basic full-batch gradient descent?",
     "options": [
@@ -281,6 +281,20 @@
       "keyTakeaway",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:10:05.858Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

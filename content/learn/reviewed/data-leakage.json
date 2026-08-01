@@ -96,29 +96,28 @@
     "reducedMotionDescription": "A static two-column comparison replaces animation. The left column shows clean features, proper train-test separation, and a credible score. The right column shows a leaked clue entering, an inflated score, and then lower real-world performance when the clue disappears."
   },
   "workedExample": {
-    "scenario": "A team wants to predict whether incoming grant emails need urgent follow-up within 24 hours.",
-    "input": "Training table with 10,000 past emails. Features include sender domain, subject words, language, and a field called 'follow_up_completed_time'.",
+    "scenario": "A reporting officer in a regional bureau tests a model to predict, at first submission, which implementing partner progress reports will miss clearance by close of business.",
+    "input": "A workflow export containing first-submission metadata, later reminder timestamps, final clearance dates and several versions of some reports.",
     "process": [
-      "The team trains a classifier and includes 'follow_up_completed_time' as an input feature.",
-      "On the test set, the model reaches 97% accuracy, much higher than the team's baseline of 78%.",
-      "A reviewer notices that 'follow_up_completed_time' is only filled after staff have already handled the urgent cases, so it indirectly reveals the outcome.",
-      "The team removes that field and re-runs the evaluation with a clean train-test split.",
-      "Accuracy falls to 81%, which is lower than 97% but much more believable for real incoming emails."
+      "The initial dataset keeps the final clearance date and a reminder timestamp, although neither would be available when the prediction is made.",
+      "Rows are split at random, placing early and revised versions of the same progress report on opposite sides of the training and test split.",
+      "The resulting performance appears strong because the model can infer the outcome from later workflow events and recognise closely related report versions.",
+      "The reporting officer removes all fields created after first submission and groups every version of a report into the same split.",
+      "Missing-value handling and other preprocessing are then fitted on the training data alone before being applied to the held-out test data."
     ],
-    "result": "The first score was inflated by target leakage. The cleaned model is less impressive on paper, but its test result is more likely to match real operations."
+    "result": "The revised score is lower, but it now tests the intended task. The first evaluation contained both target leakage and non-independent test cases, so it overstated likely performance on genuinely new progress reports."
   },
   "unWorkplaceExample": {
-    "scenario": "A country office wants to triage a shared programme inbox by predicting which messages need same-day response. The team uses approved internal tools and historical message metadata to test a model.",
-    "relevance": "Leakage can appear if the dataset includes fields added after staff review, such as priority tags, escalation status, or closure times. That would make the pilot seem stronger than it would be on new incoming messages.",
-    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or operational email content or metadata to an unapproved AI service. Use approved environments, minimise data, and keep human oversight over triage decisions."
+    "scenario": "At Headquarters, a political affairs officer tests an approved classifier to flag incoming field updates for the briefing note due to the front office at 6pm. The historical dataset includes arrival metadata, editorial tags and final inclusion decisions.",
+    "relevance": "A final section heading, clearance timestamp or inclusion flag was created only after review and would not exist when a new update arrives. Revised versions of the same update may also fall into both training and test sets. Either leak can make the classifier look more reliable than it is.",
+    "caution": "Field updates may contain confidential, personal or security-sensitive information. They must not be entered into a tool that has not been approved for that material. Use an approved environment, minimise the data used, restrict access and retain human review of every proposed flag."
   },
   "whyItMatters": "A leaked model can pass testing, win budget, and enter operations even though it does not truly work. That creates poor decisions: systems may be procured, deployed or trusted on the basis of scores that were never a fair test. For programme teams, this can mean missed cases, wasted staff time, unfair treatment, or false confidence in dashboards and automation. For technical teams, leakage blocks honest comparison between models because the evaluation no longer reflects reality. Spotting leakage early helps teams ask a simple but powerful question: would this information really be available at the moment we need the prediction?",
   "whereYouMayHearIt": [
-    "model validation meetings",
-    "machine learning code reviews",
-    "procurement and vendor demos",
-    "dashboard performance discussions",
-    "research papers on evaluation"
+    "A vendor demo during a procurement unit's technical evaluation",
+    "An ICT governance board reviewing pilot results",
+    "A model validation meeting before a dashboard is cleared for release",
+    "An internal audit interview on how training and test data were separated"
   ],
   "commonMisconceptions": [
     {
@@ -264,6 +263,18 @@
       "unWorkplaceExampleCaution",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:51.872Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

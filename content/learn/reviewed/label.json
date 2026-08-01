@@ -86,28 +86,27 @@
     "reducedMotionDescription": "A static left-to-right diagram with four labelled boxes and arrows. Labels appear only in the training part, while the final prediction stage explicitly notes that no label is provided for the new example."
   },
   "workedExample": {
-    "scenario": "A team wants to detect unusual water pump behaviour from sensor readings.",
-    "input": "Example record: vibration 8.1 mm/s, temperature 74°C, flow 42 L/min; human review outcome: needs inspection.",
+    "scenario": "A political affairs officer documents a text-classification pilot in a handover note. The training set contains paragraphs from cleared notes for the file, each reviewed and assigned an action category.",
+    "input": "Paragraph: “The delegation asked the office to circulate revised talking points by close of business.” Reviewed category: “follow-up required”.",
     "process": [
-      "Collect past pump records with sensor values and the reviewed outcome attached.",
-      "Use the sensor values as features and the reviewed outcome as the label.",
-      "During training, the model sees the record and may first output 'normal'.",
-      "The system compares that output with the label 'needs inspection' and updates the model.",
-      "Later, a new record with similar readings is sent in without a label, and the model outputs a prediction."
+      "Treat the paragraph as the input example and the reviewed category “follow-up required” as its label.",
+      "During training, the model uses patterns in the paragraph as features and produces an initial output, perhaps “for information”.",
+      "The loss function measures the difference between that output and the attached label. Training adjusts the model to reduce such differences across many examples.",
+      "For a new paragraph, no reviewed label is supplied. The model produces a prediction, which an authorised officer may confirm or correct."
     ],
-    "result": "The label for the training record was 'needs inspection'. It was the answer used to teach the model what output should match those sensor patterns."
+    "result": "“Follow-up required” is the label for the training example. It is the expected answer used to teach the model, while the category produced for a new paragraph is a prediction."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team builds an internal tool to flag whether draft speech paragraphs align with previously agreed language categories such as 'aligned', 'needs legal review', or 'not aligned'. Past paragraphs are reviewed by authorised staff, and those review outcomes become labels for training examples.",
-    "relevance": "This helps staff understand that the label is the reviewed category attached to each past example, not the paragraph text itself and not the model’s later output.",
-    "caution": "Use only approved internal systems and approved text collections. Do not place confidential negotiation text, unpublished drafts, or politically sensitive material into an unapproved public AI service."
+    "scenario": "Before completing a handover note for an incoming colleague, a political affairs officer in a country office records how an approved pilot classifies paragraphs from cleared notes for the file. Authorised reviewers have attached one category to each past paragraph, such as “follow-up required”, “for information” or “include in the next briefing note”. Those categories are the labels used during training.",
+    "relevance": "The paragraph is the input and its reviewed category is the label. During training, the model compares its output with that category. When it later processes a new paragraph, its proposed category is a prediction, not a label, however confidently it appears on screen.",
+    "caution": "Confidential political reporting, names of contacts and security-sensitive details must not be entered into a tool that has not been approved for such material, because disclosure could expose individuals or compromise the office’s work. Even in an approved system, apply access and retention controls, and keep authorised staff responsible for the final assessment."
   },
   "whyItMatters": "If you work with any machine learning system, labels affect what the system can learn, how well it performs, and where it may fail. Poor labels can teach the wrong pattern. Missing labels can limit which methods are possible. Inconsistent labels can make results unstable. For managers and programme staff, asking 'Where did the labels come from, who assigned them, and how reliable are they?' is often more useful than asking only which algorithm was used. Labels also help you judge whether a system’s output can be trusted for the task, or whether human review remains essential.",
   "whereYouMayHearIt": [
-    "data annotation projects",
-    "supervised learning discussions",
-    "model evaluation meetings",
-    "quality assurance for datasets"
+    "A review of an annotated dataset with the information management officer",
+    "A vendor demo during a procurement meeting",
+    "A model evaluation meeting before an internal pilot goes live",
+    "A handover briefing on a document-classification pilot"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +126,7 @@
     "simple": "A label is the answer attached to an example so the system can learn what output it should produce.",
     "technical": "In supervised learning, a label is the target variable associated with an input example. The model maps features to this target by minimising a loss function, which measures the difference between the model output and the label. Labels may be categorical, as in classification, or numeric, as in regression. They are often created through annotation or derived from recorded outcomes. A label is not the same as a feature, and it is not the same as a prediction produced at inference time. 'Ground truth' is often used for labels when they represent the best available reference answer, but in practice training labels can be noisy, delayed, weak, or only approximate."
   },
-  "keyTakeaway": "A label is the expected output attached to an example, and it is what lets supervised learning compare, correct, and improve.",
+  "keyTakeaway": "A label is the expected answer attached to a training example. It is distinct from the input features and from the prediction a trained model later produces.",
   "quickCheck": {
     "question": "In a dataset for predicting pump faults, which item is the label?",
     "options": [
@@ -232,6 +231,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:24.839Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

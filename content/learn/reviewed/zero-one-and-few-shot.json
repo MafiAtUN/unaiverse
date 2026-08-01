@@ -34,8 +34,8 @@
   "oneSentence": "These labels describe how many task examples a model gets in the prompt before it tries a new input: none, one, or a small handful.",
   "plainExplanation": "Zero-shot, one-shot and few-shot describe a prompting setup, not a separate kind of model. The key question is: before asking for an answer, how many examples of the task do you place in the prompt? In a prompt, you give text, images or other input to the model. The model then produces an output such as a label, summary or draft reply.\n\nIn zero-shot use, you give only the instruction and the new input. In one-shot use, you add one example that shows the pattern you want. In few-shot use, you add a small number of examples, often two to ten, to guide the format, tone or decision rule. What goes in is the task instruction, sometimes examples, and then the new case. What happens is that the model uses patterns learned earlier during pretraining and later tuning, plus the examples in the prompt if you provide them. What comes out is a prediction or generated text for the new case.\n\nThese terms are closely related to in-context learning, which means the model adjusts its behaviour from the context inside the prompt without changing its stored parameters, meaning the internal numeric settings of the model. That is why zero-shot, one-shot and few-shot are different from fine-tuning. Fine-tuning changes the model itself by training on data. Few-shot prompting usually leaves the model unchanged and only changes the prompt.\n\nPeople sometimes use these words loosely, and that can cause confusion. In older machine learning literature, few-shot learning can also mean training a system to learn new classes from very few labelled examples. In current large language model discussions, people often mean few-shot prompting inside one conversation. So it helps to ask: do they mean examples in the prompt, or additional training on a small dataset?",
   "everydayAnalogy": {
-    "title": "Helping a farming cooperative classify rainfall reports",
-    "story": "A farming cooperative receives daily notes from field officers in Kenya, Peru and Nepal. The coordinator asks a new assistant to label each note as low, medium or high rainfall risk. If the coordinator gives only the rule, that is like zero-shot. If the coordinator gives one labelled example note first, that is like one-shot. If the coordinator gives four labelled example notes showing tricky cases before the new note, that is like few-shot.",
+    "title": "Labelling boxes for a clear-out",
+    "story": "You ask a friend to label each item KEEP, GIVE AWAY or RECYCLE. Giving only the instruction is like zero-shot. Showing one labelled item before the next decision is like one-shot. Showing several labelled items, including awkward cases, is like few-shot. Your friend has not undergone new training. The examples are simply in view while each new item is considered.",
     "mapping": [
       {
         "analogyElement": "The rule for low, medium or high risk",
@@ -88,28 +88,27 @@
     "reducedMotionDescription": "A static three-column comparison replaces any animation. Each column lists the prompt contents in order and points to an output, with one shared note underneath: the same model is used in every column and its parameters do not change."
   },
   "workedExample": {
-    "scenario": "Classifying short weather bulletins for a farming cooperative into low, medium or high rainfall risk for tomorrow.",
-    "input": "New bulletin: \"Dark clouds expected after noon, 70% chance of storms, rivers already near seasonal average.\"",
+    "scenario": "The associate expert tests three prompts for converting a cleared background paragraph into three concise talking points, each with the same structure and no added claims.",
+    "input": "A cleared background paragraph and the required output format: three talking points for informals, each no longer than 20 words.",
     "process": [
-      "Zero-shot prompt: \"Label the rainfall risk for tomorrow as low, medium or high. Bulletin: ...\" The model must infer the rule from the instruction alone.",
-      "One-shot prompt: add one example, such as \"Bulletin: Light clouds, 10% chance of rain, dry soil. Label: low.\" Then provide the new bulletin.",
-      "Few-shot prompt: add three examples, for instance one low, one medium and one high case, each with a label, then provide the new bulletin.",
-      "Compare outputs. Zero-shot may vary more, one-shot may copy the desired label format, and few-shot often handles the threshold pattern more consistently."
+      "Zero-shot: provide the drafting instruction and the new paragraph, with no example. The model must infer how the requested talking points should look.",
+      "One-shot: add one cleared source paragraph followed by its approved three-point output, then provide the new paragraph.",
+      "Few-shot: add three cleared source-and-output pairs covering different sentence structures, then provide the new paragraph.",
+      "Run all three prompts on the same input. In each case, the model conditions on the prompt and generates an answer using its existing parameters. It is not fine-tuned."
     ],
-    "result": "The prompts may return low, medium or high. Check whether each output follows the requested format and applies an agreed risk rule. Few-shot prompting can still produce an inconsistent or wrong label."
+    "result": "One-shot may improve formatting, while few-shot may produce more consistent structure and treatment of recurring language. Neither guarantees accuracy. The associate expert still checks that the output reflects the cleared source, introduces no new position and is ready for the file."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team wants drafting help for short, public-facing summaries of meeting notes while keeping a human reviewer in control.",
-    "relevance": "Zero-shot prompting may be enough for a generic first draft. One-shot or few-shot prompting can improve consistency by showing one or several approved examples of tone, structure and disclaimer wording without changing the underlying model.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or negotiation-sensitive content into an unapproved public AI service. Use only approved tools and keep human review before any text is shared."
+    "scenario": "An associate expert supporting executive services at a shared services centre must turn a cleared background paragraph into talking points for informals before close of business.",
+    "relevance": "A zero-shot prompt gives only the drafting instruction. A one-shot prompt adds one cleared source-and-output pair, while a few-shot prompt adds several. The examples can establish format, tone and the treatment of recurring language without changing the model's parameters.",
+    "caution": "Talking points may contain negotiation-sensitive material. Do not paste draft positions, bracketed text or other sensitive content into a tool not approved for it. Use only cleared examples suitable for that system, and have the responsible desk officer verify every line before circulation."
   },
   "whyItMatters": "For non-specialists, these terms help you ask the right operational question: do we need a better prompt, a few strong examples, or actual model retraining? That affects cost, speed, privacy review, procurement and risk. Zero-shot is quick but may be less consistent. One-shot and few-shot can improve formatting and task guidance without changing the model, but they use more prompt space and still do not guarantee accuracy. Knowing the distinction also helps you challenge vague claims such as \"we trained it on our data\" when someone may only mean they added examples to a prompt.",
   "whereYouMayHearIt": [
-    "prompt engineering discussions",
-    "vendor product demos",
-    "machine learning papers",
-    "internal automation pilots",
-    "LLM course materials"
+    "During a vendor demo to an ICT governance board",
+    "While reviewing test results from an internal automation pilot",
+    "In a prompt-design session at Headquarters",
+    "During clearance of terms of reference for a model evaluation"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "These words tell you how much help you give the model inside the prompt before asking it to handle a new case: no example, one example, or a few examples.",
     "technical": "In current LLM practice, zero-shot, one-shot and few-shot usually refer to in-context prompting regimes. A prompt contains an instruction, optionally k labelled or pattern-setting examples, and then a query instance. The model conditions on the whole context and predicts the next tokens for the output, using its existing parameters rather than updating them. Zero-shot uses k=0, one-shot uses k=1, and few-shot uses a small k. This differs from fine-tuning, supervised fine-tuning or parameter-efficient methods such as LoRA, where optimisation updates parameters using training data. The terms can be ambiguous across subfields: in some machine learning literature, few-shot learning refers to methods built to generalise from very few labelled examples, sometimes with actual training episodes or meta-learning, not only prompt examples."
   },
-  "keyTakeaway": "Zero-shot, one-shot and few-shot usually describe how many examples you put in the prompt, while fine-tuning changes the model itself.",
+  "keyTakeaway": "Zero-shot, one-shot and few-shot count the examples supplied in the prompt. They guide the model through context rather than changing its parameters.",
   "quickCheck": {
     "question": "Which statement best distinguishes few-shot prompting from fine-tuning?",
     "options": [
@@ -265,6 +264,20 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:38.181Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Reframed the examples around a specific function, artefact and deadline; strengthened the handling of negotiation-sensitive material; and replaced the farm analogy with a more general one."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

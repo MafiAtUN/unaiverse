@@ -86,27 +86,27 @@
     "reducedMotionDescription": "A static left-to-right flow with the same four stages and the two final branches visible at once, using labels and colour contrast instead of animation."
   },
   "workedExample": {
-    "scenario": "A user asks a general-purpose assistant on 10 March 2026: 'Who won the 2025 regional football championship in East Africa?'",
-    "input": "User prompt: 'Who won the 2025 regional football championship in East Africa? Please answer in one sentence.'",
+    "scenario": "A desk officer at Headquarters asks an approved assistant to summarise changes in a revised draft circulated last week, for talking points needed before an afternoon first reading.",
+    "input": "User prompt: “Summarise the main changes in the revised draft circulated last week.” No draft or link is provided.",
     "process": [
-      "The model has built-in training knowledge only up to a stated cutoff in mid-2024.",
-      "The question asks about an event in 2025, which is after that cutoff.",
-      "Without retrieval or a user-supplied source, the model may produce a guess, say it is unsure, or mix older facts with invented detail.",
-      "If the system is connected to an approved current source, it can use that source to answer and cite it, depending on system design."
+      "The model’s stated knowledge cutoff predates circulation of the revised draft.",
+      "The prompt does not contain the draft, and the assistant has no retrieval connection to the document system.",
+      "The model may rely on an earlier version, infer plausible changes or invent details that sound consistent with previous text.",
+      "The officer supplies the authoritative circulated draft through an approved method and asks the assistant to compare it with the earlier version, with references to the relevant paragraphs."
     ],
-    "result": "The safe conclusion is not 'the model knows' or 'does not know' in a human sense, but that its built-in training background does not reliably cover that 2025 result unless newer information is added another way."
+    "result": "The cutoff explains why the model cannot reliably know the revised text from its training background. Once the current draft is supplied at inference time, the assistant can work from that text, subject to access controls and human verification."
   },
   "unWorkplaceExample": {
-    "scenario": "A communications officer in a UN country office uses an approved internal AI tool to draft responses for a shared public inbox that asks about this month’s office opening hours and a newly announced event.",
-    "relevance": "Knowing the cutoff helps the officer recognise that a draft may contain outdated details if the model was trained before the latest office notice. The officer can then provide the current approved notice or use a connected internal knowledge source before sending anything.",
-    "caution": "Use only approved public notices. Do not enter sender details, confidential messages, or sensitive information unless the tool is approved for those data."
+    "scenario": "During a lessons-learned exercise after an assistant pilot, an ombudsman case officer at a shared services centre reviews a draft note for the file before close of business. The draft describes an intake workflow that was replaced after the model’s knowledge cutoff.",
+    "relevance": "The newer workflow did not enter the model’s training-derived parameters merely because it was circulated internally. The officer must provide the current instruction through an approved source or correct the draft directly. A longer prompt alone does not make the model’s background more current.",
+    "caution": "Do not put names, contact details, allegations, case narratives or attachments into a tool that is not explicitly approved for ombudsman case material. For an approved tool, use de-identified extracts and the minimum necessary content under the office’s confidentiality requirements."
   },
   "whyItMatters": "The cutoff affects whether an answer may be outdated. That matters when you judge risk, choose whether to trust a draft, and decide when you need current documents or human checking. It also helps you ask better questions of vendors: what date does built-in knowledge reach, and what approved method adds newer information? Without that clarity, people may assume a fluent answer is current when it is not.",
   "whereYouMayHearIt": [
-    "model cards and product notes",
-    "AI procurement discussions",
-    "media interviews about chatbots",
-    "staff training on safe AI use"
+    "A vendor demo during an AI procurement meeting",
+    "A lessons-learned session after an assistant pilot",
+    "An ICT governance board review of a model card",
+    "A staff briefing before an approved assistant is rolled out"
   ],
   "commonMisconceptions": [
     {
@@ -130,7 +130,7 @@
     "simple": "It is the approximate date up to which the model’s training-derived background may be current. Newer facts may be missing unless added another way.",
     "technical": "During pretraining, a model is optimised on a corpus assembled up to an approximate time boundary. That boundary is commonly described as the knowledge cutoff. Information after that date is generally not represented in the model’s training-derived parameters. Newer information can be incorporated through additional training or fine-tuning, or supplied at inference time through retrieval or user-provided context. The term refers to temporal coverage of training data, not context capacity, conversation history, or automatic access to live external sources. Because models generate outputs from learned statistical patterns rather than a dated fact table, post-cutoff answers may still appear confident even when unsupported by current evidence."
   },
-  "keyTakeaway": "A knowledge cutoff tells you how recent the model’s built-in training background may be, not whether it can read long prompts or use fresh documents you provide.",
+  "keyTakeaway": "A knowledge cutoff marks the approximate recency of the model’s training-derived background. It does not limit prompt length or prevent the model from using current information supplied through approved retrieval or context.",
   "quickCheck": {
     "question": "Which statement best describes a knowledge cutoff?",
     "options": [
@@ -277,6 +277,19 @@
       "simpleVsTechnicalSimple",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:14.494Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Replaced generic examples with specific UN workplace scenarios and clarified the distinction between training-data recency, context capacity and retrieval."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

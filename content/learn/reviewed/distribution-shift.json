@@ -35,8 +35,8 @@
   "oneSentence": "These terms describe mismatches between development and live data, including changed inputs, labels or relationships, which can reduce a system's reliability.",
   "plainExplanation": "AI systems are built and checked on past data, then used on new data. Problems start when the new data no longer looks like the old data in an important way. That broad situation is often called distribution shift: the pattern of data in use differs from the pattern seen during development.\n\nWithin that broad idea, data drift usually means the inputs have changed. For example, a model trained on clear daytime photos may later receive more night images or lower-quality scans. Concept drift usually means the relationship between input and correct output has changed. For example, words that once signalled urgent feedback may later be used casually, so the same phrase no longer means the same thing.\n\nModel drift is used less consistently. Some people use it loosely for any drop in model performance over time. Others use it for the model becoming less suitable because of data drift, concept drift, software changes or feedback loops. Because usage varies, it is safer to ask what exactly has changed: the inputs, the target labels, the environment, or the measured performance.\n\nWhat goes in is live data from the real setting. What happens is a mismatch between the old pattern and the current one. What comes out can be lower accuracy, more bias, unstable results, false confidence or rising costs from extra checking and retraining. This is different from overfitting, which starts during development when a model matches training data too closely; drift happens later when the world or data pipeline changes.",
   "everydayAnalogy": {
-    "title": "Practising for the wrong examination",
-    "story": "A student in Nairobi practises with last year's examination papers. Those papers mostly use short factual questions, so the student learns to spot those patterns quickly. On the real exam, many questions are now based on longer case studies, and some topics are framed differently. The student's practice method has not suddenly become useless, but it now fits the real paper less well, so the score drops for reasons that were not obvious during practice.",
+    "title": "Predicting the next café order",
+    "story": "A café predicts whether the next customer will order a hot or cold drink using the hour and weather. A new bus route changes who arrives at each hour, so the inputs no longer resemble the earlier records. Later, customers begin choosing iced drinks at temperatures where they previously chose tea, so the same clues now point to a different correct answer. A heatwave may also make cold drinks much more common overall. The prediction rule has not changed, but the data around it, and possibly what those data mean, have.",
     "mapping": [
       {
         "analogyElement": "last year's practice papers",
@@ -89,29 +89,28 @@
     "reducedMotionDescription": "Show the same four boxes and two side notes as a static left-to-right diagram with all example labels visible from the start, without hover effects or animation."
   },
   "workedExample": {
-    "scenario": "An NGO helpline uses a text classifier to route incoming messages into 'housing', 'food', 'health' or 'other'.",
-    "input": "Training period: 10,000 messages, mostly formal language from email forms. Six months later, live traffic shifts to short mobile messages and voice-to-text transcripts.",
+    "scenario": "At a regional hub, an information management officer checks a classifier that tags cleared reporting extracts by sector before a monitoring report is uploaded to the portal.",
+    "input": "The development set contains older narrative paragraphs. Current submissions increasingly use short bullet points, machine-translated text and revised templates, while reviewers apply the latest labelling instructions.",
     "process": [
-      "At launch, the classifier reaches 90% accuracy on a test set similar to the training data.",
-      "In live use, 60% of messages now come from mobile chat, up from 15%, and many contain abbreviations, spelling variation and transcript errors.",
-      "Reviewers find that messages about medicine are increasingly written as short urgent fragments like 'need refill now' instead of fuller sentences used earlier.",
-      "Weekly spot checks show accuracy has fallen to 76%, with health messages often misrouted to 'other'.",
-      "The team updates preprocessing for transcripts, collects recent approved examples, and retrains and rechecks the system before redeployment."
+      "The classifier still performs well on held-out extracts drawn from the same period as its development data.",
+      "Current extracts differ in length, vocabulary and structure. This is input drift and may amount to covariate shift if the underlying feature-to-label relationship remains unchanged.",
+      "Reviewers also find that some mixed activities are labelled differently under the current instructions. The correct label for the same wording has therefore changed, indicating concept drift.",
+      "The officer compares recent human-coded extracts with model outputs and tracks changes in input patterns, label prevalence and agreement with current labels.",
+      "Recent approved examples are added for retraining, and the revised classifier is checked against current human coding before it returns to use."
     ],
-    "result": "The team addresses the changed mix of input styles, then checks whether the updated system is reliable before redeployment."
+    "result": "Monitoring the text alone can reveal changed inputs, but it cannot establish whether the correct labels have changed. Detecting concept drift requires recent, consistently labelled examples and renewed performance checks."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal search tool to find previous resolution language and classify paragraphs by topic, based on historical documents.",
-    "relevance": "The wording, document formats and topic emphasis can change over time, so a tool that worked well on older text may miss relevant newer phrasing or over-prioritise outdated formulations. Monitoring for drift helps teams avoid relying too heavily on stale patterns when preparing background research.",
-    "caution": "Do not upload confidential negotiating positions, unpublished drafts or other restricted material into an unapproved public AI service. Keep human review over retrieved language, especially where context, mandate or current practice may have shifted."
+    "scenario": "As terms of reference for a premises-alert pilot move towards Friday clearance, a security analyst supporting a UN Country Team working group checks whether the vendor must monitor changes in historical alert patterns, sensor coverage and reporting practice after deployment.",
+    "relevance": "A different mix of sensors or reporting forms would be input drift. If an alert pattern that once indicated a routine fault begins to signal an incident requiring follow-up, that would be concept drift. A change in the proportion of genuine incidents would shift label prevalence. Each can make the pilot less reliable without any change to its code.",
+    "caution": "Do not place security incident logs, access records or identifiable staff data in any tool not approved for that material. Removing names does not by itself make security patterns safe to disclose. Any pilot must retain human review of alerts and define what happens when drift is detected."
   },
   "whyItMatters": "A system can pass testing and still become less reliable later because the world, users or data pipeline changed. For programme teams, that can mean missed cases, unfair treatment or wasted staff time. For technical teams, it means monitoring cannot stop at launch. For leadership, it affects risk, budget and accountability: a model may need more review, updated data, or retirement even if nothing appears \"broken\" in the software. These terms help teams ask the right question: did the inputs change, did the meaning change, or are we simply measuring the wrong thing? That difference matters because the response is different too.",
   "whereYouMayHearIt": [
-    "model monitoring dashboards",
-    "MLOps or deployment reviews",
-    "audit and risk discussions",
-    "data quality meetings",
-    "vendor performance reports"
+    "An ICT governance board considering monitoring requirements for a pilot",
+    "A vendor performance review before a system is renewed",
+    "A data quality meeting after live results diverge from validation results",
+    "An internal audit interview on controls for a deployed model"
   ],
   "commonMisconceptions": [
     {
@@ -135,7 +134,7 @@
     "simple": "A system learned from yesterday's patterns. If today's data looks different, or the old clues no longer mean the same thing, the system's outputs can get worse.",
     "technical": "Distribution shift is the umbrella term for a mismatch between the probability patterns in development data and those in deployment data. Covariate shift means the feature distribution changes while the feature-to-target relationship stays the same; input drift is a looser term for changed features. Another is concept drift, where the relationship between features and the target label changes over time, so the same input pattern maps to a different correct output. Label prevalence can also shift, and operational changes such as new sensors, preprocessing, user interfaces or feedback loops can alter measured performance. The phrase model drift is used inconsistently: in practice it often refers to observable performance degradation from one or more of these mechanisms. Detecting drift may involve comparing feature distributions, monitoring calibration and error rates, and sampling recent cases for human review, but a detected statistical shift does not by itself prove harmful impact."
   },
-  "keyTakeaway": "A model can age even when the code stays the same, because the data or its meaning has changed.",
+  "keyTakeaway": "A model can become unreliable while its code stays unchanged because the inputs, label balance or relationship between inputs and correct outputs has shifted.",
   "quickCheck": {
     "question": "Which situation best illustrates concept drift rather than simple input data drift?",
     "options": [
@@ -268,6 +267,20 @@
       "simpleVsTechnicalTechnical",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:23:30.096Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced generic and statistically invented scenarios with distinct workplace moments that separately illustrate input drift, concept drift and changing label prevalence."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

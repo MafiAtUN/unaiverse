@@ -29,8 +29,8 @@
   "oneSentence": "Toxicity means abusive, hostile or degrading output, including insults, threats or dehumanising content aimed at people or groups.",
   "plainExplanation": "In AI, toxicity refers to abusive, hostile or degrading language or other content. It can attack, shame, threaten, harass or dehumanise people or groups. It often appears in text, but similar concerns can apply to images, audio or generated captions. The main question is not whether a system uses a rude word once, but whether the output is abusive or degrading in context.\n\nAt generation time, inputs can include a user prompt, earlier messages and system instructions. Training data is not a live input at this stage. It shaped the patterns learned earlier. If those examples contained abusive patterns, stereotypes or violent language, the model may reproduce them. A user's prompt can also push the system toward toxic output.\n\nWhat happens inside is pattern generation and filtering. The model predicts likely next words or other outputs from learned patterns. Safety tools may try to block or rewrite harmful material, but they do not catch everything. Toxicity is therefore a risk to manage, not a switch that can be turned off perfectly.\n\nWhat comes out may be obviously abusive, or less direct, such as coded insults, harassment, hate speech, sexual harassment or degrading descriptions of a nationality, religion, gender or other group. Toxicity is related to bias and safety, but it is not the same as content moderation. Content moderation is the broader process of setting rules and handling content; toxicity is one kind of harmful content those rules may address.",
   "everydayAnalogy": {
-    "title": "A public notice board with an overworked helper",
-    "story": "Imagine a busy library with a public notice board where visitors can pin messages for community events. A helper quickly checks cards before putting them up, but the pile is large and some messages use disguised insults or coded slurs that look harmless at first glance. Most harmful cards are removed, yet a few still reach the board and upset readers. If someone keeps submitting abusive cards, the helper may also become too strict and block some harmless messages by mistake.",
+    "title": "The automatic filter in a group chat",
+    "story": "A group chat blocks messages containing words on a banned list. It stops some direct insults, but it also blocks \"that match was brutal\", which was harmless, and misses a politely worded message intended to humiliate one person. A moderator has to consider the target, context and intent, then adjust the filter. Toxicity detection faces the same problem: words provide clues, but they do not settle the judgement.",
     "mapping": [
       {
         "analogyElement": "visitor message cards",
@@ -83,27 +83,27 @@
     "reducedMotionDescription": "A static four-step flowchart with the same boxes and labels: Inputs, Generation, Safety checks, and two outcomes, Shown to user or Blocked or rewritten. Notes under the boxes explain missed harm and over-blocking without animation."
   },
   "workedExample": {
-    "scenario": "A public-facing assistant for a youth information website is asked to rewrite a complaint message.",
-    "input": "Prompt: 'Rewrite this so it sounds stronger: People from Country X are dirty and should stay out of our neighbourhood.'",
+    "scenario": "A reporting officer at a regional bureau tests a public question-and-answer assistant before the test report is uploaded to the portal.",
+    "input": "Prompt: \"Draft a reply explaining why calling displaced people 'parasites' is unacceptable.\"",
     "process": [
-      "The system receives the prompt and recognises it as a request to transform text.",
-      "The model begins to generate a sharper version and may preserve the hostile meaning if no safeguard intervenes.",
-      "A safety classifier flags the text for hate or degrading language aimed at a nationality.",
-      "Instead of returning a rewrite, the system blocks the request and offers a safer alternative such as help to write a complaint without attacking a group."
+      "A keyword rule detects the dehumanising term and initially blocks the prompt.",
+      "The block is a false positive: the user quoted the term to request counter-speech, not to attack the group.",
+      "A contextual classifier and a human reviewer assess the target and intent. They allow a response but check that the assistant does not endorse, repeat unnecessarily or elaborate the insult.",
+      "The officer records both the initial block and the final decision, then adds tests covering indirect insults and relevant language varieties."
     ],
-    "result": "Safe result: 'I can help rewrite your message to focus on the specific problem without insulting people based on nationality.'"
+    "result": "Safe result: \"That wording dehumanises displaced people. A constructive response should address specific concerns without presenting any group as less than human.\""
   },
   "unWorkplaceExample": {
-    "scenario": "A communications officer checks a draft speech against agreed language using an approved internal tool. The tool is used to spot wording that could be insulting, dehumanising or inflammatory toward a community, and to suggest more respectful phrasing for human review.",
-    "relevance": "This helps reduce the risk that public communications unintentionally spread harmful language, especially in fast-moving drafting cycles.",
-    "caution": "Do not paste confidential negotiation text, personal data, protection-sensitive material or unpublished security-related information into an unapproved public AI service; human review must make the final judgement on sensitive wording."
+    "scenario": "A gender adviser in an evaluation office reviews the concept note for a side event in the margins of a Human Rights Council session. An approved drafting assistant suggests promotional wording that portrays women respondents as irrational rather than describing the evaluation finding. The adviser removes the degrading language and records the failure in the tool's evaluation log before the concept note goes for clearance.",
+    "relevance": "Toxic wording can enter an otherwise routine draft through the prompt, conversation history or the model's training and safety tuning. Testing should cover stereotypes and indirect degradation, not only obvious insults, including across languages and language varieties.",
+    "caution": "Do not put raw interview transcripts, identifying quotations, personal data or protection-sensitive evaluation material into a tool that has not been approved for that material. Doing so could expose respondents and recirculate abusive content. Even with an approved tool, use only the minimum necessary text and retain human review."
   },
   "whyItMatters": "Toxic output can harm people directly, damage trust, worsen discrimination and create legal, reputational and safety risks for organisations. Non-specialists should care because a system can sound fluent while still producing abuse, hate or harassment. That matters in customer service, education, translation, search, communications and public information. It also matters for human rights: some groups are targeted more often, and indirect insults can be missed if reviewers only look for obvious slurs. In practice, toxicity affects what systems are safe to deploy, what human oversight is needed, and when a response should be blocked, rewritten or escalated to a person.",
   "whereYouMayHearIt": [
-    "content safety reviews",
-    "social media moderation",
-    "chatbot testing",
-    "communications quality checks"
+    "During a vendor demonstration to an ICT governance board",
+    "At the first reading of a chatbot test report",
+    "In clearance of guidance for social media moderation",
+    "When an evaluation office reviews an AI risk log"
   ],
   "commonMisconceptions": [
     {
@@ -123,7 +123,7 @@
     "simple": "Toxicity means AI output that could insult, threaten, degrade or otherwise harm people or groups.",
     "technical": "In technical use, toxicity refers to harmful or abusive generated content, often assessed through classifiers, rules or human review. It can arise from prompt conditioning, conversation history, model training data or failures in safety tuning. Detection is difficult because toxicity depends on context, target, culture, language variety and intent, and because systems must balance false negatives, where harmful content is missed, against false positives, where benign content is blocked. Toxicity is often measured in text, but related risks also appear in images, audio and multimodal systems."
   },
-  "keyTakeaway": "A fluent system can still produce harmful language, so toxic output must be anticipated, tested for and reviewed by humans.",
+  "keyTakeaway": "Toxicity controls must catch abusive or degrading output without blocking benign quotation, criticism or counter-speech. Context and human judgement remain essential.",
   "quickCheck": {
     "question": "Which statement best explains toxicity in AI output?",
     "options": [
@@ -247,6 +247,20 @@
       "plainExplanation",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:25:55.815Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

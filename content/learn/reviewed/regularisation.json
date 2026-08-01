@@ -28,8 +28,8 @@
   "oneSentence": "Regularisation changes a model's training objective or procedure to reduce overfitting and improve performance beyond the training data.",
   "plainExplanation": "When a model is trained, optimisation reduces a loss: a number that measures how wrong its predictions are on the training data. Regularisation changes the objective or another part of the training procedure to reduce overfitting.\n\nWhat goes in is the usual training data, the model, and one or more regularisation settings. A weight is a number inside the model that affects its output. A common method adds a penalty to the loss when weights become large. Another regularisation method, dropout, switches off some units temporarily during training, but it is a different technique from weight decay.\n\nWith penalty-based regularisation, optimisation balances two aims: fit the data and avoid overly complex settings. The combined loss might be written as prediction loss plus a penalty term. If the penalty is too weak, the model may still fit noise. If it is too strong, the model can become too simple and miss real patterns.\n\nWhat comes out is usually a model that performs a little less perfectly on the training set but better on new data. In other words, regularisation often trades some training accuracy for better generalisation. It does not guarantee improvement, and regularisation settings are hyperparameters that need testing.",
   "everydayAnalogy": {
-    "title": "A rainfall forecast with a restraint on overreacting",
-    "story": "A farming cooperative tracks daily rainfall from several nearby fields. One analyst builds a forecasting rule and keeps adding adjustments so the rule matches every odd jump in last month's data, including a day when one rain gauge malfunctioned. Another analyst uses a rule with a built-in restraint: each adjustment is allowed, but large adjustments carry a cost unless they clearly improve the forecast. The second rule does not match the old data quite as perfectly, but it is more reliable when next month's weather arrives.",
+    "title": "Adjusting an equaliser for more than one song",
+    "story": "Imagine adjusting every slider on an equaliser until one song sounds perfect. Extreme settings may correct tiny quirks in that recording but make the next song sound worse. Adding a cost for extreme slider positions encourages a more restrained setting. The first song may sound marginally less perfect, but a wider range of songs sounds better. Regularisation similarly discourages a model from making large or numerous adjustments merely to match its training examples.",
     "mapping": [
       {
         "analogyElement": "large adjustments carry a cost",
@@ -83,28 +83,27 @@
     "reducedMotionDescription": "A static two-column comparison replaces any highlighting. Each column shows the same starting dataset and model, a different objective box, then a final note: left column, lower training loss; right column, better generalisation on new data."
   },
   "workedExample": {
-    "scenario": "A small neural network predicts next-day rainfall in millimetres for a farming cooperative using 2,000 past weather records.",
-    "input": "Training uses weather features such as humidity, temperature, wind, and pressure. Model A uses no regularisation. Model B uses L2 regularisation with strength 0.01.",
+    "scenario": "A programme officer in a regional bureau is testing a classifier that assigns themes to cleared project summaries before the first reading of a progress report.",
+    "input": "The same classifier is trained twice on labelled summaries, with separate validation and test sets. One version has no penalty; the other uses L1 regularisation.",
     "process": [
-      "Model A is trained to minimise prediction loss only, while Model B minimises prediction loss plus an L2 penalty on large weights.",
-      "After training, Model A reaches training error of 1.8 mm and validation error of 4.6 mm.",
-      "Model B reaches training error of 2.2 mm and validation error of 3.1 mm.",
-      "The regularised model fits the training data a bit less closely but predicts unseen data more reliably, so it is preferred."
+      "The first version minimises classification loss alone.",
+      "The second minimises classification loss plus λ||w||₁, which penalises the absolute size of its weights and can drive less useful weights to zero.",
+      "Several values of λ are compared on the validation set. The choice is based on performance beyond the training data, not on which version fits the training examples most closely.",
+      "The selected regularised model is then checked once on the unseen test set."
     ],
-    "result": "Adding a modest penalty produced a model with slightly worse training fit and clearly better performance on new rainfall records."
+    "result": "The regularised classifier may fit the labelled summaries slightly less closely while assigning themes more reliably to new summaries. If the penalty is too strong, however, it will underfit, so λ still requires validation."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN language technology team is testing a model that drafts rough translations of non-sensitive field updates into a working language for internal review.",
-    "relevance": "Regularisation can help the model avoid memorising quirks of the training set and improve performance on new, routine phrasing from different duty stations.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Human review remains necessary before any translation is shared or used."
+    "scenario": "A reporting officer in a Headquarters department is testing a model to code open-ended answers from a needs assessment into themes before the monitoring report goes for clearance.",
+    "relevance": "Without regularisation, the model may fit incidental wording in the earlier answers rather than patterns that transfer to new responses. Adding a penalty during training can reduce that overfitting, with the strength selected against held-out data.",
+    "caution": "Needs-assessment answers may contain personal or protection-sensitive details. Raw responses must not be entered into a tool that has not been approved for that material. Regularisation does not prevent memorisation, provide anonymisation or make an unsuitable service safe."
   },
   "whyItMatters": "If you only look at how well a model matches its training data, you can choose a system that looks excellent during training but performs poorly in real use. Regularisation matters because it helps teams prefer models that are more dependable on new cases, not just impressive on old ones. For non-specialists, this affects procurement, evaluation, risk, and trust: a slightly less perfect training score may be the safer operational choice if it means fewer surprises later.",
   "whereYouMayHearIt": [
-    "model tuning",
-    "weight decay setting",
-    "reducing overfitting",
-    "training configuration",
-    "validation performance review"
+    "During a validation-results review before model sign-off",
+    "At an ICT governance board discussion of a proposed model",
+    "In a vendor demo when weight decay settings appear on screen",
+    "During a technical first reading of the training configuration"
   ],
   "commonMisconceptions": [
     {
@@ -124,7 +123,7 @@
     "simple": "Regularisation changes training to reduce overfitting. It may add a penalty or use another method so the model usually works better on new data.",
     "technical": "Regularisation modifies the optimisation objective or training procedure to reduce overfitting and improve generalisation. In the common penalty-based form, the objective becomes empirical loss plus a term such as λ||w||² for L2 or λ||w||₁ for L1, where w are parameters and λ controls strength. This biases training toward solutions with smaller or sparser weights. In deep learning, 'weight decay' is often used as a near-synonym for L2 regularisation, but the equivalence depends on the optimiser implementation; for example, decoupled weight decay in Adam is not identical to simply adding an L2 penalty to the loss. Broader uses of the word regularisation also include methods such as dropout, early stopping, label smoothing, and data augmentation, which reduce overfitting through different mechanisms rather than the same penalty term."
   },
-  "keyTakeaway": "Regularisation changes training so the model prefers simpler, more stable patterns, often sacrificing a little training fit to perform better on new data.",
+  "keyTakeaway": "Regularisation alters training to discourage overfitting. Its strength is tuned on held-out data, since too little may not help and too much can cause underfitting.",
   "quickCheck": {
     "question": "What is the main purpose of regularisation during model training?",
     "options": [
@@ -279,6 +278,20 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:06.389Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "The workplace and worked examples now use distinct roles, artefacts and review moments, while the caution makes clear that regularisation is not a privacy safeguard."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

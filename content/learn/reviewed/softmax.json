@@ -77,28 +77,27 @@
     "reducedMotionDescription": "A static four-column diagram shows the same example without animation: raw scores, exponentiated values, the total sum, and final normalised outputs. Matching colours connect each class across the columns."
   },
   "workedExample": {
-    "scenario": "A document classifier must choose one label for a short paragraph: climate, health, or trade.",
-    "input": "Logits from the model: climate = 1.8, health = 0.7, trade = -0.2",
+    "scenario": "For one paragraph in the quarterly report, the classifier must select a single label: results, expenditure or risks.",
+    "input": "Model logits: results = 1.8, expenditure = 0.7, risks = -0.2",
     "process": [
-      "Exponentiate the scores: exp(1.8) is about 6.05, exp(0.7) is about 2.01, and exp(-0.2) is about 0.82.",
-      "Add them: 6.05 + 2.01 + 0.82 = 8.88.",
-      "Divide each value by 8.88 to normalise: climate 0.68, health 0.23, trade 0.09.",
-      "Pick the largest output if the task requires one label: climate."
+      "Exponentiate the logits: exp(1.8) is about 6.05, exp(0.7) is about 2.01 and exp(-0.2) is about 0.82.",
+      "Add the exponentiated values: 6.05 + 2.01 + 0.82 = 8.88.",
+      "Divide each value by 8.88: results is about 0.68, expenditure 0.23 and risks 0.09. The outputs are positive and sum to 1.",
+      "For a single-label task, the classifier selects results because it has the largest softmax value. The reviser can still override that suggestion after reading the paragraph."
     ],
-    "result": "Softmax produces a distribution over the three labels, with climate highest at about 68 percent of the total share."
+    "result": "Softmax produces a distribution across the three competing labels. Results receives about 68 per cent of the total, but that figure reflects the model’s relative scores, not a verified 68 per cent probability that the label is correct."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an internal classifier to suggest which existing resolution themes are most similar to a newly drafted public text, helping staff search for prior language more quickly.",
-    "relevance": "Softmax can turn the model’s output scores for themes such as disarmament, health or development into a comparable distribution, so staff can see the top suggestions and how strongly they dominate the alternatives.",
-    "caution": "Use only approved internal systems and suitable document sets. Staff should not treat the top softmax score as proof that the suggestion is correct, and should not upload confidential or negotiation-sensitive text to a public AI service."
+    "scenario": "At a shared services centre, a reviser in the translation service is checking a quarterly report to a donor before it goes for clearance at close of business. An internal classifier assigns each paragraph one subject label so that the relevant terminology list can be applied.",
+    "relevance": "Softmax converts the classifier’s raw scores for labels such as results, expenditure and risks into shares that sum to 1. The reviser can see both the leading label and whether the alternatives are close enough to warrant a manual check.",
+    "caution": "A high softmax score is not proof that the label is correct or that the model is well calibrated. Drafts containing personal data, partner-sensitive details or uncleared financial information must not be entered into any tool unless it is approved for that material, because the text could be retained, disclosed or processed outside authorised controls."
   },
   "whyItMatters": "Softmax affects how a model presents confidence at the point where people often make decisions. If you read classifier outputs, compare model options or set thresholds, you need to know that softmax shows relative competition among classes, not certainty. This helps you avoid over-trusting a high score, choose better review rules and spot when a task may need a different output design, especially when several labels could all be true at once.",
   "whereYouMayHearIt": [
-    "image classification outputs",
-    "language or topic classifiers",
-    "deep learning lectures",
-    "model evaluation discussions",
-    "machine learning libraries"
+    "During a vendor demonstration to an ICT governance board",
+    "In a model evaluation meeting before an internal classifier is released",
+    "While reviewing misclassified examples with an information management officer",
+    "In a technical discussion about why model scores should not be read as certainty"
   ],
   "commonMisconceptions": [
     {
@@ -118,7 +117,7 @@
     "simple": "Softmax takes a model’s raw output scores and turns them into a set of shares that add up to 1, so you can see which option stands out most relative to the others.",
     "technical": "Given logits z_i for classes i, softmax computes exp(z_i) divided by the sum of exp(z_j) over all classes j. The exponential emphasises differences in larger logits, and the normalisation couples all outputs so they form a categorical distribution over classes. Adding the same constant to every logit does not change the result, which is why implementations often subtract the maximum logit first for numerical stability. Softmax is typically used for single-label multi-class prediction and is often paired with cross-entropy loss during training. It should be distinguished from sigmoid outputs used for multi-label settings, where classes do not have to compete for one total mass. Although softmax outputs are often read as probabilities, they may be poorly calibrated and should not automatically be interpreted as reliable confidence estimates."
   },
-  "keyTakeaway": "Softmax does not create certainty; it turns competing class scores into a single distribution where bigger scores take a larger share of the total.",
+  "keyTakeaway": "Softmax converts competing scores into positive shares that sum to 1. The largest score gets the largest share, but that share is not automatically a reliable measure of confidence.",
   "quickCheck": {
     "question": "Which statement best describes what softmax does in a multi-class classifier?",
     "options": [
@@ -234,6 +233,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:52.031Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": " "
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

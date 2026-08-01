@@ -92,28 +92,29 @@
     "reducedMotionDescription": "A static five-box sequence shows the same process without animation: tested model, run environment, connected workflow, controls and safeguards, and live service with monitoring."
   },
   "workedExample": {
-    "scenario": "A regional library service wants a tool that labels incoming email requests as 'opening hours', 'account help' or 'other' before staff review them.",
-    "input": "Live email text from a public contact form, about 2,000 messages per week.",
+    "scenario": "An information management officer supporting conference services in Geneva must put a trained classifier into the facilities ticketing application before the next room-booking round opens. It will suggest whether each live request concerns room setup, building access, equipment or another issue, with service-desk staff confirming the label.",
+    "input": "New ticket text and existing non-sensitive routing fields from the approved ticketing system.",
     "process": [
-      "The team places the model on a cloud server that can handle about 30 requests per minute.",
-      "They create an endpoint so the contact-form system can send each new message to the model automatically.",
-      "They add a rule that only messages with confidence above 0.85 get an automatic label; lower-confidence cases go to a general queue.",
-      "They log response time and errors, and they review a weekly sample to check whether the labels still match real messages."
+      "The officer packages the trained model with its software dependencies and installs it on approved production infrastructure.",
+      "The ticketing application sends each new request to an authenticated model endpoint and receives a suggested category.",
+      "Rate limits protect the service from traffic spikes, while failed or low-confidence requests fall back to the general queue.",
+      "Logs record response times, errors and model versions without retaining unnecessary ticket content.",
+      "Before each update, staff test the new version and keep the previous version available for rollback."
     ],
-    "result": "The service goes live. Most messages receive a draft label in under one second, staff keep final oversight, and the team can pause or update the system if accuracy drops."
+    "result": "The classifier now handles live requests inside the ticketing workflow. Staff retain the final routing decision, service performance is monitored, and requests continue to reach the general queue if the model is unavailable."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team wants to identify broad protection trends across incident reports by classifying de-identified text into themes so analysts can spot patterns faster.",
-    "relevance": "Deployment matters because the model must fit the real workflow: approved infrastructure, controlled access, human review, audit logs, and monitoring for changes in reporting patterns across locations and time.",
-    "caution": "Do not put personal, survivor, witness, security-sensitive or operational incident details into an unapproved public AI service. Use approved systems, minimise data, de-identify where possible, and keep human analysts responsible for interpretation and action."
+    "scenario": "At a shared services centre, a knowledge management officer is finalising the note for the file after a bilateral. The centre is deploying a model inside the approved records application to suggest metadata and access markings before the note is uploaded to the portal. The live service must return suggestions to the officer while leaving clearance and filing decisions with staff.",
+    "relevance": "Deployment is the point at which the trained model meets the actual workflow. The release needs approved hosting, authenticated access, a connection to the records application, logging, monitoring, fallback behaviour and a tested way to restore the previous version if the update misbehaves.",
+    "caution": "A note for the file may contain confidential or politically sensitive material. It must not be entered into an external or otherwise unapproved AI service. The production environment must be approved for the material concerned, access must be restricted and logged, and the officer must verify every suggested marking before clearance."
   },
   "whyItMatters": "For non-specialists, deployment is the point where an AI idea becomes an operational service with cost, risk and accountability. A model that looked impressive in testing can fail in practice if it is slow, expensive, insecure, hard to monitor or exposed to different data than expected. Decisions about deployment affect procurement, privacy, staffing, fallback procedures, user trust and whether humans stay in control. If you approve or use an AI system, you need to ask not only 'How accurate was it in testing?' but also 'Where will it run, who can access it, how will it be watched, and what happens when it is wrong or unavailable?'",
   "whereYouMayHearIt": [
-    "product launch meetings",
-    "IT operations discussions",
-    "procurement and vendor briefings",
-    "cloud architecture planning",
-    "risk and oversight reviews"
+    "A vendor demo during a procurement meeting",
+    "An ICT governance board reviewing a production release",
+    "A go-live readiness meeting with the service owner",
+    "An incident review after a model endpoint fails",
+    "A change-control discussion before a model update"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +134,7 @@
     "simple": "Deployment is the step where an AI model stops being a test project and becomes a live tool that real people or software use.",
     "technical": "Deployment is the operational release of a trained model into a production environment. It typically includes packaging the model and dependencies, provisioning compute, exposing an endpoint or embedding the model in an application, connecting live data flows, enforcing authentication and rate limits, enabling logging and observability, defining fallback behaviour and human review, and managing versioning, rollback and updates. In practice, deployment is about reliable inference under real conditions, not just whether the model can run once on a developer's machine."
   },
-  "keyTakeaway": "Deployment turns a model into a real service, which means integration, safeguards, monitoring and accountability, not only making it run.",
+  "keyTakeaway": "A model is deployed only when it is connected to live work and operated as a service, with access controls, monitoring, human review, fallback and rollback.",
   "quickCheck": {
     "question": "Which description best matches deployment?",
     "options": [
@@ -256,6 +257,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:23:50.235Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

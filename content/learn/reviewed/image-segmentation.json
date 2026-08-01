@@ -90,28 +90,28 @@
     "reducedMotionDescription": "Show the same five panels at once in a static left-to-right row with arrows between them and a fixed legend. Keep the dashed bounding box comparison visible without animation."
   },
   "workedExample": {
-    "scenario": "A city transport team analyses an aerial image of a 1000 by 1000 pixel junction to estimate how much of the scene is road surface.",
-    "input": "One aerial photograph with classes set to road, building, vegetation, water and other.",
+    "scenario": "For the situation report, the statistician reviews a georeferenced image tile containing 1,000 by 1,000 pixels and needs an estimate of the share classified as road surface.",
+    "input": "One image tile, with each pixel to be labelled road, building, vegetation, water or other.",
     "process": [
-      "The model receives the image and predicts one class for each of the 1,000,000 pixels.",
-      "It outputs a mask with counts: road 420,000 pixels, building 310,000, vegetation 240,000, water 0, other 30,000.",
-      "Analysts overlay the mask on the original image and inspect several edges to check whether parked vehicles or shadows were wrongly labelled as road.",
-      "After minor quality review, they use the road pixels to estimate the paved share of the junction area."
+      "The model processes the image and predicts one class for each of its 1,000,000 pixels.",
+      "The predicted mask contains 420,000 road pixels, 310,000 building pixels, 240,000 vegetation pixels, no water pixels and 30,000 pixels labelled other.",
+      "The statistician overlays the mask on the source image and checks boundaries, shadows and parked vehicles, which the model may have confused with road surface.",
+      "The road-pixel count is divided by the total pixel count. If the georeferenced pixels represent equal ground areas, the pixel share also estimates the road share of the mapped tile."
     ],
-    "result": "Road share is 420,000 ÷ 1,000,000 × 100 = 42 percent. The mask gives pixel-level boundaries, not guaranteed exact ones."
+    "result": "The predicted road share is 420,000 ÷ 1,000,000 × 100 = 42 per cent. This is an estimate derived from the segmentation mask, not proof that every boundary or pixel label is correct."
   },
   "unWorkplaceExample": {
-    "scenario": "A humanitarian coordination team uses approved imagery tools to segment satellite images into roads, flooded areas, buildings and open ground after heavy rain, so they can compare access routes and identify broad areas that may be cut off.",
-    "relevance": "This can support faster map updates and help staff prioritise where human review should focus, especially when large areas must be screened quickly.",
-    "caution": "Do not upload confidential, security-sensitive or protection-sensitive imagery or location data to an unapproved public AI service, and do not rely on automated masks alone for operational decisions without expert validation and context checks."
+    "scenario": "A statistician in a regional bureau is finalising the surface-water section of a situation report before the regional bulletin closes. Using an approved imagery tool, the statistician segments a satellite image into water, roads, buildings, vegetation and other ground, then sends the resulting area estimates and map to the reporting officer for clearance.",
+    "relevance": "A pixel-level mask can turn a large image into comparable area estimates and show where roads or built-up areas overlap with detected water. It helps focus manual review when the reporting window is short, but it does not establish conditions on the ground by itself.",
+    "caution": "Do not upload security-sensitive imagery, precise protected locations or restricted geospatial data to a tool that has not been approved for them. Cloud, shadow, seasonal water and image resolution can all distort the mask, so a qualified analyst must validate it against the source image and other available information before it informs reporting or operational decisions."
   },
   "whyItMatters": "For a non-specialist, the value is not the label itself but the kind of decision it enables. Pixel-level outlines can support area estimates, route planning, change monitoring, crop mapping, flood extent review, medical image analysis and quality control. Compared with a simple box, segmentation can tell you how much of an image is actually relevant and where boundaries fall. That can improve downstream analysis, but only if the classes fit the real task, the training data reflect the real setting, and humans check whether the masks are reliable enough for the stakes involved.",
   "whereYouMayHearIt": [
-    "satellite and drone imagery",
-    "medical imaging",
-    "autonomous driving research",
-    "mapping and urban planning",
-    "manufacturing inspection"
+    "A regional bureau review of satellite-derived indicators",
+    "A vendor demonstration for an approved imagery platform",
+    "A procurement unit meeting on geospatial analysis requirements",
+    "An inter-agency working group reviewing a common map",
+    "A data unit quality review before a monitoring report is cleared"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +131,7 @@
     "simple": "It colours in an image so each tiny part is tagged with what it shows.",
     "technical": "Image segmentation is a dense prediction task in computer vision. Given an image, the model outputs a label for each pixel rather than one label for the whole image. In semantic segmentation, pixels are assigned to classes such as road, water or building, and all objects of the same class may share the same label map. Training usually uses annotated masks and an optimisation process that reduces the difference between predicted and reference masks. Architectures commonly combine local feature extraction with broader context so the model can place boundaries while still using scene-level cues. Outputs may be represented as per-pixel class probabilities, a discrete mask, or an overlay for inspection. This differs from object detection, which predicts object locations, often with bounding boxes, and from image classification, which predicts only image-level categories."
   },
-  "keyTakeaway": "Image segmentation matters when you need exact regions in a picture, not just a rough box or a single label.",
+  "keyTakeaway": "Image segmentation assigns a class to each pixel, producing a map of regions rather than one label or a set of rough boxes. The boundaries remain model predictions and require validation.",
   "quickCheck": {
     "question": "Which output best matches image segmentation?",
     "options": [
@@ -250,6 +250,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:21:17.570Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

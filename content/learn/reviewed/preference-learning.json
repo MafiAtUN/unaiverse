@@ -31,8 +31,8 @@
   "oneSentence": "A method for adjusting a model so it more often produces outputs people rank as better, safer or more useful than alternatives.",
   "plainExplanation": "Preference learning uses preference data, often comparisons, instead of only example answers. People, or another trusted process, look at two or more model outputs for the same prompt and indicate which one they prefer. That preference data becomes the training signal.\n\nWhat goes in is usually a prompt plus candidate responses and a label such as “A is better than B”. Sometimes the preference is about helpfulness, harmlessness, style or task success. The data does not say the preferred answer is perfect; it only says it is better than the alternative under the chosen criteria.\n\nWhat happens next depends on the method. In direct preference optimisation, often shortened to DPO, the model is updated to favour the preferred response over the rejected response more strongly than a reference model does. Other approaches may first train a reward model, meaning a separate model that scores outputs, and then optimise against that score. That is why preference learning is related to, but not identical to, reinforcement learning from human feedback.\n\nWhen used for model adaptation, preference learning produces a new checkpoint that tends to follow the chosen preferences more often. This can improve usefulness or safety, but it can also narrow behaviour, amplify the biases in the raters or make the model sound polished without being more correct. Preference learning changes behaviour after pretraining; it does not add reliable new factual knowledge in the same way people often imagine when they say “train it on our data”.",
   "everydayAnalogy": {
-    "title": "Choosing better document recommendations",
-    "story": "A library team is improving a document recommendation tool for staff. For one search, the tool suggests two ranked lists of reports. Reviewers compare the lists and mark which one better matches the user’s need, for example the list that puts the most relevant and recent reports higher. After many such comparisons, the team adjusts the ranking system so patterns like the preferred lists become more likely in future. The system is not told one perfect list for every search; it learns from repeated choices between alternatives.",
+    "title": "Choosing between two packed lunches",
+    "story": "Someone prepares two possible lunches and asks which you would rather take. You choose the one with fruit instead of sweets. The next day, you choose between two more, preferring the option with less packaging. After many such choices, the person becomes more likely to pack a lunch matching the patterns in your selections. You never supplied one perfect recipe or a numerical score. The learning came from repeated comparisons, and it may still miss something you did not consider, such as an allergy.",
     "mapping": [
       {
         "analogyElement": "Two ranked lists compared for the same search",
@@ -85,27 +85,27 @@
     "reducedMotionDescription": "A static left-to-right flowchart with four labelled boxes and arrows: existing model, candidate responses, preference comparison, and updated checkpoint. Notes below the final two boxes explain that DPO uses direct preference updates, while some alternatives insert a reward model stage."
   },
   "workedExample": {
-    "scenario": "A team wants a drafting model to write concise meeting summaries with action points.",
-    "input": "Prompt: \"Summarise this meeting in 5 bullet points and end with action items.\" Candidate A gives 5 bullets plus 3 clear action items. Candidate B gives a long paragraph, misses one key decision and adds no action items.",
+    "scenario": "At 16:30, a reporting officer in a regional bureau tests a model that turns synthetic extracts resembling a situation report into the five bullets required for an 18:00 briefing note.",
+    "input": "Prompt: \"Produce five bullets covering the main development, agreed action, responsible function, deadline and outstanding caveat.\" Candidate A follows the structure and stays within the supplied facts. Candidate B is shorter but omits the caveat and assigns the action to the wrong function.",
     "process": [
-      "For this prompt, a reviewer marks A as preferred over B because it follows the requested format and preserves key content.",
-      "The training set stores a pair: same prompt, preferred response A, rejected response B.",
-      "During DPO training, the model is updated so A becomes more likely than B for prompts of this kind.",
-      "After many such pairs, a new checkpoint is evaluated on held-out prompts to see whether summaries are clearer and whether important details are still retained."
+      "Using a written rubric, reviewers rank A above B because it follows the requested structure without changing the underlying facts.",
+      "The training record stores the same prompt with A as the preferred response, y+, and B as the rejected response, y-.",
+      "In direct preference optimisation, the update increases the model's preference margin for A over B relative to a reference model. It does not require a separate reward model or reinforcement-learning stage.",
+      "The resulting checkpoint is tested on held-out prompts for factual retention, omissions and consistency, not merely for whether its bullets look like the preferred examples."
     ],
-    "result": "The updated model more often produces short bullet summaries with explicit action items, but it still needs evaluation because better formatting does not guarantee better factual accuracy."
+    "result": "The adapted model becomes more likely to produce the structure reviewers preferred. It may also reproduce weaknesses in their rankings, so the reporting officer still checks every briefing note against the cleared source."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is testing an internal drafting assistant for routine, non-sensitive text such as generic meeting agendas and standard event descriptions, with staff comparing alternative drafts and choosing the clearer one.",
-    "relevance": "Preference learning can help the assistant match the organisation’s desired style, structure and caution level without rewriting the whole model from scratch.",
-    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service; use approved environments, minimise data, and keep human review before any text is shared."
+    "scenario": "At the review meeting closing a drafting-assistant pilot, an internal auditor supporting a UN Country Team working group examines how programme officers ranked alternative summaries for a progress report before the findings go to the Resident Coordinator's Office.",
+    "relevance": "The rankings can be used as comparative supervision: the model is adjusted to favour drafts that staff consistently judged clearer, more complete and appropriately cautious. The exercise also reveals whether the ranking criteria rewarded brevity at the expense of decisions, caveats or follow-up actions.",
+    "caution": "Do not use actual audit evidence, confidential staff comments, personal data or sensitive material as ranking examples in a tool not approved for them. Use an approved environment and minimised or synthetic examples. A strong preference score reflects the reviewers' criteria, including any blind spots, and is not evidence that a draft is accurate."
   },
   "whyItMatters": "Preference learning affects how a model behaves in practice, so it matters for procurement, risk review and quality control. A system may look much better after preference tuning because it is more polite, concise or policy-aligned, yet those gains do not automatically mean it is more accurate or less biased. If you are comparing vendors or internal model versions, you need to ask what preferences were optimised, who supplied the ratings, what data was excluded, and how trade-offs were tested. This is also important for governance: preference learning can encode organisational norms and safety constraints, but it can also reproduce reviewer bias or over-optimise for outputs that merely look good to raters.",
   "whereYouMayHearIt": [
-    "post-training pipeline",
-    "DPO fine-tuning run",
-    "human preference dataset",
-    "alignment evaluation"
+    "At an ICT governance board review of controls for a drafting-assistant pilot",
+    "During a vendor debrief on how reviewer rankings will be used after initial training",
+    "At a checkpoint evaluation before the next pilot phase is cleared",
+    "In a lessons-learned session comparing reviewer rubrics and model outputs"
   ],
   "commonMisconceptions": [
     {
@@ -125,7 +125,7 @@
     "simple": "Instead of showing the model one perfect answer each time, you show it several answers and tell it which one people preferred. The model is then adjusted to produce preferred kinds of answers more often.",
     "technical": "Preference learning is a post-training approach that uses comparative judgements over candidate outputs as supervision. Given a prompt x and responses y+ and y-, the objective encourages the model to favour y+ over y-. In DPO, this is done by increasing that preference margin relative to a reference policy, avoiding a separate reward-model-plus-RL stage. In reward-model-based pipelines, pairwise comparisons are first used to fit a scalar reward model, and a policy is then optimised to maximise expected reward. In both cases, the training signal is ordinal or comparative rather than a single ground-truth target, which makes label quality, rater consistency, preference specification and distribution shift central concerns."
   },
-  "keyTakeaway": "Preference learning mainly shapes which outputs a model tends to produce, not whether those outputs are actually true.",
+  "keyTakeaway": "Preference learning makes outputs matching reviewers' choices more likely. It transfers their criteria and blind spots, not an independent guarantee of truth or safety.",
   "quickCheck": {
     "question": "Which statement best distinguishes DPO from a classic reward-model-based RLHF pipeline?",
     "options": [
@@ -264,6 +264,20 @@
       "plainExplanation",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:18.213Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -86,27 +86,27 @@
     "reducedMotionDescription": "A static four-box flow replaces animation. The third box lists the loop as text: '1 estimate likely next token, 2 choose one, 3 add it, 4 repeat'. The output box shows the final text without moving token pills."
   },
   "workedExample": {
-    "scenario": "A person asks a chat assistant to rewrite a message more clearly.",
-    "input": "Prompt: 'Rewrite this in plain English: The meeting has been rescheduled owing to travel delays.'",
+    "scenario": "A reviser tests an approved tool on one cleared sentence while working through a translation backlog.",
+    "input": "Prompt: \"Translate into French: The briefing will begin after the afternoon meeting.\"",
     "process": [
-      "The system reads the prompt and treats it as the current context.",
-      "It starts generating the output one token at a time, aiming for a continuation that fits the instruction.",
-      "Possible output tokens build into a sentence such as 'The meeting has been moved because of travel delays.'",
-      "Generation stops when the sentence is complete or a stop condition is reached."
+      "The system tokenises the instruction and source sentence as its context.",
+      "It calculates probabilities for possible next tokens and selects one using its decoding method.",
+      "Each selected token is appended to the context, and the calculation repeats to build the French sentence.",
+      "Generation ends when the model produces a stop token or another configured stopping rule is reached."
     ],
-    "result": "Completion: 'The meeting has been moved because of travel delays.'"
+    "result": "Completion: \"La réunion d’information commencera après la séance de l’après-midi.\" The reviser still checks the wording against the source and applicable terminology."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN staff member drafts a situation report and asks an approved internal tool to produce a short, neutral summary from a cleared, non-sensitive excerpt.",
-    "relevance": "This shows a completion as the text returned by the system after the staff member's prompt, which can save time on first drafts or reformulations.",
-    "caution": "Do not paste confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service; human review is needed before any summary is shared."
+    "scenario": "With a statement for delivery due at close of business and a backlog in the country office translation queue, a reviser uses an approved internal language tool to generate a first-pass translation of two cleared, non-sensitive paragraphs.",
+    "relevance": "The returned draft is the completion. It is generated token by token from the instruction and source passage, rather than retrieved as a finished translation. The reviser then checks terminology, meaning and register before the statement goes for clearance.",
+    "caution": "Source text containing personal, confidential, security-sensitive or otherwise restricted information must not be entered into a tool that is not approved for that material. Prompts and completions may be retained or exposed. Even with an approved tool, the completion is a draft, not cleared language."
   },
   "whyItMatters": "If you use chat assistants, you are constantly working with completions, even if you never hear the term. Knowing what a completion is helps you separate your input from the system's output, ask better questions, and review answers more carefully. It also helps in practical decisions: whether to trust the wording, whether to request another version, and whether differences between two outputs came from the same prompt, different settings, or random variation in token choice. In short, the term gives you a clear way to talk about what the model actually produced.",
   "whereYouMayHearIt": [
-    "chat assistant interfaces",
-    "API documentation",
-    "prompt writing guides",
-    "model evaluation discussions"
+    "A vendor demo during a procurement meeting",
+    "A translation-service discussion about an approved drafting tool",
+    "An information and communications technology governance board reviewing model settings",
+    "A model evaluation session before an internal tool is released"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +126,7 @@
     "simple": "A completion is the text the AI writes back after you type something in.",
     "technical": "In language-model systems, a completion is the generated output sequence conditioned on the supplied context. The input text is tokenised, the model computes a probability distribution over possible next tokens, one token is selected by a decoding method such as greedy choice or sampling, and that token is appended to the context. The process repeats until a stop token, stop rule or length limit is reached. In everyday product language, completion, response and generation are often used interchangeably, though interfaces may define them differently. The term should be distinguished from the prompt, which is the conditioning input, and from next-token prediction, which is the mechanism used to produce the completion."
   },
-  "keyTakeaway": "A completion is the model's output text, created step by step from the prompt and context.",
+  "keyTakeaway": "A completion is the output a language model builds token by token from the prompt and other supplied context.",
   "quickCheck": {
     "question": "Which statement best describes a completion in a language model system?",
     "options": [
@@ -217,6 +217,19 @@
     "verdict": "pass",
     "issues": [],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:39.272Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

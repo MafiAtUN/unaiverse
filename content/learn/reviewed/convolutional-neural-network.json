@@ -91,29 +91,29 @@
     "reducedMotionDescription": "A static five-panel diagram shows the same stages without animation: input grid, one highlighted 3 by 3 filter with three example positions, one resulting feature map, a stack of deeper feature maps becoming smaller, and final output bars."
   },
   "workedExample": {
-    "scenario": "Classifying a 6x6 black-and-white symbol as either 'vertical line' or 'horizontal line'.",
-    "input": "A 6x6 grid where the third column has high values 1 and most other cells are 0.",
+    "scenario": "Classifying a 6 by 6 black-and-white symbol as either a vertical line or a horizontal line.",
+    "input": "A 6 by 6 grid in which every cell in the third column has value 1 and all other cells have value 0.",
     "process": [
-      "Use a 3x3 filter that gives a strong response to vertical edges or lines. Slide it across the 6x6 input to produce a 4x4 feature map.",
-      "The feature map has large values in positions where the filter overlaps the bright vertical column, and low values elsewhere.",
-      "Apply an activation function so negative responses are suppressed and strong matches stay strong.",
-      "Take the largest response from the feature map and pass it to a small final layer that compares evidence for 'vertical line' versus 'horizontal line'.",
-      "The final scores might be 4.2 for 'vertical line' and 0.6 for 'horizontal line'; after softmax these become probability-like outputs of about 0.97 and 0.03."
+      "Apply a 3 by 3 vertical-line filter whose rows are [-1, 2, -1]. Slide the same nine learned weights across every valid position in the input, producing a 4 by 4 feature map.",
+      "When the centre of the filter aligns with the bright column, its response is 6. Positions immediately beside the column produce negative responses, while positions farther away produce 0.",
+      "Apply a rectified linear activation. This changes negative responses to 0 while preserving the strong positive matches.",
+      "Apply a corresponding horizontal-line filter. Because the input contains no horizontal run, that feature map has no comparable positive response.",
+      "Pass the largest responses from both feature maps to a final classifier. The strong vertical response and weak horizontal response support the vertical-line class."
     ],
-    "result": "The model outputs 'vertical line' with a much higher score because the reused filter found the same local pattern in aligned positions."
+    "result": "The model classifies the symbol as a vertical line. Reusing each filter at every position lets it detect the same local pattern wherever it appears, while the later classifier combines those detections into the task output."
   },
   "unWorkplaceExample": {
-    "scenario": "A country office wants to triage a shared inbox that receives scanned, standard-format paper forms and photos of routine facilities issues, using an approved internal system.",
-    "relevance": "A CNN could help extract visual patterns from images, such as whether a scan contains a stamped cover sheet, a handwritten form, or a photo of damaged infrastructure, before a human reviews the queue.",
-    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive images to an unapproved public AI service; use approved tools, minimise data, and keep human oversight for any consequential routing or action."
+    "scenario": "At a regional bureau, a records officer is completing the technical evaluation matrix for three bids to classify scanned records before close of business. Each proposed system is tested on the same controlled set of non-sensitive sample pages.",
+    "relevance": "A proposed CNN may reuse learned filters across each page to detect local features such as boxes, stamps and blocks of handwriting, then combine them into larger layout patterns used to classify the document. The evaluation should test those claims consistently, including on rotated, blurred or unfamiliar pages.",
+    "caution": "Bid documents, annexes and procurement-sensitive records must not be uploaded to an external or unapproved tool, as this could compromise confidentiality and the integrity of the evaluation. Use only an authorised environment and cleared test material. Human evaluators must score the bids against the stated criteria rather than accept the model's classifications at face value."
   },
   "whyItMatters": "You may hear about CNNs whenever an organisation uses AI on images, video frames, scans, medical images, satellite pictures or other grid-like data. For a non-specialist, the practical question is not the mathematics alone but whether this model type fits the task. CNNs can be efficient because they reuse the same learned filters across many locations, which often works well when the same pattern can appear anywhere in an image. That design choice affects data needs, compute cost, explainability limits, and failure modes. If you are choosing, procuring or reviewing a system, it helps to recognise that a CNN is built to detect local patterns and spatial structure, not to handle all data types equally well.",
   "whereYouMayHearIt": [
-    "image classification systems",
-    "medical imaging tools",
-    "satellite or aerial image analysis",
-    "computer vision courses",
-    "edge detection and feature extraction discussions"
+    "During a procurement unit's technical evaluation of computer-vision bids",
+    "At an ICT governance board review of an image-processing proposal",
+    "In a vendor demonstration of document-image classification",
+    "During a technical briefing on satellite-image analysis",
+    "At a training session on feature maps and image classification"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +133,7 @@
     "simple": "A CNN is a neural network that checks small nearby parts of an image or other grid, finds repeating patterns, and combines those findings into a final result.",
     "technical": "A CNN is a feed-forward neural network that exploits spatial locality and parameter sharing. In a convolutional layer, a learnable kernel operates over local receptive fields of the input tensor to produce one or more feature maps. The same kernel weights are applied at each spatial position, which reduces parameter count compared with fully connected layers and gives a degree of translation sensitivity or robustness depending on the design. Non-linear activation functions are applied after convolutions, and pooling or strided convolutions may downsample intermediate representations. Stacking layers increases the effective receptive field, allowing later units to respond to more complex spatial patterns assembled from earlier low-level features. For classification, later layers often flatten or aggregate features and map them to class logits, which may then be passed through softmax to produce probability-like outputs. In practice, details such as padding, stride, channel depth, normalisation, and architecture choice affect performance and behaviour."
   },
-  "keyTakeaway": "A CNN works by reusing small learned pattern detectors across a grid and building simple local matches into larger features and final predictions.",
+  "keyTakeaway": "A CNN reuses learned filters across local parts of a grid, then combines the resulting feature maps into larger patterns and a task output.",
   "quickCheck": {
     "question": "What makes a convolutional neural network different from a basic fully connected network when processing images?",
     "options": [
@@ -266,6 +266,19 @@
       "plainExplanation",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:03.132Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Updated the workplace scenario, worked example and hearing contexts for specificity and technical precision."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

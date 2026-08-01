@@ -33,8 +33,8 @@
   "oneSentence": "A method for adjusting a model so its outputs better match human preferences by learning from ranked examples and reward signals.",
   "plainExplanation": "After a model has already learned general patterns from large amounts of text, developers often want it to behave in more useful ways. They may want it to follow instructions better, avoid unsafe wording, or give answers people prefer. Reinforcement learning from human feedback is one way to do that.\n\nThe input is usually a set of model answers to the same prompt, plus human judgements about which answer is better. Those judgements can come from rankings, ratings, or comparisons. A separate reward model is then trained to predict those human preferences. A reward model is a system that scores outputs based on patterns in the feedback.\n\nNext, the main model is updated so it tends to produce outputs that get higher reward scores. This part uses reinforcement learning, a training method where a system is adjusted using signals about better and worse outcomes rather than only exact correct answers. In practice, many descriptions of RLHF bundle together several stages: collecting comparisons, training the reward model, and then optimising the main model.\n\nWhat comes out is a new model version that often feels more helpful, more polite, or more on-task to users. But it does not become inherently truthful or reliable. It has learned to match the kinds of responses the feedback process rewarded, and that can reflect both good judgement and the limits or biases of the people, prompts, and scoring rules used.",
   "everydayAnalogy": {
-    "title": "Ranking search results for policy documents",
-    "story": "A team in Nairobi is improving an internal search tool for policy documents. For each search, the tool shows three possible result lists, and staff members rank which list is most useful for their task. The team then builds a scoring rule that can predict those preferences from many past rankings. After that, they tune the search tool so it produces result lists that the scoring rule rates more highly.",
+    "title": "Ranking mixes from a playlist generator",
+    "story": "A playlist generator makes several mixes for the same request. Listeners compare pairs and choose the mix they prefer. A separate scoring system learns to predict those choices. The generator is then adjusted to create mixes that receive higher predicted scores, without changing so abruptly that it loses what it already did well. The result may suit those listeners better, but it does not reveal an objectively correct playlist, and different ranking rules could produce different preferences.",
     "mapping": [
       {
         "analogyElement": "staff ranking several result lists",
@@ -87,27 +87,27 @@
     "reducedMotionDescription": "A static four-box diagram is shown with numbered arrows from left to right: candidate answers, human comparisons, reward model, updated model version."
   },
   "workedExample": {
-    "scenario": "Improving a question-answering assistant for public information requests",
-    "input": "Prompt: \"Explain in plain language what a ceasefire monitoring mission does.\" Three candidate answers are generated.",
+    "scenario": "A public information officer at Headquarters is testing a model that drafts plain-language website answers before a scheduled content release.",
+    "input": "Prompt: “How does a General Assembly committee consider draft text?” The model produces several candidate answers from the same prompt.",
     "process": [
-      "Human reviewers compare Answer A, B and C. Out of 200 comparisons, B is preferred 140 times because it is clearer and less speculative.",
-      "A reward model is trained on many such comparisons so it can score new answers according to likely human preference.",
-      "The main model is then updated to produce answers that the reward model scores more highly, while keeping changes within set limits.",
-      "After training, on a fresh test set of 100 prompts, preferred-answer rate rises from 52% to 68% in side-by-side human evaluation."
+      "Reviewers rank pairs of answers using written criteria covering clarity, relevance, factual restraint and appropriate tone.",
+      "The rankings are used to train a reward model that estimates which answer reviewers would prefer for a given prompt.",
+      "The drafting model is optimised to increase the reward model’s score, while a constraint limits how far it moves from the earlier model.",
+      "On held-out prompts, reviewers compare the updated model with the earlier version and record both preferences and factual errors."
     ],
-    "result": "The updated assistant more often gives clear, on-task answers, but reviewers still need to check factual accuracy and sensitive wording."
+    "result": "The updated model may produce answers closer to the reviewers’ stated preferences. It can still be confidently wrong, omit an important qualification or reproduce weaknesses in the ranking guidelines, so publication clearance remains unchanged."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is improving a drafting assistant that helps staff check whether a draft speech is consistent with previously agreed language for public statements.",
-    "relevance": "RLHF could be used to rank alternative phrasings so the assistant more often proposes wording that is clearer, more neutral and closer to approved style.",
-    "caution": "Do not place confidential drafts, negotiation positions, personal data, or security-sensitive material into an unapproved public AI service. Human review remains necessary because preference matching does not guarantee political accuracy, legal correctness, or institutional approval."
+    "scenario": "A partnerships officer in a regional bureau is completing the technical evaluation matrix for three bids before close of business. One bidder says its drafting assistant was improved through reinforcement learning from human feedback.",
+    "relevance": "The officer checks whether this means people ranked candidate outputs under written criteria, those rankings trained a reward model, and the main model was then optimised against that signal. A feedback button or supervised fine-tuning alone would not substantiate the claim.",
+    "caution": "Bid contents, evaluators’ comments, pricing and other procurement-sensitive material must not be entered into any tool not approved for that information. Preference-based training also does not establish factual accuracy, security or fitness for purpose, so the claim still requires technical evidence and independent testing."
   },
   "whyItMatters": "For non-specialists, RLHF matters because it helps explain why a model can feel more helpful after development without becoming fully reliable. If you procure, govern, evaluate or use AI systems, this term tells you what kind of improvement was made: the model was shaped to match human preferences under a chosen feedback process. That affects quality, safety, tone, bias, labour needs, auditability and cost. It also helps you ask better questions, such as whose preferences were collected, what instructions reviewers used, whether truthfulness was measured separately, and how the updated model was tested before deployment.",
   "whereYouMayHearIt": [
-    "chatbot development discussions",
-    "model cards and technical reports",
-    "AI governance and procurement reviews",
-    "safety and evaluation briefings"
+    "A technical evaluation meeting for an AI procurement",
+    "A vendor demonstration to an information technology governance board",
+    "A model-card review before clearance of a pilot",
+    "A safety briefing on how an assistant was adapted after initial training"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +131,7 @@
     "simple": "People look at several answers from a model, say which ones they prefer, and those preferences are used to train the model to answer in more preferred ways.",
     "technical": "RLHF typically follows earlier training stages. A base or instruction-tuned model is sampled on prompts to produce candidate completions. Human annotators then provide preference data, often pairwise rankings between completions under written guidelines. That dataset is used to train a reward model that estimates the relative desirability of outputs for a prompt. The main policy model is then optimised with a reinforcement-learning objective to increase expected reward while usually constraining it not to drift too far from the starting model. In large language model practice, this optimisation has often used methods such as PPO, though newer variants and related preference-optimisation methods also exist. The result is a new checkpoint that better matches the measured preference signal, but the reward model can be imperfect, vulnerable to shortcut learning, and sensitive to annotator bias, prompt distribution and reward hacking."
   },
-  "keyTakeaway": "RLHF does not guarantee truth. It teaches the model to produce kinds of answers that human reviewers tended to reward.",
+  "keyTakeaway": "RLHF trains towards patterns that reviewers rewarded. It can improve usefulness and tone, but preference is not proof of truth, safety or institutional clearance.",
   "quickCheck": {
     "question": "Which description best captures what RLHF adds after a model already produces text?",
     "options": [
@@ -255,6 +255,20 @@
     "applied": [
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:07.703Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -87,29 +87,28 @@
     "reducedMotionDescription": "A static flow chart shows source tokens feeding into an encoder, encoded representations feeding into a decoder, and a fixed curved arrow from partial output back to the decoder to indicate repeated next-token generation."
   },
   "workedExample": {
-    "scenario": "A small translation system converts a short Spanish sentence into English.",
+    "scenario": "A desk officer uses an approved translation tool to prepare a first-pass English rendering of one sentence from a Spanish-language non-paper before informals.",
     "input": "Source text: \"La reunión empieza mañana\"",
     "process": [
-      "The input is split into tokens such as \"La\", \"reunión\", \"empieza\", \"mañana\" and turned into vectors.",
-      "The encoder processes all four source tokens together and produces context-rich representations for each one.",
-      "The decoder starts with a start token and predicts the first English token, for example \"The\".",
-      "Using \"The\" plus the encoder output, the decoder predicts the next tokens, such as \"meeting\", then \"starts\", then \"tomorrow\".",
-      "When it predicts an end token, generation stops."
+      "The source is split into tokens and converted into vectors carrying information about each token and its position.",
+      "Using self-attention, the encoder processes all source positions and produces a contextualised hidden state for each one.",
+      "The decoder begins with a start marker. Masked self-attention lets it use only the English tokens already generated, not future ones.",
+      "Cross-attention lets the decoder consult the encoder's hidden states while predicting \"The\", then \"meeting\", \"starts\" and \"tomorrow\" in sequence.",
+      "The decoder stops when it predicts an end marker."
     ],
-    "result": "Output text: \"The meeting starts tomorrow.\""
+    "result": "Draft output: \"The meeting starts tomorrow.\" The desk officer checks the rendering against the source before using it in the file."
   },
   "unWorkplaceExample": {
-    "scenario": "A translation support tool helps convert short, non-sensitive field update summaries into a working language for internal drafting.",
-    "relevance": "This is a typical encoder-decoder use case because the system first reads the source text as one sequence and then generates a new sequence in another language.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operationally sensitive field information into an unapproved public AI service; use only approved tools with human review."
+    "scenario": "In an inter-agency secretariat, a statistician in the data unit is coding open-ended answers from a needs assessment before the monitoring report goes for clearance. An approved model proposes standard category labels for review.",
+    "relevance": "The encoder builds contextualised representations of each response. The decoder attends to those representations and generates the proposed category label one token at a time, using both the encoded response and the label tokens already produced.",
+    "caution": "Needs-assessment responses may contain personal or protection-sensitive details. They must not be entered into any tool not approved for that material. Remove unnecessary identifiers, apply the required access controls, and retain human review. De-identification alone does not make an unapproved tool acceptable."
   },
   "whyItMatters": "If you procure, evaluate or use AI tools, this term helps you tell different system designs apart. An encoder-decoder model is often a good fit when the task transforms one input into a different output, such as translation or summarisation. A decoder-only model may behave differently because it treats the prompt and response as one running sequence. This affects quality, latency, cost, context handling and failure modes. Knowing the distinction helps you ask better questions about what data the system uses, how outputs are produced, what kind of errors to expect and whether human review is needed.",
   "whereYouMayHearIt": [
-    "machine translation systems",
-    "summarisation tools",
-    "speech-to-text model discussions",
-    "transformer architecture diagrams",
-    "seq2seq research papers"
+    "A vendor demo of an approved translation tool in a procurement meeting",
+    "An architecture review by an information and communications technology governance board",
+    "An inter-agency working group reviewing automated coding of needs-assessment responses",
+    "A technical briefing before a summarisation pilot is cleared"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "Think of it as a two-part system. One part reads and organises the input. The other part uses that organised view to produce the output step by step.",
     "technical": "In a transformer encoder-decoder architecture, source tokens are embedded and processed by encoder layers, typically using self-attention to produce contextualised hidden states for all source positions. The decoder generates the target autoregressively: at each step it uses masked self-attention over previously generated target tokens and cross-attention over the encoder’s hidden states to predict the next target token. “Encoder” and “decoder” can also refer to the individual halves by themselves. “Encoder-decoder model” names the full architecture containing both halves. “Seq2seq” is the broader idea of mapping an input sequence to an output sequence; many seq2seq systems are encoder-decoder models, but the terms are not perfectly interchangeable across all literature."
   },
-  "keyTakeaway": "Encoder and decoder are partner components: one prepares the source, the other generates the target from that prepared source plus what it has already produced.",
+  "keyTakeaway": "The encoder represents the whole source in context. The decoder consults those representations and its own previous output to generate the target, usually one token at a time.",
   "quickCheck": {
     "question": "Which statement best distinguishes an encoder-decoder model from a decoder-only autoregressive model?",
     "options": [
@@ -257,6 +256,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:38.614Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -87,28 +87,27 @@
     "reducedMotionDescription": "A static left-to-right chart with four labelled columns and connecting arrows. A single highlighted path is shown without animation, with a note that influence changes as values move through successive layers."
   },
   "workedExample": {
-    "scenario": "Classifying one public feedback comment about transport",
-    "input": "Comment: \"Buses are often late and the fare is too high.\" Converted features: cost=1.0, delay=1.0, safety=0.0, cleanliness=0.0.",
+    "scenario": "Following one transport comment through an illustrative feed-forward network",
+    "input": "Comment: \"Buses are often late and the fare is too high.\" Encoded feature vector: cost=1.0, delay=1.0, safety=0.0, cleanliness=0.0.",
     "process": [
-      "The input layer receives four numbers: 1.0, 1.0, 0.0 and 0.0.",
-      "Hidden layer 1 combines them. For example, one unit may respond strongly to delay and weakly to cost, producing 0.8, while another responds strongly to cost, producing 0.7.",
-      "Hidden layer 2 recombines those internal values into broader internal signals, for example service-problem=0.9 and price-problem=0.6.",
-      "The output layer converts the final internal signals into category scores such as service complaint=0.62, cost complaint=0.33, safety complaint=0.05."
+      "The input layer receives the vector [1.0, 1.0, 0.0, 0.0]. It represents the features but does not itself decide the category.",
+      "Each unit in the first hidden layer calculates a weighted sum of the four inputs, adds a bias and applies a non-linear activation. Two illustrative units might produce 0.8 and 0.7.",
+      "The second hidden layer repeats that operation using the first layer's values, producing a new representation such as [0.9, 0.6]. These internal values need not correspond to named concepts that a person can interpret.",
+      "The output layer maps the final representation to three category scores. If a softmax is used, the resulting probabilities might be service complaint=0.62, cost complaint=0.33 and safety complaint=0.05."
     ],
-    "result": "The network would return the highest score for service complaint, while still reflecting that cost is also present."
+    "result": "The highest output is service complaint, although the cost category also receives substantial weight. The result comes from the complete sequence of learned transformations, not from a single hidden unit labelled \"service\"."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team explores whether a reviewed internal model can help identify broad protection trends across incident reports by turning structured report features into inputs, passing them through hidden layers, and producing output scores for trend categories.",
-    "relevance": "Understanding the different layer roles helps staff ask sensible questions about what enters the model, where intermediate transformations happen, and what the final output actually represents.",
-    "caution": "Do not put personal data, survivor details, witness information, security-sensitive content or confidential operational reports into an unapproved public AI service. Use only approved systems, minimise data, and keep human oversight over any protection-related interpretation."
+    "scenario": "A first-year associate expert supporting a UN Country Team working group is preparing talking points by close of business for an informal briefing with national counterparts. An implementing partner's diagram shows a model that takes structured features from public consultation comments, transforms them through two hidden layers and returns scores for broad themes.",
+    "relevance": "Distinguishing the layers lets the associate expert ask three separate questions: which features enter the model, what transformations the hidden layers perform, and whether the output is a score, probability, label or predicted value. It also prevents the talking points from treating every internal unit as a recognisable policy category.",
+    "caution": "Names, contact details and free-text submissions must not be entered into a tool that has not been approved for such data. Use only the approved environment, minimise the input to necessary features, check the implementing partner's data-handling arrangements and retain human review before consultation comments are categorised or prioritised."
   },
   "whyItMatters": "If you hear that a system has many layers, that does not by itself tell you whether it is reliable, fair or suitable. Knowing the difference between input, hidden and output layers helps you ask better questions: What information goes in? What form does the output take? Is the output a score, a label or a probability-like value? How much human review is needed? This matters when choosing tools, reading vendor claims, interpreting model behaviour and spotting when someone is oversimplifying how a neural network works.",
   "whereYouMayHearIt": [
-    "introductory AI courses",
-    "model architecture discussions",
-    "vendor product demos",
-    "research papers on neural networks",
-    "debugging model outputs"
+    "An architecture slide during a vendor demo to a procurement unit",
+    "A technical review by an ICT governance board",
+    "A model-validation meeting before a pilot is cleared",
+    "An inter-agency working group reviewing an automated classification proposal"
   ],
   "commonMisconceptions": [
     {
@@ -128,7 +127,7 @@
     "simple": "Think of the network as a line of stages. The input layer takes in numbers, the hidden layers reshape those numbers into more useful patterns, and the output layer gives the final score, label or prediction.",
     "technical": "In a feed-forward neural network, layers are ordered sets of units connected by parameters. The input layer represents the feature vector and usually performs little or no learned transformation itself. Each hidden layer computes a new representation from the previous layer, typically by applying an affine transformation, meaning weighted sum plus bias, followed by a non-linear activation function. This repeated transformation can make later representations more useful for the task. The output layer maps the final hidden representation into the target space: for example logits for classification, often followed by softmax, or a single continuous value for regression. The term layer is generic, while input layer, hidden layer and output layer refer to distinct positions and roles within the network."
   },
-  "keyTakeaway": "These layer names describe different jobs in a neural network: receive inputs, transform them internally, then produce the final output.",
+  "keyTakeaway": "The input layer represents the features, hidden layers repeatedly apply learned weighted transformations and non-linear activations, and the output layer produces the task's score, label or predicted value.",
   "quickCheck": {
     "question": "Which statement best describes hidden layers?",
     "options": [
@@ -255,6 +254,19 @@
       "plainExplanation",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:40.919Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

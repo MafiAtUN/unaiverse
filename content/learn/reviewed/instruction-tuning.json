@@ -89,28 +89,28 @@
     "reducedMotionDescription": "Show the same five boxes and arrows as a static left-to-right process, with the final box highlighted and a short note under it saying instruction tuning improves prompt following but does not by itself guarantee truthfulness or safety."
   },
   "workedExample": {
-    "scenario": "A team wants a model to handle short operational text tasks in a consistent format.",
-    "input": "Training pair example: Prompt: 'Translate this field note into French and keep the uncertainty words: Roads may be blocked north of Gao after heavy rain.' Target answer: 'Les routes peuvent être bloquées au nord de Gao après de fortes pluies.'",
+    "scenario": "An information management officer in a regional bureau oversees adaptation of an approved offline model for the coding task before the field presence must clear its progress report at close of business.",
+    "input": "Training pair: Instruction: “Assign one category from the supplied list. Return only the category and a brief rationale.” Input: “More practice using spreadsheets would help me prepare the monthly figures.” Target: “Digital skills | The response requests spreadsheet practice.”",
     "process": [
-      "Start from a pretrained checkpoint that often translates correctly but sometimes adds explanation or changes the requested format.",
-      "Assemble 120,000 instruction-response pairs covering translation, summarisation, extraction and classification in several output styles.",
-      "Run supervised training for one epoch on these pairs, updating the model weights to increase the probability of the target responses.",
-      "Evaluate on a held-out set of 5,000 prompts; exact-format compliance rises from 61% to 88%, while translation quality stays similar.",
-      "Save the adapted model as a new checkpoint for assistant-style use."
+      "Start with a pretrained checkpoint that can interpret the response but may return several categories, extra commentary or the wrong format.",
+      "Prepare supervised instruction-input-output pairs using synthetic or properly de-identified examples. Include varied wording, ambiguous cases and the exact output structures required for the coding sheet.",
+      "Run supervised fine-tuning. For each pair, update the model weights to increase the probability of the target response, conditioned on both the instruction and the supplied answer.",
+      "Evaluate the adapted checkpoint on held-out examples, checking category selection, format compliance and whether rationales remain grounded in the input.",
+      "Version the adapted checkpoint and test it in the approved offline environment before making it available to the human resources officer."
     ],
-    "result": "The new model is more likely to return a direct French translation when asked, instead of giving commentary, rephrasing the task or mixing translation with explanation."
+    "result": "The instruction-tuned checkpoint is more likely to return one permitted category in the required structure. It has not acquired judgement about staff needs, and ambiguous or sensitive responses still require human review."
   },
   "unWorkplaceExample": {
-    "scenario": "A humanitarian coordination team is testing an internally approved model to help draft structured summaries from non-sensitive, already cleared situation updates, such as turning a short public field note into a three-bullet summary with dates and locations preserved.",
-    "relevance": "Instruction tuning matters here because the team may need the model to reliably follow a prompt format across many routine tasks, not just generate fluent text. A model that follows instructions better can reduce reformatting work and make outputs easier for human reviewers to check.",
-    "caution": "Do not place confidential, protection-sensitive, personal, survivor, witness, security-sensitive or operationally sensitive information into an unapproved public AI service. Human review remains necessary before any output is shared or used operationally."
+    "scenario": "At a field presence where the connection drops regularly, a human resources officer is coding open-ended answers from a staff learning needs assessment. The coded annex for the monthly progress report is due at close of business, and an approved offline model has been configured to return one category and a short rationale for each response.",
+    "relevance": "Instruction tuning is what makes the adapted model more likely to follow that recurring task pattern: apply the supplied category list, preserve the requested output structure and avoid adding a small essay of its own. It learns this behaviour from supervised prompt-response examples, rather than from the officer repeating formatting instructions for every answer.",
+    "caution": "Do not upload raw responses, names or combinations that could identify staff to a tool not approved for human resources data. Free text may reveal medical, conduct or other personal information. Use synthetic or properly de-identified examples for testing, and use real responses only where the approved system, access controls and stated purpose cover them. The officer must review every classification."
   },
   "whyItMatters": "If you procure, evaluate or govern AI systems, this term tells you why two models built from similar base technology can behave very differently in practice. Instruction tuning often explains whether a model will follow format, task and tone requests with little prompt engineering. It also helps you ask better questions: Was the model adapted for general instruction following, for one domain only, or not at all? That affects usability, testing, risk controls and how much human checking is needed.",
   "whereYouMayHearIt": [
-    "model cards and release notes",
-    "LLM training pipelines",
-    "assistant product evaluations",
-    "research papers on post-training"
+    "During an ICT governance board review of an internal assistant",
+    "In a procurement unit’s technical clarification after a vendor demonstration",
+    "At a regional bureau model-evaluation session before deployment to the field",
+    "In a technical briefing comparing pretrained and instruction-tuned checkpoints"
   ],
   "commonMisconceptions": [
     {
@@ -240,6 +240,18 @@
     "applied": [
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:13.305Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

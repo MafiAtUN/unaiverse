@@ -89,28 +89,28 @@
     "reducedMotionDescription": "A static five-box sequence with a printed loop arrow from validation results back to chosen hyperparameters. Colour and labels, not animation, show the distinction between chosen settings and learned parameters."
   },
   "workedExample": {
-    "scenario": "A team trains the same text classifier three times to sort support emails into 'billing', 'technical' and 'other'.",
-    "input": "Same training data; different hyperparameter settings for learning rate and regularisation.",
+    "scenario": "An information management officer at a regional hub is testing a classifier that routes public technical enquiries to the appropriate unit before the monthly monitoring report is cleared.",
+    "input": "The same approved, non-sensitive training and validation data are used for each run. Only the learning rate and weight decay are changed.",
     "process": [
-      "Run A uses learning rate 0.1 and regularisation 0.0001. Training loss drops fast but validation accuracy stalls at 78%, suggesting unstable fitting.",
-      "Run B uses learning rate 0.01 and regularisation 0.0001. Validation accuracy improves to 84% after 8 epochs.",
-      "Run C uses learning rate 0.01 and regularisation 0.1. Validation accuracy falls to 80%, suggesting the regularisation is too strong for this dataset.",
-      "The team keeps the Run B settings and trains a final model with those hyperparameters."
+      "The officer fixes the training data, validation data and evaluation measure so that the runs can be compared fairly.",
+      "Run A uses a high learning rate and low weight decay. Training loss falls, but validation loss fluctuates, indicating unstable fitting.",
+      "Run B uses a lower learning rate with the same weight decay. Training is stable and it produces the lowest validation loss of the tested configurations.",
+      "Run C keeps the lower learning rate but increases weight decay. Both training and validation performance weaken, indicating that the constraint is too strong for this dataset.",
+      "The officer records each configuration and result, selects Run B's hyperparameters, and confirms the resulting model once on an untouched test set."
     ],
-    "result": "The chosen hyperparameters are learning rate 0.01 and regularisation 0.0001 because they gave the best validation performance among the tested runs."
+    "result": "The learning rate and weight decay are selected hyperparameters. They shaped how training proceeded but were not learned as model weights from the examples."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is building an internal tool to help summarise public consultation submissions that have already been cleared for approved processing. They test different hyperparameters such as summary length limit, learning rate and regularisation on non-sensitive sample data to compare clarity and consistency.",
-    "relevance": "Staff may hear about hyperparameter tuning when reviewing why one model version performs better, costs less to run or behaves more consistently than another.",
-    "caution": "Do not place confidential, personal, protection-sensitive or unapproved consultation material into a public AI service when testing or tuning settings; use approved environments, minimised data and human review."
+    "scenario": "A reporting officer in a specialised agency technical division is drafting the evaluation note before the panel reconvenes on three bids for a document-classification service. One bidder describes tuning the learning rate, batch size and weight decay; another presents only its final performance. The officer asks the evaluators to distinguish these chosen training settings from the model weights learned during training and to record whether the bids used comparable validation methods.",
+    "relevance": "Hyperparameters often appear in bid documentation as evidence that a model was systematically tuned. They help evaluators assess whether performance claims are reproducible and fairly compared, rather than the product of one favourable run.",
+    "caution": "Bid contents and panel deliberations are procurement-sensitive. They must not be uploaded to a public or otherwise unapproved AI service. Any testing must use an authorised environment, agreed test data, documented configurations and the evaluation criteria already established for the procurement."
   },
   "whyItMatters": "You do not need to tune models yourself to be affected by hyperparameters. They influence whether training is stable, whether a model generalises beyond its training data, how much computing time is used, and how repeatable the results are. For managers and reviewers, this matters because a model that looks strong in one demo may perform worse with different settings, and a poor setting choice can be mistaken for a poor model design. Asking which hyperparameters were used, how they were chosen, and what validation process checked them helps you judge quality, cost, risk and fairness more sensibly.",
   "whereYouMayHearIt": [
-    "model training notes",
-    "machine learning experiments",
-    "optimiser settings",
-    "validation and tuning discussions",
-    "MLOps dashboards"
+    "A vendor demo during a procurement evaluation meeting",
+    "A model review before an internal tool moves from pilot to production",
+    "A technical debrief on validation results",
+    "An ICT governance board reviewing model documentation"
   ],
   "commonMisconceptions": [
     {
@@ -257,6 +257,18 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:57.761Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

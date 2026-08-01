@@ -88,27 +88,27 @@
     "reducedMotionDescription": "A static four-panel diagram with the same numbers and labels: prediction and reference, difference, residual versus error measure, then multiple examples combined into one loss that points to model adjustment."
   },
   "workedExample": {
-    "scenario": "A small model predicts hourly water pump pressure from sensor readings.",
-    "input": "Three cases: predicted pressures [68, 75, 81]; reference pressures [72, 70, 79].",
+    "scenario": "A model predicts the number of working days needed to clear three progress reports.",
+    "input": "Predicted clearance times [2, 5, 4] days; actual clearance times [3, 3, 4] days.",
     "process": [
-      "Compare each prediction with its reference answer to get residuals: 68-72=-4, 75-70=5, 81-79=2.",
-      "Turn those into squared errors so larger misses count more: 16, 25, and 4.",
-      "Average them: (16+25+4) / 3 = 15.",
-      "Use that loss value, 15, to adjust the model so future predictions are closer to the references."
+      "Define each residual as predicted minus actual: 2-3=-1, 5-3=2, and 4-4=0.",
+      "Square the residuals so their signs no longer cancel and larger misses count more: 1, 4, and 0.",
+      "Average the squared errors: (1+4+0) / 3 = 1.67, rounded to two decimal places.",
+      "During training, optimisation uses the gradient of this mean squared error loss to adjust the model parameters."
     ],
-    "result": "The per-case residuals are -4, 5, and 2, while the training loss for this batch is 15 under mean squared error."
+    "result": "The signed residuals are -1, 2, and 0 days. The loss for this batch is approximately 1.67 under mean squared error."
   },
   "unWorkplaceExample": {
-    "scenario": "A team is testing a tool that suggests past resolution paragraphs similar to a new draft query, so staff can find prior language faster.",
-    "relevance": "The team can measure error at the level of individual suggestions, then combine results into a loss during development to improve ranking or matching quality before deployment. This helps them compare model versions instead of relying only on impressions.",
-    "caution": "Do not paste confidential negotiation text, unpublished draft language, or politically sensitive material into an unapproved public AI service; use approved systems, minimise sensitive content, and keep human review in the loop."
+    "scenario": "A chief of section in a country office is clearing a handover note for an incoming colleague by close of business. It records a pilot model that predicts how many working days implementing-partner progress reports will take to clear.",
+    "relevance": "For each completed file, the predicted clearance time can be compared with the actual time. If the residual is defined as predicted minus actual, a positive value means the model overestimated. A loss function can square or otherwise transform each discrepancy and average the results across a batch. Optimisation then uses gradients of that loss to adjust the model.",
+    "caution": "Do not upload progress reports, personal data or partner-sensitive material to a tool that has not been approved for them. Use an approved environment and only the minimum necessary fields, such as non-identifying workflow metadata. A low loss does not make the model suitable for judging partner performance or replacing review of the file."
   },
   "whyItMatters": "If you hear that a model is improving, this is usually part of what people mean: its loss is going down under a chosen measurement rule. That matters because the rule shapes the model’s behaviour. A system punished heavily for large mistakes may act differently from one that treats all mistakes more evenly. For non-specialists, this affects procurement, evaluation, and risk: a low loss does not automatically mean the model is fair, accurate in the way you care about, or suitable for real-world use. You need to ask what was measured, on what data, and whether that measurement matches the task and the harms you want to avoid.",
   "whereYouMayHearIt": [
-    "model training dashboards",
-    "machine learning courses",
-    "evaluation reports",
-    "debugging a prediction system"
+    "A vendor demo to an ICT governance board",
+    "A technical evaluation meeting in a procurement unit",
+    "A data focal point briefing the front office before a pilot",
+    "A model review with an evaluation office"
   ],
   "commonMisconceptions": [
     {
@@ -128,7 +128,7 @@
     "simple": "A model makes a guess and you compare it with the reference answer. The gap for one case is often called error, and sometimes residual if the sign matters. A training system then combines many such gaps into one number called loss, and tries to make that number smaller.",
     "technical": "Let a model output y-hat for a target y. A per-example discrepancy can be represented as a residual, often y minus y-hat or y-hat minus y depending on convention, so the sign matters. An error measure may then transform that discrepancy, for example with absolute value or squaring. A loss function maps predictions and targets to a scalar objective, often by computing per-example losses and aggregating them over a batch, such as a mean. Optimisation methods use gradients of that loss with respect to model parameters to update the parameters. In ordinary usage, people sometimes say 'the error' when they really mean the training loss, so context matters."
   },
-  "keyTakeaway": "One case can have an error, residual, or loss; training often aggregates losses and uses their gradients to adjust model parameters.",
+  "keyTakeaway": "A residual is a signed mismatch, so its convention matters. A loss converts predictions and references into a scalar objective, often by aggregating per-case losses, whose gradients guide training.",
   "quickCheck": {
     "question": "Which statement best captures the relationship among residual, error, and loss?",
     "options": [
@@ -268,6 +268,19 @@
       "plainExplanation",
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:49.602Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

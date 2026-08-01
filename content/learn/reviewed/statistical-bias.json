@@ -81,27 +81,27 @@
     "reducedMotionDescription": "A static two-panel chart with identical data in both panels: left shows a straight line with larger residuals and the label ‘high bias’; right shows a smooth curve with smaller residuals and the label ‘lower bias’."
   },
   "workedExample": {
-    "scenario": "A team trains a text classifier to label consultation comments as ‘support’, ‘concern’, or ‘mixed’.",
-    "input": "Training set: 1,200 comments. Model A uses only 20 frequent keywords and a very strong penalty that keeps the model simple.",
+    "scenario": "A procurement unit tests a model that sorts supplier applications into “meets profile”, “requires review” and “does not meet profile” before evaluation.",
+    "input": "Historical applications with panel-assigned labels. The first model uses a short vocabulary of exact terms and strong regularisation.",
     "process": [
-      "The team trains Model A on the 1,200 comments and tests it on a separate set of 300 unseen comments.",
-      "On the training set, accuracy is 61%, and on the test set, accuracy is 60%, so the model is not merely memorising the training data.",
-      "A review of errors shows a pattern: comments with both positive and critical language are repeatedly forced into either ‘support’ or ‘concern’ because the model cannot represent nuance well.",
-      "The team adds richer text features and relaxes the penalty slightly. A new model reaches 74% on training and 71% on test, suggesting lower bias without a large jump in variance."
+      "The unit evaluates the model on held-out applications and examines errors by category rather than relying only on an overall score.",
+      "Applications describing relevant experience with wording absent from the short vocabulary are repeatedly placed in “does not meet profile”.",
+      "The same pattern appears when the model is retrained on different samples, indicating a systematic limitation rather than an error tied to one particular training set.",
+      "The developers expand the text representation and reduce the regularisation, then repeat the evaluation to check whether the persistent error narrows without unstable predictions increasing sharply."
     ],
-    "result": "The first model’s limited features and patterned errors suggest underfitting, but one train-test split does not establish its statistical bias."
+    "result": "The first model underfits because its restricted representation cannot capture the range of language that expresses the roster criteria. Repeated resampling helps assess statistical bias, while a single train-test split can only provide evidence consistent with it."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team wants to summarise public submissions to a consultation by grouping comments into broad themes before analysts review them.",
-    "relevance": "Statistical bias matters if the chosen model is too simple and keeps missing nuanced submissions, which can distort the apparent distribution of themes and lead staff to over-trust a neat but incomplete summary.",
-    "caution": "Do not upload personal, confidential, survivor, witness, security-sensitive or otherwise protection-sensitive submissions into an unapproved public AI service; use approved tools, minimise data, and keep human review in the loop."
+    "scenario": "A procurement officer is reviewing supplier applications for inclusion on a roster. A screening model compares each application with the roster profile before the file goes to the evaluation panel.",
+    "relevance": "If the model relies on a narrow set of keywords or an overly restrictive scoring rule, it may repeatedly miss equivalent experience described in different language. That patterned underfitting can persist across training samples, giving the panel a tidy shortlist that systematically departs from the intended profile.",
+    "caution": "Supplier applications and evaluation records may contain confidential and procurement-sensitive information. They must not be entered into a tool that has not been approved for that material. The model should support, not replace, review against the published criteria, and it must not automatically exclude applicants."
   },
   "whyItMatters": "A model can produce tidy scores and still fail in a predictable way because it is too simple for the real problem. If you do not recognise statistical bias, you may choose a system that looks stable but keeps missing important patterns. That can lead to poor decisions about procurement, staffing, risk, or service quality. For non-specialists, the key question is not only ‘How accurate is it?’ but also ‘What kinds of mistakes does it make again and again, and why?’ Understanding bias helps you ask whether the model is underfitting, whether a benchmark is too easy, and whether a more suitable design or richer data is needed.",
   "whereYouMayHearIt": [
-    "model evaluation meetings",
-    "bias-variance trade-off discussions",
-    "cross-validation results reviews",
-    "underfitting diagnosis"
+    "A technical evaluation meeting before a procurement tool is cleared",
+    "A vendor demo when the unit asks why training and validation errors are both persistently high",
+    "A model review discussing the bias-variance trade-off",
+    "An ICT governance board considering evidence of underfitting"
   ],
   "commonMisconceptions": [
     {
@@ -121,7 +121,7 @@
     "simple": "A high-bias model is too simplistic, so it keeps making the same kind of mistake.",
     "technical": "In supervised learning, bias usually refers to systematic error introduced by modelling assumptions, restricted hypothesis class, regularisation, or estimation choices. Informally, if the model family cannot represent the target relationship well, the expected prediction will sit away from the true function, producing underfitting. In the classic bias-variance decomposition, expected generalisation error can be analysed as contributions from bias, variance, and irreducible noise, though the exact form depends on the loss function and setting. Practically, high bias often appears as weak performance on both training and validation data, with errors that follow a recognisable pattern rather than random fluctuation."
   },
-  "keyTakeaway": "Statistical bias is a systematic gap between a model’s expected prediction across possible training samples and the true target.",
+  "keyTakeaway": "Statistical bias is systematic error in the expected prediction across possible training samples. It often appears when restrictive assumptions keep the model from representing the true relationship.",
   "quickCheck": {
     "question": "Which situation best suggests high statistical bias rather than high variance?",
     "options": [
@@ -264,6 +264,19 @@
       "keyTakeaway",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:35.009Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "The examples now distinguish statistical bias from fairness concerns and show why repeated training samples, rather than one split alone, are relevant."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

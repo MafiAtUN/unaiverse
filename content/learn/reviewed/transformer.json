@@ -90,28 +90,27 @@
     "reducedMotionDescription": "Show the same five stages as a static left-to-right diagram. Use darker fixed lines in the self-attention box to indicate stronger connections instead of animated highlighting."
   },
   "workedExample": {
-    "scenario": "Predicting the next word in the sentence: 'The delegates reached an agreement after long ___'.",
-    "input": "The model receives the tokens: The | delegates | reached | an | agreement | after | long",
+    "scenario": "Predicting the next token in: \"After the final informals, the draft was adopted by ___\".",
+    "input": "After | the | final | informals | , | the | draft | was | adopted | by",
     "process": [
-      "Each token is converted into a vector, and its position in the sentence is added.",
-      "In self-attention, the token 'long' gives high weight to 'after' and 'agreement' because they help narrow what kind of word should follow.",
-      "Several layers refine the pattern, combining local grammar with longer-range context from the whole sentence.",
-      "The output layer assigns probabilities to possible next tokens, for example 'talks' 0.41, 'negotiations' 0.33, 'delays' 0.07, others lower."
+      "Each token is mapped to an embedding, with positional information added so the model can distinguish both the words and their order.",
+      "Through masked self-attention, the representation at the final input position can draw on permitted earlier tokens. Different attention heads may emphasise \"adopted by\", \"draft\" and \"final informals\".",
+      "Stacked attention and feed-forward layers refine these context-aware representations in parallel.",
+      "The output layer scores possible next tokens. Given this context, \"consensus\" may rank above less fitting alternatives."
     ],
-    "result": "The highest-probability next word is 'talks', so the generated continuation may be 'The delegates reached an agreement after long talks'."
+    "result": "The model selects or samples from the ranked candidates, producing a continuation such as: \"After the final informals, the draft was adopted by consensus.\""
   },
   "unWorkplaceExample": {
-    "scenario": "A country office uses an approved internal tool built on a transformer-based model to help sort a shared inbox into categories such as procurement, meeting requests, media enquiries, and general administration.",
-    "relevance": "This matters because transformers are the architecture behind many modern text tools that can classify, summarise, and draft responses quickly when used with human review.",
-    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive, or operational information into an unapproved public AI service; triage suggestions should remain under staff oversight and within approved systems."
+    "scenario": "A reporting officer in a liaison office is finishing a handover note for an incoming colleague before close of business. Using an internal tool approved for non-sensitive material, the officer submits a list of recurring deadlines and asks it to group related items under reporting, clearance and meetings.",
+    "relevance": "The tool's transformer can process the list in parallel and use self-attention to weight connections between words in different entries. This helps it recognise, for example, that several references to circulation, comments and sign-off belong under clearance even when they are phrased differently.",
+    "caution": "A handover note may contain personal, confidential or security-sensitive details. Such material must not be entered into a tool unless that tool is explicitly approved for that category of information, because prompts or outputs may be retained or exposed outside authorised controls. The officer must also check every grouping and omission."
   },
   "whyItMatters": "If you choose, buy, govern, or use AI systems, this term helps you judge what current tools are good at, why they scale well, and where they may still fail without human checking.",
   "whereYouMayHearIt": [
-    "language model discussions",
-    "machine translation tools",
-    "image analysis systems",
-    "AI procurement briefings",
-    "research papers on modern NLP"
+    "At a vendor demo during a procurement meeting",
+    "In an ICT governance board review of an AI proposal",
+    "During a Headquarters briefing on machine translation",
+    "At an inter-agency working group discussing document classification"
   ],
   "commonMisconceptions": [
     {
@@ -135,7 +134,7 @@
     "simple": "A transformer is a model design that lets each input part directly combine clues from other permitted parts, rather than carrying context step by step.",
     "technical": "A transformer maps input tokens or patches to embeddings with positional information, then applies stacked layers of self-attention and feed-forward transformations. Each position builds a context-aware representation from permitted sequence positions, often using multi-head attention and parallel computation."
   },
-  "keyTakeaway": "The key idea is that many input parts can compare with other permitted parts in parallel within a layer to build context.",
+  "keyTakeaway": "A transformer builds context by letting each position weight relevant permitted positions in parallel, then refining those representations through stacked attention and feed-forward layers.",
   "quickCheck": {
     "question": "Which statement best describes why transformers became so important?",
     "options": [
@@ -286,6 +285,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:20.276Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Replaced the generic inbox example with a specific handover task, removed invented probability figures, and recast the listening contexts as recognisable rooms and moments."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

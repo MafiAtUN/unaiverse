@@ -86,28 +86,28 @@
     "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: gradients in panel one, first-moment memory in panel two, second-moment memory in panel three, and the corrected, scaled parameter update in panel four."
   },
   "workedExample": {
-    "scenario": "Training a small text classifier that labels short support emails as 'urgent' or 'not urgent'.",
-    "input": "Suppose one parameter currently equals 0.50. At this step its gradient is 0.80. The saved Adam values from the previous step are first-moment m = 0.10 and second-moment v = 0.04. Use beta1 = 0.9, beta2 = 0.999, learning rate = 0.001, and ignore epsilon for simplicity.",
+    "scenario": "For the translation-request classifier, consider one model parameter at training step 2. Its current value is 0.50, the new gradient is 0.80, and the stored Adam values after step 1 are m = 0.04 and v = 0.00016.",
+    "input": "Use beta1 = 0.9, beta2 = 0.999 and a learning rate of 0.001. Ignore epsilon for this numerical illustration.",
     "process": [
-      "Update the first moment: new m = 0.9×0.10 + 0.1×0.80 = 0.17.",
-      "Update the second moment: new v = 0.999×0.04 + 0.001×0.64 = 0.0406, because 0.80 squared is 0.64.",
-      "Apply bias correction if this is an early step; for illustration, assume the corrected values are close enough to 0.17 and 0.0406 to see the effect.",
-      "Compute the update size: 0.001 × 0.17 / sqrt(0.0406) is about 0.00084.",
-      "Subtract the update from the parameter: 0.50 becomes about 0.49916."
+      "Update the first moment: m = 0.9 × 0.04 + 0.1 × 0.80 = 0.116.",
+      "Update the second moment: v = 0.999 × 0.00016 + 0.001 × 0.80² = 0.00079984.",
+      "Correct the initial zero bias at step 2: m-hat = 0.116 / (1 - 0.9²) ≈ 0.6105, and v-hat = 0.00079984 / (1 - 0.999²) ≈ 0.4001.",
+      "Compute the Adam update: 0.001 × 0.6105 / sqrt(0.4001) ≈ 0.000965.",
+      "Subtract the update from the parameter: 0.50 becomes approximately 0.499035."
     ],
-    "result": "The parameter changes only a little. Here Adam's 0.00084 step is slightly larger than plain gradient descent's 0.00080 step at the same learning rate."
+    "result": "Adam changes this parameter by about 0.000965. Plain gradient descent using only the current gradient would change it by 0.000800. Adam is not inherently more aggressive: the difference comes from its bias-corrected memories of recent direction and gradient size."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is training an internal model to sort incoming, non-sensitive humanitarian coordination messages by topic so analysts can find logistics, shelter and health updates faster.",
-    "relevance": "Adam is a common optimiser for this kind of training because message features can have very uneven gradient behaviour, and Adam can adapt the step size for different parameters to make training more stable.",
-    "caution": "Do not place confidential, personal, protection-sensitive or operationally sensitive message content into an unapproved public AI service; use approved systems, minimise data, and keep human review over any workflow that could affect people or operations."
+    "scenario": "A reporting officer supporting a UN Country Team working group is testing a small classifier to flag translation requests as same-day or routine after a backlog threatens clearance of the weekly progress report. Training uses approved, non-sensitive request metadata, such as document type, length and stated deadline, rather than the documents themselves.",
+    "relevance": "During training, some model settings may receive large or erratic gradients while others change more steadily. Adam tracks recent gradient direction and squared gradient size for each setting, allowing it to scale updates separately rather than applying the same-sized adjustment throughout the model.",
+    "caution": "Do not upload document text, names, contact details or other personal or sensitive material to a tool not approved for it. Minimise the training data, use an approved environment and retain human review of routing decisions, since a misclassification could delay clearance or expose protected information."
   },
   "whyItMatters": "If you train or commission models, the optimiser affects cost, speed and reliability. Adam often reaches a useful result quickly without as much manual tuning as simpler methods, so teams use it a lot in practice. But it is not automatically best for every task. The choice can change whether training is stable, whether progress stalls, and how well the final model performs on new data rather than just the training set. For non-specialists, this matters because a model that looks good in a demo may depend heavily on training choices such as the optimiser and its hyperparameters.",
   "whereYouMayHearIt": [
-    "deep learning tutorials",
-    "training configuration files",
-    "machine learning research papers",
-    "framework defaults in PyTorch or TensorFlow"
+    "A vendor demo to an ICT governance board",
+    "A technical review before an internal model pilot",
+    "A procurement meeting comparing model-training approaches",
+    "A troubleshooting call after a training run stops improving"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +127,7 @@
     "simple": "Adam is a way to train a model that remembers recent update directions and also remembers which settings have been getting large or small gradients, so it can move each setting by a different amount.",
     "technical": "At training step t, Adam receives the gradient g_t for each parameter. It updates two exponential moving averages: m_t = beta1 m_(t-1) + (1 - beta1) g_t and v_t = beta2 v_(t-1) + (1 - beta2) g_t^2, where the square is element-wise. Because these estimates start at zero, Adam applies bias correction, typically m_hat_t = m_t / (1 - beta1^t) and v_hat_t = v_t / (1 - beta2^t). The parameter update is then theta_t = theta_(t-1) - alpha m_hat_t / (sqrt(v_hat_t) + epsilon), with division, square root and epsilon applied element-wise. Intuitively, m_hat_t provides a smoothed direction and v_hat_t normalises by recent gradient magnitude, producing adaptive per-parameter step sizes."
   },
-  "keyTakeaway": "Adam updates model parameters using both remembered direction and remembered gradient size, so different parameters can take differently scaled steps.",
+  "keyTakeaway": "Adam combines a moving average of recent gradients with a moving average of their squares, corrects their early bias, and uses both to scale each parameter update.",
   "quickCheck": {
     "question": "What makes Adam different from plain gradient descent?",
     "options": [
@@ -252,6 +252,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:52.621Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

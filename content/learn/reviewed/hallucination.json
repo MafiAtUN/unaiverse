@@ -89,27 +89,27 @@
     "component": "hallucination"
   },
   "workedExample": {
-    "scenario": "A user asks a chat assistant: 'Which three cities hosted the regional clean transport summit in 2021, 2022 and 2023? Give the host ministry for each.'",
-    "input": "The prompt contains no source document, and the user does not say where the information should come from.",
+    "scenario": "A reporting officer in a field presence is consolidating eleven implementing partner updates into a two-page situation report before the 17:00 clearance cut-off. The officer asks a language model to complete a table of delivery figures and reasons for delay, although the final update provides neither.",
+    "input": "Ten updates contain figures and explanations. The eleventh states only that activities were delayed.",
     "process": [
-      "The model receives the question and notices a pattern: event name, three years, three cities, and host ministries.",
-      "It generates a tidy table because that format often fits this kind of request.",
-      "For one year, it inserts a plausible city and an official-sounding ministry name even though no evidence was provided.",
-      "The answer reads smoothly, so the user may not notice that the details were guessed rather than verified."
+      "The model uses the prompt and updates as context, then generates the table token by token according to learned probability patterns.",
+      "Because the preceding rows contain entries in every column, a figure and an explanation are likely continuations for the final row.",
+      "The source provides no basis for either entry, but the model supplies plausible details instead of preserving the gaps.",
+      "Consistent formatting and confident wording make the unsupported entries look much like the sourced ones."
     ],
-    "result": "The output lists \"2021: Amman: Ministry of Transport\", \"2022: Tbilisi: Ministry of Economy and Sustainable Development\", and \"2023: Kigali: Ministry of Infrastructure\". In this hypothetical, the 2022 entry is invented. The polished format hides that, so every entry needs checking against trusted event records."
+    "result": "The final row contains a delivery figure and an explanation that appear nowhere in the partner update. Both are hallucinations. The reporting officer should mark them as not reported or seek confirmation before clearance. A complete-looking table is not a verified one."
   },
   "unWorkplaceExample": {
-    "scenario": "A staff member searches past UN resolutions for prior agreed language on a topic and asks a chat assistant to identify exact earlier formulations and resolution numbers.",
-    "relevance": "This can save time in drafting and research, but a hallucinated resolution number, date or quoted phrase could mislead negotiations or create avoidable rework.",
-    "caution": "Do not rely on the model’s citations without checking the official UN document system or approved internal sources, and do not paste confidential negotiating text or other non-public material into an unapproved public AI service."
+    "scenario": "A legal officer in a regional bureau is preparing the note for the file after a bilateral, for clearance by close of business. The officer asks a language model to reconstruct one delegation’s position and reproduce agreed wording from an earlier exchange, although the handwritten notes contain only a brief summary.",
+    "relevance": "The model may generate a plausible quotation or make the delegation’s position sound firmer than the record supports. It is producing a likely continuation, not retrieving missing evidence. In a polished note for the file, the invented wording may then be mistaken for an accurate account of the bilateral.",
+    "caution": "Check quotations, positions and agreed language against the officer’s notes, any cleared record and official documents. Leave gaps explicit and seek confirmation where necessary. Confidential exchanges and non-public negotiating positions must not be entered into a tool that has not been approved for such material."
   },
   "whyItMatters": "A hallucinated answer can waste time, spread errors, damage trust, or affect decisions if people treat fluent text as checked fact. Non-specialists need to know when to ask for sources, when to verify, and when not to use an AI output at all.",
   "whereYouMayHearIt": [
-    "chat assistant product warnings",
-    "media coverage of AI mistakes",
-    "policy and procurement discussions",
-    "communications and research workflows"
+    "In the front office, when a quotation in a briefing note cannot be traced to the cited source",
+    "During clearance of a note for the file, when the polished account is more specific than the meeting notes",
+    "At an ICT governance board review, when a tool gives confident answers without reliable supporting sources",
+    "In a procurement meeting, when an assistant at the vendor demo invents a feature instead of acknowledging uncertainty"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +133,7 @@
     "simple": "Sometimes the system fills gaps with wording that looks right but is not actually supported by facts or sources.",
     "technical": "In language models, output is generated token by token from learned probability patterns conditioned on the prompt and context. Because this process optimises likely continuation rather than truth by default, the model may produce unsupported assertions, fabricated citations or incorrect specifics, especially under weak grounding."
   },
-  "keyTakeaway": "Plausible wording is not proof: check the evidence behind important claims.",
+  "keyTakeaway": "Fluency is not evidence. Check consequential facts, quotations and citations against trusted sources, and keep unsupported gaps visible rather than allowing the model to complete them.",
   "quickCheck": {
     "question": "Which situation best illustrates a hallucination in a chat assistant?",
     "options": [
@@ -281,6 +281,19 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:00.053Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

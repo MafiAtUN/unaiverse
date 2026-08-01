@@ -34,8 +34,8 @@
   "oneSentence": "Stored information an AI system can retrieve across separate sessions to personalise, continue tasks, or reuse past facts and preferences.",
   "plainExplanation": "In many AI systems, long-term memory means keeping selected information outside the model so it can be used again later, even after one chat or task has ended. That stored information might include a user preference, a project fact, a summary of past work, or a record of what happened in earlier steps.\n\nWhat goes in is usually not the whole conversation. A separate part of the system chooses what to save, such as “send reports in French” or “the package should contain 240 boxes”. The information is then written to a memory store, which could be a database, a file, or another storage service.\n\nWhat happens next is retrieval. When a new request arrives, the system searches that store for items that seem relevant and brings them back into the current working context. The model then uses that retrieved material along with the new prompt. This is different from the model’s training, which happened earlier and affects its general behaviour rather than one user’s stored information.\n\nWhat comes out is a response or action that can reflect earlier interactions across time. This can make systems more useful, but it also creates risks. A saved detail may be wrong, outdated, biased, or too sensitive to store. That is why long-term memory needs clear rules about what may be saved, how long it stays, who can inspect it, and when a human should review or correct it.",
   "everydayAnalogy": {
-    "title": "A warehouse check with a shift logbook",
-    "story": "At a port warehouse in Mombasa, one shift checks whether a shipping manifest matches the delivery. The team writes a few lasting notes in a logbook: container 18 usually arrives with 240 boxes, one supplier often labels weights in pounds, and a damaged pallet from last week is still under review. When the next shift starts, they do not re-read every conversation from yesterday. They open the logbook, pull out the notes that matter for today’s container, and use them during the check. If an old note is wrong and nobody updates it, the next shift may repeat the same mistake.",
+    "title": "The regular order card",
+    "story": "A café does not need to record every conversation with a regular customer. It may keep one useful note on an order card, such as “usually asks for tea without sugar”. On the next visit, staff retrieve that note when the customer gives their name. The note saves time, but it is not automatically true forever. If the customer changes their order, someone must update or remove it. An AI memory works similarly: it captures information, selects what may be useful later, stores it and retrieves it when a relevant new request arrives.",
     "mapping": [
       {
         "analogyElement": "shift logbook",
@@ -93,28 +93,28 @@
     "reducedMotionDescription": "A static five-box flow appears left to right with arrows: current session, save filter, memory store, later retrieval, draft or action with verification. Retrieved items are shown as highlighted notes rather than animated movement."
   },
   "workedExample": {
-    "scenario": "A logistics assistant helps compare a delivery with a shipping manifest over two days.",
-    "input": "Day 1: 'Container BX-204 should contain 240 boxes of masks. Supplier labels weight in pounds.' Day 2: 'Check today’s manifest for BX-204. It lists 240 boxes and 1,100 lb.'",
+    "scenario": "A political affairs officer uses dummy material to test whether a drafting assistant can remember non-sensitive preferences across two sessions during a procurement evaluation.",
+    "input": "First session: “For statements for delivery, use short headings and apply the programme title exactly as it appears in the supplied terminology list.” Later session: “Prepare the next section using my saved drafting preferences.”",
     "process": [
-      "On Day 1, the system saves two items: container BX-204 expected quantity 240, and supplier weight unit usually pounds.",
-      "Those items are stored in a memory database with tags such as supplier name, container number, and date.",
-      "On Day 2, the new request mentions BX-204, so the system retrieves the saved quantity note and the weight-unit note.",
-      "The model uses those retrieved notes to explain that 240 boxes matches the earlier record and that 1,100 lb should not be treated as kilograms without conversion."
+      "The system captures the first conversation turn and the resulting draft settings.",
+      "A selection rule identifies the heading style and terminology instruction as potentially reusable. It does not save the full dummy statement.",
+      "The selected items are written to persistent storage with their source, scope and owner.",
+      "In the later session, the request for saved drafting preferences triggers retrieval of the relevant items.",
+      "The model receives the retrieved items with the new prompt and applies them to the draft. The officer can inspect, correct or delete the memory."
     ],
-    "result": "The assistant returns a draft check note: 'Quantity matches the earlier record for BX-204. Weight is listed in pounds, consistent with this supplier; convert before comparing with kilogram-based documents.'"
+    "result": "The new section uses short headings and the supplied programme title. The system also shows which saved preferences it applied, allowing the officer to catch an obsolete term before the draft goes back into the clearance chain."
   },
   "unWorkplaceExample": {
-    "scenario": "A staff member uses an approved drafting tool to prepare recurring meeting summaries and wants the tool to remember style preferences, such as using neutral language, short headings, and a standard disclaimer for drafts.",
-    "relevance": "Long-term memory can make repeat drafting faster by carrying forward stable preferences or approved boilerplate across separate sessions, while still leaving the final text under human review.",
-    "caution": "Do not store confidential, personal, survivor, witness, security-sensitive, or operational information in an unapproved public AI service. Even in approved systems, memory rules should limit what may be saved, who can access it, and how errors are corrected or deleted."
+    "scenario": "With a statement for delivery held in the translation queue, a political affairs officer joins a procurement unit’s controlled evaluation of a drafting assistant. Using dummy text, the officer checks whether the tool can carry forward agreed terminology and formatting preferences between sessions before close of business.",
+    "relevance": "The test distinguishes long-term memory from ordinary chat context. The assistant selects a durable preference, stores it outside the model and retrieves it in a later session when the officer returns to the same type of artefact.",
+    "caution": "Real draft statements, negotiating positions, vendor submissions, pricing and evaluation material must not be entered into a tool that has not been approved for them. Any enabled memory must have access controls, retention limits and a way to inspect, correct and delete stored items, otherwise an outdated or wrongly attributed preference may keep resurfacing."
   },
   "whyItMatters": "A system with long-term memory can feel more useful because it does not start from zero every time. It can continue work across days, reuse stable preferences, and reduce repetitive prompting. But this same feature changes the risk profile. Once information is stored and reused, mistakes can persist, sensitive details can spread too far, and old assumptions can shape new outputs without being noticed. For policy, procurement, and human-rights work, the key questions are governance questions: what may be stored, for how long, with whose knowledge, under what access controls, and with what route for correction, deletion, and human review. If you ignore long-term memory, you may misunderstand what the system is actually using to produce an answer or action.",
   "whereYouMayHearIt": [
-    "agent design discussions",
-    "enterprise AI products",
-    "personalised assistants",
-    "retrieval and memory features",
-    "AI governance reviews"
+    "A procurement unit’s controlled vendor demonstration",
+    "An ICT governance board review of retention settings",
+    "A front-office discussion before enabling a drafting assistant",
+    "A data protection review of an agent’s memory store"
   ],
   "commonMisconceptions": [
     {
@@ -134,7 +134,7 @@
     "simple": "It is like a saved notebook for an AI system. Some useful details from earlier interactions are written down somewhere outside the chat, so they can be brought back in a later session.",
     "technical": "In many AI systems, long-term memory uses persistent storage outside the model, such as databases, document stores, key-value stores, or vector databases. A memory pipeline usually has four parts: capture, selection, storage, and retrieval. During capture, the system receives conversation turns, tool results, or task outcomes. During selection, the system uses rules, classifiers, or prompts to identify what is worth persisting, such as user preferences, entity facts, summaries, plans, or prior actions. During storage, those items are saved with metadata such as source, timestamp, permissions, and scope. During retrieval, the system uses keys, filters, search, similarity matching, or hybrid methods to fetch records relevant to a new request. The retrieved items are then inserted into the current context window or passed through tools for downstream use. This differs from short-term memory, which only holds information for the current interaction, and from training, which updates model parameters rather than storing per-user or per-task records."
   },
-  "keyTakeaway": "Long-term memory lets an AI system reuse selected past information across sessions, which improves continuity but also creates governance, privacy, and accuracy risks.",
+  "keyTakeaway": "Long-term memory is persistent information retrieved across sessions, not a change to the model itself. It improves continuity, but stored items need controls for access, retention, correction and deletion.",
   "quickCheck": {
     "question": "Which statement best describes long-term memory in many AI systems?",
     "options": [
@@ -242,6 +242,20 @@
       "plainExplanation",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:06.647Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

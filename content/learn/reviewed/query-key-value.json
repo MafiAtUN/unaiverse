@@ -92,27 +92,27 @@
     "reducedMotionDescription": "A static left-to-right diagram shows token vectors split into Q, K and V, then arrows from one query to all keys, score labels above those arrows, thicker weighted arrows from values, and one final combined output box."
   },
   "workedExample": {
-    "scenario": "A sentence contains the tokens: 'The city approved the plan because it was urgent.' The model is updating the token 'it'.",
-    "input": "Current token: 'it'. Candidate context tokens include 'city', 'approved', 'plan', 'urgent'. Example attention weights from 'it' after comparing its query to all keys: city 0.05, approved 0.10, plan 0.70, urgent 0.15.",
+    "scenario": "While checking a pilot’s draft lessons-learned note, an evaluation officer examines how one attention head updates “it” in the simplified token sequence: “The pilot revised the workplan because it was incomplete.”",
+    "input": "Illustrative attention weights from “it” to every token: The 0.03, pilot 0.10, revised 0.05, the 0.02, workplan 0.55, because 0.05, it 0.05, was 0.05, incomplete 0.10.",
     "process": [
-      "The model creates a query vector for 'it' and key and value vectors for all tokens in the sentence.",
-      "It compares the query for 'it' with each token’s key and converts the comparison results into attention weights that sum to 1.",
-      "Because the weight on 'plan' is highest at 0.70, the value vector for 'plan' contributes most strongly to the new representation of 'it'.",
-      "The weighted sum 0.05×V(city) + 0.10×V(approved) + 0.70×V(plan) + 0.15×V(urgent) becomes the contextual output for 'it'."
+      "The head projects the representation of “it” into a query. It separately projects every token’s representation into a key and a value using learned matrices.",
+      "It compares the query for “it” with every key, scales the resulting compatibility scores and applies softmax, producing weights that sum to 1.",
+      "The key for “workplan” receives the largest weight, 0.55. This controls how much of the corresponding value vector enters the output, but it does not mean the key and value vectors are identical.",
+      "The contextual output is the weighted sum of all value vectors: 0.03×V(The) + 0.10×V(pilot) + 0.05×V(revised) + 0.02×V(the) + 0.55×V(workplan) + 0.05×V(because) + 0.05×V(it) + 0.05×V(was) + 0.10×V(incomplete)."
     ],
-    "result": "In this head, the output for \"it\" receives its largest shown value contribution from \"plan\". Other heads and later layers may use this contextual information."
+    "result": "For this attention head, the value vector at “workplan” makes the largest contribution to the updated representation of “it”. Other heads may attend differently, and later layers combine those outputs before the model produces any text."
   },
   "unWorkplaceExample": {
-    "scenario": "After a disaster, an approved internal system analyses non-sensitive satellite image patches and associated labels such as flooded road, damaged roof and intact bridge. For one image patch, the model’s query can be compared with keys from other patches so it can draw on relevant value information from similar visual contexts.",
-    "relevance": "This helps technical staff understand how a transformer-based vision or multimodal model can connect one patch of an image to other relevant patches instead of processing each patch in isolation.",
-    "caution": "Do not upload security-sensitive imagery, personally identifiable information, or operationally sensitive location data to an unapproved public AI service; use only authorised systems with human review."
+    "scenario": "An evaluation officer at a Geneva duty station is finalising the lessons-learned note from a pilot before close of business. Progress reports arrived in Arabic, English and French. In an approved multilingual model, each token produces query, key and value vectors. A query from a pronoun, for example, may match strongly with the key of an earlier noun, causing that noun’s value vector to contribute more to the pronoun’s contextual representation.",
+    "relevance": "The mechanism helps the evaluation officer understand how the model connects related words across a sentence when summarising findings from reports in several languages. It also explains why attention is not a database lookup: learned similarities determine a weighted blend of value vectors.",
+    "caution": "Attention weights do not prove why the model produced a conclusion and should not be treated as an evaluation finding. Raw interview notes, names or details that could identify participants must not be entered into a tool unless it is authorised for that material, because evaluation records may contain confidential personal information. Outputs still require review against the source reports."
   },
   "whyItMatters": "If you hear that a transformer uses attention, query, key and value are the parts that make that mechanism work. Knowing their roles helps you judge system behaviour more clearly. You can ask better questions: what is being matched, what information is being passed forward, and why might the model focus on the wrong context? This matters when reading model cards, debugging failures, comparing architectures, or deciding whether a system is suitable for tasks like summarisation, translation or image analysis. It also helps separate a real mechanism from marketing language: the model is not searching a database in a human sense, but computing weighted combinations of internal vectors.",
   "whereYouMayHearIt": [
-    "transformer architecture discussions",
-    "attention layer diagrams",
-    "machine learning engineering interviews",
-    "research papers on language or vision models"
+    "A vendor demo to an ICT governance board",
+    "A technical review of model documentation after a pilot",
+    "A procurement meeting comparing transformer-based tools",
+    "A briefing with the evaluation office on model interpretability"
   ],
   "commonMisconceptions": [
     {
@@ -136,7 +136,7 @@
     "simple": "The model derives three vectors from each token representation: one used to seek matches, one used for matching, and one containing information that may be combined.",
     "technical": "Given an input representation x for each token, an attention head applies three learned linear projections to produce q = xW_Q, k = xW_K and v = xW_V. For one token position, its query is compared with all keys, often by a dot product, to produce raw compatibility scores. After scaling and a normalising step such as softmax, these become attention weights. The head then computes a weighted sum of the value vectors using those weights, yielding a contextualised output for that position. In self-attention, q, k and v all come from the same sequence; in cross-attention, the query comes from one sequence or stream while keys and values come from another. The important distinction is functional: keys determine matching, values determine what information is aggregated."
   },
-  "keyTakeaway": "Queries and keys determine matching weights, while values provide the information blended into the output.",
+  "keyTakeaway": "A query tests what the current position should match, keys determine the strength of each match, and values supply the information blended into the contextual output.",
   "quickCheck": {
     "question": "In an attention head, what is the main role of the value vector?",
     "options": [
@@ -297,6 +297,19 @@
       "workedExampleResult",
       "simpleVsTechnicalSimple"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:40.169Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "The workplace and worked examples now use a specific evaluation function, artefact and deadline, while showing the full query-key comparison and value-weighting sequence."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

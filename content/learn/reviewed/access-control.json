@@ -31,8 +31,8 @@
   "oneSentence": "Access control sets rules about which people, systems or AI tools can view, use or change specific data, functions and resources.",
   "plainExplanation": "Access control is the practice of limiting access to something valuable. That “something” could be a file, a database, an internal AI assistant, a plug-in, or a tool that can send email or query records. The basic question is simple: who or what is allowed to do what?\n\nWhat goes in are an identity and a request. The identity might be a staff member, a service account, or an AI application acting through a connected tool. The request might be “read this document”, “use this search tool”, or “send this message”. The system checks rules, often called permissions, to see whether that action is allowed.\n\nWhat happens next is a gatekeeping step. If the identity has the right permission, access is granted. If not, access is blocked. Good access control also limits unnecessary power. This idea is often called least privilege: give only the minimum access needed for the task, not broad access “just in case”.\n\nWhat comes out is a safer system with clearer boundaries. In AI security, this matters because many attacks do not break code in the usual way. Instead, they try to persuade a model or connected tool to reveal data, use a function, or cross a boundary it should not cross. Strong access control helps ensure that even if a model produces risky output, the underlying systems still refuse actions the user or tool is not authorised to perform.",
   "everydayAnalogy": {
-    "title": "Library desk with coloured passes",
-    "story": "At a large library, visitors receive different coloured passes. A blue pass lets someone read books in the main hall, while a green staff pass also opens the archive room and the equipment cupboard. When a volunteer asks for an old map from the archive, the librarian checks the pass before opening the door. Even if the volunteer sounds confident and knows the title of the map, they still cannot enter spaces their pass does not allow.",
+    "title": "A temporary door code",
+    "story": "A neighbour is given a temporary code to water the plants while someone is away. The code opens the front door during agreed hours, but it does not open the locked desk drawer or let the neighbour change the alarm settings. Knowing that those things exist does not grant access. The code limits the person, place, action and time.",
     "mapping": [
       {
         "analogyElement": "coloured passes",
@@ -85,28 +85,27 @@
     "reducedMotionDescription": "A static four-column diagram shows the same process without animation: request, identity, permission check, and allow-or-deny outcome, with simple labels for read-only access and denied actions."
   },
   "workedExample": {
-    "scenario": "An organisation has an internal AI assistant connected to three sources: a public guidance folder, a restricted HR folder, and an email-sending tool.",
-    "input": "User request: 'Summarise the maternity leave guidance and email it to all staff.' The user is a programme officer, not an HR administrator or communications lead.",
+    "scenario": "A reporting officer in a regional bureau is preparing the evening briefing note. An internal AI assistant can connect to public reports, cleared situation reports, a restricted folder of draft code cables and the front office distribution list.",
+    "input": "User request: “Summarise the latest cleared reporting for the briefing note and send it to the front office.”",
     "process": [
-      "The assistant receives the text request and ties it to the programme officer's account.",
-      "The system checks permissions for that account: public guidance folder = read allowed; restricted HR folder = read denied; email tool = send denied.",
-      "The assistant can retrieve the maternity leave guidance only from the public guidance folder.",
-      "The system blocks the email-sending action and any attempt to open the restricted HR folder."
+      "The assistant associates the request with the reporting officer's account rather than treating it as a general system instruction.",
+      "The system checks the requested resources and actions separately. The account may read public reports and cleared situation reports, but may not read the draft code cable folder or use the distribution list.",
+      "The retrieval system searches only the sources the account is authorised to read. Restricted drafts are excluded from both results and previews.",
+      "The assistant prepares a draft briefing note, but the system denies the send action and leaves circulation to the authorised clearance workflow."
     ],
-    "result": "The user gets a summary of the public guidance, but no access to restricted HR material and no mass email is sent."
+    "result": "The reporting officer receives a draft based only on permitted sources. No restricted code cable text is retrieved, and nothing is circulated automatically."
   },
   "unWorkplaceExample": {
-    "scenario": "A team uses an approved internal AI tool to check a draft speech against previously agreed public language on climate, health or development issues.",
-    "relevance": "Access control can limit the tool to approved public documents and prevent it from opening restricted negotiation notes, personnel files or unrelated repositories. It can also stop the tool from sending messages or changing records unless a separately authorised workflow exists.",
-    "caution": "Do not paste confidential negotiation text, personal data, security-sensitive material or protection-related information into an unapproved public AI service. Use only approved systems with the right permissions and human review."
+    "scenario": "A programme officer in a liaison office is finalising the concept note for a side event in the margins of the session before it goes to the front office for clearance. The approved internal AI assistant is connected to the shared drive and the office's email and portal tools.",
+    "relevance": "Access control allows the assistant to read public session documents and cleared talking points, while denying access to restricted negotiation notes. It may help draft the concept note, but it cannot upload it to the portal or email delegations unless the officer's account is authorised for those actions.",
+    "caution": "Do not enter bracketed negotiation text, personal data or restricted delegation material into a tool that has not been approved for it. Even in an approved system, access to each connected repository and action must match the user's permissions. Otherwise the tool could expose restricted text or act beyond the officer's authority."
   },
   "whyItMatters": "For non-specialists, access control is a clear way to reduce harm without understanding every technical detail of AI. If an AI assistant can only read a narrow set of approved documents and cannot freely call tools, send messages or open sensitive stores, many mistakes and attacks become less damaging. This matters for procurement, system design and daily use: before asking whether a tool is clever, ask what it is allowed to touch. Good access control also supports accountability. With clear permissions and access logs, organisations can separate public information from restricted material, give staff only the access they need, and review which account used a resource. In AI systems, that boundary often matters more than the wording of the prompt.",
   "whereYouMayHearIt": [
-    "IT onboarding and account setup",
-    "enterprise AI assistant design",
-    "cloud storage and document sharing",
-    "security audits and risk reviews",
-    "single sign-on discussions"
+    "During the access review before an internal AI assistant goes live",
+    "At a vendor demonstration in a procurement meeting",
+    "In an information technology governance board reviewing tool permissions",
+    "During account recertification after a colleague changes functions"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +125,7 @@
     "simple": "Access control means setting clear rules so a person or AI tool can only reach the information and functions needed for its job, and nothing more.",
     "technical": "Access control is the enforcement of policy over subjects, resources and actions. A subject, such as a user account, service account or application, requests an operation like read, write, execute, search or send. The system evaluates whether that subject is authorised for that operation on that resource under the current conditions, then permits or denies it. In AI systems, the same principle applies to model-connected data stores, retrieval systems, plug-ins, APIs and tools. Least privilege is a design principle within access control: grant the minimum necessary permissions, ideally scoped by resource, action and context, so that a compromised prompt, tool call or workflow cannot exceed those bounds. This is related to, but not identical with, authentication and authorisation: authentication establishes identity, while access control is the practical mechanism that enforces who can do what."
   },
-  "keyTakeaway": "A safer AI assistant does not just promise to behave well. It is only allowed to access what it truly needs.",
+  "keyTakeaway": "Access control checks who or what is asking, which resource is involved and which action is requested. An AI assistant should receive only the permissions needed for the task.",
   "quickCheck": {
     "question": "Which example best shows least privilege in an AI assistant?",
     "options": [
@@ -251,6 +250,20 @@
       "whyItMatters",
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:27:12.939Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Recast the examples around specific roles, artefacts, permissions and clearance moments, with separate checks for reading, searching, sending and uploading."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -84,27 +84,27 @@
     "reducedMotionDescription": "A static four-column diagram replaces animation. Column one shows selected documents. Column two shows preparation steps: cleaning, splitting and indexing. Column three shows a question linked to three ranked passages. Column four shows either passages only or an answer with citations, displayed side by side."
   },
   "workedExample": {
-    "scenario": "A municipal help desk uses a knowledge base of approved public service documents to answer resident questions.",
-    "input": "Question: \"Can I renew my parking permit online if I moved to a new address?\"",
+    "scenario": "A reporting officer in a regional bureau is finalising a briefing note for front-office clearance. The approved knowledge base contains current indicator guidance, cleared monitoring reports and notes for the file recording earlier methodological decisions.",
+    "input": "Question: \"Should people who attended two sessions be reported as two participants or one person reached?\"",
     "process": [
-      "The knowledge base contains the parking permit policy, the online renewal guide and a page about proof-of-address requirements.",
-      "The documents were split into short passages and indexed for search.",
-      "The system retrieves three top passages: one on renewals, one on address changes and one on required documents.",
-      "A response tool uses those passages to draft a short answer and attaches citations to the relevant sections."
+      "The source documents have been normalised, divided into passages and indexed by keyword and meaning.",
+      "The retriever searches for passages about attendance, repeat participation and the definition of people reached.",
+      "It returns the relevant indicator definition, a methodological note and a passage from a cleared monitoring report.",
+      "The search tool shows the passages and their sources. The reporting officer checks which guidance is current before revising the briefing note."
     ],
-    "result": "Output: \"Online renewal is available, but if your address has changed you may need to update your details and provide new proof of address before the permit is reissued.\" The answer cites the renewal guide and the proof-of-address section."
+    "result": "The officer uses the current indicator definition, records the methodological choice in the file and cites the source in the briefing note. The knowledge base supports the decision, but does not make it."
   },
   "unWorkplaceExample": {
-    "scenario": "A protection analysis team wants to identify broad trends across incident reports by searching a vetted internal collection of approved, access-controlled documents and summaries.",
-    "relevance": "A well-maintained knowledge base helps staff find previous reporting, guidance and standard definitions quickly, which can improve consistency and save time before human review.",
-    "caution": "Do not place personal data, survivor information, witness details, security-sensitive material or other confidential records into an unapproved public AI service. Use only authorised systems, apply access controls and keep human oversight over interpretation and reporting."
+    "scenario": "A partnerships officer in a country office is coding open-ended answers from a needs assessment before the coded dataset is uploaded to the portal at close of business. An approved search tool looks through a curated knowledge base containing the coding framework, assessment guidance and cleared notes on earlier coding decisions.",
+    "relevance": "The retriever can find the passages that distinguish similar categories and show the source for each suggestion. The officer still decides how to code the answer, but does not have to reconstruct the methodology from several attachments and the version someone circulated last Tuesday.",
+    "caution": "The knowledge base should contain approved guidance, not raw responses by default. Do not upload names, contact details, medical information, protection concerns or other sensitive responses to a tool that has not been authorised for them. Apply the required access controls and retention rules, and have the officer review every coding suggestion."
   },
   "whyItMatters": "For non-specialists, the knowledge base often determines whether an AI-supported answer is useful, outdated or unsupported. If the collection is incomplete, poorly maintained or includes low-quality documents, the system may retrieve weak evidence and produce misleading output. If the collection is well chosen and current, staff can find relevant passages faster, check sources more easily and make better decisions about whether to trust or reject an answer. In other words, the knowledge base is a governance issue as much as a technical one: what you include, who maintains it and how current it is all shape the quality of the result.",
   "whereYouMayHearIt": [
-    "enterprise search projects",
-    "chatbots with citations",
-    "document question-answering tools",
-    "RAG system design"
+    "During a vendor demo for an approved document-search tool",
+    "At an ICT governance board review of sources and access controls",
+    "While clearing terms of reference for a chatbot with citations",
+    "When the front office asks why a search result relied on superseded guidance"
   ],
   "commonMisconceptions": [
     {
@@ -124,7 +124,7 @@
     "simple": "Think of it as the approved shelf of documents a system looks through before answering a question.",
     "technical": "In retrieval systems, a knowledge base is the curated corpus of source documents used for lookup at inference time. Documents are typically normalised, split into chunks, indexed and sometimes converted into embeddings, which are numerical representations used to compare meaning. A retriever searches this corpus by keywords, semantic similarity or both, and returns candidate passages. Those passages may then be reranked and either shown directly or supplied to a language model in a retrieval-augmented generation pipeline. The knowledge base is therefore the content layer, distinct from the search index, the vector database that may store embeddings, and model training, which changes model parameters rather than providing external source material at query time."
   },
-  "keyTakeaway": "A knowledge base is the trusted document collection behind search and grounded answers, so its quality strongly shapes the quality of the result.",
+  "keyTakeaway": "A knowledge base is the curated source collection that retrieval searches. Good indexing helps, but the answer can only be as current, complete and authoritative as the documents included.",
   "quickCheck": {
     "question": "Which description best fits a knowledge base in a search or RAG system?",
     "options": [
@@ -243,6 +243,19 @@
     "applied": [
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:05.055Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

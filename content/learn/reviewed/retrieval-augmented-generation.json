@@ -91,28 +91,28 @@
     "component": "rag"
   },
   "workedExample": {
-    "scenario": "A staff member asks an internal assistant: \"What are the leave approval steps for short consultancy travel?\"",
-    "input": "Documents available: travel manual, consultancy guidance note, old FAQ from 2021, and a current 2024 HR circular.",
+    "scenario": "A political affairs officer drafting the note for the file after a bilateral asks an approved internal assistant to find the previously agreed wording on follow-up and any commitments already recorded.",
+    "input": "The indexed collection contains cleared talking points, an earlier note for the file, a circulated aide-memoire and a superseded background note.",
     "process": [
-      "The system splits the documents into chunks and searches for passages semantically related to leave approval, consultancy travel and required authorisation.",
-      "It retrieves three top passages: one from the 2024 HR circular, one from the consultancy guidance note and one less relevant chunk from the old FAQ.",
-      "Those passages are sent with the question to the language model, with instructions to answer only from the provided text and cite sources.",
-      "The model drafts: \"For short consultancy travel, request approval from the hiring office before booking, then record the authorised absence according to the 2024 HR circular. The current guidance note says consultants should follow the office travel authorisation process rather than staff leave workflows.\"",
-      "The interface shows citations beside each sentence so the user can open the supporting chunks and spot that the old FAQ was not used."
+      "The system divides the documents into chunks and creates embeddings for semantic search. It represents the officer’s question in the same way and retrieves chunks concerning agreed wording, follow-up and earlier commitments.",
+      "The candidate set contains relevant passages from the cleared talking points and earlier note, but also similar wording from the superseded background note.",
+      "A reranker orders the candidates by relevance. The highest-ranked passages, their source details and the officer’s question are placed in the language model prompt as context.",
+      "The model drafts a short account based on that context and provides source links. This does not itself establish that every linked passage is current or that each citation fully supports the sentence beside it.",
+      "The officer opens the sources, checks their status and surrounding text, and compares the draft with their own record of the bilateral before placing the note on the file."
     ],
-    "result": "The user gets a concise answer tied to current documents, plus source passages to verify before acting."
+    "result": "The officer has a source-linked first draft without reopening several folders at close of business. Retrieval has narrowed the search, but the superseded passage shows why document status, access controls and human verification remain part of the process."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office builds an internal assistant over approved guidance documents so colleagues can ask questions such as which template to use, what reporting step comes next, or where a rule is stated.",
-    "relevance": "This can reduce time spent searching across long manuals and circulars, while still letting staff inspect the source passage before relying on the answer.",
-    "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and keep human review for consequential guidance."
+    "scenario": "A political affairs officer in a country office is completing the note for the file after a bilateral before close of business. An approved internal assistant searches cleared talking points, an earlier note and a circulated aide-memoire, then drafts the agreed follow-up with links to the passages it used.",
+    "relevance": "Retrieval-augmented generation searches the indexed file before drafting, rather than relying only on the model’s general training. The source links let the officer check the precise wording, document status and context before the note goes on the file.",
+    "caution": "Do not index, paste or upload confidential bilateral records, personal information or security-sensitive material into a tool that is not explicitly approved for that material and purpose. The retrieval index needs appropriate access controls. A citation shows what was retrieved, not that the passage is current, complete or correctly interpreted."
   },
   "whyItMatters": "For non-specialists, this method matters because it can make AI answers more checkable. Instead of relying only on patterns learned during training, the system can pull current source material at answer time. That can improve usefulness for policies, manuals, technical documents and large knowledge collections that change often.\n\nIt also changes what you should ask before trusting a system. You should ask: What documents can it access? How recent are they? Can I inspect the cited passages? What happens when nothing relevant is found? A polished answer without good retrieval can still be wrong. Good governance therefore depends not only on the model, but also on document quality, indexing, access controls and human oversight.",
   "whereYouMayHearIt": [
-    "enterprise search tools",
-    "internal knowledge assistants",
-    "chatbots with citations",
-    "document question-answering systems"
+    "During a vendor demonstration to a procurement unit testing an internal document assistant",
+    "At an ICT governance board review of retrieval permissions and source links",
+    "In a regional bureau session reviewing a pilot across cleared records",
+    "During a first reading of the terms of reference for an internal knowledge assistant"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +132,7 @@
     "simple": "It is like giving the AI an open folder of relevant pages before asking it to answer, so the reply can be based on those pages instead of memory alone.",
     "technical": "A typical pipeline indexes a document collection as chunks, often with embeddings that place semantically similar text near each other in vector space. At query time, the system converts the question into the same kind of representation, retrieves candidate chunks through search, may rerank them, and inserts the top passages into the model prompt as context. The language model then generates a response conditioned on that retrieved context. In many systems, the output also includes citations or links back to the retrieved chunks. The quality of the final answer depends on several connected parts: chunking, indexing, retrieval, reranking, prompt construction, model behaviour and source quality. This is why evaluation should test not only answer style but also retrieval accuracy, citation faithfulness and failure handling when no good evidence is found."
   },
-  "keyTakeaway": "RAG gives an AI system relevant source passages before it answers, but reliability depends on retrieval, the documents and how the answer is generated.",
+  "keyTakeaway": "RAG retrieves source passages and places them in the model’s prompt before it answers. This can improve relevance and traceability, but retrieved material may still be missing, outdated or misranked.",
   "quickCheck": {
     "question": "What best describes retrieval-augmented generation?",
     "options": [
@@ -262,6 +262,19 @@
     "applied": [
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:58.070Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

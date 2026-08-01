@@ -32,8 +32,8 @@
   "oneSentence": "A way to adapt a large model to a new task by training only a small set of added or selected weights instead of updating the whole model.",
   "plainExplanation": "Large language models contain many weights, which are the numeric settings that shape their outputs. Traditional fine-tuning changes many or all of those weights for a new task. Parameter-efficient fine-tuning changes only a small fraction of them, often by adding small trainable components while keeping the original model mostly frozen, meaning not updated.\n\nWhat goes in is a pre-existing model, a target task, and training examples. During training, the model processes the examples as usual, but the learning step updates only the small PEFT components or a selected subset of weights. The main model weights stay fixed or nearly fixed.\n\nWhat comes out is an adapted model behaviour without storing or retraining a full new copy of the entire model. In practice, teams often keep the original checkpoint and save only the small PEFT package. That package can later be attached to the base model to produce the specialised version.\n\nThis matters because full fine-tuning can be expensive in memory, storage, time and energy. PEFT often makes adaptation practical on smaller budgets and lets one organisation maintain several task-specific variants of the same base model. It is commonly used for domain adaptation, style control, instruction following, or task-specific performance improvements.\n\nPEFT is a family of methods, not one single method. LoRA is one well-known example, but there are others. It is also different from in-context learning, where you steer behaviour by prompt examples without updating any weights at all.",
   "everydayAnalogy": {
-    "title": "Adding a thin overlay to a standard keyboard",
-    "story": "A newsroom in Nairobi, Bangkok and Bogotá all use the same standard keyboard model. For one project, each desk adds a thin removable overlay that changes only a few key labels and shortcuts for local workflows, while the keyboard hardware underneath stays the same. Staff can switch projects by swapping overlays instead of replacing the whole keyboard. The newsroom stores many small overlays, not many full keyboards.",
+    "title": "Adjusting a clip-on camera lens",
+    "story": "A media club uses one camera for several projects. Instead of rebuilding the camera for each assignment, it adjusts a small clip-on lens that changes how the camera handles a particular kind of shot. The camera body stays unchanged, and each project keeps only its own compact attachment. Similarly, parameter-efficient fine-tuning keeps the large base model fixed while training and storing a much smaller set of task-specific weights.",
     "mapping": [
       {
         "analogyElement": "standard keyboard hardware",
@@ -91,27 +91,27 @@
     "reducedMotionDescription": "A static two-column comparison remains visible at all times, with coloured labels marking updated weights in the full fine-tuning path and the small trainable adapter in the PEFT path."
   },
   "workedExample": {
-    "scenario": "A team wants a base language model to draft short technical support replies for a solar equipment company in English and French.",
-    "input": "Base model with 7 billion parameters; 12,000 approved support examples; PEFT method using small adapters with about 8 million trainable parameters.",
+    "scenario": "At a regional hub, an information management officer prepares a pilot to classify cleared monitoring report passages against the labels in a results framework before the next reporting round.",
+    "input": "An approved pretrained model, a cleaned set of labelled passages containing no personal or confidential material, and lightweight low-rank update matrices designated for training.",
     "process": [
-      "The team starts with the existing 7B-parameter checkpoint and prepares cleaned training pairs such as customer question to approved reply.",
-      "Instead of updating all 7 billion parameters, training keeps the base model frozen and updates only the 8 million adapter parameters.",
-      "After training, the team saves the adapter files, which are far smaller than a full extra copy of the model.",
-      "At use time, the service loads the original base model plus the new adapter to generate support-style replies."
+      "The officer prepares training and validation examples using the same labels and classification instructions that will apply during reporting.",
+      "The pretrained backbone is frozen. During backpropagation, gradients pass through the model, but the optimiser updates only the low-rank matrices.",
+      "The adapted model is tested on held-back passages, including ambiguous cases that must be referred for human judgement rather than assigned automatically.",
+      "The low-rank weights are saved separately and loaded alongside the unchanged base model when the classification pilot runs."
     ],
-    "result": "The adapted system follows the company reply style more closely and handles solar-support phrasing better, while the team stores and deploys a small adapter package rather than a second full model."
+    "result": "If validation is satisfactory, the pilot gains a task-specific adaptation while requiring substantially less training memory and storage than updating and saving another full model. The classifications remain proposed labels for review, not amendments to the results framework."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office wants a model to help draft routine situation report summaries in a consistent internal format from already approved, non-sensitive source text.",
-    "relevance": "PEFT can let the office adapt one approved base model to the report style of different teams by storing small task-specific adapters rather than many full model copies.",
-    "caution": "Do not place confidential, protection-sensitive, security-sensitive or personally identifiable information into an unapproved public AI service. Use only approved environments, approved data and human review before any report is shared."
+    "scenario": "Before close of business, a political affairs officer in a Resident Coordinator's Office adds to a handover note the design of a pilot for drafting talking points from cleared, public source material. The pilot keeps the approved base model fixed and trains a small adapter on previously cleared examples.",
+    "relevance": "The adapter can learn recurring structure and drafting conventions without creating and maintaining a separately fine-tuned copy of the full model. The handover note should identify the unchanged base model, the adapter version and the validation results, since all three matter when the pilot is resumed.",
+    "caution": "Confidential political reporting, source identities, personal data and security-sensitive material must not be used for training or entered into an environment not approved for them. Adaptation does not make outputs factual, appropriately caveated or cleared. Every draft still requires substantive review."
   },
   "whyItMatters": "For a non-specialist, PEFT matters because it changes the cost and governance of model adaptation. It can reduce hardware needs, shorten training time and lower storage demands. That makes it easier to test a specialised model for a narrow task without committing to a full retraining project. It also supports cleaner version management: one base model can serve many use cases through separate small adapters. But PEFT is not automatically safer or better. You still need good data, evaluation, access control, documentation and human oversight. In procurement or project planning, the key question is often not only 'can we fine-tune?' but 'do we need full fine-tuning, or will PEFT achieve the goal at lower cost and lower operational burden?'",
   "whereYouMayHearIt": [
-    "adapting an LLM for a domain",
-    "LoRA or adapter training discussions",
-    "model deployment and storage planning",
-    "GPU memory constraint conversations"
+    "A vendor demo to an ICT governance board, when deployment options reach adapters and low-rank updates",
+    "A procurement unit's technical evaluation of model customisation and hosting requirements",
+    "A regional bureau planning how several task-specific adaptations will share one approved base model",
+    "A model review before adapter files and validation records are uploaded to the portal"
   ],
   "commonMisconceptions": [
     {
@@ -135,7 +135,7 @@
     "simple": "It is often a cheaper way to customise a big model. Instead of updating the whole model, you train only a small add-on or part of it.",
     "technical": "PEFT refers to adaptation methods that restrict training to a small number of parameters relative to the full model. A common pattern is to freeze the pretrained backbone and optimise lightweight task-specific modules, such as low-rank update matrices, adapters inserted into layers, soft prompts, or other selective parameter subsets. During backpropagation, gradients may be computed through the network, but only the designated trainable parameters are updated. This cuts optimiser state, memory and checkpoint size for task adaptation. The resulting artefact is often an adapter that must be combined with the original checkpoint at inference time. PEFT is therefore about adaptation efficiency, not a single architecture, and it is distinct from prompt-only steering because weights do change."
   },
-  "keyTakeaway": "PEFT adapts a large model by training a small extra or selected parameter set, giving many benefits of fine-tuning without updating the whole model.",
+  "keyTakeaway": "Parameter-efficient fine-tuning freezes most or all of the base model and updates only a small designated set of weights, reducing training memory, optimiser state and storage needs.",
   "quickCheck": {
     "question": "Which statement best captures parameter-efficient fine-tuning?",
     "options": [
@@ -240,6 +240,20 @@
     "applied": [
       "simpleVsTechnicalSimple"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:06.511Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

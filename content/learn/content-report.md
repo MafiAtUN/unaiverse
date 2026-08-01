@@ -1,6 +1,6 @@
 # AI Literacy content report
 
-Generated 2026-07-31 23:43 UTC by `npm run content:report`.
+Generated 2026-08-01 06:41 UTC by `npm run content:report`.
 
 ## Totals
 
@@ -21,6 +21,7 @@ Generated 2026-07-31 23:43 UTC by `npm run content:report`.
 | Invalid prerequisite relationships | 0 |
 | Reading-level outliers (grade <4 or >14) | 0 |
 | Duplicate one-sentence definitions | 0 |
+| Near-duplicate UN scenarios | 0 |
 | External links checked | 957/957 reachable |
 | Broken external links | 0 |
 | Generation tokens | 644,991 in / 694,887 out |

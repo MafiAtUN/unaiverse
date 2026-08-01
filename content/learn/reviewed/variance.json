@@ -78,28 +78,27 @@
     "reducedMotionDescription": "A static two-column comparison replaces animation. Each column shows three fixed split-model-score stacks and a final summary label. Consistency of the left scores and spread of the right scores are shown with printed values and a simple score-range bracket."
   },
   "workedExample": {
-    "scenario": "A team builds a classifier to flag incomplete scholarship applications before staff review them.",
-    "input": "The dataset has 5,000 past applications labelled complete or incomplete. The team tests the same model with 5-fold cross-validation.",
+    "scenario": "A programme officer at Headquarters is testing a classifier that flags side-event concept notes missing required sections before they are circulated for clearance.",
+    "input": "A labelled archive of earlier concept notes, represented through text and layout features, is evaluated using repeated cross-validation.",
     "process": [
-      "They train and evaluate the model five times, each time using a different validation fold.",
-      "The fold-level F1 scores are 0.91, 0.74, 0.88, 0.76 and 0.90.",
-      "They compute the average score, which is 0.84, but also notice the spread is large.",
-      "They inspect the folds and find the model relied heavily on rare formatting features that appeared in some folds but not others."
+      "The officer fits the same learning procedure several times, using slightly different training and validation samples.",
+      "The average F1 score appears acceptable, but the scores and individual flags differ markedly between folds.",
+      "An error review shows that the model relies heavily on rare template headings and formatting conventions that occur in only some samples.",
+      "The unstable features are removed, the model is simplified and the evaluation is repeated to check whether both predictions and fold-level results become more consistent."
     ],
-    "result": "The average score looks acceptable at first glance, but the large variation across folds suggests high variance. The team treats the model as unstable, simplifies the feature set and retests rather than reporting only the average."
+    "result": "The large fold-to-fold spread is treated as evidence of high variance, rather than hidden behind the average. The revised model is considered stronger only if its performance remains reasonably stable when the training sample changes."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team analyses household assessment survey responses to predict which records may need manual quality checks because fields appear inconsistent or incomplete.",
-    "relevance": "Variance matters because a model that performs well on one sample of survey responses but poorly on another may waste staff time or miss records that need review. Repeated evaluation across regions, rounds or folds can show whether the apparent performance is stable enough for operational use.",
-    "caution": "Do not upload personal, confidential or protection-sensitive household data to an unapproved public AI service. Evaluate using approved systems, minimise identifiable data and keep human oversight over any action affecting people or assistance decisions."
+    "scenario": "At a lightly staffed field presence where the connection drops regularly, the ICT officer must send the front office, by close of business, talking points for informals on a proposed service that predicts network outages from monitoring logs.",
+    "relevance": "The officer checks whether fitting the same model on slightly different weeks of logs produces substantially different outage predictions. A respectable average score will not rescue the proposal if validation results swing widely depending on which weeks were used for training.",
+    "caution": "Network logs may reveal addresses, system topology and vulnerabilities. They must not be pasted into an external tool that is not approved for security-sensitive data, and credentials must never be included. Testing should use the approved environment, minimise exposed identifiers and restrict access to the file."
   },
   "whyItMatters": "A model can look strong because it scored well on one test, yet still be unreliable in practice if that score changes a lot with small data changes. Variance helps you ask a better question: not only “How high is the score?” but also “How stable is it?” This matters when choosing whether to deploy a system, compare vendors, set monitoring thresholds or trust a benchmark result. For non-specialists, variance is a warning sign against over-reading a single number. Stable performance is usually easier to defend, monitor and improve than performance that depends on a lucky split.",
   "whereYouMayHearIt": [
-    "cross-validation results",
-    "bias-variance tradeoff",
-    "model benchmarking",
-    "overfitting discussions",
-    "error bars on evaluation charts"
+    "During an ICT governance board review of cross-validation results",
+    "At a vendor demo, when the procurement unit asks why performance changes between test runs",
+    "In a regional bureau validation meeting before a model pilot is cleared",
+    "While a data focal point briefs the front office on unstable evaluation metrics"
   ],
   "commonMisconceptions": [
     {
@@ -123,7 +122,7 @@
     "simple": "Variance means the model’s results do not stay steady when you test it on slightly different data.",
     "technical": "In machine learning, variance is the component of error linked to sensitivity to fluctuations in the training sample. Formally, if you imagine repeatedly drawing datasets from the same underlying process and refitting the same learning algorithm, high variance means the learned function changes substantially across those draws. In practice, you often observe it indirectly through unstable validation metrics, shifting decision boundaries or large fold-to-fold differences under cross-validation. High variance is commonly associated with overfitting, because the model captures idiosyncratic features of the sample rather than reproducible signal. However, variance is not identical to overfitting, and it should be interpreted alongside bias, noise, leakage risk, class balance and the evaluation design."
   },
-  "keyTakeaway": "A good model score means much more when it stays similar across repeated, slightly different tests.",
+  "keyTakeaway": "A strong average score is not enough. If refitting the same procedure on slightly different samples changes predictions substantially, the model has high variance and may not generalise reliably.",
   "quickCheck": {
     "question": "Which result most strongly suggests high variance?",
     "options": [
@@ -251,6 +250,19 @@
       "oneSentence",
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:55.973Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

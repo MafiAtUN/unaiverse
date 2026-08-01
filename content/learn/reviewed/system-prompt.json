@@ -91,28 +91,27 @@
     "reducedMotionDescription": "A static flow chart shows three stacked inputs on the left: system prompt, conversation history and user message. Arrows merge into one model box in the centre, then point to one assistant reply box on the right. A note states: 'Earlier system instructions usually have higher priority in the application, but the model may still fail or be influenced by conflicting text.'"
   },
   "workedExample": {
-    "scenario": "A writing assistant inside an organisation is configured to produce short summaries.",
-    "input": "System prompt: 'You are an assistant for busy staff. Reply in exactly 3 bullet points. If the source text is unclear, say what is missing.' User message: 'Summarise: The workshop covered flood warnings, volunteer training, and radio backup plans. Budget figures were not final.'",
+    "scenario": "An approved internal assistant is configured to draft a concise working-group update from a non-sensitive section of an implementing partner’s progress report.",
+    "input": "System prompt: \"You assist with working-group updates. Return exactly three bullets: delivery, constraints and next step. Attribute reported claims, preserve uncertainty and add no facts.\" User message: \"The implementing partner reports that two consultations were completed. The attendance total is awaiting validation. The next activity was moved pending venue confirmation.\"",
     "process": [
-      "The application sends the system prompt before the user message.",
-      "Both texts are included in the model’s context for generating the reply.",
-      "The model predicts output tokens that fit both the request to summarise and the instruction to use exactly 3 bullet points.",
-      "Because the system prompt mentions unclear source material, the reply may note that budget figures are still provisional."
+      "The application supplies the system prompt in the model’s context before generation, together with the later user message.",
+      "The model conditions its response on both texts, giving the higher-priority instructions precedence over ordinary user wording.",
+      "The requested structure determines the three bullet categories, while the attribution rule keeps the implementing partner as the source of the claim.",
+      "The uncertainty instruction leads the model to retain the qualification about the attendance total rather than presenting it as confirmed."
     ],
-    "result": "• The workshop covered flood warnings and volunteer training.\n• It also covered radio backup plans.\n• Budget figures were discussed but were not final."
+    "result": "• Delivery: The implementing partner reports that two consultations were completed.\n• Constraints: The attendance total is awaiting validation, and the venue is not yet confirmed.\n• Next step: The next activity will proceed after venue confirmation."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal assistant to draft a neutral, short summary of non-sensitive, already-cleared incident trend notes for a meeting.",
-    "relevance": "The system prompt can require neutral tone, short bullets, and a reminder to flag uncertainty instead of presenting weak evidence as fact.",
-    "caution": "Do not place confidential incident reports, personal data, survivor information, witness details, security-sensitive content or operationally sensitive text into an unapproved public AI service; use only approved tools and human review."
+    "scenario": "A political affairs officer uses an approved internal assistant to turn non-sensitive excerpts from an implementing partner’s progress report into three bullets for a UN Country Team working group. The assistant’s system prompt requires neutral wording, clear attribution and an explicit flag wherever a figure is still awaiting validation.",
+    "relevance": "The system prompt sets standing instructions before the officer submits the excerpt. It can shape role, format and treatment of uncertainty across requests, without the officer repeating those requirements each time.",
+    "caution": "A system prompt is not an access control or a confidentiality safeguard. The officer must not enter personal data, protection information or security-sensitive details unless the tool is approved for that material. The output still requires human review against the source report."
   },
   "whyItMatters": "If you use or buy AI tools, the system prompt affects what the assistant tends to do, what it refuses, how it speaks and what risks remain. That matters for quality, safety, privacy and accountability. A well-designed system prompt can reduce confusion, set boundaries and make outputs more useful. A weak one can lead to off-task answers, policy breaches or overconfident text. For non-specialists, the key decision point is simple: do not assume the visible user message is the whole instruction set, and do not assume a system prompt alone makes an application safe or reliable.",
   "whereYouMayHearIt": [
-    "chat assistant configuration",
-    "developer documentation",
-    "prompt engineering discussions",
-    "AI safety and policy reviews",
-    "enterprise AI product demos"
+    "During an ICT governance board review of an internal assistant",
+    "At a vendor demo in a procurement meeting",
+    "In clearance of terms of reference for a chatbot pilot",
+    "During a technical review before a tool is connected to internal files"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +131,7 @@
     "simple": "It is the behind-the-scenes instruction that tells a chat assistant how to behave before it answers you.",
     "technical": "In a chat-formatted LLM application, a system prompt is a high-priority text segment prepended or otherwise supplied as part of the model’s context before generation. It typically encodes role, behavioural constraints, output format, tool-use policy and safety instructions. The model then generates a completion by conditioning on the entire token sequence, which may include system, developer, tool and user messages depending on the platform. The system prompt is not the same as fine-tuning, because it does not modify parameters or model weights. It is also not identical to a guardrail, because a guardrail may involve external policy classifiers, retrieval constraints, moderation layers or execution limits outside the prompt itself. In practice, instruction priority is partly a product design choice of the application and partly an empirical behaviour of the model, which means compliance can be strong but not absolute. This is why system prompts are useful but insufficient as a sole safety mechanism, and why they are relevant to prompt injection risks: hostile text later in the context may try to override or manipulate earlier instructions."
   },
-  "keyTakeaway": "A system prompt guides an assistant from the start, but it is an input to the model, not a magic control button.",
+  "keyTakeaway": "A system prompt gives the model high-priority standing instructions, but it is still context, not fine-tuning, an access control or a guarantee that every instruction will be followed.",
   "quickCheck": {
     "question": "Which statement best describes a system prompt?",
     "options": [
@@ -244,6 +243,19 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:13.160Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

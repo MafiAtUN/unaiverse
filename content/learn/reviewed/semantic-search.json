@@ -34,8 +34,8 @@
   "oneSentence": "A search method that finds material by similar meaning, not just shared words, and returns the most relevant passages for review or further AI use.",
   "plainExplanation": "Ordinary search often looks for exact words or close matches. Semantic search tries to find text with a similar meaning even when the wording is different. For example, a search for “flood damage to roads” may also find a passage about “washed-out transport routes after heavy rain”.\n\nWhat goes in? Usually a user question and a collection of documents. The system turns the question and document passages into numerical representations called embeddings. An embedding is a list of numbers designed so that items with similar meaning end up closer together.\n\nWhat happens next? The system compares the question’s embedding with the embeddings of many stored passages and retrieves the nearest ones. “Nearest” here does not mean physically nearby. It means most similar in that numerical space. The results may then be reordered by another ranking step.\n\nWhat comes out? A list of passages, documents or records that are likely to match the user’s intent. This is different from retrieval-augmented generation: semantic search finds the source material, while retrieval-augmented generation uses retrieved material to help a model produce an answer. Semantic search can help across different phrasing or terminology, and across languages when its embedding model supports them, but it still needs testing because it can miss important exact terms or return items that only seem related.",
   "everydayAnalogy": {
-    "title": "Asking a skilled librarian for the right shelf",
-    "story": "In a public library in Nairobi, a student asks for books about roads made unsafe after storms. The student does not know the official transport engineering terms. The librarian does not search only for the exact words the student said. Instead, the librarian thinks about the meaning, then walks to sections with books on flood damage, road washouts and emergency road repair, and brings back the most relevant ones.",
+    "title": "Finding the right fitting at a hardware counter",
+    "story": "You ask for something that will stop a cupboard door from slamming. The packages are labelled “soft-close damper”, “cabinet buffer” and “hinge cushion”, none of which repeats your wording. A helpful assistant considers what you are trying to achieve and brings back the most relevant options. Semantic search works similarly: it matches the intended meaning, then presents likely results for you to inspect.",
     "mapping": [
       {
         "analogyElement": "The student’s question in everyday language",
@@ -93,29 +93,28 @@
     "reducedMotionDescription": "A static left-to-right diagram shows the same five stages with numbered boxes and arrows. The three best-matching passages are highlighted without animation, and the alternate-query example appears as a small side note instead of a transition."
   },
   "workedExample": {
-    "scenario": "A small knowledge base contains three passages: A: “Heavy rainfall caused bridge closures and road washouts in the northern district.” B: “A workshop covered long-term transport budgeting.” C: “Satellite images can help identify damaged road segments after storms.” A user searches for “find roads harmed by flooding from satellite pictures”.",
-    "input": "Query: “find roads harmed by flooding from satellite pictures”",
+    "scenario": "A programme officer in a regional bureau reviews approved monitoring-report passages while preparing a progress report for clearance. The officer searches for “delivery slowed because the partner changed staff”. One passage mentions personnel turnover, another timely invoices, and a third training for newly appointed personnel.",
+    "input": "Query: “delivery slowed because the partner changed staff”",
     "process": [
-      "The system splits documents into passages and stores an embedding for each one.",
-      "It creates an embedding for the query.",
-      "It compares the query embedding with the stored passage embeddings.",
-      "Suppose the similarity scores are C = 0.88, A = 0.81, B = 0.22.",
-      "It returns C first, then A, because both are close in meaning to the query even though the wording is different."
+      "The system divides the approved reports into passages and stores an embedding for each passage.",
+      "It converts the officer’s query into an embedding using the same model.",
+      "It compares the query embedding with the stored passage embeddings and identifies the nearest passages by semantic similarity.",
+      "The passage stating that “delivery slowed following turnover among implementing partner personnel” ranks first, despite sharing few exact words with the query.",
+      "The passage about training newly appointed personnel may rank next because it is related, while the passage about timely invoices ranks lower. Filters or reranking can refine the order."
     ],
-    "result": "Top results: passage C about satellite images and damaged road segments, then passage A about road washouts after heavy rainfall. Passage B is ranked low because it is about budgeting, not damage detection."
+    "result": "The officer receives the passage about personnel turnover first and reviews it in the original monitoring report before using it. The system has retrieved a meaning match, not confirmed a cause or supplied cleared wording automatically."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office builds an internal search tool over approved guidance documents so staff can find relevant paragraphs even when they use different wording from the original documents.",
-    "relevance": "This can reduce time spent hunting through long document sets and can improve consistency by surfacing the most relevant source passages for human review.",
-    "caution": "Only use approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into a public AI search service."
+    "scenario": "A national officer in a Headquarters department is finalising a background note at close of business, with several documents already waiting for translation. To find earlier wording for “activities paused because contributions arrived late”, the officer searches an approved repository of cleared passages. Semantic search surfaces “implementation was delayed pending receipt of funds”, although the wording differs substantially.",
+    "relevance": "The search compares the meaning represented by the query and passage embeddings, rather than requiring exact terms. It can quickly surface precedent wording for the officer and translators to review, but it does not determine which formulation is authoritative or suitable in the new context.",
+    "caution": "Draft text containing personal, protection-sensitive, security-sensitive or other confidential information must not be entered into a search tool unless that tool is explicitly approved for the information and purpose. Retrieved passages must also be checked in their original context and against the latest cleared text."
   },
   "whyItMatters": "People rarely search using the exact words found in a document. That matters in policy, programme and public information work, where the right source may use different terminology, abbreviations or phrasing. Semantic search can help users find the relevant passage faster, which supports better decisions and more transparent answers. It is also useful before an AI system drafts a response, because retrieving relevant source text can reduce unsupported output. But it is not magic: if the index is poor, the passages are badly split, or the topic needs exact legal wording, results can still be wrong or incomplete. Non-specialists should care because search quality shapes what evidence is seen first.",
   "whereYouMayHearIt": [
-    "enterprise search tools",
-    "RAG system design",
-    "knowledge management projects",
-    "chat over documents",
-    "vector database demos"
+    "A vendor demo during an ICT governance board meeting",
+    "A first reading of requirements for an internal document search tool",
+    "A knowledge management discussion in a regional bureau",
+    "A briefing on retrieval-augmented generation before an approved collection is indexed"
   ],
   "commonMisconceptions": [
     {
@@ -135,7 +134,7 @@
     "simple": "It is a way to search by meaning. Instead of looking only for the same words, it tries to find text that talks about the same idea.",
     "technical": "In a typical setup, the query and document passages are encoded into embeddings: dense numerical vectors trained so semantically similar text tends to lie closer together in vector space. At search time, the system computes the query embedding, compares it against stored passage embeddings using a similarity measure such as cosine similarity, and retrieves the nearest neighbours. Results may then be filtered, reranked or combined with keyword methods. This is different from indexing in general, from the vector database that may store the vectors, and from retrieval-augmented generation, which uses retrieved passages to condition a model’s output."
   },
-  "keyTakeaway": "Semantic search helps you find the right passage by similar meaning, even when the useful document does not use the same words as the question.",
+  "keyTakeaway": "Semantic search retrieves passages with similar meaning, even when they use different words. The results still require review in their original context.",
   "quickCheck": {
     "question": "Which statement best describes semantic search?",
     "options": [
@@ -250,6 +249,20 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:17:08.925Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

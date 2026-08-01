@@ -90,29 +90,28 @@
     "reducedMotionDescription": "A static flowchart shows the same five stages without animation. Dashed arrows and numbered labels indicate the repeated training loop, and a side panel shows the final state where only the trained generator is used to produce outputs."
   },
   "workedExample": {
-    "scenario": "A research team trains a GAN on 60,000 small images of handwritten digits, each 28 by 28 pixels, to create new digit-like images.",
-    "input": "Training data: 60,000 labelled only as real examples for the discriminator; generator input: 100 random numbers per sample.",
+    "scenario": "An information management officer at a regional hub prepares a tutorial notebook for a Friday machine-learning clinic. The exercise trains a GAN on a collection of small handwritten-digit images and asks it to generate new digit-like images.",
+    "input": "Real handwritten-digit images for the discriminator, with random numerical vectors as inputs to the generator. The real images do not need digit-class labels for basic GAN training.",
     "process": [
-      "At the start, the generator turns 100 random numbers into blurry pixel patterns that do not look like digits.",
-      "The discriminator sees batches containing both real digit images and generated images, and at first correctly marks most generated ones as fake.",
-      "After many training rounds, the generator learns shapes such as loops, vertical strokes and curves that better match the training data.",
-      "The discriminator becomes harder to fool, so the generator keeps refining details, but the team also watches for instability and low variety.",
-      "After training, the team samples 500 new images from random inputs and inspects whether they look like varied handwritten digits rather than near-duplicates."
+      "At first, the generator maps each random vector to a blurry pixel pattern that bears little resemblance to a digit.",
+      "The discriminator receives mixed batches of real and generated images and updates its parameters to distinguish between them.",
+      "The generator then updates through the discriminator's feedback, learning changes that make its outputs more likely to be classified as real.",
+      "These optimisation steps alternate. Loops, strokes and curves gradually become more convincing, while the officer monitors unstable training and mode collapse, where many inputs produce very similar images.",
+      "After training, new random vectors are sampled. The outputs are checked for visual plausibility, variety and suspicious similarity to training examples."
     ],
-    "result": "The final generator produces many plausible digit images, but some are ambiguous and a few digits repeat similar styles, showing that realism does not guarantee full diversity."
+    "result": "The generator produces many plausible digit images, although some remain ambiguous and several share nearly identical styles. The exercise shows that adversarial training can improve realism without guaranteeing diversity, accuracy or originality."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN innovation team explores whether a GAN could generate synthetic layout examples for scanned guidance documents, to test an internal document-search pipeline without using real staff files in development demos.",
-    "relevance": "This is relevant because GANs can create realistic-looking synthetic data for testing, augmentation or demonstration, and staff may encounter the term when comparing generation methods for images or document-like layouts.",
-    "caution": "Do not put confidential, personal, protection-sensitive or operationally sensitive documents into an unapproved public AI service, and do not assume GAN-generated test data is automatically free of privacy or bias risks if it was trained on sensitive material."
+    "scenario": "A budget officer at a shared services centre is validating a document-extraction tool before figures are cleared for a quarterly donor report. In the vendor demo, a GAN generates synthetic, scan-like invoice layouts so the tool can be tested against skewed pages, stamps and irregular tables without using live supporting documents.",
+    "relevance": "The generator creates increasingly realistic layouts while the discriminator learns to distinguish generated pages from the training examples. Alternating updates can produce useful test material, but a plausible page is not necessarily representative, accurate or sufficiently varied.",
+    "caution": "Real invoices may contain personal, banking and procurement-sensitive information. They must not be uploaded to, or used to train, a tool that has not been approved for that material. The officer should also establish the provenance of the vendor's training data and test for memorisation, bias and low variety before any synthetic pages are used in validation."
   },
   "whyItMatters": "A non-specialist may not build a GAN, but may need to judge claims about realistic synthetic media. GANs helped make highly convincing generated images possible, which matters for media verification, fraud prevention, research choices and procurement. If someone says a system can create endless realistic examples for training or communication, it is useful to ask: what data trained it, how stable is it, how diverse are the outputs, and what misuse risks follow? GANs also matter because they are often mentioned alongside deepfakes, synthetic media and content provenance tools. Understanding the basic mechanism helps you separate a genuine technical description from vague marketing and helps you recognise that realistic output does not prove authenticity.",
   "whereYouMayHearIt": [
-    "computer vision research",
-    "deepfake discussions",
-    "synthetic media tools",
-    "machine learning courses",
-    "AI history overviews"
+    "A vendor demo during a procurement meeting on synthetic test data",
+    "An information management clinic reviewing image-generation methods",
+    "An ICT governance board discussion on deepfakes and synthetic media",
+    "A technical review of an image-generation pilot before clearance"
   ],
   "commonMisconceptions": [
     {
@@ -136,7 +135,7 @@
     "simple": "A GAN trains one AI system to make fake examples and another to catch them. Their competing training signals can make the fake examples very realistic.",
     "technical": "A GAN is a generative modelling framework with two neural networks trained in opposition. The generator maps a latent vector, often sampled from a simple distribution such as Gaussian noise, into the data space. The discriminator receives real and generated samples and learns to classify them. Some variants instead use a critic that assigns scalar scores to both. Training alternates optimisation steps for the two networks. The generator updates its parameters to make generated samples receive more real-like assessments. In the original formulation, this can be described as a minimax game over an objective related to divergence between the model distribution and the data distribution. In practice, many variants modify the loss function and architecture to improve stability, because GAN training can suffer from vanishing gradients, non-convergence and mode collapse. The hoped-for result is a generator that approximates the target data distribution well enough to sample realistic new outputs."
   },
-  "keyTakeaway": "A GAN learns to generate realistic data by setting up a repeated contest between a maker of fakes and a detector of fakes.",
+  "keyTakeaway": "A GAN alternates training between a generator that makes synthetic samples and a discriminator that spots them. Their contest can improve realism, but does not guarantee diversity, accuracy or safe data use.",
   "quickCheck": {
     "question": "What makes a GAN different from a single network trained alone to generate images?",
     "options": [
@@ -258,6 +257,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:22:31.143Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

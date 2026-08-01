@@ -35,8 +35,8 @@
   "oneSentence": "Evaluation checks how well a system performs on a defined task, while metrics are the specific measures and evals are the tests used to produce them.",
   "plainExplanation": "Evaluation is the overall process of checking whether a system works well enough for a particular purpose. An evaluation metric is the yardstick used in that process, such as accuracy or recall. People also say eval or evals to mean one test, a set of tests, or the whole evaluation setup, depending on context.\n\nWhat goes in? Usually you need model outputs, the correct answers or another reference, and a clear question such as “good at what?” Then you choose how to compare the outputs with the reference. That comparison produces scores, notes, or pass/fail results.\n\nWhat happens? You run the system on examples, compare its outputs with what you expected, and calculate one or more metrics. For example, a system might be right 90% of the time overall, but still miss many rare and important cases. That is why one score is often not enough.\n\nWhat comes out? You get evidence about quality, limits and trade-offs. A good evaluation does not only give a number. It also shows where the system fails, whether the test matches real use, and whether the result is strong enough to support a decision.\n\nEvaluation is often confused with a benchmark and with a loss function. A benchmark is a standard test set-up used to compare systems on a defined task under stated conditions. A loss function turns outputs and targets into a number showing error for an example or batch. Evaluation is the wider process of judging performance for a purpose; it may use benchmarks or loss values as evidence.",
   "everydayAnalogy": {
-    "title": "Checking a rainfall forecast for a farming cooperative",
-    "story": "A farming cooperative in Kenya, India and Peru keeps daily records of whether it actually rained in each district. A forecasting tool gives a yes-or-no rain prediction every morning. At the end of the month, the coordinators compare each prediction with what happened and count different kinds of mistakes, such as missed rain days and false alarms. One number tells them overall correctness, but they also look at whether the tool is dependable during planting season, when missing rain matters more than a false warning.",
+    "title": "Testing a journey-time app before relying on it",
+    "story": "You record an app’s predicted journey time and the actual time for 20 trips along the same route. Average error is one metric. You also count how often the app is more than ten minutes wrong and compare rush-hour trips with quieter periods. Running this planned test is the eval; reviewing all the results and deciding whether the app is dependable is the evaluation. A good average may still hide consistently poor advice exactly when traffic is busiest.",
     "mapping": [
       {
         "analogyElement": "daily forecast compared with recorded weather",
@@ -89,29 +89,27 @@
     "reducedMotionDescription": "A static horizontal flow chart with four labelled boxes and arrows between them, plus text notes that distinguish the overall evaluation process from evals and metrics."
   },
   "workedExample": {
-    "scenario": "A farming cooperative tests a simple model that predicts whether it will rain tomorrow in 100 district-days during planting season.",
-    "input": "Predictions and observed outcomes for 100 district-days. The model predicts rain on 40 days. It is correct on 78 days overall. Out of 30 actual rain days, it correctly predicts 18.",
+    "scenario": "Before a thematic monitoring report is cleared, an information management officer at a regional hub evaluates a tool that assigns 100 de-identified sentences from public reports to four reporting themes.",
+    "input": "The tool’s labels, reference labels agreed by two officers, and a protocol defining a correct classification. Twenty sentences concern access constraints.",
     "process": [
-      "The team defines the purpose: missing rain is costly because farmers may delay planting or irrigation decisions.",
-      "They compare each prediction with the observed outcome for all 100 district-days.",
-      "They calculate accuracy: 78 correct out of 100, so accuracy is 78%.",
-      "They also calculate recall for rain days: 18 correct rain predictions out of 30 actual rain days, so recall is 60%.",
-      "They review the missed rain days and see that many failures happen in one highland district."
+      "The officer runs the same 100 sentences through the tool under the defined test conditions.",
+      "The predicted theme is compared with the reference label for each sentence. The tool labels 82 sentences correctly, giving 82% accuracy.",
+      "For access constraints, the tool identifies 12 of the 20 relevant sentences. Recall for that theme is therefore 60%.",
+      "The officer reviews the errors and finds that most missed access constraints are expressed indirectly or appear in short bullet fragments."
     ],
-    "result": "The evaluation shows a mixed result: 78% accuracy sounds decent, but the model misses 40% of actual rain days, which may be too weak for planting decisions. The team would not rely on accuracy alone."
+    "result": "The evaluation produces more than one score. Accuracy is 82%, but recall for access constraints is only 60%, and the qualitative review identifies a recurring failure pattern. The officer recommends further testing before the tool is used to support the report."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN programme team reviews a tool that labels incoming monitoring comments into themes such as water access, school attendance and supply delays.",
-    "relevance": "Evaluation helps the team check whether the tool supports analysis across countries and languages, and whether its errors could distort programme reporting or hide important issues.",
-    "caution": "Do not upload personal data, complaint details, survivor information or other protection-sensitive monitoring records to an unapproved public AI service for evaluation; use approved systems, minimise data and keep human oversight."
+    "scenario": "A humanitarian affairs officer supporting a procurement unit reviews a vendor’s test results for a tool that classifies situation-report submissions. Following a bilateral meeting, the officer records in a note for the file whether the test dataset reflects field formats and languages, which metrics were reported, and which error cases remain unanswered before close of business.",
+    "relevance": "A high overall score may conceal poor recall for access constraints or weak performance on short field updates. The evaluation must therefore specify the task, test conditions, reference labels and error breakdowns, rather than simply reproduce the vendor’s preferred metric.",
+    "caution": "Bid material, operational reports and any personal, protection-sensitive or security-sensitive information must not be entered into a tool that is not approved for those data. Evaluation should use authorised, minimised and appropriately de-identified material. Procurement-sensitive findings must remain on the file and follow the applicable access controls."
   },
   "whyItMatters": "A score can look impressive and still hide serious problems. If you approve, buy or use a system based on the wrong evaluation, you may reward the wrong behaviour, miss harmful errors or trust a tool outside the situation it was tested for. Non-specialists do not need to calculate every metric themselves, but they do need to ask: evaluated on what, using which metric, against which baseline, and for which real-world risk? Good evaluation supports better procurement, safer deployment, clearer accountability and more honest reporting about what a system can and cannot do.",
   "whereYouMayHearIt": [
-    "model testing reports",
-    "procurement and vendor demos",
-    "monitoring and quality assurance",
-    "research papers and benchmarks",
-    "product launch discussions"
+    "A vendor demonstration during a procurement meeting",
+    "An ICT governance board considering a deployment",
+    "A model review before a monitoring report is cleared",
+    "A first reading of an evaluation protocol"
   ],
   "commonMisconceptions": [
     {
@@ -135,7 +133,7 @@
     "simple": "Evaluation is the organised check to see whether a system does the job you need. Metrics are individual measures, such as how often it is correct. Evals often means the tests used to generate evidence.",
     "technical": "Formally, evaluation is the procedure for estimating system performance on a specified task under defined conditions. Inputs may include an evaluation dataset or protocol, model outputs, reference labels or human judgements, and a set of metrics. The procedure may produce scalar scores, error breakdowns, confidence intervals, subgroup analyses and qualitative findings. An evaluation metric provides a defined measure of some aspect of performance, such as accuracy, precision or recall. An eval or set of evals often refers to the concrete test suite, prompts, datasets, rubrics or review protocol used to obtain that evidence. This differs from a benchmark, which is a standard test set-up for comparing systems on a defined task under stated conditions. A loss function turns outputs and targets into a number showing error for an example or batch. It is often used during optimisation, but may also be reported in evaluation. Sound evaluation considers distribution shift, class imbalance, data leakage, robustness and whether results generalise beyond the test conditions."
   },
-  "keyTakeaway": "Do not ask only “What score did it get?” Ask “Evaluated on what, with which metric, and does that match the real decision?”",
+  "keyTakeaway": "Evaluation is the overall procedure, an eval is a test used within it, and a metric is a defined measure of performance. Always ask whether the task, conditions and error measures match the real use.",
   "quickCheck": {
     "question": "Which statement best distinguishes evaluation, metrics and evals?",
     "options": [
@@ -274,6 +272,20 @@
       "simpleVsTechnicalSimple",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:31.433Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -92,28 +92,28 @@
     "reducedMotionDescription": "A static five-panel process diagram replaces any looping animation. Arrows show a single left-to-right path from base model, to labelled examples, to comparison with target, to repeated updates noted by a text label, to the final adapted checkpoint."
   },
   "workedExample": {
-    "scenario": "Adapting a multilingual text model to resolve ambiguous pronouns in short reports.",
-    "input": "Example training pair: Input: 'Amina spoke to Sofia after she arrived at the clinic.' Target output: 'Most likely referent of she: Sofia.'",
+    "scenario": "A programme officer in a regional bureau is testing whether a pretrained model can turn approved monitoring extracts into first drafts of results paragraphs for a progress report before the quarterly clearance round.",
+    "input": "Example pair: Input: an approved monitoring extract plus the instruction, \"Draft the results paragraph.\" Target output: the corresponding cleared paragraph in the office's standard format.",
     "process": [
-      "Start with a pretrained language model checkpoint with 7 billion parameters.",
-      "Collect 18,000 labelled sentences in English, Arabic, French and Spanish, each paired with the correct pronoun referent.",
-      "For each sentence, have the model predict the referent, compare its output with the target label, and compute loss.",
-      "Run three training epochs over the dataset with mini-batches of 32 examples, updating parameters after each batch.",
-      "Evaluate on a held-out set of 2,000 examples: accuracy rises from 71% before tuning to 87% after tuning."
+      "Start from a pretrained checkpoint rather than training a model from scratch.",
+      "Assemble approved, non-sensitive input-output pairs and reserve a separate set for evaluation. Each input is a monitoring extract and instruction; each target is the cleared paragraph.",
+      "For each training pair, have the model predict the target sequence token by token. Calculate cross-entropy loss between its predicted token distributions and the target tokens.",
+      "Use gradient-based updates across successive batches to adjust some or all model parameters, producing a new checkpoint.",
+      "Compare the original and tuned checkpoints on the reserved examples, checking format adherence, factual consistency and performance across the required languages."
     ],
-    "result": "The saved SFT checkpoint is more reliable on this narrow pronoun-resolution task, but it still needs testing on new domains and should not be assumed reliable for unrelated tasks."
+    "result": "The tuned checkpoint is more likely to reproduce the patterns represented in the cleared examples. It may still omit, distort or invent content, particularly when an input differs from the training data, so its paragraphs remain drafts for review and clearance."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office wants an internal search assistant over approved guidance documents so staff can ask questions in plain language and receive answers in a consistent citation format.",
-    "relevance": "Supervised fine-tuning can adapt a base model to follow the organisation’s preferred answer structure, include document references, and handle recurring query types more consistently.",
-    "caution": "Only use content specifically approved for fine-tuning in the relevant internal system. Do not use confidential, personal, protection-sensitive, security-sensitive or operational information unless that use, access and retention are authorised."
+    "scenario": "At close of business, a chief of section in a Resident Coordinator's Office must clear talking points requested by Headquarters for informals the next morning. The office is considering adapting a pretrained model using pairs of cleared background notes and final talking points, so first drafts follow the established structure and tone.",
+    "relevance": "Supervised fine-tuning would use those input-output pairs to shift the model towards the office's preferred format, phrasing and level of detail. It can improve consistency, but it does not make the checkpoint an authoritative source for facts or replace clearance.",
+    "caution": "The training set must contain only material approved for this use and be processed in an approved environment. Confidential, personal, protection-sensitive or security-sensitive material must not be entered into an external or otherwise unapproved tool, because fine-tuning can expose or reproduce training content. Every draft still requires substantive review and clearance."
   },
   "whyItMatters": "For non-specialists, supervised fine-tuning matters because many claims about a model being 'trained on our data' actually refer to this specific process. It affects procurement, risk, evaluation and governance. If a vendor says a model was adapted for your task, you need to ask what examples were used, who labelled them, what outputs were treated as correct, and how performance changed after tuning. SFT can improve consistency and task performance, but it can also lock in bias, formatting errors or narrow assumptions from the dataset. It is also a different intervention from prompting, retrieval, preference training or adding fresh documents to a search system, so choosing the wrong method can waste money and create false confidence.",
   "whereYouMayHearIt": [
-    "model adaptation plans",
-    "vendor demos for domain models",
-    "ML training pipelines",
-    "instruction-following model discussions"
+    "At an ICT governance board reviewing a model-adaptation proposal",
+    "During a vendor demo in a procurement meeting",
+    "In an evaluation office discussion on automated report drafting",
+    "At a regional bureau review of a training and validation plan"
   ],
   "commonMisconceptions": [
     {
@@ -259,6 +259,18 @@
     "applied": [
       "unWorkplaceExampleCaution"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:17:53.743Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -89,28 +89,27 @@
     "component": "precision-recall"
   },
   "workedExample": {
-    "scenario": "A team tests a classifier that should flag public comments mentioning barriers to accessing health services.",
-    "input": "Test set of 100 comments, of which 20 truly mention access barriers.",
+    "scenario": "The duty officer evaluates the classifier against 100 passages from a cleared test set. Desk officers have confirmed that 20 passages contain commitments requiring follow-up.",
+    "input": "100 test passages, including 20 actual positive cases.",
     "process": [
-      "The classifier reviews all 100 comments and flags 25 as positive.",
-      "Out of those 25 flagged comments, 16 truly mention access barriers.",
-      "That means 4 true positive comments were missed, because there were 20 real positives in total.",
-      "Recall is 16 divided by 20, which equals 0.80, or 80%."
+      "The classifier flags 25 passages at the selected threshold.",
+      "Reviewers confirm that 16 of the flagged passages contain follow-up commitments. These are true positives.",
+      "Because the test set contains 20 actual positives, the classifier missed 4 of them. These are false negatives.",
+      "Recall is TP / (TP + FN), or 16 / (16 + 4) = 0.80."
     ],
-    "result": "The system found 80% of the comments it was supposed to catch, but it still missed 4 real cases."
+    "result": "Recall is 80%. At this threshold, the classifier catches 16 of the 20 passages that require follow-up and misses 4. The 9 irrelevant passages it also flagged affect precision, not recall."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team tests a tool that scans draft speeches to flag phrases that may differ from previously agreed language, so human reviewers can check them before circulation.",
-    "relevance": "Recall helps the team judge whether the tool is catching most of the drafts that really need review. High recall may matter if missing non-agreed wording could create diplomatic or operational problems.",
-    "caution": "Use only approved systems and approved text. Do not paste confidential draft language, negotiation details or unpublished internal material into an unapproved public AI service."
+    "scenario": "A duty officer in a regional bureau is finalising a note for the file following a bilateral. Before close of business, an approved classifier flags passages that may record commitments requiring follow-up by desk officers.",
+    "relevance": "Recall shows what share of the passages confirmed by reviewers as containing follow-up commitments the classifier actually flagged. Low recall means genuine commitments are being missed, even if every passage it did flag appears relevant. The result applies at the threshold tested.",
+    "caution": "Bilateral notes may contain confidential or politically sensitive material. They must not be uploaded to a public or otherwise unapproved tool. Testing must use an environment approved for that material, or suitably cleared or synthetic text, and the classifier must not replace review by the responsible desk officer."
   },
   "whyItMatters": "If a system misses too many real cases, a good-looking overall score can hide a serious failure. Recall helps people judge whether the system is safe enough for tasks where missed cases have real consequences.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "screening tools for risk or harm",
-    "content moderation dashboards",
-    "medical test discussions",
-    "machine learning courses"
+    "An ICT governance board reviewing test results before approving a pilot",
+    "A vendor demonstration to a procurement unit for a document-screening tool",
+    "An evaluation office discussing a model validation report",
+    "An inter-agency working group setting the threshold for a referral tool"
   ],
   "commonMisconceptions": [
     {
@@ -130,7 +129,7 @@
     "simple": "Recall tells you how good a system is at catching the cases you do not want to miss.",
     "technical": "Recall, also called sensitivity or true positive rate, is TP / (TP + FN): the proportion of actual positive instances that the classifier labels positive at a given threshold."
   },
-  "keyTakeaway": "Recall answers one question: of the real cases that mattered, how many did the system catch?",
+  "keyTakeaway": "Recall asks: among all the cases that were truly positive, what proportion did the system flag at the chosen threshold?",
   "quickCheck": {
     "question": "A system reviews 50 documents. Ten truly contain a problem that should be flagged. It correctly flags 8 of those 10. What is its recall?",
     "options": [
@@ -233,6 +232,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:06.134Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

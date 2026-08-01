@@ -31,8 +31,8 @@
   "oneSentence": "A method that lets a model return a structured request for an external tool or system instead of only producing free-form text.",
   "plainExplanation": "Function calling lets a language model produce a structured request that software can parse. Instead of replying only with prose, the model can name a tool and supply arguments, such as fields for a search or calendar request.\n\nThe input usually includes the user’s request, available tools and a schema. A schema defines details such as field names, types and required values. The model may answer directly or generate one or more structured tool requests. Those requests can still be wrong or incomplete.\n\nAn application layer parses and validates each request, then decides whether to run it. The model does not execute the tool by itself. External code, under human-designed rules, runs the tool, collects the result and may send it back to the model for another step.\n\nTool use is the broader act of using a tool. An API is an interface a tool may expose. A connector links systems, while Model Context Protocol provides a shared interface for tools and data. Function calling is specifically the model’s structured output requesting a call.",
   "everydayAnalogy": {
-    "title": "Asking a records clerk with a standard request slip",
-    "story": "A policy officer needs a report from a large document archive. Instead of shouting a vague request across the room, the officer fills in a standard slip with fixed boxes: topic, date range, language and urgency. The records clerk reads the slip, checks that the boxes are complete, then sends it to the archive system and brings back the results. If the slip is unclear, the clerk asks for a correction before doing anything.",
+    "title": "Ordering through a café till",
+    "story": "You ask for a drink in ordinary language. The cashier enters a structured order with fixed choices such as size, temperature and milk type. The till rejects combinations the café cannot make, checks that payment is complete and sends the valid ticket to the kitchen. The kitchen prepares the drink and returns it. The cashier interpreted the request, but did not gain unrestricted control of the kitchen.",
     "mapping": [
       {
         "analogyElement": "The standard request slip with fixed boxes",
@@ -90,28 +90,28 @@
     "reducedMotionDescription": "A static five-step horizontal diagram with numbered boxes and arrows. No animation; all examples are visible at once under each step."
   },
   "workedExample": {
-    "scenario": "A research assistant asks: 'Search our policy library for climate adaptation guidance published after 2021 in French and give me the top 3 titles.'",
-    "input": "User text plus a search_documents tool defined with fields: query, language, published_after, limit.",
+    "scenario": "Before close of business, a desk officer needs the latest cleared talking points on digital inclusion from the document repository for a front office meeting.",
+    "input": "The request plus a search_records tool with typed fields for document_type, topic, clearance_status, language and limit.",
     "process": [
-      "The application sends the request and the tool schema to the model.",
-      "The model returns a structured call: tool='search_documents', arguments={query:'climate adaptation guidance', language:'fr', published_after:'2021-12-31', limit:3}.",
-      "The application validates that the fields match the schema and that the user is allowed to search this library.",
-      "The search tool runs and returns three matching records with titles, dates and document IDs.",
-      "The application sends the results back to the model, which drafts a short answer listing the three titles."
+      "The application sends the request and the tool specification to the model.",
+      "The model returns a structured call with document_type set to talking points, topic set to digital inclusion, clearance_status set to cleared, language set to English and limit set to three.",
+      "The orchestration layer validates the field types, confirms that the repository and records are within the desk officer’s permissions, and rejects or requests correction if any argument is invalid.",
+      "The repository search runs and returns matching records with titles, clearance status, dates and file links.",
+      "The model presents the records in date order and identifies the most recent one, without inventing content that was not returned by the repository."
     ],
-    "result": "The user receives three French-language titles and dates drafted from the tool output. The application or user must still check that the reply matches those records."
+    "result": "The desk officer receives a short, traceable list of cleared records and can open the source file before sending it to the front office. Execution remains with the application, not the model."
   },
   "unWorkplaceExample": {
-    "scenario": "After a disaster, an analyst uses an approved internal assistant connected to a mapping service and an imagery catalogue. The assistant can return a structured request to query available satellite scenes for a district and date range, then summarise what imagery is available for expert review.",
-    "relevance": "This helps staff move from a natural-language request to a controlled operational query without manually typing every field, while keeping the actual execution in approved systems with logs and permissions.",
-    "caution": "Do not send raw sensitive imagery, personal data, precise security-sensitive locations or protection-related information to an unapproved public AI service. Human analysts must verify outputs before operational use."
+    "scenario": "At a liaison office town hall, a human resources officer gets an unanticipated question about the form and clearance route for a flexible working request. An approved internal assistant can turn the question into a structured call to the office’s guidance register, with fields for request type, duty station and document status, then retrieve the current form and instructions.",
+    "relevance": "The model proposes the lookup, but the orchestration layer checks the fields, the officer’s access and the permitted data source before running it. This is faster than searching several folders while the town hall waits, and more controlled than letting the model improvise an answer from memory.",
+    "caution": "The tool call is a retrieval request, not an eligibility decision or approval. The officer must verify that the returned guidance is current. Staff names, medical details, performance information or other personal circumstances must not be entered into a tool that has not been approved for such data."
   },
   "whyItMatters": "For non-specialists, this term matters because it affects what an AI system can actually do, how safely it does it, and where responsibility sits. A system that uses function calling can move from chat to action: searching databases, creating tickets, checking stock, or drafting a query for another system. That can save time, but it also creates new failure points. The model may select the wrong tool, fill arguments badly, or produce a well-formed request that still makes little sense. Good systems therefore add validation, permissions, logging and human review. If you are buying, governing or using AI tools, this term helps you ask better questions: What tools can it call? Who approves execution? What data leaves the system? Can we audit each action?",
   "whereYouMayHearIt": [
-    "agent frameworks",
-    "assistant platform documentation",
-    "API integration discussions",
-    "automation design meetings"
+    "A vendor demo for an approved internal assistant",
+    "An ICT governance board reviewing tool permissions",
+    "A procurement unit meeting on system integration",
+    "A design session for automating document clearance"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +131,7 @@
     "simple": "It is a way for an AI system to ask software tools for help using a neat, fixed form instead of messy text.",
     "technical": "In practice, function calling means the model is prompted with one or more tool specifications, usually including a name, description and argument schema. The model then generates either plain text or a structured object representing a call, often JSON-like, with typed fields. An orchestration layer parses that object, validates it against the schema, checks policy and permissions, executes the corresponding tool or API if allowed, and returns the tool output to the model or user. This improves reliability over extracting parameters from free text, but it does not guarantee semantic correctness. The important separation is between generation of a call by the model and execution of the call by external software."
   },
-  "keyTakeaway": "Function calling does not give a model magic control of tools; it gives software a structured way to interpret, check and possibly execute the model’s request.",
+  "keyTakeaway": "Function calling lets a model propose a schema-constrained tool request. Separate software must validate, authorise and execute that request before anything happens.",
   "quickCheck": {
     "question": "Which statement best describes function calling in an AI system?",
     "options": [
@@ -241,6 +241,20 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:40.687Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

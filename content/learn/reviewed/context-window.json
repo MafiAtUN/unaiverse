@@ -96,28 +96,27 @@
     "component": "context-window"
   },
   "workedExample": {
-    "scenario": "A user asks a chat assistant to compare two long policy paragraphs and point out whether they mean the same thing.",
-    "input": "System instructions: 120 tokens. User question: 80 tokens. Paragraph A: 260 tokens. Paragraph B: 300 tokens. Model context limit: 600 tokens.",
+    "scenario": "A reporting officer uses an approved assistant over several turns to revise talking points for a chief of section. The latest request adds a long background note and asks for a concise final version.",
+    "input": "Context limit: 1,000 tokens. System instructions: 120. Earlier conversation: 430. Latest request and background note: 380. Requested output: up to 200.",
     "process": [
-      "The system instructions, question, and both paragraphs would total 760 tokens, so they do not all fit.",
-      "The tool keeps the instructions and question, then includes all of Paragraph B and only part of Paragraph A, because the limit is reached.",
-      "The model generates its answer from the text that remains inside the window.",
-      "Because part of Paragraph A was cut off, the answer misses one qualification that appeared only in the omitted section."
+      "The full sequence would require up to 1,130 tokens, which exceeds the 1,000-token context window.",
+      "The application must reduce the input, allow less room for output or reject the request. In this example, it removes 130 tokens from the oldest conversation turn.",
+      "The model drafts the talking points using the remaining instructions, text and prior output. The removed passage is no longer available during generation.",
+      "A caveat found only in that passage does not appear in the draft, even though it was discussed earlier in the conversation."
     ],
-    "result": "The assistant says the paragraphs are mostly equivalent, but its comparison is incomplete because not all relevant text was available at once."
+    "result": "The talking points are fluent but omit the earlier caveat. Starting a fresh request with the essential instructions and source passages may produce a more reliable draft than relying on a long conversation history."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN analyst uses an approved internal tool to draft a first-pass summary of non-sensitive notes about satellite imagery after a disaster, together with short location descriptions and time stamps.",
-    "relevance": "The amount of imagery description, instructions, and draft output that can be considered together is limited by the context window. If too much material is included, early details may drop out, which can change the summary.",
-    "caution": "Do not paste confidential, protection-sensitive, security-sensitive, personally identifiable, or operationally sensitive material into an unapproved public AI service. Even in an approved tool, keep human review because omitted earlier details can affect the draft."
+    "scenario": "At 5.20 pm, a statistician in a data unit asks an approved internal assistant to shorten a briefing note for a UN Country Team working group before the 6 pm deadline. The prompt includes drafting instructions, the current note, comments from several focal points and earlier exchanges with the assistant.",
+    "relevance": "All of that material, plus the text being generated, competes for space in the context window. If the combined sequence is too long, the application may reject the request, shorten the available output or remove earlier material. A qualification supplied near the start can therefore disappear from the model's usable context just when the final paragraph is drafted.",
+    "caution": "Use only material permitted in the approved tool. Personal, protection-sensitive, security-sensitive or other confidential information must not be pasted into a service that has not been approved for it. Check the draft against the source material, particularly where content may have been removed to fit the window."
   },
   "whyItMatters": "It affects whether a tool can handle long documents, long chats, and multi-step tasks without dropping important details. That matters for procurement, workflow design, risk assessment, and judging whether an output is complete enough to trust for review.",
   "whereYouMayHearIt": [
-    "model specification sheets",
-    "chat assistant product pages",
-    "procurement and vendor demos",
-    "prompt writing guidance",
-    "technical troubleshooting"
+    "A vendor demo during a procurement meeting",
+    "An ICT governance board reviewing an AI service",
+    "A data focal-point meeting on prompt guidance",
+    "A troubleshooting call with the service desk"
   ],
   "commonMisconceptions": [
     {
@@ -141,7 +140,7 @@
     "simple": "It is the amount of recent text and instructions the model can look at at one time while answering.",
     "technical": "It is the model’s maximum usable sequence length for the current inference step, typically measured in tokens and shared across system prompt, user input, retrieved text, multimodal encodings where applicable, and generated output tokens."
   },
-  "keyTakeaway": "A context window is a temporary viewing limit, not a guarantee that the model will remember everything in a long task.",
+  "keyTakeaway": "The context window is the model's working limit for the current step. Instructions, source material, conversation history and generated output all use the same finite space.",
   "quickCheck": {
     "question": "What best explains why a chat assistant may ignore an important detail from much earlier in a long conversation?",
     "options": [
@@ -267,6 +266,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:29.529Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Replaced generic scenarios with distinct UN workplace moments, corrected the token accounting to include generated output, and avoided implying that every application handles overflow in the same way."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

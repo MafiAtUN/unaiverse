@@ -32,8 +32,8 @@
   "oneSentence": "A decoding setting that limits each next-token choice to the smallest group whose combined probability reaches a chosen threshold, such as 0.9.",
   "plainExplanation": "When a language model generates text, it first assigns a probability to many possible next tokens. A token is a small unit of text, such as a word, part of a word, or punctuation. Top-p controls which of those candidate tokens are allowed to be sampled.\n\nThe model sorts candidate tokens from most likely to least likely, then keeps adding them until their probabilities add up to the chosen threshold p. If p is 0.9, it keeps the smallest set whose total probability is at least 0.9. The next token is then sampled only from that set, not from the full vocabulary.\n\nThis means the size of the allowed set changes from step to step. If probability is concentrated in a few tokens, only a few may be included. If probability is spread across many tokens, more may be included. That is the main difference from top-k, which always keeps a fixed number k of tokens.\n\nWhat comes out is not a new score but a filtered token choice process. Lower top-p narrows the candidate set and can reduce variation, but it can also make output repetitive or narrow. Higher top-p includes more lower-probability options and can increase variety. Neither setting by itself guarantees safer or more accurate output. Top-p is often adjusted together with temperature, but they are different controls.",
   "everydayAnalogy": {
-    "title": "Choosing wording for meeting notes",
-    "story": "A team in Nairobi is drafting a short summary after an online meeting with colleagues in Bangkok and Lima. For one sentence, the facilitator writes five possible phrases on a board and ranks them by how likely they are to match the discussion. The team agrees to consider only the smallest group of phrases that together cover most of the likely choices, such as 90 percent. If the top two phrases already cover that amount, they choose between those two; if the discussion was unclear, they may need four phrases before reaching the same coverage.",
+    "title": "Letting a playlist choose the next song",
+    "story": "Imagine a music app ranks possible next songs by how well each fits the current playlist. With a 90% threshold, it keeps the smallest group whose probabilities add up to at least 90%, adjusts the probabilities within that group and makes a weighted random choice. If one or two songs are strong matches, the group is small. If many songs are similarly plausible, the group is larger.",
     "mapping": [
       {
         "analogyElement": "ranked phrases on the board",
@@ -91,29 +91,28 @@
     "reducedMotionDescription": "A static five-panel diagram with highlighted cumulative totals and shaded excluded tokens. Two side examples show that a peaked distribution leads to a small nucleus, while a flatter distribution leads to a larger nucleus."
   },
   "workedExample": {
-    "scenario": "Generating the next token after the text: \"The report was submitted on\"",
-    "input": "Candidate next tokens with model probabilities: \" Monday\" 0.42, \" Tuesday\" 0.24, \" time\" 0.11, \" 12\" 0.08, \" Friday\" 0.06, \".\" 0.03, others 0.06. Use top-p = 0.80.",
+    "scenario": "The model is generating the next token after: \"The revised talking points will be circulated by\".",
+    "input": "Candidate tokens and probabilities are: \" noon\" 0.42, \" email\" 0.24, \" close\" 0.11, \" 18\" 0.08, \" Monday\" 0.06 and \".\" 0.03. All remaining tokens together account for 0.06. Use top-p = 0.80.",
     "process": [
-      "Sort tokens by probability from highest to lowest.",
-      "Add probabilities downward: 0.42, then 0.66, then 0.77, then 0.85.",
-      "Stop when the running total first reaches or passes 0.80, so keep \" Monday\", \" Tuesday\", \" time\", and \" 12\".",
-      "Exclude lower-probability options such as \" Friday\" and \".\" for this step.",
-      "Sample one token from the kept set, still weighted by their probabilities within that set."
+      "Sort the individual tokens from highest to lowest probability.",
+      "Add probabilities in order. The cumulative totals are 0.42, 0.66, 0.77 and then 0.85.",
+      "Stop at the smallest prefix that reaches at least 0.80. Retain \" noon\", \" email\", \" close\" and \" 18\".",
+      "Renormalise those four probabilities over their total of 0.85. Their sampling weights become about 49.4%, 28.2%, 12.9% and 9.4%.",
+      "Sample one token using those adjusted weights. At the following step, the model produces a new distribution and constructs a new nucleus."
     ],
-    "result": "The next token might be \" Monday\" or \" Tuesday\" most often, but \" time\" or \" 12\" are still possible because they fell inside the 0.80 nucleus."
+    "result": "\" noon\" is the likeliest selection, but any of the four retained tokens can be sampled. The number of candidates at the next step may differ because top-p applies to the new probability distribution."
   },
   "unWorkplaceExample": {
-    "scenario": "A team is testing an internal search-and-answer tool over approved guidance documents and wants concise but not overly rigid draft answers for staff queries.",
-    "relevance": "Top-p helps tune how broad the wording choices are during answer generation. A lower setting can make replies steadier and easier to review, while a higher setting may produce more varied phrasing. This matters when balancing consistency, readability and review workload.",
-    "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service."
+    "scenario": "A desk officer in a small field presence with intermittent connectivity is using an approved, locally hosted model to tighten talking points before informals resume in 20 minutes.",
+    "relevance": "The desk officer compares top-p settings to keep the drafting reasonably consistent without forcing identical wording each time. A lower value narrows the candidate set; a higher value may admit more varied phrasing. The setting affects variation, not whether the output is accurate or cleared.",
+    "caution": "Talking points may contain uncleared positions or attribution-sensitive details. Do not enter them into any tool not approved for that material. Even in an approved system, top-p is not a factuality or confidentiality control. The desk officer must check the draft against the cleared file."
   },
   "whyItMatters": "Top-p affects how risky, varied and review-heavy generated text may be. If you set it too low, outputs can become narrow, repetitive or brittle. If you set it too high, outputs may wander into weaker wording or unsupported details. For anyone choosing model settings, evaluating assistants or comparing vendors, top-p is one of the controls that changes behaviour without changing the underlying model weights. It is especially important in tasks where consistency matters, such as drafting summaries, and in tasks where some variation is useful, such as brainstorming alternative phrasing. Knowing top-p also helps you separate two questions that are often mixed together: how the model scores options, and how a system chooses among them.",
   "whereYouMayHearIt": [
-    "model inference settings",
-    "LLM API documentation",
-    "generation parameter tuning",
-    "prompting workshops",
-    "evaluation dashboards"
+    "A vendor demo during a procurement unit's technical evaluation",
+    "An ICT governance board reviewing settings for an approved assistant",
+    "A model evaluation session in an information management office",
+    "A prompting workshop before a pilot is cleared"
   ],
   "commonMisconceptions": [
     {
@@ -137,7 +136,7 @@
     "simple": "Top-p tells the system to choose the next piece of text only from the most likely options whose probabilities add up to a chosen amount, such as 90 percent.",
     "technical": "At each decoding step, the model outputs a probability distribution over the vocabulary for the next token. Under nucleus sampling, tokens are sorted by probability in descending order, and the smallest prefix whose cumulative probability is at least p is retained. The distribution is then renormalised over that retained set, and one token is sampled from it. Because the retained prefix depends on the shape of the distribution, the effective candidate count varies by step. In a peaked distribution, the nucleus may contain only a few tokens; in a flatter distribution, it may contain many. This distinguishes top-p from top-k, which clips by rank rather than cumulative mass. In practice, top-p also interacts with temperature, because temperature reshapes the distribution before or during sampling, which changes how many tokens are needed to reach the threshold."
   },
-  "keyTakeaway": "Top-p controls variety by keeping enough likely tokens to reach a probability threshold, so the number of options changes with the probability distribution.",
+  "keyTakeaway": "Top-p retains the smallest set of likely next tokens whose combined probability reaches the threshold, then samples from that set. Its size can change at every step.",
   "quickCheck": {
     "question": "Which statement best distinguishes top-p from top-k during text generation?",
     "options": [
@@ -262,6 +261,20 @@
       "plainExplanation",
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:54.787Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

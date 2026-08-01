@@ -32,8 +32,8 @@
   "oneSentence": "Grounding ties an AI answer to specific retrieved source passages so the reply is based on provided material rather than only on the model's general patterns.",
   "plainExplanation": "Grounding means giving a model relevant source material before it answers, so the answer can be anchored in that material. The source material is often a few passages retrieved from documents, policies, reports or webpages. “Retrieved” means found by a search step, often by meaning rather than exact word match.\n\nWhat goes in? Usually there is a user question, a collection of approved documents, and a retrieval step that selects the most relevant passages. Those passages are then added to the model prompt, which is the instruction and context sent to the model.\n\nWhat happens? The system asks the model to answer using the retrieved passages. In a good design, the model is also asked to stay within those sources, quote or cite them, and say when the sources do not contain enough information. Grounding does not guarantee correctness, but it reduces the chance that the model will produce unsupported claims.\n\nWhat comes out? Ideally, you get an answer that is connected to identifiable source text, often with citations. This is different from a citation alone: a citation may simply be attached after the fact, while grounding means the source passages were part of how the answer was produced.\n\nGrounding is commonly used in retrieval-augmented generation, often shortened to RAG. It is closely related to retrieval, semantic search and ranking, but it is not the same as those steps. Retrieval finds candidate passages; grounding is the act of using those passages to constrain and support the answer.",
   "everydayAnalogy": {
-    "title": "A librarian pulls the right shelves before answering",
-    "story": "A student in Nairobi asks a librarian, “Which books in this library explain coastal erosion and include maps?” The librarian does not answer from memory alone. She first walks to the geography shelves, pulls three relevant books, opens the most useful pages, and then answers while looking at those pages. Her answer is more reliable because it is tied to the books in front of her, not just her recollection.",
+    "title": "Checking the departure board before answering",
+    "story": "Someone at a railway station asks which platform to use and whether a change is required. Rather than relying on memory, their companion reads the relevant lines on the departure board and the service notice, then answers from that information. The answer is tied to visible sources and can be checked. It may still be wrong if the wrong service was selected or the display is out of date, just as grounding depends on retrieving the right material.",
     "mapping": [
       {
         "analogyElement": "student's question",
@@ -91,28 +91,27 @@
     "reducedMotionDescription": "A static five-column flowchart replaces animation. Arrows connect Question to Documents, Documents to Selected Passages, Selected Passages to Grounded Prompt, and Grounded Prompt to Answer with Citations. Highlight colours indicate the passages carried forward."
   },
   "workedExample": {
-    "scenario": "An organisation has a document set with travel policy sections. A staff member asks, 'How many hotel nights can be claimed during transit travel?'",
-    "input": "Question: How many hotel nights can be claimed during transit travel? Retrieved passages: (1) 'One overnight stay may be reimbursed when a scheduled connection requires a stop of more than 8 hours.' (2) 'Additional nights require prior approval by the travel office.'",
+    "scenario": "A reporting officer in a regional bureau is finalising a progress report before close of business and asks an internal assistant what remains before a publication can be cleared. The indexed corpus contains the current workplan and the latest clearance note.",
+    "input": "Question: What must happen before clearance is requested? Retrieved passages: (1) Workplan: “Complete the accessibility review before publication.” (2) Clearance note: “Front-office clearance may be requested once the accessibility review is recorded as complete.”",
     "process": [
-      "The system searches the approved travel policy documents and finds passages about transit stops and reimbursement.",
-      "Ranking puts the passage on overnight stays first and the approval rule second because both mention nights and transit conditions.",
-      "Those two passages are inserted into the prompt with an instruction such as 'Answer only from the provided policy text and cite the relevant passage.'",
-      "The model drafts a short answer based on the passages and includes both source references."
+      "The system searches the approved indexed corpus for passages concerning clearance and outstanding publication steps.",
+      "It ranks the clearance note and the relevant workplan entry highest because both address the condition that must be met before clearance.",
+      "The passages are inserted into the prompt with an instruction to answer only from the retrieved material and identify the supporting passages.",
+      "The model generates a concise answer conditioned on the question and those passages."
     ],
-    "result": "Answer: One overnight stay may be reimbursed if a scheduled connection requires a stop of more than 8 hours. Any additional nights need prior approval from the travel office. Sources: retrieved passages 1 and 2."
+    "result": "The accessibility review must be completed and recorded before front-office clearance is requested. The answer is supported by retrieved passages 1 and 2. The reporting officer can open both passages before updating the progress report."
   },
   "unWorkplaceExample": {
-    "scenario": "A policy officer searches past General Assembly and Security Council resolutions to find earlier wording on humanitarian access before drafting a briefing note.",
-    "relevance": "Grounding can help the system retrieve the most relevant prior language and generate a summary tied to the actual resolution text, reducing the risk of invented wording.",
-    "caution": "Use only approved internal or public sources, and do not place confidential negotiations, unpublished drafts, personal data or security-sensitive information into an unapproved public AI service."
+    "scenario": "At close of business, a humanitarian affairs officer in a country office is coding open-ended answers from a needs assessment for the next situation report. An approved assistant retrieves the relevant definitions and examples from the assessment’s coding guide before suggesting a code for each de-identified response.",
+    "relevance": "The suggested code is grounded when the model receives the retrieved passages from the coding guide as context and bases its answer on them. Showing those passages lets the officer check whether the correct definition was retrieved and applied, rather than accepting a plausible label on trust.",
+    "caution": "Needs assessment responses may contain personal, protection-sensitive or security-sensitive information. Raw responses must not be entered into a tool that is not approved for that material. Use only permitted, access-controlled data, remove identifiers where required, and retain human review because grounding can still retrieve or apply the wrong passage."
   },
   "whyItMatters": "For non-specialists, grounding matters because it changes what kind of answer you are getting. Without grounding, a model may produce fluent text that sounds plausible but is not tied to a source. With grounding and access to its sources, you can inspect where the answer came from, check whether the source is current, and notice when the source does not support the claim. That helps with policy work, communications, research and operations where you need traceability, not just polished wording. It also helps you ask better questions: 'What source was this based on?' and 'What was not found?' are often more useful than simply asking whether the answer is correct.",
   "whereYouMayHearIt": [
-    "RAG system design",
-    "enterprise search tools",
-    "policy and legal drafting support",
-    "customer support assistants",
-    "document question-answering demos"
+    "A vendor demo during procurement of an internal document-search tool",
+    "An ICT governance board reviewing a RAG assistant",
+    "A programme office testing questions against its monitoring reports",
+    "A chief of section asking why an answer has no supporting passage"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +131,7 @@
     "simple": "Grounding means giving the AI the exact source text it should use before it answers, so the reply is more connected to evidence.",
     "technical": "In a typical pipeline, a query is used to retrieve relevant document chunks from an indexed corpus, often through semantic search, keyword search or a hybrid method. The top-ranked chunks are inserted into the model prompt as context, along with instructions such as answering only from the provided material or citing it. The language model then generates a response conditioned on both the user query and the retrieved context. This is why grounding is often discussed inside retrieval-augmented generation. It is distinct from retrieval itself, which finds candidate passages, and distinct from citation display, which may or may not reflect the actual conditioning context. Grounding usually works better when chunking, indexing and ranking are well designed, but it still does not ensure factual correctness, faithful use of sources or complete coverage of the answer."
   },
-  "keyTakeaway": "Grounding does not make an AI answer automatically correct, but it can make the answer easier to check when its specific source material is also shown.",
+  "keyTakeaway": "Grounding gives the model specific retrieved material to answer from and makes the result easier to verify. It does not guarantee accuracy if the source, retrieval or interpretation is wrong.",
   "quickCheck": {
     "question": "Which statement best describes grounding in an AI question-answering system?",
     "options": [
@@ -257,6 +256,20 @@
       "keyTakeaway",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:22:12.237Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced generic and invented policy examples with distinct workplace moments, strengthened the handling caution for needs assessment data, and replaced the library analogy."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

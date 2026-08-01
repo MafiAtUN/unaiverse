@@ -32,8 +32,8 @@
   "oneSentence": "Memorisation happens when a model encodes information specific to individual training examples or small subsets of them.",
   "plainExplanation": "A model is trained on examples such as images, text or numbers. During training, it adjusts numerical parameters to produce outputs such as a label, score or summary.\n\nMemorisation occurs when those parameters encode information specific to individual training examples or small subsets. This may allow exact or near-exact reproduction, or make an output depend unusually strongly on whether a particular example appeared in training.\n\nMemorisation can coexist with learning broader patterns. It can contribute to overfitting, but a drop on new data does not by itself prove memorisation. Such a drop may instead reflect distribution shift, noise or reliance on a spurious correlation.\n\nMemorisation is also different from long-term memory in AI systems. Long-term memory is a designed mechanism for storing and retrieving information across separate sessions. Training-data memorisation is information encoded while the model is trained.",
   "everydayAnalogy": {
-    "title": "Studying road damage photos by heart",
-    "story": "A road inspector is preparing for an assessment using printed satellite images from Nairobi, Lima and Dhaka. Instead of learning the general signs of cracks, potholes and flood damage, the inspector memorises that one image with a blue roof nearby means “damaged” and another with a curved shadow means “not damaged”. In the assessment, many questions use the same practice images, so the score looks excellent. But when shown new images from different places, seasons and camera angles, the inspector starts making mistakes because the remembered clues do not carry over.",
+    "title": "Sorting bottles by their dents",
+    "story": "Someone learns to sort reusable bottles by repeatedly seeing the same batch. Instead of noticing the bottle shapes and materials, they remember that the bottle with a torn green label goes in one crate and the bottle with a dent near the base goes in another. They are almost perfect when the familiar bottles return. With a new batch, the labels and dents are different, so the sorting quickly breaks down. The person learned details of the examples, not a rule that travels.",
     "mapping": [
       {
         "analogyElement": "memorising particular practice photos and nearby visual quirks",
@@ -91,28 +91,27 @@
     "reducedMotionDescription": "A static two-column diagram shows the same comparison without animation: shared training data at the top, model behaviour in the middle, and performance on familiar versus new test data at the bottom."
   },
   "workedExample": {
-    "scenario": "A team trains a classifier to detect damaged roads in satellite images.",
-    "input": "1,200 labelled images for training and 300 images for testing.",
+    "scenario": "An information management officer at a regional hub checks an image classifier before using its results in a road-condition monitoring report.",
+    "input": "1,200 labelled satellite images for training and 300 images for initial testing.",
     "process": [
-      "The training set includes many near-duplicate images taken a few days apart from the same road segments.",
-      "The model reaches 98% accuracy on the training set and 95% on an initial test set assembled from the same image collection.",
-      "A second test set is created using 300 images from different districts, dates and viewing angles, with duplicates removed.",
-      "On this cleaner test set, accuracy drops to 68%, and errors cluster where shadows and roof colours differ from the training images."
+      "Many images show the same road segments on nearby dates, creating near-duplicates with similar shadows, buildings and surface markings.",
+      "A random split places related images in both sets. The model reaches 98% accuracy on the training set and 95% on the initial test set.",
+      "The officer assembles a second test set from different areas, dates and viewing angles, removing duplicate and near-duplicate images.",
+      "Accuracy falls to 68%. Errors cluster where shadows, surface colours and nearby structures differ from those in the training images."
     ],
-    "result": "The score drop shows weak transfer to changed conditions, but does not by itself establish memorisation."
+    "result": "The initial score was inflated by repeated patterns and narrow visual cues. The drop on independently sampled images is consistent with memorisation and weak transfer, although further tests would be needed to establish the cause."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team explores a model to classify free-text answers from a household assessment into themes such as water access, shelter damage and health concerns.",
-    "relevance": "If the model memorises phrases, names of localities or questionnaire wording from past rounds, it may look accurate during testing yet fail on responses from a new region or survey cycle. That can mislead planning and resource decisions.",
-    "caution": "Do not put personal, household-level, protection-sensitive or other confidential survey responses into an unapproved public AI service. Use approved systems, remove direct identifiers where possible, and test on independently collected data with human review."
+    "scenario": "A partnerships officer at a shared services centre is finalising a handover note before close of business. She reviews a model proposed to route incoming implementing-partner queries into categories such as grant amendments, reporting and due diligence.",
+    "relevance": "The historical inbox contains repeated templates, familiar partner names and near-duplicate follow-ups. If these appear across both training and test sets, the model may score well by recalling narrow cues rather than learning the substance of each query. It may then misroute messages from new partners or a new reporting cycle.",
+    "caution": "Do not place correspondence containing personal data, bank details, due diligence records or procurement-sensitive material in any tool not approved for it. Use an approved environment, restrict access, remove unnecessary identifiers and duplicates, and test on later, independently sampled messages. Human review remains necessary because both disclosure and misrouting can cause harm."
   },
   "whyItMatters": "Memorisation matters because a system can appear reliable while actually being fragile. A polished dashboard or a high benchmark score may hide the fact that the model only works on cases that closely resemble its training data. For policy and operational use, that can lead to poor procurement choices, unfair treatment of some groups, weak risk controls and false confidence in deployment. Checking for memorisation helps you ask better questions: Was the test data truly separate? Are there duplicates or leaked clues? Does performance hold across places, languages, time periods and conditions that matter in the real task?",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "benchmark discussions",
-    "data leakage reviews",
-    "privacy and safety audits",
-    "machine learning debugging"
+    "During first reading of a model evaluation report",
+    "At a vendor demo in a procurement meeting",
+    "In an ICT governance board review of a proposed pilot",
+    "During clearance of a monitoring report that relies on model outputs"
   ],
   "commonMisconceptions": [
     {
@@ -136,7 +135,7 @@
     "simple": "A model has memorised when it seems good mainly because it has seen very similar examples before, not because it learned a rule that works more widely.",
     "technical": "In technical terms, memorisation refers to a model encoding training-set-specific information strongly enough that its outputs depend on recalled examples or narrow cues rather than robust, transferable structure. This can appear as exact or near-exact reproduction, unusually high confidence on repeated patterns, sensitivity to duplicate or near-duplicate samples, or sharp performance drops under distribution shift. It is often associated with high-capacity models, limited or noisy data, and weak train-test separation. Memorisation is related to but distinct from generalisation: some retention of recurring patterns is necessary for learning, while harmful memorisation shows up when behaviour does not extend to independently sampled data from the target task. It is also linked to overfitting and can be worsened by data leakage, contamination of benchmarks, or spurious correlations. Detection often relies on holdout evaluation, deduplication, cross-validation where appropriate, out-of-distribution testing, privacy-oriented probing, and inspection of whether errors increase when superficial cues change."
   },
-  "keyTakeaway": "A model can encode or reproduce training examples while still failing on independently sampled cases.",
+  "keyTakeaway": "A strong score may reflect recalled examples or narrow cues rather than a pattern that transfers to genuinely new cases.",
   "quickCheck": {
     "question": "Which result is the clearest warning sign of memorisation?",
     "options": [
@@ -281,6 +280,20 @@
       "keyTakeaway",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:58.969Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -31,8 +31,8 @@
   "oneSentence": "The control layer that coordinates an AI system’s steps, tools, rules and handoffs so a task can move from request to checked result.",
   "plainExplanation": "In AI systems that do more than produce one reply, there needs to be something that manages the whole job. Orchestration is that management layer. It receives a goal or request, chooses what should happen next, sends work to the right component, checks results, and keeps the process moving until there is an outcome or a stop condition.\n\nWhat goes in can include a user request, system rules, available tools, past context, and limits such as time, cost or permission. A tool can be a search service, database query, calendar system or other software function. The orchestrator may ask a model to plan, call a tool, wait for a response, pass the result into another step, or ask a human to review.\n\nWhat happens in the middle is coordination rather than raw generation. The orchestrator tracks state, meaning the current facts about where the task stands. It can route work between steps, enforce rules, retry failed calls, log what happened, and decide when the process should stop. In some systems this logic is mostly fixed like a workflow. In others, the model has more freedom to choose the next action. That is why orchestration is related to workflows and agents but not the same thing.\n\nWhat comes out is not just text. It may be a completed action, a compiled answer with sources, a summary after several tool calls, or a flagged case for human review. Good orchestration improves reliability, traceability and safety, because it makes the system’s sequence of actions more visible and easier to control.",
   "everydayAnalogy": {
-    "title": "A librarian coordinating a complex book request",
-    "story": "A student in Nairobi asks a librarian for a book on coastal erosion, but only remembers part of the title and the author’s country. The librarian does not search one shelf at random. She checks the catalogue, asks a colleague in archives to confirm an old edition, requests retrieval from storage, and then verifies that the book matches the topic before handing it over. If one path fails, she tries another and keeps track of what has already been checked.",
+    "title": "Routing a parcel through several stops",
+    "story": "A parcel does not reach its destination because one person carries it from door to door. A routing system reads the label, sends it to the correct depot, records each scan and chooses the next vehicle. If an address check fails or a connection is missed, it holds or reroutes the parcel instead of declaring it delivered. Orchestration plays the same coordinating role for an AI task, keeping track of what has happened, directing each next step and checking that the requested result was actually reached.",
     "mapping": [
       {
         "analogyElement": "The student’s request with partial details",
@@ -90,29 +90,28 @@
     "reducedMotionDescription": "A static left-to-right flowchart with five numbered stages and fixed arrows. The selected path is shown with thicker lines instead of animation, and alternate endings are shown side by side as 'Completed result' and 'Human review'."
   },
   "workedExample": {
-    "scenario": "An internal support assistant helps staff find the correct travel claim rule for a workshop in Bangkok.",
-    "input": "User request: 'I attended a three-day workshop in Bangkok last month. Which daily subsistence allowance rule applies, and what document do I need to attach?'",
+    "scenario": "A programme officer in a country office is preparing a progress report for clearance by close of business. An internal assistant is asked to compile the results table from the approved workplan and reporting portal, follow up on one missing indicator and route the completed draft for review.",
+    "input": "Prepare the results table for the current reporting period using the cleared workplan. Flag missing or inconsistent values and do not fill gaps by inference.",
     "process": [
-      "The orchestrator classifies the request as policy lookup, not free-form advice, and loads the approved travel policy connector.",
-      "It asks the model to extract key fields: location Bangkok, duration three days, purpose workshop, and missing detail: duty station not provided.",
-      "It calls a policy search API with those fields, gets two possible policy sections, and detects ambiguity because one depends on duty station category.",
-      "It asks a follow-up question for the missing duty station, then reruns the search and receives one matching section plus the required attachment list.",
-      "It passes the result through a final check that the answer cites the current policy section and contains no unsupported reimbursement calculation."
+      "The orchestrator records the reporting period, workplan version, required indicators and clearance deadline as the task state.",
+      "It invokes approved connectors to retrieve the cleared results framework and the latest submitted indicator values, then checks that their reporting periods and version identifiers match.",
+      "Deterministic validation rules flag one missing value and one unit mismatch. The system does not ask the model to estimate either figure.",
+      "It routes the two exceptions to the designated focal points, pauses the affected sections and resumes from the saved state when replies arrive.",
+      "It rebuilds the table, reruns validation and sends the draft and exception log to the programme officer. The officer’s confirmed version then goes to the chief of section for clearance."
     ],
-    "result": "After the user provides the duty station, the assistant returns the one matching policy section and its required attachment list. It cites the current section and does not add a reimbursement calculation."
+    "result": "The programme officer receives a traceable draft using the correct workplan version, with the missing value supplied by its focal point and the unit mismatch corrected. If either exception remains unresolved, the report retains a visible gap and is not presented as complete."
   },
   "unWorkplaceExample": {
-    "scenario": "A protection analysis team wants a system to identify broad protection trends across incident reports stored in an approved internal environment.",
-    "relevance": "Orchestration can coordinate the sequence: retrieve approved records, remove or mask direct identifiers where required, run structured trend extraction, aggregate patterns, apply quality checks, and route the summary to an analyst for review before sharing.",
-    "caution": "Do not send incident reports containing personal, survivor, witness, security-sensitive or other confidential information into an unapproved public AI service. Use approved systems, minimise data exposure, and keep human oversight for interpretation and dissemination."
+    "scenario": "A records officer in a regional bureau is assembling a delegation briefing for informals while comments from capitals are still outstanding. An internal assistant must find the latest cleared talking points, identify superseded drafts and stop for review if the file does not establish which version has clearance.",
+    "relevance": "The orchestration layer tracks the briefing’s status, searches the approved repository, checks document metadata, routes bracketed sections to the relevant desk officers, incorporates replies and reruns version and clearance checks. It sends the completed pack to the front office, but escalates missing inputs, connector failures or unclear clearance rather than guessing.",
+    "caution": "Draft talking points, internal comments and access-restricted documents must not be uploaded to an external or unapproved AI service. Any assistant used for this task must operate in an approved environment, preserve access controls and document provenance, and require human confirmation before material is circulated."
   },
   "whyItMatters": "If you use or buy AI systems that take actions, orchestration is one of the main places where reliability and risk are shaped. It affects what tools the system can access, what data it can touch, what checks happen before an action, and when a human must review the result. In practical terms, it influences cost, speed, auditability, error handling and safety. A strong model with weak orchestration can still produce poor outcomes, while careful orchestration can make a system more useful and easier to govern.",
   "whereYouMayHearIt": [
-    "agent platforms",
-    "automation design meetings",
-    "tool-calling demos",
-    "enterprise AI architecture",
-    "multi-step support assistants"
+    "A vendor demo to an ICT governance board",
+    "A design session for an internal support assistant",
+    "A procurement unit’s technical evaluation meeting",
+    "A review of an automated reporting workflow"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +131,7 @@
     "simple": "Think of it as the traffic control layer for an AI system that has to do several things in order. It tells the system what to do first, what tool to use next, what to check, and when to ask a person for help.",
     "technical": "In AI systems, orchestration is the control logic that manages multi-step execution across models, tools and external services. It maintains task state, passes context between steps, selects actions, invokes connectors or APIs, interprets returned observations, applies policies and validation, handles retries and exceptions, and determines termination or escalation conditions. It may be implemented as deterministic workflow logic, model-guided routing, or a hybrid of both. It is closely related to planning, tool use and observation-action loops, but it is not identical to any one of them. Planning concerns how steps are chosen; tool use concerns how external capabilities are invoked; observation and action describes the cycle of acting and seeing results; orchestration coordinates the full process and its controls across these elements."
   },
-  "keyTakeaway": "Orchestration is what turns separate model calls and tools into a controlled, multi-step system that can act, check and hand off responsibly.",
+  "keyTakeaway": "Orchestration is the control layer that keeps a multi-step AI task on track: it preserves state, calls tools, applies rules, handles failures and decides when to finish or hand the task to a person.",
   "quickCheck": {
     "question": "Which description best matches orchestration in an AI system?",
     "options": [
@@ -255,6 +254,20 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:09.899Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "The examples now distinguish orchestration from a single model response by showing state management, tool use, deterministic checks, pauses, retries, escalation and human clearance."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

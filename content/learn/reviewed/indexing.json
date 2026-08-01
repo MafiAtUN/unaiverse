@@ -30,8 +30,8 @@
   "oneSentence": "Indexing organises documents or document chunks into a searchable structure so a system can quickly find the most relevant passages for a query.",
   "plainExplanation": "Indexing is the preparation step that makes later search fast and useful. The input is usually a set of documents, or smaller pieces of them called chunks. Each chunk may be stored with its text, source, identifier and sometimes an embedding, which is a list of numbers that represents meaning in a machine-usable form.\n\nDuring indexing, the system turns the content into a structure built for search rather than for reading. In keyword search, that often means a table of which words appear in which documents. In semantic search, it often means storing embeddings in a way that allows fast nearest-neighbour search, which means finding vectors that are mathematically closest to the query vector.\n\nThe output is an index: a data structure optimised for retrieval. When a user asks a question, the system searches the index instead of scanning every document from the beginning each time. That saves time and makes large collections practical to search.\n\nIndexing is related to retrieval, but it is not the same thing. Retrieval is the act of fetching likely relevant items at query time. Indexing happens earlier, usually when documents are added or updated, so retrieval can work efficiently later.\n\nIn retrieval-augmented generation, indexing matters because poor indexing leads to poor evidence. If chunks are too large, too small, missing metadata or embedded badly, the model may receive weak source passages even if the answer exists somewhere in the knowledge base.",
   "everydayAnalogy": {
-    "title": "Preparing a library help desk",
-    "story": "A regional library receives thousands of reports, guides and meeting notes in Arabic, English, French and Spanish. Before staff can recommend the right document to visitors, they break long reports into sections, label each section with source details and place cards in a searchable cabinet. Later, when someone asks about school feeding in drought-affected areas, the librarian checks the cabinet instead of rereading every shelf. The cabinet helps the librarian reach likely sections quickly, then the librarian still reads them before recommending anything.",
+    "title": "The lost-property register",
+    "story": "A community centre records each lost item by type, colour, material, where it was found and when it arrived. Someone later asks for a dark waterproof jacket left near the sports hall. The register can quickly surface entries such as “navy raincoat” even though the wording is not identical. It narrows the search to likely items, but a staff member still checks the actual coat before returning it.",
     "mapping": [
       {
         "analogyElement": "sections of long reports",
@@ -89,29 +89,28 @@
     "reducedMotionDescription": "A static left-to-right diagram with five labelled boxes and arrows: documents, chunking, search features, index, and query-time retrieval results."
   },
   "workedExample": {
-    "scenario": "A knowledge base has 1,200 policy and guidance documents for field operations.",
-    "input": "One 12-page guidance note contains the sentence: 'Solar-powered cold storage may reduce vaccine spoilage in remote clinics where diesel delivery is unreliable.'",
+    "scenario": "A reporting officer in a liaison office needs to locate evidence across applications against the experience and language requirements in a rostered profile.",
+    "input": "The approved recruitment environment contains the profile, application forms and supporting attachments. One criterion concerns experience drafting multilingual situation reports.",
     "process": [
-      "The note is split into 18 chunks of about 250 words each, with overlap so important sentences are not cut off mid-topic.",
-      "Each chunk is stored with metadata: document ID GN-204, section title, language and publication date.",
-      "An embedding is created for every chunk and saved in the index along with the text and metadata.",
-      "A user asks: 'How can remote clinics keep vaccines cold when fuel deliveries fail?' The query is embedded and compared against the indexed chunk embeddings.",
-      "The system returns chunk 11 from GN-204 among the top results because its meaning is close to the query, even though the query did not use the exact phrase 'diesel delivery is unreliable'."
+      "The system parses each application and separates relevant fields and attachments into searchable sections.",
+      "Each section is stored with metadata linking it to the application record, document type and form field.",
+      "A lexical index maps terms to sections. An embedding-based index stores a vector for each section and arranges the vectors for efficient similarity search.",
+      "The officer searches for evidence of drafting reporting products in more than one language. The system retrieves sections containing exact terms and passages with similar meaning.",
+      "The officer opens each retrieved passage in its full application context, checks it against the rostered profile and records the assessment through the approved process."
     ],
-    "result": "The application can show the relevant passage with its source details, giving the model or the user grounded material to work from."
+    "result": "The index reduces the material that must be opened initially and preserves links to the source application. It supports evidence-finding, not the staffing decision."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team maintains an approved internal knowledge base of public guidance, policy documents and cleared training material to help staff draft routine explanatory text with human review.",
-    "relevance": "Indexing lets the system search those materials quickly and return the most relevant passages for the drafter to inspect and cite, instead of relying only on the model's general patterns.",
-    "caution": "Only approved, non-sensitive material should be indexed in the service used for drafting. Staff should not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and human reviewers must check retrieved passages for relevance, date and context."
+    "scenario": "A reporting officer in a liaison office must screen a long list of applications against a rostered profile before sending the file to the staffing focal point at close of business.",
+    "relevance": "Indexing makes the application fields and supporting passages searchable. The officer can retrieve likely evidence for each criterion without opening every attachment in turn, but the index does not decide whether the evidence meets the requirement.",
+    "caution": "Applications contain personal and HR-sensitive data. They must not be uploaded to or indexed in an external or otherwise unapproved tool. Any index must remain in an approved environment with appropriate access, retention and deletion controls. Retrieval must not infer protected characteristics, rank applicants or make eligibility or selection decisions. The responsible officer must review the complete application and follow the approved process."
   },
   "whyItMatters": "If indexing is done well, search systems can find better evidence faster. If it is done badly, users may see irrelevant, outdated or incomplete passages even when the right answer exists in the collection. For managers and practitioners, this affects trust, speed, cost and risk. Good indexing choices influence what can be found, what gets missed, how often systems need to be updated and whether a retrieval-augmented system can show usable sources instead of unsupported text.",
   "whereYouMayHearIt": [
-    "RAG system design",
-    "enterprise search setup",
-    "vector database discussions",
-    "knowledge base administration",
-    "document ingestion pipelines"
+    "A vendor demonstration to an ICT governance board",
+    "A procurement meeting reviewing search requirements for an internal platform",
+    "A technical review of a retrieval-augmented generation prototype",
+    "A knowledge management meeting before documents are uploaded to the portal"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +130,7 @@
     "simple": "Indexing is the preparation work that organises documents so a search system can quickly find useful passages later.",
     "technical": "Indexing is the process of transforming a corpus into data structures optimised for retrieval. In lexical systems, this often means building structures such as inverted indexes over terms and document fields. In embedding-based systems, it usually means generating vectors for chunks, storing them with metadata and arranging them for efficient nearest-neighbour search, sometimes approximately rather than exactly for speed at scale. The indexed unit may be a full document, a chunk or another segment chosen during ingestion. The quality of indexing depends on choices such as chunking strategy, metadata design, embedding model, update policy and whether filters or reranking will be applied later. It is distinct from the knowledge base itself, which is the content collection, and from the vector database, which is one possible storage and query layer that may hold an index."
   },
-  "keyTakeaway": "Indexing does not answer the question by itself; it prepares content so the system can find the right passage quickly when the question arrives.",
+  "keyTakeaway": "Indexing prepares documents, sections or other units for fast retrieval. It helps a system find likely passages, but does not judge whether they are correct, sufficient or current.",
   "quickCheck": {
     "question": "Which statement best describes indexing in a semantic search or RAG pipeline?",
     "options": [
@@ -229,6 +228,20 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:17:27.109Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

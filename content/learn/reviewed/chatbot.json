@@ -84,28 +84,27 @@
     "reducedMotionDescription": "A static four-box flow replaces animation. Solid arrows show the main path from user message to reply, and a dashed side loop shows the optional tool step."
   },
   "workedExample": {
-    "scenario": "Sorting incoming applications by completeness",
-    "input": "User message: \"I have 120 training applications. Can you help me identify which ones are incomplete based on these rules: each application must include a name, email address, motivation statement, and one reference?\"",
+    "scenario": "Resolving an indicator discrepancy while drafting the quarterly donor report",
+    "input": "Statistician: \"Why does the narrative use a different total from the results table?\" Follow-up: \"Which figure should I use for this quarter, and can you draft two sentences explaining the change?\"",
     "process": [
-      "The chatbot replies with a safe approach and asks for the rules and a non-sensitive sample format instead of raw personal data in a public system.",
-      "In an approved internal setup, it compares each application record against the four required fields.",
-      "It groups applications into 'complete' and 'missing information' and drafts a short summary.",
-      "It returns the results in conversation and suggests a template message asking applicants to submit the missing items."
+      "Through an approved connector, the chatbot retrieves the relevant aggregate values, indicator definitions and reporting-period labels.",
+      "It compares the narrative and table, then asks whether the report should follow the current-quarter cut-off or the cumulative reporting period.",
+      "When the statistician replies, \"Use the current quarter\", the chatbot retains that context rather than requiring the full question again.",
+      "It identifies the validated value, drafts two sentences and points to the source cells for human checking. It does not alter the table or send the report for clearance."
     ],
-    "result": "Reply: \"Using the four rules, 87 applications appear complete and 33 are missing at least one required item. Most common gaps: 18 missing a reference, 11 missing a motivation statement, 4 missing both. I can draft a neutral follow-up message for the incomplete cases.\""
+    "result": "Reply: \"The difference comes from the reporting cut-off: the narrative is cumulative, while the table is for the current quarter. Use the value marked as validated for the current quarter. I have drafted two sentences and flagged the source cells for checking before clearance.\""
   },
   "unWorkplaceExample": {
-    "scenario": "A country office uses an approved internal chatbot to help triage a shared inbox by labelling messages such as meeting request, vendor question, travel query, or general information request, then drafting suggested replies for staff review.",
-    "relevance": "This saves time on repetitive first-pass sorting while keeping a human responsible for checking labels, priorities, and any outgoing response.",
-    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive, or operational information into an unapproved public chatbot. Human review is essential before acting on labels or sending replies."
+    "scenario": "Before the quarterly report to a donor goes for clearance, a statistician in the Resident Coordinator's Office uses an approved internal chatbot to query a validated aggregate results table. The statistician asks follow-up questions about indicator definitions, reporting periods and apparent discrepancies, then requests draft language for the results section.",
+    "relevance": "The conversation lets the statistician refine the request turn by turn. The chatbot can retain short-term context, retrieve authorised material through a connector and draft text, but it does not make the figures authoritative or clear the report.",
+    "caution": "Do not upload row-level records, personal data or restricted donor material to a chatbot unless the tool is expressly approved for that information and use. Connect only sources it is authorised to access. Check every figure, definition and drafted claim against the validated table before the report enters clearance."
   },
   "whyItMatters": "Many people now meet AI through chatbots, so it helps to know what they can and cannot do. If you understand the term, you can ask better questions before using one: Is it only answering, or can it also take actions? What data does it use? Is a human checking the result? That matters for procurement, risk, privacy, accessibility, service quality, and accountability. A chatbot can speed up routine communication and first-pass support, but if people mistake it for a reliable expert or a fully autonomous agent, they may trust it too much or give it tasks it should not handle.",
   "whereYouMayHearIt": [
-    "customer support chat windows",
-    "messaging apps and websites",
-    "internal helpdesks",
-    "AI product demos",
-    "service design discussions"
+    "A vendor demo during an ICT governance board meeting",
+    "A service desk review at Headquarters",
+    "A reporting discussion before close of business",
+    "A procurement clarification meeting for an internal helpdesk tool"
   ],
   "commonMisconceptions": [
     {
@@ -125,7 +124,7 @@
     "simple": "A chatbot is a programme you chat with in ordinary language to get answers or help with simple tasks.",
     "technical": "A chatbot is a conversational interface that accepts natural-language input and returns responses turn by turn. The response mechanism may be rule-based retrieval, template selection, or generation by a large language model. More capable chatbots may maintain short-term conversation state, apply system instructions, and invoke external tools through APIs or connectors. However, the term 'chatbot' describes the interaction mode more than the underlying architecture. That is why it should be distinguished from a language model, which is only one component, and from an AI agent, which usually implies multi-step action, tool use, and some degree of autonomy within set limits."
   },
-  "keyTakeaway": "A chatbot is mainly a way of interacting through conversation; it may be simple or powerful, but it is not automatically an agent or a source of verified facts.",
+  "keyTakeaway": "A chatbot is defined by its turn-by-turn conversational interface. It may retrieve set replies, generate text or call other tools, but that alone does not make it an autonomous agent or a reliable source.",
   "quickCheck": {
     "question": "Which statement best describes a chatbot?",
     "options": [
@@ -249,6 +248,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:21.085Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "The examples now centre on a specific reporting task, show multi-turn context and tool retrieval, and strengthen the handling requirements for sensitive source material."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

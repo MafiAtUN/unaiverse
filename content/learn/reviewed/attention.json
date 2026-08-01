@@ -87,27 +87,27 @@
     "component": "attention"
   },
   "workedExample": {
-    "scenario": "A small language model is processing the sentence: 'Maria thanked Amina because she helped.' It needs a better representation for the token 'she'.",
+    "scenario": "A language model is processing: “Maria thanked Amina because she helped.” It is computing a context-dependent representation for the token “she”.",
     "input": "Tokens: Maria | thanked | Amina | because | she | helped",
     "process": [
-      "The model compares the current token 'she' with the other tokens and calculates relative weights.",
-      "Suppose the weights come out like this: Maria 0.15, thanked 0.10, Amina 0.35, because 0.05, she 0.05, helped 0.30.",
-      "It then combines information from all token vectors using those weights, so Amina and helped contribute the most.",
-      "The new representation for 'she' now carries stronger context linking it to Amina and the action helped."
+      "The representation of “she” is projected into a query. The token representations across the sentence are projected into keys and values.",
+      "The query is compared with each key to produce relevance scores, which are converted into weights. An illustrative pattern might assign larger weights to “Amina” and “helped” than to the other tokens.",
+      "The model forms a weighted combination of the value vectors. Information associated with “Amina” and “helped” therefore contributes more strongly at this position.",
+      "Later layers process this context-dependent representation. Other attention heads may learn different patterns, such as grammatical structure or longer-range relationships."
     ],
-    "result": "The output is not a final answer by itself. It is a context-aware representation of 'she' that later parts of the model can use to analyse the sentence more accurately."
+    "result": "The result is a contextual representation of “she”, not a final interpretation of the sentence. It can help later layers resolve the reference, but an attention pattern alone does not prove why the model reached a particular answer."
   },
   "unWorkplaceExample": {
-    "scenario": "A country office uses an approved internal tool to help sort a shared inbox that receives messages about procurement, event invitations, travel requests and public information. When the system analyses a message, attention can help it focus more on terms such as dates, contract numbers or words that signal the topic.",
-    "relevance": "This helps staff understand why a model may classify two similar-looking emails differently: it may be weighting different parts of each message.",
-    "caution": "Do not place confidential, personal, protection-sensitive or security-sensitive email content into an unapproved public AI service. Human staff should review any automated triage before action is taken."
+    "scenario": "An associate expert supporting the programme officer in a UN Country Team working group is asked to turn an implementing partner's progress report into a two-paragraph update before close of business. In an approved internal drafting tool, attention allows the model to weight passages on outputs, delays and corrective action differently for each part of the draft. A sentence on delivery dates may draw heavily on the timeline, while one on results may give more weight to the monitoring table.",
+    "relevance": "For each position, the model compares a query vector with key vectors derived from the report's tokens, then uses the resulting weights to combine the corresponding value vectors. Because the weights change by position, different parts of the report shape different words and sentences in the draft.",
+    "caution": "The progress report must not be uploaded if it contains personal, protection-sensitive, security-sensitive, medical or other confidential material unless the tool is approved for that class of data. Use a cleared extract where necessary, and have the programme officer verify the draft against the report before circulation."
   },
   "whyItMatters": "If you use or oversee AI systems, attention helps explain why outputs change with context. That matters when judging reliability, debugging errors and deciding how much human review is needed.",
   "whereYouMayHearIt": [
-    "transformer model explainers",
-    "machine translation discussions",
-    "large language model documentation",
-    "NLP courses and tutorials"
+    "In a procurement meeting during a vendor demo for a drafting tool",
+    "At a technical briefing to an information and communications technology governance board",
+    "In an inter-agency working group reviewing machine-translation output",
+    "During a model-assurance review before a pilot is cleared"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +127,7 @@
     "simple": "It is a way for a model to focus more on some parts of the text and less on others when updating each part.",
     "technical": "Given token vectors, the mechanism computes relevance weights between positions and uses those weights to form weighted combinations of value vectors, producing context-dependent representations. In transformers, this is often implemented through query, key and value projections."
   },
-  "keyTakeaway": "Attention helps a model use context by weighting which parts of the input matter most for each position.",
+  "keyTakeaway": "Attention creates context-dependent representations by weighting and combining information from different input positions. The weighting is recalculated for each position.",
   "quickCheck": {
     "question": "What does attention mainly produce inside a transformer?",
     "options": [
@@ -274,6 +274,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:30.493Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

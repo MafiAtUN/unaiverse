@@ -95,28 +95,28 @@
     "reducedMotionDescription": "A static three-column chart with the same top row, different middle actions, and different bottom outcomes, plus a footer note stating that these attacks overlap but are not identical."
   },
   "workedExample": {
-    "scenario": "A company offers an image API that labels road damage in satellite tiles as none, low, medium or high and returns confidence scores.",
-    "input": "An attacker sends 50,000 satellite tiles, including altered versions of the same roads, and records the label and confidence for each response.",
+    "scenario": "During an authorised assessment, a vendor provides a test interface for an application-screening model. It returns a suitability ranking and confidence score for synthetic candidate profiles.",
+    "input": "The assessors use only generated profiles, varying qualifications, experience and wording across many controlled queries.",
     "process": [
-      "They build a dataset of image tiles and the API’s outputs, including which visual changes raise or lower confidence.",
-      "They train a local substitute model to match the API’s labels and confidence patterns.",
-      "They then test one specific tile from a contractor dispute and find the original API gives an unusually sharp confidence pattern compared with similar unseen tiles.",
-      "Using that signal, they estimate the disputed tile was likely in the training set, while their earlier analysis also showed the model was especially sensitive to rain-darkened crack patterns."
+      "They record each synthetic profile and the resulting ranking and confidence score, creating input-output pairs without accessing the original model.",
+      "They train a substitute model on those pairs. If it reproduces the target’s rankings on new synthetic profiles, this demonstrates model extraction.",
+      "Separately, they optimise generated profile features to produce very high confidence for a target ranking. With richer outputs or exposed embeddings, this may reveal representative feature combinations associated with that ranking.",
+      "They compare the reconstructed patterns with authorised documentation and controlled test data. They do not treat them as proof that any particular person or application appeared in training."
     ],
-    "result": "One campaign produced two outcomes: a substitute model that approximates the original service and a membership inference claim about a specific tile. The attacker still has only an estimate, not proof, about training inclusion."
+    "result": "The assessment finds that high-volume queries could support a useful behavioural copy and that detailed scores reveal more about represented profile features than necessary. It recommends rate limits, reduced output detail, monitoring and stricter access controls."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is using an approved internal tool to draft a situation report from public news and previously cleared internal summaries. A security review asks whether repeated prompts could let a user reconstruct protected training material or build a close copy of the system’s behaviour.",
-    "relevance": "This matters for procurement, deployment and oversight. Even if no one breaks into servers, an exposed model interface may leak too much through outputs, especially if confidence scores, long context windows or high-volume automated access are allowed.",
-    "caution": "Do not run extraction, inversion or membership probes without explicit authorisation. Use only approved environments and test data, with access controls, logging and human oversight."
+    "scenario": "An ombudsman case officer in a country office is reviewing a complaint about an automated screening tool used against a rostered profile. The file raises a separate security question: could repeated test applications and returned scores let a user imitate the tool’s ranking behaviour or infer features represented in earlier application data?",
+    "relevance": "Access to the interface is not the same as access to the model, but enough queries, scores or embeddings may still support extraction or inversion. The case officer needs the technical review to distinguish a copied decision function from an attempted reconstruction of training-data features, since the controls and possible harms differ.",
+    "caution": "Applications and case files contain personal and HR-sensitive information. Do not submit real applications, case details or inferred applicant attributes to any tool not approved for that material. Extraction or inversion testing must be explicitly authorised, isolated from live records, conducted with synthetic or properly controlled test data, and logged. Suspected exposure should be handled under the applicable security and data protection procedures."
   },
   "whyItMatters": "A non-specialist may hear \"the model was attacked\" and imagine malware or stolen passwords. These attacks are different. They can happen through ordinary-looking use of an AI interface. That matters for procurement, contract terms, rate limits, logging, output design, privacy review and incident response. If a system can be cheaply copied, an organisation may lose intellectual property or control over safety features. If outputs leak training data clues, privacy, confidentiality and trust may be harmed even without a classic network breach. Decision-makers need to ask not only who can log in, but also what the model reveals by design under repeated questioning.",
   "whereYouMayHearIt": [
-    "AI risk assessments",
-    "procurement and vendor review",
-    "privacy and data protection discussions",
-    "red-teaming and penetration testing",
-    "machine learning security research"
+    "A vendor demo during a procurement unit’s technical review",
+    "An ICT governance board considering access controls for a model interface",
+    "An internal audit interview on logging and high-volume queries",
+    "A data protection review before an automated tool is cleared for use",
+    "An authorised red-team debrief with the system owner"
   ],
   "commonMisconceptions": [
     {
@@ -140,7 +140,7 @@
     "simple": "A model can give away more than intended. By asking it many questions, someone may copy how it behaves, reconstruct features linked to training data, or estimate whether one person’s record was used to train it.",
     "technical": "These are attacks on model behaviour under black-box or partial white-box access. In model extraction, an attacker queries a target model to collect input-output pairs, then optimises a substitute model to approximate the target decision function, ranking behaviour or output distribution. In model inversion, the attacker uses outputs, gradients, embeddings or confidence signals to infer sensitive features of target records or reconstruct representative inputs associated with classes, prompts or identities. In membership inference, the attacker performs a hypothesis test on a target record, exploiting differences in loss, confidence, entropy or other signals between records inside and outside the training set. The terms overlap in practice because overfitting, rich outputs and repeated access can enable more than one attack, but they should be separated analytically: copying a function, recovering training-data information and testing record inclusion are not the same objective."
   },
-  "keyTakeaway": "The main question is not only who can access the model, but what its outputs or exposed internals let them infer, copy or reveal.",
+  "keyTakeaway": "Model extraction copies what a model does. Model inversion uses what the model reveals to reconstruct sensitive features or representative inputs. Both can occur through an interface, without direct access to the underlying model.",
   "quickCheck": {
     "question": "Which statement best distinguishes these related attacks?",
     "options": [
@@ -303,6 +303,19 @@
       "simpleVsTechnicalSimple",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:27:07.663Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

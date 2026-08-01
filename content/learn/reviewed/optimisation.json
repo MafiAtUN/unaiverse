@@ -92,29 +92,28 @@
     "reducedMotionDescription": "A static five-box sequence with arrows from step 1 to step 5 and a final curved arrow returning to step 2, plus a small downward trend line beside the last box to indicate repeated improvement over training."
   },
   "workedExample": {
-    "scenario": "A tiny classifier predicts whether a message is urgent using two signals: contains a deadline and contains a routine greeting.",
-    "input": "Current score = 0.8 × deadline_words + 0.6 × greeting_words. Training example: a message says 'Please send by 16:00' and has no greeting, so deadline_words=1 and greeting_words=0. True label: urgent=1.",
+    "scenario": "A simplified linear model predicts whether a message is urgent from two signals: deadline wording and a routine greeting.",
+    "input": "Prediction = 0.8 × deadline signal + 0.6 × greeting signal. One labelled example says \"Please send by 16:00\", giving signals 1 and 0, with target urgency 1. For this illustration, loss is half the squared prediction error.",
     "process": [
-      "The model scores the message at 0.8, which is lower than ideal for a clear urgent case, so the loss is not zero.",
-      "Gradient estimates suggest increasing the deadline weight would reduce loss, while the greeting weight barely matters for this example because greeting_words=0.",
-      "Using a learning rate of 0.1, the optimiser updates the deadline weight from 0.8 to 0.9.",
-      "On the next pass, the same message scores 0.9, so the loss for this example is lower.",
-      "After many such updates across many examples, the model settles on weights that reduce average loss across the training set."
+      "The model predicts 0.8. Its loss is 0.5 × (0.8 − 1)² = 0.02.",
+      "The gradient for the deadline weight is (0.8 − 1) × 1 = −0.2. The gradient for the greeting weight is zero because that signal is absent.",
+      "With a learning rate of 0.1, gradient descent updates the deadline weight to 0.8 − 0.1 × (−0.2) = 0.82. The greeting weight remains 0.6.",
+      "The new prediction is 0.82 and the loss is 0.5 × (0.82 − 1)² = 0.0162, which is lower.",
+      "Repeating this process across batches of labelled examples adjusts both weights to reduce average loss. A different optimiser or learning rate could produce different update paths."
     ],
-    "result": "Optimisation changed the parameters from a less effective setting toward one that fits the training examples better; the specific update rule, not optimisation in general, determined the exact new values."
+    "result": "Optimisation moved the parameters in a direction that reduced the stated loss. The gradient indicated the direction, while the optimiser and learning rate determined the actual update."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is testing a model that flags whether a draft speech line may diverge from previously agreed language. During training, optimisation adjusts the model’s parameters to reduce mismatch between its flags and a reviewed training set.",
-    "relevance": "This matters because model quality depends not only on the training data but also on how the parameters are updated. Different optimisers and learning rates can change stability, speed and final performance.",
-    "caution": "Use only approved, non-sensitive training material and keep human review in the loop; do not place confidential negotiation text or unpublished drafts into an unapproved public AI service."
+    "scenario": "At close of business before rotating out of a regional bureau, a desk officer finalises a handover note on a pilot that classifies incoming requests as requiring action or background only. During training, the model processes batches of reviewed examples, calculates how its errors affect its parameters and uses an optimiser to update them. The handover records the optimiser and learning rate used, rather than merely saying that the model was trained.",
+    "relevance": "The incoming colleague needs those details to reproduce the training run and understand why another run may learn faster, become unstable or reach a different result. Optimisation covers the process of reducing the objective; the optimiser is the rule used for each parameter update.",
+    "caution": "A handover note or mailbox may contain names, internal correspondence and sensitive assessments. Do not upload either to a tool that has not been approved for that material. Training examples must be authorised, minimised and appropriately protected, with human review retained because a lower training loss does not prevent consequential misrouting."
   },
   "whyItMatters": "If you hear that a model was trained with a certain optimiser, learning rate or number of steps, that is not minor engineering detail. These choices affect cost, speed, stability and what kind of errors remain. A model can fail because the data are poor, but it can also fail because the optimisation process is unstable, too slow, or trapped in a poor solution. For non-specialists, this matters when assessing whether a system was developed carefully, whether more training is likely to help, and whether claims about performance are robust or just the result of lucky tuning on one setup.",
   "whereYouMayHearIt": [
-    "model training discussions",
-    "deep learning courses",
-    "papers comparing Adam and SGD",
-    "debugging unstable training",
-    "talk about convergence and tuning"
+    "A vendor demo to an ICT governance board, when the training slide names the optimiser and learning rate",
+    "A procurement unit's technical evaluation, when bidders explain how their training run converged",
+    "A model review at Headquarters after the loss begins oscillating instead of falling",
+    "A regional bureau handover briefing on whether a pilot can be reproduced"
   ],
   "commonMisconceptions": [
     {
@@ -138,7 +137,7 @@
     "simple": "Optimisation is the repeated process of checking how wrong a model is and adjusting its settings to make it less wrong.",
     "technical": "Formally, optimisation in machine learning seeks parameter values that minimise an objective, usually a loss function over training data, sometimes plus regularisation terms. A common process iterates over batches of examples, computes gradients of the objective with respect to parameters, often via backpropagation and the chain rule, and applies an update rule. That update rule is the optimiser: for example, stochastic gradient descent, SGD with momentum, or Adam. The learning rate controls update size; momentum and adaptive methods modify how past or per-parameter gradient information affects the step. In non-convex problems such as deep neural networks, optimisation does not guarantee reaching a global minimum, and practical concerns include convergence speed, numerical stability, sensitivity to hyperparameters, and issues such as vanishing or exploding gradients. The term 'optimization' is the same concept in another spelling."
   },
-  "keyTakeaway": "Optimisation is the overall training process of reducing loss, while an optimiser is the specific rule that chooses each parameter update.",
+  "keyTakeaway": "Optimisation is the process of adjusting model parameters to reduce an objective, while the optimiser is the specific update rule used at each step.",
   "quickCheck": {
     "question": "Which statement best distinguishes optimisation from an optimiser?",
     "options": [
@@ -278,6 +277,19 @@
       "simpleVsTechnicalTechnical",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:24.127Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Replaced the unsupported numerical update with an explicit loss, gradient and learning-rate calculation, and grounded the workplace example in a specific handover moment."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

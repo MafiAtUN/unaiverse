@@ -29,8 +29,8 @@
   "oneSentence": "A number comparing one token’s query with a candidate token’s key during an attention step.",
   "plainExplanation": "In a transformer, each token such as a word or subword is compared with tokens at allowed positions, which may include its own position. The model computes a score for each pair. That score reflects their compatibility for the current attention calculation.\n\nWhat goes in are vector representations of tokens. A vector is a list of numbers. For each token, the model creates a query vector, a key vector and a value vector. The query represents what information may be useful at that position. The key represents features available at a candidate position. The attention score comes from comparing a query with keys.\n\nWhat happens next is important. The raw scores are often converted by softmax into weights that add up to 1 across allowed positions. Those normalised values are called attention weights. They are then used to mix the corresponding value vectors.\n\nWhat comes out is not the score itself but a new representation for each token. That representation contains a weighted mixture of value vectors from allowed positions. So the attention score is an intermediate compatibility signal that helps determine the mixture.",
   "everydayAnalogy": {
-    "title": "Finding the right book in a large library",
-    "story": "A student in Nairobi is writing a report about river flooding and asks a librarian for the most useful books. The librarian scans many book titles and subject labels, then gives each one a quick relevance mark based on the student’s question. Books with higher marks are brought to the desk first, and the student uses those books more heavily when writing the report. The marks do not mean the other books are false or useless; they only show which ones seem more relevant to this request.",
+    "title": "Mixing a target paint colour",
+    "story": "A decorator compares a target colour card with the label on each paint tin and gives every tin a match mark. Those marks are like attention scores: they indicate relative compatibility but are not yet mixing proportions. The decorator converts the marks into shares that add up to one, then takes that share of paint from each tin and blends the contents. The labels were used for comparison, while the paint inside the tins supplied what was actually mixed.",
     "mapping": [
       {
         "analogyElement": "The student’s question",
@@ -83,28 +83,27 @@
     "reducedMotionDescription": "A static flow diagram with four columns: focus token and query, comparisons to three key vectors with raw scores, a normalisation box with three weights summing to 1, and a final merged output vector built from weighted value vectors."
   },
   "workedExample": {
-    "scenario": "A short sequence is: 'The animal did not cross because it was tired.' We want the model to update the token 'it'.",
-    "input": "Focus token: 'it'. Candidate earlier tokens: 'animal', 'cross', 'tired'. Raw query–key scores are invented for illustration.",
+    "scenario": "The synthetic test sentence is: “Because the bridge was blocked, the convoy stopped before it.” The focus token is “it”, and the example examines three candidate tokens: “bridge”, “convoy” and “stopped”.",
+    "input": "Illustrative scaled query-key scores for “it”: bridge 1.8, convoy 0.2, stopped 1.1. Assume that no mask excludes these positions.",
     "process": [
-      "The query for 'it' is compared with the keys for 'animal', 'cross' and 'tired', giving raw scores 1.8, 0.2 and 1.1.",
-      "Those raw scores are normalised into attention weights of about 0.58, 0.12 and 0.30.",
-      "The model multiplies each candidate value vector by its weight.",
-      "It adds the weighted value vectors to produce a new representation for 'it' that draws most strongly from 'animal' and also from 'tired'."
+      "The query vector for “it” is compared with each candidate token’s key vector, producing the raw attention scores 1.8, 0.2 and 1.1.",
+      "Softmax converts those logits into non-negative attention weights of approximately 0.59, 0.12 and 0.29, which sum to 1 across the three allowed positions.",
+      "Each weight multiplies the corresponding value vector for “bridge”, “convoy” or “stopped”.",
+      "The three weighted value vectors are added to form the output for this attention head at the position of “it”."
     ],
-    "result": "Using softmax, the weights are about 0.59 for 'animal', 0.12 for 'cross' and 0.29 for 'tired'. Their value vectors are blended rather than one word being selected."
+    "result": "In this head, “bridge” contributes the largest share of the mixture, but no token is simply selected. The raw score of 1.8 is not itself a probability, and the pattern does not prove that the model has resolved the reference correctly."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN analyst reviews de-identified programme monitoring notes and uses an approved internal model to group statements about supply delays, training needs and access barriers. In one transformer layer, high attention scores may connect a phrase like 'delayed delivery' with nearby mentions of 'transport' or 'road closure'.",
-    "relevance": "This helps technical staff understand why the model links parts of a sentence or document and why some wording influences the output more than other wording.",
-    "caution": "Use only approved systems and appropriately handled data. Attention scores expose numerical associations in one calculation, not why the model produced an output. They do not replace human review or data-governance rules."
+    "scenario": "A protection officer joins a specialised agency technical division for the technical evaluation of three bids. Before the evaluation file goes for clearance at close of business, the officer runs the same synthetic sentence through each bidder’s approved demonstration environment. One interface calls the raw query-key comparisons “attention weights”, although they have not yet been normalised.",
+    "relevance": "Distinguishing an attention score from an attention weight lets the officer test whether each bidder is describing the model accurately. The score is a raw logit for one candidate position. Only after masking and normalisation does it determine that position’s share of the weighted value mixture.",
+    "caution": "Bid documents, evaluators’ notes, commercial information and any personal or protection data must not be entered into a vendor demonstration or a tool not approved for that material. Use synthetic text in the authorised environment. Attention scores also show an internal numerical association, not the model’s reasoning or a sufficient explanation of its output."
   },
   "whyItMatters": "If you read model cards, technical reports or debugging notes, you will often see attention scores mentioned as if they explain what a model is doing. They matter because, after normalisation, they help determine which value vectors contribute more to each output representation. That affects translation, summarisation, retrieval and many other tasks. But people also over-interpret them. Within one query and head, a higher allowed score usually leads to a larger attention weight. It is not proof of meaning, causation or explanation by itself. Knowing this helps you ask better questions about reliability, traceability and limits.",
   "whereYouMayHearIt": [
-    "transformer architecture discussions",
-    "model interpretability debates",
-    "NLP engineering notes",
-    "research papers on attention",
-    "visualisations of token interactions"
+    "A vendor demonstration during a technical evaluation",
+    "An information management officer’s review of an attention visualisation",
+    "An ICT governance board discussion on model transparency",
+    "A research briefing in the margins of a technical session"
   ],
   "commonMisconceptions": [
     {
@@ -124,7 +123,7 @@
     "simple": "It is a relevance number. It tells the model how much one token should draw information from another token during one attention step.",
     "technical": "For a given focus token, the model forms a query vector and compares it with key vectors from candidate tokens, commonly using a scaled dot product. The resulting raw attention scores are logits over positions. A normalisation function, usually softmax and sometimes with a mask, converts them into non-negative attention weights that sum to 1 across the allowed positions. Those weights are applied to the corresponding value vectors, and the weighted sum becomes the output for that head. In multi-head attention, separate heads produce separate sets of scores and weighted sums, which are later combined. People often use 'attention score' for the raw compatibility value and 'attention weight' for the normalised value, but usage is not always consistent."
   },
-  "keyTakeaway": "An attention score is a temporary relevance signal between tokens, not a stored fact, and its main job is to help build a weighted mixture of information.",
+  "keyTakeaway": "An attention score is a raw query-key comparison for one candidate position. After masking and normalisation, it helps determine how much that position’s value vector contributes to the head’s output.",
   "quickCheck": {
     "question": "Which statement best describes an attention score in a transformer?",
     "options": [
@@ -267,6 +266,20 @@
       "workedExampleResult",
       "unWorkplaceExampleCaution"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:39.698Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

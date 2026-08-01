@@ -190,6 +190,58 @@ credentials at all.
 
 ---
 
+## 5b. The two passes after generation
+
+Generation gets a term written. Two further passes make it worth reading.
+
+### The adversarial review (`content:review`)
+
+A **different model** from the one that wrote the corpus reads each page looking
+for what is wrong with it. Independence is the point: `npm test` fails if the
+reviewer deployment ever equals the writer's, because a model marking its own
+homework is not a check.
+
+It is given each term's confused-with neighbours so it can verify the
+distinctions actually hold, may rewrite a bounded set of fields, may never
+introduce a fact or a URL, and every rewrite is re-validated against the schema
+before it is kept. Findings land in `content/learn/review-report.md` and in a
+`machineReview` field on each term.
+
+It found, among 865 error-level observations across the corpus: a definition
+saying a model handles tokens "at one step" (input tokens are processed
+together, only generation is sequential); a hallucination example that never
+established anything was actually false; a RAG example citing a document that
+did not exist; and a bug in this repository where the precision explainer
+printed "0%" for the undefined 0/0 case.
+
+**What it does not do is human review.** It catches arithmetic, circular
+definitions, indefensible quiz answers and blurred distinctions. It does not
+catch a fluent, confident, wrong account of a mechanism.
+
+### The United Nations voice pass (`content:voice`)
+
+The generated corpus read as though written *about* the Organization: "a UN
+team explores a model", "a UN office wants a system". Those are placeholders
+standing where a person should be.
+
+This pass replaces the setting and the register, never the mechanism, and
+deliberately **does not touch `oneSentence` or `plainExplanation`** — those are
+the part a newcomer reads, and this site is for the public as much as for
+staff. It rewrites the UN workplace example, the worked example, where you may
+hear the term, and the key takeaway.
+
+Two guards make it safe:
+
+- **A rotating role, setting and moment per term**, seeded from the term id.
+  Without it the model copies whatever example the prompt shows it, and three
+  hundred pages end up sharing one duty officer. `content:report` and `npm test`
+  both check for near-duplicate scenarios by six-word overlap.
+- **An approved-reference sheet** built from `content/milestones/`, which is the
+  sourced timeline corpus. The pass may cite only those document symbols, and
+  anything symbol-shaped that is not on the list is refused outright. Adding
+  institutional specificity is exactly how a corpus acquires an invented
+  `A/RES/79/412`, and a delegate might quote it.
+
 ## 6. Commands
 
 ```bash
@@ -211,6 +263,14 @@ npm run content:generate -- --term token --force
 
 # Anything written under an older prompt version
 npm run content:generate -- --regenerate-stale
+
+# The two passes after generation
+npm run content:review -- --term weight --audit      # report only, change nothing
+npm run content:review -- --errors-only              # apply only what is false
+npm run content:review -- --reviewer gpt-5.5         # a third opinion
+npm run content:voice -- --term overfitting --audit  # show what it would change
+npm run content:voice                                # everything not yet done
+npm run content:voice -- --force --term overfitting  # redo one
 
 # Validate, check links, report
 npm run content:validate

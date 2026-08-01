@@ -89,28 +89,27 @@
     "reducedMotionDescription": "A static flow diagram shows the same five stages without highlighting. Lines from internal components to the report remain visible at all times, so the reader can compare output-only information with internal inspection evidence."
   },
   "workedExample": {
-    "scenario": "A small classifier sorts incoming grant applications into 'complete' or 'needs review'. An analyst tests 200 applications: 120 truly complete and 80 incomplete.",
-    "input": "Application A includes all required files, but the filenames use an unusual local format and one PDF has scanned text rather than selectable text.",
+    "scenario": "Before close of business, an information management officer in a country office tests a classifier that routes implementing-partner progress reports to either ready for review or return for missing annexes. The test uses a synthetic report rather than a live submission.",
+    "input": "The synthetic report contains every required attachment, but the attachment section is headed “Supporting schedules” rather than “Annexes”.",
     "process": [
-      "The model marks Application A as 'needs review' with a score of 0.78.",
-      "An interpretability tool shows high activation for features linked to document count, but also unexpectedly high activation for filename pattern and text extractability.",
-      "Across 50 similar cases, the analyst finds that unusual filenames raise the review score by about 0.20 even when required documents are present.",
-      "The team revises preprocessing so the model checks actual document presence more directly and reduces dependence on filename style."
+      "The classifier routes the report for return, stating that annexes appear to be missing.",
+      "Inspection of internal activations identifies a feature that responds strongly to the exact heading “Annexes”, while the representation of attachment presence has little influence on the output.",
+      "The officer changes only the heading, and the classification changes. A causal intervention that suppresses the heading-related feature also reduces the missing-annex score, providing evidence that the feature contributes to the decision.",
+      "The classifier is revised to use attachment-presence metadata and is tested against varied headings and document layouts before being placed on the file for clearance."
     ],
-    "result": "After the change, false flags for complete applications with unusual filenames drop from 18 out of 50 to 5 out of 50 in the test set. The analysis does not prove the model is fully fair, but it reveals one harmful shortcut and supports a concrete fix."
+    "result": "The investigation identifies a shortcut in the model's internal mechanism, not merely a suspicious output. It does not prove that every relevant pathway has been found, so the office retains human review and continues testing other document formats."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is building an internal search tool over approved guidance documents so staff can find the right procedural note more quickly. Interpretability methods can help the technical team inspect whether the ranking model is surfacing documents because of meaningful policy terms or because of superficial cues such as repeated formatting phrases.",
-    "relevance": "This matters because staff may rely on search rankings during time-sensitive work. Looking inside the ranking behaviour can support accountability, safer deployment and better human oversight before staff use the tool widely.",
-    "caution": "Do not upload confidential, security-sensitive, personal or protection-sensitive internal documents to an unapproved public AI service for interpretability testing or debugging. Use approved environments, minimise sensitive content, and keep human review over any high-stakes use."
+    "scenario": "At a regional hub where drafts arrive in three working languages, an ICT officer is checking a model that tags paragraphs in the situation report before the regional bulletin closes. Internal inspection tests whether the model responds to substantive operational terms across languages, or to shortcuts such as familiar headings, paragraph position or one language's punctuation.",
+    "relevance": "The officer can compare internal activations and intervene on suspected features to see whether they actually affect the tags. This provides stronger evidence than observing outputs alone, although even a convincing trace covers only the behaviour tested and does not establish that the model is safe or reliable overall.",
+    "caution": "Draft situation reports may contain personal, protection-sensitive or security-sensitive information. They must not be copied into a public or otherwise unapproved tool, including for debugging. Use only an authorised environment, minimise the material used, apply access controls and retain human review before anything is circulated."
   },
   "whyItMatters": "For non-specialists, interpretability matters because an AI system can appear accurate while relying on the wrong reasons. A model may pick up shortcuts, hidden bias or brittle patterns that only become visible when conditions change. If a system affects access, safety, rights or important work, decision-makers need more than a polished answer. They need evidence about whether the system’s behaviour is trustworthy enough for the task, what risks remain, and where human review must stay in place. Interpretability does not solve these problems on its own, but it can make risk assessment, red-teaming, accountability and safer system design more concrete.",
   "whereYouMayHearIt": [
-    "AI safety research",
-    "model auditing",
-    "high-stakes procurement reviews",
-    "bias investigations",
-    "technical governance discussions"
+    "During an ICT governance board review before clearance",
+    "At a vendor demo when procurement asks what evidence supports the model's explanations",
+    "In an internal audit opening meeting on automated decision support",
+    "At an inter-agency working group reviewing model risks before rollout"
   ],
   "commonMisconceptions": [
     {
@@ -130,7 +129,7 @@
     "simple": "It is a way of opening the black box a little to see what parts of an AI system seem to drive its answers.",
     "technical": "Interpretability studies the relationship between a model’s internal representations and its outputs. In mechanistic interpretability, the aim is to identify circuits, features, activations or pathways that appear to implement parts of the model’s behaviour. Methods may inspect neurons, attention heads, embeddings, saliency patterns or causal interventions on internal states. The core question is whether we can build evidence-based accounts of the model’s internal mechanism, rather than only observing input-output behaviour. In large models, this is difficult because representations are distributed, context-dependent and sometimes only partly recoverable. Findings are therefore often provisional and should be validated against multiple prompts, datasets and interventions."
   },
-  "keyTakeaway": "Interpretability is how far people can understand a model’s operation. Internal inspection can provide evidence, but not certainty or safety.",
+  "keyTakeaway": "Interpretability seeks evidence about the internal features and pathways producing a model's output. That evidence can reveal shortcuts or failure modes, but it is rarely a complete account and is not proof of safety.",
   "quickCheck": {
     "question": "Which statement best distinguishes interpretability from explainability?",
     "options": [
@@ -253,6 +252,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:24:45.688Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

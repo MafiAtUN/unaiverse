@@ -82,28 +82,28 @@
     "reducedMotionDescription": "A static four-box flow replaces all animation. Arrows connect raw data, automatic target creation, model training with feedback, and later reuse for downstream tasks."
   },
   "workedExample": {
-    "scenario": "Training a language model on short public transport updates",
-    "input": "Original sentence: “Bus 42 delayed by 15 minutes due to heavy rain near the central station.”",
+    "scenario": "Pretraining a language model on public transport updates using masked-word prediction",
+    "input": "Original sentence: “Bus 42 is delayed by 15 minutes due to heavy rain near the central station.”",
     "process": [
-      "Mask one word to create the input: “Bus 42 delayed by 15 minutes due to heavy rain near the [MASK].”",
-      "Use the hidden original word, “central station”, as the target the model should predict from context.",
-      "Run many examples like this and update the model each time its predicted words differ from the hidden original words.",
-      "After training, test the learned representation on a new task such as classifying whether an update is about delay, cancellation or route change."
+      "Replace one word with a mask to create the model input: “Bus 42 is delayed by 15 minutes due to heavy rain near the central [MASK].”",
+      "Use the hidden word, “station”, as the target. It comes directly from the original sentence, rather than from a human annotation.",
+      "Repeat this transformation across many updates. Each time, adjust the model when its prediction differs from the hidden word.",
+      "Use the resulting representations for a later task, such as classifying updates as delays, cancellations or route changes, with a smaller set of labelled examples."
     ],
-    "result": "Although no person labelled the sentences by topic, the model may learn language patterns that help with later classification."
+    "result": "The pretraining data had no topic labels, but the masking task provided its own targets. By learning to predict missing words, the model may capture language patterns that are useful for the later classification task."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team reviews approved programme monitoring reports from several country offices and wants a model that can group similar narrative updates before analysts examine them.",
-    "relevance": "Self-supervised pretraining on a large collection of approved, non-sensitive text can help the system learn patterns in reporting language, so later grouping or retrieval may need fewer manually tagged examples.",
-    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive monitoring data to an unapproved public AI service; use only approved systems, minimise data exposure, and keep human review in the loop."
+    "scenario": "A records officer in the Resident Coordinator's Office is drafting the note for the file after a bilateral held by the data working group of the UN Country Team. Before close of business, the officer must record a proposal to pretrain an internal search model on cleared workplans and progress reports, without first tagging every document by topic.",
+    "relevance": "During pretraining, the model could create targets by masking passages in each document and learning to reconstruct them. This may produce representations that support later retrieval or grouping with fewer manually tagged examples.",
+    "caution": "Clearance for circulation does not automatically permit use as training data. Personal, confidential, protection-sensitive or security-sensitive material must not be entered into a system that is not approved for it, because training can expose or reproduce source content. Confirm the authorised purpose, access controls, retention arrangements and human review before proceeding."
   },
   "whyItMatters": "For decision-makers, self-supervised learning matters because labelled data is expensive, slow and sometimes impossible to obtain at scale. This approach can use large amounts of existing raw data to learn useful patterns first, then reduce how much manual labelling is needed for a later task. It can improve performance in settings where organisations have many documents, images or signals but limited expert time. It also changes procurement and governance questions: you may need to ask not only about labels, but about the source data, the automatic training task, privacy controls, and whether the learned representations transfer well to the real task.",
   "whereYouMayHearIt": [
-    "foundation model pretraining",
-    "language model training",
-    "computer vision research",
-    "representation learning",
-    "low-label workflow design"
+    "A vendor demo during an ICT governance board meeting",
+    "A technical review of an internal search proposal",
+    "An inter-agency working group discussing document retrieval",
+    "A procurement clarification on proposed training data",
+    "A research briefing on foundation-model pretraining"
   ],
   "commonMisconceptions": [
     {
@@ -123,7 +123,7 @@
     "simple": "Instead of asking people to label every example, this method hides or rearranges part of the data and trains the model to predict the missing or related part.",
     "technical": "Self-supervised learning trains on unlabelled data by deriving supervisory signals from each example itself. A transformation defines an input-target pair, such as masked-token prediction in text, contrastive pairing of two augmented views of the same image, next-step prediction in sequences, or reconstruction of corrupted inputs. The optimisation objective updates model parameters so internal representations capture statistical structure that is useful beyond the pretext task. Those representations can then be transferred, fine-tuned, or used directly for downstream tasks. The key distinction from standard supervised learning is that the target is not an external human-provided label, while the distinction from generic unsupervised learning is that training commonly still uses an explicit predictive loss."
   },
-  "keyTakeaway": "Self-supervised learning uses the data to manufacture its own training task, so models can learn useful representations before humans add labels.",
+  "keyTakeaway": "Self-supervised learning creates prediction targets from the raw data itself, allowing a model to learn reusable representations before a smaller labelled dataset is applied.",
   "quickCheck": {
     "question": "Which statement best describes self-supervised learning?",
     "options": [
@@ -239,6 +239,19 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:49.317Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -32,8 +32,8 @@
   "oneSentence": "A method that propagates derivatives backwards through a model to compute how changes to each weight would affect the loss.",
   "plainExplanation": "When a neural network produces an answer, we compare that answer with the target and measure the error using a loss function. A loss function is a rule that turns “how wrong was it?” into a number. Backpropagation uses derivatives to work out how a small change to each weight would affect that loss.\n\nIt does this by moving backwards from the output layer toward the earlier layers. At each step, it calculates a gradient, which is the slope showing how much the loss would change if one weight changed slightly. This uses the chain rule from calculus, which connects small effects across many steps.\n\nThe output of backpropagation is not the final improved model by itself. What comes out is a set of gradients for the weights and biases. An optimisation method such as gradient descent then uses those gradients to nudge the settings.\n\nSo backpropagation is different from the forward pass and different from gradient descent. The forward pass makes a prediction. Backpropagation computes loss gradients from the output toward earlier layers. Gradient descent uses those gradients to update the parameters.",
   "everydayAnalogy": {
-    "title": "Tracing a wrong library book location back through the filing process",
-    "story": "In a large library, a student looks for a history book and finds it on the wrong shelf. The head librarian traces the mistake backwards: first the shelf label, then the trolley used for reshelving, then the sorting desk, then the return bin where the book was first handled. At each stage, the librarian asks how much that stage likely contributed to the book ending up in the wrong place. The staff then adjust their labelling and sorting habits so the next returned books are more likely to be shelved correctly.",
+    "title": "Adjusting a chain of connected sound controls",
+    "story": "Imagine a microphone connected through several sound controls before reaching a speaker. The final sound is too loud. A technician works backwards from the speaker, calculating how a small turn of each control would change the final volume, including the effect of controls earlier in the chain. Those measurements do not adjust anything by themselves. They tell the technician which controls to turn and by how much. Backpropagation similarly calculates sensitivities backwards through connected model operations, while the optimiser makes the actual adjustments.",
     "mapping": [
       {
         "analogyElement": "book found on the wrong shelf",
@@ -87,28 +87,28 @@
     "component": "backpropagation"
   },
   "workedExample": {
-    "scenario": "A tiny network predicts whether an email should be marked important, using one output number between 0 and 1.",
-    "input": "Input features produce a prediction of 0.80, but the target label is 1.00.",
+    "scenario": "A small network is being trained to flag paragraphs that need human review before inclusion in a progress report. Its output ranges from 0 to 1.",
+    "input": "For a paragraph labelled 1.00, meaning review is required, the network predicts 0.80.",
     "process": [
-      "The forward pass gives output 0.80, so the model is too low by 0.20.",
-      "Using a simple squared-error loss, the loss is (1.00 - 0.80)^2 = 0.04.",
-      "Backpropagation computes gradients for the weights. Suppose one weight into the output has gradient -0.30, meaning increasing that weight slightly should reduce the loss.",
-      "With learning rate 0.1, that weight is updated by subtracting 0.1 × (-0.30), so it increases by 0.03.",
-      "After the update, a new forward pass might produce 0.83, closer to the target than before."
+      "The forward pass produces 0.80, which is 0.20 below the target.",
+      "Using squared-error loss, the loss is (1.00 - 0.80)² = 0.04.",
+      "Backpropagation applies the chain rule from the loss through the output and earlier layers. Suppose the gradient for one output weight is -0.30.",
+      "With a learning rate of 0.1, the optimiser subtracts 0.1 × (-0.30) from that weight, increasing it by 0.03.",
+      "A new forward pass might produce 0.83. The precise change depends on the other parameters and the network's activations."
     ],
-    "result": "Backpropagation has produced the gradients that tell the optimiser how to change each weight so the next prediction is likely to be less wrong."
+    "result": "Backpropagation computed the gradients. The optimiser then used them to update the parameters so that this training example would tend to produce a lower loss."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is testing an internal model that helps sort incoming draft briefing notes by topic before human review. During training, backpropagation is used to calculate how each model weight contributed when a draft on food security was misclassified as public health.",
-    "relevance": "This helps non-specialists see that training does not happen by magic: the system needs a measurable error, a backward calculation of contribution, and then controlled parameter updates.",
-    "caution": "Use only approved, non-sensitive training data and secure tools. Do not place confidential, personal, protection-sensitive, witness, survivor, security-related, or operational information into an unapproved public AI service for training or testing."
+    "scenario": "At close of business, an associate expert in an inter-agency secretariat is checking a classifier used to route implementing-partner progress reports into headings for the quarterly report to a donor. During training, when a paragraph is assigned to the wrong heading, backpropagation carries the loss signal backwards through the model and calculates a gradient for each weight and bias.",
+    "relevance": "The gradients show the optimiser which parameters to adjust, and in which direction, to reduce similar classification errors. Backpropagation performs the calculation efficiently across the model. It does not decide whether the donor report is accurate, complete or ready for clearance.",
+    "caution": "Train and test only in an approved environment using data cleared for that purpose. Progress reports may contain personal, operational or partner-sensitive information. Such material must not be entered into an unapproved tool because its storage, reuse and disclosure cannot be adequately controlled."
   },
   "whyItMatters": "If you hear that a model was “trained”, backpropagation is a large part of what that usually means in practice. Understanding it helps you ask better questions about whether a system can improve, why training takes time and compute, and why poor data or poor loss choices can push improvement in the wrong direction.",
   "whereYouMayHearIt": [
-    "introductory machine learning courses",
-    "neural network training discussions",
-    "papers on deep learning",
-    "software library documentation"
+    "A technical briefing before an internal model is approved for testing",
+    "A vendor demonstration to an ICT governance board",
+    "A review meeting on why model training has stalled",
+    "A discussion with an evaluation office about how a model was developed"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +132,7 @@
     "simple": "After calculating a model’s loss, this method works backwards to compute how changes to each setting would affect that loss.",
     "technical": "Backpropagation applies the chain rule to a computational graph to efficiently compute partial derivatives of the loss with respect to each parameter, propagating error signals from outputs to earlier layers so an optimiser can update weights and biases."
   },
-  "keyTakeaway": "Backpropagation does not make a prediction; it computes how changes to each weight would affect the loss.",
+  "keyTakeaway": "Backpropagation applies the chain rule backwards through a model to compute each parameter's effect on the loss. An optimiser uses those gradients to update the parameters.",
   "quickCheck": {
     "question": "What does backpropagation mainly produce during neural network training?",
     "options": [
@@ -301,6 +301,20 @@
       "keyTakeaway",
       "simpleVsTechnicalSimple"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:58.733Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

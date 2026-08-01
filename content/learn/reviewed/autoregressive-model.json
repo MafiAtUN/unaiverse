@@ -83,29 +83,28 @@
     "reducedMotionDescription": "A static four-panel diagram shows the same loop without animation: initial context, probability list, selected token, and extended context with a visible arrow indicating repetition."
   },
   "workedExample": {
-    "scenario": "Generating a short completion for the prompt “The bus arrives”.",
-    "input": "Prompt tokens: [The] [bus] [arrives]",
+    "scenario": "A drafting assistant continues a sentence in a donor progress report from the prefix: “The reporting period concluded with”.",
+    "input": "Prompt tokens: [The] [reporting] [period] [concluded] [with]",
     "process": [
-      "The model reads the three tokens and outputs next-token probabilities such as [at: 0.48, late: 0.19, tomorrow: 0.08, .: 0.05].",
-      "A decoding rule picks “at”, so the sequence becomes “The bus arrives at”.",
-      "Using the updated context, the model predicts again: [08:30: 0.51, noon: 0.17, dawn: 0.06, stop: 0.04].",
-      "It picks “08:30”, then predicts once more: [.: 0.74, daily: 0.09, and: 0.05].",
-      "It picks “.” and stops, producing “The bus arrives at 08:30.”"
+      "From the prefix, the model assigns probabilities to possible next tokens. Illustrative leading options are “all” at 0.34, “three” at 0.21 and “the” at 0.15.",
+      "The decoding rule selects “all”. With that token added, the context is now “The reporting period concluded with all”, and the model calculates a new next-token distribution.",
+      "The leading options now include “activities” at 0.46, “planned” at 0.24 and “partners” at 0.09. The decoder selects “planned”.",
+      "Conditioned on the longer prefix, the model selects “activities”, then “completed”, then a full stop through successive prediction steps."
     ],
-    "result": "A complete output built token by token, where each later choice depended on the earlier generated tokens."
+    "result": "The output is “The reporting period concluded with all planned activities completed.” It was not retrieved as a complete sentence. It was assembled token by token, and each selected token changed the probabilities for the next one."
   },
   "unWorkplaceExample": {
-    "scenario": "A language model is used inside an approved UN tool to draft a rough translation of non-sensitive field updates into a working language, producing the translated text one token at a time from the source text and the translated prefix so far.",
-    "relevance": "Knowing the model is autoregressive helps staff understand why wording can drift, why an early mistranslation can affect later phrases, and why human review remains necessary before sharing.",
-    "caution": "Do not paste confidential, personal, survivor, witness, security-sensitive or operational information into an unapproved public AI service; use only approved systems and keep human oversight over the final translation."
+    "scenario": "At close of business, an ICT officer in an inter-agency secretariat is testing an approved drafting assistant against cleared, non-sensitive bullet points for a donor progress report. The assistant drafts the narrative one token at a time, with each choice conditioned on the report prompt and the wording it has already produced.",
+    "relevance": "An early choice such as “completed” rather than “initiated” changes the probabilities of later words and may lead the paragraph away from the cleared facts. Understanding the autoregressive mechanism helps the officer recognise why fluent text still requires line-by-line verification before clearance.",
+    "caution": "Do not enter personal data, confidential partner information, procurement-sensitive material or uncleared figures into a tool that has not been approved for them. Such material may be exposed or handled outside required controls. Use only approved systems, minimise the input and verify every claim against the cleared source."
   },
   "whyItMatters": "If you use, buy, govern or evaluate language AI, autoregressive behaviour affects speed, cost, reliability and risk. These models generate output sequentially, so long responses take multiple prediction steps. Each step can introduce small errors, and those errors can influence later text. This helps explain common behaviours such as fluent continuation, occasional repetition, drifting off topic, and sensitivity to prompt wording. It also matters for system design: caching earlier computations can improve efficiency, while human review is important in high-stakes uses because the model’s output is generated plausibly step by step, not guaranteed fact by fact.",
   "whereYouMayHearIt": [
-    "large language model design",
-    "text generation papers",
-    "speech and audio modelling",
-    "model inference and decoding",
-    "transformer tutorials"
+    "A technical review of a drafting assistant before an ICT governance board",
+    "A vendor demonstration during a procurement meeting",
+    "An inter-agency working group discussing safeguards for text generation",
+    "A briefing with the front office on why generated wording can drift",
+    "A model evaluation meeting before an approved tool is rolled out"
   ],
   "commonMisconceptions": [
     {
@@ -129,7 +128,7 @@
     "simple": "It writes a sequence in order. It looks at what is already there, predicts the next piece, adds it, and repeats.",
     "technical": "An autoregressive model factorises the probability of a sequence into a product of conditional probabilities over positions, typically left to right: each token is modelled given the preceding tokens. In modern language models, the input prefix is embedded into vectors, position information is added or encoded, and masked self-attention enforces causality so position t can attend only to positions 1 through t. The network outputs logits over the vocabulary for the next token; a decoding procedure such as greedy selection, beam search or stochastic sampling chooses one token, appends it to the prefix, and feeds the longer prefix back for the next step. During training, teacher forcing commonly supplies the true previous tokens; during generation, the model conditions on its own earlier outputs, which creates exposure to error accumulation. The same autoregressive idea can be applied beyond text, but the ordering of the sequence then becomes an important design choice."
   },
-  "keyTakeaway": "Autoregressive models build output step by step, so each new token depends on the earlier sequence and can shape everything that follows.",
+  "keyTakeaway": "An autoregressive model generates one token at a time. Each selection becomes part of the context for the next prediction, so an early choice can shape the remainder of the output.",
   "quickCheck": {
     "question": "Which statement best captures what makes a model autoregressive?",
     "options": [
@@ -239,6 +238,19 @@
     "applied": [
       "oneSentence"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:35.881Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

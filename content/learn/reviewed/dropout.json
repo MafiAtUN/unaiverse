@@ -27,8 +27,8 @@
   "oneSentence": "A training method that randomly switches off some units during updates to reduce reliance on particular pathways and potentially improve generalisation.",
   "plainExplanation": "Dropout is a training technique used in many neural networks. During each training step, the system temporarily sets some selected unit outputs to zero. A unit here means a small computational part of the network that passes a number forward. The choice is random, and the dropout rate sets the probability that each selected unit will be inactive for that step.\n\nWhat goes in is the normal training data, plus a dropout rate such as 0.2 or 0.5. What happens is that the network learns on a partly thinned version of itself. Because different units disappear on different steps, training discourages the model from depending too heavily on one narrow pattern of internal signals. This may reduce fit to the training examples while improving performance on new data, but the result depends on the model and data.\n\nThis is mainly a form of regularisation, which means adding pressure that reduces overfitting. Overfitting means the model matches training data too closely and then does poorly on fresh examples. Dropout is often confused with deleting parameters permanently, but it does not do that. The units are only inactive during particular training steps.\n\nAt inference time, meaning when the trained model is being used rather than updated, standard dropout is normally turned off. To keep the scale of activations consistent, many implementations use inverted dropout: during training, the active units are scaled up so no extra scaling is needed later. In modern architectures, dropout can help, but its usefulness depends on the model type, dataset size, and other regularisation methods.",
   "everydayAnalogy": {
-    "title": "Finding books when some library signs are covered",
-    "story": "Imagine a large library where trainee staff are learning how to guide visitors to books. During practice, the supervisor randomly covers some shelf signs and aisle markers for each exercise. The trainees must still help a visitor find a book, so they learn to use several clues at once: subject labels, floor maps, nearby collections and catalogue codes. When the real library opens, all the signs are visible again, and the staff are less likely to depend on only one sign that might be missing or misleading.",
+    "title": "Practising with changing road closures",
+    "story": "Imagine learning several ways to reach the same destination. On each practice trip, a few roads are randomly closed, so you cannot memorise one route and depend on it every time. You learn to combine several landmarks and alternatives instead. When practice ends, all roads are open again. You may now cope better with an unfamiliar journey, although that still needs to be tested rather than assumed.",
     "mapping": [
       {
         "analogyElement": "randomly covered shelf signs and aisle markers",
@@ -86,29 +86,28 @@
     "reducedMotionDescription": "A static two-panel comparison replaces any mask-changing animation. One panel shows all hidden units active. The other shows a single fixed random set of hidden units greyed out, with a note that a different random set would be used on another training step. The bottom note still shows that all units are active during inference."
   },
   "workedExample": {
-    "scenario": "A small neural network classifies short product reviews as positive or negative.",
-    "input": "Training step with dropout rate 0.5 on a hidden layer of 4 units; review text encoded as numbers and target label = positive.",
+    "scenario": "In a controlled test, a small neural network ranks synthetic application summaries against a rostered profile.",
+    "input": "One training update uses a dropout rate of 0.5 on a hidden layer with four units. The synthetic summary is numerically encoded and carries a training label indicating a strong match.",
     "process": [
-      "Without dropout, hidden unit outputs for one example might be [0.8, 0.1, 0.7, 0.6], and the model predicts 0.92 for 'positive', suggesting strong confidence.",
-      "With dropout at 0.5, a random mask such as [1, 0, 1, 0] is applied, so only units 1 and 3 stay active for this step.",
-      "Using inverted dropout, the active outputs are scaled, giving approximately [1.6, 0, 1.4, 0] before the next layer combines them.",
-      "The prediction for this training step might drop to 0.74, producing a larger loss than before, so weight updates encourage several units to become useful rather than only a few.",
-      "On a later step, a different mask such as [0, 1, 1, 1] is used, so different units must carry the signal.",
-      "After training, dropout is off and all 4 units contribute; validation accuracy improves from 81% without dropout to 85% with dropout in this toy example."
+      "Without dropout, the hidden-unit outputs for one example might be [0.8, 0.1, 0.7, 0.6], producing a predicted match score of 0.92.",
+      "For this update, dropout samples the mask [1, 0, 1, 0]. Units 2 and 4 are set to zero, make no contribution to the forward pass and receive no gradient through those activations.",
+      "With inverted dropout, the surviving outputs are scaled to approximately [1.6, 0, 1.4, 0] before the next layer combines them.",
+      "The predicted score might fall to 0.74, creating a larger loss. The resulting update encourages the network to perform without relying on the same small combination of units every time.",
+      "On a later update, a different mask, such as [0, 1, 1, 1], is sampled. Once training ends, dropout is switched off and all four units contribute, with the corresponding inference-time scaling already accounted for."
     ],
-    "result": "The model fits using changing subsets of hidden units. Validation testing is needed to determine whether this reduces dependence on fragile internal routes and improves performance on unseen reviews."
+    "result": "Changing the active subset on each update discourages units from becoming useful only in one fixed combination. Separate validation is still required: dropout may improve performance on unseen summaries, but it does not guarantee better ranking, fairness or suitability for operational use."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is building an internal search tool over approved guidance documents so staff can retrieve relevant policy passages more reliably across topics and wording styles.",
-    "relevance": "If the neural ranking model starts to overfit to repeated phrases from the training set, dropout can be one option during training to reduce dependence on a few internal features and improve performance on new documents and queries.",
-    "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, security-sensitive or operational information into an unapproved public AI service for model training or testing."
+    "scenario": "At an inter-agency secretariat, a records officer is testing a tool that ranks application files against a rostered profile before the long list goes to the responsible panel. The test uses authorised, non-live sample records in the approved environment.",
+    "relevance": "If the ranking model learns to depend on a few recurring phrases, dropout can randomly remove selected activations during training. This may encourage the model to use a broader range of signals when it encounters applications written in different styles. Whether it actually improves generalisation must be established on separate validation data.",
+    "caution": "Do not upload live applications or other personal employment information to a tool that has not been approved for that material. Access, retention and training use must be authorised. A model ranking must not replace eligibility checks or panel judgement, since errors or biased patterns could affect applicants."
   },
   "whyItMatters": "Dropout matters because a model that looks excellent during training can still fail on real-world data. For someone choosing, buying, reviewing or governing an AI system, the key question is not only 'How low is the training loss?' but also 'Will it still work on new cases?' Dropout is one of the standard tools used to reduce overfitting, so it affects reliability, maintenance needs and the amount of testing required. It also signals that good model quality usually comes from balancing fit and robustness, not from making the network chase every detail of the training set.",
   "whereYouMayHearIt": [
-    "neural network training settings",
-    "overfitting discussions",
-    "deep learning courses",
-    "model tuning notes"
+    "A vendor demonstration of model-training controls",
+    "A technical review before a ranking tool is cleared for testing",
+    "An ICT governance board discussion on overfitting",
+    "A debrief on validation results from a pilot"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +131,7 @@
     "simple": "Dropout trains a neural network with some internal outputs temporarily masked on each practice round, which can make its learned patterns less brittle.",
     "technical": "In a neural network, dropout samples a random binary mask over selected activations during training. If the dropout rate is p, each chosen unit is set to zero with probability p for that update, and its outgoing contribution is removed from the forward pass. In backpropagation, gradients do not pass through dropped units for that step. This injects noise into training and discourages co-adaptation, meaning a small set of units becoming useful only in combination with each other. Many implementations use inverted dropout, scaling surviving activations by 1 divided by 1 minus p during training so the expected activation level matches inference time. Dropout is therefore a stochastic regularisation method, not an optimiser. It interacts with architecture and other design choices: for example, its benefits differ across dense layers, convolutional networks and transformer variants, and in some modern setups alternatives or lower rates are preferred."
   },
-  "keyTakeaway": "Dropout makes training harder on purpose to reduce dependence on particular internal routes and potentially improve performance on new data.",
+  "keyTakeaway": "During training, dropout randomly switches off selected units for each update. This discourages reliance on fixed internal combinations and may improve generalisation, but validation must show whether it helps.",
   "quickCheck": {
     "question": "Which statement best describes standard dropout in a neural network?",
     "options": [
@@ -283,6 +282,20 @@
       "workedExampleResult",
       "simpleVsTechnicalSimple"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:56.980Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

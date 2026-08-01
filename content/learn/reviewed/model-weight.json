@@ -34,8 +34,8 @@
   "oneSentence": "A released file of learned numerical settings that lets compatible software run a trained model without repeating the original training process.",
   "plainExplanation": "When people say they are downloading a model, they often mean they are downloading its weights files. This is a saved artefact: a file, or set of files, full of numbers learned during training. Some releases use files taken from a training checkpoint, but a full checkpoint can also contain optimiser state and other training information. The learned numbers shape how the model transforms input text into likely next tokens, where a token is a small unit such as part of a word.\n\nWhat goes in? During training, the model sees very large amounts of text and repeatedly adjusts many numerical values. What happens? The training process changes them so the model becomes better at predicting the next token. What comes out is a saved snapshot of those learned values.\n\nWhen someone releases model weights, other people can load the files into software that implements the matching architecture, meaning the design of the network that uses the numbers. The software combines the architecture, the weights, a vocabulary, and tokenisation rules to generate outputs from prompts. The weights alone are powerful, but they are not the whole system.\n\nThis term is often confused with a single weight or with a parameter. A single weight is one learned number that scales a signal. A parameter is any learned numerical setting, which can include weights and other values. Model weights as a released artefact means the packaged collection of learned parameter values saved to disk and shared so others can run, fine-tune, inspect, or convert the model.",
   "everydayAnalogy": {
-    "title": "A library’s document-sorting cheat sheet",
-    "story": "A regional library network tests thousands of past document requests and gradually improves a scoring sheet used by staff to rank which knowledge-base articles to show first. At the end, the network sends each branch a spreadsheet full of tuned numbers, plus instructions for which columns the local software should apply them to. The spreadsheet does not contain the whole library system, but when loaded into the right software it makes the ranking behaviour work in the same trained way. If a branch only has the spreadsheet and not the matching software and category list, it cannot use it properly.",
+    "title": "A saved sound preset",
+    "story": "A musician spends hours adjusting the controls on a synthesiser, then saves those settings to a file. Someone with a compatible synthesiser can load the file and obtain the tuned sound without repeating all the adjustments. The file is not the instrument: without the matching controls, sound engine and software, it is only a set of values. A model-weights release works similarly, although it stores many more learned values and compatible software uses them to calculate outputs.",
     "mapping": [
       {
         "analogyElement": "The spreadsheet of tuned numbers sent to branches",
@@ -88,28 +88,27 @@
     "reducedMotionDescription": "A static four-box left-to-right flow replaces animation. Arrows connect Training run, Released weights/checkpoint, Compatible runtime with architecture and configuration, and Output from prompt."
   },
   "workedExample": {
-    "scenario": "A developer downloads a small open-weight language model for local testing.",
-    "input": "Prompt: 'Summarise this paragraph in one sentence.' The download page provides 2 checkpoint files totalling 7.2 GB, plus a configuration file and tokenizer files.",
+    "scenario": "An information management officer in a regional hub prepares a local summarisation test for a technology governance board review. The test uses a paragraph from a public progress report and must be ready by close of business.",
+    "input": "The release package contains serialised weight tensors, an architecture configuration and tokeniser files. It does not contain the original training environment or optimiser state.",
     "process": [
-      "The developer downloads the checkpoint files, configuration, and tokeniser files from the release package.",
-      "A compatible inference program loads the checkpoint into the matching model architecture defined by the configuration.",
-      "The program tokenises the prompt into model tokens and passes them through the loaded network using the saved weights.",
-      "The model outputs probabilities for possible next tokens repeatedly until it produces a one-sentence summary."
+      "The officer confirms that the approved inference runtime supports the stated architecture and weights format.",
+      "The runtime constructs the matching model architecture from the configuration and loads the tensor values as its parameters.",
+      "The tokeniser converts the progress-report paragraph into model tokens. The loaded network then calculates successive output-token probabilities.",
+      "The runtime generates a summary using the trained parameter values, without repeating the original training process."
     ],
-    "result": "The downloaded weights made the trained behaviour available locally, but only because the developer also used the matching runtime, configuration, and tokeniser."
+    "result": "The release supports local inference because the weights are combined with the matching architecture, configuration, tokeniser and runtime. It is not a complete training checkpoint and cannot by itself restore the original training state."
   },
   "unWorkplaceExample": {
-    "scenario": "A country office ICT or data team evaluates whether an open-weight model can help triage a shared general enquiries inbox on approved internal infrastructure.",
-    "relevance": "Understanding released weights helps leadership and technical staff ask the right questions: are we receiving just the checkpoint, or a full deployable package; what additional software is needed; can it run in the approved environment; and what controls are required before staff use outputs operationally.",
-    "caution": "Do not place personal data, case details, protection-sensitive information, security-related content, or other confidential material into an unapproved public AI service merely because a model name appears available online. Any trial should follow organisational approval, security review, and human oversight."
+    "scenario": "An internal auditor is finalising the terms of reference for a review of a locally hosted language model in a library and records service. Before the file goes to the chief of section for Friday clearance, the draft must distinguish a release of model weights from a complete, deployable system.",
+    "relevance": "The distinction determines what the review must test. Serialised tensors may provide the trained parameter values, while the service still needs the matching architecture definition, configuration, tokeniser and runtime. A full training checkpoint may also contain optimiser state; a weights release need not.",
+    "caution": "Do not treat local possession of the weights as security or data-protection approval. The auditor should require provenance and integrity checks, licence review, access controls and testing in an approved environment. Restricted records, personal data and confidential documents must not be loaded until that environment is authorised for them, because the runtime, logs and surrounding tools can expose or retain inputs."
   },
   "whyItMatters": "This term matters because discussions about access, cost, transparency, security, and deployment often turn on what exactly has been released. If a vendor or developer says a model is available, a non-specialist should ask whether that means API access, an application, source code, or the weights artefact. Released weights can make local deployment, auditing, fine-tuning, conversion, or offline use more feasible, but they also raise governance questions about licensing, safety controls, infrastructure needs, and misuse. In procurement and policy conversations, confusing weights with the whole system can lead to wrong assumptions about reproducibility, openness, portability, or risk.",
   "whereYouMayHearIt": [
-    "model release announcements",
-    "open-source AI discussions",
-    "procurement or ICT reviews",
-    "machine learning deployment guides",
-    "safety and governance meetings"
+    "A technology governance board reviewing whether a model can run on approved infrastructure",
+    "A procurement meeting clarifying what a supplier means by “model package”",
+    "A technical handover before a locally hosted model is accepted",
+    "An internal audit opening meeting on controls around released AI models"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "Think of it as the trained model packed into files full of numbers. Those files let compatible software reproduce the model’s learned behaviour without training from the beginning.",
     "technical": "A released weights artefact contains serialised tensors holding the learned numerical values of a trained model. It is usually saved after training or fine-tuning, or extracted from an intermediate checkpoint. A full training checkpoint may also contain optimiser state and other information used to resume training. The tensors correspond to parameter values used by the model architecture during inference. On their own, weights files are not enough: a runtime must know the architecture definition, tensor shapes, layer arrangement, configuration settings, vocabulary, and tokenisation scheme expected by the files. Once loaded, the runtime applies the weights during forward passes to transform token representations and produce next-token probability distributions. Different formats may store the same learned values in different ways. Some releases provide quantised versions, which lower numerical precision and memory use and may improve speed on compatible systems. In practice, people often say “the model” when they mean the weights, but the full runnable system also includes code, configuration, and supporting assets."
   },
-  "keyTakeaway": "Released model weights are a saved snapshot of trained numbers: essential for running a model, but not the same as the whole system around them.",
+  "keyTakeaway": "Weights are serialised trained parameter values, not a complete application. A compatible architecture, runtime, configuration and tokeniser are still needed.",
   "quickCheck": {
     "question": "What best describes released model weights?",
     "options": [
@@ -256,6 +255,20 @@
       "plainExplanation",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:51.742Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

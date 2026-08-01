@@ -86,27 +86,26 @@
     "reducedMotionDescription": "A static four-step row shows Instruction, Examples, New input and Output, with arrows between them and a fixed note near the model icon reading 'parameters unchanged'."
   },
   "workedExample": {
-    "scenario": "Classifying short feedback messages by urgency for a helpdesk",
-    "input": "Instruction: Label each message as low, medium or high urgency.\nExample 1: 'The printer in room 4 is making noise.' -> low\nExample 2: 'Payroll access is down for all staff.' -> high\nExample 3: 'I cannot open the budget file due tomorrow.' -> medium\nNew message: 'Email is delayed for the whole office.'",
+    "scenario": "A security analyst is preparing cleared status lines for a liaison office's quarterly donor report and wants an approved model to reproduce the agreed classification and format.",
+    "input": "Instruction: Classify each observation as On track, Watch or Action required. Return \"Status: [label] | Follow-up: [text]\".\nExample 1: \"All scheduled liaison briefings took place.\" -> Status: On track | Follow-up: None\nExample 2: \"One briefing moved; a replacement date is confirmed.\" -> Status: Watch | Follow-up: Confirm completion next quarter\nExample 3: \"A required approval remains outstanding and blocks the planned activity.\" -> Status: Action required | Follow-up: Escalate through the agreed channel\nNew observation: \"Two briefings moved to next month; replacement dates are confirmed.\"",
     "process": [
-      "The prompt gives the task and three labelled examples.",
-      "The model compares the new message with the examples, especially the difference between one-person issues and office-wide disruptions.",
-      "It infers that 'whole office' is more serious than a minor local issue.",
-      "It outputs a label in the same style as the examples."
+      "The prompt supplies an instruction, three demonstration pairs and a new observation.",
+      "Through attention over the current prompt, the model associates confirmed rescheduling with the demonstrated \"Watch\" pattern rather than with a blocked activity.",
+      "It reproduces the requested status and follow-up structure. Its stored weights are not updated, so the pattern is not learned permanently."
     ],
-    "result": "high"
+    "result": "Status: Watch | Follow-up: Confirm completion next quarter"
   },
   "unWorkplaceExample": {
-    "scenario": "A programme team wants a model to sort short, non-sensitive monitoring notes into categories such as 'on track', 'needs follow-up' and 'data quality issue' by giving a few approved examples in the prompt.",
-    "relevance": "This lets staff test a classification scheme quickly before investing in a more permanent workflow or model adaptation.",
-    "caution": "Do not place personal data, protection-sensitive information, survivor accounts, witness details, security-sensitive material or other confidential records into an unapproved public AI service; use only approved tools and human review."
+    "scenario": "On the afternoon before clearance of a quarterly donor report, a security analyst in a liaison office gives an approved model three synthetic examples showing how cleared observations should be labelled as \"on track\", \"watch\" or \"action required\", then asks it to format a new, non-sensitive observation in the same way.",
+    "relevance": "The model can imitate the labels and reporting format from the current prompt without retraining. The examples shape its output for that interaction through the prompt context, while its stored parameters remain unchanged.",
+    "caution": "Real security-sensitive details must not be used as prompt examples or pasted into a tool that is not approved for them. Use only an approved environment and cleared, sanitised or synthetic material, since prompts may be retained or exposed. The analyst must verify both the label and the donor-facing wording before clearance."
   },
   "whyItMatters": "People often hear 'we trained it on our data' when what actually happened was much lighter and more temporary. That difference matters for cost, speed, privacy, governance and reliability. In-context learning can be set up quickly and changed from one task to the next, which is useful for prototypes, formatting, extraction and classification. But because the model itself is not updated, the behaviour may be less consistent than fine-tuning, will not carry into a later request unless the relevant context is supplied again, and depends heavily on prompt quality and context length. If you know this term, you can ask better questions: Are examples only in the prompt? Will the behaviour persist? What data was sent to the service? What human checks are still needed?",
   "whereYouMayHearIt": [
-    "prompt design discussions",
-    "few-shot prompting demos",
-    "rapid prototyping of AI tasks",
-    "vendor claims about customisation"
+    "A vendor demo in a procurement meeting",
+    "A prompt review before clearance of the quarterly report",
+    "An ICT governance board discussion on an approved pilot",
+    "A front office discussion about standardising draft status lines"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +125,7 @@
     "simple": "You can steer a model by showing it a few examples right in your request. It often copies the pattern for that conversation, but it has not been permanently retrained.",
     "technical": "In-context learning refers to task adaptation through the prompt context rather than parameter updates. The prompt may contain instructions plus demonstration pairs, and the model conditions its next-token predictions on that sequence. In a transformer model, the current context influences output through the attention mechanism over tokens in the prompt, but the underlying weights remain fixed during inference. This is why in-context learning can mimic new formatting, extraction, classification or transformation behaviours without producing a new checkpoint. It is closely related to zero-shot, one-shot and few-shot prompting, though the exact boundary between these terms can vary by author. It differs from fine-tuning, supervised fine-tuning, LoRA and other parameter-efficient methods because those create a persistent model change rather than a temporary context-dependent one."
   },
-  "keyTakeaway": "Examples inside the prompt can temporarily steer a model's behaviour, but they do not permanently change the model.",
+  "keyTakeaway": "Examples in the current prompt can steer a model's task, labels and format for that interaction, without changing its stored parameters.",
   "quickCheck": {
     "question": "Which situation is the best example of in-context learning?",
     "options": [
@@ -275,6 +274,19 @@
       "plainExplanation",
       "whyItMatters"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:34.054Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

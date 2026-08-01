@@ -93,28 +93,27 @@
     "component": "precision-recall"
   },
   "workedExample": {
-    "scenario": "An email filter checks 100 messages and marks some as spam.",
-    "input": "Out of 100 messages, 20 are really spam and 80 are not. The filter marks 25 as spam. Of those 25, 15 are really spam and 10 are not.",
+    "scenario": "At Headquarters, an information management officer evaluates a classifier that identifies service desk tickets reporting a system outage. The test uses 100 previously labelled, de-identified tickets in an approved environment.",
+    "input": "Twenty tickets actually concern outages. The classifier flags 25 tickets, of which 15 are genuine outage reports and 10 concern other issues.",
     "process": [
-      "Compare each spam label from the filter with the real status of the message.",
-      "Count the 15 messages that were spam and were marked spam as true positives.",
-      "Count the 10 messages that were not spam but were marked spam as false positives.",
-      "Of the 5 spam messages the filter missed, count them as false negatives; the remaining 70 non-spam messages correctly left alone are true negatives."
+      "Compare the classifier's label for each ticket with the reference label assigned during review.",
+      "The 15 outage tickets correctly flagged are true positives. The 10 other tickets wrongly flagged as outages are false positives.",
+      "Five of the 20 actual outage tickets were not flagged, so they are false negatives.",
+      "The remaining 70 tickets concern other issues and were correctly left unflagged, so they are true negatives."
     ],
-    "result": "True positives = 15, false positives = 10, false negatives = 5, true negatives = 70. The filter catches many spam messages, but it also wrongly marks some legitimate mail as spam."
+    "result": "The confusion matrix contains 15 true positives, 10 false positives, 5 false negatives and 70 true negatives. The classifier finds 15 of 20 actual outages, but two out of every five tickets it flags are not outages."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is testing an internal search tool over approved guidance documents. Staff type a query such as 'cash transfer monitoring' and the team checks whether the tool marks each returned document as relevant or not relevant.",
-    "relevance": "False positives are irrelevant documents shown as relevant, which wastes staff time. False negatives are relevant documents not shown, which can hide useful guidance. Looking at both helps the team decide whether the tool is genuinely useful, not just fast.",
-    "caution": "Use only approved internal content and a secure, authorised environment. Do not upload confidential case files, personal data, protection-sensitive records or security-related operational information into an unapproved public AI service for testing."
+    "scenario": "During a records retention review, a national officer in a procurement unit tests a classifier that flags closed procurement files as eligible for disposal. The officer compares each prediction with the retention decision recorded on the file.",
+    "relevance": "A false positive is a file wrongly flagged for disposal, potentially removing a record that must be retained. A false negative is an eligible file left unflagged, prolonging storage and later review. Lowering the decision threshold may reduce missed eligible files while increasing incorrect disposal flags.",
+    "caution": "Procurement files may contain commercially sensitive or personal information. They must not be uploaded to a tool that is not approved for that material. No file should be destroyed solely because of a model prediction. Apply the authorised retention schedule and require the designated records review and clearance."
   },
   "whyItMatters": "A system can look good overall while still making the wrong kind of mistakes for your purpose. If you only hear that a tool is '90% accurate', you may miss that it wrongly flags many innocent cases, or misses many real ones. False positives and false negatives make those trade-offs visible. That helps non-specialists ask better questions: What harm comes from each kind of error? Who is affected? Are some groups hit more often? Is the threshold set for convenience, safety or fairness? Those questions matter in procurement, policy, programme design and day-to-day use.",
   "whereYouMayHearIt": [
-    "medical screening and tests",
-    "search and recommendation systems",
-    "fraud or risk detection",
-    "content moderation",
-    "machine learning evaluation"
+    "A vendor demo during a procurement meeting",
+    "An ICT governance board reviewing test results",
+    "A first reading of an evaluation report",
+    "A programme officer discussing a model's decision threshold with the evaluation office"
   ],
   "commonMisconceptions": [
     {
@@ -134,7 +133,7 @@
     "simple": "There are four basic results when a system makes a yes-or-no call: correct yes, correct no, wrong yes and wrong no. The two wrong ones are false positives and false negatives, and they tell you what kind of mistakes the system makes.",
     "technical": "For a binary classification task, each case has a predicted label and a reference label. Comparing them yields four cells: true positive, false positive, true negative and false negative. These counts are often arranged in a confusion matrix. They are the basis for evaluation metrics such as accuracy, precision and recall: accuracy uses all four cells, precision focuses on predicted positives, and recall focuses on actual positives. The decision threshold often controls the trade-off: lowering it tends to increase true positives and false positives together, while raising it tends to increase true negatives and false negatives together. In imbalanced datasets, the raw counts and the cost of each error type may matter more than a single headline score."
   },
-  "keyTakeaway": "Do not ask only whether a system is right overall; ask how often it makes the two different kinds of wrong answer and what each mistake costs.",
+  "keyTakeaway": "Overall accuracy can conceal the mistake that matters. Count false positives and false negatives separately, then assess their consequences and how the decision threshold shifts the balance.",
   "quickCheck": {
     "question": "A document filter marks 40 files as relevant. Later review shows that 12 of those 40 were actually not relevant. What are those 12 cases?",
     "options": [
@@ -263,6 +262,19 @@
       "oneSentence",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:12.084Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

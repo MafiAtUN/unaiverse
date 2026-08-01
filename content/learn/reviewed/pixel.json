@@ -80,27 +80,27 @@
     "reducedMotionDescription": "A static side-by-side comparison remains visible at all times: coarse grid on the left, highlighted single unit in the centre callout, and finer grid on the right, with no animation."
   },
   "workedExample": {
-    "scenario": "Reading a scanned page with optical character recognition",
-    "input": "A scanned greyscale image of the word 'REPORT' at 600 pixels wide and 200 pixels high.",
+    "scenario": "Using optical character recognition to extract a heading from a scanned annex",
+    "input": "A greyscale image containing the heading “PROGRESS REPORT”.",
     "process": [
-      "The scanner converts light from the page into a 600 by 200 grid of brightness values.",
-      "Each position in the grid stores a number, for example 0 for black up to 255 for white.",
-      "The OCR system examines groups of nearby values to find edges and letter shapes.",
-      "It matches those patterns to likely characters and joins them into a word."
+      "The scanner represents the page as a two-dimensional grid of pixels.",
+      "Each pixel stores a sampled brightness value, with darker values usually corresponding to printed marks and lighter values to the page.",
+      "The recognition system computes patterns across neighbouring pixels to identify edges, curves and likely letter shapes.",
+      "It classifies the larger patterns as characters and combines them into a probable sequence of words."
     ],
-    "result": "The output is text, such as 'REPORT', but it was derived from the image grid values, not from the page directly."
+    "result": "The system returns editable text such as “PROGRESS REPORT”. It inferred the words from patterns across many pixel values, rather than reading any single pixel as a letter."
   },
   "unWorkplaceExample": {
-    "scenario": "A team preparing a briefing note includes a satellite image and asks why small labels on a map are unreadable after resizing.",
-    "relevance": "Understanding picture elements helps staff recognise that shrinking an image removes visual detail and can affect later tasks such as text reading, object detection or clear presentation."
+    "scenario": "At a shared services centre, a reporting officer is clearing an implementing partner's progress report for upload to the portal before close of business. Two chart images become blocky when enlarged, and their labels cannot be read.",
+    "relevance": "Each chart is stored as a grid of pixels. If the source image contains too few pixels, enlargement can repeat or estimate values but cannot recover detail that was never captured. The reporting officer requests the original chart export rather than a larger version of the same screenshot.",
+    "caution": "If an image contains personal or security-sensitive material, it must not be uploaded to an external enlargement or enhancement tool unless that tool is approved for such material. Enhancement may also create plausible-looking detail, which is not the same as recovering evidence from the source."
   },
   "whyItMatters": "This term matters because many decisions about images depend on it. If you know that a digital image is a grid of tiny units, you can better judge whether an image has enough detail for the task, whether enlargement will add real information, and why a system may miss small text or distant objects. It also helps you ask better questions about quality: not just how many units there are, but whether the image was well captured, compressed or cropped. For non-specialists, this can prevent overconfidence in image-based outputs.",
   "whereYouMayHearIt": [
-    "camera settings",
-    "screen specifications",
-    "medical imaging discussions",
-    "satellite image analysis",
-    "OCR and document scanning"
+    "During clearance of a progress report containing low-resolution charts",
+    "At a vendor demonstration of document scanning in a procurement meeting",
+    "When an information management officer checks image quality before upload to the portal",
+    "In a front office review after a briefing graphic appears blocky on screen"
   ],
   "commonMisconceptions": [
     {
@@ -120,7 +120,7 @@
     "simple": "A digital picture is made of tiny squares arranged in a grid. Each square stores a little bit of colour or brightness, and together they form the whole image.",
     "technical": "In technical terms, a digital image is a discrete raster: a two-dimensional array of picture elements indexed by position. Each element stores one or more sampled values, such as a single intensity value in greyscale or multiple channel values in colour images. Common colour channels include red, green and blue. Computer vision systems typically take this array, or a transformed version of it, as input and compute patterns across local neighbourhoods and larger regions. A single picture element is not the same as image resolution, which refers to the dimensions or total count of elements in the image. Also, pixel count alone does not determine effective detail, because sampling quality, optics, noise, compression and preprocessing affect the usable signal."
   },
-  "keyTakeaway": "A digital image is a grid of many tiny value-holding units, and the whole pattern matters more than any one unit alone.",
+  "keyTakeaway": "A pixel stores colour or brightness at one position in an image. Meaningful shapes, text and objects emerge from patterns across many pixels, not from one pixel alone.",
   "quickCheck": {
     "question": "Which statement is the best description?",
     "options": [
@@ -236,6 +236,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:24:08.982Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

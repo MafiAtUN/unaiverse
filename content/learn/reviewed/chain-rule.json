@@ -26,8 +26,8 @@
   "oneSentence": "A calculus rule for tracing how a small change in one setting affects the final error through a chain of intermediate calculations.",
   "plainExplanation": "Many models produce an output through several steps. One setting changes an intermediate value, that intermediate value changes another, and eventually the final loss changes. The chain rule is the mathematical rule that links those small effects together.\n\nA small effect here usually means a derivative: a number that tells you how much one quantity changes when another changes a little. The chain rule says that if A affects B, and B affects C, then the effect of A on C can be found by combining the effect of A on B with the effect of B on C. In simple cases, you multiply these local rates of change.\n\nIn model training, what goes in are the model's calculations for one example and the loss at the end. What happens is that the training procedure works backwards through the computation, step by step, using the chain rule to assign part of the final error signal to each earlier quantity and each parameter. What comes out are gradients, which are numbers used to update the parameters.\n\nThis is closely connected to backpropagation, but they are not the same. The chain rule is the mathematical principle. Backpropagation is the efficient procedure that applies that principle across many connected calculations in a model such as a neural network.",
   "everydayAnalogy": {
-    "title": "Tracing a bad document recommendation back through the pipeline",
-    "story": "A team builds a knowledge-base recommender for staff. For one search, the wrong guidance note appears at the top. The ranking depended on several stages: language match, topic score, freshness score, and then a final combined score. To work out which setting to adjust, the team traces how a tiny change in an early stage, such as topic weighting, would have changed the combined score and then the final ranking loss.",
+    "title": "A row of connected volume controls",
+    "story": "Imagine three connected controls between a microphone and a speaker. A small turn of the first control changes the signal entering the second; the second changes what reaches the third; the third changes the final loudness. To estimate how that first tiny turn affects the speaker, multiply the effect at each handover. The chain rule does the same for a sequence of calculations.",
     "mapping": [
       {
         "analogyElement": "language, topic and freshness stages",
@@ -80,27 +80,26 @@
     "reducedMotionDescription": "A static version shows the same four boxes and both directions at once: solid forward arrows for computation, dashed reverse arrows for sensitivity tracing, and a colour-coded formula under the boxes matching each derivative to one link."
   },
   "workedExample": {
-    "scenario": "A tiny model computes h = 3w, y = h^2, and loss L = y. We want the effect of w on L at w = 2.",
+    "scenario": "At the vendor demonstration, the technical lead uses a deliberately small model: h = 3w, y = h² and L = y. The training officer asks how a change in w affects the final loss when w = 2.",
     "input": "w = 2",
     "process": [
-      "Forward pass: h = 3×2 = 6, then y = 6^2 = 36, so L = 36.",
-      "Find local derivatives: ∂h/∂w = 3, ∂y/∂h = 2h = 12 at h = 6, and ∂L/∂y = 1.",
+      "Forward pass: h = 3 × 2 = 6, then y = 6² = 36, so L = 36.",
+      "Find the local derivatives: ∂h/∂w = 3, ∂y/∂h = 2h = 12 at h = 6, and ∂L/∂y = 1.",
       "Apply the chain rule: ∂L/∂w = (∂L/∂y) × (∂y/∂h) × (∂h/∂w) = 1 × 12 × 3 = 36.",
-      "Interpretation: if w increases by a very small amount near 2, the loss increases by about 36 times that amount."
+      "Near w = 2, a very small increase in w therefore produces an increase in the loss of about 36 times that amount."
     ],
-    "result": "The gradient with respect to w is 36 at w = 2."
+    "result": "The gradient of the loss with respect to w is 36 at w = 2. It comes from multiplying the sensitivities at each step, rather than recalculating the whole relationship as one expression."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is testing an internal search tool over approved guidance documents. The tool scores documents through several layers, then produces a ranking loss based on whether relevant documents appear near the top. During training, the chain rule lets engineers trace the final ranking error back through the scoring layers to see which parameters most influenced the mistake.",
-    "relevance": "This matters when staff need a reliable internal tool and technical teams must explain how training updates are produced, not just report that the model 'learned'.",
-    "caution": "Use only approved internal systems and approved document collections. Do not place confidential, personal, protection-sensitive or security-sensitive material into a public AI service for experimentation or training."
+    "scenario": "In a procurement unit, a training officer is finalising the situation report on a pilot search function for supplier training materials before the regional bulletin closes. At the vendor demonstration, the technical lead uses the chain rule to trace the ranking loss backwards through each scoring step to each trainable parameter, showing how the next model update is calculated.",
+    "relevance": "The explanation gives the training officer something concrete to record: an update is not assigned to a parameter by guesswork. It is calculated by multiplying local sensitivities from the final error back through the model. That distinguishes a genuine account of backpropagation from a slide saying only that the system learns.",
+    "caution": "The pilot must use an approved environment and a cleared test collection. Bid content, commercial evaluations, vendor due-diligence records and personal data must not be entered into a public or otherwise unapproved tool, because training and system logs may retain or expose procurement-sensitive information."
   },
   "whyItMatters": "If you work with model development, procurement or oversight, this term helps you recognise how training computes gradients. A model does not improve by magic. The training procedure estimates how a small parameter change would affect the loss, then uses that gradient to adjust the parameter. The chain rule makes this calculation possible in deep models with many layers. If local derivatives vanish, grow sharply or do not exist, training can stall, become unstable or fail. Understanding this helps you ask better questions about feasibility, stability, the training process, and why some architectures are harder to optimise than others.",
   "whereYouMayHearIt": [
-    "calculus for machine learning",
-    "neural network training",
-    "gradient derivation",
-    "backpropagation explanation"
+    "During the technical portion of a vendor demonstration in a procurement meeting",
+    "In a first reading of a model-training note by an ICT governance board",
+    "At a briefing for programme staff before a pilot is cleared"
   ],
   "commonMisconceptions": [
     {
@@ -120,7 +119,7 @@
     "simple": "If a model reaches its final error through several steps, this rule lets you trace a small effect backwards through those steps to see how an earlier setting influenced the error.",
     "technical": "Suppose a loss L depends on an output y, which depends on an intermediate state h, which depends on a parameter w. The chain rule gives the derivative of the composite function by composing local derivatives along the path: ∂L/∂w = ∂L/∂y · ∂y/∂h · ∂h/∂w for the scalar case. In vector-valued settings, the same idea appears through Jacobians and repeated application across graph edges. Automatic differentiation and backpropagation exploit this structure to compute gradients efficiently without separately differentiating the whole expression from scratch for each parameter. In deep networks, repeated multiplication of local derivatives is also why gradient magnitudes can shrink or grow dramatically, contributing to vanishing or exploding gradients."
   },
-  "keyTakeaway": "The chain rule lets training connect final error back to earlier parameters by combining small step-by-step sensitivities through the whole computation.",
+  "keyTakeaway": "The chain rule traces final error back to an earlier parameter by multiplying the local sensitivity at each step in the calculation. Backpropagation applies this repeatedly across a model.",
   "quickCheck": {
     "question": "Why is the chain rule essential during gradient-based training?",
     "options": [
@@ -238,6 +237,20 @@
       "whyItMatters",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:39.714Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Recast the examples around a specific procurement review, artefact and deadline; strengthened the handling caution for procurement-sensitive material; and replaced generic subject areas with rooms and moments where the term would arise."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

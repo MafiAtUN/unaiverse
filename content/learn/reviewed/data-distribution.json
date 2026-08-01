@@ -32,8 +32,8 @@
   "oneSentence": "The pattern of values, categories and frequencies in a dataset, including what appears often, rarely or not at all.",
   "plainExplanation": "A dataset does not just contain items. It also has a pattern. Some words, numbers or categories appear a lot. Others appear rarely. That overall pattern is the data distribution.\n\nWhat goes in is a collection of examples: documents, images, records or sensor readings. What happens is that we count, group or measure their features, such as language, length, topic, class label or numeric range. What comes out is a picture of how common different kinds of cases are.\n\nThis matters because models fit patterns in the examples they are given. If one type of case dominates the dataset, it has more influence on training, but frequency alone does not determine performance. A balanced dataset is not always the goal, but the distribution should fit the real task.\n\nData distribution is often confused with sampling and with distribution shift. Sampling is how you select data. Distribution is the pattern in the data you ended up with. Distribution shift is what we call it when that pattern changes between training and real-world use.",
   "everydayAnalogy": {
-    "title": "A library trolley after a week of returns",
-    "story": "In a city library, staff sort one trolley of returned books before putting them back on the shelves. They notice that most returns are school textbooks and exam guides, some are novels, very few are poetry books, and none are in Braille that week. From one glance, they can describe the pattern of what came back most and least often. That pattern helps them decide whether the trolley reflects normal library use or just a special period such as exam season.",
+    "title": "A tin of assorted buttons",
+    "story": "Open a sewing tin and you may find many small black buttons, several white ones, one large wooden button and no zips. That pattern is the distribution: which categories are present and how frequently each occurs. If you learned what sewing supplies look like only from this tin, you would become very familiar with black buttons but would be poorly prepared to identify a zip. The tin is not necessarily faulty. It simply may not match what you later encounter.",
     "mapping": [
       {
         "analogyElement": "the mix of books on the trolley",
@@ -86,28 +86,28 @@
     "reducedMotionDescription": "Show the same two static 100-card grids side by side with percentages, captions and outcome notes. Topic highlighting appears instantly on click or keyboard focus, with no animation."
   },
   "workedExample": {
-    "scenario": "A team is building a search assistant for a repository of 10,000 policy documents.",
-    "input": "Training set topic counts: health 6,000; education 2,000; climate 1,500; logistics 500.",
+    "scenario": "A programme officer in a regional bureau tests a classifier for routing incoming progress reports before a quarterly portfolio review.",
+    "input": "In the training data, delivery updates appear often, partnership and risk issues appear less often, and evaluation follow-up appears rarely. Some combinations of label, source office and language do not appear at all.",
     "process": [
-      "The team counts documents by topic and sees that health makes up 60% of the training data, while logistics is only 5%.",
-      "They test the search assistant with 200 queries: 50 per topic to compare performance across topics fairly.",
-      "The assistant retrieves relevant documents for 44 of 50 health queries, 39 of 50 education queries, 36 of 50 climate queries and 24 of 50 logistics queries.",
-      "The team concludes that the training distribution likely favoured health and under-served logistics, so they collect more logistics documents and retest."
+      "The officer counts the records under each label, then compares the distribution across source offices, reporting periods and languages.",
+      "They prepare a test set that covers every label and source represented in the intended use, rather than allowing the most frequent label to dominate the test.",
+      "The classifier handles the common delivery label consistently but often misses rare labels and combinations absent from its training data.",
+      "The officer adds reviewed examples for sparse categories and retests, while also checking whether unclear label definitions or inconsistent tagging contributed to the gap."
     ],
-    "result": "The analysis reveals uneven performance alongside uneven topic counts, guiding further checks and targeted data collection without proving that distribution caused the gap."
+    "result": "The review shows where the training distribution is dense, sparse or unlike the reports the classifier will receive. It supports targeted data collection and testing, without treating distribution alone as proof of what caused each error."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN analysis team reviews whether an internal model can help identify broad protection trends across incident reports from several field offices.",
-    "relevance": "Before using the model, the team checks the distribution of report types, locations, time periods and languages. If most records come from a few places or months, the model may reflect reporting patterns rather than wider trends.",
-    "caution": "Do not place personal, survivor, witness, case-level, security-sensitive or otherwise confidential incident data into an unapproved public AI service. Use approved systems, minimise data, aggregate where possible and keep human review over any analytical conclusions."
+    "scenario": "An associate expert in a Resident Coordinator's Office is preparing the annual workplan review for front-office clearance by close of business. They check a proposed classifier that assigns paragraphs from implementing partner progress reports to outcomes in the results framework.",
+    "relevance": "The associate expert compares how often each outcome, reporting period, source office and language appears in the model's training data. If some outcomes dominate while others are rare or absent, the classifier may look reliable overall but perform poorly on less represented parts of the workplan.",
+    "caution": "Progress reports may contain personal, confidential or partner-sensitive information. Such material must not be uploaded to a tool that has not been approved for it, because doing so could breach confidentiality and data protection requirements. Use approved systems, minimise the data and review classifications before they enter the file."
   },
   "whyItMatters": "If you do not look at data distribution, you can make poor decisions about quality, fairness, cost and risk. A model may appear accurate in testing but fail on the cases that matter most in practice because those cases were rare in the data. Distribution also affects how you interpret results: a high overall score can hide weak performance on smaller groups, languages or document types. For programme and technical teams, checking distribution helps you ask better questions: Does this dataset match the real setting? Are important cases missing? Are we measuring success on the right mix of examples?",
   "whereYouMayHearIt": [
-    "model training discussions",
-    "data quality reviews",
-    "evaluation and benchmarking",
-    "bias and risk assessments",
-    "search and classification projects"
+    "During an annual workplan review in a Resident Coordinator's Office",
+    "At a vendor demo before an ICT governance board",
+    "In a data quality review with implementing partners",
+    "During an evaluation office discussion of benchmark results",
+    "At a model handover between a country office and Headquarters"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +127,7 @@
     "simple": "It is the shape of a dataset: what kinds of things are in it, and how often each kind appears.",
     "technical": "A data distribution describes how values or features are spread across a dataset. For numeric variables, this can mean ranges, central tendency and frequency across intervals. For categorical variables, it means the relative frequencies of classes or labels. In machine learning, the distribution of training data matters because models fit patterns present in that data. If the joint pattern of inputs and labels is uneven, sparse in some regions, or different from deployment conditions, performance can vary sharply across cases. In practice, teams inspect distributions with counts, proportions, histograms, summary statistics and subgroup analysis. This is related to sampling, because collection choices shape the observed distribution, but it is not the same thing as the sampling process itself."
   },
-  "keyTakeaway": "A dataset is not just what examples it contains, but how those examples are distributed across the cases you care about.",
+  "keyTakeaway": "Data distribution is the pattern of what appears often, rarely or not at all. A model usually learns the dense parts best, so overall performance can conceal weak results for sparse categories.",
   "quickCheck": {
     "question": "Two training datasets contain the same document topics, but one has 80% health documents and the other has 30% health documents. What does this show?",
     "options": [
@@ -252,6 +252,20 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:23:23.548Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -33,8 +33,8 @@
   "oneSentence": "A neural network usually uses an activation function to transform a unit’s weighted input into an output, often adding the non-linear behaviour needed to learn complex patterns.",
   "plainExplanation": "Inside a neural network, each unit first combines numbers from earlier units. Those numbers are multiplied by weights, added together, and usually shifted by a bias. That gives one intermediate value, often called the pre-activation.\n\nAn activation function then changes that intermediate value into the unit’s output. Common examples are ReLU, which keeps positive values and turns negative ones into zero, and sigmoid, which squeezes any value into a number between 0 and 1. The word activation can mean either the function itself or the output after that function is applied, so the context matters.\n\nNon-linearity explains why commonly used activation functions matter. If every layer only used weighted sums and biases, stacking many layers would collapse into one equivalent weighted sum and bias. The network would remain limited to the relationships that one such operation can represent. A non-linear activation function breaks that limitation.\n\nThese words are related but not identical. Activation function is the rule. ReLU and sigmoid are specific kinds of that rule. Activation often names the resulting output value. Non-linearity describes the property that lets networks model more complex relationships than weighted sums can represent.",
   "everydayAnalogy": {
-    "title": "A road damage screening desk",
-    "story": "A team reviewing satellite images has a scoring sheet for each image tile. Several clues are added together: dark cracks, broken edges, and patchy texture increase the score, while clean straight surfaces lower it. Then the team uses a rule to turn that score into a signal for the next step: one desk only passes tiles with positive scores, while another converts every score into a smooth 0-to-1 urgency scale. Those rules change how strongly each tile influences later decisions about where to inspect first.",
+    "title": "Volume knob versus sound effects",
+    "story": "Imagine passing music through several devices. If each device only makes the sound twice as loud, chaining them still does nothing more complicated than turn the volume up. A single knob could produce the same result. If some devices instead cut off quiet sounds, compress loud ones or reshape certain frequencies, the chain can produce much richer effects. Linear activations are like stacking volume knobs. Non-linear activations give each stage a rule that can change the shape of the signal, not merely its overall scale.",
     "mapping": [
       {
         "analogyElement": "combined clue score for one image tile",
@@ -87,28 +87,27 @@
     "reducedMotionDescription": "A static version shows the same four stages without animation: inputs and weights combine into z, z passes through ReLU or sigmoid, example outputs are displayed for one fixed z value, and a small comparison underneath explains linear-only versus non-linear stacks."
   },
   "workedExample": {
-    "scenario": "A small image model checks whether a satellite image tile may contain road damage.",
-    "input": "One unit receives three numbers from the previous layer: crack pattern = 1.2, edge disruption = 0.8, smooth surface = 0.4.",
+    "scenario": "At Headquarters, an information management officer is testing an image-quality model before a batch of publicly issued monitoring reports is uploaded to the portal. The model flags scanned pages that may need rescanning.",
+    "input": "One hidden unit receives three signals from the previous layer: blur pattern = 1.2, skewed edge = 0.8 and clean text line = 0.4.",
     "process": [
-      "Apply weights and bias: z = (1.2 × 1.5) + (0.8 × 0.7) + (0.4 × -1.0) + (-0.5) = 1.46.",
-      "Use ReLU: max(0, 1.46) = 1.46, so the signal passes forward unchanged because it is positive.",
-      "If the same unit used sigmoid instead, the output would be about 0.81, because sigmoid compresses 1.46 into the 0 to 1 range.",
-      "That output becomes an input to the next layer, where later units combine it with many other signals before producing a final prediction."
+      "Apply the weights and bias: z = (1.2 × 1.5) + (0.8 × 0.7) + (0.4 × -1.0) + (-0.5) = 1.46.",
+      "With ReLU, the output is max(0, 1.46) = 1.46. The positive signal therefore passes to the next layer unchanged.",
+      "With sigmoid, the same pre-activation produces about 0.81 because sigmoid compresses the value into the range from 0 to 1.",
+      "Later units combine this activation with other signals before the model produces its final rescan flag."
     ],
-    "result": "The activation function changes the same pre-activation value into different forms: ReLU keeps a positive magnitude, while sigmoid turns it into a bounded score."
+    "result": "The choice of activation changes how the same weighted input is represented. ReLU preserves its positive magnitude, while sigmoid produces a bounded activation. Neither value is, by itself, the model's final classification."
   },
   "unWorkplaceExample": {
-    "scenario": "An approved internal model helps draft a situation report by classifying incoming, non-sensitive text snippets into categories such as infrastructure, health services and logistics. Hidden layers use activation functions between weighted sums so the model can capture patterns more complex than simple keyword matching.",
-    "relevance": "For staff reviewing a model-based workflow, this explains why the system can detect combinations of terms and context patterns rather than only counting words.",
-    "caution": "Do not enter confidential, personal, protection-sensitive, security-sensitive or operationally sensitive information into an unapproved public AI service; use only approved tools and keep human review over any report content."
+    "scenario": "At a field presence where the connection is intermittent, the training officer is closing an audit observation on how course feedback is analysed. For a progress report due to the front office by close of business, the officer documents an approved model that runs locally and sorts de-identified, non-sensitive comments into themes. Its hidden units use non-linear activation functions to recognise combinations such as access problems plus requests for translated material, rather than merely adding keyword counts.",
+    "relevance": "The activation function is why stacking the model's layers can add expressive power. If every layer used only a linear activation, the stack would still amount to one affine transformation. Using ReLU, sigmoid or another non-linear function changes the signals passed onwards and the patterns the model can learn.",
+    "caution": "Course feedback may contain personal, personnel or disability-related information. Do not put names, personnel records, accommodation requests or identifiable comments into a model that is not approved for such data. A local installation is not approval. Use the authorised workflow, restrict access and review every theme before it enters the progress report."
   },
   "whyItMatters": "If you hear that a model uses ReLU, sigmoid or another activation, that is not a minor implementation detail. It affects what kinds of patterns the network can represent, how stable training may be, how outputs are scaled, and how easily signals pass through many layers. For a non-specialist making decisions about procurement, evaluation or risk, this matters because model behaviour can change for mathematical reasons that are not visible from the user interface. It also helps you avoid confusion: a sigmoid inside a hidden layer is not the same thing as a calibrated probability, and a softmax output layer serves a different purpose from an activation used throughout the network.",
   "whereYouMayHearIt": [
-    "deep learning tutorials",
-    "model architecture discussions",
-    "framework documentation",
-    "debugging training behaviour",
-    "research papers on neural networks"
+    "A vendor demo to an ICT governance board reviewing a proposed model architecture",
+    "A technical review after a model's training results become unstable",
+    "A procurement clarification meeting on how a proposed classifier works",
+    "A handover between a data focal point and developers after outputs collapse into one class"
   ],
   "commonMisconceptions": [
     {
@@ -132,7 +131,7 @@
     "simple": "A neural network unit first adds up evidence into one number, then passes that number through a rule. A non-linear rule might cut off negative values, like ReLU, or squeeze the number into 0 to 1, like sigmoid. It lets many layers model more than a single weighted sum and bias.",
     "technical": "For one unit, a pre-activation value is computed as z = w·x + b, where x is the input vector, w the weights and b the bias. The activation function φ then produces a = φ(z). If φ is linear, such as φ(z)=cz, then compositions across layers remain equivalent to a single linear or affine transformation, so depth alone adds little representational power. Choosing a non-linear φ, such as ReLU or sigmoid, allows piecewise-linear or smooth non-linear mappings and therefore more expressive decision boundaries. ReLU is computationally simple and helps preserve positive signals, though it can produce units that stay at zero for many inputs. Sigmoid maps real numbers to the open interval from 0 to 1, which can be useful in some settings but may compress large-magnitude inputs strongly. The term activation may refer either to φ itself or to the resulting value a, so precise writing should distinguish the function from its output. This concept is also distinct from softmax, which is typically applied across multiple output logits to create a normalised distribution over classes."
   },
-  "keyTakeaway": "An activation function transforms a weighted sum into a new signal. Non-linear activation functions give deep networks much of their expressive power.",
+  "keyTakeaway": "An activation function transforms a unit’s weighted input. Non-linear activations let stacked layers represent patterns that a sequence of purely linear transformations cannot.",
   "quickCheck": {
     "question": "Why do neural networks usually place an activation function after the weighted sum in each unit?",
     "options": [
@@ -275,6 +274,20 @@
       "simpleVsTechnicalSimple",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:06.542Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the operationally suggestive satellite-image example with a neutral document-scanning workflow, made the audit-response setting concrete, strengthened the caution for personnel-related feedback, and recast hearing contexts as specific rooms and moments."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -14,6 +14,7 @@ const models = [...new Set(TERMS.map((t) => t.generation?.model).filter(Boolean)
 const reviewers = [...new Set(TERMS.map((t) => t.machineReview?.deployment).filter(Boolean))] as string[];
 const machineReviewed = TERMS.filter((t) => t.machineReview).length;
 const rewritten = TERMS.filter((t) => (t.machineReview?.applied.length ?? 0) > 0).length;
+const voiced = TERMS.filter((t) => t.voicePass).length;
 const openErrors = TERMS.flatMap((t) => t.machineReview?.issues ?? []).filter(
   (i) => i.severity === 'error',
 ).length;
@@ -95,6 +96,7 @@ const description =
         <li><span><strong>Every URL is fetched.</strong> Links that answer are marked as checked with a date. Links that do not are labelled "not verified" on the page rather than quietly presented as vetted.</span></li>
         <li><span><strong>A quality report is generated:</strong> reading-level outliers, duplicate definitions, orphan terms, prerequisites pointing at unwritten pages, missing UN examples, broken links.</span></li>
         <li><span><strong>A second, different model reviews the first one's work.</strong>{reviewers.length ? ` Currently ${reviewers.join(', ')}, ` : ' '}prompted to find errors rather than to approve: arithmetic that does not compute, definitions that fail to distinguish themselves from neighbouring terms, quiz answers that are not defensible, anthropomorphism, and examples that present invented specifics as real. It may rewrite a bounded set of fields, never introduce a new fact or URL, and every rewrite is re-validated against the same schema before it is kept.{rewritten ? ` ${rewritten} pages were rewritten as a result.` : ''}</span></li>
+        <li><span><strong>A United Nations voice pass rewrites the examples.</strong> The first draft read as though written about the Organization rather than from inside it: "a UN team", "a UN office". This pass gives each term a specific person doing a specific job against a real deadline, rotated so that no two of the {CORPUS_STATS.published} pages share a scenario. It changes the setting and the register only; the definition and the plain explanation are out of its reach, because those are the part someone with no background reads.{voiced ? ` ${voiced} pages have been through it.` : ''} It may cite only document symbols that appear in this site's sourced timeline corpus, and anything else symbol-shaped is refused.</span></li>
         <li><span><strong>Publishing is a separate, deliberate step.</strong> The site renders one directory, and a term is in it only because someone ran the command that put it there.</span></li>
       </ol>
 

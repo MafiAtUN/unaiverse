@@ -90,29 +90,28 @@
     "reducedMotionDescription": "A static two-lane comparison is shown with no animation. The top lane reads normal input, model, expected output. The bottom lane reads crafted input, same model, wrong or unsafe output. A note states that the attack works by manipulating input rather than necessarily breaking into the system."
   },
   "workedExample": {
-    "scenario": "A building entrance uses an image model to read printed visitor badges and match the badge type to an allowed access list.",
-    "input": "Normal badge text: 'VISITOR - CONFERENCE'. Crafted badge includes extra printed patterning around the text that looks decorative to staff but changes how the model reads it.",
+    "scenario": "At a Geneva duty station, a facilities security officer records an authorised test of a badge-reading prototype in the access-control evaluation report before the vendor demonstration.",
+    "input": "A synthetic visitor badge is correctly read as “visitor”. A second synthetic badge has a deliberately crafted border pattern that appears decorative but has been tested against the prototype.",
     "process": [
-      "The system is trained to classify badge images into categories such as visitor, contractor and staff.",
-      "A normal printed badge is photographed by the camera and correctly classified as 'visitor', which gives lobby-only access.",
-      "An attacker prints a visually plausible badge with subtle added marks near the text and border.",
-      "The camera captures the crafted badge, and the model misclassifies it as 'staff'.",
-      "The downstream rule engine grants wider door access because it trusts the model’s label."
+      "The image model classifies badge photographs as visitor, contractor or staff.",
+      "The normal synthetic badge is classified as visitor, which permits lobby access only.",
+      "The tester presents the crafted badge under the same camera conditions.",
+      "The added pattern moves the image across the model’s decision boundary, and the prototype labels it as staff.",
+      "The downstream access rule accepts that label and attempts to grant wider access. The test environment prevents any door from opening."
     ],
-    "result": "The attack succeeds even though the software was not obviously hacked; a manipulated input caused the model to produce the wrong classification at the time of use."
+    "result": "The deliberate input-time manipulation produces the tester’s chosen failure without changing the model or its software. The crafted badge image is the adversarial example; the wider attempt to exploit the system is the adversarial attack."
   },
   "unWorkplaceExample": {
-    "scenario": "A procurement team is drafting requirements for a vendor-provided AI tool that screens uploaded documents and user prompts for a multilingual helpdesk.",
-    "relevance": "The team should ask how the supplier tests for adversarial attacks, including maliciously crafted text, files or images that try to bypass safeguards or trigger incorrect outputs. Requirements can cover red-team testing, logging, rate limits, fallback handling, sandboxing and human review for high-risk actions.",
-    "caution": "Do not test public AI services with confidential procurement records, personal data, vendor-sensitive material or security-related documents unless the service is approved and the testing is authorised."
+    "scenario": "In a procurement unit, a security analyst is clearing a background note for a delegation briefing on a proposed AI document-screening service. It must be circulated by close of business while delegations await instructions from capitals.",
+    "relevance": "The note should distinguish ordinary errors from deliberate attempts to obtain an attacker-chosen result. The procurement requirements can ask how the supplier tests crafted text, files and images, including attacks conducted with little knowledge of the model, and what logging, rate limits, sandboxing, fallback handling and human review are in place.",
+    "caution": "Security testing must be authorised and conducted in an approved environment. Do not upload live bids, personal data, confidential records, vendor-sensitive material or security-related documents to an external tool that is not approved for them. Doing so may expose protected information and compromise the procurement process."
   },
   "whyItMatters": "For non-specialists, this term matters because a system can fail without anyone 'hacking in' through a password prompt or network exploit. If an AI tool is used to filter documents, check identity, review content or trigger actions, an attacker may only need to shape the input to get a harmful result. That affects procurement, risk assessment, incident response and oversight. It changes what good controls look like: not only firewalls and accounts, but also input validation, testing with hostile examples, limits on what the model can trigger, and human review where mistakes carry real consequences.",
   "whereYouMayHearIt": [
-    "AI risk assessments",
-    "red-team exercises",
-    "computer vision security",
-    "LLM safety discussions",
-    "procurement and vendor reviews"
+    "During the technical evaluation of bids for an AI-enabled service",
+    "At an ICT governance board review before deployment",
+    "In an authorised red-team exercise before acceptance testing",
+    "When a security incident is reviewed with the duty officer"
   ],
   "commonMisconceptions": [
     {
@@ -136,7 +135,7 @@
     "simple": "Someone deliberately exploits an AI system so it makes a mistake, bypasses a safeguard or produces another result that benefits the attacker.",
     "technical": "In technical terms, an adversarial attack is a deliberate attempt to exploit an AI system and induce an attacker-desired failure. Input-time evasion is one form. In classical machine learning, it may use a perturbation designed to move an input across a decision boundary while remaining similar under a constraint. The attacker’s knowledge of the model and system may range from none to extensive. An adversarial example is the specific crafted instance, not the overall attack. Data poisoning names manipulation of training data. Prompt injection names malicious text instructions intended to override an assistant’s rules."
   },
-  "keyTakeaway": "An adversarial attack does not need to break the machine; it can work by making the machine misread the input.",
+  "keyTakeaway": "An adversarial attack deliberately exploits how an AI system handles inputs to cause a chosen failure. The crafted input is an adversarial example, not the whole attack.",
   "quickCheck": {
     "question": "Which situation best fits an adversarial attack?",
     "options": [
@@ -292,6 +291,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:26:50.549Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

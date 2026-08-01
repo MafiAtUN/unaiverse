@@ -92,28 +92,27 @@
     "reducedMotionDescription": "A static left-to-right diagram with five labelled stages: example, feature boxes, model, output, and a dashed training-only label lane below. No animation is used; the training and inference difference is shown with visible labels and line styles."
   },
   "workedExample": {
-    "scenario": "A simple model helps a maintenance team spot unusual pump behaviour.",
-    "input": "Pump A at 03:00 has pressure 82, temperature 67°C, vibration 0.4 mm/s and flow rate 110 L/min.",
+    "scenario": "Before the donor reporting package enters clearance, the evaluation office uses a simple classifier to identify progress reports that may require closer review.",
+    "input": "One report was submitted on time, has an incomplete results field, includes an explanation for variance and has an unresolved action from the previous review.",
     "process": [
-      "The system takes the four measured values as features for this pump reading.",
-      "The model combines these feature values using patterns learned from past labelled examples.",
-      "It gives extra weight to the combination of high temperature and lower-than-usual pressure at that hour.",
-      "The output is an unusual-reading score of 0.86 on a 0 to 1 scale."
+      "The four report attributes are selected as features.",
+      "The categorical values are encoded numerically, for example yes as 1 and no as 0, so the model can process them.",
+      "The model compares this feature vector with patterns learned from previously reviewed reports and assigns a follow-up category.",
+      "The humanitarian affairs officer checks the source report and records the reason for any follow-up."
     ],
-    "result": "Because the score is above the team’s review threshold of 0.80, the reading is flagged for a technician to check."
+    "result": "The report is placed in the review queue before clearance. The model helps prioritise the file, but does not itself establish poor performance or determine a funding decision."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team analyses household assessment responses to estimate which households may need follow-up support. Features might include household size, reported access to water, shelter condition and travel time to the nearest clinic.",
-    "relevance": "This helps staff understand that each survey field used by the model is a feature, while the follow-up category or score is the output. It also clarifies that thoughtful feature choice affects fairness, usefulness and interpretability.",
-    "caution": "Do not put personal, confidential or protection-sensitive household data into an unapproved public AI service. Use approved systems, minimise personal data, and keep human review over any decision that could affect people’s access to assistance or services."
+    "scenario": "A humanitarian affairs officer on temporary assignment to an evaluation function is preparing a donor reporting package for quarter-end clearance. A model sorts implementing partner progress reports for follow-up using features such as timely submission, missing results fields, unexplained variance and unresolved actions from the previous review.",
+    "relevance": "Each listed attribute is a feature: an input the model uses to assign a follow-up category. Some are recorded directly, while others are derived from the report. The category is the output, not another feature. Feature choice determines what evidence the model notices and what it overlooks.",
+    "caution": "Progress reports may contain personal, partner-confidential or protection-sensitive information. Do not upload them to any tool not approved for that material, as this could expose information outside authorised controls. Use minimised data in an approved environment, check for misleading proxy features, and require human review before any performance or funding decision."
   },
   "whyItMatters": "If you hear that a model used certain features, you can ask practical questions: What information went in? Was anything important missing? Were some inputs poor quality, biased or out of date? Did the system use a proxy variable that may unfairly stand in for something sensitive? These questions affect accuracy, fairness, privacy, explainability and whether the output is suitable for real decisions. For non-specialists, understanding features helps you scrutinise a system without needing to build one yourself.",
   "whereYouMayHearIt": [
-    "model documentation",
-    "data preparation meetings",
-    "survey and sensor analysis",
-    "classification or regression tutorials",
-    "procurement and risk reviews"
+    "During a vendor demo for an evaluation office",
+    "At a data-preparation meeting before a monitoring report is cleared",
+    "In an ICT governance board review of a proposed prediction tool",
+    "While agreeing fields for an implementing partner reporting template"
   ],
   "commonMisconceptions": [
     {
@@ -137,7 +136,7 @@
     "simple": "A feature is one piece of information you give a model so it can produce an output.",
     "technical": "In machine learning, a feature is an input variable representing one measurable or derived property of an example. Features may be numeric, categorical, binary, text-derived, image-derived or time-based, though many models require them to be encoded into numerical form before use. In supervised learning, the model is trained to map feature vectors to labels or target values. In unsupervised learning, it uses features to find structure such as clusters or lower-dimensional representations without target labels. The term overlaps with input variable and, in some contexts, attribute, but usage varies by field. Features should be distinguished from labels, which are target outputs, and from parameters, which are internal learned values of the model."
   },
-  "keyTakeaway": "Features are the pieces of information a model receives from the data; they are inputs, not the target answer and not the model’s internal settings.",
+  "keyTakeaway": "A feature is one piece of input information used by a model. It may be measured directly or derived from other data, but it is not the model’s target output.",
   "quickCheck": {
     "question": "Which option describes a feature most accurately?",
     "options": [
@@ -267,6 +266,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:27.139Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

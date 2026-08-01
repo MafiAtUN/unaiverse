@@ -85,27 +85,26 @@
     "reducedMotionDescription": "A static four-column diagram shows the same process without animation: input message, model box, ranked intent list with score bars, and chosen action. All arrows are fixed and visible at once."
   },
   "workedExample": {
-    "scenario": "An online support form for a public transport service needs to sort requests before a human agent reads them.",
-    "input": "Message: \"My card was charged twice for one bus trip. Can you refund the extra fare?\"",
+    "scenario": "A duty officer at a regional hub must sort new service desk messages before circulating the morning handover.",
+    "input": "Message: “I can sign in, but the portal says I do not have permission to upload the progress report.”",
     "process": [
-      "The system receives the text and cleans obvious formatting, such as extra spaces and punctuation noise.",
-      "It compares the wording with examples labelled as intents like “refund request”, “lost card”, “route information” and “complaint”.",
-      "It assigns scores to the candidate intents, for example: refund request 0.84, complaint 0.11, route information 0.03, lost card 0.02.",
-      "Because “refund request” is highest and above the review threshold, the message is routed to the billing support queue."
+      "The classifier converts the message into internal features and compares them with labelled examples for intents such as account access, system outage, upload failure and request for guidance.",
+      "It estimates scores for the available classes: account access 0.72, upload failure 0.19, request for guidance 0.07 and system outage 0.02.",
+      "The account access score exceeds the routing threshold, so the message is assigned to that queue. If no score had met the threshold, the system would have requested clarification or sent the message for manual review."
     ],
-    "result": "Output label: “refund request”, with a confidence score of 0.84 and automatic routing to the appropriate team."
+    "result": "The message is labelled “account access” with a score of 0.72 and routed accordingly. The original text remains available to the officer, who can correct the label if the apparent permission problem has another cause."
   },
   "unWorkplaceExample": {
-    "scenario": "A team reviewing a draft speech wants to check whether each paragraph matches agreed themes such as climate finance, humanitarian access, gender equality or youth participation.",
-    "relevance": "An intent detection style system can tag paragraphs by likely communicative purpose or theme, helping staff spot sections that may not align with the intended message structure.",
-    "caution": "Use it as a triage aid, not as the final authority on a person’s request. Do not paste names, contact details, accessibility needs or other personal or unapproved material into a public AI service."
+    "scenario": "During the technical evaluation of three bids, an ICT officer in a Resident Coordinator's Office tests each proposed service desk classifier against the same set of labelled sample requests before the evaluation matrix goes to the procurement unit at close of business.",
+    "relevance": "The test shows whether each system can assign new messages to operational goals such as requesting access, reporting an outage or asking for guidance. It should also show when confidence is too low for automatic routing and the message should instead be flagged for clarification or human review.",
+    "caution": "Bid contents and procurement-sensitive correspondence must not be entered into an external tool that has not been approved for that material. Use synthetic or properly anonymised test messages, apply the same test set and thresholds to all bids, and record misclassifications in the evaluation file rather than relying on a polished vendor demonstration."
   },
   "whyItMatters": "For a non-specialist, intent detection matters because it shapes how organisations respond to people. It can speed up triage, route requests to the right team, and make services easier to use. But it also creates practical risks: if the label set is poorly designed, if training examples are unbalanced, or if confidence is ignored, people can be misrouted or misunderstood. Knowing what the system actually does helps you ask better questions: What are the intent categories? What happens when none fit? How is low confidence handled? Who checks errors? Those questions affect service quality, fairness and accountability more than impressive-sounding claims about AI.",
   "whereYouMayHearIt": [
-    "customer support chatbots",
-    "helpdesk ticket routing",
-    "virtual assistants",
-    "contact centre analytics"
+    "A vendor demo during a procurement meeting",
+    "A service desk handover at a regional hub",
+    "An ICT governance board reviewing chatbot performance",
+    "A country office meeting on routing requests from a shared inbox"
   ],
   "commonMisconceptions": [
     {
@@ -125,7 +124,7 @@
     "simple": "It is a way of sorting messages by what the sender is trying to do, such as ask for help, change a booking or report a problem.",
     "technical": "Intent detection is a supervised classification task in natural language processing. A model is trained on labelled examples where each utterance, query or text span is mapped to one intent class. At inference time, the model converts the new text into internal features or embeddings and estimates scores or probabilities over the available classes. The system then selects the top class, or a set of classes in a multi-label design, often with thresholds for fallback or clarification. In deployed systems, intent detection is commonly combined with entity extraction, dialogue state tracking or workflow routing. It differs from sentiment analysis, topic modelling and named entity recognition: those tasks target emotional tone, broad themes and named items, not the user’s operational goal."
   },
-  "keyTakeaway": "Intent detection does not read minds; it sorts language into likely goal categories so a system can choose the next step.",
+  "keyTakeaway": "Intent detection assigns a message to the most likely goal category. Useful systems also recognise low-confidence cases and send them for clarification or human review.",
   "quickCheck": {
     "question": "Which output best matches an intent detection system?",
     "options": [
@@ -228,6 +227,19 @@
     "applied": [
       "unWorkplaceExampleCaution"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:22:04.455Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

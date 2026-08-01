@@ -29,8 +29,8 @@
   "oneSentence": "A vector is an ordered list of numbers, and a vector space is a set of same-length vectors that is closed under addition and scaling.",
   "plainExplanation": "In modern language models, many things are turned into vectors: words, parts of words, positions, or intermediate states inside the model. A vector is an ordered list of numbers, such as [0.2, -1.1, 0.7]. Each number can be treated like one coordinate. The whole list acts as one compact description that a computer can compare or transform.\n\nA vector space is the larger set those vectors belong to. It gives the rules for combining them. In a vector space, you can add two vectors and multiply a vector by a number, and the result still stays in the same space. In plain terms, vectors of the same dimension can be combined using consistent operations.\n\nWhat goes in? Usually text tokens or other inputs are first converted into vectors. What happens next? The model moves those vectors through many calculations, such as comparing, mixing, projecting or otherwise transforming them with matrix operations. A matrix is a table of numbers used to transform one vector into another. What comes out? New vectors that capture useful patterns for the next step, such as attention or prediction.\n\nThis is often confused with an embedding. An embedding is one particular kind of vector representation learned so that related items often end up near each other. But not every vector in a transformer is an embedding, and a vector space is not the same thing as one vector. It is also not the same as a physical arrow in school geometry, though that image can help at first.",
   "everydayAnalogy": {
-    "title": "Pins on a multilingual noticeboard",
-    "story": "Imagine a team in Nairobi, Bangkok and Bogotá sharing a large noticeboard for incident summaries. Each summary card is pinned on the board using many coordinates at once: one for location type, one for urgency, one for health issues, one for displacement, and many more. Cards about similar situations end up nearer each other, so when someone asks what the pronoun “they” refers to in a sentence, nearby cards can help show whether it likely points to families, officials or aid workers. The board is the shared layout, and each card’s position is one vector.",
+    "title": "Instructions on a tiled floor",
+    "story": "Imagine each movement is written as an ordered pair: [3, 2] means three tiles to the right and two forward. Combining [3, 2] with [-1, 4] gives [2, 6], still an ordered pair. Doubling [3, 2] gives [6, 4], also an ordered pair. One instruction is a vector; the set of all such compatible pairs, including fractional and negative movements, is the vector space.",
     "mapping": [
       {
         "analogyElement": "one card’s many coordinates on the noticeboard",
@@ -88,29 +88,27 @@
     "reducedMotionDescription": "A static five-panel diagram with the same stages: token, one vector, vector space with several points, comparison arrows of different thickness, and an updated vector on the right. No animation; emphasis is shown by colour contrast and labels."
   },
   "workedExample": {
-    "scenario": "Resolving an ambiguous pronoun in the sentence: “Amina thanked Lina because she organised the meeting.”",
-    "input": "Tokens: [Amina, thanked, Lina, because, she, organised, the, meeting]",
+    "scenario": "A simplified transformer represents the token “clearance” and its position in a briefing note using three-number vectors. Real systems use many more dimensions, but the arithmetic is the same.",
+    "input": "Token vector: [0.4, -0.2, 0.7]. Position vector: [0.1, 0.3, -0.1].",
     "process": [
-      "The model converts each token into a vector, for example “Amina” -> [0.6, 0.1, -0.2], “Lina” -> [0.58, 0.15, -0.1], “she” -> [0.2, 0.7, 0.05].",
-      "Inside the shared vector space, the model creates comparison vectors and calculates how strongly “she” relates to other tokens in this context.",
-      "Suppose the attention weights for “she” are: Amina 0.18, thanked 0.05, Lina 0.41, because 0.07, organised 0.22, others 0.07.",
-      "The model forms a weighted combination of the relevant value vectors, so the updated vector for “she” is pulled more toward information linked to “Lina” and “organised”.",
-      "That updated vector is then used by later layers to help the model continue the sentence or answer a question about who organised the meeting."
+      "Both vectors have three components, so the model can add them component by component: [0.4, -0.2, 0.7] + [0.1, 0.3, -0.1] = [0.5, 0.1, 0.6].",
+      "The result is another three-component vector in the same vector space. This illustrates closure under addition.",
+      "Suppose attention combines value vectors [1, 0, 2] and [0, 2, -1] with weights 0.25 and 0.75. Scaling gives [0.25, 0, 0.5] and [0, 1.5, -0.75].",
+      "Adding the scaled vectors produces [0.25, 1.5, -0.25], again a three-component vector that later layers can process."
     ],
-    "result": "In this simplified illustration, Lina has the largest assumed attention weight for “she”. That may contribute Lina-related information to the update, but one set of attention weights alone does not establish that “she” refers to Lina."
+    "result": "Because addition and scaling preserve the vector length, embeddings, positional information and attention outputs remain compatible with subsequent model operations. The numbers are illustrative and should not be read as named semantic features."
   },
   "unWorkplaceExample": {
-    "scenario": "An analyst is reviewing many approved, de-identified incident summaries to identify broad protection trends across districts and months. Text from each summary is converted into vectors so similar reports can be grouped and compared before a human reviews the patterns.",
-    "relevance": "This helps explain why vector spaces matter in practical systems: they make similarity search, clustering and attention-based processing possible across large collections of text.",
-    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational details into an unapproved public AI service. Use only approved systems, de-identify data where required, and keep human oversight over any analytical conclusion."
+    "scenario": "A chief of section in an evaluation office is finalising a handover note for an incoming colleague before close of business. The note records how a proposed search tool represents each paragraph of a cleared evaluation report as a same-length vector, then compares vectors to retrieve passages with similar meaning even when they use different wording.",
+    "relevance": "The vector is the numeric representation of one paragraph. The shared vector space allows the tool to compare, add and transform compatible representations. The same principle underlies token embeddings and hidden states inside a transformer, although those vectors usually have far more dimensions.",
+    "caution": "Only cleared reports should enter this workflow. Confidential interview notes, personal data and material identifying participants must not be uploaded to a tool that has not been approved for them. Access controls and human review remain necessary, particularly where retrieved passages could be mistaken for evaluation findings."
   },
   "whyItMatters": "If you hear that a model “represents” words or documents numerically, vectors are usually the mechanism. Understanding this helps you ask better questions about similarity, bias, retrieval, clustering and attention. It also helps you separate three different ideas: one vector, the larger vector space, and a learned embedding. For decision-making, this matters because many system behaviours depend on how items are positioned and transformed in that space. Similar-looking items may be grouped together; ambiguous items may shift with context; and errors can come from poor representations, not only from the final output stage. You do not need the full mathematics to recognise what the model is doing and where caution is needed.",
   "whereYouMayHearIt": [
-    "transformer architecture explainers",
-    "search and recommendation systems",
-    "semantic similarity demos",
-    "machine learning courses",
-    "discussions of embeddings and attention"
+    "A vendor demo during a procurement unit meeting",
+    "An ICT governance board review of a language-model pilot",
+    "A technical debrief in an evaluation office",
+    "A briefing for an inter-agency working group considering semantic search"
   ],
   "commonMisconceptions": [
     {
@@ -134,7 +132,7 @@
     "simple": "A vector is one item written as many numbers. A vector space is the shared numeric landscape where many such items can be compared, combined and moved around by the model.",
     "technical": "In transformer systems, tokens and intermediate states are represented as vectors in a high-dimensional vector space, often with dimension d_model. A vector is an element of that space: an ordered numeric array. The space matters because model operations assume closure under addition and scalar multiplication, which allows weighted sums and linear transformations to stay in compatible form. Input embeddings, positional information and hidden states are vectors; matrices project them into new vectors such as queries, keys and values. Attention then compares vectors, often through dot products, and uses the resulting weights to build weighted combinations of value vectors. Distances or angles between vectors can also support similarity measures such as cosine similarity, but those measures depend on the chosen representation and task. In short, a vector is one point or direction in the space; a vector space is the structured set that makes those operations mathematically and computationally consistent."
   },
-  "keyTakeaway": "Think of a vector as one numeric description and a vector space as the shared coordinate system that lets a model compare, combine and transform many such descriptions.",
+  "keyTakeaway": "A vector is one ordered numeric representation. A vector space supplies the compatible structure in which models can add, scale, compare and transform such representations.",
   "quickCheck": {
     "question": "Which statement best distinguishes a vector from a vector space in a transformer?",
     "options": [
@@ -282,6 +280,20 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:29.825Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the attention-heavy worked example with arithmetic that directly demonstrates same-length vectors, addition and scaling."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

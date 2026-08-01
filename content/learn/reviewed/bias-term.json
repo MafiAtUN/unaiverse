@@ -83,27 +83,28 @@
     "reducedMotionDescription": "A static four-step diagram shows inputs multiplied by weights, summed, then increased or decreased by a bias term before activation. A fixed comparison underneath shows the same weighted sum with three bias settings, illustrating that the output changes because the starting offset changes."
   },
   "workedExample": {
-    "scenario": "A single neuron helps flag whether a short message may be urgent.",
-    "input": "Input features: contains the word \"urgent\" = 1, sent outside working hours = 1. Weights: 1.2 and 0.7. Bias: -1.0.",
+    "scenario": "A neuron checks whether a sentence in the situation report contains deadline language requiring the budget officer's attention.",
+    "input": "Features: explicit deadline phrase = 1; action verb = 1. Weights: 1.2 and 0.7. Bias: -1.0. Activation: output 1 when z is above 0.",
     "process": [
-      "Multiply each input by its weight: 1×1.2 = 1.2 and 1×0.7 = 0.7.",
+      "Multiply each feature by its weight: 1 × 1.2 = 1.2 and 1 × 0.7 = 0.7.",
       "Add the weighted inputs: 1.2 + 0.7 = 1.9.",
-      "Add the bias: 1.9 + (-1.0) = 0.9.",
-      "Pass 0.9 through the activation function. If the neuron uses a simple threshold at 0, the output is active because 0.9 is above 0."
+      "Add the learned bias: z = 1.9 + (-1.0) = 0.9.",
+      "Apply the activation rule. Since 0.9 is above 0, the neuron outputs 1 and the sentence is flagged.",
+      "If both features were zero, z would equal the bias, -1.0, and the neuron would not activate."
     ],
-    "result": "The message is more likely to be treated as urgent because the positive evidence overcame the negative bias. If the bias had been -2.5 instead, the same inputs would not have activated this neuron."
+    "result": "The two features overcome the negative bias. With the same weights but a bias of -2.5, z would be -0.6 and the neuron would not activate. The changed result comes from shifting the threshold, not changing the contribution of either feature."
   },
   "unWorkplaceExample": {
-    "scenario": "A technical team building an internal tool to help prepare a briefing note uses a neural network component to detect sections that may need rapid human review, such as emerging deadline signals in already approved, non-sensitive text.",
-    "relevance": "Understanding the bias term helps staff recognise why a model may trigger more or fewer alerts even when the input features stay the same. It is part of how the model sets its baseline sensitivity.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Any model-assisted drafting or triage should stay under approved governance and human oversight."
+    "scenario": "In a liaison office, a budget officer uses an approved classifier to flag deadline language in non-sensitive extracts of the situation report before the regional bulletin closes. The classifier includes neurons whose learned bias affects how readily a line is sent for human review.",
+    "relevance": "For each neuron, the bias is added after the input features have been weighted. Changing it shifts the activation threshold without changing how strongly each feature counts, so the classifier can produce more or fewer flags even when the feature weights remain fixed.",
+    "caution": "Use only approved tools and appropriately classified text. Do not enter confidential, personal, security-sensitive or procurement-sensitive material into a service not approved for it. A flag is a prompt for review, not a finding that the report contains an urgent resource issue."
   },
   "whyItMatters": "If you understand bias as an offset parameter, you can better interpret why a neural network responds too often, too rarely, or at the wrong threshold. That matters when choosing models, checking errors, or discussing calibration and behaviour with technical teams.",
   "whereYouMayHearIt": [
-    "neural network tutorials",
-    "model architecture discussions",
-    "debugging training behaviour",
-    "machine learning code comments"
+    "A technical review before an ICT governance board",
+    "A vendor demonstration during a procurement meeting",
+    "A model debugging session before an internal tool is released",
+    "A briefing with an evaluation office on how a classifier reaches its outputs"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +128,7 @@
     "simple": "A bias is the neuron's learned starting value. It shifts the result up or down before the neuron produces its output.",
     "technical": "For a neuron computing z = w·x + b, the bias b is a learned scalar offset added to the weighted input sum before the activation a = f(z). Geometrically, it shifts the decision boundary or activation threshold without changing the input-dependent coefficients."
   },
-  "keyTakeaway": "Weights say how much each input counts; the bias sets the neuron's starting point.",
+  "keyTakeaway": "Weights determine how each input changes a neuron's score. The bias is a learned offset that shifts where the neuron activates, including when every input is zero.",
   "quickCheck": {
     "question": "What does the bias term do in a standard neuron calculation?",
     "options": [
@@ -239,6 +240,19 @@
       "simpleVsTechnicalSimple",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:37.471Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "The examples now anchor the mechanism in a specific role, document and deadline, while keeping the numerical explanation of z = w·x + b explicit."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

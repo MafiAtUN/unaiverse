@@ -33,8 +33,8 @@
   "oneSentence": "A parameter is a learned numerical setting inside a model that helps shape which token it is likely to produce next.",
   "plainExplanation": "In a large language model, text goes in as tokens, which are small pieces of text such as words, parts of words, or punctuation. Inside the model are many numerical settings. These learned settings are called parameters.\n\nDuring training, the model is shown large amounts of text and tries to predict the next token. When it predicts badly, training adjusts many parameters slightly. Over time, those adjustments make some patterns more likely and others less likely.\n\nLater, when you enter a prompt, the model uses its parameters together with the current context to calculate probabilities for possible next tokens. The output is a stream of chosen tokens, which becomes the reply you see.\n\nPeople often confuse parameters with tokens or with hyperparameters. Tokens are pieces of input and output text. Hyperparameters are training choices set by engineers, such as learning rate or batch size. Parameters are the learned numbers produced by training.",
   "everydayAnalogy": {
-    "title": "Marking practice examinations and adjusting habits",
-    "story": "A student in Nairobi takes many practice history examinations before a regional competition. After each paper, her teacher notices patterns: she often misses date questions, but does well on cause-and-effect questions, so they adjust how she studies. Over weeks, dozens of small study habits change: how long she reviews timelines, which errors she checks first, and which clues she pays more attention to. On the next practice paper, those accumulated adjustments shape which answer she writes for each question.",
+    "title": "Predictive text learning your phrasing",
+    "story": "Imagine a phone keyboard that adjusts many hidden numerical preferences as it learns from repeated text and corrections. Later, when you type “See you in the”, those settings work together with the words already entered to rank possible next words. One suggestion may be much more likely than the others, but no single setting contains the whole phrase or decides the answer alone. A language model uses vastly more parameters and more complex calculations, but the basic idea is similar.",
     "mapping": [
       {
         "analogyElement": "many small study-habit adjustments",
@@ -88,28 +88,28 @@
     "component": "parameters"
   },
   "workedExample": {
-    "scenario": "A small demonstration model is given the prompt: 'The capital of Kenya is'",
-    "input": "Prompt: 'The capital of Kenya is'",
+    "scenario": "A small demonstration model is trained on public administrative sentences, including examples ending with the phrase “close of business”. It is then prompted: “Please send comments by close of”.",
+    "input": "Prompt: “Please send comments by close of”",
     "process": [
-      "The model converts the text into tokens and reads the current context.",
-      "Its parameters are used to calculate probabilities for possible next tokens such as 'Nairobi', 'Mombasa', and 'Kampala'.",
-      "Suppose the probabilities come out as 0.91 for 'Nairobi', 0.05 for 'Mombasa', and 0.01 for 'Kampala', with the rest spread across other options.",
-      "A sampling step chooses a token, usually 'Nairobi' in this case because its probability is much higher.",
-      "The chosen token is added to the text, and the process repeats for the next token."
+      "The model converts the prompt into tokens representing the words and punctuation.",
+      "During training, whenever its predicted next token differed from the token in the training text, optimisation adjusted many parameters slightly to reduce that prediction error.",
+      "Across many examples, those adjustments made some continuations more probable in particular contexts. No single parameter stores the phrase or controls the answer by itself.",
+      "During inference, the learned parameter values are used with the prompt to calculate a probability distribution over possible next tokens, such as “business”, “the” or “day”.",
+      "A decoding method selects one token, adds it to the context and repeats the calculation for the following token."
     ],
-    "result": "In one sampling run, the model outputs 'Nairobi'. Its 0.91 probability made that outcome likely, but not certain."
+    "result": "The model is likely to produce “business” because its learned parameters give that token a relatively high probability in this context. The parameters shape the distribution, but do not make the output certain."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal tool to draft a public situation report from already cleared, non-sensitive notes and asks why one model version is slower but often writes more fluent first drafts than another.",
-    "relevance": "Parameter count can help explain part of that difference: more parameters often mean a larger learned pattern store, which can improve performance on some tasks but may also increase computing cost and latency.",
-    "caution": "Do not paste confidential, personal, survivor, witness, security-sensitive, or operational information into an unapproved public AI service; use only approved tools and keep human review in the loop."
+    "scenario": "At a duty station working in three languages, a humanitarian affairs officer is sending a side-event concept note for clearance before close of business. During a vendor demonstration, the officer asks whether the model advertised as having more parameters will necessarily produce the better first draft in all three languages.",
+    "relevance": "Parameters jointly shape the probabilities assigned to possible next tokens. A larger parameter count means more trainable numerical values, but does not by itself establish accuracy, fluency across languages, suitability for the task or acceptable computing cost. Those claims require testing on representative material.",
+    "caution": "Parameter count says nothing about how a tool handles data. Do not enter uncleared positions, personal data or security-sensitive details into a service that has not been approved for them. Use only approved tools, test outputs in each working language and retain human review before clearance."
   },
   "whyItMatters": "If you hear that a model has billions of parameters, that tells you something about its size and cost, but not whether it is safe, accurate, or suitable for your task. This helps leaders ask better questions when comparing tools, budgets, speed, and risk.",
   "whereYouMayHearIt": [
-    "model launch announcements",
-    "procurement discussions",
-    "AI safety briefings",
-    "technical product documentation"
+    "A vendor demonstration during a procurement unit’s technical evaluation",
+    "An ICT governance board reviewing hosting and computing requirements",
+    "A front-office briefing before approval of an AI drafting pilot",
+    "A technical review of model performance before deployment"
   ],
   "commonMisconceptions": [
     {
@@ -129,7 +129,7 @@
     "simple": "Parameters are the many learned numbers inside a model that help it guess what text should come next.",
     "technical": "Parameters are the trainable numerical values of a neural network. During training, optimisation updates these values to reduce prediction error, and during inference they are used to compute probability distributions over next tokens."
   },
-  "keyTakeaway": "Parameters are learned numerical settings that shape a model’s output, but their count alone does not tell you whether a model is good or safe.",
+  "keyTakeaway": "Parameters are learned numerical values that jointly shape next-token probabilities. Their number indicates model scale, not whether the model is accurate, suitable or safe.",
   "quickCheck": {
     "question": "Which statement best describes parameters in a large language model?",
     "options": [
@@ -252,6 +252,20 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:26.955Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the generic workplace setting, removed invented probability figures and revised the analogy to avoid the examination frame."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

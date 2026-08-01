@@ -90,28 +90,28 @@
     "reducedMotionDescription": "A static four-panel flow replaces animation. Each panel shows one stage with arrows between them: image input, text location and cleanup, character recognition, and searchable text output."
   },
   "workedExample": {
-    "scenario": "A team photographs a printed meeting notice on a wall to capture the details quickly.",
-    "input": "Photo text: “Health clinic closed on 14 May. Reopens 16 May at 08:30.”",
+    "scenario": "A conference services assistant in Geneva receives an image-only scan of text tabled during informals and needs a searchable working copy before the first reading.",
+    "input": "Scanned line: “Requests the secretariat to report on implementation.”",
     "process": [
-      "The OCR system receives the phone photo and detects one main text block on the notice.",
-      "It corrects the slight tilt and increases contrast so the letters stand out from the paper background.",
-      "It recognises the characters line by line and outputs digital text with word positions.",
-      "A simple keyword rule then flags the message as time-sensitive because it contains a closure date and reopening time."
+      "The OCR system receives the scanned page and identifies the region containing text.",
+      "Preprocessing straightens the page and improves contrast between the letters and background.",
+      "The system groups the detected text into a line and predicts the character sequence.",
+      "It outputs editable text with location data and confidence scores, allowing low-confidence words to be checked against the scan."
     ],
-    "result": "Searchable text: “Health clinic closed on 14 May. Reopens 16 May at 08:30.” The text can now be copied into a message log or sorted with other notices."
+    "result": "Working text: “Requests the secretariat to report on implementation.” The assistant can search and copy it, but compares it with the tabled scan before circulation because OCR output is not the authoritative text."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office wants to build an internal search tool over a large collection of scanned guidance documents and image-only PDF manuals.",
-    "relevance": "OCR can turn those page images into searchable text so staff can find the right section by keywords instead of opening files one by one.",
-    "caution": "Use only approved internal systems and review the output, especially if documents contain sensitive operational, personal, protection-related, or security-sensitive information; do not upload such files to a public AI service."
+    "scenario": "A security analyst in a regional bureau is finalising a note for the file following a bilateral. The written points provided at the meeting are available only as an image-only scan, so the analyst uses approved OCR software to extract passages for searching and quotation.",
+    "relevance": "OCR detects the text regions, recognises the character sequences and produces editable text, often with confidence scores and word positions. This saves retyping, but the scan remains the source against which quotations and names must be checked before clearance.",
+    "caution": "The written points may be security-sensitive. They must not be uploaded to a public or otherwise unapproved service. Use only a system approved for that information, apply the relevant access controls, and verify every quoted passage against the scan because OCR can silently misread names, numbers and punctuation."
   },
   "whyItMatters": "Many important documents are trapped inside images: scans, photos, old PDFs, forms, signs, and archives. Without OCR, a computer cannot easily search or reuse that writing. With OCR, organisations can find information faster, reduce manual retyping, improve accessibility, and feed text into translation, search, or analysis tools.\n\nFor non-specialists, the key decision point is reliability. OCR can save time, but mistakes matter when dates, names, case numbers, medicine labels, or legal wording are involved. You may need human checking, especially for poor-quality scans, handwriting, uncommon scripts, or low-resource languages. Knowing what OCR can and cannot do helps you choose the right workflow and the right level of review.",
   "whereYouMayHearIt": [
-    "document digitisation",
-    "mobile scanning apps",
-    "archive and library projects",
-    "invoice and form processing",
-    "searching scanned PDFs"
+    "At a vendor demonstration for a procurement unit",
+    "During an archive digitisation planning meeting",
+    "When a desk officer cannot search an image-only PDF",
+    "In a conference room while converting tabled scans into working text",
+    "At an ICT governance board reviewing document-processing tools"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +131,7 @@
     "simple": "OCR changes a picture of writing into text that software can search and copy.",
     "technical": "OCR is a pipeline that converts text-bearing images into structured text output. It often includes image preprocessing, text detection or segmentation, line and word grouping, and character or sequence recognition. Older systems relied more on hand-engineered image features and character templates. Many modern systems use machine learning to detect text regions and predict character sequences directly from image patches or text lines. The output may include recognised text, confidence scores, and coordinates for each line or word. OCR should be distinguished from speech-to-text, which converts audio rather than images, and from later natural language processing steps that interpret the extracted text."
   },
-  "keyTakeaway": "OCR does not read meaning first; it turns visible writing in images into usable text so people and software can work with it.",
+  "keyTakeaway": "OCR converts visible writing into searchable, editable text. It does not establish that the text is correct, authoritative or understood, so important output must be checked against the image.",
   "quickCheck": {
     "question": "What does OCR mainly produce from a scanned page?",
     "options": [
@@ -223,6 +223,19 @@
     "verdict": "pass",
     "issues": [],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:21:30.894Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

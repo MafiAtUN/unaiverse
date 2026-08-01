@@ -33,8 +33,8 @@
   "oneSentence": "A single row of training data used to adjust a model, often made of input values and, in some methods, a target answer.",
   "plainExplanation": "A training example is one item a machine-learning system learns from. It might be one row in a table, one image, one short text, one sound clip, or one event in a log. A collection of these items is a dataset, but each individual item is a training example.\n\nPeople also say sample or instance. In many introductions, these words are used almost interchangeably for one item in the data. But they can carry slightly different emphasis. Sample often points to something taken from a larger population, while instance often means one concrete case represented in the model's input format.\n\nWhat goes in depends on the learning method. In supervised learning, one example usually contains input features, meaning the measurable parts the model receives, plus a label, meaning the target answer. In unsupervised learning, an example may have only the input features. During training, the system processes many examples and may update internal numbers so later it can produce predictions for new cases.\n\nWhat comes out is a trained system. In many methods, this is a changed model rather than a stored answer for each example. A single example usually changes the model only a little. After many examples, patterns in the data can shape how the model behaves. This term is often confused with feature, which is one column or property inside an example, and with dataset, which is the full collection of examples.",
   "everydayAnalogy": {
-    "title": "Marked-up policy search cards",
-    "story": "A team is improving a search tool for policy documents. They make index cards, and each card has a user query on the front and a note on the back saying which document was actually relevant. One card says “school meal standards” and points to a nutrition policy; another says “border health screening” and points to an entry procedure guide. The team reviews many cards to tune the search system so future queries rank the right documents higher. Each card is one training example, while the full box of cards is the dataset.",
+    "title": "Learning the pastry counter",
+    "story": "A new bakery assistant learns the products by seeing one item at a time together with its correct name. One round pastry, shown with the label \"bagel\", is a single example. Its shape and appearance are the input, and the name is the target answer. The assistant needs many varied examples before reliably recognising new items. Likewise, one training example contributes to learning, but does not establish the whole pattern by itself.",
     "mapping": [
       {
         "analogyElement": "one index card with a query and the correct document",
@@ -87,28 +87,28 @@
     "reducedMotionDescription": "A static four-panel diagram shows: one example, many examples, repeated model updates, and a trained model making a prediction on new input. No animation is used; the loops are shown as fixed arrows."
   },
   "workedExample": {
-    "scenario": "A team trains a simple system to classify short email subject lines as 'meeting' or 'travel'.",
-    "input": "Example row: subject line = 'Flight change for Nairobi workshop'; label = 'travel'",
+    "scenario": "For the audit file, the desk officer shows how one reviewed request contributes to training a classifier that routes messages as either programme or administration.",
+    "input": "One example: subject line = \"Comments requested on draft workplan\"; reviewed target = \"programme\"",
     "process": [
-      "Convert the subject line into features, such as which words appear.",
-      "Feed this one example into the model during training.",
-      "Compare the model's current output with the label 'travel'.",
-      "Adjust the model's internal parameters slightly so patterns linked to travel become more influential.",
-      "Repeat with many other examples, such as 'Agenda for Monday meeting' labelled 'meeting'."
+      "Convert the permitted words or other attributes into an input vector, conventionally written as x.",
+      "Pair that vector with the reviewed target y, in this case \"programme\".",
+      "Have the current model calculate its predicted category or category probabilities.",
+      "Compare the prediction with the target and calculate the error for this example.",
+      "Use that error, alone or combined with errors from a batch, to adjust the model's parameters slightly."
     ],
-    "result": "This single example does not create a rule by itself, but it can nudge the model so future subject lines containing similar learned features, such as \"flight\", are more likely to be classified as travel."
+    "result": "The example does not create a fixed rule that every message mentioning a workplan is programme-related. It contributes a small adjustment alongside many other examples, from which the model learns broader statistical patterns."
   },
   "unWorkplaceExample": {
-    "scenario": "An approved internal project analyses household assessment survey responses to group common needs and to predict which responses may need manual follow-up. One training example could be a single, de-identified survey response represented as structured fields and, if available, an outcome from a previous reviewed case.",
-    "relevance": "This helps staff see that the learning system uses one record at a time during training, even though reliable performance depends on many reviewed examples and careful quality checks.",
-    "caution": "Do not place personal, confidential, protection-sensitive or operationally sensitive survey data into an unapproved public AI service. Use approved systems, de-identify data where possible, and keep human oversight over any decisions affecting people."
+    "scenario": "A desk officer in a Resident Coordinator's Office is closing an internal audit query about a classifier that routes incoming requests to the correct focal point. The file needs a concrete account of the training data. One training example is one previously reviewed request, represented by permitted text features, paired with the routing category assigned by staff.",
+    "relevance": "The example may be processed alone or in a batch. Its features and reviewed target help determine a small parameter adjustment. The audit response can therefore distinguish one training example from the full dataset, which is a useful distinction when the annex is due by close of business.",
+    "caution": "Requests may contain names, contact details or confidential material. They must not be copied into a tool that has not been approved for that information. Use only necessary fields, follow the office's data protection guidance, restrict access and retain human review of routing decisions."
   },
   "whyItMatters": "If you can recognise what counts as one training example, you can ask better questions about quality, bias, coverage and privacy. For example: does each example represent a real case, is the label trustworthy, are important groups missing, and is one person or event counted many times? These questions affect whether a system learns useful patterns or misleading ones. The term also helps you separate three different things that are often mixed up: one example, the full dataset, and the trained model.",
   "whereYouMayHearIt": [
-    "machine-learning courses",
-    "data-lab meetings",
-    "model documentation",
-    "discussions of labelling data"
+    "An internal audit exit meeting reviewing model documentation",
+    "A vendor demo to an ICT governance board",
+    "A data-lab session preparing labelled records for quality review",
+    "An evaluation office briefing on a predictive model's methodology"
   ],
   "commonMisconceptions": [
     {
@@ -128,7 +128,7 @@
     "simple": "A training example is one piece of data the system learns from, like one row in a spreadsheet or one labelled image.",
     "technical": "Technically, a training example is one observation used by a learning algorithm. In optimisation-based methods, it is often represented as an input vector x and, in supervised learning, an associated target y. The terms sample and instance are often used for the same unit, though sample may emphasise that the observation was drawn from a broader population, and instance may emphasise one concrete case in feature space. Examples may be processed singly or in batches, and each can contribute to an update of model parameters. The usual result is an adjusted model, not a permanent one-to-one lookup table of the examples."
   },
-  "keyTakeaway": "Think of a training example as one case the model learns from; many such cases together can shape the trained model.",
+  "keyTakeaway": "A training example is one observation presented to the learning process, often as input x paired with target y. It can influence the model alone or as part of a batch.",
   "quickCheck": {
     "question": "Which statement best describes a training example?",
     "options": [
@@ -253,6 +253,20 @@
       "workedExampleResult",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:23.894Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

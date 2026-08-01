@@ -90,28 +90,27 @@
     "reducedMotionDescription": "A static five-box diagram shows the same sequence without animation: new input, short-term memory, next step, update memory, reply or action. Dashed arrows indicate that after an update, the system can loop back and continue the task."
   },
   "workedExample": {
-    "scenario": "A delivery-checking assistant helps compare a shipment with a manifest during one chat session.",
-    "input": "User: 'Please help me verify this delivery. Manifest says 120 cartons of soap, batch SX-44, for Clinic A. Driver says 118 arrived and 2 are damaged.'",
+    "scenario": "A statistician is checking three indicators in the procurement unit’s draft workplan while incorporating comments from the annual review.",
+    "input": "“Check the indicator table. Keep baselines separate from annual targets, flag missing values and use the wording already cleared by the chief of section.”",
     "process": [
-      "The system stores the key details for this session: 120 expected, 118 arrived, 2 damaged, batch SX-44, destination Clinic A.",
-      "It asks a follow-up question: 'Should damaged cartons count as arrived but not accepted, or as missing for your report?'",
-      "The user answers: 'Count them as arrived but damaged.' The system updates the temporary state with that rule.",
-      "It prepares the next step using the updated state and drafts: 'Delivery matches quantity received: 118 intact, 2 damaged, total 120 arrived; acceptance pending damage review.'"
+      "The application creates session state containing the drafting instruction, the three indicator rows, the clearance constraint and a pending task list.",
+      "A spreadsheet tool flags one missing baseline and one target entered in the wrong column. Its output is added to the session state.",
+      "On the next model call, the application supplies a summary of that state. The agent asks whether the missing baseline should remain blank or be marked for follow-up.",
+      "The statistician replies, “Leave it blank and add it to the follow-up list.” The state is updated, and the next call receives that decision together with the earlier formatting and clearance instructions."
     ],
-    "result": "The reply stays consistent with the earlier numbers and the user’s chosen reporting rule because those details were kept in short-term memory during the session."
+    "result": "The revised table preserves the cleared wording, separates baselines from targets and carries the unresolved baseline into the follow-up list. This continuity comes from temporary session state passed across calls, not from a permanent change to the model."
   },
   "unWorkplaceExample": {
-    "scenario": "A staff member uses an approved internal drafting assistant to prepare a short briefing note from non-sensitive meeting notes, and the assistant keeps the current outline, style instructions and the latest edits during that drafting session.",
-    "relevance": "This shows why temporary session memory matters: it helps the system keep the requested structure and avoid losing track of edits across several turns.",
-    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Human review remains necessary before any text is shared."
+    "scenario": "At the procurement unit’s annual workplan review, a statistician from the data unit uses an approved internal agent to check the draft results framework before close of business. Across several turns, the agent keeps the current indicators, the chief of section’s formatting instruction, a spreadsheet check and unresolved questions available for the next step.",
+    "relevance": "The model does not necessarily retain these details itself. The application may hold them in session state, then inject or summarise the relevant instructions, tool outputs and pending tasks for each successive model call. That is how the agent can continue the same review without being briefed again at every turn.",
+    "caution": "Bids, supplier evaluations, pricing details, personal data and other procurement-sensitive material must not be entered into a tool unless it is specifically approved for that material. Session-scoped memory does not guarantee deletion: prompts and tool outputs may still be logged or retained. The statistician must also verify every proposed correction against the file."
   },
   "whyItMatters": "For non-specialists, this term matters because it affects whether an AI system stays consistent during a task. Good short-term memory can help a system remember the latest instruction, use a tool result correctly, and avoid repeating or skipping steps. Weak short-term memory can lead to contradictions, lost constraints, duplicate actions or answers that ignore recent corrections. If you are choosing, supervising or auditing an AI system, this helps you ask practical questions: What does it keep during a session? For how long? Can it be updated, summarised or cleared? Does a human review important steps? Those questions matter for quality, safety and accountability.",
   "whereYouMayHearIt": [
-    "agent design discussions",
-    "product demos for copilots",
-    "tool-using chat systems",
-    "multi-step automation workflows",
-    "prompt engineering conversations"
+    "During a vendor demonstration to an ICT governance board",
+    "At an annual workplan review when an agent forgets an earlier instruction",
+    "In a design review for a multi-step automation",
+    "During a procurement unit’s technical evaluation of an internal assistant"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +130,7 @@
     "simple": "It is the temporary notepad an AI system uses during one conversation or task so it can keep track of the latest instructions and results.",
     "technical": "In many AI agents, short-term memory is a session-scoped working state used across successive model calls. It may contain recent dialogue turns, system instructions, intermediate reasoning notes if the design exposes them, tool outputs, pending subtasks, execution state and user-specific constraints for the current task. This state is often stored outside the model itself, then injected, summarised or transformed before each call. The mechanism can be as simple as passing the latest messages, or more structured, such as maintaining a state object with fields for observations, actions taken, plan status and tool responses. It is distinct from long-term memory because it is not primarily designed for persistence across sessions, and distinct from the context window because the working state may be larger than what is sent at once and therefore needs selection or compression."
   },
-  "keyTakeaway": "Short-term memory helps an AI system stay on track during the current task, but it is temporary and should not be confused with permanent memory or guaranteed reliability.",
+  "keyTakeaway": "Short-term memory is temporary working state for the current interaction, often stored outside the model and supplied again on later calls. It supports continuity, but neither guarantees accuracy nor implies immediate deletion.",
   "quickCheck": {
     "question": "Which statement best describes short-term memory in an AI system?",
     "options": [
@@ -244,6 +243,19 @@
     "applied": [
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:21:24.362Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

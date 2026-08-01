@@ -32,8 +32,8 @@
   "oneSentence": "A machine learning method that assigns one or more predefined category labels to an input based on learned patterns.",
   "plainExplanation": "Classification is used when you want a system to choose one or more categories from a fixed set. For example, an email might be labelled “spam” or “not spam”, or a document might be labelled “invoice”, “contract” or “report”. The input can be text, an image, a sound clip or a row of numbers.\n\nDuring training, the system is shown many examples along with the correct category or categories. Those correct categories are called labels. From these examples, it adjusts internal settings so that certain patterns in the input become linked with certain labels.\n\nLater, during inference, a new input goes in. The system turns that input into measurable signals, often called features, such as words present in a message or shapes in an image. It then produces a prediction: which class or classes apply, sometimes with a score for each class.\n\nClassification is different from regression, which predicts a number such as temperature or price. It is also different from clustering, which groups similar items without using pre-named categories. In classification, the categories are defined in advance, even if the model sometimes gets them wrong.",
   "everydayAnalogy": {
-    "title": "Tuning a radio to label a station",
-    "story": "Aisha is driving from Nairobi to Arusha and turns the radio dial to find a clear station. At each frequency, she listens for clues: spoken news, music style, language and signal quality. She then marks the station on a list as “news”, “music” or “talk”, based on what best matches what she hears. If the signal is weak, she may still choose a label, but with less confidence.",
+    "title": "Sorting buttons into labelled trays",
+    "story": "Sam is shown many buttons already placed in trays labelled “red”, “blue”, “two-hole” and “four-hole”. From those examples, Sam learns which visible features correspond to each label. For a new button, Sam checks its colour and number of holes, then places it in the matching trays. If only colour labels are allowed, it receives one label. If colour and hole-count labels may both apply, it receives more than one.",
     "mapping": [
       {
         "analogyElement": "list of station types such as news, music or talk",
@@ -86,29 +86,28 @@
     "reducedMotionDescription": "A static left-to-right diagram with four labelled boxes: Input, Features, Model and Prediction. Short example text under each box replaces any animated highlighting."
   },
   "workedExample": {
-    "scenario": "Sorting support emails for a small health clinic",
-    "input": "Email text: “Hello, I need to move my appointment from Tuesday to Friday if possible.”",
+    "scenario": "Classifying a facilities ticket before the duty officer hands over the service desk at a Geneva duty station.",
+    "input": "Ticket text: “The meeting room on level 3 is too warm, and the wall control does not respond.”",
     "process": [
-      "The system receives the email text as input.",
-      "It measures features such as words and phrases like “move”, “appointment”, “Tuesday” and “Friday”.",
-      "The classifier compares these features with patterns learned from labelled emails in classes such as “appointment change”, “billing question” and “medical records request”.",
-      "It assigns scores: appointment change 0.91, billing question 0.06, medical records request 0.03.",
-      "It outputs the top class as the prediction."
+      "The classifier receives the ticket text as input.",
+      "It identifies features associated with the available labels, including “too warm”, “wall control” and “does not respond”.",
+      "It compares those features with patterns learned from tickets previously labelled “temperature issue”, “equipment fault” or “access issue”.",
+      "It calculates a score for each label: temperature issue 0.94, equipment fault 0.72 and access issue 0.04.",
+      "Because this is a multilabel classifier, it returns every label above the set threshold of 0.50."
     ],
-    "result": "Predicted class: “appointment change”. A staff member can then route the email to the scheduling team."
+    "result": "Predicted labels: “temperature issue” and “equipment fault”. The ticket can be routed to facilities maintenance, with the duty officer able to correct the labels if the request has been misread."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN procurement team is drafting requirements for software that automatically sorts incoming vendor questions into categories such as technical clarification, submission issue or contract terms question.",
-    "relevance": "Understanding classification helps staff ask the right questions: what classes are predefined, how labels were created, how accuracy will be tested, and how errors such as misrouting will be handled with human oversight.",
-    "caution": "Do not test public AI services with confidential procurement documents, bidder information or any commercially sensitive material unless the service is approved for that use."
+    "scenario": "Late in the afternoon, a budget officer in a country office is reviewing applications for a finance roster before the proposed shortlist goes to the front office at close of business. An approved screening tool classifies each application as “profile matched”, “manual review” or “required criterion not evidenced”, using patterns learned from previously labelled applications.",
+    "relevance": "Classification determines which predefined label each application receives. The budget officer needs to examine how the training labels were assigned, what evidence drives each category, how borderline cases are handled and whether errors fall unevenly across groups. The output is a triage label, not a recruitment decision.",
+    "caution": "Applications contain personal and potentially sensitive HR information. They must not be uploaded to an external or unapproved tool. A classifier must not make or effectively determine the shortlist: every exclusion requires meaningful human review, since biased training labels or missed evidence could unfairly affect a candidate."
   },
   "whyItMatters": "Classification affects how information is routed, filtered and prioritised. A system may flag content as risky, sort messages into queues, or label documents for faster handling. If you understand classification, you can ask practical questions: What are the classes? Who chose the labels? How often does it confuse one class with another? What happens when it is unsure? These questions matter because errors have consequences. A false alarm can waste time or unfairly block something. A missed case can hide an urgent issue. Non-specialists do not need to build classifiers, but they often need to judge whether one is suitable, what data it needs and where human review is still necessary.",
   "whereYouMayHearIt": [
-    "spam filtering",
-    "document sorting",
-    "medical image screening",
-    "sentiment analysis",
-    "content moderation"
+    "A vendor demonstration at an ICT governance board meeting",
+    "First reading of requirements for a document-management system",
+    "An evaluation office discussion on coding survey responses",
+    "Clearance of a concept note for an automated triage pilot"
   ],
   "commonMisconceptions": [
     {
@@ -128,7 +127,7 @@
     "simple": "Classification is teaching a system to put each new item into one or more named buckets, like sorting messages into “spam” or “not spam”.",
     "technical": "In machine learning, classification is a supervised learning task that maps an input x to one or more labels from a finite set of classes. A model is trained on labelled examples to learn a decision function or class score based on features in the input. At inference time, it computes scores for the possible classes and returns one or more labels, depending on the design. Common variants include binary classification, multiclass classification and multilabel classification, where one item can receive more than one label. Evaluation often examines per-class performance, confusion between classes and trade-offs such as false positives versus false negatives."
   },
-  "keyTakeaway": "Classification predicts which named category or categories apply to an input, using patterns learned from labelled examples.",
+  "keyTakeaway": "Classification uses patterns learned from labelled examples to assign one or more predefined categories to a new input. A score supports the prediction, but is not proof that the label is correct.",
   "quickCheck": {
     "question": "Which situation is a classification task?",
     "options": [
@@ -245,6 +244,20 @@
       "simpleVsTechnicalSimple",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:09.607Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced generic scenarios with distinct workplace moments, strengthened the HR-data and human-review caution, and made the worked example demonstrate multilabel classification."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

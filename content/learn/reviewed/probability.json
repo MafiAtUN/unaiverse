@@ -33,8 +33,8 @@
   "oneSentence": "A number attached to a model’s possible outputs that shows how much of its total estimated likelihood the model assigns to each option.",
   "plainExplanation": "When a model produces several possible outputs, it often also produces numbers for those options. For tasks with mutually exclusive options, these numbers are often turned into probabilities: values between 0 and 1, or 0% and 100%, that add up to 1 across all possible choices. A display may show only some choices, so the displayed values need not add up to 1. The model is not reporting a fact about the world. It is reporting how its calculations distribute likelihood among the options.\n\nWhat goes in is an input such as text, an image, or sensor data. Inside the model, many numerical steps combine patterns learned from training data. At the end, the model gives raw scores for possible outputs. A method called softmax often converts those scores into probabilities so they can be compared more easily.\n\nWhat comes out depends on the task. In image classification, the output may be probabilities for labels such as road, tree, or building. In next-word text generation, the output may be probabilities for many possible next tokens, meaning pieces of text. The highest probability often becomes the top suggestion, but systems can also sample from the distribution instead of always picking the top one.\n\nA high probability does not automatically mean the model is correct, safe, or well calibrated. Calibration means whether probabilities match real-world frequencies over many cases. For example, among outputs given 80% probability, about 80% should be right if the system is well calibrated. Output probability is therefore best treated as information about how the model distributes likelihood among options, not as proof.",
   "everydayAnalogy": {
-    "title": "Finding a book in a large library",
-    "story": "A librarian receives a note that says, \"history of river trade in East Africa, blue cover, maybe published in the 1990s\". After checking the catalogue and the shelves, the librarian says, \"I’d first look in African history, about 60%; second, transport economics, about 25%; third, local geography, about 15%.\" Those numbers do not guarantee where the book is. They only show which shelves seem more likely to the librarian based on the clues. If the note was vague or misleading, the highest number could still point to the wrong place.",
+    "title": "Which bus arrives next?",
+    "story": "A display predicts that the next bus will be route 4 with 60% probability, route 7 with 30% and route 12 with 10%. The percentages divide the full prediction among the three possibilities, so they add to 100%. Route 4 is the display’s leading guess, but route 7 may still turn the corner first. A high number shows the strength of the prediction relative to the other options, not a promise about what will happen.",
     "mapping": [
       {
         "analogyElement": "The note with partial clues about the book",
@@ -87,27 +87,26 @@
     "reducedMotionDescription": "A static left-to-right diagram with four labelled boxes and arrows. The same example scores and probabilities are shown without animation or hover effects."
   },
   "workedExample": {
-    "scenario": "A text model is asked to continue the sentence: 'The meeting will start at'.",
-    "input": "The meeting will start at",
+    "scenario": "A programme officer tests a classifier that assigns public, non-confidential project summaries to one of three portal categories.",
+    "input": "A project summary describing drought-resistant crops, local market access and training for small producers.",
     "process": [
-      "The model analyses the text so far and considers many possible next tokens.",
-      "It gives raw scores to options such as '9', '10', 'noon', and 'the'.",
-      "A conversion step turns those scores into probabilities, for example '9' 55%, '10' 25%, 'noon' 12%, 'the' 1%, with the remaining 7% spread across many other tokens.",
-      "If the system always picks the highest probability, it outputs '9'. If it samples, it could still output '10' or 'noon' occasionally."
+      "The model produces raw scores for the candidate labels: climate resilience 2.1, livelihoods 1.2 and governance 0.3.",
+      "A softmax transformation converts the scores into probabilities of about 66%, 24% and 10%. They are each between 0 and 1 and together sum to 100%.",
+      "Using argmax selects climate resilience because it has the highest probability. Sampling could occasionally select livelihoods or governance instead."
     ],
-    "result": "The probabilities show which next token the model currently favours, not whether the actual meeting time in the real world is 9."
+    "result": "The distribution ranks the three labels for this input. It does not establish that climate resilience is the correct portal category, nor that the 66% figure is a calibrated measure of real-world certainty."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal drafting tool to suggest alternative wording for a public, non-confidential briefing note. The tool shows several next-phrase options with different probabilities, and the drafter reviews them before choosing or rewriting.",
-    "relevance": "This helps staff see that the system is ranking likely continuations, not confirming facts or policy wording. A lower-probability option may still be the better one for accuracy, neutrality or tone.",
-    "caution": "Do not enter confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service, and do not treat high-probability wording as approved, factual or rights-compliant without human review."
+    "scenario": "At a small field presence with intermittent connectivity, a protection officer must complete a roster screening sheet by close of business. An internal classifier approved for the relevant data assigns each application probabilities across three labels: profile match, needs review and no match.",
+    "relevance": "The probabilities divide the model’s estimated likelihood across the available labels. A 0.72 probability for “profile match” means that label ranks highest under the model, not that the applicant has a 72% chance of being suitable or that the underlying information is correct.",
+    "caution": "Application material may contain personal or protection-sensitive information. It must not be copied into any tool not explicitly approved for that data, because disclosure could expose applicants to harm. No probability score should be the sole basis for rejecting or deprioritising an application. The officer must review the evidence, the profile criteria and possible model error."
   },
   "whyItMatters": "Non-specialists often see a percentage and assume certainty. That can lead to over-trusting a system, especially when the number only reflects how the model ranks options. Understanding output probability helps you ask better questions: Is this the top guess or just one option among many? Was the model well calibrated? Should a human verify this before it is used in communication, analysis or service delivery? This matters in practice because the same probability can support different actions depending on risk. A spelling suggestion at 70% may be acceptable. A medical, legal, protection or human-rights-related claim at 70% should trigger caution and checking.",
   "whereYouMayHearIt": [
-    "image classification dashboards",
-    "text generation settings",
-    "machine learning evaluation reports",
-    "product demos about AI confidence"
+    "A vendor demo during a procurement meeting",
+    "A first reading of an evaluation report on an automated classifier",
+    "An ICT governance board reviewing model thresholds",
+    "A programme meeting before results are uploaded to the portal"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +126,7 @@
     "simple": "These numbers show which answers the model leans toward most strongly. They are not guarantees that the top answer is correct.",
     "technical": "For many models, the final layer produces raw values often called logits or scores for candidate outputs. A transformation such as softmax converts these values into a probability distribution over the options, where each probability is between 0 and 1 and the probabilities sum to 1. In classification, this distribution ranks labels. In language models, it ranks possible next tokens at each step. The argmax gives the highest-probability option, while sampling draws from the full distribution. These probabilities are model-based estimates conditioned on the input and the model parameters; they are not automatically calibrated estimates of empirical correctness."
   },
-  "keyTakeaway": "A model’s output probability is best read as a ranking signal about its options, not as a guarantee that the top answer is true.",
+  "keyTakeaway": "An output probability shows how the model divides its estimated likelihood among available options. It ranks those options, but does not by itself prove that the leading one is true or correct.",
   "quickCheck": {
     "question": "Which statement best describes a 78% probability attached to one model output?",
     "options": [
@@ -246,6 +245,20 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:01.105Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the generic workplace scenario with a specific protection workflow and strengthened the safeguards for personal and protection-sensitive application data. The worked example now shows raw scores, softmax probabilities, argmax and sampling in one classification task. The library analogy was replaced because it is a tired frame."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

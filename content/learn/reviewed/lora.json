@@ -85,28 +85,27 @@
     "reducedMotionDescription": "A static two-column comparison remains visible at all times, with labels showing which weights are trainable, which are frozen, and what output file each approach produces."
   },
   "workedExample": {
-    "scenario": "A team wants a 7 billion-parameter language model to format customer support replies in a company's house style.",
-    "input": "Base model: 7B parameters. LoRA attached to attention layers with rank 16. Training set: 50,000 prompt-response pairs.",
+    "scenario": "An evaluation office needs an approved 7-billion-parameter model to classify recommendations in monitoring reports by theme before an annual synthesis is circulated. It uses LoRA rather than creating a fully fine-tuned copy of the model.",
+    "input": "Base model: 7 billion parameters. LoRA rank: 16 on selected attention projections. Training set: 50,000 approved, labelled report passages.",
     "process": [
-      "Load the 7B checkpoint and freeze the original weights so they do not change during training.",
-      "Attach LoRA modules to selected attention projections, creating a small set of trainable parameters compared with the full model.",
-      "Train on the 50,000 examples so the loss function updates only the LoRA weights, not the full 7B parameters.",
-      "Save the learned adapter as a separate file; for deployment, either load it alongside the base model or merge it into a new checkpoint."
+      "Load the base checkpoint and freeze its original weight matrices, so optimisation does not change them.",
+      "Insert trainable factor matrices A and B into selected attention projections. With shared dimension 16, the update BA has rank at most 16.",
+      "Train on the labelled passages. Gradients update only A and B, reducing the trainable parameter count and associated optimiser state.",
+      "Save the learned adapter separately. At deployment, load it with the matching base checkpoint or merge the update into a validated deployment copy."
     ],
-    "result": "The team gets a small task-specific adapter instead of a full second 7B model copy, making storage and distribution easier while preserving the original base model."
+    "result": "The evaluation office receives a comparatively small task-specific adapter rather than another full 7-billion-parameter checkpoint. The original base model remains available for other tasks, while the adapter can be versioned and tested separately."
   },
   "unWorkplaceExample": {
-    "scenario": "A language technology team in a UN entity wants to adapt an approved internal model so it checks draft speeches for consistency with previously agreed language on humanitarian access and gender equality.",
-    "relevance": "LoRA can let the team create a small domain-specific adapter for that drafting task without retraining or duplicating the full base model, which helps with version control and deployment across internal systems.",
-    "caution": "Only use approved internal systems and approved datasets. Do not place confidential negotiation text, personal data, protection-sensitive information or unpublished Member State positions into a public AI service."
+    "scenario": "A communications officer supporting a United Nations Country Team working group is finalising a handover note for an incoming colleague before close of business. An approved internal model uses a LoRA adapter to flag departures from agreed terminology in draft joint talking points.",
+    "relevance": "The adapter can learn this narrow drafting pattern while the base model remains frozen. It is smaller to store, version and replace than a fully fine-tuned model, which is useful when agreed terminology changes but the approved base model does not.",
+    "caution": "Use only approved systems and cleared training material. Do not train or test the adapter on unpublished positions, personal data, confidential negotiations or protection-sensitive material unless both the system and dataset are explicitly approved for that purpose. A small adapter can still encode or reproduce sensitive information."
   },
   "whyItMatters": "LoRA matters because it changes the cost and governance of model adaptation. If an organisation wants a model tailored to a narrow task, full fine-tuning may require more computing, storage and model management. LoRA can make experimentation cheaper and faster, allow several task-specific adapters to share one base model, and make rollback easier because the base checkpoint stays unchanged. For non-specialists, this affects procurement, deployment choices, security review, version control and whether a system can be updated for local needs without maintaining many full model copies. It is not a guarantee of quality or safety, but it is an important practical option.",
   "whereYouMayHearIt": [
-    "open-source model adaptation",
-    "enterprise AI deployment",
-    "MLOps and model serving",
-    "LLM training tutorials",
-    "discussion of cheaper fine-tuning"
+    "During a vendor demo to a technology governance board",
+    "In the technical review of an internal model adaptation plan",
+    "At a procurement meeting on model hosting and storage",
+    "During a regional bureau handover on model serving"
   ],
   "commonMisconceptions": [
     {
@@ -130,7 +129,7 @@
     "simple": "LoRA lets you customise a large model by adding and training a small attachment instead of editing the whole model.",
     "technical": "LoRA is a parameter-efficient fine-tuning method that freezes a pre-trained weight matrix W and learns a low-rank update, often written W + BA. A and B are trainable factor matrices with a small shared dimension r, so BA has rank at most r. These updates are inserted into selected layers, commonly attention projections, and only A and B receive gradient updates during optimisation. This reduces trainable parameters, optimiser state and often storage for task-specific adaptations. At inference, the adapter can remain separate or be merged into the base weights. Exact memory and speed benefits depend on implementation, target modules, precision, batch size and whether the adapter is merged."
   },
-  "keyTakeaway": "LoRA adapts a big model by learning a small, compressed weight update instead of retraining the whole model.",
+  "keyTakeaway": "LoRA freezes the base model and learns small, low-rank updates in selected layers, reducing the parameters and storage needed for task-specific adaptation.",
   "quickCheck": {
     "question": "Which statement best describes LoRA?",
     "options": [
@@ -249,6 +248,19 @@
       "simpleVsTechnicalTechnical",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:00.976Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -96,28 +96,27 @@
     "reducedMotionDescription": "A static left-to-right flow chart shows the teacher path, the student path, a comparison box and a return arrow from comparison to student labelled 'repeat during training'. The final distilled model is shown as the output of the completed loop."
   },
   "workedExample": {
-    "scenario": "A team has a 20 billion parameter multilingual support model that gives strong results on classifying incoming helpdesk messages into 12 categories, but it is too slow for mobile deployment. They want a smaller model for common cases.",
-    "input": "50,000 previously approved helpdesk messages in Arabic, English, French and Spanish, with the teacher model’s probability scores over the 12 categories for each message.",
+    "scenario": "At a regional hub, an information management officer needs a lightweight model to tag paragraphs from cleared situation reports before the morning portal upload. The approved teacher model is accurate but cannot meet the processing window on the available hardware.",
+    "input": "A curated set of cleared report paragraphs. For each paragraph, the teacher supplies a probability distribution over the office’s existing tags. A separate held-out set remains unseen during training.",
     "process": [
-      "The large teacher model is run on all 50,000 messages and outputs a probability distribution for each category, not only the top label.",
-      "A 1.3 billion parameter student model reads the same messages and starts with less accurate category scores.",
-      "Training compares the student’s scores with the teacher’s scores and updates only the student to reduce the gap.",
-      "After several training rounds, the student is tested on a held-out set of 5,000 messages to check speed and classification quality."
+      "The teacher processes each training paragraph and assigns probabilities across all available tags, preserving more information than a single top choice.",
+      "The smaller student processes the same paragraphs and produces its own probability distributions.",
+      "A loss function measures the mismatch between the two distributions. Training updates only the student’s parameters to reduce that mismatch.",
+      "The student is evaluated on the held-out paragraphs for tagging quality, processing time and performance on uncommon or overlapping topics."
     ],
-    "result": "The student keeps most of the teacher’s performance on frequent message types while running much faster on phones. However, it is weaker on rare mixed-language messages, so the larger teacher is still kept for difficult or high-risk cases."
+    "result": "The student handles common tags within the portal window and needs less computing capacity. It remains less reliable on rare or ambiguous paragraphs, which are routed to the information management officer or processed with the teacher model."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN communications unit uses an approved internal language model to check whether a draft speech follows previously agreed language on a recurring topic. A large internal model performs well but is costly to run at scale, so an internal data science team distils it into a smaller model for routine first-pass checks.",
-    "relevance": "This shows why distillation matters in public-sector settings: it can reduce cost and delay while keeping a human reviewer and the authoritative agreed language process in place.",
-    "caution": "Do not place confidential draft text, negotiation-sensitive language, personal data or unpublished internal material into an unapproved public AI service for distillation or testing. Use approved environments, minimise sensitive data, and keep human review over any suggested edits."
+    "scenario": "The procurement unit’s national officer at a country office is closing the procurement annex for a donor progress report at quarter-end. An approved large model can sort non-sensitive requisition descriptions into reporting categories, but it is too slow for the reporting run. The technical evaluator proposes a smaller student model trained to match the larger model’s category probabilities, then tested before the annex is cleared.",
+    "relevance": "The smaller model is not simply a compressed copy. During training, its outputs are compared with the teacher’s signals and only the student’s parameters are updated. If evaluation is satisfactory, it may provide quicker, cheaper routine classification while the established clearance process remains unchanged.",
+    "caution": "Tender submissions, bid evaluations, supplier pricing, personal data and material from an active procurement must not be entered into any model or environment not approved for that information. Use authorised, minimised training data with appropriate access controls. Test for inherited errors and information leakage, and retain human review before figures or categories enter the report."
   },
   "whyItMatters": "For non-specialists, distillation matters because it affects what organisations can actually deploy. A system may work well in a lab with a very large model but be too slow, too expensive or too energy-intensive for real use. Distillation can make deployment practical on ordinary servers, phones or low-bandwidth settings. It also matters for procurement and governance: a distilled model may behave differently from its teacher, especially on edge cases, so claims such as 'same quality, just smaller' need testing rather than assumption. In policy and operational settings, this affects cost, access, audit plans, safety review and decisions about when a smaller model is acceptable and when the larger model or human handling is still needed.",
   "whereYouMayHearIt": [
-    "model compression discussions",
-    "mobile or edge deployment planning",
-    "LLM optimisation engineering",
-    "AI procurement and cost review",
-    "serving latency conversations"
+    "During a vendor demo to an ICT governance board",
+    "In the technical evaluation meeting for an AI procurement",
+    "At a model deployment review before a portal release",
+    "In a data science discussion on reducing inference costs"
   ],
   "commonMisconceptions": [
     {
@@ -141,7 +140,7 @@
     "simple": "A big model shows a smaller model how to answer many examples. The smaller model learns to produce similar outputs, so it can often do a similar job faster and more cheaply.",
     "technical": "Distillation is a training procedure in which a student model is optimised to match a teacher model’s behaviour on a set of inputs. The targets may be hard labels, soft labels such as probability distributions over classes, generated token distributions, hidden-state representations or combinations of these. The loss function typically measures the mismatch between teacher and student outputs and updates only the student parameters. In language models, distillation may occur after pretraining or task-specific fine-tuning, and can be used to compress capability into a smaller architecture for lower inference cost. It differs from parameter-efficient adaptation methods such as LoRA, which modify how a model is adapted, and from compression methods such as quantisation or pruning, which reduce storage or computation without necessarily training a separate student to imitate a teacher."
   },
-  "keyTakeaway": "Distillation trains a student model to imitate a teacher; a smaller student can trade some performance for speed and lower cost.",
+  "keyTakeaway": "Distillation trains a student model to match signals from a teacher model. The student is often smaller and faster, but it must be tested for performance lost or errors inherited in the transfer.",
   "quickCheck": {
     "question": "Which statement best describes distillation?",
     "options": [
@@ -259,6 +258,19 @@
       "oneSentence",
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:49.928Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Replaced generic settings and invented quantities with distinct workplace moments, while making the teacher-student mechanism and procurement caution more explicit."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

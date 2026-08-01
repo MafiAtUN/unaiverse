@@ -95,28 +95,27 @@
     "reducedMotionDescription": "A static five-box horizontal process graphic with arrows between boxes, showing raw data, rules, marking, review and finished labelled dataset, with no animation or hover-only content."
   },
   "workedExample": {
-    "scenario": "A public works team wants a model to flag storm-damaged roads in satellite images.",
-    "input": "1,200 satellite image tiles from three provinces, each showing a 200-metre square area.",
+    "scenario": "A reporting officer in a Resident Coordinator’s Office is preparing the first draft of a progress report and wants a text model to locate stated actions in publicly issued meeting summaries.",
+    "input": "Publicly issued meeting summaries with their headings and body text preserved, plus a draft annotation guide.",
     "process": [
-      "The team defines three labels: damaged road, no visible damage, and uncertain; they also require a polygon outline around visible damage.",
-      "Four trained annotators mark all 1,200 images using the same written guide.",
-      "A quality reviewer checks 200 sampled images and sends 48 disputed cases back for discussion and correction.",
-      "The final dataset is split into 900 training images, 150 validation images and 150 test images."
+      "Define span-level tags for the action, responsible entity and timeframe, together with a document-level label for summaries containing no stated action.",
+      "Have annotators independently mark the same calibration set, compare disagreements and revise the guide where the boundary or meaning of a tag is unclear.",
+      "Label the remaining summaries, flag uncertain passages for adjudication and record the final decision rather than silently overwriting the original annotation.",
+      "Create separate training, validation and test sets, ensuring that duplicate or near-duplicate summaries do not appear across them."
     ],
-    "result": "The output is a reviewed annotated dataset: 310 images marked as damaged, 780 as no visible damage, 110 as uncertain, plus polygon files showing where damage appears."
+    "result": "The result is a versioned annotated corpus in which relevant text spans and no-action cases can be traced to the guide and review decision. It can support model training and held-out testing, with any model output still reviewed before it enters the progress report."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team wants to organise a large archive of incoming public reports by topic so staff can route them faster, using a small labelled sample to train or evaluate a classifier.",
-    "relevance": "This shows why annotation matters before automation: staff must define categories clearly, label examples consistently, and check whether the categories are fair, useful and suitable for the task.",
-    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive reports into an unapproved public AI service for labelling or model training. Use approved systems, minimise personal data, and keep human oversight over category design and review."
+    "scenario": "Before close of business on the last day of a rotation, the partnerships officer in a specialised agency’s technical division updates the handover note with the annotation scheme for a dashboard that groups published partner activity summaries by theme. The note records which text receives each label, how mixed-theme items are handled and which examples remain uncertain, so the incoming colleague can continue the work consistently.",
+    "relevance": "Annotation is not merely adding topic names. The officer must define the categories, decide whether an item may receive several labels, document edge cases and review disagreements. A model trained on the dataset will reproduce those decisions, including any inconsistencies.",
+    "caution": "Published summaries may be suitable for the task, but raw source files can contain personal, confidential or commercially sensitive information. Such material must not be copied into a labelling platform or external AI tool unless it is approved for that class of data. Remove unnecessary personal data, restrict access and retain the source and review history for each label."
   },
   "whyItMatters": "If you hear that an AI system was “trained on data”, annotation helps explain what that often means in practice: people or tools turned messy inputs into examples with clear targets. The quality of those targets affects accuracy, fairness, safety and cost. Poorly designed labels can hide important differences, force sensitive realities into crude categories, or reproduce bias from the people and rules used to create them. For non-specialists, this matters when choosing vendors, reviewing evidence, setting procurement requirements, or deciding whether a system is suitable for a high-stakes task. Asking who labelled the data, under what rules, with what checks, is often more useful than asking only which model was used.",
   "whereYouMayHearIt": [
-    "building training datasets",
-    "quality assurance for AI systems",
-    "computer vision projects",
-    "document classification work",
-    "vendor procurement discussions"
+    "A vendor demo during a procurement meeting",
+    "A first reading of an annotation guide in an inter-agency working group",
+    "A data quality review before a model is tested",
+    "An ICT governance board discussion on training data"
   ],
   "commonMisconceptions": [
     {
@@ -140,7 +139,7 @@
     "simple": "People look at data and add useful tags or markings so an AI system has clearer examples to learn from or be tested against.",
     "technical": "Annotation is the process of attaching task-relevant information to raw data instances. In classification, this may be a discrete class label. In other tasks, it may be token-level tags in text, bounding boxes or polygons in images, segmentation masks, keypoints, timestamps, speaker labels, rankings or free-text notes. Data labelling usually refers to the simpler end of this range, while annotation is the broader term. The process typically includes schema design, instructions, annotator training, sampling, assignment, quality control, adjudication of disagreements, and storage of labels in a machine-readable format linked to each source item. The resulting annotated corpus can support supervised learning, evaluation, error analysis and ongoing monitoring. Labels may be treated as reference targets, but they remain dependent on the task definition, the annotators, and the governance choices around privacy, labour and data handling."
   },
-  "keyTakeaway": "Annotation turns raw data into usable examples, and the rules and review behind those labels matter as much as the quantity.",
+  "keyTakeaway": "Annotation turns raw material into task-specific examples. Clear categories, consistent instructions and documented review matter more than a large pile of unexplained labels.",
   "quickCheck": {
     "question": "Which statement best describes annotation and data labelling?",
     "options": [
@@ -268,6 +267,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:23:03.761Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -33,8 +33,8 @@
   "oneSentence": "The practice of writing and refining instructions so a language model is more likely to produce a useful, safe and well-structured reply.",
   "plainExplanation": "A prompt is the text, image or other input you give a model. Prompt engineering means shaping that input carefully: stating the task, giving relevant context, setting limits, and asking for the output format you need. The goal is not magic control. The goal is to improve the chance of a useful result.\n\nWhat goes in can include a role, the task, background information, examples, rules and a requested format such as bullets or a table. What happens next is that the model processes those words as tokens, which are small pieces of text, and predicts a response token by token. The wording of the prompt matters because it changes the patterns the model draws on.\n\nWhat comes out is a completion: the model’s generated text, and sometimes images or other content in multimodal systems. A better prompt can make the output clearer, more relevant and easier to check. But a good prompt does not guarantee factual accuracy, fairness or compliance with policy. Human review is still needed.\n\nPrompt engineering is often confused with fine-tuning and retrieval-augmented generation. Fine-tuning changes the model itself by additional training. Retrieval-augmented generation adds outside sources at run time. Prompt engineering usually changes only the instructions and context you provide for a particular task.",
   "everydayAnalogy": {
-    "title": "Briefing a temporary assistant",
-    "story": "A team in Nairobi is sorting a shared inbox before a regional meeting. If the manager says only, “Handle these messages,” the temporary assistant may reply in many different ways. If the manager says, “Mark messages as urgent or not urgent, use only these three criteria, and put the result in a two-column table,” the assistant is more likely to produce something useful. If the first result is uneven, the manager can tighten the instructions and try again.",
+    "title": "x",
+    "story": "x",
     "mapping": [
       {
         "analogyElement": "Manager’s written instructions",
@@ -87,29 +87,28 @@
     "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: vague prompt, weak output, refined prompt with labelled parts, and improved structured output with a note that human checking remains necessary."
   },
   "workedExample": {
-    "scenario": "A communications officer wants help drafting labels for incoming public messages about an event.",
-    "input": "Classify each message as urgent or not urgent. Use only these rules: urgent means a safety issue, a media deadline within 24 hours, or a request from senior leadership. Return a table with message number, label, and one short reason. Messages: 1) “Journalist asks for comment by 16:00 today.” 2) “Can I get the event poster in French next week?” 3) “Broken barrier at venue entrance.”",
+    "scenario": "During the lessons-learned exercise, the chief of section tests a revised prompt for turning approved meeting notes into a consistent note for the file.",
+    "input": "Initial prompt: “Summarise the meeting notes.”\n\nRevised prompt: “Using only the approved notes below, draft text for a lessons-learned note for the file. Use three headings: What worked, What did not and Follow-up. Under Follow-up, name an owner or timing only if stated. Mark unsupported details ‘Not in record’. Use a neutral tone and no more than 180 words. Notes: Pilot users found the template useful. Outputs varied when prompts omitted the audience and format. The section will test a standard prompt and review it at the next monthly meeting.”",
     "process": [
-      "The prompt states a clear task: classify messages.",
-      "It defines the rules for “urgent” so the model has a narrower target.",
-      "It requests a fixed output format: a table with three columns.",
-      "The model generates a completion that applies the rules to each message.",
-      "The officer checks the result before using it."
+      "The initial prompt gives the model wide latitude, so its structure and emphasis may vary.",
+      "The chief compares the first completion with the requirements of the note for the file.",
+      "The revised prompt adds the artefact, source boundary, headings, tone, length and a rule for missing information.",
+      "Those elements steer next-token prediction towards the requested structure without changing the model's weights.",
+      "The chief checks every statement against the approved notes before clearing the text."
     ],
-    "result": "|No.|Label|Reason|\n|---|---|---|\n|1|Urgent|Deadline today|\n|2|Not urgent|Needed next week|\n|3|Urgent|Safety issue|"
+    "result": "What worked\nPilot users found the template useful.\n\nWhat did not\nOutputs varied when prompts did not specify the audience and format.\n\nFollow-up\nThe section will test a standard prompt and review it at the next monthly meeting. Owner: Not in record."
   },
   "unWorkplaceExample": {
-    "scenario": "A programme team wants help drafting a neutral first draft of a public-facing summary from approved, non-sensitive meeting notes.",
-    "relevance": "Careful prompting can specify tone, length, audience and structure, which can save time and make outputs easier to review.",
-    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Use only approved tools and keep human oversight over accuracy, neutrality and rights-sensitive content."
+    "scenario": "After a drafting-assistant pilot, a chief of section at Headquarters must clear a lessons-learned note for the file before close of business. The first summaries vary in tone and omit decisions, so the chief revises the standard prompt to require fixed headings, separate decisions from follow-up actions and flag anything unsupported by the approved meeting record.",
+    "relevance": "Prompt engineering turns the drafting requirement into explicit instructions, context, constraints and an output format. Testing the result and refining those elements can make later completions more consistent. It steers generation through the input; it does not change the model's weights.",
+    "caution": "Use only approved, non-sensitive source material. Never enter confidential, personal, protection-sensitive, security-sensitive or procurement-sensitive information into a tool not approved for it, as the information could be retained or disclosed. Prompt wording cannot make an unapproved service safe. The draft still requires human review before clearance."
   },
   "whyItMatters": "Non-specialists do not need to become engineers, but they do need to know that results depend heavily on the instructions given. A vague request can waste time, while a clear prompt can produce output that is easier to review, compare and reuse. This matters for decisions about efficiency, quality control and risk. It also helps people recognise the limits: if the model gives a polished answer, that does not mean the answer is correct. Good prompting improves usefulness, but it does not replace evidence, policy checks or human judgement.",
   "whereYouMayHearIt": [
-    "chat assistant training",
-    "office productivity tools",
-    "communications drafting",
-    "developer documentation",
-    "AI literacy sessions"
+    "During a lessons-learned session after an AI pilot",
+    "At a vendor demo for an office drafting tool",
+    "In an ICT governance board review of an approved use case",
+    "While clearing a standard prompt for a briefing-note workflow"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "It means telling the AI tool clearly what you want, what rules to follow and what shape the answer should have.",
     "technical": "Prompt engineering is the design and iterative refinement of the input sent to a language model so that next-token prediction is steered toward a more useful completion. In practice, the prompt may include task instructions, context, constraints, examples, role framing and output formatting requirements. These elements influence which patterns in the model’s training and current context are activated during generation. This is different from changing model weights through fine-tuning, and different from retrieval-augmented generation, which adds external information at run time. Prompt engineering can improve relevance, consistency and structure, but it cannot by itself guarantee truthfulness, policy compliance or robust reasoning."
   },
-  "keyTakeaway": "Better instructions often produce better AI output, but they do not turn generated text into verified fact.",
+  "keyTakeaway": "Prompt engineering refines the instructions and context that steer a model's reply. It can improve consistency and structure, but it neither changes the model's weights nor verifies the result.",
   "quickCheck": {
     "question": "Which example best shows prompt engineering rather than fine-tuning or retrieval?",
     "options": [
@@ -251,6 +250,20 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:05.234Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -33,8 +33,8 @@
   "oneSentence": "Making an AI system's behaviour better match intended goals or preferences, often through methods applied after broad training.",
   "plainExplanation": "People use this word in more than one way, so it helps to be precise. In everyday product talk, it often means adjusting a model after its broad initial training so it behaves in ways people find more useful, safer or more consistent. In research and policy discussions, it can also mean the wider problem of making advanced AI systems reliably pursue intended goals.\n\nFor a language model, the input to alignment work usually includes example prompts and preferred answers, ratings from people, rules about what the system should avoid, and tests that check its behaviour. A model is first broadly trained on large amounts of text in pretraining. Then extra methods are used to steer it. These may include instruction tuning, preference learning, or reinforcement learning from human feedback, where human judgements are used as a training signal.\n\nWhat happens during alignment is not magic and it does not guarantee perfect behaviour. Developers use training methods to change the model so certain kinds of responses become more likely and others less likely. That can improve helpfulness, reduce some harmful outputs and make answers follow a task more closely. But it can also introduce trade-offs, such as making the model more cautious, more verbose or less flexible.\n\nThe output of alignment work is usually a model version that better matches chosen instructions or preferences on the tests that were used. This differs from fine-tuning, which is a parameter-update method that can serve alignment or another adaptation goal. It also differs from a guardrail, which is a rule, check or control that limits outputs or actions before people rely on them. AI safety is broader and covers risks, governance and real-world impacts beyond this training stage.",
   "everydayAnalogy": {
-    "title": "Preparing for a practice examination with feedback",
-    "story": "A student in Nairobi takes a practice examination, then sits with a teacher who marks which answers were clear, which ignored the question, and which were confident but wrong. The student does not relearn every subject from the beginning. Instead, they practise responding in the style the examination expects: answer the actual question, show steps when asked, and stop guessing when unsure. After several rounds of feedback, the student usually gives answers that fit the test better, even though they can still make mistakes.",
+    "title": "An experienced cook joining a new kitchen",
+    "story": "An experienced cook already knows how to prepare many dishes. In a new kitchen, the head chef provides sample plates, written standards and repeated choices between two versions of the same dish. The cook gradually learns that this kitchen prefers less salt, a particular presentation and no substitutions without asking. The cook has not relearned cooking from the beginning. Their existing skill has been adjusted towards the new kitchen’s preferences. They can still misread an order or make a poor judgement, so the final plate is still checked.",
     "mapping": [
       {
         "analogyElement": "the student after studying many subjects already",
@@ -87,28 +87,27 @@
     "reducedMotionDescription": "A static four-box process with arrows from 'Pretrained model' to 'Examples, instructions, policies' to 'Alignment methods' to 'Aligned model version and checks', plus a dotted side note for optional external guardrails."
   },
   "workedExample": {
-    "scenario": "A team has a general language model that often answers directly, but it does not reliably follow a house style for customer support.",
-    "input": "120,000 prompt-answer examples in the desired style, 18,000 human preference comparisons, and an evaluation set of 2,000 held-out prompts.",
+    "scenario": "A translation service is adapting an existing multilingual model to produce first drafts that follow approved terminology, preserve qualifications and avoid adding content not present in the source.",
+    "input": "Curated source-and-draft examples, paired responses ranked by revisers, relevant drafting guidance and a held-out evaluation set containing texts not used during adaptation.",
     "process": [
-      "The team starts from an existing pretrained checkpoint rather than training from scratch.",
-      "They run instruction tuning on the 120,000 examples so the model learns patterns such as greeting politely, asking one clarifying question when needed, and avoiding unsupported claims.",
-      "They use the 18,000 preference comparisons to further adjust the model toward responses that human reviewers judged clearer and more faithful to policy.",
-      "They test the new model version on 2,000 unseen prompts and compare it with the old version on instruction-following, refusal quality and hallucination rates."
+      "The developers begin with an existing pretrained model rather than training a language model from scratch.",
+      "They use supervised instruction tuning on curated examples so the model practises following terminology, formatting and fidelity instructions.",
+      "They apply preference learning using pairs of candidate drafts, giving greater weight to versions that revisers judged accurate, restrained and consistent with the guidance.",
+      "They test the adapted model on unseen texts, checking instruction-following, terminology, omissions, unsupported additions and cases where the source is ambiguous."
     ],
-    "result": "The new version follows the requested format on 89% of test prompts, up from 71%. It also gives fewer unsupported confident answers on the evaluation set, though reviewers note it has become slightly more cautious on borderline cases."
+    "result": "The adapted model follows the selected drafting preferences more consistently than the base model. It still requires human revision, particularly where wording is politically sensitive, context-dependent or genuinely ambiguous."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN procurement team is drafting requirements for a software purchase that includes a language model for summarising public vendor documentation and answering staff questions about approved procurement procedures.",
-    "relevance": "Understanding alignment helps the team ask whether the vendor adapted the model to follow procurement instructions consistently, what evaluation evidence supports those claims, and whether behaviour comes from model training, external guardrails or both.",
-    "caution": "Do not test or customise a public AI service with confidential bids, personal data, investigation material or security-sensitive procurement information unless an approved system, legal basis and safeguards are in place."
+    "scenario": "At a shared services centre, a reviser is checking a multilingual drafting assistant before a side-event concept note goes for clearance. The base model produces fluent text, but it sometimes ignores approved terminology, adds unnecessary flourishes and changes carefully negotiated wording.",
+    "relevance": "Alignment is the work done after broad training to make the model follow selected instructions and preferences more consistently. The reviser should ask what supervised examples, preference judgements and evaluation sets were used, and whether the resulting behaviour was tested on unseen texts rather than demonstrated on a few convenient prompts.",
+    "caution": "Do not enter an uncleared concept note, negotiating text or other non-public material into an external tool that has not been approved for that information. Alignment to house style does not make a model secure, confidential or reliable enough to replace revision and clearance."
   },
   "whyItMatters": "If someone says a model is aligned, that sounds reassuring, but it may refer to very different things. For buyers, managers and policymakers, the key question is aligned to what, by which method, tested how, and with what trade-offs. A system tuned to be polite may still be inaccurate. A system tuned to refuse risky requests may also refuse legitimate ones. Clear understanding helps with procurement, risk assessment, governance, incident review and public communication. It also prevents a common mistake: treating a general claim about alignment as proof that a system is safe, fair or reliable in your own setting.",
   "whereYouMayHearIt": [
-    "AI product announcements",
-    "procurement and vendor demos",
-    "AI policy briefings",
-    "model card discussions",
-    "research papers on post-training"
+    "During a vendor demo to an ICT governance board",
+    "In an evaluation readout before clearance of an AI pilot",
+    "At an inter-agency working group reviewing generative AI safeguards",
+    "In a procurement meeting examining evidence about model adaptation"
   ],
   "commonMisconceptions": [
     {
@@ -128,7 +127,7 @@
     "simple": "After a model has learned general patterns, developers can further adjust it so it follows instructions and preferred behaviour more reliably. That adjustment is often what people mean by alignment.",
     "technical": "In current language-model practice, alignment often refers to post-training methods that optimise a pretrained model toward selected behavioural targets, such as instruction-following, policy compliance, response style or preference satisfaction. Typical inputs include supervised examples, pairwise preference data, constitutions or policy documents, and evaluation sets. Common mechanisms include supervised fine-tuning, instruction tuning, preference learning and reinforcement learning from human feedback. These methods alter model parameters, or in some systems combine parameter updates with external controls, so the distribution of likely outputs shifts toward behaviours that raters or designers prefer. In a broader research sense, 'alignment' can also refer to the harder problem of ensuring advanced systems robustly pursue intended objectives under distribution shift and imperfect specification. Because the term spans both practical post-training and deeper control questions, claims about alignment need context."
   },
-  "keyTakeaway": "Alignment usually means steering a broad model toward intended behaviour, not proving that it is universally safe, correct or under full control.",
+  "keyTakeaway": "Alignment usually means steering a broad model towards selected behaviour after pretraining. It improves conformity to chosen targets, but does not prove that the model is safe, correct or fully controlled.",
   "quickCheck": {
     "question": "Which statement best distinguishes alignment from a guardrail?",
     "options": [
@@ -248,6 +247,20 @@
       "oneSentence",
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:18:32.075Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced generic examples with a specific revision workflow, removed invented figures, strengthened the confidentiality caution and replaced the examination analogy."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

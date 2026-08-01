@@ -91,29 +91,28 @@
     "reducedMotionDescription": "A static two-lane flowchart shows one input feeding both a model path and a reference-answer path. These meet in a comparison box, which then points to either training updates or evaluation scores."
   },
   "workedExample": {
-    "scenario": "A team is building a classifier to detect whether a message asks for technical support.",
-    "input": "Message text: 'I cannot log in after resetting my password.'",
+    "scenario": "A service desk focal point at Headquarters is evaluating a classifier before figures go into a monthly monitoring report. Reviewers have labelled a held-out set of requests using an agreed coding guide.",
+    "input": "Sanitised request text: \"I cannot log in after resetting my password.\"",
     "process": [
-      "Human reviewers mark the message as 'support request'. That marked answer is the ground truth for this example.",
-      "The model reads the message and predicts 'support request' with probability 0.82.",
-      "The prediction is compared with the ground truth.",
-      "Because the prediction matches the reference class, this example counts as correct for evaluation.",
-      "If this happens during training, the model still uses the difference between its full probability distribution and the reference answer to adjust internal weights."
+      "Reviewers check the request and assign the category \"account access\". This checked label is the ground truth for the example.",
+      "The model assigns probabilities of 0.82 to \"account access\", 0.12 to \"software request\" and 0.06 to \"other\".",
+      "For evaluation, the model's highest-probability class is compared with the ground-truth class. They match, so the prediction is counted as correct.",
+      "Because this request is in a held-out evaluation set, the result contributes to performance metrics but does not update the model.",
+      "If the labelled request were used during training, a loss function would compare the predicted probabilities with the ground-truth target and use the difference to adjust model parameters."
     ],
-    "result": "For this example, the ground truth is 'support request', the prediction matches it, and the model gets credit for a correct classification."
+    "result": "The ground truth is \"account access\". The classifier receives credit for a correct prediction, while its probability distribution still shows how much uncertainty it assigned to the alternatives."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is preparing procurement requirements for software that classifies incoming public enquiries into categories such as logistics, finance or IT support. During vendor testing, the office uses a sample of previously reviewed enquiries with categories assigned by trained staff under clear rules as the reference set.",
-    "relevance": "Ground truth matters because procurement staff need to ask where the vendor’s reference answers came from, who reviewed them, how disagreements were handled, and whether the evaluation data matches the organisation’s real use case.",
-    "caution": "Do not place confidential, personal, security-sensitive or protection-sensitive enquiry data into an unapproved public AI service when creating or checking reference answers; use approved systems, minimise data, and keep human oversight."
+    "scenario": "At close of business, a human resources officer in a Resident Coordinator's Office is checking the staffing section of a quarterly report to a donor. A pilot tool has classified recruitment actions as on time or delayed. The officer compares its outputs with labels assigned by reviewing the approved workflow timestamps against agreed reporting rules. Those checked labels are the ground truth.",
+    "relevance": "If the reference labels use inconsistent cut-off rules or omit exceptional cases, a high accuracy score says little. The officer needs to record who assigned the labels, how disputed cases were resolved and whether the held-out sample reflects the recruitment actions covered by the report.",
+    "caution": "Recruitment files contain personal and HR-sensitive information. They must not be uploaded to a tool that has not been approved for such material. Use the approved environment, remove fields not needed for classification, restrict access and retain a human check before the figures are cleared."
   },
   "whyItMatters": "If you hear that a model is “90% accurate”, the next question should be: compared with what reference answer? That reference is the ground truth. If it is weak, outdated, biased or inconsistent, the performance claim can mislead decision-makers. Ground truth affects procurement, risk assessment, quality assurance and fairness review. It helps you ask practical questions: Who created the reference answers? Were clear guidelines used? Did experts agree? Does the reference reflect the population and language varieties the system will face? A non-specialist does not need to build models to see that better reference answers usually lead to more trustworthy evaluation and, often, better training.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "data labelling projects",
-    "vendor demos and procurement",
-    "research papers on benchmarks",
-    "quality assurance meetings"
+    "A vendor demo during a procurement meeting",
+    "A quality assurance meeting before an evaluation report is cleared",
+    "An ICT governance board reviewing a pilot",
+    "A labelling review with subject-matter focal points"
   ],
   "commonMisconceptions": [
     {
@@ -137,7 +136,7 @@
     "simple": "Ground truth is the answer you use as the trusted reference when checking whether a model got something right.",
     "technical": "Ground truth is the target value or reference annotation assigned to an example and treated as the benchmark for comparison during training, validation or testing. In supervised learning, the model receives inputs and associated targets, then a loss function measures the difference between predicted outputs and ground-truth targets. Those differences can be used to update model parameters during training or to compute evaluation metrics on held-out data. The reference may come from human annotation, direct measurement, sensor readings, administrative records or expert adjudication. Depending on the task, it may be categorical, numeric, textual or spatial. A label is an expected answer attached to an example; it is ground truth when treated as the trusted reference. Ground truth is also distinct from prediction, which is the model output, and from accuracy, which summarises comparisons across many examples. In practice, ground truth may be noisy, partial, delayed or contested, so dataset documentation and annotation protocols are part of technical quality control."
   },
-  "keyTakeaway": "Ground truth is the best available reference answer a model is trained or tested against, not the model’s output and not the score summarising performance.",
+  "keyTakeaway": "Ground truth is the checked reference target used to train or evaluate a model. It is not the model's answer and, despite the name, can still reflect judgement, ambiguity or labelling error.",
   "quickCheck": {
     "question": "Which statement best describes ground truth in machine learning?",
     "options": [
@@ -263,6 +262,19 @@
       "plainExplanation",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:11:30.420Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

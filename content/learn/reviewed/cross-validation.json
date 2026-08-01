@@ -89,29 +89,28 @@
     "reducedMotionDescription": "A static five-row chart shows the dataset split into five folds. In each row, one fold is coloured as evaluation and the others as training, with the evaluation fold changing position from row to row. Five scores are listed at the right, leading to a final summary box with the average and variation."
   },
   "workedExample": {
-    "scenario": "A team is building a model to sort 1,000 customer support messages into 'urgent' or 'not urgent'. They use 5-fold cross-validation and measure F1 score because urgent cases are less common.",
-    "input": "1,000 labelled messages, 5 folds of 200 messages each, one classification model, F1 score as the metric.",
+    "scenario": "The statistician checks the pilot using 1,000 authorised, labelled passages from progress reports. The model classifies each passage as requiring follow-up or routine, with follow-up cases less common.",
+    "input": "1,000 labelled passages, five folds of about 200 passages, one classification model and F1 score as the evaluation metric.",
     "process": [
-      "Split the 1,000 messages into five folds of 200, keeping the urgent/not urgent ratio similar in each fold.",
-      "Train on folds 2 to 5 and evaluate on fold 1, then repeat until each fold has been the evaluation fold once.",
-      "Record the five F1 scores: 0.72, 0.75, 0.70, 0.74, and 0.73.",
-      "Average the scores to get 0.728, and note that the scores are fairly close to one another.",
-      "Use this result to compare the model with alternatives, while keeping a separate final test set if one is available for the last independent check."
+      "Group passages by source report, then create five disjoint folds while keeping the follow-up and routine proportions as similar as possible. This reduces leakage from repeated or near-duplicate wording.",
+      "Train on folds 2 to 5 and evaluate on fold 1. Repeat the process until every fold has served once as the held-out evaluation fold.",
+      "Record the five F1 scores: 0.72, 0.75, 0.70, 0.74 and 0.73.",
+      "Calculate the mean score, 0.728, and examine the fold-level results rather than reporting the mean alone.",
+      "Use the same folds and metric when comparing alternative models. If a separate final test set is available, leave it untouched until the preferred model has been selected."
     ],
-    "result": "The model's estimated performance is about F1 = 0.73 on unseen messages, with modest variation across folds, so the estimate looks more reliable than a single split score."
+    "result": "The estimated F1 score is about 0.73 on passages from reports not used for fitting in each iteration. The fairly close fold scores make the estimate less dependent on one favourable split, although only a separate final test set provides the last independent check."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN procurement team is assessing vendor claims about a document-classification tool for routing incoming public correspondence. In the requirements and evaluation plan, they ask vendors to report cross-validation results on approved sample data, including the metric used, the number of folds, and the variation across folds.",
-    "relevance": "This helps the team judge whether a high performance claim is consistent across different data splits or just the result of one favourable split. It also makes vendor comparisons more structured and transparent.",
-    "caution": "Do not place confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service for testing. If sample data contain sensitive material, evaluation must follow approved governance, privacy and security procedures."
+    "scenario": "By close of business, a statistician in a regional bureau must send the chief of section talking points for informals on a pilot that flags implementing partner progress-report passages for follow-up. With only 1,000 labelled passages, the statistician asks for stratified five-fold cross-validation and all five fold-level F1 scores, rather than the single score featured in the vendor slide.",
+    "relevance": "The results show whether the headline score holds across several data splits and whether the less common follow-up cases are represented in each fold. The mean provides a more stable estimate, while variation between folds gives the chief of section a reason to qualify the talking point if performance is uneven.",
+    "caution": "Progress reports may contain personal, protection, security-sensitive or procurement-sensitive material. They must not be uploaded to an external or unapproved AI service, because this could expose restricted information. Use only authorised data in an approved environment, and keep passages from the same report in one fold where duplication could otherwise leak information and inflate the score."
   },
   "whyItMatters": "A single performance score can look reassuring even when it depends heavily on how the data were split. Cross-validation gives a stronger estimate by repeating the train-and-check cycle across multiple splits. For non-specialists, that matters when comparing vendors, approving pilots, or deciding whether a system is ready for real use. It can reveal that one model is consistently solid while another only looks good under favourable conditions. It also helps you ask better questions: What metric was used, how many folds, was the split appropriate, and how much did the score vary? Those questions reduce the chance of buying, deploying or trusting a system on weak evidence.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "procurement technical annexes",
-    "data science tutorials",
-    "research papers",
-    "benchmark comparisons"
+    "During informals, when a statistician is asked what sits behind a headline model score",
+    "In a regional bureau clearance meeting on talking points for a data pilot",
+    "At a vendor demo, when the procurement unit asks for fold-level results",
+    "During an evaluation office's first reading of a model validation report"
   ],
   "commonMisconceptions": [
     {
@@ -135,7 +134,7 @@
     "simple": "Instead of testing a model once on one held-out chunk of data, you test it several times on different held-out chunks and combine the results.",
     "technical": "In k-fold cross-validation, a dataset is partitioned into k disjoint folds. For each iteration i, the model is fit on the union of k-1 folds and evaluated on fold i. This produces k out-of-sample performance estimates, one per fold, which are then summarised, commonly by the mean and sometimes the standard deviation or confidence interval. The method reduces sensitivity to a single split and uses data efficiently, especially when datasets are small. Variants include stratified k-fold for preserving class proportions, grouped cross-validation for keeping related samples together, and time-series methods when order matters. Cross-validation is mainly an internal evaluation procedure for model selection and hyperparameter tuning; if it guides repeated choices, an untouched final test set is still valuable for a less biased final estimate."
   },
-  "keyTakeaway": "Cross-validation checks a model across several rotated hold-out splits, so one lucky split is less likely to fool you.",
+  "keyTakeaway": "Cross-validation rotates the held-out data and summarises all fold scores, making the estimate less dependent on one split. It does not replace a final independent test set or correct data leakage.",
   "quickCheck": {
     "question": "Why do many teams use k-fold cross-validation instead of relying on one train-test split?",
     "options": [
@@ -233,6 +232,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:35.127Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "The workplace and numerical examples now use the rotated role, setting and deadline, with stronger safeguards against sensitive-data exposure and leakage between folds."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

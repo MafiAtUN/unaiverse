@@ -85,28 +85,27 @@
     "reducedMotionDescription": "A static left-to-right chart with four panels: counts, precision, recall and F1. Arrows show that TP, FP and FN lead to precision and recall, and those two lead to F1. A note under the last panel says the score rewards balance, not one strong value alone."
   },
   "workedExample": {
-    "scenario": "A team tests a model that flags potentially fraudulent expense claims for human review.",
-    "input": "On 200 past claims with verified labels, the model flags 50 as suspicious. Of those 50, 30 are truly fraudulent. In the full set, there are 40 truly fraudulent claims.",
+    "scenario": "Before the progress report enters clearance, the partnerships officer evaluates the classifier against needs assessment answers previously coded and checked by two reviewers.",
+    "input": "Among 200 checked answers, 40 require partner follow-up. The classifier flags 50 answers, of which 30 genuinely require follow-up.",
     "process": [
-      "Count outcomes: true positives = 30, false positives = 20, false negatives = 10.",
-      "Calculate precision: 30 / (30 + 20) = 0.60.",
-      "Calculate recall: 30 / (30 + 10) = 0.75.",
+      "Count the outcomes: true positives = 30, false positives = 20 and false negatives = 10.",
+      "Calculate precision: 30 / (30 + 20) = 0.60. Of the answers flagged for follow-up, 60 per cent were correctly flagged.",
+      "Calculate recall: 30 / (30 + 10) = 0.75. The classifier found 75 per cent of all answers requiring follow-up.",
       "Combine them: F1 = 2 × 0.60 × 0.75 / (0.60 + 0.75) = 0.67, rounded."
     ],
-    "result": "The system has an F1 score of about 0.67. That suggests a moderate balance: it catches many fraud cases, but still produces a noticeable number of false alarms."
+    "result": "The F1 score is about 0.67. The classifier finds most follow-up items, but 20 of its 50 flags are false alarms and it misses 10 relevant answers. The officer should examine those errors and the operational threshold, not treat 0.67 as a verdict on whether the model is fit for use."
   },
   "unWorkplaceExample": {
-    "scenario": "A humanitarian coordination team is testing a classifier that tags incoming situation update messages as likely 'requires urgent follow-up' or 'routine', so human staff can prioritise review.",
-    "relevance": "F1 can help the team compare versions of the classifier when both missed urgent items and unnecessary urgent flags matter. It gives one summary score for the trade-off between catching true urgent messages and avoiding too many false alarms.",
-    "caution": "Do not place confidential, personal, protection-sensitive or security-sensitive message content into an unapproved public AI service. Evaluation should use approved systems, governance controls and human review, and teams should also examine the actual costs of misses and false alarms rather than relying on F1 alone."
+    "scenario": "A partnerships officer in a country office is testing a classifier while coding open-ended answers from a needs assessment. The model tags answers that may require partner follow-up before the progress report goes for clearance at close of business.",
+    "relevance": "F1 helps compare model versions when both missed follow-up items and unnecessary flags create work. It combines the share of flagged answers that reviewers confirm as relevant with the share of all relevant answers that the model finds. Because the lower value weighs heavily, strong recall cannot conceal weak precision, or vice versa.",
+    "caution": "Needs assessment answers may contain personal or protection-sensitive details. Raw answers must not be entered into a tool that has not been approved for that material, because doing so could expose respondents. Use an approved environment, minimise the evaluation data and retain human review. Also inspect false positives and false negatives separately, since F1 excludes true negatives and does not reflect the different consequences of each error."
   },
   "whyItMatters": "A single score can make model results look simple, but decisions are rarely simple. F1 matters because it is often used when accuracy would be misleading, especially if positive cases are rare. For example, a system can look highly accurate by mostly saying “not positive”, yet still miss many of the cases people care about. F1 helps you ask a better question: does the system both find important cases and avoid too many false alarms? That said, it should not be the only basis for procurement, deployment or risk decisions. If missing a case is much more harmful than raising a false alarm, or the reverse, then two systems with the same F1 may still be very different in practice.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "machine learning dashboards",
-    "benchmark comparisons",
-    "fraud or risk detection projects",
-    "triage classifier testing"
+    "A vendor demo during a procurement meeting",
+    "An ICT governance board reviewing a classification tool",
+    "Clearance of a model evaluation report",
+    "A progress meeting with an implementing partner"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +125,7 @@
     "simple": "F1 score gives one number for how well a system finds positive cases without producing too many wrong positive alerts.",
     "technical": "For binary classification, F1 is the harmonic mean of precision and recall: F1 = 2PR / (P + R), where precision P = TP / (TP + FP) and recall R = TP / (TP + FN). Because it is a harmonic mean, the result is strongly influenced by the smaller of the two values, so it rewards balance rather than allowing one high value to hide one low value. F1 is especially common under class imbalance, where plain accuracy can be misleading. However, it excludes true negatives, so it should not be treated as a full description of performance. Variants such as macro, micro and weighted F-scores extend the idea to multi-class settings, and F-beta variants change the balance to favour recall or precision more strongly."
   },
-  "keyTakeaway": "F1 is useful when you need one score for balancing missed positives against false alarms, but it is not a complete picture of real-world performance.",
+  "keyTakeaway": "F1 summarises the balance between precision and recall, with the lower value pulling the score down. It is useful under class imbalance, but excludes true negatives and cannot show whether particular errors are acceptable.",
   "quickCheck": {
     "question": "Why can F1 be more informative than accuracy when positive cases are rare?",
     "options": [
@@ -239,6 +238,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:10.122Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -32,8 +32,8 @@
   "oneSentence": "The ability of a model to give useful results on new cases, not just on the examples used to build or tune it.",
   "plainExplanation": "A model is built from past examples, often called training data. Generalisation asks whether its performance carries over to relevant examples it has not seen before.\n\nTesting does not create generalisation. It provides evidence about it. Developers compare predictions with known answers on a separate set of examples. Strong performance on relevant unseen data suggests better generalisation. A sharp drop suggests that patterns learned during development do not transfer well.\n\nAccuracy and generalisation are not the same. Accuracy is a measurement on a particular dataset. Generalisation concerns performance beyond the data used to train or tune the model. A model can have high development accuracy and still perform poorly in practice.\n\nGeneralisation also differs from memorisation and overfitting. Memorisation means repeating training examples or narrow patterns. Overfitting occurs when fitting the training examples closely leads to worse performance on new cases. Generalisation is usually estimated with held-out test data or cross-validation, followed by checks under relevant operating conditions.",
   "everydayAnalogy": {
-    "title": "Finding books in a large library",
-    "story": "A new library assistant learns how books are arranged by practising in one wing of a large library. In that wing, the assistant gets very fast at locating history books on familiar shelves. The next day, the assistant is sent to a different wing with new shelves, different subjects and some unusual labels. If the assistant can still find the right books quickly by using the library system rather than just memory of one area, that is the kind of behaviour people mean by generalisation.",
+    "title": "Using the map, not memorising the route",
+    "story": "Someone practises cycling to one address until every turn is familiar. That does not show they can reach a new address. If they have learned to read the map, recognise street signs and adjust when a road is closed, they can handle routes they have not practised. A model generalises when it likewise applies what it learned to new, relevant cases rather than merely reproducing familiar patterns.",
     "mapping": [
       {
         "analogyElement": "Practising in one wing of the library",
@@ -86,28 +86,27 @@
     "reducedMotionDescription": "A static two-column comparison with the same boxes and labels, no animation. Notes that would appear on hover are shown as small text under each outcome."
   },
   "workedExample": {
-    "scenario": "A team builds a model to identify whether customer support messages are about password resets.",
-    "input": "10,000 past messages for development; 2,000 separate new messages for testing.",
+    "scenario": "The officer tests whether the classifier can recognise access constraints in field updates it did not encounter during development.",
+    "input": "A development set of earlier updates and a separate, later batch kept out of training and tuning.",
     "process": [
-      "The team trains and tunes the model on the 10,000 development messages.",
-      "On development data, the model reaches 95% accuracy, which looks excellent.",
-      "They then test it on 2,000 new messages collected later from a different month.",
-      "On the new messages, accuracy falls to 74%, and many messages mentioning 'account access code' are missed because that wording was rare in development data."
+      "The classifier is fitted and tuned only on the development set, where its precision and recall appear strong.",
+      "The later batch remains untouched until the final evaluation, preventing information from the test material leaking into development.",
+      "On the held-out batch, recall drops because several sources describe access constraints using different shorthand and sentence structures.",
+      "The officer examines the missed cases and checks whether the gap reflects overfitting, limited data coverage or a change in reporting patterns."
     ],
-    "result": "The model does not generalise well enough yet. Its strong development score did not carry over to fresh data, so the team needs better data coverage, evaluation and possibly a different approach."
+    "result": "The lower performance on held-out updates reveals a generalisation gap. Before operational use, the classifier needs broader development data and another evaluation on fresh material, not further tuning against the same test batch."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team reviews a tool that flags possible data quality issues in programme monitoring reports from several country offices.",
-    "relevance": "The key question is not whether the tool performs well on reports from the offices used to develop it, but whether it still performs acceptably on reports from other offices, time periods and reporting styles.",
-    "caution": "Do not upload confidential, personal or protection-sensitive monitoring data into an unapproved public AI service for testing; use approved environments, minimise data, and keep human review in the loop before acting on flags."
+    "scenario": "A humanitarian affairs officer in a country office is assessing a classifier that sorts incoming field updates by issue before preparing a briefing note for clearance at 6pm.",
+    "relevance": "Strong results on updates used during development mean little if the classifier misses new wording, abbreviations or reporting styles. It should be evaluated on genuinely held-out updates from later periods and different sources, using measures that reflect the cost of missed or incorrect flags.",
+    "caution": "Do not enter raw field updates containing personal, protection-related or security-sensitive information into a tool that is not approved for such material. Evaluation must use an approved environment and appropriately minimised or de-identified data. Every flag still requires human review before it affects the briefing note or any follow-up."
   },
   "whyItMatters": "A system can look strong in a demo, a pilot or a benchmark and still fail in real use. Generalisation matters because most decisions rely on the future, not the past examples used to build the model. If a model does not generalise, people may trust scores that do not hold across places, time periods, languages or populations. That can waste money, miss important cases, or create unfair results. For a non-specialist, this term is a practical warning: ask not only 'What score did it get?' but also 'On what data, and does that resemble where we plan to use it?'",
   "whereYouMayHearIt": [
-    "model evaluation meetings",
-    "product testing reports",
-    "benchmark discussions",
-    "procurement reviews",
-    "research papers"
+    "A vendor demo before a procurement unit records its technical assessment",
+    "An ICT governance board reviewing evidence from held-out testing",
+    "A programme review where a pilot worked in one country office but not another",
+    "An evaluation office discussing whether model results transfer across reporting periods"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +126,7 @@
     "simple": "In simple terms, this means a model learned something useful that still helps on new examples, not just on the examples used to build it.",
     "technical": "Technically, generalisation is the performance a fitted model is expected to achieve on relevant unseen data. The difference between development performance and unseen-data performance is the generalisation gap. Generalisation is estimated with held-out test sets or cross-validation, using metrics suited to the task, such as accuracy, precision, recall, F1 score or calibration. Poor unseen performance can result from overfitting, data leakage, distribution mismatch or evaluation procedures that do not reflect intended use. The central question is whether patterns fitted from the observed sample support useful performance beyond that sample."
   },
-  "keyTakeaway": "A model is only as useful as its performance on new, relevant data, not on the examples it has already seen.",
+  "keyTakeaway": "Judge a model by useful performance on relevant cases it has not seen, not by how well it handles material used to build or tune it.",
   "quickCheck": {
     "question": "Which result is the best evidence that a model generalises well?",
     "options": [
@@ -252,6 +251,20 @@
       "plainExplanation",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:40.011Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

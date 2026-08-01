@@ -90,28 +90,27 @@
     "reducedMotionDescription": "A static side-by-side comparison replaces any hover or animation. The changed part of the second input remains outlined, and both input-to-output paths are visible at once."
   },
   "workedExample": {
-    "scenario": "An image classifier used in a warehouse sorts parcels by hazard label.",
-    "input": "Original image: a parcel with a clearly visible 'flammable' diamond. Altered image: the same parcel photo with a faint printed sticker pattern added over one corner.",
+    "scenario": "In a controlled robustness test, a model routes scanned correspondence to “action required”, “for information” or “archive”.",
+    "input": "Baseline: a synthetic letter requesting follow-up. Altered version: the same letter with a faint, carefully calculated pixel pattern around the letterhead.",
     "process": [
-      "The original photo is sent to the classifier, which outputs 'flammable' with 0.94 confidence.",
-      "An attacker tests small overlay patterns and finds one that changes the model’s internal representation.",
-      "The altered photo looks almost the same to staff viewing a thumbnail.",
-      "The same classifier processes the altered photo and outputs 'general goods' with 0.71 confidence."
+      "The model sends the baseline letter to “action required”.",
+      "Using access to the model, the tester calculates a small perturbation intended to reduce the model’s score for that queue and increase its score for “archive”.",
+      "The wording is unchanged, and the altered scan looks almost identical to a person.",
+      "The model sends the altered letter to “archive”. A black-box attacker could instead search for a similar perturbation through repeated queries or by testing it on another model first."
     ],
-    "result": "A tiny, deliberate visual change to the input causes a materially different label, even though the object in the scene has not changed."
+    "result": "The optimised perturbation moves the input across the model’s decision boundary. Its purpose distinguishes it from ordinary blur, compression or scanning noise."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal tool to help triage incoming public social media images for a situation report, separating damaged infrastructure photos from unrelated content.",
-    "relevance": "If someone deliberately edits images or text snippets to fool the model, the triage queue may misclassify important material or elevate misleading content. Staff need to recognise that model error can be induced, not only accidental.",
-    "caution": "Do not upload confidential, personal, protection-sensitive or security-sensitive material to an unapproved public AI service for testing. Any review of suspected adversarial inputs should stay within approved systems and human oversight."
+    "scenario": "During the technical evaluation of three bids, a records officer in an inter-agency secretariat tests each proposed document-routing model with approved synthetic correspondence. The evaluation report is due for clearance by close of business.",
+    "relevance": "One test file differs from the baseline only by a faint pixel pattern around the letterhead. If the baseline goes to the action queue but the altered copy goes to archive, the test has exposed a vulnerability to a deliberately optimised input, not merely routine scanning noise.",
+    "caution": "Bid contents, evaluator comments and procurement-sensitive records must not be entered into a public or otherwise unapproved tool. Testing should use controlled, non-sensitive samples in an approved environment, with the model version, settings and queries recorded on the file. Routing decisions still require human review."
   },
   "whyItMatters": "For non-specialists, this matters because a system that performs well in routine testing may still be fragile in practice. If a model can be pushed off course by small, crafted changes, then safety, quality control, procurement and risk assessments need to ask different questions: not only 'How accurate is it on average?' but also 'How does it fail under manipulation?' This affects decisions about whether a model can be trusted for screening, routing, monitoring or support tasks, what human review is needed, and what safeguards such as input filtering, rate limits, sandboxing and fallback procedures should be in place.",
   "whereYouMayHearIt": [
-    "computer vision security",
-    "red-team testing",
-    "robustness evaluation",
-    "llm safety discussions",
-    "machine-learning research"
+    "During a vendor demonstration in a procurement meeting",
+    "In an ICT governance board review of model security",
+    "At the clearance meeting for a red-team test report",
+    "During the technical evaluation of bids for an AI-enabled service"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +130,7 @@
     "simple": "A model can be tricked by an input that looks almost normal to a person but has been altered on purpose to cause a wrong answer.",
     "technical": "An adversarial example is a test-time input modified by an adversary to induce model error or a target output. The perturbation may be constrained to remain small under some distance measure or perceptual bound, but it is optimised to move the input across a decision boundary or otherwise change the model’s output distribution. In practice, attacks may be white-box, using gradients or other model knowledge, or black-box, using queries and transferability. The exact mechanism differs by modality: in vision, it often involves pixel-space or patch perturbations; in speech, waveform changes; in text, token substitutions, insertions or control strings, though for language models many real incidents are more precisely classified under prompt injection or jailbreak. The key distinction is between the crafted input instance and the broader adversarial attack process used to generate or deploy it."
   },
-  "keyTakeaway": "A tiny, deliberate change to the input can be enough to make a model fail, even when nothing visible about the real-world situation has changed.",
+  "keyTakeaway": "An adversarial example is an input deliberately altered to make a model fail, while remaining almost unchanged to a person.",
   "quickCheck": {
     "question": "Which statement best distinguishes an adversarial example from an adversarial attack?",
     "options": [
@@ -238,6 +237,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:27:02.953Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

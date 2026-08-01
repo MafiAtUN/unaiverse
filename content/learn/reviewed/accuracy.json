@@ -31,8 +31,8 @@
   "oneSentence": "The share of cases a system labels correctly out of all the cases it was tested on.",
   "plainExplanation": "Accuracy is a simple score for checking a system’s predictions. You compare what the system predicted with the correct answers, then count how many times it got the answer right.\n\nWhat goes in: a set of cases, the system’s predicted labels for those cases, and the true labels known from reliable checking. What happens: each case is marked as correct or incorrect. What comes out: one number, usually written as a percentage.\n\nFor example, if a system checks 100 messages and labels 92 of them correctly, its accuracy is 92%. This sounds straightforward, and sometimes it is useful.\n\nBut accuracy can mislead when one outcome is much more common than another. If 95 out of 100 messages are routine, a weak system could label everything as routine and still reach 95% accuracy while completely missing the unusual but important cases. That is why accuracy should be separated from precision, recall, and the pattern of false positives and false negatives.",
   "everydayAnalogy": {
-    "title": "Marking a practice examination",
-    "story": "A student in Nairobi takes a 50-question practice examination. After finishing, they compare their answers with the official answer sheet and count 40 matches. They report that they got 80% correct. This gives a quick summary of performance, but it does not show whether the missed questions were all from one difficult topic such as algebra.",
+    "title": "Sorting dark and light socks",
+    "story": "A basket contains 90 dark socks and 10 light socks. A sorter calls every sock dark. It is correct 90 times out of 100, so its accuracy is 90%. That sounds respectable until someone notices that it failed on every light sock. The common group dominates the score.",
     "mapping": [
       {
         "analogyElement": "the student's answers",
@@ -85,27 +85,27 @@
     "reducedMotionDescription": "A static four-panel diagram shows the same sequence without animation: labelled test cases, predictions beside labels, green and red match markings, and a final fraction converted to a percentage with a caution note about rare cases."
   },
   "workedExample": {
-    "scenario": "A clinic tests a simple screening model on 200 past cases to see whether it flags a condition.",
-    "input": "Out of 200 cases, 180 truly do not have the condition and 20 truly do. The model labels 190 cases correctly.",
+    "scenario": "At a regional hub, an information management officer evaluates a classifier that identifies paragraphs containing numerical claims before monitoring reports are uploaded to the portal.",
+    "input": "The reviewed test set contains 200 paragraphs: 180 without numerical claims and 20 with them. The classifier labels 190 paragraphs correctly, but misses 10 of the 20 paragraphs containing numerical claims.",
     "process": [
-      "Collect the model's predicted label for each of the 200 cases.",
-      "Compare each prediction with the known true label from the checked records.",
-      "Count 190 correct predictions and 10 incorrect ones.",
-      "Calculate accuracy: 190 divided by 200 equals 95%."
+      "Compare the classifier's label for each paragraph with the label assigned during human review.",
+      "Count 190 correct labels out of 200 evaluated paragraphs.",
+      "Calculate accuracy: 190 divided by 200 equals 95%.",
+      "Check performance by class. The classifier found only 10 of the 20 paragraphs containing numerical claims, despite its 95% overall accuracy."
     ],
-    "result": "The model's accuracy is 95%, but that score alone does not show whether the 10 mistakes were harmless or whether they included many missed positive cases."
+    "result": "The classifier has 95% accuracy, but it misses half of the less common numerical-claim cases. The headline score is therefore insufficient for deciding whether it can support the pre-upload check."
   },
   "unWorkplaceExample": {
-    "scenario": "A team in a UN office tests a tool that suggests whether a draft resolution paragraph matches prior agreed language found in a public archive of resolutions.",
-    "relevance": "Accuracy gives a quick first check of how often the tool's suggestions match the reviewed reference set, which can help decide whether the tool is ready for limited support use under human review.",
-    "caution": "Use only an approved tool. Do not enter draft text unless it is public or authorised for that tool. Check rare but important distinctions, not accuracy alone."
+    "scenario": "An internal auditor in a country office tests a classifier that marks claims in a draft statement as either supported or unsupported before the statement goes for clearance at close of business.",
+    "relevance": "Accuracy shows the share of claims the classifier labels correctly against a set already reviewed by staff. It is a useful headline result, but a high score may simply reflect that most claims are supported. The auditor also needs to check how often the tool misses the less common unsupported claims.",
+    "caution": "Draft statements may contain sensitive or uncleared material. Do not enter the text into a tool that has not been approved for that material. Every flagged or unflagged claim still requires human review before clearance."
   },
   "whyItMatters": "A single percentage can strongly influence whether leaders trust a system, buy a product, or change a workflow. If that percentage hides important mistakes, people may approve a tool that looks good on paper but fails where the consequences matter most.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "procurement demonstrations",
-    "dashboard metrics",
-    "media coverage of AI performance"
+    "A vendor demo in a procurement meeting",
+    "An ICT governance board reviewing a pilot",
+    "A results meeting on a model evaluation report",
+    "An internal audit discussion on automated controls"
   ],
   "commonMisconceptions": [
     {
@@ -125,7 +125,7 @@
     "simple": "Accuracy tells you what fraction of all answers were right.",
     "technical": "In classification, accuracy is the number of correct predictions divided by the total number of evaluated cases, often written as (true positives plus true negatives) over all cases. It is sensitive to class imbalance because common classes dominate the score."
   },
-  "keyTakeaway": "Accuracy is useful as a first glance, not as the whole judgement.",
+  "keyTakeaway": "Accuracy is the share of all tested cases labelled correctly. When one class is much more common, the score can look strong while performance on the rarer class remains poor.",
   "quickCheck": {
     "question": "A fraud detector is tested on 1,000 transactions. Only 20 are actually fraudulent. The system labels every transaction as not fraudulent and gets 980 labels correct. What is the best conclusion?",
     "options": [
@@ -222,6 +222,20 @@
     "applied": [
       "unWorkplaceExampleCaution"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:59.127Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the generic workplace setting and clinic example with distinct, deadline-based UN scenarios, made class imbalance explicit, strengthened the handling caution for uncleared text, and replaced the examination analogy."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -30,8 +30,8 @@
   "oneSentence": "A computer vision task that finds instances of chosen object types in an image or video and marks where each one appears.",
   "plainExplanation": "Object detection takes an image or video frame as input. The system looks for specific categories such as people, vehicles, buildings or cartons. The output is usually a list of findings: the object label, a location, and a confidence score, which is a number indicating the strength the model assigns to that finding.\n\nThe location is often shown with a bounding box, a rectangle drawn around the detected object. This is what makes object detection different from image classification. Image classification answers a whole-image question such as \"What is in this picture?\" Object detection answers \"What objects are here, and where are they?\"\n\nA common approach analyses many visual patterns, proposes possible object locations and labels, then removes weaker duplicate proposals. In video, detection can be repeated frame by frame, sometimes with tracking added afterwards to follow the same object over time.\n\nObject detection is also different from image segmentation. Segmentation assigns labels at pixel level to outline objects or meaningful regions, while object detection usually gives a rectangle around each detected object. That rectangle is often good enough for counting, monitoring, search, safety alerts or checking whether something important is present in a scene.",
   "everydayAnalogy": {
-    "title": "Marking duplicate paper files on a registry table",
-    "story": "Imagine two staff members reviewing a table covered with paper registry files. Their task is not to read every file in detail, but to spot each pile that appears to be a duplicate case and place a coloured frame card around it. At the end, they produce a sheet listing each marked pile, its table position, and how sure they are that it is a duplicate. If two frame cards overlap the same pile, they keep the stronger one and remove the extra mark.",
+    "title": "Marking fruit in a photograph",
+    "story": "Imagine receiving a photograph of a crowded kitchen counter and being asked to mark every apple and orange. You draw a box around each fruit, label it and note how confident you are. If you accidentally draw two overlapping boxes around the same apple, you keep the better one. An orange partly hidden behind a bowl may still be missed. Object detection performs this kind of locating and labelling automatically.",
     "mapping": [
       {
         "analogyElement": "each pile of files on the table",
@@ -84,28 +84,27 @@
     "reducedMotionDescription": "A static four-panel figure replaces animation. Panel 1 shows the original image. Panel 2 shows all candidate boxes at once. Panel 3 shows weaker overlapping boxes faded or crossed out. Panel 4 shows only the final labelled boxes and the results table."
   },
   "workedExample": {
-    "scenario": "Counting parked vehicles in a loading area from one camera image.",
-    "input": "One image, 1920×1080 pixels, showing 4 vans, 1 bicycle and 12 people near a warehouse entrance.",
+    "scenario": "An annex to the handover note demonstrates the detector on one cleared test photograph of a furnished training room.",
+    "input": "The reference annotation contains 24 chairs and 6 tables, including one chair partly hidden behind a table.",
     "process": [
-      "The detector scans the image and proposes many possible boxes, including several overlapping boxes around the same van.",
-      "It assigns labels and confidence scores such as van 0.94, person 0.88 and bicycle 0.79.",
-      "A duplicate-filtering step removes weaker overlaps, for example keeping one van box at 0.94 and dropping another at 0.61 on the same vehicle.",
-      "The final list is reviewed against the use case: 4 vans detected, 1 bicycle detected and 11 people detected, with one partly hidden person missed."
+      "The detector produces candidate boxes across the image, including several overlapping boxes around some chairs.",
+      "It assigns each candidate a class label and confidence score, such as chair 0.92 or table 0.87, and refines the box coordinates.",
+      "Post-processing removes near-duplicate overlaps, retaining the strongest box when several correspond to the same object.",
+      "The remaining detections are compared with the reference annotation. The model finds all 6 tables and 23 of the 24 chairs, missing the partly hidden chair."
     ],
-    "result": "The system outputs labelled bounding boxes and counts by category. It is useful for a quick estimate, but the missed person shows why results should be checked when occlusion or crowding matters."
+    "result": "The output is a set of labelled, localised boxes with confidence scores. It supports counting and review, but the comparison shows that an apparently precise total can still be incomplete when objects overlap."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN logistics team uses an approved internal computer vision tool to estimate how many shelter kits and water containers are visible in drone images of a warehouse yard after deliveries.",
-    "relevance": "Object detection can speed up stock visibility checks and help staff decide where manual verification is needed, especially when images are too numerous to review one by one.",
-    "caution": "Do not upload identifiable people, vehicle plates, security-sensitive sites or other non-public operational imagery to an unapproved public AI service; use approved systems, minimise personal data, and keep human review in the loop before acting on results."
+    "scenario": "A statistician in an evaluation office is finalising a handover note before close of business. It records how an approved detector was tested on photographs attached to implementing partner monitoring reports, locating chairs and tables in training rooms so the incoming colleague can reproduce the review rather than inherit a folder called \"final-final\".",
+    "relevance": "The detector returns a label, location and confidence score for each visible item. This can accelerate an initial review of a large photo set, while sampled manual checks show whether crowding, unusual camera angles or locally common furniture are affecting the results.",
+    "caution": "Monitoring photographs may contain faces, name badges, location details or other sensitive information. They must not be uploaded to a tool that has not been approved for that material. Use cleared images, minimise or redact personal data, and verify detections against the underlying records. A visible chair is not proof that it was procured, delivered as reported or usable."
   },
   "whyItMatters": "For non-specialists, object detection matters because it changes what a system can tell you. A model that only classifies an image might say \"there are vehicles here\". A detector can say how many and where they are. Its outputs can also support systems that use tracking or other rules to estimate whether objects cross a line, enter an area or are missing from a scene. That makes it useful for counting, safety checks, inventory support, traffic analysis, document layout analysis and quality inspection. It also changes the risks: accuracy can vary by lighting, camera angle, object size, clutter and the training data used, so procurement, oversight and human review decisions should match the stakes.",
   "whereYouMayHearIt": [
-    "camera analytics",
-    "warehouse and inventory systems",
-    "autonomous driving discussions",
-    "satellite or drone image analysis",
-    "document layout processing"
+    "During a vendor demo to an ICT governance board",
+    "In a procurement unit reviewing requirements for image-analysis software",
+    "At an evaluation office meeting on analysing monitoring photographs",
+    "In an inter-agency working group discussing satellite or drone imagery"
   ],
   "commonMisconceptions": [
     {
@@ -125,7 +124,7 @@
     "simple": "Object detection finds chosen kinds of things in a picture and draws a box around each one it finds.",
     "technical": "Object detection is a computer vision task that predicts zero or more object instances in an image, typically as class labels plus localised coordinates such as bounding boxes and confidence scores. In a common supervised setup, detectors learn visual features from annotated training images. One common pipeline generates candidate regions or dense predictions, classifies them, refines box coordinates, and applies post-processing to remove near-duplicate overlaps. Evaluation usually considers both localisation and classification, often through overlap-based criteria rather than label accuracy alone. The term differs from image classification, which predicts labels for the whole image, and from image segmentation, which assigns labels at pixel level instead of only rectangular extents."
   },
-  "keyTakeaway": "Object detection does more than say what is in an image; it also marks where each detected object appears.",
+  "keyTakeaway": "Object detection identifies individual instances of selected object types and marks their locations, usually with bounding boxes and confidence scores.",
   "quickCheck": {
     "question": "Which output best matches object detection rather than image classification?",
     "options": [
@@ -254,6 +253,20 @@
       "whyItMatters",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:21:28.815Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Reworked the workplace and numerical examples around the supplied role, setting and handover moment; strengthened the caution for monitoring photographs; made the listening contexts event-specific; and replaced the institution-dependent analogy."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -33,8 +33,8 @@
   "oneSentence": "Authentication verifies a claimed identity; authorisation checks what that requester is allowed to do.",
   "plainExplanation": "These words are related, but they are not the same. Authentication checks an identity claim: do the credentials support the claimed person, device or service? Authorisation checks permissions: now that the claim has been checked, what is that requester allowed to read, use or change? Login usually means the sign-in step people see on screen, but a system can authenticate and authorise in other ways too.\n\nWhat goes in depends on the system. It might be a password, a code from an app, a security key, or a digital token. A token is a piece of data that may represent a session, identity, granted scope or other claims. The system compares that information with its records or with another trusted service.\n\nWhat happens next has two parts. First, the system tries to verify the identity claim. If that succeeds, it then looks up rules or roles, such as “staff can view this page” or “editors can approve changes”. What comes out is not just yes or no. The result may be “signed in but view only”, “signed in with editing rights”, or “access denied”.\n\nIn AI systems, this matters because many incidents are not about breaking encryption or guessing passwords. They are about getting a model, plugin or connected tool to act beyond its allowed scope. Good authentication and authorisation do not stop every AI attack, such as prompt injection, but they limit what a compromised session, tool or application can reach.",
   "everydayAnalogy": {
-    "title": "Entering a large library reading room",
-    "story": "At the entrance to a large library, Amina shows her library card to the desk clerk. The clerk checks that the card belongs to her and that it is still valid. After that, the clerk looks at her membership type and tells her she may enter the reading room and borrow ordinary books, but not enter the rare manuscripts room. Her friend Ravi also gets in, but his researcher pass lets him request materials from a restricted collection.",
+    "title": "Checking into a hotel",
+    "story": "At reception, Noor shows identification and confirms the booking. That verifies who she is. She then receives a key card programmed for her room and the guest lift, but not the staff office or another guest’s room. The identity check is authentication. The doors the card is permitted to open are authorisation. Passing the first check does not make every door available.",
     "mapping": [
       {
         "analogyElement": "library card check",
@@ -87,27 +87,27 @@
     "reducedMotionDescription": "A static four-card sequence with arrows between the cards and example labels under each stage, showing the same order and outcomes without animation."
   },
   "workedExample": {
-    "scenario": "A team uses an internal AI assistant connected to a document system.",
-    "input": "User: Leila. Credentials: password plus six-digit code. Requested action: summarise Project Atlas notes and share the summary to the team workspace.",
+    "scenario": "A budget officer is coding open-ended needs assessment answers with an approved internal AI assistant. The officer asks it to classify a de-identified extract and upload the coding table to the regional bureau’s progress report folder.",
+    "input": "Verified bureau account using a security key. Requested actions: read the de-identified extract, call the classification function and write the coding table to the progress report folder.",
     "process": [
-      "Leila enters her username and password, then confirms with a one-time code from her authenticator app.",
-      "The identity service verifies both factors and issues a session token for Leila's signed-in session.",
-      "The AI assistant checks Leila's permissions and finds she may read the 'Project Atlas' folder but may not share documents outside her own unit.",
-      "The assistant generates a summary from files Leila is allowed to open, but blocks the cross-unit sharing step and returns an explanation."
+      "The identity service verifies the account and security key, then issues a session token representing the authenticated session.",
+      "The assistant checks authorisation for each requested action. The officer may read the de-identified extract and call the classification function.",
+      "A separate check finds that the officer has read access, but not write access, to the progress report folder while the file is under clearance.",
+      "The assistant produces the coding table in the officer’s authorised workspace but blocks the upload and records the reason."
     ],
-    "result": "Authentication succeeded. Authorisation allowed reading and summarising approved files, but denied the requested sharing action."
+    "result": "Authentication succeeded. Authorisation permitted reading and classification, but denied writing to the folder under clearance. The officer can send the coding table through the established clearance process rather than bypassing the folder controls."
   },
   "unWorkplaceExample": {
-    "scenario": "An officer uses an approved internal AI drafting tool to check a speech against previously agreed language and public resolutions stored in a controlled repository.",
-    "relevance": "Authentication confirms the officer is using the approved service under their own account. Authorisation limits the tool to the repositories and actions that officer is allowed to access, which reduces the impact of mistakes or malicious prompts.",
-    "caution": "Do not put confidential, negotiation-sensitive, personal or protection-sensitive material into an unapproved public AI service, and do not assume that being logged in means every connected file or action is authorised."
+    "scenario": "At close of business, a budget officer in a regional bureau uses an approved internal AI assistant to code de-identified, open-ended answers from a needs assessment before the progress report goes for clearance.",
+    "relevance": "Authentication verifies the officer’s identity through the bureau account and security key. Authorisation separately checks whether that account may read the de-identified extract, call the coding function and write the output to the progress report folder. Permission for one action does not confer permission for the others.",
+    "caution": "Do not enter raw answers containing personal, medical, protection-sensitive or other confidential information into a tool that has not been approved for that material. Access to the AI assistant does not authorise access to the underlying response file, and de-identification must not be assumed merely because names were removed."
   },
   "whyItMatters": "For most people, the practical question is not just 'Can I sign in?' but 'What can this account, app or AI tool do once it is inside?' That affects security, privacy, safety and accountability. If authentication is weak, the wrong person or service may get in. If authorisation is too broad, a legitimate account can still expose data, trigger the wrong action, or let an AI-connected tool reach more than it should. In AI settings, this is especially important because a model may be connected to documents, email, databases or external tools. Clear identity checks and narrow permissions help contain errors, misuse and attacks, even when they do not prevent them entirely.",
   "whereYouMayHearIt": [
-    "sign-in screens and password resets",
-    "single sign-on at work",
-    "API keys and access tokens",
-    "AI assistant tool permissions"
+    "A vendor demo before an information and communications technology governance board",
+    "A regional bureau access review before an AI assistant goes live",
+    "A procurement meeting on service accounts and tool permissions",
+    "A help-desk call after a colleague can sign in but cannot open the file"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +127,7 @@
     "simple": "First the system checks who is asking. Then it checks what that person or service is allowed to do.",
     "technical": "Authentication establishes or verifies an identity claim using credentials such as passwords, security keys, certificates or tokens. Successful authentication may create a session or issue a token representing that verified state. Authorisation then evaluates policy for that identity, session or workload: roles, attributes, group membership, resource rules or scope. The output is a decision about specific actions on specific resources, such as read, write, execute or call-tool permission. Login is a common interactive entry point for human users, but machine-to-machine systems may authenticate and authorise without a visible login screen. These concepts are related to access control, but they are not identical: authentication and authorisation are mechanisms within the broader control of who can do what, under which conditions."
   },
-  "keyTakeaway": "Signing in checks an identity claim; it does not automatically justify every action that follows.",
+  "keyTakeaway": "Authentication verifies who or what is making the request. Authorisation decides whether that verified requester may perform a particular action on a particular resource.",
   "quickCheck": {
     "question": "A staff member signs in successfully to an AI tool but cannot export a dataset. What best explains this?",
     "options": [
@@ -275,6 +275,20 @@
       "keyTakeaway",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:27:19.108Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

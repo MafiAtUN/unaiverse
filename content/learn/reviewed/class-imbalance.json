@@ -33,8 +33,8 @@
   "oneSentence": "A dataset has this problem when one class appears far more often than another, which can make overall accuracy look strong while a model misses rare cases.",
   "plainExplanation": "In classification, a system sorts items into categories such as \"damaged road\" or \"not damaged road\". Class imbalance means one category is much more common than the other in the data used to train or test the system. The rarer category is often the one people most need to detect.\n\nWhat goes in is a set of labelled examples. If 9,900 satellite images show no road damage and 100 show damage, the system sees many more examples of \"no damage\" than \"damage\". During training, many models can reduce their overall error simply by favouring the common class.\n\nWhat happens next is that a headline score, especially accuracy, can look strong even if the model performs badly on the rare class. A model that predicts \"no damage\" for every image would be 99% accurate in that example, but it would find none of the damaged roads. This is why people also check measures such as precision, recall, F1 score, and the confusion matrix.\n\nWhat comes out is not just a model but a risk of misleading evaluation. The problem is about the data distribution and the metric choice, not automatically about unfair treatment between social groups. It can contribute to harmful outcomes, but it is different from algorithmic bias, which is about systematic differences in behaviour across people or groups.",
   "everydayAnalogy": {
-    "title": "Security checks at a stadium gate",
-    "story": "At a large stadium, almost everyone arriving has a valid ticket. Only a small number are trying to enter with a fake one. If a guard simply waves everyone through, the guard will appear correct almost all the time because most people are legitimate, but the few fake tickets still get through. If the organisers care about stopping fake tickets, they need to measure how often the guard actually catches those rare cases, not only how often the guard agrees with the majority.",
+    "title": "The two flat batteries",
+    "story": "A drawer contains 100 batteries: 98 are charged and two are flat. A checker that declares every battery charged is right 98% of the time. That sounds excellent until someone needs it to find the flat batteries. Its overall accuracy is 98%, but its recall for flat batteries is zero because it misses both of them.",
     "mapping": [
       {
         "analogyElement": "Most visitors have valid tickets",
@@ -92,28 +92,27 @@
     "reducedMotionDescription": "A static two-panel comparison remains on screen at once: the left panel shows the imbalanced dataset and the 95 percent accuracy badge for predicting only the common class; the right panel shows the confusion matrix and checklist of better evaluation measures."
   },
   "workedExample": {
-    "scenario": "A team builds a model to identify damaged roads from satellite images after heavy rain.",
-    "input": "Test set: 10,000 images, including 9,700 images with no visible damage and 300 images with damage.",
+    "scenario": "An information management officer in a field presence is testing a model that prioritises satellite images for an access map due with the 5pm situation report.",
+    "input": "Test set: 10,000 images, including 9,700 with no visible road damage and 300 with damage.",
     "process": [
-      "The model predicts 9,850 images as 'no damage' and 150 as 'damage'.",
-      "After checking labels, 120 of the 150 'damage' predictions are correct, and 180 damaged roads were missed.",
-      "Overall accuracy is high because most images truly show no damage.",
-      "The team then calculates recall for damage as 120 out of 300, or 40%, and precision for damage as 120 out of 150, or 80%."
+      "A classifier that labels every image “no damage” would achieve 97% accuracy while finding none of the damaged-road images.",
+      "The tested model labels 150 images “damage” and 9,850 “no damage”.",
+      "Label checks find 120 true positives, 30 false positives, 9,670 true negatives and 180 false negatives.",
+      "Its overall accuracy is 97.9%. For the damage class, precision is 80% and recall is 40%."
     ],
-    "result": "The model looks strong if you only read its 97.9% accuracy, but it misses 60% of the damaged roads, so it is not yet reliable for finding rare damage cases."
+    "result": "The model improves accuracy by only 0.9 percentage points over the trivial majority-class classifier and still misses 60% of the damaged-road images. The headline figure is therefore unsuitable for deciding which images can be left unreviewed."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN office is preparing procurement requirements for a vendor offering software that flags rare compliance problems in large volumes of procurement records.",
-    "relevance": "Class imbalance matters because most records will be ordinary, so a vendor can report a high accuracy score while still missing many of the uncommon cases the organisation needs to review. Procurement requirements can ask vendors to disclose class distribution, confusion matrices, and rare-class recall on realistic test data.",
-    "caution": "Do not upload confidential procurement records, vendor information, personal data, or investigation-related material into an unapproved public AI service for testing or benchmarking."
+    "scenario": "A monitoring and evaluation officer in a regional bureau is reviewing an implementing partner’s progress report before the consolidated update goes to the front office at close of business. The report cites strong overall accuracy for a model that flags workplan activities likely to miss their milestones.",
+    "relevance": "Because most activities are on schedule, predicting “on schedule” every time may already produce impressive accuracy while identifying none of the delayed activities. Before clearance, the officer requests the label distribution, confusion matrix, recall and precision for delayed activities, and comparison with that majority-class baseline.",
+    "caution": "Do not upload underlying monitoring records, including personal data or confidential information about partner performance, to a tool that has not been approved for that material. Unauthorised disclosure could harm individuals, prejudice programme decisions or breach confidentiality. Model flags should support review, not determine escalation without human assessment."
   },
   "whyItMatters": "Non-specialists often see one number, such as accuracy, and assume the system works. With imbalanced data, that can lead to poor purchasing, unsafe deployment, or false confidence in a model that fails on the cases that matter most. In practice, many important tasks are imbalanced: fraud is rarer than legitimate transactions, serious disease is rarer than no disease, and damaged roads are rarer than intact roads. If you ask the right questions early, you can avoid approving a system that performs well only on the easy majority cases. This helps with quality control, risk management, and transparent reporting.",
   "whereYouMayHearIt": [
-    "model evaluation meetings",
-    "vendor demonstrations",
-    "machine learning courses",
-    "procurement requirements",
-    "quality assurance reviews"
+    "In a regional bureau results meeting reviewing an implementing partner’s progress report",
+    "During front office clearance of an update that quotes model accuracy without class-level results",
+    "At a vendor demonstration to an ICT governance board, when the performance slide omits minority-class recall",
+    "During an evaluation office’s first reading of a model validation report"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "When the thing you want to detect is rare, a system can seem good by mostly predicting the common case. So you should not rely on one overall score.",
     "technical": "In a classification task, class imbalance means the label distribution is highly skewed, such as many more negative than positive examples. Under this condition, optimising or reporting aggregate accuracy can be misleading because the loss and the metric may be dominated by majority-class performance. A trivial classifier that always predicts the majority class can achieve high accuracy while having zero recall for the minority class. Proper evaluation usually includes the confusion matrix and class-sensitive metrics such as precision, recall, F1 score, balanced accuracy, or area-under-precision-recall measures, depending on the task. Mitigation may involve class weighting, over-sampling or under-sampling, threshold adjustment, stratified sampling, and collecting more representative minority-class data. These methods help, but they also have trade-offs, such as overfitting duplicated rare examples or creating unrealistic class proportions in testing, so the test set should reflect the deployment context."
   },
-  "keyTakeaway": "If important cases are rare, a model can look impressive on paper while failing where it matters most.",
+  "keyTakeaway": "When important cases are rare, compare the model with the majority-class baseline and examine recall, precision and the confusion matrix. Overall accuracy may mostly reflect routine cases.",
   "quickCheck": {
     "question": "A dataset has 9,900 normal cases and 100 rare cases. A model predicts every case as normal and gets 99% accuracy. What is the best interpretation?",
     "options": [
@@ -251,6 +250,20 @@
       "oneSentence",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:48.953Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

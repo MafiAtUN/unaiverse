@@ -32,8 +32,8 @@
   "oneSentence": "A recurrent neural network processes a sequence by carrying a changing hidden state from one step to the next, so earlier inputs can influence later outputs.",
   "plainExplanation": "Many AI tasks involve sequences: words in a sentence, notes in speech, sensor readings over time, or clicks in order. A recurrent neural network handles this by reading one item at a time instead of treating every item as unrelated.\n\nAt each step, it takes two things as input: the current item and a hidden state. The hidden state is a vector, meaning a list of numbers, that acts like a running summary of what came before. The network updates that summary using learned weights, which are numbers that control how strongly signals affect later calculations.\n\nBecause the same update rule is reused at every step, the model can process sequences of different lengths. It can produce one output at the end, such as a sentiment label for a whole sentence, or an output at each step, such as the next word or a tag for each token.\n\nIn practice, basic RNNs often struggle with long-range dependencies, meaning information from far back in the sequence can fade or become unstable during training. Variants such as LSTM and GRU were designed to keep useful information for longer. RNNs are important historically and still useful in some time-series and compact systems, but many language tasks now use transformers instead.",
   "everydayAnalogy": {
-    "title": "A librarian tracing a request through many shelves",
-    "story": "A visitor asks for a history book, but only remembers fragments: the region, then the century, then part of the author name. A librarian walks through the library with a notepad, updating the note after each clue. Each new clue matters, but the note also carries forward the useful parts of earlier clues. By the end, the librarian uses the final note and the last clue to choose the most likely shelf and book.\n\nIf the conversation becomes very long, some early details may be missed unless the note-taking method is especially good.",
+    "title": "Updating a sketch as directions arrive",
+    "story": "Someone gives you directions one turn at a time. After each instruction, you update a small sketch of where you think you are. You interpret the next turn using both the new instruction and the sketch carried forward, rather than starting again from a blank page.\n\nThe sketch is like the hidden state, and updating it by the same rule after every instruction resembles the recurrent operation. On a very long route, early details may fade from the sketch, just as a simple recurrent neural network can struggle to preserve information across many steps.",
     "mapping": [
       {
         "analogyElement": "each clue from the visitor",
@@ -86,28 +86,27 @@
     "reducedMotionDescription": "Show the same four-cell chain as a static diagram with all arrows visible at once. Use colour and labels, not animation, to indicate that the hidden state passes from one step to the next and that the same cell logic is reused."
   },
   "workedExample": {
-    "scenario": "Predicting the next word in a short phrase.",
-    "input": "Sequence: 'United', 'Nations', 'General'",
+    "scenario": "Forecasting the next status in a sequence of monthly workplan updates.",
+    "input": "Illustrative sequence: \"on schedule\", \"minor delay\", \"inputs pending\"",
     "process": [
-      "At step 1, the model reads 'United' and updates its hidden state from h0 to h1.",
-      "At step 2, it reads 'Nations' and combines that word with h1 to produce h2, which now reflects the phrase 'United Nations'.",
-      "At step 3, it reads 'General' and updates to h3, which reflects the full context so far.",
-      "Using h3, the output layer assigns scores to candidate next words, then converts them to probabilities."
+      "The model starts with an initial hidden state and reads \"on schedule\", producing a new state that summarises the first update.",
+      "It then reads \"minor delay\" and combines that input with the previous hidden state. The new state therefore reflects both reporting periods.",
+      "Next, it reads \"inputs pending\" and updates the state again. The same learned weights are used at each step, although the hidden state changes.",
+      "An output layer uses the final hidden state to score possible next statuses. During training, errors are propagated backwards through the unfolded sequence using backpropagation through time."
     ],
-    "result": "Example output probabilities: 'Assembly' 0.72, 'Secretary' 0.12, 'debate' 0.05, 'meeting' 0.04, other words 0.07. The model therefore predicts 'Assembly' as the most likely next word."
+    "result": "In this illustrative run, the highest-scoring next status is \"at risk of delay\". That output is influenced by the order of all three updates, not only by the final phrase."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN procurement team is comparing software proposals and wants to know whether a vendor's sequence model for forecasting equipment demand uses an RNN, an LSTM, or a transformer.",
-    "relevance": "This matters because sequence models differ in accuracy, training cost, explainability limits, and suitability for long or short time series. Asking the right term helps staff interpret vendor claims and compare technical requirements more carefully.",
-    "caution": "Do not paste confidential bids, commercially sensitive pricing, or identifiable staff or beneficiary data into an unapproved public AI service to get help interpreting the proposals."
+    "scenario": "A chief of section in a technical division is clearing a note for the file, due to the front office by close of business, in response to an audit observation on a model that forecasts the section's document-processing backlog. The vendor describes it as recurrent, but the file does not explain what information passes from one reporting period to the next.",
+    "relevance": "The chief needs to confirm whether the model processes the figures in sequence, updates a hidden state at each step and uses shared parameters across the sequence. That helps distinguish an RNN from a model that treats each reporting period independently, and exposes questions about long-range dependencies that the vendor summary has politely avoided.",
+    "caution": "Do not upload audit working papers, underlying case records or personal or commercially sensitive data to a tool that has not been approved for that material. A model's recurrent architecture also says nothing by itself about forecast quality, appropriate controls or fitness for the operational decision."
   },
   "whyItMatters": "If you read an AI proposal, audit note, model card, or vendor presentation, you may see RNN or LSTM used for speech, translation, forecasting, or anomaly detection. Knowing the term helps you ask practical questions: Does the model process data in order? How well can it handle long sequences? Is it producing one result at the end or many along the way? Could a transformer or another method be more suitable? This matters for procurement, risk assessment, compute cost, latency, and performance claims. It also helps you recognise that older sequence models may still be appropriate for small devices or short time-series, even if they are no longer the main choice for many language systems.",
   "whereYouMayHearIt": [
-    "speech recognition systems",
-    "time-series forecasting",
-    "older language modelling tutorials",
-    "vendor technical proposals",
-    "machine learning courses"
+    "A vendor demo during a procurement meeting on forecasting tools",
+    "An internal audit exit meeting on controls around a sequence model",
+    "A technical review of a monitoring dashboard before clearance",
+    "A briefing to an ICT governance board on model architecture"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +126,7 @@
     "simple": "An RNN reads a sequence one piece at a time and carries forward a running summary so what came earlier can affect what comes next.",
     "technical": "At time step t, a recurrent model computes a new hidden state from the current input xt and the previous hidden state h(t-1), typically with shared parameters across all time steps. In a simple RNN, this may look like h(t) = f(Wx xt + Wh h(t-1) + b), where f is an activation function. Outputs may be produced from each h(t) or only from the final state. Training usually uses backpropagation through time, which unfolds the repeated cell across steps and propagates gradients through that chain. This creates well-known vanishing and exploding gradient problems, which is why gated variants such as LSTMs and GRUs were introduced. Compared with convolutional neural networks, which scan local patterns across grid-like inputs, recurrent networks are built around ordered dependence across time or position. Compared with transformers, RNNs pass information step by step through a hidden state rather than weighting relationships among many positions in parallel."
   },
-  "keyTakeaway": "An RNN handles ordered data by reusing the same cell across steps and passing a hidden state forward as a compact memory of earlier inputs.",
+  "keyTakeaway": "An RNN processes ordered inputs by applying the same learned operation at each step and carrying forward a changing hidden state that summarises relevant earlier inputs.",
   "quickCheck": {
     "question": "What makes a recurrent neural network different from a basic feed-forward network?",
     "options": [
@@ -241,6 +240,20 @@
       "simpleVsTechnicalTechnical",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:09.927Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": "Replaced the generic procurement example and invented output probabilities with a specific audit-clearance scenario and a technically grounded illustrative sequence."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

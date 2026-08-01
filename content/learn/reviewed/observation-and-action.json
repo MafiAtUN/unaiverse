@@ -91,29 +91,28 @@
     "reducedMotionDescription": "A static five-box sequence with arrows and a visible loop-back arrow from 'Stop or loop' to 'Interpret current state', plus a side note that observations are inputs, actions are outputs, and the loop is the repetition between them."
   },
   "workedExample": {
-    "scenario": "An internal document tool tries to classify a photographed customs form into one of three templates: T-17, C-4, or H-9.",
-    "input": "User instruction: 'Identify the form template from this image and return the closest match with confidence.' Initial OCR text: '... Customs Declaration ... Box 12 ... Signature ...' Image quality score: 0.58.",
+    "scenario": "During the review, an approved records assistant checks where the final version of a situation report belongs in the file plan. The metadata is incomplete, so the assistant must gather another observation before proposing an action.",
+    "input": "Metadata provided: document type, situation report; final version, yes; access marking, present; file-plan code, blank. Instruction: propose a records series, but send ambiguous cases for human review.",
     "process": [
-      "Observation: the system receives OCR text, image features, and a low quality score of 0.58.",
-      "Action: it runs a template-matching tool and gets provisional scores: T-17 0.41, C-4 0.44, H-9 0.39; result is too close to trust.",
-      "Observation: the tool also reports 'header region blurred'. The system now has evidence that the uncertainty is caused by missing visual detail.",
-      "Action: instead of forcing a guess, it asks for a clearer crop of the top third of the page.",
-      "Observation and result: the new crop raises the score for C-4 to 0.82, so the system returns 'C-4' and logs that a second observation resolved the ambiguity."
+      "Observation: the controller receives the metadata and sees that the file-plan code is missing.",
+      "Action: it queries the approved file plan using the document type and access marking.",
+      "Observation: the query returns two plausible records series and reports that the distinction depends on whether the file is the circulated copy or a working version.",
+      "Action: it asks the humanitarian affairs officer to confirm the version status instead of selecting a series from incomplete evidence.",
+      "Observation and action: the officer confirms that it is the circulated final copy. The controller reruns the check, proposes the matching series and sends the recommendation to the records officer for clearance."
     ],
-    "result": "Output: 'Best match: C-4, calibrated confidence 0.82. The initial scores failed the configured acceptance check; the clearer header passed it.'"
+    "result": "The file is not moved or deleted automatically. The system records the observations, tool returns and handoff, allowing the records officer to see why the recommendation changed after the missing information was supplied."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal automation tool to route incoming records to the right administrative workflow. The system observes metadata and validation results, then takes actions such as suggesting a queue, requesting a missing non-sensitive field, or sending a case to human review.",
-    "relevance": "This helps staff see why acting systems need supervision: each action should depend on the latest approved observation, and uncertain cases should stop or escalate rather than continue automatically.",
-    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive, or operational information into an unapproved public AI service. For sensitive records, restrict observations to approved data sources, minimise exposed fields, and require human review before any external transmission or irreversible action."
+    "scenario": "Before close of business in a records retention review, a humanitarian affairs officer in a documentation and library service uses an approved internal tool to check a batch of situation reports. The tool observes file metadata, access markings and validation returns. It can then request a missing field, propose the appropriate records series or hand the file to the records officer when the evidence remains ambiguous.",
+    "relevance": "The recommendation is not based on one static scan. Each tool return becomes a new observation that shapes the next action. A missing classification may trigger a request for information, while conflicting metadata should trigger a handoff rather than an automatic disposition decision.",
+    "caution": "Records may contain personal, protection-related, security-sensitive or otherwise confidential information. They must not be uploaded to a tool that is not approved for that material. The system must not delete, transfer, declassify or alter an official record without the required human clearance, because a mistaken action could expose protected information or destroy the record."
   },
   "whyItMatters": "If a system can act, the key risk is not only whether one answer looks plausible. The real question is how it behaves across steps. A weak observation can trigger a wrong action. A wrong action creates new conditions that can push the system further off course. Understanding this loop helps you ask better governance questions: What can it observe? What is it allowed to do? What stops it? When does a human review the next step? What gets logged? Those questions matter for safety, auditability, cost, reliability, and accountability.",
   "whereYouMayHearIt": [
-    "agent design discussions",
-    "tool-using assistant demos",
-    "workflow automation projects",
-    "computer use evaluations",
-    "API orchestration reviews"
+    "During a vendor demo to an ICT governance board",
+    "In a procurement unit meeting reviewing an automation tool",
+    "At the first reading of terms of reference for an agent pilot",
+    "During a walkthrough of execution logs with an internal audit function"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "First the system sees what is happening, then it does one thing, then it checks what changed. That repeat pattern lets it carry out multi-step tasks.",
     "technical": "In an agentic system, an observation is any external or updated state made available to the policy or controller: user input, environment state, tool return values, execution traces, error codes, UI snapshots, or retrieved context. An action is an emitted operation that can affect the environment or workflow, such as a tool invocation, API call, UI interaction, message, state update, or handoff request. The act-observe loop is the iterative control cycle in which the controller conditions on the latest observation and internal working state, selects an action under its constraints, executes it, ingests the resulting environment change as a new observation, and repeats until a termination condition, budget limit, failure rule, or human-intervention gate is reached. This is often implemented alongside planning, memory, orchestration, and tool-use layers, but it should not be collapsed into any one of them."
   },
-  "keyTakeaway": "To evaluate an acting AI system, do not ask only what answer it gives; ask what it can observe, what it can do next, and how the loop is supervised.",
+  "keyTakeaway": "Assess the whole loop: what the system can observe, which actions it may take, how new results change its next step, and where it must stop for human review.",
   "quickCheck": {
     "question": "Which statement best distinguishes the three related terms?",
     "options": [
@@ -259,6 +258,19 @@
     "applied": [
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:19:45.701Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

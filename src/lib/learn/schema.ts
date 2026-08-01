@@ -302,6 +302,28 @@ export const termExplanationSchema = z.object({
     .optional(),
 
   /**
+   * The United Nations voice pass: setting and register, never mechanism.
+   *
+   * A separate record from `machineReview` because it answers a different
+   * question. That one asks "is this true"; this one asks "would a colleague
+   * recognise their own week in it". The definition and the plain explanation
+   * are out of its reach by design.
+   *
+   * Must be declared here or Zod strips it on the way through `safeParse`,
+   * which silently loses the audit trail and makes every re-run start over.
+   */
+  voicePass: z
+    .object({
+      model: z.string(),
+      deployment: z.string(),
+      promptVersion: z.string(),
+      revisedAt: z.string(),
+      applied: z.array(z.string()).default([]),
+      note: z.string().max(400).optional(),
+    })
+    .optional(),
+
+  /**
    * Provenance. Present on anything the pipeline produced; absent only on a
    * fixture. `/learn/methodology` renders it, because a site about AI literacy
    * that hides how its own pages were written would be teaching the wrong thing.

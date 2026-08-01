@@ -37,8 +37,8 @@
   "oneSentence": "Systematic unfair patterns in data, rules or model outputs can disadvantage some people or groups, especially when tools are used in important decisions.",
   "plainExplanation": "People use several related words here, and they are not exactly the same. “Algorithmic bias” usually means unfair patterns linked to a computational system. “AI bias” and “bias in AI” are broader everyday labels for similar problems in AI tools. “Discrimination” is a legal and human-rights term about harmful unequal treatment; some biased systems may amount to discrimination, but not every technical bias question is automatically a legal finding.\n\nWhat goes in? Usually data, design choices, categories, rules, and goals. A system may be trained on past examples, or it may follow hand-written instructions. If past records under-represent some groups, contain historical inequalities, or use poor labels, the system starts from a distorted picture.\n\nWhat happens? The system looks for patterns and applies them to new cases. Bias can enter at many stages: how a problem is framed, which data are collected, whose language is recognised well, what counts as “success”, and how results are interpreted. Even a model with the same rule for everyone can still produce unequal harm if the starting data or context are unequal.\n\nWhat comes out? Scores, rankings, labels, summaries, recommendations, or generated text. These outputs can work less well for some groups, exclude people, or push staff towards unfair choices. This is different from “statistical bias”, which can simply mean a systematic error in estimation, and different again from the “bias” term inside some neural networks, which is a mathematical parameter, not a fairness problem.\n\nThe key point is practical: bias is not only inside the model. It can come from the full system around it, including data collection, deployment, user behaviour, and weak human oversight.",
   "everydayAnalogy": {
-    "title": "A library shelf guide built from incomplete records",
-    "story": "A large city library creates a digital shelf guide to tell visitors where books are likely to be found. The guide was built from old borrowing records and shelf maps from years when books in some languages were stored inconsistently and some sections were rarely updated. A visitor looking for disability rights materials in Arabic keeps being sent to the wrong floor, while visitors searching for popular English novels usually get accurate directions. The guide is not intentionally excluding anyone, but its inputs and setup make the service work unevenly across groups and topics.",
+    "title": "Voice-to-text that works better for one speaker",
+    "story": "Two friends use the same voice-to-text feature. It transcribes one person's messages accurately but repeatedly changes words in the other person's accent, forcing that person to correct every message. The tool has no intention, but its training data and design make the burden fall unevenly. Looking only at its average accuracy would hide who is doing the extra work.",
     "mapping": [
       {
         "analogyElement": "old borrowing records and shelf maps",
@@ -96,28 +96,27 @@
     "reducedMotionDescription": "A static horizontal flowchart with five labelled boxes and arrows between them: task definition, data and labels, model or rules, outputs in use, and impact. Each box includes one short note about how unfairness can arise at that stage."
   },
   "workedExample": {
-    "scenario": "A city office tests an AI triage tool for housing support applications.",
-    "input": "1,000 past applications: 700 from neighbourhoods with stable internet access and 300 from neighbourhoods with poorer access. The tool assigns a priority score from 0 to 100.",
+    "scenario": "A case-allocation officer at a municipal housing support desk reviews an automatically generated priority list before the next morning's allocation meeting.",
+    "input": "Past applications disproportionately reflect people with reliable internet access and complete digital records. Applications received through other channels often contain less structured documentation.",
     "process": [
-      "Staff train the tool on past cases where quicker responses were more common in well-documented applications.",
-      "In testing, the tool correctly flags 81 out of 100 urgent cases from the better-documented group, but only 54 out of 100 urgent cases from the less-documented group.",
-      "Because the office uses a cut-off score of 70, many urgent applicants from the second group are placed lower in the queue.",
-      "Reviewers notice the gap only after comparing error rates by group rather than looking only at overall accuracy."
+      "Testing uses minimised data in an approved environment. Housing case files must not be uploaded to a public AI service or any tool not approved for such personal data.",
+      "The model learns that complete digital documentation is associated with cases that previously received quicker responses, although documentation quality does not reliably indicate urgency.",
+      "Reviewers compare missed urgent cases across application channels and find that the model performs worse on less structured records.",
+      "A single cut-off score places more urgent applicants with incomplete records lower on the priority list. Overall accuracy had concealed the uneven error rate."
     ],
-    "result": "The test shows a 27 percentage-point gap in urgent-case detection: 81% versus 54%. The tool therefore performs unevenly across groups and risks unfair delays. The office pauses deployment, reviews data quality, changes the process, and adds human review for borderline cases."
+    "result": "The ranking creates a systematic risk of delay for applicants with less complete digital records. The desk pauses deployment, reviews the labels and proxy variables, tests alternative thresholds and retains accountable human review of every priority decision."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team receives many submissions to a public consultation and considers using an AI tool to summarise themes and rank comments by relevance.",
-    "relevance": "Bias matters because the tool may represent some regions, languages or writing styles more fully than others, which could distort what staff think participants said. This can affect inclusion, accountability and the fairness of consultation analysis.",
-    "caution": "Do not paste confidential, personal, protection-sensitive or otherwise unapproved submission content into a public AI service. Check language coverage, compare outputs across regions and groups, and keep human review over any summary used for official work."
+    "scenario": "A budget officer at a shared services centre is the finance member of a panel reviewing applications for a temporary staffing roster. The assessment matrix must reach the chief of section for clearance by close of business. With several dozen files still to read, the panel is offered a tool that ranks applicants against the agreed profile.",
+    "relevance": "Previous panel scores are not neutral ground truth. Career breaks, translated applications, unfamiliar institutions and non-standard job titles may have influenced earlier decisions and can become proxies for suitability. The tool may therefore rank some applicants systematically lower, while a respectable overall agreement rate conceals who is being screened out incorrectly.",
+    "caution": "Applicant files contain HR-sensitive personal data and must not be entered into a public service or any tool not expressly approved for recruitment data. The panel must not use the tool to infer sensitive characteristics or make it the sole basis for exclusion. Any comparison across groups must be lawful and appropriately safeguarded. Record threshold changes, retain accountable panel review and preserve a route to challenge the decision."
   },
   "whyItMatters": "Bias matters because AI tools can shape access, attention and opportunity without making the risk obvious. A system may look efficient overall while still failing certain groups more often. For a non-specialist, the key question is not only 'Does it work?' but also 'For whom does it work, who is missed, and who checks the result?' In public services, humanitarian work, hiring, education, health, finance or online platforms, unequal errors can create real harm, weaken trust, and expose an organisation to legal, ethical and reputational risk. Good practice means testing for uneven impacts, documenting limits, keeping meaningful human oversight, and being ready not to use the tool when the risk is too high.",
   "whereYouMayHearIt": [
-    "hiring and recruitment tools",
-    "facial recognition debates",
-    "credit or benefit scoring",
-    "content moderation systems",
-    "public sector digital services"
+    "A selection panel reviewing an AI-assisted shortlist before signing the assessment matrix",
+    "An ICT governance board during a vendor demonstration, before a pilot is cleared",
+    "An evaluation office presenting error rates by language to the front office",
+    "A Human Rights Council side event on due diligence for automated decisions"
   ],
   "commonMisconceptions": [
     {
@@ -137,7 +136,7 @@
     "simple": "An AI system can treat people unfairly because of the way it was designed, trained, or used, even if no one intended that result.",
     "technical": "Algorithmic bias refers to systematic patterns in a computational system that produce unfairly different performance, outcomes or burdens across people or groups. The source may be unrepresentative data, label bias, measurement error, historical inequity, proxy variables, objective-function choices, threshold setting, feedback loops, interface effects or deployment context. In practice, people also say 'AI bias' or 'bias in AI' for this broader class of problems. 'Discrimination' overlaps but is not identical: it is a legal and human-rights concept concerning unjustified unequal treatment or impact, assessed under applicable law and context. The term should also be distinguished from 'statistical bias', which often means systematic deviation in estimation, and from the 'bias' parameter in some machine-learning models, which is a mathematical component rather than a fairness judgement."
   },
-  "keyTakeaway": "A system can be efficient on average and still be unfair in practice, so always ask who is missed, who is harmed, and who reviews the output.",
+  "keyTakeaway": "Good average performance can conceal systematic harm. Examine the data, labels, proxy variables and thresholds, compare errors across relevant groups, and keep people accountable for consequential decisions.",
   "quickCheck": {
     "question": "Which statement best captures algorithmic bias?",
     "options": [
@@ -265,6 +264,17 @@
       "workedExampleResult",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:26:40.069Z",
+    "applied": [
+      "unWorkplaceExample",
+      "whereYouMayHearIt"
+    ],
+    "note": "Revised the workplace scenario and listening contexts for greater procedural specificity, and strengthened the safeguards around recruitment data and group-level testing."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

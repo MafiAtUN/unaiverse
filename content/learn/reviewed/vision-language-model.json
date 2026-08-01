@@ -93,28 +93,27 @@
     "reducedMotionDescription": "Show the same five boxes in a static left-to-right layout with visible arrows and labels for image input, text input, separate encoding, shared context, output, and human review. Instead of animated highlighting, use three small legend tags above the arrows: image only, text only, and image plus text."
   },
   "workedExample": {
-    "scenario": "A finance team has three standard invoice templates. They test a VLM on a phone photo of one invoice and ask it to identify the template and extract one field.",
-    "input": "Image: slightly tilted photo of a printed invoice. Text prompt: 'Identify the template from A, B or C. Then extract the invoice number only.'",
+    "scenario": "During acceptance testing at Headquarters, a finance assistant tests an invoice-capture tool on three synthetic templates before comments on the vendor demonstration are due at close of business.",
+    "input": "Image: a slightly tilted photograph of a synthetic invoice. Prompt: \"Identify template A, B or C, then return only the invoice number.\"",
     "process": [
-      "The vision component converts the image into visual features, including layout, printed text shapes and box positions.",
-      "The text prompt is tokenised so the instruction and the allowed template names become part of the context.",
-      "The model relates the prompt words to visual areas that look like headings and form fields.",
-      "It generates an answer token by token: first the template label, then the extracted number."
+      "The vision pathway converts patches or regions of the photograph into numerical features representing layout, printed characters and field positions.",
+      "The prompt is tokenised into text embeddings, including the permitted template labels and the requested field.",
+      "The model projects or aligns the visual and textual representations into a shared context, allowing the instruction to condition attention to likely headings and form fields.",
+      "The decoder generates the response token by token, first producing the template label and then the invoice number."
     ],
-    "result": "Output: 'Template B. Invoice number: 84737.' A human checks the original image and confirms the template is B, but notices the last digit is actually 1, not 7; photo glare made the 1 look similar to 7. This shows why verification matters."
+    "result": "The tool returns \"Template B, TEST-84I\". The finance assistant checks the synthetic source and finds that the final character is the digit 1, not the letter I. The format is correct, but glare and similar character shapes produced a plausible extraction error."
   },
   "unWorkplaceExample": {
-    "scenario": "An office wants an internal search tool over approved guidance documents so staff can upload a screenshot of a form or table and ask, 'Which guidance note matches this layout?'",
-    "relevance": "A VLM can connect the screenshot with document text, which may help staff find the right guidance faster than keyword search alone.",
-    "caution": "Use only approved internal systems and approved documents. Do not upload confidential, personal, protection-sensitive, security-sensitive or operational information to an unapproved public AI service, and keep a human in the loop before acting on the result."
+    "scenario": "At a regional hub, the reporting officer supporting procurement is reviewing closed solicitation files before the retention register goes to the chief of section at close of business. In an approved system, the officer tests whether a VLM can read scanned cover sheets, distinguish document types and propose file references for human confirmation.",
+    "relevance": "The model can use layout, visible text and the officer’s written instruction together. This may help sort mixed scans or locate a requested field, including where ordinary text search fails because the page is an image.",
+    "caution": "Procurement files may contain bids, evaluation material, pricing, personal details and commercially confidential information. They must not be uploaded to any tool that is not approved for that material, because disclosure could breach access controls or compromise a procurement process. Model-generated labels must be checked against the source file and cannot override retention requirements."
   },
   "whyItMatters": "For non-specialists, this term matters because many new AI tools no longer work on text alone. If a tool can inspect images, forms, charts or screenshots, its risks and uses change. That affects procurement, privacy review, testing, accessibility planning and human oversight. Knowing the difference between a text-only model, a VLM and a broader multimodal model helps you ask the right questions about inputs, failure modes and whether a claimed capability is actually needed.",
   "whereYouMayHearIt": [
-    "document extraction tools",
-    "image question answering demos",
-    "multimodal AI product briefings",
-    "OCR replacement discussions",
-    "model benchmarking reports"
+    "A vendor demonstration during a procurement meeting",
+    "An ICT governance board reviewing a multimodal tool",
+    "A records-management meeting on classifying scanned files",
+    "An evaluation read-out comparing extraction against verified source documents"
   ],
   "commonMisconceptions": [
     {
@@ -134,7 +133,7 @@
     "simple": "A VLM is an AI model that can use pictures and words together, so you can show it an image, ask a question in text, and get a text answer or extracted information.",
     "technical": "A VLM combines a vision pathway with a language model or language-like decoder. The image is transformed into numerical features, often from patches or regions, while the text is tokenised into text embeddings. These representations are aligned or projected into a shared space or shared context so the generation component can condition on both. In many implementations, the final output is still produced autoregressively through next-token prediction, even when the task looks like image understanding. 'Large multimodal model' is often used for broader systems that may support text plus images and sometimes audio or video; 'VLM' is narrower because it specifically names the vision-language pairing. The exact architecture varies, so the term refers more to capability class than to one single design."
   },
-  "keyTakeaway": "A VLM extends language-model behaviour with visual input, but image access does not make its answers automatically accurate or fully grounded.",
+  "keyTakeaway": "A VLM can condition its output on images and text together. It may still misread, omit or confidently infer visual details, so outputs must be checked against the source.",
   "quickCheck": {
     "question": "Which statement best captures the relationship between VLM and LMM?",
     "options": [
@@ -260,6 +259,19 @@
       "plainExplanation",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:19.121Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

@@ -88,28 +88,27 @@
     "component": "attention"
   },
   "workedExample": {
-    "scenario": "Sentence fragment: \"The animal did not cross the road because it was tired.\" We examine the token \"it\".",
-    "input": "Tokens: [The, animal, did, not, cross, the, road, because, it, was, tired]",
+    "scenario": "In the sentence \"The catalogue entry was returned to the focal point because it was incomplete\", examine the token \"it\".",
+    "input": "Tokens: [The, catalogue, entry, was, returned, to, the, focal, point, because, it, was, incomplete]",
     "process": [
-      "The model forms a query for \"it\" and keys and values for every token.",
-      "Suppose the comparison scores from \"it\" to selected tokens are: animal 3.2, road 1.1, because 0.8, tired 2.7, it 1.5, others near 0.",
-      "After normalisation, the weights might be: animal 0.38, tired 0.23, it 0.07, road 0.05, because 0.04, remaining tokens sharing the rest.",
-      "The output vector for \"it\" is the weighted sum of all value vectors, so information linked to \"animal\" and \"tired\" contributes more than information linked to \"road\".",
-      "The next layer can use that updated vector to represent \"it\" in context, helping the model treat it as referring more to the animal than to the road."
+      "The layer projects every token representation into a query, key and value. The query for \"it\" is compared with the keys for all allowed tokens, including its own key.",
+      "For one illustrative attention head, the normalised weights might assign 0.30 to \"entry\", 0.25 to \"incomplete\", 0.12 to \"catalogue\", 0.08 to \"it\", 0.07 to \"returned\", and 0.18 across the remaining tokens.",
+      "The representation for \"it\" becomes a weighted sum of the corresponding value vectors. Information from \"entry\" and \"incomplete\" therefore contributes more strongly than information from \"focal point\".",
+      "A residual connection typically combines this attention output with the token's earlier representation before the result passes to subsequent processing."
     ],
-    "result": "The token \"it\" keeps its position, but its new representation carries contextual information from the whole sentence, especially tokens that looked most relevant."
+    "result": "The position of \"it\" is unchanged, but its updated representation now carries evidence that it refers more strongly to the catalogue entry than to the focal point."
   },
   "unWorkplaceExample": {
-    "scenario": "A team drafts a situation report from approved, non-sensitive text notes. In a transformer-based drafting tool, self-attention helps each word in a sentence use nearby and distant words, such as dates, locations and reported actions, so the sentence stays coherent.",
-    "relevance": "This helps staff understand why transformer outputs can reflect long-range context within the same paragraph rather than only the last few words.",
-    "caution": "Do not paste confidential, personal, protection-sensitive, security-sensitive or operational information into an unapproved public AI service. Use only approved tools and maintain human review before any report is shared."
+    "scenario": "At the annual workplan review, an ombudsman case officer in a documentation and library service uses an approved drafting tool to revise a non-sensitive paragraph on records management. Self-attention allows each token to draw on other tokens in the paragraph, so a phrase such as \"the revised filing procedure\" can influence the later word \"it\" even when several words intervene.",
+    "relevance": "The mechanism helps explain how a transformer keeps references, qualifications and defined terms connected across a sentence. It does not retrieve the correct interpretation from a file. It reweights token representations within the sequence presented to it.",
+    "caution": "Ombudsman case files, identities, allegations, correspondence and associated metadata must not be entered into a tool unless it is explicitly approved for that material. Such information is confidential and may expose individuals or compromise a case. Keep the exercise to non-sensitive administrative text and review the output before clearance."
   },
   "whyItMatters": "Self-attention helps explain why transformers work well on language, code and other sequences. For a non-specialist, this matters because it shows what the model is actually doing: not retrieving one exact rule, but repeatedly reweighting parts of the input to build context-aware representations. That helps you judge strengths and limits. A system using self-attention may capture long-range relationships better than older sequence models, but it can still miss meaning, rely on weak patterns or spread errors through the representation. Knowing this supports better choices about procurement, evaluation, safety checks and when human review is needed.",
   "whereYouMayHearIt": [
-    "transformer architecture discussions",
-    "large language model explainers",
-    "machine learning lectures",
-    "research papers on NLP and vision"
+    "A vendor demo to an ICT governance board",
+    "A technical review of terms of reference for a language-model procurement",
+    "An information management officer's briefing before a drafting-tool pilot",
+    "A research presentation in the margins of a digital cooperation session"
   ],
   "commonMisconceptions": [
     {
@@ -133,7 +132,7 @@
     "simple": "Each token draws more information from the available tokens in the same input that receive higher computed weights.",
     "technical": "Given input token representations X, the layer learns projections that produce Q, K and V. For each position i, it computes similarity scores between q_i and every allowed k_j, scales and normalises them into weights, and uses those weights to form a weighted sum of the corresponding v_j. The result is a contextualised representation for position i. Doing this for every position gives a full set of updated token representations. In transformers, this is typically wrapped with residual connections, layer normalisation and feed-forward sublayers. Self-attention describes where Q, K and V come from. Multi-head attention describes running several attention heads in parallel, so multi-head attention can perform self-attention."
   },
-  "keyTakeaway": "Self-attention lets each token rebuild its representation by drawing weighted information from available tokens in the same sequence, including itself.",
+  "keyTakeaway": "Self-attention lets each token rebuild its representation from a weighted combination of all tokens it is allowed to attend to, including itself, before the next layer processes it.",
   "quickCheck": {
     "question": "Which statement best describes self-attention in a transformer?",
     "options": [
@@ -279,6 +278,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:22.955Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

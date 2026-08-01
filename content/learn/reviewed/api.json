@@ -85,28 +85,27 @@
     "reducedMotionDescription": "A static four-box flow chart with arrows: Calling application, API request, Service behind API, Response. Example labels appear as fixed text below each box instead of hover effects."
   },
   "workedExample": {
-    "scenario": "A travel planning app wants to show the weather for Accra before suggesting what to pack.",
-    "input": "Request: city=Accra, date=2026-08-02, units=celsius",
+    "scenario": "A programme officer at Headquarters is finalising a side-event concept note for circulation by close of business. The event-planning tool uses the approved room-booking API to check whether a suitable room is available and place a provisional hold.",
+    "input": "Request: operation=check_availability, capacity=medium, equipment=videoconference, time_window=afternoon",
     "process": [
-      "The app sends a weather API request with the city, date and units.",
-      "The weather service checks that the app has a valid key and that the request format is correct.",
-      "The service looks up the forecast for Accra on that date.",
-      "It returns structured data: high 29, low 24, chance_of_rain 70%."
+      "The planning tool sends the request to the room-booking endpoint with its authentication data and the required parameters.",
+      "The booking service validates the credentials, request format and the officer's permission to place a hold.",
+      "The service checks its booking records and applies the rules for room capacity, equipment and availability.",
+      "It returns a structured response with availability, permitted next actions and status information. If the request is valid and a room is available, the tool sends a second request for a provisional hold."
     ],
-    "result": "Using this hypothetical response, the app displays: “Accra on 2 August: 24–29°C, high chance of rain. Consider light clothes and rain protection.”"
+    "result": "The tool records the provisional hold and inserts the room details into the draft concept note. If no suitable room is available, it displays the service's response rather than guessing or treating an error as a booking."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team uses an approved internal tool to translate short, non-sensitive field updates into a working language through a translation service API.",
-    "relevance": "This shows how software can pass text to another service automatically and receive a structured result that staff can review before use.",
-    "caution": "Do not send confidential, personal, survivor, witness, security-sensitive or operational information to an unapproved public API service. Use approved tools, apply human review, and follow organisational data-protection rules."
+    "scenario": "During a Resident Coordinator's Office town hall, a chief of section receives an unanticipated question about delivery against the current workplan. An approved internal dashboard calls the results system through its API and retrieves the latest validated status for use in the chief's talking points before the question period closes.",
+    "relevance": "The dashboard is the client. It sends an authenticated request with the relevant workplan identifier to a specified endpoint. The results system validates the request, checks access rights and returns structured status information that the dashboard can display.",
+    "caution": "The API must return only information the user is authorised to access. Unpublished reporting, personal data or authentication credentials must not be sent to an unapproved service or exposed in prompts, talking points or system logs."
   },
   "whyItMatters": "If you use digital services, you are already affected by APIs even if you never see them. They are the links that let systems share data and trigger actions. For non-specialists, this matters because APIs shape what can be automated, what data moves where, who has access, how errors are handled, and what oversight is needed. In AI systems, APIs often determine whether a tool only chats or can actually act in other systems. Knowing this helps you ask practical questions: What system is being called? What data leaves our environment? What permissions are granted? What happens if the response is wrong or delayed? Who reviews the result before action?",
   "whereYouMayHearIt": [
-    "software integration meetings",
-    "AI agent demos",
-    "developer documentation",
-    "procurement discussions",
-    "automation planning"
+    "A vendor demo for an ICT governance board",
+    "A procurement meeting on connecting a new platform to existing systems",
+    "An automation review with a programme office and information management officer",
+    "A technical discussion before an internal tool is cleared for use"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +125,7 @@
     "simple": "Think of it as a formal service desk for software. One program asks for something in a standard way, and another program returns an answer in a standard way.",
     "technical": "An API defines how a client application can interact with a service through specified operations, inputs, outputs and rules. A client sends a request to a service interface, often to a particular endpoint, with parameters and authentication data. The service validates the request, applies business logic or calls underlying resources, then returns a structured response and status information. In practice, APIs are used to expose functions such as search, translation, storage, payments or messaging so other systems can invoke them programmatically. In AI workflows, an assistant or agent may use APIs as tools to fetch context, perform actions or update external systems. This is related to function calling and tool use, but not identical: function calling usually refers to the model producing a structured instruction for a tool, while the actual API call is then made by software around the model."
   },
-  "keyTakeaway": "An API is the agreed doorway that lets software ask another system for data or actions in a predictable way.",
+  "keyTakeaway": "An API is an agreed interface through which one system requests data or an action from another, using defined operations, inputs, authentication rules and structured responses.",
   "quickCheck": {
     "question": "Which description best matches an API?",
     "options": [
@@ -269,6 +268,19 @@
       "oneSentence",
       "workedExampleResult"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:05.425Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Replaced the hypothetical weather data and generic workplace scenario with distinct, process-specific examples that show requests, authentication, validation, business rules, structured responses and status handling."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

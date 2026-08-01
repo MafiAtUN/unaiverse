@@ -91,28 +91,27 @@
     "reducedMotionDescription": "A static left-to-right diagram shows test items with real labels, a classifier, and a 2×2 table with rows for real labels and columns for predicted labels. Arrows connect the stages, and each cell is labelled true positive, false negative, false positive or true negative."
   },
   "workedExample": {
-    "scenario": "A programme team tests a model that labels incoming feedback messages as 'urgent' or 'not urgent'. They evaluate it on 100 messages already reviewed by staff.",
-    "input": "Known reality: 20 messages were truly urgent and 80 were not. Model output: 15 of the urgent messages were predicted urgent, 5 urgent messages were missed, 10 non-urgent messages were incorrectly flagged urgent, and 70 non-urgent messages were correctly left as not urgent.",
+    "scenario": "The communications officer evaluates the classifier on 120 files already labelled by the records focal point: 40 final public products, 40 working drafts and 40 duplicates.",
+    "input": "For actual final products, the predictions are 35 final, 4 draft and 1 duplicate. For actual drafts, they are 6 final, 30 draft and 4 duplicate. For actual duplicates, they are 2 final, 3 draft and 35 duplicate.",
     "process": [
-      "Set up a 2×2 table with rows for real status and columns for predicted status.",
-      "Place 15 in true positive because those messages were truly urgent and predicted urgent.",
-      "Place 5 in false negative because they were truly urgent but predicted not urgent.",
-      "Place 10 in false positive and 70 in true negative for the non-urgent messages.",
-      "Read the table to see that the model catches many urgent messages but also creates some false alarms."
+      "Create a 3×3 table with actual labels as rows and predicted labels as columns.",
+      "Enter each count in the corresponding cell. The diagonal contains 35 correctly identified final products, 30 correctly identified drafts and 35 correctly identified duplicates.",
+      "Inspect the off-diagonal cells. The largest error is the six working drafts predicted to be final public products.",
+      "Add the diagonal counts to obtain 100 correct predictions out of 120. Use the individual rows and columns to calculate per-class recall and precision if needed."
     ],
-    "result": "The confusion matrix is: true positive 15, false negative 5, false positive 10, true negative 70. Accuracy is 85%, but the table shows more than that: recall for urgent messages is 15 out of 20, while precision for urgent predictions is 15 out of 25."
+    "result": "Overall accuracy is 100 out of 120, or 83.3%. The confusion matrix adds the operationally useful finding that six drafts were labelled as final products. That error may warrant closer review even though the classifier performs equally well on final products and duplicates, correctly identifying 35 of 40 in each class."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN language services team pilots a classifier that labels translated field updates as 'contains logistics issue' or 'does not contain logistics issue' so staff can triage messages faster.",
-    "relevance": "A confusion matrix helps the team see whether the tool mainly misses real logistics issues or mainly creates extra review work through false alarms, which is more useful than a single overall score.",
-    "caution": "Do not upload confidential, personal, protection-sensitive, security-sensitive or operational field updates into an unapproved public AI service for evaluation; use approved tools, minimised data and human oversight."
+    "scenario": "A communications officer in an office working in English, French and Arabic is preparing shared communications files for a records retention review due at close of business. The officer tests a classifier that proposes one of three labels: final public product, working draft or duplicate.",
+    "relevance": "A confusion matrix shows not only how many labels match the records focal point's review, but which categories the classifier confuses. Drafts labelled as final products create a different problem from duplicates labelled as drafts, even if both count equally in an overall accuracy score.",
+    "caution": "The officer must not upload shared-drive files to a tool that has not been approved for confidential or personal information. Evaluation should use an approved environment and minimised copies. The classifier may support the review, but a designated colleague must make retention decisions."
   },
   "whyItMatters": "A confusion matrix helps people ask a better question than “What is the score?” It shows what kinds of mistakes a system makes, not just how often it is right overall. That matters when different errors have different costs. In a screening task, missing a real case may be worse than raising an extra alert, or the opposite may be true. The table also helps spot class imbalance, where one category is much rarer than another and a high accuracy score can be misleading. For non-specialists making procurement, deployment or oversight decisions, it is a practical way to check whether a system’s behaviour matches the real operational need.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "machine learning training courses",
-    "procurement and vendor demos",
-    "quality assurance for classifiers"
+    "During an ICT governance board's first reading of a model evaluation report",
+    "At a vendor demonstration convened by a procurement unit",
+    "In a quality assurance meeting before a classifier is uploaded to the portal",
+    "During clearance of an evaluation office's findings on an automated tool"
   ],
   "commonMisconceptions": [
     {
@@ -136,7 +135,7 @@
     "simple": "It is a score table for a sorting system. It tells you how many items were sorted correctly, how many false alarms it raised, and how many real cases it missed.",
     "technical": "For a classifier evaluated on labelled test data, a confusion matrix tabulates counts by actual class versus predicted class. In binary classification, the four cells are true positive, false positive, false negative and true negative. In multiclass classification, the matrix extends to one row and one column per class, and off-diagonal cells show which classes are being confused with which others. The matrix is not itself a single metric. Instead, it is the count structure from which metrics such as accuracy, precision, recall, specificity and F1 score can be derived. Its usefulness depends on sound evaluation design: representative test data, clear label definitions, separation from training data, and awareness of class imbalance and error costs."
   },
-  "keyTakeaway": "Do not ask only how often a classifier is right; ask which mistakes it makes, and the confusion matrix is the fastest way to see that.",
+  "keyTakeaway": "A confusion matrix is not a single score. It shows the count and direction of each kind of classification error, including which classes a multiclass model confuses.",
   "quickCheck": {
     "question": "Why might a confusion matrix be more informative than accuracy alone?",
     "options": [
@@ -244,6 +243,19 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:19.844Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

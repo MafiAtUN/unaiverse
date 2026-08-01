@@ -92,29 +92,28 @@
     "reducedMotionDescription": "A static two-row diagram. Row one shows 12 examples split into 3 batches, each batch connected to one update step, with a brace marking all 3 updates as epoch 1. Row two repeats the same structure for epoch 2 with the example order changed."
   },
   "workedExample": {
-    "scenario": "Training a classifier to sort short customer messages into “billing”, “delivery” or “other”.",
-    "input": "1,200 labelled training messages, batch size 100, train for 5 epochs.",
+    "scenario": "Training a classifier to sort sanitised multilingual helpdesk summaries into broad cyber-event categories for an aggregate progress report.",
+    "input": "1,200 labelled summaries, a batch size of 100 and a training run of 5 epochs.",
     "process": [
-      "The 1,200 messages are divided into 12 batches of 100 messages each.",
-      "In iteration 1, the model processes batch 1, compares its predictions with the labels, and updates its parameters once.",
-      "After 12 iterations, every training message has been used once, so epoch 1 is complete.",
-      "The same 1,200 messages are used again for epochs 2 to 5, often in a new order each time.",
-      "After 5 epochs, the model has made 60 update steps in total because 12 iterations per epoch times 5 epochs equals 60."
+      "The 1,200 summaries form 12 batches of 100. If the final batch were incomplete, it would still count as an iteration.",
+      "At each iteration, the model makes predictions for one batch, calculates the loss, backpropagates the gradients and updates its parameters once.",
+      "After 12 iterations, the model has used every training summary once, completing one epoch.",
+      "The summaries are commonly shuffled before the next epoch, but they remain the same training set.",
+      "Five epochs produce 60 parameter updates: 12 iterations per epoch multiplied by 5."
     ],
-    "result": "The training run finishes after 5 full passes through the data and 60 parameter updates; the final model can then be evaluated on validation or test data."
+    "result": "The run ends after five complete passes through the training set and 60 updates. The resulting model is then assessed on separate validation or test data before any aggregate figures are included in the progress report."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN analytics team is testing a model to identify broad protection-related trends across incident reports that have already been approved for secure internal analysis.",
-    "relevance": "Understanding epoch, batch and iteration helps the team estimate training time, choose hardware settings, and interpret progress reports such as loss changing after each iteration or each epoch.",
-    "caution": "Do not upload confidential, personal, survivor, witness, security-sensitive or operational incident data into an unapproved public AI service; use only approved secure environments with human oversight and data protection controls."
+    "scenario": "A security analyst in Geneva is testing a classifier that sorts sanitised helpdesk summaries in English, French and Spanish into broad cyber-event categories. The aggregate results are needed for a quarterly progress report to a donor, due to the front office for clearance at close of business.",
+    "relevance": "With 1,200 labelled summaries and a batch size of 100, each epoch takes 12 iterations. Knowing the distinction lets the analyst estimate whether five epochs, meaning 60 parameter updates, will finish before the reporting deadline and interpret whether a training chart records loss after each update or after each full pass.",
+    "caution": "Raw security logs, staff identifiers, access details and operational incident records must not be entered into a tool that has not been approved for such material. Training must use an approved secure environment and appropriately minimised data, because disclosure could expose individuals, systems or security controls."
   },
   "whyItMatters": "These words affect time, cost, stability and quality during training. If you hear that a model trained for 20 epochs, that does not tell you much unless you also know the batch size and dataset size. A small batch can make updates noisier but sometimes helps generalisation; a very large batch can be efficient on some hardware but may need different learning settings. Iteration counts matter for progress monitoring, while epoch counts matter for judging how many times the model has revisited the data. For non-specialists reviewing a project, these terms help you ask better questions: How many examples were used per update? How many full passes were made? Was the model checked on validation data, or did it simply train for more epochs and risk overfitting?",
   "whereYouMayHearIt": [
-    "training logs",
-    "machine learning courses",
-    "research papers",
-    "deep learning frameworks",
-    "model tuning meetings"
+    "A vendor demonstration to an ICT governance board",
+    "A model-tuning review before a progress report is cleared",
+    "A technical discussion with an implementing partner",
+    "A procurement evaluation of proposed training infrastructure"
   ],
   "commonMisconceptions": [
     {
@@ -138,7 +137,7 @@
     "simple": "Think of training as studying from a large stack of examples. A batch is one small pile you look at at a time. An iteration is one study-and-adjust step using that pile. An epoch is finishing the whole stack once.",
     "technical": "Let a training set contain N examples and let batch size be B. In mini-batch gradient-based training, each iteration performs a forward pass on one batch, computes a loss, backpropagates gradients, and updates parameters once. An epoch is one complete pass through the training set, so it takes about N/B iterations per epoch, or ceil(N/B) if the last batch is smaller. In practice, data are often shuffled between epochs. The terms are also used somewhat differently across tools: some logs report progress by iteration or step, others by epoch, and some use “batch” loosely to mean any update unit. These terms describe training procedure, not inference. They also do not by themselves tell you whether the learning is supervised, self-supervised or another training setup."
   },
-  "keyTakeaway": "Batch size sets how many examples are used per update, an iteration is one update, and an epoch is enough iterations to cover the full training set once.",
+  "keyTakeaway": "A batch is the group of examples used for one parameter update, an iteration is that update step, and an epoch is one complete pass through the training set.",
   "quickCheck": {
     "question": "A dataset has 10,000 training examples and batch size 500. If the model trains for 4 epochs, how many iterations happen in total?",
     "options": [
@@ -251,6 +250,19 @@
       "oneSentence",
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:08.071Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

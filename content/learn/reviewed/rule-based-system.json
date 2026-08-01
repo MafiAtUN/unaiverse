@@ -86,29 +86,27 @@
     "reducedMotionDescription": "A static left-to-right diagram shows the same four boxes and arrows without animation. Under it, three printed examples show one input matching a deadline rule, one matching a budget rule and one going to human review because no rule matched."
   },
   "workedExample": {
-    "scenario": "A small organisation wants to sort meeting notes into three categories: action item, budget issue or schedule item.",
-    "input": "\"Action: Amina to send revised budget by 18 July. Estimated cost: 4,500 dollars.\"",
+    "scenario": "At a regional bureau, a reporting officer configures a rule-based tracker to prepare progress reports for the weekly file review.",
+    "input": "Document type = progress report; clearance status = pending; deadline status = due by close of business.",
     "process": [
-      "The system receives the note as text.",
-      "It checks the rules in order: if text starts with 'Action:' label as action item; if text contains a currency amount label as budget issue; if text contains a date label as schedule item.",
-      "The first rule matches because the note starts with 'Action:'.",
-      "Depending on the design, the system either stops at the first match or also applies later matching rules.",
-      "In this design it keeps all matching labels, so it also marks budget issue and schedule item."
+      "The tracker stores the three input facts in working memory.",
+      "It applies the rule: if the document is a progress report and clearance is pending, place it in the clearance queue.",
+      "It then applies another rule: if the deadline is close of business, mark the item as priority.",
+      "A final rule uses the newly derived facts: if an item is both in the clearance queue and marked priority, flag it for front-office review."
     ],
-    "result": "Output: labels = action item, budget issue, schedule item. A dashboard can then show the note in all three queues."
+    "result": "The progress report appears in the priority clearance queue and is flagged for front-office review. The result follows from explicit rules, not from a prediction learned from earlier reports."
   },
   "unWorkplaceExample": {
-    "scenario": "After a disaster, an approved internal workflow uses a rule-based system to sort satellite-image analysis requests. For example: if the request mentions damaged roads, send it to transport analysts; if it mentions flooded clinics, send it to health and logistics teams.",
-    "relevance": "This helps teams triage repetitive requests quickly and transparently, especially when routing rules must be clear and auditable.",
-    "caution": "Do not upload security-sensitive imagery, personal data or operational details into an unapproved public AI service. Routing suggestions should remain under human oversight because context can change fast in emergencies."
+    "scenario": "In an evaluation office, a training officer preparing a handover note before close of business records how the approved request workflow operates. If a request is for an introductory, self-paced course, the system sends the standard course link. If it asks for a tailored session, it enters the officer review queue. If the learning objective field is blank, the request is returned for completion.",
+    "relevance": "The rules make routine routing consistent and allow the incoming colleague to see exactly why each action occurs. They can also be amended when the training offer changes. The system is not learning from previous requests. It is applying the conditions written into the workflow.",
+    "caution": "The workflow must not infer staff performance, suitability or accommodation needs from free text. Personal or HR-related information must not be entered unless the system is approved for it and access is appropriately controlled. Ambiguous requests and exceptions require human review."
   },
   "whyItMatters": "A non-specialist will hear many things called AI, but they do not work the same way. A rule-based system is often more predictable and easier to audit than machine learning because you can inspect the rules directly. That can be useful for eligibility checks, routing tasks and compliance steps where the logic must be explained. But it can also be brittle: if the rules are incomplete, outdated or badly written, the system can miss important cases. Knowing this helps you ask better questions: Who wrote the rules? How are they updated? What happens when no rule fits? Can a person review edge cases?",
   "whereYouMayHearIt": [
-    "helpdesk triage tools",
-    "tax or eligibility screening",
-    "medical decision support history",
-    "business process automation",
-    "older AI textbooks"
+    "During a vendor demo to an ICT governance board",
+    "In a procurement meeting reviewing workflow requirements",
+    "At a handover on helpdesk routing rules",
+    "During an internal audit walkthrough of an automated control"
   ],
   "commonMisconceptions": [
     {
@@ -260,6 +258,18 @@
       "plainExplanation",
       "quickCheckExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:23.509Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

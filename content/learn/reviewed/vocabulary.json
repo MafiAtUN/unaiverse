@@ -84,29 +84,27 @@
     "reducedMotionDescription": "A static four-column diagram shows text examples, their token splits, a highlighted fixed vocabulary panel with token IDs, and a final column where one candidate token is chosen from a scored list."
   },
   "workedExample": {
-    "scenario": "A small technical model processes the text: 'Pump-A7 reading 12.5 kPa'.",
-    "input": "Pump-A7 reading 12.5 kPa",
+    "scenario": "A reporting officer at a regional bureau investigates why an approved drafting tool sometimes reproduces the term “co-financing” inconsistently in a progress report.",
+    "input": "Co-financing remains subject to clearance.",
     "process": [
-      "The tokenizer checks the model’s vocabulary for matching token pieces.",
-      "One possible split is ['Pump', '-', 'A', '7', ' reading', ' 12', '.', '5', ' k', 'Pa'] because the exact string 'Pump-A7' may not exist as one token.",
-      "Each token is converted to its vocabulary ID, such as 4812, 17, 33, 29, 910, 602, 8, 21, 77, 144.",
-      "When generating a continuation after 'kPa', the model scores every token in the vocabulary, for example ' at' 3.1, ' and' 2.4, '.' 4.0, ' normal' 1.8.",
-      "The decoding method selects one token from those scored vocabulary items, such as '.'."
+      "The tokeniser searches its fixed vocabulary for token pieces that represent the character string.",
+      "Depending on that vocabulary, “Co-financing” might be one token or several, such as “Co”, “-”, “financing”. Each selected token has a corresponding vocabulary ID.",
+      "For every next-token position, the model's output layer assigns a score to every token in the same vocabulary.",
+      "The decoding rule selects one token ID, converts it back to its token string and appends it. The process then repeats."
     ],
-    "result": "The model can process and continue the text only through tokens available in its vocabulary; uncommon strings often require more tokens."
+    "result": "The model never reads or writes the term outside its vocabulary. If the term requires several tokens, generation takes more steps and offers more points at which a different token may be selected."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN analyst uses an approved internal tool to draft a summary of programme monitoring data, including indicator names, numeric values, and standard reporting phrases.",
-    "relevance": "Vocabulary matters because technical abbreviations, local place names, and number formats may split into many tokens, affecting cost, context use, and how reliably the model handles those terms.",
-    "caution": "Use only data approved for that internal tool. Remove personal data, case details, beneficiary records, and confidential monitoring material."
+    "scenario": "A budget officer in a Resident Coordinator's Office uses an approved language tool to check terminology in the quarterly report to a donor before it goes for clearance. Repeated output labels, abbreviations and hyphenated budget terms do not always correspond to single tokens in the model's vocabulary.",
+    "relevance": "If a term is absent as a single vocabulary item, the tokeniser represents it with smaller pieces. This can increase token use and make specialised labels, unusual abbreviations or number formats harder for the model to reproduce consistently. At each generation step, the model can select only from its fixed vocabulary.",
+    "caution": "Do not enter an uncleared donor report, implementing-partner financial details, banking information or personal data into a tool that is not approved for that material. Tool approval does not automatically cover every data category. Follow the office's access controls and standing instruction on external tools."
   },
   "whyItMatters": "Vocabulary affects practical decisions. It influences how efficiently a model handles names, codes, numbers, spelling variants, and different languages or scripts. A term that matches one token may be cheaper and easier to keep inside the context window than the same term split into many tokens. It also affects system design: model interoperability, prompt length, latency, and output control all depend partly on token inventories. For non-specialists, this helps explain why one model handles a domain term smoothly while another breaks it into awkward pieces, and why text length in characters is not the same as text length in tokens.",
   "whereYouMayHearIt": [
-    "model card discussions",
-    "tokeniser design notes",
-    "API cost estimates",
-    "context window planning",
-    "multilingual model comparisons"
+    "A vendor demo before an ICT governance board",
+    "A procurement unit's technical evaluation of language-model bids",
+    "A multilingual testing session at Headquarters",
+    "A model review before an approved tool is opened to a country office"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +124,7 @@
     "simple": "Think of it as the model’s box of text pieces. When text goes in, it gets broken into pieces from that box. When text comes out, the model chooses the next piece from the same box.",
     "technical": "In most LLMs, the vocabulary is the finite set V of token types defined by the tokenizer and tied to the model’s input and output layers. Tokenisation maps a character string to a sequence of token IDs in V. During generation, the model produces a logit or score for each token in V at every step; sampling or another decoding rule then selects one token ID. The selected ID is converted back to its token string and appended to the sequence. Because the output distribution is defined over the vocabulary, the model does not directly choose arbitrary character strings at each step. Vocabulary design interacts with tokenisation strategy, multilingual coverage, byte handling, special tokens, embedding matrices, output projection, memory use, and token efficiency."
   },
-  "keyTakeaway": "Vocabulary is the model’s fixed menu of token pieces, and both input processing and next-token generation must work through that menu.",
+  "keyTakeaway": "A model's vocabulary is the finite token set its tokeniser maps text into and its output layer scores at every generation step.",
   "quickCheck": {
     "question": "Which statement best describes token vocabulary in a language model?",
     "options": [
@@ -232,6 +230,19 @@
     "applied": [
       "unWorkplaceExampleCaution"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:15:15.866Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

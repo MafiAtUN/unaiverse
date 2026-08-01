@@ -32,8 +32,8 @@
   "oneSentence": "The share of flagged results that are actually correct positives.",
   "plainExplanation": "Precision looks only at the items a system marked as positive. It asks: out of those flagged items, how many were truly the thing we were looking for?\n\nThe input is a set of predictions and the real outcomes. For each case, the system either flags it as positive or does not. Then we compare those flags with reality.\n\nA true positive means the system flagged something and it really was positive. A false positive means the system flagged something but it was not actually positive. Precision uses these two counts: true positives divided by all flagged positives.\n\nSo precision tells you how trustworthy a positive result is. High precision means few false alarms among the positives. It does not tell you how many real positives were missed; that is recall, a different measure.",
   "everydayAnalogy": {
-    "title": "A librarian’s suggested documents list",
-    "story": "A librarian in Nairobi receives a request for past documents about coastal flooding. She quickly pulls 10 documents from a large knowledge base and puts them on a trolley marked “relevant”. After checking, 8 really are about coastal flooding, but 2 are about general weather planning and do not fit. Her precision is based on the 10 she selected, not on all the useful documents still left on the shelves.",
+    "title": "The blurry-photo folder",
+    "story": "A phone places 10 photographs in a folder labelled “blurry”. On inspection, 8 are genuinely blurry and 2 are clear photographs taken in low light. The phone’s precision for that folder is 8 out of 10, or 80%. This says nothing about blurry photographs left elsewhere in the gallery.",
     "mapping": [
       {
         "analogyElement": "Documents on the trolley marked relevant",
@@ -87,27 +87,27 @@
     "component": "precision-recall"
   },
   "workedExample": {
-    "scenario": "A knowledge-base search tool labels some documents as relevant to “drought early warning”.",
-    "input": "The tool flags 12 documents as relevant. After human checking, 9 are truly relevant and 3 are not.",
+    "scenario": "The procurement officer manually checks the product sheets flagged by the classifier as confirming both live captioning and keyboard navigation.",
+    "input": "The classifier flags 12 product sheets. Nine explicitly confirm both features. Three contain general accessibility language but do not confirm both requirements.",
     "process": [
-      "Count the documents the tool marked as relevant: 12 predicted positives.",
-      "Count how many of those are actually relevant: 9 true positives.",
-      "Count the incorrect flagged documents: 3 false positives.",
-      "Calculate precision as 9 divided by 12, which equals 0.75."
+      "Count all flagged product sheets: 12 predicted positives.",
+      "Count the flagged sheets that confirm both required features: 9 true positives.",
+      "Count the flagged sheets that do not confirm both features: 3 false positives.",
+      "Calculate precision as TP divided by TP plus FP: 9 divided by 12, or 0.75."
     ],
-    "result": "Precision is 75%. In plain language, three out of every four flagged documents were actually relevant."
+    "result": "Precision is 75%. In other words, three quarters of the classifier's positive flags were correct. The calculation does not reveal how many product sheets confirming both features were left unflagged."
   },
   "unWorkplaceExample": {
-    "scenario": "A team searches past UN resolutions for earlier wording on disaster risk reduction. An internal retrieval tool highlights paragraphs it predicts are relevant to the query, and staff sample the highlighted results to measure precision before relying on the tool.",
-    "relevance": "This helps staff judge whether highlighted passages are usually on-topic or whether the tool creates too many false leads that waste time and may misguide drafting.",
-    "caution": "Use only approved internal systems and approved document collections. Do not paste confidential, negotiation-sensitive or access-restricted text into a public AI service for testing."
+    "scenario": "At a UN Country Team working group, a procurement officer is finalising the accessibility requirements in the concept note for a side event in the margins of the session. With clearance due by close of business, the officer tests a classifier that screens event-platform product sheets for explicit confirmation of live captioning and keyboard navigation, rather than a general claim that the platform is accessible.",
+    "relevance": "High precision means that most product sheets flagged for follow-up actually confirm both required features. It does not show how many suitable platforms the classifier missed. The figure applies to the decision threshold and document mix tested, and may change when either changes.",
+    "caution": "Do not upload bids, pricing, evaluation comments or other procurement-sensitive material to a tool that has not been approved for it. This could expose confidential commercial information and compromise the integrity of the procurement process."
   },
   "whyItMatters": "A system can look useful while still producing many false alarms. Precision helps you judge whether a positive result is trustworthy enough for your task, especially when acting on a wrong alert has costs.",
   "whereYouMayHearIt": [
-    "search and retrieval evaluation",
-    "medical test discussions",
-    "spam filter reports",
-    "machine learning dashboards"
+    "During a vendor demo to a procurement unit, when staff ask how many automated flags survive manual review",
+    "At an evaluation office meeting reviewing the results of a document classifier",
+    "During a release-readiness review for a search tool",
+    "At an ICT governance board meeting considering a change to a classifier's decision threshold"
   ],
   "commonMisconceptions": [
     {
@@ -127,7 +127,7 @@
     "simple": "When the system says ‘this one is a match’, precision tells you how often that positive signal is correct.",
     "technical": "For binary classification, precision, also called positive predictive value, equals TP divided by TP plus FP. It measures the proportion of predicted positives that are true positives, and it depends on the decision threshold and the data distribution."
   },
-  "keyTakeaway": "Precision tells you how much to trust a positive flag, not how many real positives were found overall.",
+  "keyTakeaway": "Precision is the share of positive flags that are correct. It does not measure how many real positives were missed, and it can change with the threshold or data being assessed.",
   "quickCheck": {
     "question": "A system flags 20 messages as urgent. Human review shows that 15 really are urgent and 5 are not. What is the precision?",
     "options": [
@@ -229,6 +229,20 @@
       }
     ],
     "applied": []
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:05.671Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway",
+      "everydayAnalogy"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

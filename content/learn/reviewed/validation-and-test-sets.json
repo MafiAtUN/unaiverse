@@ -89,28 +89,27 @@
     "reducedMotionDescription": "A static four-panel diagram shows the same process without highlights or animation: split data, train on Training, tune using Validation, then evaluate once on Test with no return arrow."
   },
   "workedExample": {
-    "scenario": "A team is building a classifier to sort 12,000 customer-support emails into four categories: billing, technical issue, account access and other.",
-    "input": "12,000 labelled emails split into 8,000 for training, 2,000 for validation and 2,000 for test.",
+    "scenario": "After a pilot, a partnerships officer in a liaison office is finalising a lessons-learned note before front-office review. The pilot classifies publicly available partner announcements by theme for an internal horizon-scanning digest.",
+    "input": "A labelled archive of public announcements, divided once into disjoint training, validation and test subsets before development begins.",
     "process": [
-      "They train Version A on the 8,000 training emails and get 78% accuracy on the 2,000 validation emails.",
-      "They try Version B with different settings, still train only on the same 8,000 training emails, and get 83% accuracy on the validation set.",
-      "They choose Version B because it performs better on validation and then stop tuning.",
-      "They run Version B once on the 2,000 test emails and get 81% accuracy, which is their final reported test result."
+      "The pilot team fits several candidate models using only the training subset.",
+      "It compares candidates on the validation subset, adjusts settings and classification thresholds, and selects the strongest pipeline.",
+      "After selection, it freezes the pipeline rather than making further changes based on evaluation results.",
+      "It then runs the frozen pipeline once on the untouched test subset and records that result in the lessons-learned note."
     ],
-    "result": "The validation set helped them choose between versions; the test set gave the final estimate on unseen emails. If they kept changing the model after seeing the 81%, that test result would no longer be a clean final check."
+    "result": "The validation results supported development choices. The test result provided the final independent estimate on unseen announcements. If the pipeline were revised after that result, the test subset would have influenced development and a new untouched test subset would be needed."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team preparing procurement requirements for an automated document-classification tool asks vendors to explain how they separate training, validation and test data when reporting accuracy.",
-    "relevance": "This helps the team judge whether a vendor’s reported performance likely reflects genuine generalisation or only repeated tuning on the same evaluation data.",
-    "caution": "Do not place confidential procurement material, vendor-sensitive information, or any personal data into an unapproved public AI service. Ask for method descriptions, governance details and reproducible evaluation evidence through approved channels."
+    "scenario": "A procurement officer at Headquarters is finalising an evaluation note for the procurement unit before close of business. One technical proposal reports a combined “validation/test” score, so the officer asks the technical focal point whether model tuning and final testing used disjoint records.",
+    "relevance": "If the bidder repeatedly adjusted the model after viewing the same records, the reported score is not an independent final check. The distinction helps the procurement unit assess whether performance is likely to hold on genuinely unseen material.",
+    "caution": "Technical proposals, bids and evaluation records are procurement-sensitive. They must not be uploaded to a public or otherwise unapproved AI service. Review them only through authorised systems and share evaluation material strictly within the approved process."
   },
   "whyItMatters": "If you read an AI performance claim, this term helps you ask one of the most important questions: was the system measured on data it had already influenced, or on genuinely held-out data? That affects whether a reported score is likely to hold up in practice. For programme teams, procurement staff and managers, the distinction matters when comparing vendors, approving pilots, setting risk controls and deciding whether a model is ready for deployment. A strong validation score can help choose among options, but only a properly protected test set gives a more trustworthy final check on expected behaviour with new cases from the same task.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "vendor procurement responses",
-    "machine-learning courses",
-    "research papers",
-    "data science team reviews"
+    "A vendor demo during a procurement meeting",
+    "A lessons-learned session after an analytics pilot",
+    "An ICT governance board reviewing an evaluation report",
+    "A technical review before a model is cleared for deployment"
   ],
   "commonMisconceptions": [
     {
@@ -134,7 +133,7 @@
     "simple": "Use one pile of examples to teach the model, a second pile to help choose the best version, and a final untouched pile to check how that chosen version performs on new cases.",
     "technical": "In supervised learning, a dataset is often partitioned into disjoint subsets with different roles. The training set is used to fit model parameters. The validation set is a held-out subset used during model development for hyperparameter tuning, model selection, threshold choice, early stopping or comparing alternative pipelines. Because these decisions are influenced by validation performance, the validation set is not a fully independent measure once tuning has occurred. The test set is another held-out subset reserved for final evaluation after the modelling choices are fixed. Its purpose is to estimate generalisation to unseen samples drawn from the same target distribution. 'Held-out set' is a broader label for any data excluded from training, so it may refer to validation, test, or both depending on context. In some workflows, cross-validation replaces a single validation split during development, but a separate final test set may still be kept. Good practice also requires preventing data leakage, such as duplicate records, future information, or grouped observations crossing between splits."
   },
-  "keyTakeaway": "Validation helps you improve the model; the test set should wait until the end to check whether those improvements are likely to hold on unseen data.",
+  "keyTakeaway": "Use validation data to make development choices. Reserve the test data for the final check, after the model and evaluation procedure have been fixed.",
   "quickCheck": {
     "question": "Which statement best describes the difference between a validation set and a test set?",
     "options": [
@@ -255,6 +254,19 @@
     "applied": [
       "plainExplanation"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:12:17.319Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

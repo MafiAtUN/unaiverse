@@ -87,29 +87,28 @@
     "reducedMotionDescription": "A static side-by-side chart shows System A with mismatched score bands and observed outcomes, and System B with closely matched bands and outcomes. Text labels explain 'too confident' and 'well calibrated' without animation."
   },
   "workedExample": {
-    "scenario": "A classifier flags whether incoming messages are likely to be routine administrative requests. It outputs a confidence score for the label 'routine'.",
-    "input": "100 previously reviewed messages with model scores and confirmed outcomes.",
+    "scenario": "For an illustrative validation exercise, the translation service compares the tool's scores with completed human screening of 100 applications for a rostered profile.",
+    "input": "One hundred previously screened applications, with the model score and confirmed screening outcome for each.",
     "process": [
-      "Group the 100 messages by model score: 20 messages near 0.2, 30 near 0.5, and 50 near 0.8.",
-      "Check what fraction were truly routine in each group.",
-      "In the 0.2 group, 4 of 20 were routine, matching 20%.",
-      "In the 0.5 group, 15 of 30 were routine, matching 50%.",
-      "In the 0.8 group, only 30 of 50 were routine, which is 60%, not 80%."
+      "Group the applications by score: 20 near 0.2, 30 near 0.5 and 50 near 0.8.",
+      "Calculate the share in each group that human screening confirmed as meeting the profile.",
+      "In the 0.2 group, 4 of 20 met the profile, corresponding to 20%.",
+      "In the 0.5 group, 15 of 30 met the profile, corresponding to 50%.",
+      "In the 0.8 group, 30 of 50 met the profile, corresponding to 60%, not 80%."
     ],
-    "result": "On this sample, the model is calibrated at 0.2 and 0.5 but overconfident at 0.8. If staff treat 0.8 as “about 80% likely”, they would be misled."
+    "result": "In this illustrative sample, the lower two score groups are calibrated, while the tool is overconfident in the 0.8 group. It may still rank stronger applications above weaker ones, but staff cannot interpret 0.8 as an 80% likelihood without recalibration or further validation."
   },
   "unWorkplaceExample": {
-    "scenario": "A country office tests a tool that assigns confidence scores to likely categories in a shared public enquiries inbox, such as travel request, procurement question or event registration.",
-    "relevance": "Calibration helps staff judge whether a score like 0.85 should be treated as strong evidence or only a rough hint before human review and routing.",
-    "caution": "Do not upload personal, confidential, protection-sensitive or security-related messages to an unapproved public AI service. Use approved systems, minimise personal data, and keep human oversight over routing decisions."
+    "scenario": "At a duty station with three working languages, a reviser in the translation service checks a pilot tool that scores how likely each application is to meet a rostered translator profile. The long list and screening sheet are due to the selection panel at close of business.",
+    "relevance": "Calibration shows whether applications given, for example, a 0.8 score are later confirmed as meeting the profile about 80% of the time. The reviser should also check calibration by working language, since acceptable overall results can conceal uneven reliability between groups.",
+    "caution": "Applications contain personal and HR-sensitive material. They must not be entered into any tool not approved for that material. Minimise the data used, restrict access and retain human review. A probability score must not become an automatic ground for excluding an applicant."
   },
   "whyItMatters": "Confidence scores often shape action. A manager may prioritise cases above 0.9, a reviewer may skip checks below 0.2, or a rights-focused team may escalate cases marked high risk. If those scores are not calibrated, people can trust the wrong cases too much or discount important ones.\n\nThis matters especially where harms are uneven. Overconfident scores can hide uncertainty in cases affecting access to services, moderation, fraud checks, or risk screening. A system may look strong on a headline metric while still giving misleading confidence. For non-specialists, calibration is a practical question: 'When this system sounds sure, how often is that justified?'",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "risk scoring tools",
-    "medical or safety screening",
-    "spam or fraud detection",
-    "benchmark discussions"
+    "A translation service review before a roster-screening pilot is cleared",
+    "A vendor demo during a procurement meeting",
+    "An evaluation office discussion of a reliability diagram",
+    "An ICT governance board review of whether probability scores are fit for use"
   ],
   "commonMisconceptions": [
     {
@@ -129,7 +128,7 @@
     "simple": "A system is well calibrated when its probability scores match what happens over time. If it assigns 80% to an outcome in many cases, that outcome should occur about 80% of the time.",
     "technical": "For probabilistic predictions, calibration means agreement between predicted probabilities and empirical outcome frequencies. In binary classification, if we collect instances assigned score p, the event should occur about p of the time within that group. It is often examined with reliability diagrams, calibration curves, or summary measures such as calibration error, though the exact metric and binning method vary. Calibration differs from discrimination or ranking quality: a model can order cases well yet be systematically overconfident or underconfident. It can also be improved after training by recalibration methods, but recalibration itself must be validated on appropriate data to avoid leakage or overfitting."
   },
-  "keyTakeaway": "Do not ask only “Was it right?” Also ask: “When it assigned 80% to an outcome, did that outcome occur about 80% of the time?”",
+  "keyTakeaway": "Calibration asks whether stated probabilities match observed frequencies. It is not the same as ranking accuracy: a model may order cases well while giving misleading confidence scores.",
   "quickCheck": {
     "question": "Which statement best describes a well-calibrated classifier?",
     "options": [
@@ -271,6 +270,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:54.273Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

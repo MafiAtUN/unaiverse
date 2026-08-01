@@ -90,28 +90,27 @@
     "reducedMotionDescription": "A static five-panel strip replaces animation. Each panel shows one stage: random noise, prompt added, early noisy structure, clearer intermediate image, and final output image."
   },
   "workedExample": {
-    "scenario": "A person uses an image generator to create an illustration for a community cycling poster.",
-    "input": "Prompt: 'Flat poster-style image of a red bicycle parked beside a fruit stall at dusk, warm lights, no people, square format'",
+    "scenario": "A communications officer in Geneva needs a non-photorealistic visual for a side-event concept note before it goes for clearance.",
+    "input": "Prompt: \"Flat square illustration of a red bicycle beside a fruit stall at dusk, warm lights, no people, no logos\"",
     "process": [
-      "The system encodes the text prompt into guidance signals for the image model.",
-      "It starts from a 1024 by 1024 field of random noise.",
-      "Over roughly 30 denoising steps, broad shapes appear first: stall, bicycle frame, ground and lights.",
-      "Later steps refine edges, colours and small details so the scene better matches 'poster-style', 'dusk' and 'no people'."
+      "The system converts the prompt into conditioning signals that guide image generation.",
+      "Sampling begins with random noise in the model's working representation.",
+      "At each step, the trained model predicts noise or a related quantity and uses that prediction to make the sample slightly less noisy. Guidance pushes the evolving image towards the prompt.",
+      "Across repeated steps, broad composition appears first, followed by colours, edges and smaller details. If the model works in a compressed representation, the final sample is decoded into an image."
     ],
-    "result": "The output is a new square illustration that matches the prompt reasonably well, though details such as wheel spokes or fruit shapes may still be imperfect or invented."
+    "result": "The officer receives a new illustration broadly matching the prompt. It may still invent awkward spokes, fruit shapes or lettering, so the image requires review before it is inserted into the concept note."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team preparing procurement requirements for a design tool is assessing whether a vendor's image-generation feature uses diffusion and what controls it offers.",
-    "relevance": "Knowing the term helps staff ask practical questions: what inputs guide generation, how many editing controls exist, what provenance or watermarking features are available, what data was used for training, and what risks of misleading synthetic media need mitigation.",
-    "caution": "Staff should not test public services with confidential drafts, personal data, protection-sensitive material, security-related imagery or unpublished procurement information unless the service is approved for that use."
+    "scenario": "During a records retention review at a duty station working in three languages, a monitoring and evaluation officer finds AI-generated header images in several monitoring reports. Before the files are transferred, the officer asks the information management focal point whether a diffusion model produced them and what prompts, source files and provenance records were retained.",
+    "relevance": "Understanding diffusion helps the officer distinguish generated illustrations from documentary images. The model began with noise and iteratively produced a plausible output under guidance, rather than retrieving a photograph of an actual event. That distinction matters when preserving the reports and recording how their visuals were made.",
+    "caution": "Generated images must not be treated as monitoring evidence merely because they look realistic. Personal data, protection-sensitive images or unpublished report content must not be entered into a service that has not been approved for such material, because prompts and uploads may be retained or used by the provider."
   },
   "whyItMatters": "Non-specialists may meet diffusion models in image, audio and video tools, procurement documents, media literacy discussions and authenticity checks. The term matters because it signals a specific way content can be generated: from noise through many refinement steps. That affects speed, controllability, cost and common failure modes. It also matters for risk assessment. Outputs can look convincing even when they contain errors, fabricated details or misleading context. If you recognise the term, you can ask better questions about training data, bias, consent, provenance, watermarking, human review and whether a tool is suitable for a real task.",
   "whereYouMayHearIt": [
-    "image generator product pages",
-    "AI procurement discussions",
-    "synthetic media policy briefings",
-    "technical explainers about text-to-image",
-    "debates about deepfakes and provenance"
+    "A vendor demo before an ICT governance board",
+    "A procurement unit reviewing requirements for a media tool",
+    "Clearance of a background note on synthetic media",
+    "An inter-agency working group discussing image provenance"
   ],
   "commonMisconceptions": [
     {
@@ -131,7 +130,7 @@
     "simple": "A diffusion model makes new media by starting with random noise and gradually cleaning it up until it matches a prompt or another guide.",
     "technical": "A diffusion model learns a parameterised reverse-noising process. During training, clean samples are progressively corrupted by a forward diffusion process that adds noise over multiple time steps. The model is trained to predict the noise, the clean sample, or a related quantity at each step, often conditioned on text, images, audio or other inputs. At generation time, sampling begins from noise and iteratively applies the learned reverse steps, sometimes with guidance methods that push the sample toward the conditioning signal. In practice, many modern image systems use latent diffusion, where denoising happens in a compressed latent space rather than directly on full-resolution pixels, which improves efficiency. Compared with autoregressive models, which generate one token or patch after another, diffusion models typically refine the whole sample over repeated steps."
   },
-  "keyTakeaway": "Diffusion models generate convincing media by turning noise into structure step by step, which is powerful for creation but not a guarantee of truth or authenticity.",
+  "keyTakeaway": "A diffusion model generates media through learned, iterative denoising, often guided by a prompt. Plausible output is not evidence that the depicted content is real or accurate.",
   "quickCheck": {
     "question": "Which statement best describes how a diffusion model usually generates an image?",
     "options": [
@@ -270,6 +269,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:20:44.430Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

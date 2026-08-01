@@ -88,27 +88,27 @@
     "reducedMotionDescription": "A static side-by-side comparison shows one shared input feeding a baseline branch and a new model branch, then a box comparing their scores and a final box asking whether the difference is useful in practice."
   },
   "workedExample": {
-    "scenario": "A team builds a classifier to label incoming policy documents as 'education', 'health' or 'climate'.",
-    "input": "Test set of 300 documents: 180 health, 90 education, 30 climate.",
+    "scenario": "A desk officer in a regional bureau is finalising the evaluation annex for a document-routing pilot. The classifier assigns 300 public programme summaries to education, health or climate queues.",
+    "input": "Test set of 300 summaries: 180 health, 90 education and 30 climate.",
     "process": [
-      "Choose a simple baseline: always predict the most common class, which is 'health'.",
-      "Score the baseline on the same 300-document test set.",
-      "Run the new classifier on the same test set and score it with the same metric.",
-      "Compare the results and check whether the gain helps on the less common classes, not only overall accuracy."
+      "Set the baseline to always predict the most frequent class, health.",
+      "Score that baseline on the fixed test set using the evaluation metric selected for the pilot.",
+      "Run the candidate classifier on the same test set and score it with the same metric.",
+      "Compare overall accuracy and class-level recall, particularly for the less frequent education and climate categories."
     ],
-    "result": "Baseline accuracy is 180/300 = 60%. The new classifier reaches 72% accuracy, which is 12 percentage points higher. This shows improvement in overall accuracy, but does not by itself prove practical value. If its climate recall is still very low, the team may decide it is not yet good enough for the real task."
+    "result": "The majority-class baseline is correct for 180 of 300 summaries, giving 60% accuracy. The classifier reaches 72%, an improvement of 12 percentage points. That gain is not sufficient on its own: if climate recall remains poor, the classifier may still be unsuitable for routing work."
   },
   "unWorkplaceExample": {
-    "scenario": "An analysis team wants to identify protection trends across incident reports using a model that tags reports by theme, such as displacement, access restrictions or gender-based risks.",
-    "relevance": "A baseline could be a keyword rule list or always predicting the most common theme. Comparing the model against that baseline shows whether the model improves enough to justify use in reporting workflows.",
-    "caution": "Do not place confidential, personal, survivor, witness, security-sensitive or operational report text into an unapproved public AI service. Use approved systems, minimise data and keep human review over any protection-related interpretation."
+    "scenario": "A legal officer in an inter-agency secretariat is drafting a lessons-learned note after a pilot that grouped comments on draft guidance by legal issue. Before the findings go to the front office, the officer compares the model with the keyword rules previously used for first-pass sorting.",
+    "relevance": "The keyword rules are a useful baseline only if they and the model are assessed on the same labelled comments, with the same categories and metric. The comparison shows whether the pilot improved on the existing workflow rather than merely producing a respectable-looking score.",
+    "caution": "Comments on draft guidance may contain confidential or legally sensitive material. They must not be entered into a tool that has not been approved for that material. Use an approved environment, minimise the text retained and keep legal review in the workflow."
   },
   "whyItMatters": "Without a baseline, people can be impressed by numbers that do not prove real usefulness. A high score may simply reflect an easy dataset, an imbalanced class distribution or a weak comparison. Baselines help non-specialists ask better questions: Is this system better than a simple rule? Better than the current process? Better in the ways that matter for risk, cost and fairness? This supports safer procurement, clearer reporting and more reliable decisions about whether to deploy, revise or reject a system.",
   "whereYouMayHearIt": [
-    "model evaluation reports",
-    "procurement and vendor demos",
-    "dashboard performance reviews",
-    "research papers and benchmarks"
+    "A lessons-learned meeting after an AI pilot",
+    "A procurement meeting while a vendor presents evaluation results",
+    "An ICT governance board reviewing a proposed deployment",
+    "Clearance of a model evaluation annex"
   ],
   "commonMisconceptions": [
     {
@@ -128,7 +128,7 @@
     "simple": "A baseline is the reference result you compare against before calling a model better.",
     "technical": "In model evaluation, a baseline is a reference method or performance level assessed under the same task definition, data split and evaluation metric as the candidate model. Common baselines include majority-class prediction, random prediction with known class frequencies, linear or rule-based methods, historical averages, previous production systems and human performance under defined conditions. The purpose is to compare the model with trivial patterns or an existing workflow. A baseline can reveal that an apparently high score offers little improvement over an obvious strategy, but it does not by itself diagnose problems such as data leakage. Baseline selection depends on context. For time series, a last-value or seasonal baseline may be appropriate. For retrieval, keyword search may be relevant. For classification, majority-class or simple linear models are common. A strong evaluation may report multiple baselines because one rarely captures every practical comparison."
   },
-  "keyTakeaway": "A model score is easier to interpret when compared with a relevant reference method or result.",
+  "keyTakeaway": "A baseline makes a model score meaningful, provided both are tested on the same task, data split and metric.",
   "quickCheck": {
     "question": "Why is a baseline useful when evaluating a classifier?",
     "options": [
@@ -256,6 +256,19 @@
       "quickCheckExplanation",
       "quickCheckCorrectOptionIndex"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:14:20.136Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": ""
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

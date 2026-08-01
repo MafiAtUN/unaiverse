@@ -85,28 +85,27 @@
     "reducedMotionDescription": "A static flowchart shows prompt tokens on the left, a labelled pause in the middle, and a row of output tokens on the right. The pause is marked as latency, and a bracket under several output tokens marks throughput as tokens per second."
   },
   "workedExample": {
-    "scenario": "Comparing two model deployments for a drafting assistant",
-    "input": "Prompt length: 1,200 tokens. Model A starts output after 0.8 seconds and generates 40 tokens per second. Model B starts output after 0.3 seconds and generates 18 tokens per second. Needed answer length: 180 tokens.",
+    "scenario": "A country office compares two approved deployments for producing a 180-token draft from a synthetic 1,200-token prompt. Both are tested under the same serving load, and the reported rates cover output generation rather than prompt ingestion.",
+    "input": "Deployment A starts output after 0.8 seconds and generates 40 tokens per second. Deployment B starts after 0.3 seconds and generates 18 tokens per second.",
     "process": [
-      "For Model A, the first visible token appears after 0.8 seconds.",
-      "Model A then needs about 180 / 40 = 4.5 seconds to generate the answer tokens.",
-      "So Model A finishes in about 5.3 seconds after the request starts.",
-      "For Model B, the first visible token appears after 0.3 seconds, but 180 / 18 = 10 seconds are needed to generate the answer tokens.",
-      "So Model B finishes in about 10.3 seconds, even though it felt faster at the start."
+      "Deployment A takes about 180 ÷ 40 = 4.5 seconds to generate the output after generation begins.",
+      "Including the 0.8-second wait for the first token, Deployment A finishes in about 5.3 seconds.",
+      "Deployment B takes about 180 ÷ 18 = 10 seconds to generate the output after generation begins.",
+      "Including the 0.3-second wait for the first token, Deployment B finishes in about 10.3 seconds.",
+      "Prompt-ingestion throughput cannot be derived from these figures. It would require a separate measurement of how quickly each deployment processes the 1,200-token input."
     ],
-    "result": "Model B has lower latency, but Model A has higher throughput and finishes the full answer sooner."
+    "result": "Deployment B has lower time to first token, so it appears more responsive initially. Deployment A has higher output throughput and completes the full draft sooner."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team is assessing an approved internal language tool to help draft non-sensitive meeting summaries from already cleared notes. They compare how quickly different deployments produce text during busy periods.",
-    "relevance": "Throughput matters because a system that handles more tokens per second can serve more staff or produce long outputs faster, which affects procurement, staffing expectations and user experience.",
-    "caution": "Do not test or benchmark with confidential, personal, protection-sensitive, security-sensitive or operational information in an unapproved public AI service; use approved environments and sanitised material."
+    "scenario": "A protection officer in a country office is finalising a delegation briefing while comments from capitals are still outstanding. The office tests two approved deployments using a synthetic prompt with the same length and structure as the expected task, measuring how quickly each produces the full draft under the anticipated workload.",
+    "relevance": "Higher output throughput can finish a long draft sooner and allow more colleagues to use the service concurrently. It does not necessarily mean that the first words appear sooner. Input throughput should be measured separately if ingesting lengthy background material is a significant part of the task.",
+    "caution": "The protection officer must not use the actual briefing, case details, names, witness accounts or other protection-sensitive material in a benchmark unless the environment is specifically approved for that information. Use synthetic or properly sanitised text, because prompts and outputs may be logged, retained or accessible beyond the intended group."
   },
   "whyItMatters": "Throughput affects cost, capacity and user experience, but the scope of the measure matters. Aggregate service throughput shows how much work a deployment completes across users. Per-response output throughput shows how quickly one response generates tokens. Batching can raise aggregate throughput without making each response arrive faster. If you ignore throughput, a system that performs well in a demo may struggle under daily demand. Technical teams can use clearly defined measures to compare deployments and estimate infrastructure needs. Non-specialists can ask: 'Can this service handle enough work, and do individual responses arrive fast enough to be useful?'",
   "whereYouMayHearIt": [
-    "model benchmarking",
-    "GPU capacity planning",
-    "API performance tuning",
-    "tokens-per-second dashboards"
+    "A vendor demonstration to a country office procurement unit",
+    "An ICT governance board reviewing capacity for an internal drafting tool",
+    "A service review after response times slow near close of business"
   ],
   "commonMisconceptions": [
     {
@@ -126,7 +125,7 @@
     "simple": "Throughput is how fast a language model gets through text, usually measured as tokens per second.",
     "technical": "In LLM inference, throughput is the volume of token processing completed per unit time. People often report output throughput as generated tokens per second during decoding, but input throughput for prompt ingestion can be measured separately and may be much higher. Throughput is shaped by model architecture, parameter count, hardware bandwidth, parallelism, batch size, sequence length, memory limits and serving strategy. It differs from latency: latency captures delay to first token or per-token response delay, while throughput captures sustained work rate. Reported numbers also depend on what exactly is counted, such as prompt tokens only, completion tokens only, or both combined, so comparisons need the measurement method to be clear."
   },
-  "keyTakeaway": "Throughput is token work per unit time. Latency is the delay for a request or the next part of its response.",
+  "keyTakeaway": "Throughput is the volume of tokens processed or generated per unit time. Input and output throughput may differ, and neither should be confused with the delay before a response begins.",
   "quickCheck": {
     "question": "Which statement best describes throughput for a language model service?",
     "options": [
@@ -257,6 +256,19 @@
       "whyItMatters",
       "keyTakeaway"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:16:15.676Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "Reframed the examples around a specific country-office task, separated output throughput from prompt ingestion, and strengthened the protection-data caution."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

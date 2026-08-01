@@ -91,29 +91,28 @@
     "reducedMotionDescription": "Show the same five boxes in a static row with a visible return arrow from policy update back to current state. Use labels and text only, with no animation."
   },
   "workedExample": {
-    "scenario": "A small warehouse trains a system to move one package at a time through two conveyor paths: fast lane or regular lane.",
-    "input": "State: queue length, package size, and whether the loading dock is close to full. Actions: send to fast lane or regular lane. Reward: +3 if package arrives on time without blocking others, -2 if late, -3 if it causes congestion.",
+    "scenario": "A warehouse trains a system to route one parcel at a time through either a fast conveyor or a regular conveyor. Each routing decision changes the queues faced by later parcels.",
+    "input": "State: both queue lengths, parcel size and remaining loading-dock capacity. Actions: fast conveyor or regular conveyor. Reward: +3 for on-time arrival, -2 if the choice pushes a conveyor above its operating queue, and -3 if loading is blocked.",
     "process": [
-      "At one moment, the state is: queue length 8, package small, dock nearly full.",
-      "The system chooses 'fast lane'. The package arrives on time, but the fast lane becomes crowded.",
-      "The environment returns reward +1 overall because on-time delivery helped, but congestion reduced the benefit.",
-      "After many similar cases, the system learns that when the dock is nearly full, using the fast lane for every small package is not best.",
-      "Its policy shifts so that in states with heavy congestion, some small packages go to the regular lane to improve total flow over time."
+      "The state is: eight parcels waiting, a small parcel ready, the fast conveyor moderately busy and the loading dock nearly full.",
+      "The system chooses the fast conveyor. The parcel arrives on time, earning +3, but the choice pushes that conveyor above its operating queue, adding -2. The immediate reward is therefore +1.",
+      "The next state now includes a crowded fast conveyor. If later parcels are delayed or loading is blocked, those lower future rewards reduce the cumulative return associated with the earlier choice.",
+      "Across many simulated sequences, training updates the policy or its estimates of future reward for each state and action.",
+      "The policy gradually learns that sending every small parcel to the fast conveyor can produce a lower cumulative reward than preserving capacity for later parcels."
     ],
-    "result": "The trained policy does not simply ask 'which lane is fastest now?'; it learns which choice tends to maximise total reward across many future packages."
+    "result": "The trained policy does not merely select the conveyor that looks fastest now. It favours actions expected to produce the best cumulative reward across the sequence, including consequences that appear several routing decisions later."
   },
   "unWorkplaceExample": {
-    "scenario": "A UN team explores an internal prototype that learns how to order non-sensitive public consultation submissions for human reviewers, aiming to surface likely high-priority themes earlier while balancing reviewer workload.",
-    "relevance": "This illustrates a sequential decision problem: the system's ordering choices affect what reviewers see next, how quickly themes are identified and how efficiently limited time is used, so feedback can be based on overall review outcomes rather than one fixed correct answer per submission.",
-    "caution": "Use only confirmed non-sensitive submissions in an approved internal system. Human oversight is needed to check that the learned ordering does not systematically disadvantage certain viewpoints, languages or regions, and that data handling follows applicable rules."
+    "scenario": "An ombudsman case officer, sitting in a UN Country Team working group, receives a side-event concept note for clearance by close of business. It proposes demonstrating a simulator that learns which sequence of prompts to offer managers in fictional workplace-conflict exercises. The simulated agent observes how each conversation changes, selects the next prompt and receives rewards for outcomes such as keeping options open, making an appropriate referral and avoiding escalation.",
+    "relevance": "There is no single labelled correct prompt at each point. An early choice changes the later options, so training uses cumulative reward across the simulated conversation to update the policy. The case officer asks the drafters to state clearly that the system learns in simulation, not from live ombudsman work.",
+    "caution": "Confidential case records, identities and free-text accounts must not be entered, replayed or used as feedback in any system not expressly approved for that material. Doing so could expose individuals and undermine confidentiality. Even with synthetic data, reward design needs review: rewarding rapid closure, for example, could teach coercive or superficial behaviour rather than sound handling."
   },
   "whyItMatters": "For non-specialists, reinforcement learning matters because it is used in situations where choices affect later options, costs or risks. That makes it relevant to resource allocation, scheduling, recommendations, control systems and some forms of AI-assisted optimisation. If you are assessing a system, you need to ask different questions than you would for ordinary prediction tools: What reward is it optimising? Who defined that reward? Does short-term success hide long-term harm? What happens while it explores and makes mistakes? Could it learn behaviour that scores well but conflicts with safety, fairness or policy goals? Understanding this helps with procurement, oversight and realistic expectations.",
   "whereYouMayHearIt": [
-    "game-playing systems",
-    "traffic or routing optimisation",
-    "recommendation and ranking research",
-    "AI safety discussions",
-    "control and operations planning"
+    "At a vendor demonstration to an ICT governance board",
+    "During first reading of a concept note for an adaptive system",
+    "In a procurement unit meeting on an optimisation prototype",
+    "At an evaluation office review of a model's reward design"
   ],
   "commonMisconceptions": [
     {
@@ -137,7 +136,7 @@
     "simple": "The system learns by trying things, seeing what leads to better results over time, and adjusting what it does next.",
     "technical": "In reinforcement learning, an agent interacts with an environment over time steps. At each step it observes a state, selects an action according to a policy, receives a reward and transitions to a new state. Training updates the policy, or a value function estimating expected future reward, with the aim of improving expected cumulative reward rather than matching pre-labelled answers. This differs from supervised learning because there is usually no fixed target output for each input, and feedback may be sparse or delayed. It also differs from standard prediction tasks because the agent's actions change the future data it will encounter. Many formulations use the language of Markov decision processes, but not all practical systems fit that framework perfectly."
   },
-  "keyTakeaway": "Reinforcement learning is about learning a strategy for sequences of actions by using reward signals, especially when today's choice changes tomorrow's options.",
+  "keyTakeaway": "Reinforcement learning improves a policy through rewards received over sequences of actions. The best action now may be the one that preserves better options, and higher cumulative reward, later.",
   "quickCheck": {
     "question": "Which situation best fits reinforcement learning rather than ordinary supervised learning?",
     "options": [
@@ -263,6 +262,19 @@
       "unWorkplaceExampleCaution",
       "simpleVsTechnicalTechnical"
     ]
+  },
+  "voicePass": {
+    "model": "gpt-5.6-sol-2026-07-09",
+    "deployment": "gpt-5.6-sol",
+    "promptVersion": "1.0.0",
+    "revisedAt": "2026-08-01T06:13:39.415Z",
+    "applied": [
+      "unWorkplaceExample",
+      "workedExample",
+      "whereYouMayHearIt",
+      "keyTakeaway"
+    ],
+    "note": "The workplace example now has a specific role, artefact and clearance deadline, with stronger safeguards for confidential case material. The worked example also makes the reward arithmetic and delayed consequences explicit."
   },
   "generation": {
     "model": "gpt-5.4-2026-03-05",

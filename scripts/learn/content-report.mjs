@@ -103,6 +103,40 @@ const duplicateSentences = (() => {
   return dupes;
 })();
 
+/**
+ * Near-duplicate scenarios.
+ *
+ * The voice pass is exactly the kind of thing that turns three hundred
+ * distinct pages into three hundred copies of one good sentence. Shared
+ * six-word runs catch that long before a reader would, and catch it in a way
+ * that a duplicate-string check never would, because the model varies the
+ * noun and keeps the skeleton.
+ */
+function shingles(text, n = 6) {
+  const words = text.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean);
+  const out = new Set();
+  for (let i = 0; i + n <= words.length; i++) out.add(words.slice(i, i + n).join(' '));
+  return out;
+}
+
+const scenarioEchoes = (() => {
+  const entries = [...corpus.entries()]
+    .map(([id, t]) => ({ id, set: shingles(t.unWorkplaceExample?.scenario ?? '') }))
+    .filter((e) => e.set.size >= 4);
+  const hits = [];
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      const a = entries[i];
+      const b = entries[j];
+      let shared = 0;
+      for (const s of a.set) if (b.set.has(s)) shared++;
+      const overlap = shared / Math.min(a.set.size, b.set.size);
+      if (overlap >= 0.34) hits.push({ a: a.id, b: b.id, overlap: Math.round(overlap * 100) });
+    }
+  }
+  return hits.sort((x, y) => y.overlap - x.overlap);
+})();
+
 const byCategory = taxonomy.categories.map((c) => {
   const inCat = rows.filter((r) => r.category === c.id);
   return {
@@ -140,6 +174,7 @@ md.push(`| Orphan terms (no prerequisites and no related terms) | ${orphans.leng
 md.push(`| Invalid prerequisite relationships | ${badPrereqs.length} |`);
 md.push(`| Reading-level outliers (grade <4 or >14) | ${outliers.length} |`);
 md.push(`| Duplicate one-sentence definitions | ${duplicateSentences.length} |`);
+md.push(`| Near-duplicate UN scenarios | ${scenarioEchoes.length} |`);
 md.push(
   `| External links checked | ${linkReport ? `${linkReport.ok}/${linkReport.total} reachable` : 'not yet run'} |`,
 );
@@ -206,6 +241,15 @@ if (duplicateSentences.length) {
   md.push('## Duplicate definitions');
   md.push('');
   for (const d of duplicateSentences) md.push(`- ${d}`);
+  md.push('');
+}
+
+if (scenarioEchoes.length) {
+  md.push('## Near-duplicate UN workplace scenarios');
+  md.push('');
+  md.push('Pairs sharing more than a third of their six-word runs. Usually means the voice pass reached for the same skeleton twice. Re-run those terms with `npm run content:voice -- --force --term a,b`.');
+  md.push('');
+  for (const e of scenarioEchoes.slice(0, 40)) md.push(`- ${e.overlap}%  \`${e.a}\` and \`${e.b}\``);
   md.push('');
 }
 
