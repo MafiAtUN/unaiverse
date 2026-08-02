@@ -124,7 +124,8 @@ const description = `${lines.length} speech-ready lines on the UN's AI work, eac
               data-line
               data-persona={l.persona ?? 'any'}
               data-topic={l.topic}
-              data-text={`${l.line} ${l.milestoneTitle} ${l.symbol ?? ''} ${l.personaLabel} ${l.topicLabel}`.toLowerCase()}
+              data-topic-label={l.topicLabel}
+              data-copy-scope
             >
               <p class="line__meta mono">
                 <span class="line__persona">{l.personaLabel}</span>
@@ -135,7 +136,9 @@ const description = `${lines.length} speech-ready lines on the UN's AI work, eac
               <p class="line__text">{l.line}</p>
 
               <p class="line__actions">
-                <CopyButton text={l.line} label="Copy" context={`the safe line for ${l.personaLabel}`} />
+                {/* `from` rather than `text`: the sentence is already on the
+                    page a few nodes up, and 161 duplicates of it cost 24 KB. */}
+                <CopyButton from=".line__text" label="Copy" context={`the safe line for ${l.personaLabel}`} />
                 {l.milestoneId ? (
                   <a class="line__source" href={href(`m/${l.milestoneId}`)}>
                     {l.milestoneTitle} →
@@ -415,6 +418,19 @@ const description = `${lines.length} speech-ready lines on the UN's AI work, eac
   import { getRole, onRoleChange } from '../scripts/role';
 
   const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-line]'));
+
+  /**
+   * The searchable text, read off the rows rather than stamped into them.
+   *
+   * Every row used to carry a `data-text` attribute repeating its own line,
+   * title, symbol and labels in lowercase — which doubled the page to 291 KB
+   * and cost it eight Lighthouse points in parse time, to save one pass over
+   * the DOM at startup. The row already contains all of that as text; the only
+   * thing not visible in it is the topic label, so that stays an attribute.
+   */
+  const haystack = rows.map((row) =>
+    `${row.textContent ?? ''} ${row.dataset.topicLabel ?? ''}`.toLowerCase().replace(/\s+/g, ' '),
+  );
   const search = document.querySelector<HTMLInputElement>('[data-line-search]');
   const count = document.querySelector<HTMLElement>('[data-line-count]');
   const empty = document.querySelector<HTMLElement>('[data-lines-empty]');
@@ -426,7 +442,7 @@ const description = `${lines.length} speech-ready lines on the UN's AI work, eac
       const q = state.q.trim().toLowerCase();
       let shown = 0;
 
-      for (const row of rows) {
+      for (const [i, row] of rows.entries()) {
         // The curated lines carry persona "any" and survive every role filter:
         // they are safe for everyone, which is the point of them.
         const personaOk =
@@ -434,7 +450,7 @@ const description = `${lines.length} speech-ready lines on the UN's AI work, eac
           row.dataset.persona === state.persona ||
           row.dataset.persona === 'any';
         const topicOk = state.topic === 'all' || row.dataset.topic === state.topic;
-        const textOk = !q || (row.dataset.text ?? '').includes(q);
+        const textOk = !q || haystack[i]!.includes(q);
         const hit = personaOk && topicOk && textOk;
 
         row.toggleAttribute('data-line-hidden', !hit);

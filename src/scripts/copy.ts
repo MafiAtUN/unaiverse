@@ -47,11 +47,35 @@ async function write(text: string): Promise<boolean> {
 
 const timers = new WeakMap<HTMLElement, number>();
 
+/**
+ * What this button copies.
+ *
+ * Normally the exact string, carried in `data-copy` — assembled at build time
+ * so the tap does no formatting, and deliberately not read from neighbouring
+ * markup, which is how copied text quietly acquires a stray glyph or the
+ * whitespace of whatever wrapped it.
+ *
+ * `data-copy-from` is the exception, for pages that would otherwise ship the
+ * same sentence twice. It names an element whose text IS the payload — a
+ * single text node with no markup in it — and the saving is real: the safe
+ * lines page carried 161 duplicated sentences, 24 KB, for no benefit.
+ */
+function payload(button: HTMLElement): string {
+  const from = button.dataset.copyFrom;
+  if (from) {
+    const scope = button.closest('[data-copy-scope]') ?? document;
+    return scope.querySelector(from)?.textContent?.trim() ?? '';
+  }
+  return button.dataset.copy ?? '';
+}
+
 document.addEventListener('click', async (e) => {
-  const button = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+  const button = (e.target as HTMLElement).closest<HTMLButtonElement>(
+    '[data-copy], [data-copy-from]',
+  );
   if (!button) return;
 
-  const ok = await write(button.dataset.copy ?? '');
+  const ok = await write(payload(button));
   const said = button.querySelector<HTMLElement>('[data-copy-said]');
 
   if (ok) button.dataset.copied = '';

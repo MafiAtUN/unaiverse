@@ -19,7 +19,13 @@
 
 interface Props {
   /** The exact string to place on the clipboard. */
-  text: string;
+  text?: string;
+  /**
+   * Selector for an element whose text is the payload, used instead of `text`
+   * where carrying the string twice would be a measurable cost. Resolved
+   * within the nearest `[data-copy-scope]`. Only for single text nodes.
+   */
+  from?: string;
   /** Visible button text. */
   label?: string;
   /**
@@ -41,6 +47,7 @@ interface Props {
 
 const {
   text,
+  from,
   label = 'Copy',
   context,
   variant = 'chip',
@@ -48,7 +55,12 @@ const {
 } = Astro.props;
 ---
 
-<button type="button" class:list={['copy', `copy--${variant}`, className]} data-copy={text}>
+<button
+  type="button"
+  class:list={['copy', `copy--${variant}`, className]}
+  data-copy={text}
+  data-copy-from={from}
+>
   <span class="copy__icon" aria-hidden="true">⧉</span>
   <span class="copy__label">{label}</span>
   {context && <span class="visually-hidden">{` ${context}`}</span>}
