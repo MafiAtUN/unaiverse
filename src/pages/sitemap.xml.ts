@@ -11,6 +11,7 @@ import { getCollection } from 'astro:content';
 import { TERMS, CATEGORIES } from '../lib/learn/terms';
 import { LEARNING_PATHS } from '../lib/learn/paths';
 import { COMPARISONS } from '../lib/learn/compare';
+import { PERSONAS } from '../lib/taxonomy';
 
 interface Entry {
   path: string;
@@ -35,6 +36,12 @@ export const GET: APIRoute = async ({ site }) => {
     { path: 'agenda', changefreq: 'weekly', priority: '0.9' },
     { path: 'inherit', changefreq: 'monthly', priority: '0.9' },
     { path: 'safe-lines', changefreq: 'weekly', priority: '0.9' },
+    // The forwardable assets: one sheet per desk.
+    ...PERSONAS.map((p) => ({
+      path: `for/${p.id}`,
+      changefreq: 'monthly' as const,
+      priority: '0.9',
+    })),
     ...milestones.map((m) => ({
       path: `m/${m.id}`,
       changefreq: 'monthly' as const,

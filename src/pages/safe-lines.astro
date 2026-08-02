@@ -386,12 +386,14 @@ const description = `${lines.length} speech-ready lines on the UN's AI work, eac
      shortlist and walking it into a meeting. Filters, controls and chrome
      are for the screen; the lines and their symbols are the document. */
   @media print {
+    /* `!important` for the same reason as the cheat sheet: CopyButton's own
+       scoped rule outranks a selector written from this stylesheet. */
     .crumb,
     .controls,
     .head__picker,
     .foot,
-    .line__actions .copy {
-      display: none;
+    .line__actions :global(.copy) {
+      display: none !important;
     }
 
     .line {
@@ -514,7 +516,22 @@ const description = `${lines.length} speech-ready lines on the UN's AI work, eac
       });
     }
 
-    syncRole(getRole());
+    /**
+     * An explicit ?role= in the URL wins over the stored role.
+     *
+     * The cheat sheets link here as ?role=front-office, and that link is a
+     * request: whoever followed it asked for those lines, whatever the browser
+     * happens to remember about them. It also makes a filtered view something
+     * you can send to someone.
+     */
+    const asked = new URLSearchParams(location.search).get('role');
+    if (asked) {
+      document
+        .querySelector<HTMLButtonElement>(`[data-facet="persona"] [data-value="${asked}"]`)
+        ?.click();
+    } else {
+      syncRole(getRole());
+    }
     onRoleChange(syncRole);
     apply();
     revealTarget();

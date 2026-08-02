@@ -35,10 +35,25 @@ interface Props {
    * labelled region and still needs its accessible name.
    */
   hideLabel?: boolean;
+  /**
+   * Offer the cheat sheet once a role is chosen.
+   *
+   * Choosing a role should visibly lead somewhere — on the router it changes
+   * takes on pages the reader has not opened yet, which is invisible at the
+   * moment of choosing and reads as the control doing nothing.
+   */
+  offerCheatSheet?: boolean;
   class?: string;
 }
 
-const { variant = 'full', hideLabel = false, class: className } = Astro.props;
+const {
+  variant = 'full',
+  hideLabel = false,
+  offerCheatSheet = false,
+  class: className,
+} = Astro.props;
+
+const cheatBase = `${import.meta.env.BASE_URL}/for/`.replace(/\/+/g, '/');
 
 /**
  * The picker is changeable from any page, which means two of them can end up
@@ -95,6 +110,16 @@ if (declared !== mirrored) {
       ))
     }
   </div>
+
+  {
+    offerCheatSheet && (
+      <p class="picker__onward" data-role-onward hidden>
+        <a data-role-cheat href={cheatBase}>
+          Your cheat sheet: the ten documents that land on your desk →
+        </a>
+      </p>
+    )
+  }
 </section>
 
 <style>
@@ -177,6 +202,19 @@ if (declared !== mirrored) {
     font-size: 1.05em;
   }
 
+  .picker__onward[hidden] {
+    display: none;
+  }
+
+  .picker__onward {
+    margin: 0;
+    font-size: var(--step--1);
+  }
+
+  .picker__onward a {
+    color: var(--riso-pink);
+  }
+
   /* On a paper surface the dark-sky palette has no contrast at all — cream
      background, near-white text — so the whole control reads as a row of
      floating emoji. The site already keeps a print-weight twin of every accent
@@ -238,6 +276,16 @@ if (declared !== mirrored) {
             'aria-pressed',
             String(option.dataset.roleOption === role),
           );
+        }
+
+        // The general role has no cheat sheet — there are eight, one per desk,
+        // and "anyone" is not a desk.
+        const onward = picker.querySelector<HTMLElement>('[data-role-onward]');
+        const link = picker.querySelector<HTMLAnchorElement>('[data-role-cheat]');
+        if (onward && link) {
+          const real = role !== GENERAL;
+          onward.hidden = !real;
+          if (real) link.href = link.href.replace(/\/for\/.*$/, `/for/${role}`);
         }
       }
     };

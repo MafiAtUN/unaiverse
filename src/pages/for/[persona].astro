@@ -1,0 +1,593 @@
+---
+/**
+ * /for/<persona> — the cheat sheet (brief §6).
+ *
+ * "One page per persona: the ~10 milestones that matter for that role, their
+ * safe lines, key symbols. Print-friendly CSS. These are the forwardable
+ * assets."
+ *
+ * That last sentence is the design. This page is not really for the person
+ * reading it on screen — it is for the colleague they send it to, or the copy
+ * they print and take into a meeting. So it is one page with no interaction
+ * required, everything expanded, nothing behind a tab, and a print stylesheet
+ * that produces a document rather than a screenshot of a website.
+ *
+ * ── Which ten ───────────────────────────────────────────────────────────
+ * Not hand-picked, because a hand-picked list for eight personas is 80
+ * editorial decisions that would drift the moment a milestone was added. The
+ * corpus already carries the judgement: a milestone declares which personas it
+ * was written for, and its tier says how much it matters. So the ten are the
+ * highest-tier milestones that name this role, most recent first within a
+ * tier. Add a Supernova naming Peace & Security tomorrow and it appears here
+ * without anyone editing this file.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CopyButton from '../../components/CopyButton.astro';
+import { parseMilestoneBody, sortKey } from '../../lib/milestone';
+import { getTake } from '../../lib/takes';
+import { PERSONAS, SITE, TIERS } from '../../lib/taxonomy';
+
+export async function getStaticPaths() {
+  const all = await getCollection('milestones');
+
+  return PERSONAS.map((persona) => {
+    const mine = all
+      .filter((m) => m.data.personas.includes(persona.id))
+      .map((m) => ({ m, key: sortKey(m.data.date_display, m.data.year, m.id) }))
+      // Weight first, recency second: a delegate who reads only the top of
+      // this page should have read the load-bearing documents.
+      .sort((a, b) => a.m.data.tier - b.m.data.tier || b.key - a.key)
+      .slice(0, 10)
+      .map(({ m }) => m);
+
+    return { params: { persona: persona.id }, props: { persona, mine } };
+  });
+}
+
+const { persona, mine } = Astro.props;
+
+const rows = mine.map((m) => ({
+  id: m.id,
+  data: m.data,
+  ...parseMilestoneBody(m.body ?? ''),
+  take: getTake(m.id, persona.id),
+}));
+
+const symbols = [...new Set(rows.map((r) => r.data.symbol).filter((s): s is string => !!s))];
+const safeLines = rows.filter((r) => r.take?.useIt);
+
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+const canonical = new URL(href(`for/${persona.id}`), Astro.site).href;
+
+/** The whole sheet as plain text, for the colleague who wants it in an email. */
+const asText = [
+  `UNAIVERSE CHEAT SHEET — ${persona.label.toUpperCase()}`,
+  persona.who,
+  '',
+  'THE DOCUMENTS THAT MATTER',
+  ...rows.map((r, i) =>
+    [
+      `${i + 1}. ${r.data.title}`,
+      `   ${[r.data.date_display, r.data.symbol].filter(Boolean).join('  ·  ')}`,
+      r.why ? `   Why: ${r.why}` : '',
+      r.take?.useIt ? `   Say: ${r.take.useIt}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n'),
+  ),
+  '',
+  'KEY SYMBOLS',
+  `  ${symbols.join('  ·  ')}`,
+  '',
+  `Compiled from UNAIVERSE, an unofficial field guide to UN action on AI: ${canonical}`,
+  'Not a United Nations product. Every claim is sourced to the documents listed on the site.',
+].join('\n');
+
+const title = `Cheat sheet: ${persona.label} · ${SITE.name}`;
+const description = `The ${rows.length} UN AI milestones that matter for ${persona.label} (${persona.who}) — with the document symbols and a speech-ready line for each. One page, printable, forwardable.`;
+---
+
+<Base title={title} description={description} skip={{ href: '#sheet', label: 'Skip to the sheet' }}>
+  <div class="wrap page">
+    <nav class="crumb mono" aria-label="Breadcrumb">
+      <a href={href('')}>{SITE.name}</a>
+      <span aria-hidden="true">/</span>
+      <span>Cheat sheet</span>
+    </nav>
+
+    <header class="head">
+      <p class="head__kicker mono">
+        <span aria-hidden="true">{persona.glyph}</span> Cheat sheet
+      </p>
+      <h1 class="head__title">{persona.label}</h1>
+      <p class="head__who">{persona.who}</p>
+      <p class="head__lead">
+        The {rows.length} things on this file that actually land on your desk, in the order they
+        matter, each with the symbol you will be asked for and a line you can say out loud.
+        Everything here is on the site in full — this is the version that fits on a page.
+      </p>
+
+      <div class="head__actions">
+        <CopyButton
+          variant="button"
+          text={asText}
+          label="Copy the whole sheet"
+          context="as plain text"
+        />
+        <CopyButton variant="button" text={canonical} label="Copy link" context="to this sheet" />
+        <button type="button" class="action" data-print hidden>Print</button>
+        <a class="action" href={`${href('safe-lines')}?role=${persona.id}`}>
+          All {persona.label} safe lines →
+        </a>
+      </div>
+    </header>
+
+    <main id="sheet">
+      <section class="symbols" aria-labelledby="symbols-heading">
+        <h2 class="section__heading" id="symbols-heading">Key symbols</h2>
+        <p class="symbols__lead">
+          The documents you will be asked to cite. Every one is a copy button.
+        </p>
+        <ul class="symbols__list">
+          {
+            symbols.map((s) => (
+              <li class="symbols__item">
+                {/* The symbol is text, with a copy button beside it — not the
+                    button's label. Print hides the buttons, and a "Key
+                    symbols" section that prints as a row of empty separators
+                    is the one failure this page cannot afford. */}
+                <span class="symbols__symbol mono">{s}</span>
+                <CopyButton text={s} label="Copy" context={`document symbol ${s}`} />
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="docs" aria-labelledby="docs-heading">
+        <h2 class="section__heading" id="docs-heading">The documents that matter</h2>
+        <ol class="docs__list">
+          {
+            rows.map((r) => (
+              <li class="doc">
+                <div class="doc__head">
+                  <p class="doc__meta mono">
+                    <span class="doc__tier" data-tier={r.data.tier}>
+                      <span aria-hidden="true">{TIERS[r.data.tier].glyph}</span>
+                      {TIERS[r.data.tier].name}
+                    </span>
+                    <span class="doc__date">{r.data.date_display}</span>
+                    {r.data.symbol && <span class="doc__symbol">{r.data.symbol}</span>}
+                  </p>
+                  <h3 class="doc__title">
+                    <a href={href(`m/${r.id}`)}>{r.data.title}</a>
+                  </h3>
+                </div>
+
+                {r.why && (
+                  <p class="doc__why">
+                    <span class="doc__label">Why it matters</span>
+                    {r.why}
+                  </p>
+                )}
+
+                {r.take && (
+                  <div class="doc__take">
+                    {r.take.watchFor && (
+                      <p class="doc__beat">
+                        <span class="doc__label">Watch for</span>
+                        {r.take.watchFor}
+                      </p>
+                    )}
+                    {r.take.useIt && (
+                      <p class="doc__beat doc__beat--say">
+                        <span class="doc__label">Say</span>
+                        <span class="doc__say">{r.take.useIt}</span>
+                        <CopyButton
+                          text={r.take.useIt}
+                          label="Copy"
+                          context={`the safe line for ${r.data.title}`}
+                        />
+                      </p>
+                    )}
+                  </div>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      {
+        safeLines.length > 0 && (
+          <p class="more">
+            {safeLines.length} of these carry a line you can quote. There are more —{' '}
+            <a href={href('safe-lines')}>the full safe-lines library</a> holds every one in the
+            corpus, filterable by role and topic.
+          </p>
+        )
+      }
+    </main>
+
+    <footer class="foot">
+      <p class="foot__where">{canonical}</p>
+      <p>
+        Compiled from UNAIVERSE, an unofficial field guide by Mafizul Islam. Not a United Nations
+        product. Every claim here is sourced to an official document on the milestone page it
+        links to.
+      </p>
+      <nav class="foot__others" aria-label="Other cheat sheets">
+        {
+          PERSONAS.filter((p) => p.id !== persona.id).map((p) => (
+            <a href={href(`for/${p.id}`)}>
+              <span aria-hidden="true">{p.glyph}</span> {p.label}
+            </a>
+          ))
+        }
+      </nav>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding: var(--sp-6) 0 var(--sp-8);
+  }
+
+  .crumb {
+    display: flex;
+    gap: var(--sp-2);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .crumb a {
+    color: var(--ink-dim);
+    text-decoration: none;
+  }
+
+  .head {
+    margin: var(--sp-5) 0 var(--sp-6);
+  }
+
+  .head__kicker {
+    margin: 0 0 var(--sp-2);
+    font-size: var(--step--2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--riso-yellow);
+  }
+
+  .head__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+  }
+
+  .head__who {
+    margin: var(--sp-2) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .head__lead {
+    margin: var(--sp-4) 0 0;
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .head__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-5);
+  }
+
+  .action {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    background: none;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .action:hover,
+  .action:focus-visible {
+    border-color: var(--riso-pink);
+    color: var(--paper);
+  }
+
+  .section__heading {
+    margin: 0 0 var(--sp-3);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ── Symbols ────────────────────────────────────────────────────── */
+  .symbols {
+    margin-bottom: var(--sp-6);
+    padding-bottom: var(--sp-5);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .symbols__lead {
+    margin: 0 0 var(--sp-3);
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+
+  .symbols__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .symbols__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  .symbols__symbol {
+    font-size: var(--step--1);
+    color: var(--paper);
+  }
+
+  /* ── Documents ──────────────────────────────────────────────────── */
+  .docs__list {
+    display: grid;
+    gap: var(--sp-5);
+    margin: 0;
+    padding: 0 0 0 var(--sp-5);
+  }
+
+  .doc {
+    padding-left: var(--sp-2);
+  }
+
+  .doc::marker {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--riso-pink);
+  }
+
+  .doc__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-3);
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .doc__tier[data-tier='1'] {
+    color: var(--riso-yellow);
+  }
+
+  .doc__date {
+    color: var(--ink-dim);
+  }
+
+  .doc__symbol {
+    color: var(--paper);
+  }
+
+  .doc__title {
+    margin: var(--sp-1) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .doc__title a {
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .doc__title a:hover,
+  .doc__title a:focus-visible {
+    text-decoration: underline;
+    text-decoration-color: var(--riso-pink);
+  }
+
+  .doc__why,
+  .doc__beat {
+    margin: var(--sp-3) 0 0;
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    line-height: 1.55;
+    color: var(--ink-dim);
+  }
+
+  .doc__label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* The one line on the page most likely to be read aloud. */
+  .doc__beat--say {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2);
+    padding: var(--sp-3);
+    border-left: 2px solid var(--riso-pink);
+    background: var(--void-raised);
+    color: var(--paper);
+  }
+
+  .doc__beat--say .doc__label {
+    flex-basis: 100%;
+    color: var(--riso-pink);
+  }
+
+  .doc__say {
+    flex: 1 1 20rem;
+  }
+
+  .more {
+    margin: var(--sp-6) 0 0;
+    max-width: var(--measure);
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+
+  /* ── Footer ─────────────────────────────────────────────────────── */
+  .foot {
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--hairline);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .foot__where {
+    display: none;
+  }
+
+  .foot__others {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-4);
+    margin-top: var(--sp-4);
+  }
+
+  .foot__others a {
+    color: var(--ink-dim);
+    font-size: var(--step--2);
+  }
+
+  /* ── Print ──────────────────────────────────────────────────────────
+     The point of the page. A printed sheet has no hover, no clipboard and no
+     navigation, so all three come off; the URL goes on instead, because the
+     first thing anyone asks about a printout is where it came from.
+
+     Black on white rather than the dark identity: this is the one surface
+     where the cosmic palette would cost a colleague half a toner cartridge
+     and give them grey text on grey paper. */
+  /* ── Print ──────────────────────────────────────────────────────────
+     The point of the page. A printed sheet has no hover, no clipboard and no
+     navigation, so all three come off; the URL goes on instead, because the
+     first thing anyone asks about a printout is where it came from.
+
+     The colours are repainted at the token level rather than selector by
+     selector. The dark identity puts near-white text on near-black, and every
+     "faint" value in the system is defined as translucent cream — so a print
+     rule that recolours six named elements leaves every label, kicker and
+     tier chip invisible on white. tokens.css already keeps a print-weight
+     twin of each accent for exactly this. */
+  @media print {
+    :global(:root) {
+      --void: #fff;
+      --void-raised: #fff;
+      --void-panel: #f4f4f4;
+      --void-deep: #fff;
+      --paper: #111;
+      --ink: #222;
+      --ink-dim: #333;
+      --ink-faint: #5a5a5a;
+      --hairline: #ccc;
+      --hairline-strong: #999;
+      --riso-pink: var(--pink-on-paper);
+      --riso-yellow: var(--yellow-on-paper);
+      --riso-green: var(--green-on-paper);
+      --tier-1: var(--yellow-on-paper);
+    }
+
+    :global(html),
+    :global(body) {
+      background: #fff;
+      color: #111;
+    }
+
+    /* `!important` earns its place here: CopyButton's own scoped rule is
+       `.copy[data-astro-cid-…]`, which outranks a `:global(.copy)` written
+       from another component's stylesheet. Without it the buttons print. */
+    .crumb,
+    .head__actions,
+    .foot__others,
+    .more,
+    .symbols__lead,
+    :global(.copy),
+    :global(.skip-link) {
+      display: none !important;
+    }
+
+    .page {
+      padding: 0;
+    }
+
+    .doc__beat--say {
+      background: #f4f4f4;
+      border-left-color: #999;
+    }
+
+    .symbols {
+      border-bottom: 1px solid #ccc;
+    }
+
+    .symbols__item::after {
+      content: '·';
+      color: #999;
+    }
+
+    .symbols__item:last-child::after {
+      content: '';
+    }
+
+    /* Each entry is a unit; splitting one across a page break puts a safe
+       line on a different sheet from the symbol it belongs to. */
+    .doc {
+      break-inside: avoid;
+    }
+
+    .foot {
+      border-top: 1px solid #ccc;
+    }
+
+    .foot__where {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 9pt;
+      margin-bottom: var(--sp-2);
+    }
+
+    @page {
+      margin: 1.6cm;
+    }
+  }
+</style>
+
+<script>
+  // Progressive enhancement: without JavaScript the reader still has their
+  // browser's own print command, so this button is a shortcut rather than the
+  // mechanism. Hidden until it works.
+  const button = document.querySelector<HTMLButtonElement>('[data-print]');
+  if (button) {
+    button.hidden = false;
+    button.addEventListener('click', () => window.print());
+  }
+</script>
