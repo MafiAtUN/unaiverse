@@ -1,0 +1,523 @@
+---
+/**
+ * /safe-lines — journey J4, the front-office speechwriter.
+ *
+ * "Any safe line findable and copied in under 1 minute." So: every line is on
+ * one page, every line has a copy button, and the filters narrow rather than
+ * navigate. No line is more than a scroll and a tap away, and nothing here
+ * requires opening anything.
+ *
+ * Filtering is client-side over markup that is already complete, which means
+ * the page works fully without JavaScript — you get all 161 lines and your
+ * browser's own find, rather than an empty shell and a spinner.
+ *
+ * Defaults to the reader's role when they have one. A speechwriter who told
+ * the site they are Front Office arrives at the Front Office lines, which is
+ * the entire benefit of having asked.
+ */
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CopyButton from '../components/CopyButton.astro';
+import RolePicker from '../components/RolePicker.astro';
+import { buildSafeLines, safeLineFacets } from '../lib/safe-lines';
+import { CONSTELLATIONS, PERSONAS, SITE } from '../lib/taxonomy';
+
+const entries = await getCollection('milestones');
+const lines = buildSafeLines(entries);
+const { byPersona, byTopic } = safeLineFacets(lines);
+
+const personas = PERSONAS.filter((p) => byPersona.get(p.id));
+const topics = Object.entries(CONSTELLATIONS)
+  .filter(([id]) => byTopic.get(id))
+  .map(([id, meta]) => ({ id, ...meta, count: byTopic.get(id)! }));
+
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+
+console.log(`[unaiverse] /safe-lines — ${lines.length} lines across ${personas.length} roles`);
+
+const title = `Safe lines · ${SITE.name}`;
+const description = `${lines.length} speech-ready lines on the UN's AI work, each one a statement of procedural fact with its document symbol. Filter by role or topic and copy.`;
+---
+
+<Base title={title} description={description} skip={{ href: '#lines', label: 'Skip to the lines' }}>
+  <div class="wrap page">
+    <nav class="crumb mono" aria-label="Breadcrumb">
+      <a href={href('')}>{SITE.name}</a>
+      <span aria-hidden="true">/</span>
+      <span>Safe lines</span>
+    </nav>
+
+    <header class="head">
+      <h1 class="head__title">Safe lines</h1>
+      <p class="head__lead">
+        {lines.length} sentences you can put in a statement, a briefing note or a set of talking
+        points without checking anything first. Each one says what happened and points at the
+        document where it is written down — which is exactly what makes it safe. None of them
+        characterises any Member State's position, and none of them says whether any of it was
+        a good idea.
+      </p>
+
+      <div class="controls">
+        <div class="controls__search">
+          <label class="controls__label" for="line-search">Search the lines</label>
+          <input
+            type="search"
+            id="line-search"
+            class="controls__input"
+            placeholder="autonomous weapons, capacity-building, 79/325…"
+            autocomplete="off"
+            data-line-search
+          />
+        </div>
+
+        <div class="controls__facet">
+          <p class="controls__label" id="facet-role">Whose desk</p>
+          <div class="chips" role="group" aria-labelledby="facet-role" data-facet="persona">
+            <button type="button" class="chip" data-value="all" aria-pressed="true">
+              All roles<span class="chip__count">{lines.length}</span>
+            </button>
+            {
+              personas.map((p) => (
+                <button type="button" class="chip" data-value={p.id} aria-pressed="false">
+                  <span aria-hidden="true">{p.glyph}</span>
+                  {p.label}
+                  <span class="chip__count">{byPersona.get(p.id)}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="controls__facet">
+          <p class="controls__label" id="facet-topic">Topic</p>
+          <div class="chips" role="group" aria-labelledby="facet-topic" data-facet="topic">
+            <button type="button" class="chip" data-value="all" aria-pressed="true">All topics</button>
+            {
+              topics.map((t) => (
+                <button type="button" class="chip" data-value={t.id} aria-pressed="false">
+                  <span aria-hidden="true">{t.glyph}</span>
+                  {t.label}
+                  <span class="chip__count">{t.count}</span>
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <p class="controls__count mono" data-line-count aria-live="polite">
+          {lines.length} lines
+        </p>
+      </div>
+
+      <div class="head__picker">
+        <RolePicker variant="compact" />
+      </div>
+    </header>
+
+    <main id="lines">
+      <ul class="lines">
+        {
+          lines.map((l) => (
+            <li
+              class="line"
+              id={l.id}
+              data-line
+              data-persona={l.persona ?? 'any'}
+              data-topic={l.topic}
+              data-text={`${l.line} ${l.milestoneTitle} ${l.symbol ?? ''} ${l.personaLabel} ${l.topicLabel}`.toLowerCase()}
+            >
+              <p class="line__meta mono">
+                <span class="line__persona">{l.personaLabel}</span>
+                {l.symbol && <span class="line__symbol">{l.symbol}</span>}
+                {l.dateDisplay && <span>{l.dateDisplay}</span>}
+              </p>
+
+              <p class="line__text">{l.line}</p>
+
+              <p class="line__actions">
+                <CopyButton text={l.line} label="Copy" context={`the safe line for ${l.personaLabel}`} />
+                {l.milestoneId ? (
+                  <a class="line__source" href={href(`m/${l.milestoneId}`)}>
+                    {l.milestoneTitle} →
+                  </a>
+                ) : (
+                  <span class="line__source line__source--curated">
+                    Hand-checked · {l.symbol}
+                  </span>
+                )}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="lines__empty" data-lines-empty hidden>
+        No line matches that. Clear a filter, or try the words you would actually say — “capacity
+        building”, “consensus”, “review”.
+      </p>
+    </main>
+
+    <footer class="foot">
+      <p>
+        Every line here was written as the “Use it” beat of a role take, so each one also sits on
+        its milestone alongside what it means and what to watch. Browse them that way on the{' '}
+        <a href={href('timeline')}>timeline</a>.
+      </p>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding: var(--sp-6) 0 var(--sp-8);
+  }
+
+  .crumb {
+    display: flex;
+    gap: var(--sp-2);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .crumb a {
+    color: var(--ink-dim);
+    text-decoration: none;
+  }
+
+  .head {
+    margin: var(--sp-5) 0 var(--sp-6);
+  }
+
+  .head__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--paper);
+  }
+
+  .head__lead {
+    margin: var(--sp-3) 0 0;
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .head__picker {
+    margin-top: var(--sp-5);
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* ── Controls ───────────────────────────────────────────────────── */
+  .controls {
+    display: grid;
+    gap: var(--sp-4);
+    margin-top: var(--sp-5);
+  }
+
+  .controls__label {
+    display: block;
+    margin: 0 0 var(--sp-2);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .controls__input {
+    width: min(100%, 42rem);
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+    font: inherit;
+    color: var(--paper);
+  }
+
+  .controls__input:focus {
+    outline: none;
+    border-color: var(--riso-pink);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: var(--sp-2) var(--sp-3);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: none;
+    font: inherit;
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .chip:hover {
+    border-color: var(--hairline-strong);
+    color: var(--paper);
+  }
+
+  .chip[aria-pressed='true'] {
+    border-color: var(--riso-pink);
+    background: rgb(255 95 168 / 0.12);
+    color: var(--paper);
+  }
+
+  .chip__count {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .controls__count {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  /* ── The lines ──────────────────────────────────────────────────── */
+  .lines {
+    display: grid;
+    gap: var(--sp-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .line {
+    padding: var(--sp-4);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+  }
+
+  /* Landing on a line from a search result should be unmistakable. */
+  .line:target {
+    border-color: var(--riso-pink);
+    background: var(--void-panel);
+  }
+
+  .line__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2) var(--sp-3);
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .line__persona {
+    color: var(--riso-yellow);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .line__symbol {
+    color: var(--ink-dim);
+  }
+
+  /* The line is the content. Everything else on the card is provenance. */
+  .line__text {
+    margin: var(--sp-2) 0 0;
+    max-width: var(--measure);
+    font-size: var(--step-0);
+    line-height: 1.5;
+    color: var(--paper);
+  }
+
+  .line__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-2) var(--sp-3);
+    margin: var(--sp-3) 0 0;
+  }
+
+  .line__source {
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  a.line__source:hover,
+  a.line__source:focus-visible {
+    color: var(--paper);
+  }
+
+  .line__source--curated {
+    color: var(--riso-green, #2fbf74);
+  }
+
+  .lines__empty {
+    padding: var(--sp-6) 0;
+    max-width: var(--measure);
+    color: var(--ink-dim);
+  }
+
+  .lines__empty[hidden] {
+    display: none;
+  }
+
+  .foot {
+    margin-top: var(--sp-6);
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--hairline);
+    font-size: var(--step--1);
+    color: var(--ink-faint);
+  }
+
+  .foot a {
+    color: var(--ink-dim);
+  }
+
+  /* ── Print ──────────────────────────────────────────────────────────
+     A speechwriter's second-most-common move after copying is printing the
+     shortlist and walking it into a meeting. Filters, controls and chrome
+     are for the screen; the lines and their symbols are the document. */
+  @media print {
+    .crumb,
+    .controls,
+    .head__picker,
+    .foot,
+    .line__actions .copy {
+      display: none;
+    }
+
+    .line {
+      border: 0;
+      border-bottom: 1px solid #ccc;
+      border-radius: 0;
+      padding: 0.4cm 0;
+      break-inside: avoid;
+    }
+
+    .line[hidden],
+    [data-line-hidden] {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import { getRole, onRoleChange } from '../scripts/role';
+
+  const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-line]'));
+  const search = document.querySelector<HTMLInputElement>('[data-line-search]');
+  const count = document.querySelector<HTMLElement>('[data-line-count]');
+  const empty = document.querySelector<HTMLElement>('[data-lines-empty]');
+
+  if (rows.length) {
+    const state = { persona: 'all', topic: 'all', q: '' };
+
+    function apply() {
+      const q = state.q.trim().toLowerCase();
+      let shown = 0;
+
+      for (const row of rows) {
+        // The curated lines carry persona "any" and survive every role filter:
+        // they are safe for everyone, which is the point of them.
+        const personaOk =
+          state.persona === 'all' ||
+          row.dataset.persona === state.persona ||
+          row.dataset.persona === 'any';
+        const topicOk = state.topic === 'all' || row.dataset.topic === state.topic;
+        const textOk = !q || (row.dataset.text ?? '').includes(q);
+        const hit = personaOk && topicOk && textOk;
+
+        row.toggleAttribute('data-line-hidden', !hit);
+        row.hidden = !hit;
+        if (hit) shown++;
+      }
+
+      if (count) count.textContent = `${shown} line${shown === 1 ? '' : 's'}`;
+      if (empty) empty.hidden = shown > 0;
+    }
+
+    for (const group of document.querySelectorAll<HTMLElement>('[data-facet]')) {
+      const facet = group.dataset.facet as 'persona' | 'topic';
+      group.addEventListener('click', (e) => {
+        const chip = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-value]');
+        if (!chip) return;
+        state[facet] = chip.dataset.value!;
+        for (const c of group.querySelectorAll<HTMLButtonElement>('[data-value]')) {
+          c.setAttribute('aria-pressed', String(c.dataset.value === state[facet]));
+        }
+        apply();
+      });
+    }
+
+    let timer = 0;
+    search?.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        state.q = search.value;
+        apply();
+      }, 90);
+    });
+
+    /**
+     * Follow the role the reader already chose.
+     *
+     * Only when they have actually chosen one, and never when they arrived on
+     * a specific line — a link to #2024-…--front-office was sent to them, and
+     * filtering it out from under them because they happen to be tagged
+     * Human Rights would hide the thing they clicked.
+     */
+    function syncRole(role: string) {
+      if (location.hash) return;
+      const chip = document.querySelector<HTMLButtonElement>(
+        `[data-facet="persona"] [data-value="${role === 'curious' ? 'all' : role}"]`,
+      );
+      chip?.click();
+    }
+
+    /**
+     * Never let a filter hide the line someone just followed a link to.
+     *
+     * The cold-load case is handled above by declining to apply the role at
+     * all. This is the other one: a reader already filtered to Peace &
+     * Security clicks a link to an OPGA line — a same-document navigation, so
+     * nothing re-runs and the browser scrolls to a row that is display:none.
+     * The link silently does nothing, which is the worst available outcome.
+     *
+     * So the filters yield to the anchor. Widening them is recoverable in one
+     * tap; a dead link is not.
+     */
+    function revealTarget() {
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (!id) return;
+      const row = document.getElementById(id);
+      if (!row?.hasAttribute('data-line') || !row.hidden) return;
+
+      for (const group of document.querySelectorAll<HTMLElement>('[data-facet]')) {
+        group.querySelector<HTMLButtonElement>('[data-value="all"]')?.click();
+      }
+      if (search?.value) {
+        search.value = '';
+        state.q = '';
+        apply();
+      }
+      row.scrollIntoView({
+        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'center',
+      });
+    }
+
+    syncRole(getRole());
+    onRoleChange(syncRole);
+    apply();
+    revealTarget();
+    addEventListener('hashchange', revealTarget);
+  }
+</script>

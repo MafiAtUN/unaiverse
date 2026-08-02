@@ -34,6 +34,7 @@ export const GET: APIRoute = async ({ site }) => {
     { path: 'learn', changefreq: 'weekly', priority: '1.0' },
     { path: 'agenda', changefreq: 'weekly', priority: '0.9' },
     { path: 'inherit', changefreq: 'monthly', priority: '0.9' },
+    { path: 'safe-lines', changefreq: 'weekly', priority: '0.9' },
     ...milestones.map((m) => ({
       path: `m/${m.id}`,
       changefreq: 'monthly' as const,
