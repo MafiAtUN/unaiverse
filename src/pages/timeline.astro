@@ -24,6 +24,7 @@ import SiteSearch from '../components/SiteSearch.astro';
 import { buildMilestoneIndex } from '../lib/search-index';
 import { parseMilestoneBody, resolveDate, sortKey } from '../lib/milestone';
 import { SITE } from '../lib/taxonomy';
+import { freshnessMap } from '../lib/freshness';
 
 const all = await getCollection('milestones');
 
@@ -57,6 +58,9 @@ for (const m of sorted) {
 const whyById = new Map(sorted.map((m) => [m.id, parseMilestoneBody(m.body ?? '').why]));
 
 const index = buildMilestoneIndex(sorted);
+
+// What has changed since the last stamped publish — journey J3's question.
+const fresh = freshnessMap(sorted);
 
 const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
 
@@ -107,6 +111,7 @@ const description = `All ${sorted.length} UN artificial-intelligence milestones 
                   tier={m.data.tier}
                   constellation={m.data.constellation}
                   why={whyById.get(m.id) ?? ''}
+                  freshness={fresh.get(m.id)}
                 />
               ))}
             </div>

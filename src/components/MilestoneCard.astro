@@ -23,6 +23,7 @@
  * A link, not a <details>. The card's job is to get out of the way.
  */
 import { CONSTELLATIONS, TIERS } from '../lib/taxonomy';
+import { FRESHNESS_LABEL, type Freshness } from '../lib/freshness';
 
 interface Props {
   id: string;
@@ -33,9 +34,12 @@ interface Props {
   constellation: string;
   /** The one-line "why it matters", parsed from the milestone body. */
   why: string;
+  /** Whether this changed since the last publish — J3's whole question. */
+  freshness?: Freshness;
 }
 
-const { id, title, dateDisplay, symbol, tier, constellation, why } = Astro.props;
+const { id, title, dateDisplay, symbol, tier, constellation, why, freshness } = Astro.props;
+const flag = freshness && freshness !== 'unchanged' ? FRESHNESS_LABEL[freshness] : null;
 
 const tierMeta = TIERS[tier];
 const constellationMeta = CONSTELLATIONS[constellation];
@@ -50,6 +54,11 @@ const href = `${import.meta.env.BASE_URL}/m/${id}`.replace(/\/+/g, '/');
 >
   <a class="card__link" href={href}>
     <div class="card__meta">
+      {/* Ahead of the date, because it is the only thing a returning reader is
+          scanning for. It is not one of the two badges the diet allows — those
+          describe what a milestone *is*, and this describes what happened to
+          it since you last looked. */}
+      {flag && <span class="card__flag mono" data-freshness={freshness}>{flag}</span>}
       <time class="mono card__date">{dateDisplay}</time>
       {symbol && <span class="mono card__symbol">{symbol}</span>}
     </div>
@@ -137,6 +146,25 @@ const href = `${import.meta.env.BASE_URL}/m/${id}`.replace(/\/+/g, '/');
   .card__date {
     color: var(--riso-yellow);
     letter-spacing: 0.04em;
+  }
+
+  .card__flag {
+    padding: 0.1em 0.45em;
+    border-radius: var(--radius-sm);
+    background: var(--riso-pink);
+    color: var(--void, #101011);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* "Updated" is quieter than "New": it is a correction to something the
+     reader may already know, not a thing that did not exist before. */
+  .card__flag[data-freshness='updated'] {
+    background: none;
+    border: 1px solid var(--riso-pink);
+    color: var(--riso-pink);
   }
 
   .card__symbol {
