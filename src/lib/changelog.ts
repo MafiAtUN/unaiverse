@@ -26,7 +26,7 @@ export const CHANGES: Change[] = [
     date: '2026-08-01',
     summary: 'Rebuilt as a tool: a front door that routes, and a timeline you can search.',
     detail:
-      'The homepage was an 800 KB scroll through all 76 milestones at once, which is a lovely thing to have built and a terrible thing to arrive at. It is now four doors and a search box. Every milestone has its own page and its own link, document symbols are searchable ("78/241" finds A/RES/78/241), and you can tell the site which desk you sit at so it shows you your take instead of all eight. The galaxy is still here — it just waits behind its own door now instead of loading whether you wanted it or not.',
+      'The homepage was an 800 KB scroll through all 76 milestones at once, which is a lovely thing to have built and a terrible thing to arrive at. It is now four doors and a search box. Every milestone has its own page and its own link, document symbols are searchable ("78/241" finds A/RES/78/241), and you can tell the site which desk you sit at so it shows you your take instead of all eight. Every speech-ready line in the corpus is now on one page, jargon explains itself in place, and each of the eight roles has a cheat sheet built to be printed and forwarded. The galaxy is still here: it just waits behind its own door now instead of loading whether you wanted it or not.',
   },
 ];
 
