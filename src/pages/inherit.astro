@@ -6,8 +6,11 @@
  */
 import Base from '../layouts/Base.astro';
 import Starfield from '../components/Starfield.astro';
+import JargonPopover from '../components/JargonPopover.astro';
 import { getCollection } from 'astro:content';
 import { CHAPTERS, SAFE_LINES } from '../lib/onboarding';
+import { markupFactual } from '../lib/glossary';
+import { jargonPayload } from '../lib/jargon';
 import { getTake } from '../lib/takes';
 import { ORGAN_BY_ID, SITE, VENUE_BY_ID } from '../lib/taxonomy';
 
@@ -18,17 +21,42 @@ const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/
 
 // A step naming a milestone that no longer exists would render as a blank row.
 // Fail loudly at build time instead — this file is hand-authored and drifts.
+/**
+ * Jargon, underlined once per page rather than once per paragraph.
+ *
+ * This page is journey J2's destination: an intern with no context reads it
+ * end to end, and the words that stop them are "recorded vote", "normative
+ * instrument", "terms of reference". Each is explained in place, in a popover,
+ * without ever leaving the brief.
+ *
+ * The Set is shared across every call below and marking runs in reading
+ * order, so a term is underlined at its first appearance and left alone
+ * afterwards.
+ */
+const marked = new Set<string>();
+
 const chapters = CHAPTERS.map((chapter) => ({
   ...chapter,
+  introHtml: markupFactual(chapter.intro, marked).html,
   steps: chapter.steps.flatMap((step) => {
     const entry = byId.get(step.id);
     if (!entry) {
       console.warn(`[unaiverse] /inherit references unknown milestone "${step.id}"`);
       return [];
     }
-    return [{ ...step, entry, take: getTake(step.id, 'missions') }];
+    return [
+      {
+        ...step,
+        entry,
+        take: getTake(step.id, 'missions'),
+        whatHtml: markupFactual(step.what, marked).html,
+        soThatHtml: markupFactual(step.soThat, marked).html,
+      },
+    ];
   }),
 }));
+
+const jargon = jargonPayload([...marked]);
 
 const stepCount = chapters.reduce((n, c) => n + c.steps.length, 0);
 
@@ -89,7 +117,7 @@ const description =
           <h2 class="chapter__title" id={`${chapter.key}-title`}>
             {chapter.title}
           </h2>
-          <p class="chapter__intro">{chapter.intro}</p>
+          <p class="chapter__intro" set:html={chapter.introHtml} />
 
           <ol class="steps">
             {chapter.steps.map((step) => (
@@ -104,10 +132,10 @@ const description =
                   </p>
                 </div>
 
-                <p class="step__what">{step.what}</p>
+                <p class="step__what" set:html={step.whatHtml} />
                 <p class="step__so">
                   <span class="step__so-mark">Why you care</span>
-                  {step.soThat}
+                  <span set:html={step.soThatHtml} />
                 </p>
 
                 {step.take && (
@@ -211,6 +239,7 @@ const description =
     </div>
   </footer>
 
+  <JargonPopover entries={jargon} />
   <Starfield />
 </Base>
 

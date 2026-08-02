@@ -57,10 +57,22 @@ interface Hit {
 /**
  * Turn a milestone's factual prose into HTML: glossary terms become buttons,
  * *asterisks* become <em>, everything else is escaped.
+ *
+ * `alreadyMarked` extends "one underline per concept" from a single block of
+ * prose to a whole page. A milestone body is one call and needs nothing; a
+ * page like Start Here is twenty short authored paragraphs, and marking each
+ * one independently underlines "resolution" fourteen times. Pass a Set shared
+ * across the calls and it is underlined once, at its first appearance. The
+ * Set is mutated, so the caller does not have to fold the return value back
+ * in.
  */
-export function markupFactual(text: string): { html: string; terms: string[] } {
+export function markupFactual(
+  text: string,
+  alreadyMarked?: Set<string>,
+): { html: string; terms: string[] } {
   const hits: Hit[] = [];
-  const usedSlugs = new Set<string>();
+  const usedSlugs = alreadyMarked ?? new Set<string>();
+  const markedHere: string[] = [];
 
   // Emphasis ranges — **bold** and *italic document titles*. A term button
   // landing inside one splits the asterisk pair across two segments, so the
@@ -99,6 +111,7 @@ export function markupFactual(text: string): { html: string; terms: string[] } {
 
       hits.push({ start, end, slug: surface.slug });
       usedSlugs.add(surface.slug);
+      markedHere.push(surface.slug);
       break; // first usable occurrence only
     }
   }
@@ -117,20 +130,7 @@ export function markupFactual(text: string): { html: string; terms: string[] } {
   }
   out += italics(escapeHtml(text.slice(cursor)));
 
-  return { html: out, terms: [...usedSlugs] };
-}
-
-/**
- * The same prose with no term buttons — escaped, emphasis resolved, nothing
- * clickable.
- *
- * The buttons `markupFactual` emits are inert without A/BOT mounted to answer
- * them, and a definition that does nothing when tapped is worse than a word
- * that was never underlined. The redesign's milestone pages do not carry
- * A/BOT, so until inline glossary popovers land they render prose this way.
- */
-export function plainProse(text: string): string {
-  return italics(escapeHtml(text));
+  return { html: out, terms: markedHere };
 }
 
 /**

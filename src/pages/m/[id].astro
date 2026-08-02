@@ -26,8 +26,10 @@ import Base from '../../layouts/Base.astro';
 import CopyButton from '../../components/CopyButton.astro';
 import RolePicker from '../../components/RolePicker.astro';
 import TakeBody from '../../components/TakeBody.astro';
+import JargonPopover from '../../components/JargonPopover.astro';
 import { parseMilestoneBody, sortKey } from '../../lib/milestone';
-import { plainProse } from '../../lib/glossary';
+import { markupFactual } from '../../lib/glossary';
+import { jargonPayload } from '../../lib/jargon';
 import { buildBrief, flattenBrief } from '../../lib/brief';
 import { getTake } from '../../lib/takes';
 import {
@@ -101,6 +103,11 @@ const takes = PERSONAS.filter((p) => written.has(p.id)).map((p) => ({
   take: getTake(id, p.id),
 }));
 const missing = PERSONAS.filter((p) => !written.has(p.id));
+
+// Jargon is underlined at build time and explained in place — the popover
+// carries definitions for exactly the terms this milestone used.
+const { html: factualHtml, terms: jargonSlugs } = markupFactual(factual);
+const jargon = jargonPayload(jargonSlugs);
 
 const title = `${data.title} · ${SITE.name}`;
 const description = why || factual.slice(0, 155);
@@ -184,7 +191,7 @@ const description = why || factual.slice(0, 155);
       }
 
       <div class="record__prose">
-        <p set:html={plainProse(factual)} />
+        <p set:html={factualHtml} />
       </div>
 
       {/* ── What this means for you ─────────────────────────────────── */}
@@ -364,6 +371,8 @@ const description = why || factual.slice(0, 155);
         )
       }
     </nav>
+
+    <JargonPopover entries={jargon} />
   </div>
 </Base>
 

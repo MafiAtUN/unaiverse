@@ -1,0 +1,281 @@
+---
+/**
+ * THE DEFINITION POPOVER (journey J2, step 3)
+ *
+ * "Tapping opens the Learn definition inline as a popover — never navigates
+ * away." That sentence is the whole spec, and the last four words are the
+ * hard part: the obvious implementation is a link to /learn/<term>, which
+ * loses the reader's place in the brief they were three minutes into.
+ *
+ * One popover element per page, reused. The alternative — a popover per marked
+ * term — puts thirty hidden panels in the markup of a page that will open at
+ * most one.
+ *
+ * Native `popover="auto"`, so light-dismiss, Escape, and top-layer stacking
+ * are the platform's problem rather than ours. Positioning is done by hand:
+ * CSS anchor positioning would be the right tool and is not yet available
+ * everywhere this has to work, so the script measures the button and places
+ * the panel under it, flipping above when there is no room below.
+ */
+import type { JargonEntry } from '../lib/jargon';
+
+interface Props {
+  /** Only the terms this page actually marked — see lib/jargon. */
+  entries: JargonEntry[];
+}
+
+const { entries } = Astro.props;
+const payload = JSON.stringify(entries).replace(/</g, '\\u003c');
+---
+
+{
+  entries.length > 0 && (
+    <>
+      <div id="jargon-popover" class="jargon" popover="auto" data-jargon>
+        <div class="jargon__head">
+          <h2 class="jargon__term" data-jargon-term />
+          <button
+            type="button"
+            class="jargon__close"
+            data-jargon-close
+            aria-label="Close definition"
+          >
+            ×
+          </button>
+        </div>
+        <p class="jargon__short" data-jargon-short />
+        <p class="jargon__analogy">
+          <span class="jargon__analogy-mark">Think of it as</span>
+          <span data-jargon-analogy />
+        </p>
+        <a class="jargon__more" data-jargon-more hidden href="#">
+          Read the full explanation →
+        </a>
+      </div>
+
+      <script type="application/json" data-jargon-data is:inline set:html={payload} />
+    </>
+  )
+}
+
+<style is:global>
+  /* Global, because the buttons are written into prose by lib/glossary at
+     build time and therefore carry no scope attribute from this component. */
+  .term {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: help;
+    /* An underline the reader can learn to recognise, drawn so it never
+       collides with a descender. */
+    text-decoration: underline dotted;
+    text-decoration-color: var(--pink-on-paper, var(--riso-pink));
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+  }
+
+  .term:hover,
+  .term:focus-visible {
+    text-decoration-style: solid;
+    color: var(--pink-on-paper, var(--riso-pink));
+  }
+
+  /* The sky-side pages draw the same buttons on a dark background. */
+  :not(.on-paper) > .term,
+  .node__factual .term {
+    text-decoration-color: var(--riso-pink);
+  }
+</style>
+
+<style>
+  .jargon {
+    /* Placed by the script; these are the fallbacks for the frame before it
+       runs and for the reduced case where measurement fails. */
+    position: fixed;
+    inset: auto;
+    max-width: min(22rem, calc(100vw - 2rem));
+    margin: 0;
+    padding: var(--sp-4);
+    border: 1px solid var(--paper-hairline-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--paper-ink);
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.45);
+  }
+
+  .jargon:not(:popover-open) {
+    display: none;
+  }
+
+  .jargon__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+
+  .jargon__term {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
+  .jargon__close {
+    flex: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    font-size: var(--step-1);
+    line-height: 1;
+    color: var(--paper-ink-faint);
+    cursor: pointer;
+  }
+
+  .jargon__close:hover,
+  .jargon__close:focus-visible {
+    color: var(--paper-ink);
+    background: var(--paper-sunk);
+  }
+
+  .jargon__short {
+    margin: var(--sp-2) 0 0;
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+
+  .jargon__analogy {
+    margin: var(--sp-3) 0 0;
+    padding-top: var(--sp-3);
+    border-top: 1px solid var(--paper-hairline);
+    font-size: var(--step--1);
+    line-height: 1.5;
+    color: var(--paper-ink-dim);
+  }
+
+  .jargon__analogy-mark {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pink-on-paper);
+  }
+
+  .jargon__more {
+    display: inline-block;
+    margin-top: var(--sp-3);
+    font-size: var(--step--1);
+    color: var(--pink-on-paper);
+  }
+
+  .jargon__more[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  interface JargonEntry {
+    slug: string;
+    term: string;
+    short: string;
+    analogy: string;
+    href?: string;
+  }
+
+  const panel = document.querySelector<HTMLElement>('[data-jargon]');
+  const raw = document.querySelector<HTMLScriptElement>('[data-jargon-data]');
+
+  if (panel && raw && 'showPopover' in panel) {
+    const entries: Record<string, JargonEntry> = {};
+    for (const e of JSON.parse(raw.textContent!) as JargonEntry[]) entries[e.slug] = e;
+
+    const el = {
+      term: panel.querySelector<HTMLElement>('[data-jargon-term]')!,
+      short: panel.querySelector<HTMLElement>('[data-jargon-short]')!,
+      analogy: panel.querySelector<HTMLElement>('[data-jargon-analogy]')!,
+      more: panel.querySelector<HTMLAnchorElement>('[data-jargon-more]')!,
+      close: panel.querySelector<HTMLButtonElement>('[data-jargon-close]')!,
+    };
+
+    let invoker: HTMLElement | null = null;
+
+    /**
+     * Under the word, unless that would run off the bottom — then above it.
+     * Clamped horizontally so a term at the right edge of a phone screen does
+     * not open a panel half off the screen.
+     */
+    function place(button: HTMLElement) {
+      const r = button.getBoundingClientRect();
+      const { width, height } = panel!.getBoundingClientRect();
+      const gap = 8;
+      const margin = 12;
+
+      const below = r.bottom + gap;
+      const fitsBelow = below + height <= window.innerHeight - margin;
+      const top = fitsBelow ? below : Math.max(margin, r.top - gap - height);
+
+      const ideal = r.left + r.width / 2 - width / 2;
+      const left = Math.min(Math.max(margin, ideal), window.innerWidth - width - margin);
+
+      panel!.style.top = `${Math.round(top)}px`;
+      panel!.style.left = `${Math.round(left)}px`;
+    }
+
+    function open(button: HTMLElement, entry: JargonEntry) {
+      el.term.textContent = entry.term;
+      el.short.textContent = entry.short;
+      el.analogy.textContent = entry.analogy;
+      if (entry.href) {
+        el.more.href = entry.href;
+        el.more.hidden = false;
+      } else {
+        el.more.hidden = true;
+      }
+
+      invoker = button;
+      // Shown before measuring: a display:none element has no dimensions, so
+      // placing it first would centre it on a zero-sized box.
+      panel!.showPopover();
+      place(button);
+      el.close.focus();
+    }
+
+    document.addEventListener('click', (e) => {
+      const button = (e.target as HTMLElement).closest<HTMLElement>('.term');
+      if (!button) return;
+      const entry = entries[button.dataset.term ?? ''];
+      if (!entry) return;
+      e.preventDefault();
+      open(button, entry);
+    });
+
+    el.close.addEventListener('click', () => panel.hidePopover());
+
+    // Escape and clicking away are handled by popover=auto, but neither
+    // returns focus — so a keyboard reader would be dropped at the top of the
+    // document instead of back at the word they were reading.
+    panel.addEventListener('toggle', (e) => {
+      if ((e as ToggleEvent).newState === 'closed' && invoker) {
+        invoker.focus();
+        invoker = null;
+      }
+    });
+
+    // The panel is positioned in viewport coordinates, so it has to follow or
+    // close. Closing is the honest choice on scroll: the reader has moved on.
+    addEventListener('scroll', () => panel.matches(':popover-open') && panel.hidePopover(), {
+      passive: true,
+    });
+    addEventListener('resize', () => {
+      if (panel.matches(':popover-open') && invoker) place(invoker);
+    });
+  }
+</script>
