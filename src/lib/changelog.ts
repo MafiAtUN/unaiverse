@@ -23,6 +23,12 @@ export interface Change {
 
 export const CHANGES: Change[] = [
   {
+    date: '2026-08-02',
+    summary: 'A bar on every page, what is coming on the front page, and a glossary that answers the question.',
+    detail:
+      'Three things. There is now a navigation bar on every page, so the 307-term AI course is visible from anywhere instead of being a link in the footer that nobody found; pressing "/" puts you in the search box. The front page shows what is actually coming next, with a button that drops each one into Outlook. And the glossary stopped being homework: a term page used to open with 2,300 words across twenty-three sections, and now opens with the definition, the same thing said without jargon, one everyday example and the thing to remember. Everything else is still there, one click down. The examples were also spread across the duty stations: half of them were set in the same city, and the ones where something goes wrong were mostly set there too.',
+  },
+  {
     date: '2026-08-01',
     summary: 'Rebuilt as a tool: a front door that routes, and a timeline you can search.',
     detail:

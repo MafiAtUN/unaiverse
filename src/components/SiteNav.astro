@@ -1,0 +1,237 @@
+---
+/**
+ * THE PERSISTENT NAVIGATION
+ *
+ * The redesign gave the site four doors on the front page and then no way to
+ * change your mind. Once a reader was two clicks in — on a milestone, on a
+ * cheat sheet — the only route to anything else was Back, or a link buried in
+ * the footer. The worst casualty was the AI literacy half: 307 terms, learning
+ * paths, comparisons and a concept map, reachable in practice only by someone
+ * who already knew it existed.
+ *
+ * So: one bar, on every page of the main site, carrying the four places worth
+ * going and a search box that is always one keystroke away.
+ *
+ * ── Why the term count is on the link ────────────────────────────────────
+ * "Learn AI" is a label that promises nothing. "Learn AI · 307 terms" is an
+ * offer, and it is the single cheapest way to make a year of work visible to
+ * someone who has never clicked it. The number comes from the corpus, so it
+ * cannot drift.
+ *
+ * The bar is static markup. The only script is the keyboard shortcut, and
+ * everything works without it.
+ */
+import { CORPUS_STATS } from '../lib/learn/terms';
+
+interface Props {
+  /** Marks the current section, so a reader knows where they are. */
+  current?: 'timeline' | 'safe-lines' | 'agenda' | 'learn' | 'start';
+}
+
+const { current } = Astro.props;
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+
+const LINKS = [
+  { id: 'timeline', label: 'Timeline', href: href('timeline'), hint: 'Every milestone, searchable' },
+  { id: 'start', label: 'Start here', href: href('inherit'), hint: 'Ten minutes on the whole file' },
+  { id: 'agenda', label: "What's coming", href: href('agenda'), hint: 'Dates and open obligations' },
+  { id: 'safe-lines', label: 'Safe lines', href: href('safe-lines'), hint: 'Sentences you can say' },
+] as const;
+---
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap nav__inner">
+    <a class="nav__brand" href={href('')}>
+      UN<span class="nav__brand-ai">AI</span>VERSE
+    </a>
+
+    <ul class="nav__links">
+      {
+        LINKS.map((link) => (
+          <li>
+            <a href={link.href} title={link.hint} aria-current={current === link.id ? 'page' : undefined}>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+
+      {/* The literacy half, given the prominence the work deserves. A separate
+          group rather than a fifth link: it is the other half of the site, not
+          another page of this one. */}
+      <li class="nav__course">
+        <a href={href('learn')} aria-current={current === 'learn' ? 'page' : undefined}>
+          <span class="nav__course-label">Learn AI</span>
+          <span class="nav__course-count mono">{CORPUS_STATS.published} terms</span>
+        </a>
+      </li>
+    </ul>
+
+    {/* Search lives on the router and on the timeline. From anywhere else this
+        is the way back to it, and it carries the shortcut hint because a
+        reference site is used by the same people over and over. */}
+    <a class="nav__search" href={href('timeline')} data-nav-search>
+      <span class="nav__search-icon" aria-hidden="true">⌕</span>
+      <span class="nav__search-label">Search</span>
+      <kbd class="nav__kbd" aria-hidden="true">/</kbd>
+    </a>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    border-bottom: 1px solid var(--hairline);
+    background: color-mix(in srgb, var(--void) 88%, transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3) var(--sp-5);
+    min-height: 3rem;
+  }
+
+  .nav__brand {
+    flex: none;
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .nav__brand-ai {
+    color: var(--riso-pink);
+  }
+
+  .nav__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-2) var(--sp-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step--1);
+  }
+
+  .nav__links a {
+    color: var(--ink-dim);
+    text-decoration: none;
+    padding: 0.45rem 0;
+    display: inline-block;
+  }
+
+  .nav__links a:hover,
+  .nav__links a:focus-visible {
+    color: var(--paper);
+  }
+
+  .nav__links a[aria-current='page'] {
+    color: var(--paper);
+    box-shadow: inset 0 -2px 0 var(--riso-pink);
+  }
+
+  /* The other half of the site. The count is the point: it turns a label into
+     an offer. */
+  .nav__course a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45em;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 999px;
+  }
+
+  .nav__course a:hover,
+  .nav__course a:focus-visible {
+    border-color: var(--riso-yellow);
+  }
+
+  .nav__course-label {
+    color: var(--ink);
+  }
+
+  .nav__course-count {
+    font-size: var(--step--2);
+    color: var(--riso-yellow);
+  }
+
+  .nav__search {
+    flex: none;
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-sm);
+    color: var(--ink-faint);
+    text-decoration: none;
+    font-size: var(--step--1);
+  }
+
+  .nav__search:hover,
+  .nav__search:focus-visible {
+    border-color: var(--riso-pink);
+    color: var(--paper);
+  }
+
+  .nav__kbd {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    padding: 0 0.35em;
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+  }
+
+  @media (max-width: 52rem) {
+    .nav__search-label,
+    .nav__kbd {
+      display: none;
+    }
+
+    .nav__inner {
+      gap: var(--sp-2) var(--sp-3);
+    }
+  }
+
+  /* On a phone the bar would eat a third of the viewport if it stayed stuck. */
+  @media (max-width: 40rem) {
+    .nav {
+      position: static;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * `/` focuses search, the convention every reference site shares.
+   *
+   * On a page that has a search box it focuses it; anywhere else the link is
+   * already the route to one, so the shortcut follows it. Ignored while the
+   * reader is typing, otherwise it would swallow the slash in "A/RES/79/325".
+   */
+  const link = document.querySelector<HTMLAnchorElement>('[data-nav-search]');
+
+  addEventListener('keydown', (e) => {
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+
+    const el = document.activeElement as HTMLElement | null;
+    if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+
+    const box = document.querySelector<HTMLInputElement>('[data-search-input], [data-line-search]');
+    e.preventDefault();
+    if (box) {
+      box.focus();
+      box.select();
+    } else {
+      link?.click();
+    }
+  });
+</script>

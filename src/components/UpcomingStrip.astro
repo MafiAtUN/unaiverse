@@ -1,0 +1,265 @@
+---
+/**
+ * WHAT IS COMING, ON THE FRONT PAGE
+ *
+ * The router sent everyone who wanted a date to /agenda and told them only how
+ * many things were on it. But "what is coming" is the question a delegate
+ * arrives with most often, and a number is not an answer — a room that already
+ * knows the Global Dialogue is in Geneva wants to know when, and wants it in
+ * their calendar before they close the tab.
+ *
+ * So the next few dated things sit on the front page, each with the two
+ * actions that matter: put it in my calendar, and tell me more.
+ *
+ * ── Why .ics and not a "remind me" ───────────────────────────────────────
+ * A reminder needs an account, a backend and somewhere to store an email
+ * address, all of which the brief rules out and none of which this needs. An
+ * .ics file is the same promise with no infrastructure: it lands in Outlook,
+ * which is where these people already live, and it keeps working if this site
+ * is never touched again. The whole-feed subscription is the stronger version
+ * of the same thing, so it sits alongside.
+ */
+import { upcomingEvents, openPeriods, type MilestoneLike, type AgendaEvent } from '../lib/agenda';
+import { VENUE_BY_ID } from '../lib/taxonomy';
+
+interface Props {
+  entries: MilestoneLike[];
+  /** How many to show before sending the reader to the full agenda. */
+  limit?: number;
+}
+
+const { entries, limit = 4 } = Astro.props;
+
+const now = new Date();
+const dated = upcomingEvents(entries, now);
+
+/**
+ * Dated events first, then the ones the UN has committed to without naming a
+ * day. A front page that showed only confirmed dates would imply the file goes
+ * quiet after the last one, which is the opposite of true.
+ */
+const undated = openPeriods(entries, now, new Set(dated.map((e) => e.id)));
+
+type Row = {
+  id: string;
+  title: string;
+  when: string;
+  away: string | null;
+  venue: string;
+  exact: boolean;
+};
+
+const rows: Row[] = [
+  ...dated.map((e: AgendaEvent) => ({
+    id: e.id,
+    title: e.title,
+    when: e.dateDisplay,
+    away: e.daysAway > 0 ? relative(e.daysAway) : 'happening now',
+    venue: e.venue.map((v) => VENUE_BY_ID.get(v)?.label ?? v).join(' · '),
+    exact: e.precision === 'day',
+  })),
+  ...undated.map((p) => ({
+    id: p.id,
+    title: p.title,
+    when: p.dateDisplay,
+    away: null,
+    venue: p.venue.map((v) => VENUE_BY_ID.get(v)?.label ?? v).join(' · '),
+    exact: false,
+  })),
+].slice(0, limit);
+
+function relative(days: number): string {
+  if (days < 7) return `in ${days} day${days === 1 ? '' : 's'}`;
+  if (days < 60) return `in ${Math.round(days / 7)} weeks`;
+  if (days < 400) return `in ${Math.round(days / 30)} months`;
+  return `in ${Math.round(days / 365)} years`;
+}
+
+const href = (path: string) => `${import.meta.env.BASE_URL}/${path}`.replace(/\/+/g, '/');
+---
+
+{
+  rows.length > 0 && (
+    <section class="upcoming" aria-labelledby="upcoming-heading">
+      <div class="upcoming__head">
+        <h2 class="upcoming__heading" id="upcoming-heading">What's coming</h2>
+        <a class="upcoming__all" href={href('agenda')}>The full agenda, with open obligations →</a>
+      </div>
+
+      <ul class="upcoming__list">
+        {rows.map((row) => (
+          <li class="event">
+            <p class="event__when mono">
+              <span class="event__date">{row.when}</span>
+              {row.away && <span class="event__away">{row.away}</span>}
+              {!row.exact && <span class="event__tbc">dates not yet published</span>}
+            </p>
+
+            <h3 class="event__title">
+              <a href={href(`m/${row.id}`)}>{row.title}</a>
+            </h3>
+
+            {row.venue && <p class="event__where mono">{row.venue}</p>}
+
+            {/* Only events with a resolved date have a file: an .ics for
+                something with no date would put a guess in someone's calendar,
+                and a wrong date is worse than no entry. */}
+            {row.exact || row.away ? (
+              <a class="event__save" href={href(`calendar/${row.id}.ics`)} download>
+                <span aria-hidden="true">＋</span> Save the date
+              </a>
+            ) : (
+              <span class="event__save event__save--none">Date not announced yet</span>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <p class="upcoming__subscribe">
+        <a href={href('calendar.ics')}>
+          Subscribe to the whole calendar
+        </a>
+        <span class="upcoming__hint">
+          One feed in Outlook, and every new date arrives on its own.
+        </span>
+      </p>
+    </section>
+  )
+}
+
+<style>
+  .upcoming {
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .upcoming__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-2) var(--sp-4);
+    margin-bottom: var(--sp-4);
+  }
+
+  .upcoming__heading {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .upcoming__all {
+    font-size: var(--step--1);
+    color: var(--ink-dim);
+  }
+
+  .upcoming__all:hover,
+  .upcoming__all:focus-visible {
+    color: var(--paper);
+  }
+
+  .upcoming__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--sp-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .event {
+    display: grid;
+    align-content: start;
+    gap: var(--sp-1);
+    padding: var(--sp-4);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--void-raised);
+  }
+
+  .event__when {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-1) var(--sp-3);
+    margin: 0;
+    font-size: var(--step--2);
+  }
+
+  .event__date {
+    color: var(--riso-yellow);
+  }
+
+  .event__away {
+    color: var(--riso-pink);
+  }
+
+  .event__tbc {
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  .event__title {
+    margin: var(--sp-1) 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .event__title a {
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .event__title a:hover,
+  .event__title a:focus-visible {
+    text-decoration: underline;
+    text-decoration-color: var(--riso-pink);
+  }
+
+  .event__where {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+  }
+
+  .event__save {
+    justify-self: start;
+    margin-top: var(--sp-3);
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius-sm);
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+    text-decoration: none;
+  }
+
+  a.event__save:hover,
+  a.event__save:focus-visible {
+    border-color: var(--riso-green, #2fbf74);
+    color: var(--paper);
+  }
+
+  .event__save--none {
+    border-style: dashed;
+    color: var(--ink-faint);
+  }
+
+  .upcoming__subscribe {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--sp-2) var(--sp-3);
+    margin: var(--sp-4) 0 0;
+    font-size: var(--step--1);
+  }
+
+  .upcoming__hint {
+    color: var(--ink-faint);
+    font-size: var(--step--2);
+  }
+</style>

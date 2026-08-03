@@ -142,7 +142,22 @@ const LAYERS = {
 
     <div class="term-layout">
       <div>
-        {/* ── Layer 1: in five seconds ─────────────────────────────── */}
+        {/*  ── Layer 1: the whole answer, for most readers ─────────────
+             A colleague who opens this page wants one thing: what the word
+             means, in words they already have. That used to take 2,300 rendered
+             words across twenty-three sections, because every layer opened by
+             default and the plain-language version of the definition was
+             buried at the bottom under "Go deeper".
+
+             So this layer now carries the four things that answer the question
+             — the one-sentence definition, the same idea said without any
+             jargon, a story from ordinary life, and the one thing to remember
+             — and everything else is closed until asked for. Nothing was
+             deleted; the depth is one click away for the reader who wants it.
+
+             Ordered plain-first on purpose: `oneSentence` is precise but still
+             uses the vocabulary, and `simpleVsTechnical.simple` is the version
+             written for someone who has none of it. */}
         <section class="layer" data-layer="1" aria-labelledby="layer-1">
           <p class="layer__kicker">In five seconds</p>
           <h2 class="layer__title" id="layer-1">What it is</h2>
@@ -150,11 +165,27 @@ const LAYERS = {
           <p class="term-hero__one">{term.oneSentence}</p>
 
           <div class="paper-panel paper-panel--accent">
-            <h3>Why it matters</h3>
-            <p>{term.whyItMatters}</p>
+            <h3>In plain words</h3>
+            <p class="lead">{term.simpleVsTechnical.simple}</p>
           </div>
 
-          <TermVisual visual={term.visual} termId={term.id} />
+          {/* The real-life example, promoted out of the collapsed explanation.
+              This is a story from ordinary life rather than the UN workplace
+              scenario further down, which is written in the register of an
+              administrative instruction and is the wrong thing to meet first. */}
+          <div class="paper-panel">
+            <h3>An everyday example</h3>
+            <p class="lead">{term.everydayAnalogy.story}</p>
+            <div class="limitation">
+              <span class="limitation__label">Where the story stops working</span>
+              <p>{term.everydayAnalogy.limitation}</p>
+            </div>
+          </div>
+
+          <p class="term-takeaway">
+            <span class="term-takeaway__label">Remember this</span>
+            {term.keyTakeaway}
+          </p>
 
           {
             term.contested && (
@@ -175,16 +206,24 @@ const LAYERS = {
           </button>
 
           <div class="layer__body" id="layer-2-body">
+            <div class="paper-panel paper-panel--accent">
+              <h3>Why it matters</h3>
+              <p>{term.whyItMatters}</p>
+            </div>
+
+            <TermVisual visual={term.visual} termId={term.id} />
+
             <div class="prose">
               {paragraphs.map((p) => <p>{p}</p>)}
             </div>
 
             <div class="paper-panel">
-              <h3>{term.everydayAnalogy.title}</h3>
-              <p class="lead">{term.everydayAnalogy.story}</p>
+              {/* The story itself is in the summary above; what belongs here is
+                  the line-by-line mapping, which is the part that repays a
+                  reader who has decided to go deeper. */}
+              <h3>How “{term.everydayAnalogy.title}” maps onto the real thing</h3>
 
               <table class="mapping">
-                <caption>How the story maps onto the real thing</caption>
                 <thead>
                   <tr>
                     <th scope="col">In the story</th>
@@ -203,12 +242,6 @@ const LAYERS = {
                 </tbody>
               </table>
 
-              {/* Required on every term. An analogy without its limit is a
-                  misconception waiting to be quoted in a meeting. */}
-              <div class="limitation">
-                <span class="limitation__label">Where the analogy stops working</span>
-                <p>{term.everydayAnalogy.limitation}</p>
-              </div>
             </div>
 
             <h3>A worked example</h3>

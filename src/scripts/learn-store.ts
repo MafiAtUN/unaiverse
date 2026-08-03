@@ -107,7 +107,7 @@ export function getDepth(): Depth {
   if (!storageAvailable()) return 'standard';
   try {
     const v = localStorage.getItem(KEYS.depth);
-    return DEPTHS.includes(v as Depth) ? (v as Depth) : 'standard';
+    return DEPTHS.includes(v as Depth) ? (v as Depth) : 'brief';
   } catch {
     return 'standard';
   }

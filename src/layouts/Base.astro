@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SiteNav from '../components/SiteNav.astro';
 import { SITE } from '../lib/taxonomy';
 
 interface Props {
@@ -11,6 +12,12 @@ interface Props {
   head?: string;
   /** Where the skip link goes. The literacy pages have no #timeline. */
   skip?: { href: string; label: string };
+  /**
+   * Which nav item to mark as current, or `false` for the pages that carry
+   * their own bar: the literacy half has one already, and the galaxy is a
+   * showcase whose whole point is that nothing floats over it.
+   */
+  nav?: 'timeline' | 'safe-lines' | 'agenda' | 'learn' | 'start' | false;
 }
 
 const {
@@ -19,6 +26,7 @@ const {
   ogType = 'website',
   head,
   skip = { href: '#timeline', label: 'Skip to the timeline' },
+  nav,
 } = Astro.props;
 
 // Absolute URLs — social scrapers do not resolve relative paths.
@@ -91,6 +99,7 @@ const base = import.meta.env.BASE_URL;
   </head>
   <body>
     <a class="skip-link" href={skip.href}>{skip.label}</a>
+    {nav !== false && <SiteNav current={nav || undefined} />}
     <slot />
   </body>
 </html>

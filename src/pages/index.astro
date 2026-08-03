@@ -32,6 +32,7 @@
 import Base from '../layouts/Base.astro';
 import RolePicker from '../components/RolePicker.astro';
 import SiteSearch from '../components/SiteSearch.astro';
+import UpcomingStrip from '../components/UpcomingStrip.astro';
 import { getCollection } from 'astro:content';
 import { checkCorpus } from '../lib/corpus-check';
 import { formatChangeDate, latestChange } from '../lib/changelog';
@@ -147,12 +148,17 @@ const description =
       </a>
     </nav>
 
-    {/* ── 4. Role picker ──────────────────────────────────────────── */}
+    {/* ── 4. What is coming ───────────────────────────────────────
+         The agenda door says how much is ahead; this says what, and lets
+         someone put it in Outlook without opening anything. */}
+    <UpcomingStrip entries={all} />
+
+    {/* ── 5. Role picker ──────────────────────────────────────────── */}
     <div class="router__picker">
       <RolePicker variant="full" offerCheatSheet />
     </div>
 
-    {/* ── 5. Freshness ────────────────────────────────────────────── */}
+    {/* ── 6. Freshness ────────────────────────────────────────────── */}
     <p class="fresh">
       <a href={href('changelog')}>
         <span class="fresh__date mono">Updated {formatChangeDate(change.date)}</span>
