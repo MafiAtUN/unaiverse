@@ -1,0 +1,164 @@
+---
+/**
+ * THE PRESENTING CREDIT
+ *
+ * UNAIVERSE is published under Nerd Lab — the independent maker project this
+ * kind of thing goes out under. So the site carries a title card, the way a
+ * film does: the mark, then the word.
+ *
+ * Two placements, one component:
+ *
+ *   • `hero`  — above the title on the router, the first thing read.
+ *   • `strip` — a thin band under every page's own footer, so the credit is on
+ *     the cheat sheet someone forwards as much as on the front door.
+ *
+ * The wordmark is inlined rather than requested. It is a kilobyte of paths, it
+ * has to paint with the text rather than a frame later, and inlining lets it
+ * take `currentColor` — so one copy is the pink one on the router and the
+ * dimmed one in the footer, with no second asset to keep in sync. It is the
+ * Nerd Lab brand file (public/brand/nerd-lab-logo-white.svg) with the fills
+ * swapped for currentColor and nothing else touched.
+ *
+ * Not a link: Nerd Lab has no public address yet, and a credit that goes
+ * nowhere beats one that 404s.
+ */
+import { NERD_LAB } from '../lib/taxonomy';
+
+interface Props {
+  variant?: 'hero' | 'strip';
+}
+
+const { variant = 'hero' } = Astro.props;
+
+const MARK = `<svg class="nl__mark" viewBox="0 0 700 176" aria-hidden="true" focusable="false">
+  <g transform="translate(38,38)" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter">
+    <path d="M12 100 L12 0 L64 100 L64 0"/>
+    <g transform="translate(90,0)" stroke="none">
+      <rect x="6" y="0" width="56" height="24" fill="currentColor"/>
+      <rect x="20" y="38" width="56" height="24" fill="currentColor"/>
+      <rect x="6" y="76" width="56" height="24" fill="currentColor"/>
+    </g>
+    <path transform="translate(172,0)" d="M12 100 L12 0 M12 12 H40 Q64 12 64 33 Q64 54 40 54 H12 M40 54 L66 100"/>
+    <path transform="translate(264,0)" d="M12 100 L12 0 M12 12 H38 Q66 12 66 50 Q66 88 38 88 H12"/>
+    <path transform="translate(384,0)" d="M12 0 L12 88 L56 88"/>
+    <path transform="translate(458,0)" d="M6 100 L38 0 L70 100 M22 64 H54"/>
+    <path transform="translate(548,0)" d="M12 100 L12 0 M12 12 H36 Q58 12 58 30 Q58 48 36 48 H12 M12 48 H38 Q64 48 64 68 Q64 88 38 88 H12"/>
+  </g>
+</svg>`;
+---
+
+{/* The mark is decorative; the label on the wrapper reads the credit as one
+    phrase, so a screen reader gets "Nerd Lab presents" rather than a wordmark
+    and a stray word. */}
+{
+  variant === 'strip' ? (
+    <aside class="nl nl--strip" aria-label={`${NERD_LAB.name} presents. ${NERD_LAB.tagline}`}>
+      <div class="wrap nl__inner">
+        <p class="nl__lockup">
+          <Fragment set:html={MARK} />
+          <span class="nl__word mono">presents</span>
+        </p>
+        <p class="nl__tagline">{NERD_LAB.tagline}</p>
+      </div>
+    </aside>
+  ) : (
+    <p class="nl nl--hero" aria-label={`${NERD_LAB.name} presents`}>
+      <Fragment set:html={MARK} />
+      <span class="nl__word mono">presents</span>
+    </p>
+  )
+}
+
+<style is:global>
+  /* Global rather than scoped: the mark comes in through `set:html`, so Astro
+     never sees it at compile time and would not stamp the scope attribute on
+     it. The two selectors below are the only ones that touch it. */
+  .nl .nl__mark {
+    display: block;
+    /* The viewBox carries the brand's own padding, so the height is set to sit
+       against the mono text beside it, not against the box. */
+    height: 1.9em;
+    width: auto;
+    flex: none;
+  }
+
+  /* On the router it is a title card, not a credit line: the mark leads the
+     staircase down into the kicker and the title. */
+  .nl--hero .nl__mark {
+    height: 2.6em;
+  }
+</style>
+
+<style>
+  .nl__word {
+    letter-spacing: 0.22em;
+  }
+
+  /* ── Hero: the title card on the router ──────────────────────────── */
+  .nl--hero {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    margin: 0 0 var(--sp-4);
+    font-size: var(--step--2);
+    color: var(--riso-pink);
+  }
+
+  .nl--hero .nl__word {
+    color: var(--ink-faint);
+    font-size: var(--step--1);
+  }
+
+  /* ── Strip: the standing credit under every page ─────────────────── */
+  .nl--strip {
+    border-top: 1px solid var(--hairline);
+    padding: var(--sp-4) 0 var(--sp-5);
+    /* The galaxy paints a starfield behind everything; the credit belongs on
+       the page, not in space. */
+    position: relative;
+    z-index: 1;
+    background: var(--void);
+  }
+
+  .nl__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-2) var(--sp-4);
+  }
+
+  .nl__lockup {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-dim);
+  }
+
+  .nl--strip .nl__word {
+    color: var(--ink-faint);
+  }
+
+  .nl__tagline {
+    margin: 0;
+    font-size: var(--step--2);
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  /* A forwarded cheat sheet gets printed in black on white, where a mark left
+     at newsprint-grey would come out as nothing. */
+  @media print {
+    .nl--strip {
+      background: none;
+      border-top: 1px solid #999;
+    }
+
+    .nl__lockup,
+    .nl--strip .nl__word,
+    .nl__tagline {
+      color: #000;
+    }
+  }
+</style>

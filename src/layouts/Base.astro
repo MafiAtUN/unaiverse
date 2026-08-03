@@ -1,7 +1,8 @@
 ---
 import '../styles/global.css';
 import SiteNav from '../components/SiteNav.astro';
-import { SITE } from '../lib/taxonomy';
+import NerdLab from '../components/NerdLab.astro';
+import { NERD_LAB, SITE } from '../lib/taxonomy';
 
 interface Props {
   title?: string;
@@ -58,7 +59,7 @@ const base = import.meta.env.BASE_URL;
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="UNAIVERSE: 76 milestones, 236 receipts, 156 reader takes, 2017 to 2027"
+      content={`${NERD_LAB.name} presents ${SITE.name}: 76 milestones, 236 receipts, 156 reader takes, 2017 to 2027`}
     />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -101,5 +102,10 @@ const base = import.meta.env.BASE_URL;
     <a class="skip-link" href={skip.href}>{skip.label}</a>
     {nav !== false && <SiteNav current={nav || undefined} />}
     <slot />
+
+    {/* The presenting credit, last thing on every page. Here rather than in
+        each page's own footer: there are eight of those and they disagree, and
+        the label belongs to the site rather than to any one page. */}
+    <NerdLab variant="strip" />
   </body>
 </html>

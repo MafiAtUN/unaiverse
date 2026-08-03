@@ -9,6 +9,16 @@ export const SITE = {
   bot: 'A/BOT',
 } as const;
 
+/**
+ * The label this site is published under. Nerd Lab is the author's own maker
+ * project — independent of the UN and of any employer, which is the whole
+ * point of putting a name on it.
+ */
+export const NERD_LAB = {
+  name: 'Nerd Lab',
+  tagline: 'Unnecessarily clever. Occasionally useful.',
+} as const;
+
 export type ZoneId = 0 | 1 | 2 | 3;
 
 export const ZONES: Record<

@@ -27,6 +27,10 @@ const grotesk = b64('node_modules/@fontsource-variable/space-grotesk/files/space
 const inter = b64('node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2');
 const plex = b64('node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2');
 
+// The presenting credit, from the same brand file the site inlines. Read
+// rather than re-typed, so the card cannot drift from the page.
+const nerdLab = readFileSync(resolve(root, 'public/brand/nerd-lab-logo-magenta.svg'), 'utf8');
+
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:'SG';src:url(data:font/woff2;base64,${grotesk}) format('woff2-variations');font-weight:100 900}
 @font-face{font-family:'IN';src:url(data:font/woff2;base64,${inter}) format('woff2-variations');font-weight:100 900}
@@ -51,6 +55,9 @@ body{width:1200px;height:630px;background:#101011;font-family:'IN';color:#F1EEE4
   background-size:600px 600px}
 .pad{position:relative;padding:72px 80px;height:100%;display:flex;flex-direction:column}
 .kicker{font-family:'PX';font-size:19px;letter-spacing:.24em;text-transform:uppercase;color:#F5D020;margin-bottom:26px}
+.presents{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.presents svg{height:34px;width:auto;display:block}
+.presents span{font-family:'PX';font-size:17px;letter-spacing:.22em;color:rgba(245,241,230,.56)}
 h1{font-family:'SG';font-size:128px;font-weight:700;letter-spacing:-.035em;line-height:1;color:#F1EEE4}
 .rule-accent{width:96px;height:6px;background:#FF5FA8;margin-top:22px}
 .tag{font-size:30px;color:rgba(245,241,230,.78);margin-top:26px;max-width:900px;line-height:1.4}
@@ -68,6 +75,7 @@ h1{font-family:'SG';font-size:128px;font-weight:700;letter-spacing:-.035em;line-
 <div class="sky"></div><div class="stars"></div>
 <div class="olive"></div><div class="olive2"></div>
 <div class="pad">
+  <div class="presents">${nerdLab}<span>presents</span></div>
   <div class="kicker">A totally unofficial field guide</div>
   <h1>UNAIVERSE</h1><div class="rule-accent"></div>
   <div class="tag">One data nerd's lovingly sarcastic map of the UN's AI universe.<br>All links official. All jokes mine.</div>
