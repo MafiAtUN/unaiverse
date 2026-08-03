@@ -1,0 +1,66 @@
+name: Bug
+description: Something on the site or in the build does not work
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a wrong fact, use the "Factual correction" template instead.
+        For anything exploitable, see SECURITY.md and email rather than post.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open /learn
+        2. Search for "gradient decent"
+        3. ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where
+      options:
+        - The live site
+        - Local dev (npm run dev)
+        - The build (npm run build)
+        - The tests (npm test)
+        - The content pipeline (npm run content:*)
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: Browser and OS, or Node version
+      placeholder: Safari 18 on iOS 18, or Node 22.14 on Ubuntu
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you file
+      options:
+        - label: If this is about the built output, I ran `npm run build` before `npm test`
+          required: false
+        - label: I checked whether it also happens on the live site
+          required: false

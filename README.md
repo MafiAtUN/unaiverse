@@ -2,9 +2,22 @@
 
 **One data nerd's lovingly sarcastic map of the UN's AI universe.**
 
+[![Deploy to GitHub Pages](https://github.com/MafiAtUN/unaiverse/actions/workflows/deploy.yml/badge.svg)](https://github.com/MafiAtUN/unaiverse/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
+[![Astro](https://img.shields.io/badge/built%20with-Astro-black.svg)](https://astro.build)
+
 > **Live:** https://mafiatun.github.io/unaiverse
 >
-> *Currently the Phase 2 skeleton: all 76 milestones with their receipts, rendered as a plain vertical timeline. The galaxy, the Big Bang and A/BOT's dialogue are still in the hangar.*
+> 76 milestones with their receipts, 156 role takes, 307 AI terms explained.
+
+```bash
+git clone https://github.com/MafiAtUN/unaiverse.git
+cd unaiverse && npm install && npm run dev
+```
+
+Node 22 or newer. **No API key, no environment file, no account, no service to
+stand up.** If those three commands do not give you the whole site on a clean
+clone, that is a bug worth reporting.
 
 ## What is this?
 
@@ -48,13 +61,18 @@ All facts are sourced to official UN documents. All jokes are the author's own a
 
 | Path | What it is |
 |---|---|
+| `CONTRIBUTING.md` | How to run it, the rules a pull request is checked against, and what will be declined |
+| `SECURITY.md` | How to report a vulnerability, and how credentials are kept out of the build |
+| `CODE_OF_CONDUCT.md` | Contributor Covenant, plus one clause specific to a project about intergovernmental work |
+| `LICENSE` | MIT, plus a note on the UN source material this project quotes and links to |
+| `.env.template` | Every environment variable the repository reads, and which script reads it. The site needs none of them |
 | `UN_AI_TIMELINE_PLAN.md` | Master plan: concept, design, stack, tone rules, build phases |
 | `CONTENT_SPEC.md` | Tiers, badges, the eight personas, take formula, generation prompt |
 | `research.md` | The sourced research base (~75 milestones, 2017 – Jul 2026) |
 | `content/milestones/` | One file per milestone, frontmatter carries tier/badges/personas |
 | `content/quotes.md` | Key official quotations, sourced |
 | `content/gaps.md` | Known gaps and open questions: what Phase 1 closed, and what's still open |
-| `takes_manifest.json` | Every milestone × persona pair awaiting a generated take |
+| `takes_manifest.json` | Every milestone × persona pair, the authoritative list behind the 156 takes |
 | `VERIFICATION_LOG.md` | What the Phase 1 accuracy pass checked, found and fixed |
 | `src/` | The site: content collection, timeline, take slots, A/BOT |
 | `src/data/README.md` | How to drop the generated takes in when they're ready |
@@ -63,6 +81,7 @@ All facts are sourced to official UN documents. All jokes are the author's own a
 | `src/lib/onboarding.ts` | The authored reading order behind `/inherit`, plus the always-safe citable lines |
 | `scripts/annotate-milestones.mjs` | The hand-written duty-station and body mapping for all 76 milestones |
 | `docs/AI_LITERACY.md` | **The literacy platform**: architecture, content model, Azure pipeline, review workflow, accessibility, limitations |
+| `docs/AI_LITERACY_IMPLEMENTATION_PROMPT.md` | The brief the literacy area was built from, kept for the record |
 | `content/learn/taxonomy.json` | 307 terms in 16 categories — the source of truth for the literacy area |
 | `content/learn/reviewed/` | The published term corpus. The site reads this directory and nothing else |
 | `scripts/learn/` | The offline content pipeline: generate, validate, check links, report, publish |
@@ -77,7 +96,7 @@ Reduced-motion and mobile modes are first-class citizens, not afterthoughts.
 npm install
 npm run dev      # local, with the content collection watching content/milestones
 npm run build    # static output to dist/
-npm test         # 44 tests: content contract, search behaviour, built output
+npm test         # 49 tests: content contract, search behaviour, built output
 npm run check    # astro check — type checking
 ```
 
@@ -88,8 +107,12 @@ disk. The published site is static files: it holds no credential, calls no AI
 service, and `npm test` asserts that no Azure identifier or `.env` value appears
 anywhere in `dist/`.
 
+Only the generating scripts need credentials, and only three of them cost
+money. `content:validate`, `content:report` and `content:check-links` are
+offline and free, and are the ones CI runs on every push.
+
 ```bash
-cp .env.template .env                              # fill in four variables
+cp .env.template .env      # three required variables, all documented in the file
 
 npm run content:generate -- --term gradient-descent   # one term
 npm run content:generate                              # everything outstanding
@@ -113,8 +136,12 @@ Nothing a model wrote reaches a reader until a person has run
 The build reports what it rendered, which is the quickest way to spot a content problem:
 
 ```text
-[unaiverse] 76 milestones · 156 take slots · 0/156 takes loaded
+[unaiverse] 76 milestones · 156 take slots · 156/156 takes loaded
 ```
+
+Run `npm run build` before `npm test`. Several assertions read `dist/`,
+including the sweep that proves no credential reached the published output.
+Against a stale build they pass without meaning anything.
 
 ### Adding a milestone
 
@@ -144,6 +171,40 @@ mandates:
     source: "A/RES/79/239"
     note: "Delivered as A/80/78, 5 June 2025."
 ```
+
+## Contributing
+
+Corrections are the most welcome contribution there is, and they need no code:
+if a date, a document symbol, a link or an explanation is wrong, open an issue
+with the source and it gets fixed. There is a template for exactly that.
+
+Before opening a pull request, read [CONTRIBUTING.md](CONTRIBUTING.md). It
+covers how to run the project, the rules that are enforced by tests (receipts
+kept, WCAG AA computed rather than eyeballed, no em dashes in rendered copy, no
+invented document symbols), the tone rules, and an honest list of what will
+probably be declined so you do not spend an evening on it.
+
+Everyone taking part is expected to follow the
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+The published site is static: no server, no database, no login, no cookie, no
+analytics. Azure OpenAI is used only at development time, and CI asserts on
+every push that no credential, endpoint or `.env` value reached `dist/`.
+
+Found something anyway? [SECURITY.md](SECURITY.md) has the details. Email rather
+than open a public issue.
+
+## License
+
+[MIT](LICENSE). Use it, fork it, learn from it.
+
+The licence covers the code, the build, the scripts and the original editorial
+writing. It does not cover the UN documents, resolutions, reports and
+photographs this project cites and links to: those remain the property of their
+publishers and are used here for reporting, comment and education. If you reuse
+this repository, your use of that source material is your own responsibility.
 
 ---
 
