@@ -1,0 +1,40 @@
+version: 2
+
+updates:
+  # The site's own dependencies.
+  #
+  # Grouped on purpose. Ten separate pull requests a week on a project this
+  # size is how a maintainer starts ignoring Dependabot entirely, and an
+  # ignored security alert is worse than none. Majors stay separate, because
+  # those need reading rather than merging.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      # Matches the house style: a human sentence, no feat:/fix: prefix.
+      prefix: Update
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Pinned deliberately and bumped by hand. Three.js minors move the
+      # galaxy's rendering, and @knight-lab/timelinejs is vendored into
+      # public/ on every build by scripts/vendor-timeline.mjs.
+      - dependency-name: three
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@knight-lab/timelinejs"
+        update-types: ["version-update:semver-major"]
+
+  # The actions in .github/workflows/deploy.yml. These hold the Pages
+  # deployment token, so a stale one matters more than a stale devDependency.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: Update

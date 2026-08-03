@@ -48,6 +48,14 @@ jobs:
         # alternatives. A corpus that fails this must not reach a reader.
         run: npm run content:validate
 
+      - name: Type check
+        # `astro check` over the components and the .ts libraries. Cheap, and
+        # it fails fast: a type error should stop a deploy here rather than
+        # surface as a blank section on the live site.
+        run: npm run check
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
+
       - name: Build
         run: npm run build
         env:
