@@ -8,9 +8,10 @@
  *
  * Two placements, one component:
  *
- *   • `hero`  — above the title on the router, the first thing read.
+ *   • `nav`   — the left end of the bar, ahead of UNAIVERSE, so the label is on
+ *     every page at the top rather than only on the front door.
  *   • `strip` — a thin band under every page's own footer, so the credit is on
- *     the cheat sheet someone forwards as much as on the front door.
+ *     the cheat sheet someone forwards too.
  *
  * The wordmark is inlined rather than requested. It is a kilobyte of paths, it
  * has to paint with the text rather than a frame later, and inlining lets it
@@ -25,10 +26,10 @@
 import { NERD_LAB } from '../lib/taxonomy';
 
 interface Props {
-  variant?: 'hero' | 'strip';
+  variant?: 'nav' | 'strip';
 }
 
-const { variant = 'hero' } = Astro.props;
+const { variant = 'nav' } = Astro.props;
 
 const MARK = `<svg class="nl__mark" viewBox="0 0 700 176" aria-hidden="true" focusable="false">
   <g transform="translate(38,38)" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter">
@@ -62,10 +63,10 @@ const MARK = `<svg class="nl__mark" viewBox="0 0 700 176" aria-hidden="true" foc
       </div>
     </aside>
   ) : (
-    <p class="nl nl--hero" aria-label={`${NERD_LAB.name} presents`}>
+    <span class="nl nl--nav" aria-label={`${NERD_LAB.name} presents`}>
       <Fragment set:html={MARK} />
       <span class="nl__word mono">presents</span>
-    </p>
+    </span>
   )
 }
 
@@ -82,10 +83,11 @@ const MARK = `<svg class="nl__mark" viewBox="0 0 700 176" aria-hidden="true" foc
     flex: none;
   }
 
-  /* On the router it is a title card, not a credit line: the mark leads the
-     staircase down into the kicker and the title. */
-  .nl--hero .nl__mark {
-    height: 2.6em;
+  /* In the bar the mark sits against UNAIVERSE, which is set at step--1 and
+     bold. This lands the wordmark on the same optical line without competing
+     with it — the label presents the site, it is not the site. */
+  .nl--nav .nl__mark {
+    height: 1.75em;
   }
 </style>
 
@@ -94,19 +96,27 @@ const MARK = `<svg class="nl__mark" viewBox="0 0 700 176" aria-hidden="true" foc
     letter-spacing: 0.22em;
   }
 
-  /* ── Hero: the title card on the router ──────────────────────────── */
-  .nl--hero {
-    display: flex;
+  /* ── Nav: the label, at the left end of the bar ───────────────────── */
+  .nl--nav {
+    flex: none;
+    display: inline-flex;
     align-items: center;
-    gap: 0.7em;
-    margin: 0 0 var(--sp-4);
+    gap: 0.55em;
     font-size: var(--step--2);
     color: var(--riso-pink);
   }
 
-  .nl--hero .nl__word {
+  .nl--nav .nl__word {
     color: var(--ink-faint);
-    font-size: var(--step--1);
+  }
+
+  /* The bar is already carrying five links and a search box. Below the wide
+     breakpoint the word goes and the mark stays: a reader who has seen it once
+     reads the mark alone, and it is the part that cannot be re-typed. */
+  @media (max-width: 62rem) {
+    .nl--nav .nl__word {
+      display: none;
+    }
   }
 
   /* ── Strip: the standing credit under every page ─────────────────── */

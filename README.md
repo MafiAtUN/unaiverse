@@ -42,7 +42,7 @@ All facts are sourced to official UN documents. All jokes are the author's own a
 
 ## Who made this?
 
-**Mafi (Mafizul Islam)**, UN data specialist. Built with [Claude Code](https://claude.com/claude-code), because a site about AI should probably be built with some.
+**Mafi (Mafizul Islam)**, UN data specialist. Published under **Nerd Lab** — unnecessarily clever, occasionally useful.
 
 ## Repository map
 

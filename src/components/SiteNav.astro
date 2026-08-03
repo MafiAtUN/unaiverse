@@ -21,6 +21,7 @@
  * The bar is static markup. The only script is the keyboard shortcut, and
  * everything works without it.
  */
+import NerdLab from './NerdLab.astro';
 import { CORPUS_STATS } from '../lib/learn/terms';
 
 interface Props {
@@ -41,9 +42,15 @@ const LINKS = [
 
 <nav class="nav" aria-label="Main">
   <div class="wrap nav__inner">
-    <a class="nav__brand" href={href('')}>
-      UN<span class="nav__brand-ai">AI</span>VERSE
-    </a>
+    {/* The label, then what it presents. The mark sits outside the home link
+        on purpose: it credits the site, it is not a way back to it. */}
+    <div class="nav__id">
+      <NerdLab variant="nav" />
+      <span class="nav__divider" aria-hidden="true"></span>
+      <a class="nav__brand" href={href('')}>
+        UN<span class="nav__brand-ai">AI</span>VERSE
+      </a>
+    </div>
 
     <ul class="nav__links">
       {
@@ -93,6 +100,21 @@ const LINKS = [
     align-items: center;
     gap: var(--sp-3) var(--sp-5);
     min-height: 3rem;
+  }
+
+  /* The presenting label and the site name read as one lockup, so they are
+     grouped and spaced against each other rather than against the links. */
+  .nav__id {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .nav__divider {
+    width: 1px;
+    height: 1.1rem;
+    background: var(--hairline-strong);
   }
 
   .nav__brand {
@@ -205,6 +227,18 @@ const LINKS = [
   @media (max-width: 40rem) {
     .nav {
       position: static;
+    }
+
+    /* Two clean rows rather than links wrapping into a ragged column beside
+       the lockup: the label and the site name, then everything you can go to.
+       The search box keeps its `margin-left: auto` and rides the first row. */
+    .nav__inner {
+      flex-wrap: wrap;
+    }
+
+    .nav__links {
+      flex-basis: 100%;
+      order: 3;
     }
   }
 </style>
