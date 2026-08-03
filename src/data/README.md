@@ -73,7 +73,7 @@ The canonical shape, if you get to choose:
 ## Valid values
 
 `milestone_id` must match a filename stem in `content/milestones/` — identical to
-`milestone_id` in `takes_manifest.json`. `persona` must be one of:
+`milestone_id` in `content/takes_manifest.json`. `persona` must be one of:
 
 `peace-security` · `development` · `human-rights` · `data-digital` ·
 `front-office` · `opga` · `builders` · `missions`
@@ -91,6 +91,6 @@ Nothing fails silently. The build reports each case:
 
 ## Partial delivery
 
-Expected, and supported. `CONTENT_SPEC.md` §7 recommends generating in batches per
+Expected, and supported. `docs/CONTENT_SPEC.md` §7 recommends generating in batches per
 persona to keep voice consistent — drop each batch as it clears Mafi's review pass and
 rebuild. The hero counter shows `N/156` so progress is visible on the live site.

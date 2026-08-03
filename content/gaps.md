@@ -1,6 +1,6 @@
 # X. Gaps and open questions
 
-*Status updated by the Phase 1 verification pass, 28 July 2026. See `VERIFICATION_LOG.md` for evidence and method.*
+*Status updated by the Phase 1 verification pass, 28 July 2026. See `docs/VERIFICATION_LOG.md` for evidence and method.*
 
 ## Closed in Phase 1
 
@@ -12,7 +12,7 @@
 
 18. ✅ **Independent verification of links.** All 176 URLs in `content/milestones/` were checked. Ten dead links were found and replaced; none remain broken. See the log for the caveat about hosts that block automated clients.
 
-**Also resolved (was flagged UNVERIFIED in the milestone files, not listed here):** the Secretary-General’s mandated report on military AI has been published as **A/80/78** (5 June 2025, reissued for technical reasons 4 February 2026). The `na-secretary-generals-report-on-military-ai` node is no longer a forward-looking placeholder — **see `VERIFICATION_LOG.md` for a zone/tier decision this creates for Mafi.**
+**Also resolved (was flagged UNVERIFIED in the milestone files, not listed here):** the Secretary-General’s mandated report on military AI has been published as **A/80/78** (5 June 2025, reissued for technical reasons 4 February 2026). The `na-secretary-generals-report-on-military-ai` node is no longer a forward-looking placeholder — **see `docs/VERIFICATION_LOG.md` for a zone/tier decision this creates for Mafi.**
 
 ## Still open
 
@@ -46,4 +46,4 @@
 
 ## New in Phase 1
 
-19. **Hosts that block automated verification.** OHCHR, UNDP, UNHCR, UNICEF, UNESDOC, UNCTAD, OpenAI and Reuters return 401/403 to every automated client, including the site’s own link checker. Their URLs were confirmed live through independent search-engine indexes instead, but **21 URLs have never been opened in a real browser by this pass**. They are listed in `VERIFICATION_LOG.md` and need one manual click-through before launch. Any automated link checker added in Phase 6 must allowlist these hosts or it will report permanent false failures.
+19. **Hosts that block automated verification.** OHCHR, UNDP, UNHCR, UNICEF, UNESDOC, UNCTAD, OpenAI and Reuters return 401/403 to every automated client, including the site’s own link checker. Their URLs were confirmed live through independent search-engine indexes instead, but **21 URLs have never been opened in a real browser by this pass**. They are listed in `docs/VERIFICATION_LOG.md` and need one manual click-through before launch. Any automated link checker added in Phase 6 must allowlist these hosts or it will report permanent false failures.

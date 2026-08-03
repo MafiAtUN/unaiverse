@@ -16,7 +16,7 @@
 | Document symbols validated against ODS | — | 25 of 25 |
 | Factual errors found and corrected | — | **6** |
 
-Corpus integrity re-checked after all edits: 76 milestones, tiers **9 / 27 / 40** exactly as `CONTENT_SPEC.md` §6 specifies, 156 persona slots matching `takes_manifest.json` one-for-one, no orphan IDs, every file carries `**Sources:**` and `**Why it matters:**`.
+Corpus integrity re-checked after all edits: 76 milestones, tiers **9 / 27 / 40** exactly as `CONTENT_SPEC.md` §6 specifies, 156 persona slots matching `content/takes_manifest.json` one-for-one, no orphan IDs, every file carries `**Sources:**` and `**Why it matters:**`.
 
 ---
 

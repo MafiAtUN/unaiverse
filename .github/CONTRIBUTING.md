@@ -70,7 +70,7 @@ refuse anything outside it.
 
 ## Tone
 
-The full rules are in [UN_AI_TIMELINE_PLAN.md](UN_AI_TIMELINE_PLAN.md) section
+The full rules are in [UN_AI_TIMELINE_PLAN.md](../docs/UN_AI_TIMELINE_PLAN.md) section
 4, and they are the authority. The short version:
 
 - Jokes land on hype, on acronym soup, or on the author. Never on the United
@@ -126,12 +126,12 @@ code is behind, not the document.
 
 | Question | Document |
 |---|---|
-| Tone, concept, narrative zones, build phases | [UN_AI_TIMELINE_PLAN.md](UN_AI_TIMELINE_PLAN.md) |
-| Tiers, badges, personas, the three-beat take formula | [CONTENT_SPEC.md](CONTENT_SPEC.md) |
-| Palette, contrast floors, what shipped and why | [DESIGN.md](DESIGN.md) |
-| Current IA, the four journey tests, definition of done | [unaiverse-redesign-brief.md](unaiverse-redesign-brief.md) |
-| The literacy platform end to end | [docs/AI_LITERACY.md](docs/AI_LITERACY.md) |
-| What the accuracy pass checked, and its caveats | [VERIFICATION_LOG.md](VERIFICATION_LOG.md) |
+| Tone, concept, narrative zones, build phases | [UN_AI_TIMELINE_PLAN.md](../docs/UN_AI_TIMELINE_PLAN.md) |
+| Tiers, badges, personas, the three-beat take formula | [CONTENT_SPEC.md](../docs/CONTENT_SPEC.md) |
+| Palette, contrast floors, what shipped and why | [DESIGN.md](../docs/DESIGN.md) |
+| Current IA, the four journey tests, definition of done | [REDESIGN_BRIEF.md](../docs/REDESIGN_BRIEF.md) |
+| The literacy platform end to end | [AI_LITERACY.md](../docs/AI_LITERACY.md) |
+| What the accuracy pass checked, and its caveats | [VERIFICATION_LOG.md](../docs/VERIFICATION_LOG.md) |
 
 ## Pull requests
 

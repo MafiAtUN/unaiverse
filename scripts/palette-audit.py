@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Contrast audit for the palettes in DESIGN.md.
+Contrast audit for the palettes in docs/DESIGN.md.
 
 Every text/surface pairing the site actually uses, checked against WCAG 2.x
 at the 4.5:1 small-text threshold — including the alpha-blended --dim and

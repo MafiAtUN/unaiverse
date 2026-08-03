@@ -7,7 +7,7 @@ went in the same pass.
 
 **Supersedes:** `UN_AI_TIMELINE_PLAN.md` §7 palette in full.
 
-![Three palettes compared against the current one](docs/palettes.png)
+![Three palettes compared against the current one](palettes.png)
 
 ---
 

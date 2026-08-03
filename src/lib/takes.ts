@@ -11,7 +11,7 @@
  * pipeline's exact output isn't fixed yet. It accepts:
  *
  *   [ {...}, {...} ]                         ← bare array
- *   { "takes": [ {...} ] }                   ← wrapped (matches takes_manifest.json)
+ *   { "takes": [ {...} ] }                   ← wrapped (matches content/takes_manifest.json)
  *
  * ...and per entry, any of these key spellings:
  *

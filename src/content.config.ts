@@ -5,7 +5,7 @@ import { glob } from 'astro/loaders';
  * Milestones live at the repo root in `content/milestones/`, deliberately outside
  * `src/` — content is edited independently of code (plan §8). The glob loader
  * derives each entry's `id` from the filename, which is identical to the
- * `id:` field in frontmatter and to `milestone_id` in takes_manifest.json.
+ * `id:` field in frontmatter and to `milestone_id` in content/takes_manifest.json.
  * That three-way identity is what lets takes bind to nodes without a lookup table.
  */
 const milestones = defineCollection({

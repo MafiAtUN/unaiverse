@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * TAKE GENERATION PIPELINE — CONTENT_SPEC.md §7
+ * TAKE GENERATION PIPELINE — docs/CONTENT_SPEC.md §7
  * =============================================
- * Generates the 156 takes listed in `takes_manifest.json` by calling the Azure
+ * Generates the 156 takes listed in `content/takes_manifest.json` by calling the Azure
  * OpenAI deployment named in `.env`, and writes them to `src/data/takes.json`
  * in the canonical shape the loader (`src/lib/takes.ts`) expects.
  *
@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const MANIFEST = join(ROOT, 'takes_manifest.json');
+const MANIFEST = join(ROOT, 'content/takes_manifest.json');
 const MILESTONES = join(ROOT, 'content/milestones');
 const OUT = join(ROOT, 'src/data/takes.json');
 

@@ -59,33 +59,65 @@ All facts are sourced to official UN documents. All jokes are the author's own a
 
 ## Repository map
 
+Four directories, and the root holds only what a tool insists on finding there.
+
+```text
+src/         the site        Astro pages, components, and the .ts libraries behind them
+content/     the words       milestones, the 307-term corpus, the sourced quotations
+scripts/     the pipeline    offline generation and validation. Never shipped to a reader
+docs/        the reasoning   why the site is shaped the way it is
+```
+
+**`src/` — the site**
+
 | Path | What it is |
 |---|---|
-| `CONTRIBUTING.md` | How to run it, the rules a pull request is checked against, and what will be declined |
-| `SECURITY.md` | How to report a vulnerability, and how credentials are kept out of the build |
-| `CODE_OF_CONDUCT.md` | Contributor Covenant, plus one clause specific to a project about intergovernmental work |
-| `LICENSE` | MIT, plus a note on the UN source material this project quotes and links to |
-| `.env.template` | Every environment variable the repository reads, and which script reads it. The site needs none of them |
-| `UN_AI_TIMELINE_PLAN.md` | Master plan: concept, design, stack, tone rules, build phases |
-| `CONTENT_SPEC.md` | Tiers, badges, the eight personas, take formula, generation prompt |
-| `research.md` | The sourced research base (~75 milestones, 2017 – Jul 2026) |
-| `content/milestones/` | One file per milestone, frontmatter carries tier/badges/personas |
-| `content/quotes.md` | Key official quotations, sourced |
-| `content/gaps.md` | Known gaps and open questions: what Phase 1 closed, and what's still open |
-| `takes_manifest.json` | Every milestone × persona pair, the authoritative list behind the 156 takes |
-| `VERIFICATION_LOG.md` | What the Phase 1 accuracy pass checked, found and fixed |
-| `src/` | The site: content collection, timeline, take slots, A/BOT |
-| `src/data/README.md` | How to drop the generated takes in when they're ready |
 | `src/lib/agenda.ts` | The forward view: upcoming events, the mandate ledger, iCalendar output |
 | `src/lib/brief.ts` | Builds the plain-text briefing note behind every "Copy briefing note" button |
 | `src/lib/onboarding.ts` | The authored reading order behind `/inherit`, plus the always-safe citable lines |
-| `scripts/annotate-milestones.mjs` | The hand-written duty-station and body mapping for all 76 milestones |
-| `docs/AI_LITERACY.md` | **The literacy platform**: architecture, content model, Azure pipeline, review workflow, accessibility, limitations |
-| `docs/AI_LITERACY_IMPLEMENTATION_PROMPT.md` | The brief the literacy area was built from, kept for the record |
-| `content/learn/taxonomy.json` | 307 terms in 16 categories — the source of truth for the literacy area |
-| `content/learn/reviewed/` | The published term corpus. The site reads this directory and nothing else |
-| `scripts/learn/` | The offline content pipeline: generate, validate, check links, report, publish |
 | `src/lib/learn/schema.ts` | The content schema, shared by the Astro build and the Node scripts |
+| `src/data/README.md` | How the generated takes are shaped and dropped in |
+
+**`content/` — the words**
+
+| Path | What it is |
+|---|---|
+| `content/milestones/` | One file per milestone, frontmatter carries tier/badges/personas |
+| `content/learn/reviewed/` | The published term corpus. The site reads this directory and nothing else |
+| `content/learn/taxonomy.json` | 307 terms in 16 categories, the source of truth for the literacy area |
+| `content/quotes.md` | Key official quotations, sourced |
+| `content/gaps.md` | Known gaps and open questions: what Phase 1 closed, and what is still open |
+| `content/takes_manifest.json` | Every milestone × persona pair, the authoritative list behind the 156 takes |
+
+**`scripts/` — the pipeline**
+
+| Path | What it is |
+|---|---|
+| `scripts/learn/` | Generate, validate, check links, report, publish |
+| `scripts/annotate-milestones.mjs` | The hand-written duty-station and body mapping for all 76 milestones |
+
+**`docs/` — the reasoning**
+
+| Path | What it is |
+|---|---|
+| [`docs/UN_AI_TIMELINE_PLAN.md`](docs/UN_AI_TIMELINE_PLAN.md) | Master plan: concept, design, stack, tone rules, build phases |
+| [`docs/CONTENT_SPEC.md`](docs/CONTENT_SPEC.md) | Tiers, badges, the eight personas, take formula, generation prompt |
+| [`docs/DESIGN.md`](docs/DESIGN.md) | Palette, contrast floors, what shipped and why |
+| [`docs/REDESIGN_BRIEF.md`](docs/REDESIGN_BRIEF.md) | Current IA, the four journey tests, definition of done |
+| [`docs/AI_LITERACY.md`](docs/AI_LITERACY.md) | **The literacy platform**: architecture, content model, Azure pipeline, review workflow, accessibility, limitations |
+| [`docs/VERIFICATION_LOG.md`](docs/VERIFICATION_LOG.md) | What the Phase 1 accuracy pass checked, found and fixed |
+| [`docs/research.md`](docs/research.md) | The sourced research base (~75 milestones, 2017 to Jul 2026) |
+| [`docs/AI_LITERACY_IMPLEMENTATION_PROMPT.md`](docs/AI_LITERACY_IMPLEMENTATION_PROMPT.md) | The brief the literacy area was built from, kept for the record |
+
+**Root, and `.github/`**
+
+| Path | What it is |
+|---|---|
+| [`LICENSE`](LICENSE) | MIT, plus a note on the UN source material this project quotes and links to |
+| [`.env.template`](.env.template) | Every environment variable the repository reads, and which script reads it. The site needs none of them |
+| [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md) | How to run it, the rules a pull request is checked against, and what will be declined |
+| [`.github/SECURITY.md`](.github/SECURITY.md) | How to report a vulnerability, and how credentials are kept out of the build |
+| [`.github/CODE_OF_CONDUCT.md`](.github/CODE_OF_CONDUCT.md) | Contributor Covenant, plus one clause specific to a project about intergovernmental work |
 
 ## Stack
 
@@ -178,14 +210,14 @@ Corrections are the most welcome contribution there is, and they need no code:
 if a date, a document symbol, a link or an explanation is wrong, open an issue
 with the source and it gets fixed. There is a template for exactly that.
 
-Before opening a pull request, read [CONTRIBUTING.md](CONTRIBUTING.md). It
+Before opening a pull request, read [CONTRIBUTING.md](.github/CONTRIBUTING.md). It
 covers how to run the project, the rules that are enforced by tests (receipts
 kept, WCAG AA computed rather than eyeballed, no em dashes in rendered copy, no
 invented document symbols), the tone rules, and an honest list of what will
 probably be declined so you do not spend an evening on it.
 
 Everyone taking part is expected to follow the
-[Code of Conduct](CODE_OF_CONDUCT.md).
+[Code of Conduct](.github/CODE_OF_CONDUCT.md).
 
 ## Security
 
@@ -193,7 +225,7 @@ The published site is static: no server, no database, no login, no cookie, no
 analytics. Azure OpenAI is used only at development time, and CI asserts on
 every push that no credential, endpoint or `.env` value reached `dist/`.
 
-Found something anyway? [SECURITY.md](SECURITY.md) has the details. Email rather
+Found something anyway? [SECURITY.md](.github/SECURITY.md) has the details. Email rather
 than open a public issue.
 
 ## License

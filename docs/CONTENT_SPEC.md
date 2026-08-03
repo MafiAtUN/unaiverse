@@ -176,7 +176,7 @@ All Tier 3, badge `ONGOING TRACK` (GDC-beyond-AI, data governance, WSIS+20, OEWG
 | GA82 · GDC high-level review | 2 | UPCOMING | OPGA, Missions, Front Office |
 | SG report on military AI (mandated) | 3 | UPCOMING | — |
 
-**Totals (final, from generated content files): 9 Supernovas · 27 Stars · 40 Stardust = 76 milestones.** Take volume: 72 Supernova takes (9×8) + 84 Star takes = **156 takes** — the authoritative list is `takes_manifest.json`.
+**Totals (final, from generated content files): 9 Supernovas · 27 Stars · 40 Stardust = 76 milestones.** Take volume: 72 Supernova takes (9×8) + 84 Star takes = **156 takes** — the authoritative list is `content/takes_manifest.json`.
 
 ---
 
